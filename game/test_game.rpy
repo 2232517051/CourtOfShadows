@@ -1,0 +1,260 @@
+## ============================================================
+## 自动化测试脚本
+## test_game.rpy
+## 用法: renpy.exe CourtOfShadows --test test_walkthrough
+## ============================================================
+
+
+################################################################################
+## 1. Ren'Py 内置测试框架 — 自动走通游戏
+################################################################################
+
+## 主测试：快速走通游戏，验证不会崩溃
+testcase test_walkthrough:
+    ## 跳过教程和难度选择
+    click
+    pause 0.5
+    click
+    pause 0.5
+    click
+    pause 0.5
+
+    ## 输入名字（使用默认名）
+    type "测试领主\n"
+    pause 0.5
+
+    ## 连续点击推进剧情，直到遇到选择
+    ## 第一章
+    ## 自动点击推进剧情
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+    pause 0.3
+    click
+
+
+################################################################################
+## 2. 测试用快速通关标签 — 验证各结局不会崩溃
+################################################################################
+
+## 铁腕领主结局测试
+label test_ending_iron_lord:
+    ## 设置满足铁腕领主结局的属性
+    $ player_name = "测试·铁腕"
+    $ power = 80
+    $ wealth = 50
+    $ faith = 30
+    $ loyalty = 40
+    $ reputation = 50
+    $ intrigue = 30
+    $ rel_aldric = 70
+    $ rel_elena = 40
+    $ rel_bishop = 30
+    $ rel_baron = 10
+    $ rel_captain = 60
+    $ rel_queen = 30
+    $ ending_type = "iron_lord"
+    jump ending_iron_lord
+
+## 影中之王结局测试
+label test_ending_shadow_king:
+    $ player_name = "测试·影王"
+    $ power = 40
+    $ wealth = 50
+    $ faith = 30
+    $ loyalty = 30
+    $ reputation = 40
+    $ intrigue = 80
+    $ rel_aldric = 50
+    $ rel_elena = 70
+    $ rel_bishop = 20
+    $ rel_baron = 30
+    $ rel_captain = 40
+    $ rel_queen = 50
+    $ dark_lily_joined = True
+    $ ending_type = "shadow_king"
+    jump ending_shadow_king
+
+## 圣光守护结局测试
+label test_ending_holy_guardian:
+    $ player_name = "测试·圣光"
+    $ power = 30
+    $ wealth = 40
+    $ faith = 80
+    $ loyalty = 50
+    $ reputation = 60
+    $ intrigue = 20
+    $ rel_aldric = 60
+    $ rel_elena = 30
+    $ rel_bishop = 80
+    $ rel_baron = 10
+    $ rel_captain = 50
+    $ rel_queen = 40
+    $ alliance_church = True
+    $ ending_type = "holy_guardian"
+    jump ending_holy_guardian
+
+## 人民领主结局测试
+label test_ending_peoples_lord:
+    $ player_name = "测试·人民"
+    $ power = 40
+    $ wealth = 50
+    $ faith = 40
+    $ loyalty = 80
+    $ reputation = 70
+    $ intrigue = 30
+    $ rel_aldric = 80
+    $ rel_elena = 50
+    $ rel_bishop = 50
+    $ rel_baron = 20
+    $ rel_captain = 80
+    $ rel_queen = 30
+    $ ending_type = "peoples_lord"
+    jump ending_peoples_lord
+
+## 真相大白结局测试（最佳结局）
+label test_ending_truth:
+    $ player_name = "测试·真相"
+    $ power = 50
+    $ wealth = 50
+    $ faith = 50
+    $ loyalty = 50
+    $ reputation = 60
+    $ intrigue = 60
+    $ rel_aldric = 70
+    $ rel_elena = 60
+    $ rel_bishop = 40
+    $ rel_baron = 20
+    $ rel_captain = 60
+    $ rel_queen = 50
+    $ true_killer_known = True
+    $ father_letters_found = True
+    $ poison_evidence = True
+    $ ending_type = "truth"
+    jump ending_truth
+
+
+################################################################################
+## 3. 一键验证所有系统 — 不进入剧情，只测试函数
+################################################################################
+
+label test_systems:
+    ## 测试属性系统
+    "开始系统测试..."
+
+    $ power = 50
+    $ change_stat("power", 10)
+    if power != 60:
+        "错误：change_stat 异常！期望 power=60，实际=[power]"
+
+    $ change_stat("power", -5)
+    if power != 55:
+        "错误：change_stat 负值异常！期望 power=55，实际=[power]"
+
+    ## 测试属性钳制
+    $ power = 150
+    $ clamp_stats()
+    if power != 100:
+        "错误：clamp_stats 未正确钳制！期望 power=100，实际=[power]"
+
+    $ power = -20
+    $ clamp_stats()
+    if power != 0:
+        "错误：clamp_stats 负值钳制异常！期望 power=0，实际=[power]"
+
+    ## 测试结局可达性分析
+    $ power = 80
+    $ intrigue = 30
+    $ faith = 30
+    $ loyalty = 30
+    $ true_killer_known = False
+    $ _results = check_ending_reachability()
+    $ _reachable = [r[0] for r in _results if r[2]]
+    if "iron_lord" not in _reachable:
+        "错误：铁腕领主应该可达但检测为不可达！"
+    if "shadow_king" in _reachable:
+        "错误：影中之王不应该可达但检测为可达！"
+
+    ## 测试收藏品系统
+    $ persistent.collectibles_found = set()
+    $ collect_item("letter_father_1")
+    if "letter_father_1" not in persistent.collectibles_found:
+        "错误：收藏品系统异常！"
+
+    ## 测试决策日志
+    $ _decisions = []
+    $ log_decision("测试章节", "测试选择", "测试结果")
+    $ _test_decs = get_decisions()
+    if len(_test_decs) == 0:
+        "错误：决策日志记录异常！"
+
+    ## 测试彩蛋名字检测
+    $ _test_egg = check_name_easter_egg("小燚")
+    if _test_egg is None:
+        "错误：名字彩蛋检测异常！"
+
+    ## 测试成就系统
+    $ persistent.achievements = set()
+    $ unlock_achievement("first_steps")
+    if "first_steps" not in persistent.achievements:
+        "错误：成就解锁异常！"
+
+    "所有系统测试通过！"
+
+    return
+
+
+################################################################################
+## 4. 属性边界测试
+################################################################################
+
+label test_stat_boundaries:
+    "开始属性边界值测试..."
+
+    ## 测试所有属性在 0-100 范围内
+    $ power = 0
+    $ wealth = 0
+    $ faith = 0
+    $ loyalty = 0
+    $ reputation = 0
+    $ intrigue = 0
+
+    ## 大量减少，确保不会低于0
+    $ change_stat("power", -50)
+    $ clamp_stats()
+    if power < 0:
+        "错误：power 低于0！值=[power]"
+
+    ## 大量增加，确保不会超过100
+    $ power = 95
+    $ change_stat("power", 50)
+    $ clamp_stats()
+    if power > 100:
+        "错误：power 超过100！值=[power]"
+
+    ## 测试好感度范围
+    $ rel_aldric = 100
+    $ change_rel("rel_aldric", 50)
+    ## 好感度应该有上限保护
+
+    $ rel_baron = -100
+    $ change_rel("rel_baron", -50)
+    ## 好感度应该有下限保护
+
+    "属性边界测试完成！"
+
+    return

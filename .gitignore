@@ -1,0 +1,29 @@
+# 签名密钥（绝对不能上传）
+*.keystore
+
+# Ren'Py 编译缓存
+game/cache/
+game/**/*.rpyc
+__pycache__/
+*.pyc
+
+# 存档文件（本地数据）
+game/saves/
+
+# 备份文件
+*.bak
+
+# 日志/错误
+log.txt
+errors.txt
+traceback.txt
+
+# Android 构建配置（含本地路径）
+.android.json
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# Ren'Py 临时文件
+tmp/

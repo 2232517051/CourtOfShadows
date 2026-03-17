@@ -1,0 +1,212 @@
+## ============================================================
+## 角色定义
+## ============================================================
+
+## 主角 - 新任艾登堡领主
+define player = Character("[player_name]", color="#c8b06b")
+
+## 核心角色
+define aldric = Character("奥尔德里克", color="#8b0000")
+define elena = Character("艾琳娜", color="#9370db")
+define bishop = Character("主教马修斯", color="#ffd700")
+define baron = Character("冯·哈根男爵", color="#2f4f4f")
+define captain = Character("队长雷恩", color="#4682b4")
+define queen = Character("伊莎贝拉王后", color="#800080")
+define merchant = Character("商人卡尔", color="#d2691e")
+
+## 第二章新增角色
+define assassin = Character("???", color="#333333")
+
+## 第三章新增角色
+define lily_master = Character("暗百合首领", color="#2d1b4e")
+
+## 第四章新增角色
+define prince = Character("王子弗雷德里克", color="#4169e1")
+
+## 通用角色
+define servant = Character("侍从", color="#a9a9a9")
+define soldier = Character("士兵", color="#708090")
+define crowd = Character("众人", color="#a9a9a9")
+
+## ============================================================
+## 数值系统
+## ============================================================
+
+default player_name = "亚瑟"
+
+# 核心属性 (0-100)
+default power = 30
+default wealth = 40
+default faith = 50
+default loyalty = 50
+default reputation = 40
+default intrigue = 20
+
+# 角色好感度 (-100 到 100)
+default rel_aldric = 60
+default rel_elena = 0
+default rel_bishop = 30
+default rel_baron = -10
+default rel_captain = 50
+default rel_queen = 20
+default rel_prince = 0
+default rel_lily = 0
+
+# 第一章剧情标记
+default father_death_known = False
+default secret_passage_found = False
+default spy_network = False
+default first_decree = ""
+
+# 第二章剧情标记
+default alliance_baron = False
+default alliance_church = False
+default merchant_deal = False
+default assassination_survived = False
+default council_outcome = ""
+
+# 第三章剧情标记
+default dark_lily_joined = False
+default dark_lily_destroyed = False
+default true_killer_known = False
+default father_letters_found = False
+default poison_evidence = False
+
+# 第四章剧情标记
+default queen_trust = False
+default prince_ally = False
+default prince_betrayed = False
+default elena_romance = False
+default court_faction = ""
+
+# 第五章/结局标记
+default ending_type = ""
+
+## ============================================================
+## 持久化数据（跨存档）
+## ============================================================
+
+default persistent.chapters_completed = set()
+default persistent.endings_seen = set()
+default persistent.gallery_unlocked = set()
+default persistent.achievements = set()
+
+## ============================================================
+## 成就系统
+## ============================================================
+
+init python:
+    ## 成就数据: (名称, 描述, 隐藏?, 未解锁提示)
+    achievement_data = {
+        "first_steps":      ("初登大位", "完成第一章", False, "完成第一章即可解锁"),
+        "diplomat":         ("舌战群雄", "通过外交解决边境危机", False, "在第一章尝试外交手段"),
+        "warrior":          ("铁血领主", "通过军事手段击退男爵", False, "在第一章尝试军事手段"),
+        "holy_man":         ("虔诚之心", "寻求教会帮助解决危机", False, "在第一章尝试寻求教会帮助"),
+        "spy_master_ch1":   ("暗影之主", "建立间谍网络", False, "在第一章探索城堡的秘密"),
+        "council_master":   ("纵横捭阖", "在领主会议中获得最佳结果", False, "在第二章领主会议中表现出色"),
+        "truth_seeker":     ("真相猎人", "发现父亲死因的全部真相", False, "在第三章深入调查"),
+        "secret_passage":   ("密道探索者", "发现城堡密道", False, "仔细探索城堡"),
+        "iron_lord":        ("铁腕领主", "达成铁腕领主结局", False, "以武力统一天下"),
+        "shadow_king":      ("影中之王", "达成影中之王结局", False, "在阴影中掌控一切"),
+        "holy_guardian":    ("圣光守护", "达成圣光守护结局", False, "以信仰之光照亮大地"),
+        "peoples_lord":     ("人民领主", "达成人民领主结局", False, "守护最平凡的幸福"),
+        "truth_ending":     ("真相大白", "达成真相大白结局", False, "追寻真相直到终点"),
+        "completionist":    ("全能领主", "解锁所有五个结局", False, "达成全部五个结局"),
+        "max_stat":         ("登峰造极", "任一属性达到100", False, "将任一属性提升至最高"),
+        ## 隐藏成就 — 未解锁前不显示名称和描述
+        "romeo":            ("权谋情圣", "与艾琳娜达成浪漫关系", True, "心 隐藏成就"),
+        "betrayer":         ("背信弃义", "背叛王子弗雷德里克", True, "! 隐藏成就"),
+        "merchant_prince":  ("商业巨擘", "财富达到100且与商人卡尔合作", True, "金 隐藏成就"),
+        "lone_wolf":        ("独行之狼", "不与任何势力结盟通关", True, "狼 隐藏成就"),
+        "silver_tongue":    ("银舌如蛇", "谋略达到100", True, "刃 隐藏成就"),
+        "all_friends":      ("八面玲珑", "所有角色好感度达到60以上", True, "* 隐藏成就"),
+        "dark_path":        ("深渊凝视", "加入暗百合且谋略大于80", True, "暗 隐藏成就"),
+        "pacifist":         ("和平使者", "不使用军事手段通关", True, "和 隐藏成就"),
+    }
+
+    ## 属性预警阈值
+    STAT_DANGER_LOW = 15
+    STAT_DANGER_HIGH = 90
+    STAT_WARNING_MESSAGES = {
+        "power":      ("权力过低，男爵可能发动进攻！", "权力极高，引起了王后的警惕..."),
+        "wealth":     ("财库将尽，领地运转困难！", "富可敌国，有人在觊觎你的财富..."),
+        "faith":      ("信仰不足，教会对你心存不满！", "虔诚至极，主教视你为圣人"),
+        "loyalty":    ("民心涣散，叛乱一触即发！", "忠诚无双，领民誓死追随"),
+        "reputation": ("声名扫地，无人愿与你合作！", "声名远扬，天下皆知你的大名"),
+        "intrigue":   ("谋略不足，容易被人暗算！", "深不可测，所有人都忌惮你"),
+    }
+
+    ## 属性变化历史（用于趋势箭头）
+    _stat_history = {}
+
+    def unlock_achievement(name):
+        if name not in persistent.achievements:
+            persistent.achievements.add(name)
+            if name in achievement_data:
+                renpy.show_screen("achievement_popup", ach_name=achievement_data[name][0], ach_desc=achievement_data[name][1])
+                renpy.play("audio/sfx/ui_confirm.ogg", channel="sound")
+
+    def check_max_stat():
+        for val in [power, wealth, faith, loyalty, reputation, intrigue]:
+            if val >= 100:
+                unlock_achievement("max_stat")
+                return
+
+    def check_hidden_achievements():
+        """检查隐藏成就条件"""
+        if store.elena_romance:
+            unlock_achievement("romeo")
+        if store.prince_betrayed:
+            unlock_achievement("betrayer")
+        if store.wealth >= 100 and store.merchant_deal:
+            unlock_achievement("merchant_prince")
+        if store.intrigue >= 100:
+            unlock_achievement("silver_tongue")
+        if store.dark_lily_joined and store.intrigue > 80:
+            unlock_achievement("dark_path")
+        ## 八面玲珑：所有关系>=60
+        all_rels = [store.rel_aldric, store.rel_elena, store.rel_bishop,
+                    store.rel_baron, store.rel_captain, store.rel_queen]
+        if all(r >= 60 for r in all_rels):
+            unlock_achievement("all_friends")
+
+    def get_stat_trend(stat_name):
+        """获取属性趋势: 'up', 'down', 'stable'"""
+        history = _stat_history.get(stat_name, [])
+        if len(history) < 2:
+            return "stable"
+        recent = history[-3:] if len(history) >= 3 else history
+        diff = recent[-1] - recent[0]
+        if diff > 0:
+            return "up"
+        elif diff < 0:
+            return "down"
+        return "stable"
+
+    def record_stat(stat_name, value):
+        """记录属性变化历史"""
+        if stat_name not in _stat_history:
+            _stat_history[stat_name] = []
+        _stat_history[stat_name].append(value)
+        if len(_stat_history[stat_name]) > 10:
+            _stat_history[stat_name] = _stat_history[stat_name][-10:]
+
+    def get_stat_warning(stat_name):
+        """获取属性预警信息，返回 None 或警告文本"""
+        val = getattr(store, stat_name, 50)
+        msgs = STAT_WARNING_MESSAGES.get(stat_name)
+        if not msgs:
+            return None
+        if val <= STAT_DANGER_LOW:
+            return msgs[0]
+        if val >= STAT_DANGER_HIGH:
+            return msgs[1]
+        return None
+
+    def clamp_stats():
+        store.power = max(0, min(100, store.power))
+        store.wealth = max(0, min(100, store.wealth))
+        store.faith = max(0, min(100, store.faith))
+        store.loyalty = max(0, min(100, store.loyalty))
+        store.reputation = max(0, min(100, store.reputation))
+        store.intrigue = max(0, min(100, store.intrigue))

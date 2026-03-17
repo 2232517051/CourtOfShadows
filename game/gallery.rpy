@@ -1,0 +1,460 @@
+## ============================================================
+## CG画廊 & 音乐鉴赏 & 成就展示 & 章节选择
+## 大厂级设计
+## ============================================================
+
+## ════════════════════════════════════════════════════════════
+## CG画廊
+## ════════════════════════════════════════════════════════════
+
+init python:
+    gallery_images = [
+        ("bg_castle_exterior", "艾登堡城堡"),
+        ("bg_great_hall", "大厅"),
+        ("bg_study", "书房"),
+        ("bg_border", "北方边境"),
+        ("bg_council_hall", "领主议事厅"),
+        ("bg_market", "哈伦堡集市"),
+        ("bg_forest_path", "密林小径"),
+        ("bg_underground", "暗百合密室"),
+        ("bg_church_interior", "大教堂"),
+        ("bg_royal_palace", "王宫"),
+        ("bg_throne_room", "王座大厅"),
+        ("bg_palace_garden", "宫廷花园"),
+        ("bg_dungeon", "地牢"),
+        ("bg_battlefield", "战场"),
+    ]
+
+    gallery_characters = [
+        ("aldric", "奥尔德里克"),
+        ("elena", "艾琳娜"),
+        ("bishop", "主教马修斯"),
+        ("baron", "冯·哈根男爵"),
+        ("captain", "队长雷恩"),
+        ("queen", "伊莎贝拉王后"),
+        ("merchant_karl", "商人卡尔"),
+        ("lily_master", "暗百合首领"),
+        ("prince", "王子弗雷德里克"),
+    ]
+
+transform gallery_thumb_hover:
+    on hover:
+        ease 0.2 zoom 1.08
+    on idle:
+        ease 0.2 zoom 1.0
+
+screen cg_gallery():
+    tag menu
+    use game_menu(_("画廊"), scroll="viewport"):
+        style_prefix "gallery"
+
+        vbox:
+            spacing 20
+
+            ## ─── 场景 ───
+            hbox:
+                spacing 8
+                text "*" size 20 color "#d4a942" yalign 0.5
+                text "场景画廊" size 22 color "#d4a942" font "msyh.ttf"
+            $ scene_unlocked = len([x for x, _ in gallery_images if x in persistent.gallery_unlocked])
+            text "已解锁 [scene_unlocked]/[len(gallery_images)] 幅场景" size 13 color "#6a5e48"
+
+            null height 4
+
+            grid 4 4:
+                spacing 12
+                xfill True
+
+                for img_name, img_label in gallery_images:
+                    $ img_path = "images/" + img_name + ".webp"
+                    $ is_unlocked = img_name in persistent.gallery_unlocked
+                    if renpy.loadable(img_path) and is_unlocked:
+                        vbox:
+                            spacing 4
+                            frame:
+                                xsize 190
+                                ysize 107
+                                background Solid("#1a152800")
+
+                                imagebutton:
+                                    idle Transform(img_path, size=(190, 107))
+                                    hover Transform(img_path, size=(190, 107))
+                                    action Show("fullscreen_image", img=img_path)
+                                    at gallery_thumb_hover
+
+                            text img_label size 12 xalign 0.5 color "#b8a878"
+                    else:
+                        vbox:
+                            spacing 4
+                            frame:
+                                xsize 190
+                                ysize 107
+                                background Solid("#0f0d1a")
+                                text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
+                            text "???" size 12 xalign 0.5 color "#3a3040"
+
+                for i in range(4 * 4 - len(gallery_images)):
+                    null
+
+            null height 20
+            add Solid("#d4a94220") xsize 1.0 ysize 1
+            null height 10
+
+            ## ─── 角色 ───
+            hbox:
+                spacing 8
+                text "*" size 20 color "#d4a942" yalign 0.5
+                text "角色肖像" size 22 color "#d4a942" font "msyh.ttf"
+            $ char_unlocked = len([x for x, _ in gallery_characters if x in persistent.gallery_unlocked])
+            text "已解锁 [char_unlocked]/[len(gallery_characters)] 位角色" size 13 color "#6a5e48"
+
+            null height 4
+
+            grid 5 2:
+                spacing 12
+                xfill True
+
+                for img_name, img_label in gallery_characters:
+                    $ img_path = "images/" + img_name + ".webp"
+                    $ is_unlocked = img_name in persistent.gallery_unlocked
+                    if renpy.loadable(img_path) and is_unlocked:
+                        vbox:
+                            spacing 4
+                            frame:
+                                xsize 150
+                                ysize 150
+                                background Solid("#1a152800")
+
+                                imagebutton:
+                                    idle Transform(img_path, size=(150, 150))
+                                    hover Transform(img_path, size=(150, 150))
+                                    action Show("fullscreen_image", img=img_path)
+                                    at gallery_thumb_hover
+
+                            text img_label size 12 xalign 0.5 color "#b8a878" font "msyh.ttf"
+                    else:
+                        vbox:
+                            spacing 4
+                            frame:
+                                xsize 150
+                                ysize 150
+                                background Solid("#0f0d1a")
+                                text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
+                            text "???" size 12 xalign 0.5 color "#3a3040"
+
+                for i in range(5 * 2 - len(gallery_characters)):
+                    null
+
+
+## ─── 全屏查看 ───
+screen fullscreen_image(img):
+    modal True
+    zorder 200
+
+    add Solid("#000000ee")
+    add img xalign 0.5 yalign 0.5
+
+    ## 关闭提示
+    frame:
+        xalign 0.5
+        yalign 0.97
+        background Solid("#0f0d1acc")
+        xpadding 20
+        ypadding 8
+        text "点击任意位置关闭" size 14 color "#6a5e48"
+
+    key "mouseup_1" action Hide("fullscreen_image")
+    key "K_ESCAPE" action Hide("fullscreen_image")
+
+
+## ════════════════════════════════════════════════════════════
+## 音乐鉴赏
+## ════════════════════════════════════════════════════════════
+
+init python:
+    ## 音乐曲目: (文件, 名称, 描述, 图标, 解锁条件章节)
+    ## 解锁条件: None=默认解锁, "chapter1"=通过第一章后解锁, 以此类推
+    music_tracks_data = [
+        ("audio/music/main_theme.ogg", "主旋律", "权谋之庭主题曲", "*", None),
+        ("audio/music/castle_calm.ogg", "城堡日常", "平静的领地生活", "城", None),
+        ("audio/music/great_hall.ogg", "大厅", "庄严的议事氛围", "剑", "chapter1"),
+        ("audio/music/tension.ogg", "暗流涌动", "紧张的阴谋时刻", "刃", "chapter2"),
+        ("audio/music/battle_prepare.ogg", "战鼓雷鸣", "备战的号角声", "剑", "chapter2"),
+        ("audio/music/night_mystery.ogg", "夜之谜", "神秘的夜晚", "月", "chapter3"),
+        ("audio/music/victory.ogg", "凯旋", "胜利的欢呼", "*", "chapter5"),
+        ("audio/music/sad.ogg", "悲歌", "悲伤的旋律", "泪", "chapter4"),
+    ]
+
+    def is_music_unlocked(req_chapter):
+        if req_chapter is None:
+            return True
+        if persistent.chapters_completed and req_chapter in persistent.chapters_completed:
+            return True
+        return False
+
+    ## 兼容旧变量名
+    music_tracks = [(f, n, d, i) for f, n, d, i, _ in music_tracks_data]
+
+screen music_room():
+    tag menu
+    use game_menu(_("音乐鉴赏"), scroll="viewport"):
+        vbox:
+            spacing 16
+
+            hbox:
+                spacing 8
+                text "【乐】" size 24 color "#d4a942" yalign 0.5
+                text "音乐鉴赏" size 26 color "#d4a942" font "msyh.ttf"
+
+            $ _unlocked_music = len([1 for _,_,_,_,req in music_tracks_data if is_music_unlocked(req)])
+            text "[_unlocked_music]/[len(music_tracks_data)] 首原创配乐已解锁" size 14 color "#6a5e48"
+
+            null height 8
+
+            for track_file, track_name, track_desc, track_icon, track_req in music_tracks_data:
+                $ _m_unlocked = is_music_unlocked(track_req)
+                frame:
+                    xfill True
+                    xpadding 16
+                    ypadding 12
+                    background Solid("#1a152800")
+                    hover_background Solid("#1a152880")
+
+                    if _m_unlocked and renpy.loadable(track_file):
+                        button:
+                            action Play("music", track_file, fadein=1.0)
+                            xfill True
+                            background None
+
+                            hbox:
+                                spacing 14
+                                yalign 0.5
+
+                                ## 图标
+                                frame:
+                                    xsize 44
+                                    ysize 44
+                                    background Solid("#d4a94215")
+                                    text track_icon xalign 0.5 yalign 0.5 size 20
+
+                                vbox:
+                                    spacing 2
+                                    text track_name size 18 color "#e0d8c8" font "msyh.ttf"
+                                    text track_desc size 13 color "#6a5e48"
+
+                                ## 播放图标
+                                text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                    else:
+                        hbox:
+                            spacing 14
+                            yalign 0.5
+                            frame:
+                                xsize 44
+                                ysize 44
+                                background Solid("#0f0d1a")
+                                text "锁" xalign 0.5 yalign 0.5 size 16
+                            vbox:
+                                text track_name size 18 color "#3a3040" font "msyh.ttf"
+                                if track_req:
+                                    text "通过相关章节解锁" size 13 color "#2a2030"
+                                else:
+                                    text "音频文件缺失" size 13 color "#2a2030"
+
+            null height 16
+            add Solid("#d4a94220") xsize 1.0 ysize 1
+            null height 8
+
+            ## 停止按钮
+            frame:
+                xalign 0.5
+                xpadding 24
+                ypadding 10
+                background Solid("#1a152880")
+
+                textbutton "# 停止播放":
+                    action Stop("music", fadeout=1.0)
+                    text_size 16
+                    text_color "#8a7e60"
+                    text_hover_color "#d4a942"
+
+
+## ════════════════════════════════════════════════════════════
+## 成就展示
+## ════════════════════════════════════════════════════════════
+
+screen achievement_screen():
+    tag menu
+    use game_menu(_("成就"), scroll="viewport"):
+        vbox:
+            spacing 12
+
+            ## 标题
+            hbox:
+                spacing 8
+                text "*" size 24 color "#d4a942" yalign 0.5
+                text "成就殿堂" size 26 color "#d4a942" font "msyh.ttf"
+
+            $ ach_count = len(persistent.achievements) if persistent.achievements else 0
+            $ ach_total = len(achievement_data)
+            text "已解锁 [ach_count]/[ach_total]" size 14 color "#6a5e48"
+
+            ## 进度条
+            bar:
+                value StaticValue(ach_count, ach_total)
+                xmaximum 400
+                ysize 6
+                left_bar Solid("#d4a942")
+                right_bar Solid("#1a1528")
+
+            null height 10
+
+            for key in achievement_data:
+                $ a_data = achievement_data[key]
+                $ a_name = a_data[0]
+                $ a_desc = a_data[1]
+                $ a_hidden = a_data[2] if len(a_data) > 2 else False
+                $ a_hint = a_data[3] if len(a_data) > 3 else "继续游戏解锁"
+                $ unlocked = key in persistent.achievements
+
+                frame:
+                    xfill True
+                    xpadding 16
+                    ypadding 12
+                    background Solid("#1a152840" if unlocked else "#0f0d1a40")
+
+                    hbox:
+                        spacing 14
+                        yalign 0.5
+
+                        ## 成就图标
+                        frame:
+                            xsize 44
+                            ysize 44
+                            background Solid("#d4a94220" if unlocked else "#1a1528")
+
+                            if unlocked:
+                                text "*" xalign 0.5 yalign 0.5 size 22 color "#ffd700"
+                            elif a_hidden:
+                                text "?" xalign 0.5 yalign 0.5 size 22 color "#6a3080"
+                            else:
+                                text "*" xalign 0.5 yalign 0.5 size 22 color "#2a2040"
+
+                        vbox:
+                            spacing 2
+                            if unlocked:
+                                text a_name size 17 color "#e0d8c8" font "msyh.ttf" bold True
+                                text a_desc size 13 color "#8a7e60"
+                            elif a_hidden:
+                                text "隐藏成就" size 17 color "#6a3080" font "msyh.ttf"
+                                text a_hint size 13 color "#4a3060"
+                            else:
+                                text a_name size 17 color "#3a3040" font "msyh.ttf"
+                                text a_hint size 13 color "#2a2030"
+
+
+## ════════════════════════════════════════════════════════════
+## 章节选择
+## ════════════════════════════════════════════════════════════
+
+init python:
+    chapter_list = [
+        ("chapter1", "第一章", "新主登基", "start", "初临领地，面对未知的挑战"),
+        ("chapter2", "第二章", "领主会议", "chapter2_start", "贵族间的明争暗斗"),
+        ("chapter3", "第三章", "暗百合", "chapter3_start", "神秘组织浮出水面"),
+        ("chapter4", "第四章", "王都风云", "chapter4_start", "踏入更大的棋局"),
+        ("chapter5", "第五章", "最终决战", "chapter5_start", "一切的终章"),
+    ]
+
+    chapter_icons = ["I", "II", "III", "IV", "V"]
+
+screen chapter_select():
+    tag menu
+    use game_menu(_("章节选择"), scroll="viewport"):
+        vbox:
+            spacing 16
+
+            ## 标题
+            hbox:
+                spacing 8
+                text "【章】" size 24 color "#d4a942" yalign 0.5
+                text "章节选择" size 26 color "#d4a942" font "msyh.ttf"
+
+            text "通关后解锁对应章节" size 14 color "#6a5e48"
+
+            null height 10
+
+            for idx, (ch_id, ch_num, ch_name, ch_label, ch_desc) in enumerate(chapter_list):
+                $ is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1"
+
+                frame:
+                    xfill True
+                    xpadding 0
+                    ypadding 0
+                    background Solid("#1a152800")
+
+                    if is_unlocked:
+                        button:
+                            action Start(ch_label)
+                            xfill True
+                            xpadding 20
+                            ypadding 16
+                            background Solid("#1a152840")
+                            hover_background Solid("#1a152880")
+
+                            hbox:
+                                spacing 16
+                                yalign 0.5
+
+                                ## 章节编号
+                                frame:
+                                    xsize 56
+                                    ysize 56
+                                    background Solid("#d4a94215")
+                                    text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#d4a942" font "msyh.ttf"
+
+                                vbox:
+                                    spacing 3
+                                    text ch_num size 13 color "#d4a942"
+                                    text ch_name size 20 color "#e0d8c8" font "msyh.ttf" bold True
+                                    text ch_desc size 13 color "#8a7e60"
+
+                                ## 箭头
+                                text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                    else:
+                        frame:
+                            xfill True
+                            xpadding 20
+                            ypadding 16
+                            background None
+
+                            hbox:
+                                spacing 16
+                                yalign 0.5
+
+                                frame:
+                                    xsize 56
+                                    ysize 56
+                                    background Solid("#0f0d1a")
+                                    text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#2a2040" font "msyh.ttf"
+
+                                vbox:
+                                    spacing 3
+                                    text ch_num size 13 color "#2a2040"
+                                    text "[ch_name] — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
+
+            null height 16
+            add Solid("#d4a94220") xsize 1.0 ysize 1
+            null height 8
+
+            ## 结局统计
+            frame:
+                xalign 0.5
+                xpadding 24
+                ypadding 12
+                background Solid("#1a152840")
+
+                hbox:
+                    spacing 12
+                    text "【卷】" size 18 yalign 0.5
+                    $ endings_count = len(persistent.endings_seen) if persistent.endings_seen else 0
+                    text "已解锁结局: [endings_count]/5" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
