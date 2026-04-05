@@ -4,13 +4,21 @@
 
 label chapter3_start:
 
+    ## 安全重置：防止上一章过场动画的 _dismiss_pause 泄漏
+    $ _dismiss_pause = True
+    $ quick_menu = True
+    window auto
+
     $ renpy.force_autosave()
     $ snapshot_chapter_start()
     scene black with fade
 
-    call show_chapter("第三章", "暗百合", "神秘组织浮出水面")
-    call show_recap("chapter2")
+    call show_chapter("第三章", "暗百合", "神秘组织浮出水面") from _call_show_chapter_1
+    call show_recap("chapter2") from _call_show_recap_1
+    call apply_rel_chapter_effects from _call_rel_ch3
 
+    ## 章节过场动画
+    call cinematic_chapter3 from _call_cinematic_ch3
 
     "暗杀事件后的第三天。"
 
@@ -19,6 +27,25 @@ label chapter3_start:
     "但你没有时间舔舐伤口。领地内的事务不会因为你的伤痛而停下。"
 
     "更何况，暗处的敌人也不会给你喘息的机会。"
+
+    ## 章节间过渡：旅途（含暗林谷伏击）+ 到达城堡
+    call interlude_ch2_ch3 from _call_interlude23
+
+    ## NPC深度支线
+    call npc_captain_war_story from _call_npc_cws
+    call npc_bishop_doubt from _call_npc_bd
+
+    ## NPC支线（第三章可用）
+    call npc_elena_past from _call_npc_ep3
+    call npc_bishop_confession from _call_npc_bc3
+
+    ## 章节深化
+    call ch3_deep_captain_scar from _call_ch3_dcs
+    call ch3_deep_cure from _call_ch3_dcure
+
+    ## 治理系统：瘟疫恐慌 / 建设
+    call gov_plague from _call_gov_plague3
+    call gov_building from _call_gov_build3
 
     ## ============================================================
     ## 第一部分：异常迹象（~400行）
@@ -29,6 +56,8 @@ label ch3_strange_signs:
     $ play_music("audio/music/castle_calm.ogg", fadein=2.0)
     scene bg castle_exterior with dissolve
     $ unlock_gallery("bg_castle_exterior")
+
+    $ trigger_random_event("explore")
 
     "清晨。艾登堡的城墙在朝阳下闪烁着金色的光芒。"
 
@@ -41,32 +70,48 @@ label ch3_strange_signs:
 
     captain "领主大人，早安。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "雷恩，有什么新情况？"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "有几件事需要您注意。"
 
     captain "首先，北部的三个村庄报告说有农民失踪。最近半个月，已经有七个人不见了。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "七个人？这不正常。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "是的。我派人去调查了，但没有发现任何线索。没有打斗痕迹，没有血迹，人就像凭空消失了一样。"
 
     "你皱起眉头。农民失踪不是小事——这些人是领地的根基。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "失踪的人有什么共同点吗？"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "都是青壮年男性，年龄在二十到四十之间。而且……"
 
     "雷恩犹豫了一下。"
 
     captain "他们都住在靠近森林边缘的地方。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "森林……"
 
     "你想起了父亲生前常说的话——'森林里有很多秘密，有些最好不要去探究。'"
 
     "现在你开始怀疑，父亲说的并不是什么猎人的迷信。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "还有一件事。"
 
     "雷恩从怀中掏出一块粗糙的布片，上面画着一个奇怪的符号——一朵倒置的百合花。"
@@ -75,8 +120,12 @@ label ch3_strange_signs:
 
     "你接过布片，仔细端详。那朵倒置的百合花线条流畅，不像是随手涂鸦。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "这是什么意思？"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "我不确定。但老一辈的人说，这是一个古老组织的标记。"
 
     captain "他们叫它……暗百合。"
@@ -91,22 +140,42 @@ label ch3_strange_signs:
         "让雷恩加派巡逻":
             $ change_stat("loyalty", 5)
             $ change_stat("power", 5)
+            hide captain_img
+            show player_char_img at left with dissolve
             player "加派人手，特别是森林边缘的区域。我不想再有人失踪。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "遵命。我会安排双倍巡逻。"
-            "你看着雷恩离去的背影，心中的不安并没有消减。"
+            "雷恩走后，你盯着地上他靴子踩过的泥印。不安并没有消减——反而在安静下来后更加清晰了。"
 
         "亲自去失踪地点调查":
-            $ change_stat("intrigue", 10)
+            $ change_stat("power", 5)
+            hide captain_img
+            show player_char_img at left with dissolve
             player "准备马匹，我要亲自去看看。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "领主大人，暗杀事件刚过，您亲自出行太危险了。"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "正因为刚刚有人想杀我，我更不能躲在城堡里。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "……是。我安排一队人随行。"
 
         "先不管失踪的事，调查符号的来源":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
+            hide captain_img
+            show player_char_img at left with dissolve
             player "失踪的事先交给你处理。我对这个符号更感兴趣。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "领主大人？"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "帮我找一个懂古代纹章学的人。越快越好。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "是，大人。"
 
     hide captain_img with dissolve
@@ -124,46 +193,70 @@ label ch3_strange_signs:
 
     "他的妻子哭着跑到城堡求见你。"
 
-    servant "领主大人！求您救救我丈夫！"
+    show blacksmith_wife_img sad at left with dissolve
 
-    servant "昨晚他去森林里取木炭，就再也没有回来……"
+    blacksmith_wife "领主大人！求您救救我丈夫！"
 
-    servant "我去找他，只看到他的斧头扔在地上，还有……这个。"
+    blacksmith_wife "昨晚他去森林里取木炭，就再也没有回来……"
+
+    blacksmith_wife "我去找他，只看到他的斧头扔在地上，还有……这个。"
 
     "她颤抖着递给你一块布条。上面画着那个你已经见过的符号——倒置的百合花。"
 
     "但这一次，百合花旁边多了一行小字：'沉默者将得到庇护。'"
 
+    hide blacksmith_wife_img
+    show player_char_img at left with dissolve
     player "沉默者将得到庇护……这是什么意思？"
 
     "铁匠的妻子摇着头，泣不成声。"
+
+    hide blacksmith_wife_img with dissolve
 
     menu:
         "安慰她并承诺会找回她丈夫":
             $ change_stat("loyalty", 5)
             $ change_stat("reputation", 5)
             player "我会找到你的丈夫。在那之前，你和孩子搬到城堡里来住。我派人保护你们。"
-            servant "谢谢领主大人……谢谢您……"
+            hide player_char_img
+            show blacksmith_wife_img at left with dissolve
+            blacksmith_wife "谢谢领主大人……谢谢您……"
             "你叫来一个侍女，安排铁匠的妻子住下。"
             "然后你走到窗前，看着远处的森林。"
             "那片浓密的绿色里，藏着什么秘密？"
 
         "仔细询问铁匠失踪前的异常情况":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
+            hide blacksmith_wife_img
+            show player_char_img at left with dissolve
             player "在你丈夫失踪之前，他有没有提到什么异常的事？有没有见过什么陌生人？"
-            servant "他……他前几天确实说过一件怪事。"
-            servant "他说，有个穿黑斗篷的人来铁匠铺，不打东西，只是站在那里看。"
-            servant "他问那人要什么，那人说：'很快你就会知道。'"
-            servant "然后就走了。第二天……他就不见了。"
+            hide player_char_img
+            show blacksmith_wife_img at left with dissolve
+            blacksmith_wife "他……他前几天确实说过一件怪事。"
+            blacksmith_wife "他说，有个穿黑斗篷的人来铁匠铺，不打东西，只是站在那里看。"
+            blacksmith_wife "他问那人要什么，那人说：'很快你就会知道。'"
+            blacksmith_wife "然后就走了。第二天……他就不见了。"
+            hide blacksmith_wife_img
+            show player_char_img at left with dissolve
             player "黑斗篷的人……长什么样？"
-            servant "看不清脸。戴着兜帽。但他的手上——我丈夫说——他的手上有一个纹身。"
+            hide player_char_img
+            show blacksmith_wife_img at left with dissolve
+            blacksmith_wife "看不清脸。戴着兜帽。但他的手上——我丈夫说——他的手上有一个纹身。"
+            hide blacksmith_wife_img
+            show player_char_img at left with dissolve
             player "什么样的纹身？"
-            servant "一朵……花。"
+            hide player_char_img
+            show blacksmith_wife_img at left with dissolve
+            blacksmith_wife "一朵……花。"
             "你和雷恩交换了一个眼神。"
 
         "命令雷恩立刻搜索森林":
             $ change_stat("power", 10)
+            hide blacksmith_wife_img
+            show player_char_img at left with dissolve
             player "雷恩！带二十个人，立刻搜索北边的森林。重点搜查铁匠最后出现的地方。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "是！"
             "雷恩带着一队人马飞奔而去。"
             "你等了三个小时。"
@@ -172,22 +265,30 @@ label ch3_strange_signs:
             captain "有人在那里建了一个临时营地。至少住过二十个人。"
             captain "但我们到的时候，人已经撤走了。只留下了一些痕迹——和这个。"
             "他递给你一块金属牌。上面刻着倒置的百合花，背面写着一个数字——'7'。"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "七……和失踪的人数一样。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "还有一件事。营地周围有车轮印。他们往南走了。"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "往南？南面是……"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "冯·哈根男爵的领地。"
             "一切似乎有了一个方向。"
-            $ change_stat("intrigue", 15)
+            $ change_stat("reputation", 8)
 
     "你站在城墙上，看着夕阳缓缓沉入地平线。"
 
-    "一种前所未有的紧迫感涌上心头。"
+    "你的手不自觉地攥紧了城垛的石头，指节发白。"
 
     "这不是普通的犯罪事件。这是有组织、有目的的行动。"
 
     "而暗百合——不管它是什么——已经把手伸进了你的领地。"
 
-    "你深吸一口气，决定回大厅。有些事情需要和奥尔德里克商量。"
+    "你决定回大厅。有些事情需要和奥尔德里克商量。"
 
     ## --- 与奥尔德里克的对话 ---
 
@@ -196,21 +297,29 @@ label ch3_strange_signs:
 
     "回到大厅，你发现奥尔德里克已经在等你了。"
 
-    show aldric_img at center with dissolve
+    show aldric_img at left with dissolve
     $ unlock_gallery("aldric")
 
     aldric "听说又有人失踪了？"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "你消息倒是灵通。"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "领地里发生的事，没有我不知道的。"
 
     "奥尔德里克的语气一如既往地自信，但你注意到他的眼神中多了一丝忧虑。"
 
     aldric "年轻的领主，我有些话想跟你说。关于你的父亲。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "父亲？"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "你父亲晚年的行为……很异常。"
 
     "老骑士在椅子上坐下，似乎在回忆往事。"
@@ -219,8 +328,12 @@ label ch3_strange_signs:
 
     aldric "他变得越来越多疑，甚至不让任何人碰他书桌上的东西。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "你觉得他在隐瞒什么？"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "不只是隐瞒。他在……准备什么。"
 
     aldric "有一次，我半夜路过书房，听到他在自言自语。他说——"
@@ -229,8 +342,12 @@ label ch3_strange_signs:
 
     "你的心猛然一缩。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "他说的'他们'是谁？"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "我不知道。我问过他，但他只是摇摇头，说：'你不需要知道。知道得越少，越安全。'"
 
     "奥尔德里克看着你，目光深邃。"
@@ -240,24 +357,44 @@ label ch3_strange_signs:
     menu:
         "请奥尔德里克告诉你所有他知道的":
             $ change_rel("rel_aldric", 10)
-            $ change_stat("intrigue", 10)
+            $ change_stat("loyalty", 5)
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "告诉我，奥尔德里克。我需要知道。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "你父亲在去世前的最后几个月，频繁与一些陌生人见面。那些人总是深夜来，天亮前走。"
             aldric "我只见过他们的身影——都穿着深色斗篷，脸上蒙着面纱。"
             aldric "有一次，我在走廊上撞见了其中一个人。他的斗篷上绣着一朵百合花。"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "暗百合……"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "你也听说了那个名字？"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "今早雷恩告诉我的。领地内到处出现这个组织的符号。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "那么事情比我想象的更严重了。"
             aldric "你父亲可能不只是和暗百合有联系——他可能就是暗百合的一部分。"
 
         "问奥尔德里克为什么现在才说这些":
             $ change_rel("rel_aldric", -5)
-            $ change_stat("intrigue", 5)
+            $ change_stat("power", 5)
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "你早就知道这些，为什么到现在才告诉我？"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "因为你父亲让我发誓保密。他说，除非你主动问起，否则不要提起任何关于暗百合的事。"
             aldric "他说，如果你没有注意到那些迹象，说明时机还没到。"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "而现在，符号到处出现，人在失踪——时机到了？"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "恐怕是的。"
 
         "保持沉默，让奥尔德里克继续说":
@@ -265,7 +402,7 @@ label ch3_strange_signs:
             "你没有说话，只是安静地看着老骑士。"
             "奥尔德里克理解了你的意思。"
             aldric "你和你父亲一样，善于倾听。好吧，让我把我知道的都告诉你。"
-            aldric "暗百合不是普通的秘密组织。它有很长的历史——据说可以追溯到王国建立之初。"
+            aldric "暗百合不是普通的秘密组织。它有很长的历史——据说有两百多年了。"
             aldric "你父亲晚年最大的变化，就是他开始相信一件事——"
             aldric "当今王后的摄政权，是建立在谎言之上的。"
 
@@ -273,11 +410,15 @@ label ch3_strange_signs:
 
     aldric "他一定留下了什么东西给你。他太精明了，不可能什么都没留下。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "我之前已经翻过书房了。"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "你翻过书架后面的暗格吗？你检查过地板下面吗？你看过壁炉里的每一块砖吗？"
 
-    "你沉默了。显然，你之前的搜查太粗糙了。"
+    "显然，你之前的搜查太粗糙了。"
 
     aldric "你父亲有一个习惯——把最重要的东西藏在最不起眼的地方。"
 
@@ -285,11 +426,17 @@ label ch3_strange_signs:
 
     aldric "你不能按常理来找。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "你了解他比我多得多。"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "那是因为我跟了他三十年。从他还是个毛头小伙子的时候就开始了。"
 
-    "奥尔德里克的眼中闪过一丝怀念的光。"
+    "奥尔德里克的目光落在墙上那把旧剑上，声音放轻了。"
+
+    show aldric_img sad at left with dissolve
 
     aldric "他年轻时和你很像——倔强、勇敢，有一股不服输的劲头。"
 
@@ -297,8 +444,12 @@ label ch3_strange_signs:
 
     aldric "到了最后几年，他几乎不和任何人说心里话了。连我都被排斥在外。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "你不怨他？"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "怨？不。我理解他。"
 
     aldric "当一个人背负着能够颠覆整个王国的秘密时，他不敢信任任何人，是合情合理的。"
@@ -307,12 +458,20 @@ label ch3_strange_signs:
 
     aldric "去书房吧，仔细找。你父亲藏东西的手段，可不是随便翻翻就能发现的。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "奥尔德里克。"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "什么？"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "谢谢你告诉我这些。"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "别谢我。把真相找出来就行。你父亲值得一个交代。"
 
     hide aldric_img with dissolve
@@ -321,27 +480,39 @@ label ch3_strange_signs:
 
     "你正要去书房，一个侍卫急匆匆地跑来。"
 
+    show soldier_generic_img at left with dissolve
     soldier "大人！城门口来了一个人，说是冯·哈根男爵的信使。"
 
+    hide soldier_generic_img
+    show player_char_img at left with dissolve
     player "男爵的信使？他来做什么？"
 
+    hide player_char_img
+    show soldier_generic_img at left with dissolve
     soldier "他说有一封男爵的亲笔信，必须当面交给您。"
 
     menu:
         "接见信使":
             "你来到城门口。"
             "信使是一个中年男人，穿着男爵家族的制服——暗绿色配银边。"
+            hide soldier_generic_img
+            show servant_generic_img at left with dissolve
             servant "领主大人。冯·哈根男爵让我转交此信，并等候您的回复。"
             "你打开信封。"
             "信是男爵的手笔——笔迹生硬，措辞傲慢。"
             "'致艾登堡领主：近闻贵领地出现一些……不安定因素。失踪的农民、奇怪的符号——这些事在我的领地上也有发生。本男爵提议共同调查此事。如蒙允诺，请遣使者至我堡商谈。——冯·哈根男爵。'"
             "你反复读了两遍，嘴角露出一丝冷笑。"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "共同调查？他以为我会相信这种鬼话。"
-            "如果男爵真的和暗焰有关，那这封信就是试探——看你知道多少，看你会怎么反应。"
+            if darkflame_known:
+                "如果男爵真的和暗焰有关，那这封信就是试探——看你知道多少，看你会怎么反应。"
+            else:
+                "如果男爵真的在背后搞什么名堂，那这封信就是试探——看你知道多少，看你会怎么反应。"
 
             menu:
                 "写一封客气但模糊的回信":
-                    $ change_stat("intrigue", 10)
+                    $ change_stat("intrigue", 5)
                     $ change_rel("rel_baron", 5)
                     player "替我回信：领主对男爵的提议深表感谢，愿择日商议。"
                     "你没有答应，也没有拒绝。给自己留了回旋的余地。"
@@ -353,7 +524,7 @@ label ch3_strange_signs:
                     "信使的脸色有些难看，但他恭敬地接过回信离开了。"
 
                 "接受邀请——借机探查男爵的意图":
-                    $ change_stat("intrigue", 15)
+                    $ change_stat("intrigue", 8)
                     $ change_rel("rel_baron", 5)
                     player "回信：本领主将于三日后遣使者前往。望男爵以礼相待。"
                     "你不会亲自去——但派一个可靠的人去打探虚实，是个好主意。"
@@ -361,8 +532,12 @@ label ch3_strange_signs:
         "拒绝接见，让信使把信留下":
             $ change_stat("power", 5)
             player "让他把信留在城门口。我不见他。"
+            hide player_char_img
+            show soldier_generic_img at left with dissolve
             soldier "是，大人。"
             "不久后，侍卫把信拿来了。你看过内容后，把信扔进壁炉。"
+            hide soldier_generic_img
+            show player_char_img at left with dissolve
             player "男爵的邀请……不值一提。"
 
     "处理完男爵的事后，你终于可以去书房了。"
@@ -375,20 +550,30 @@ label ch3_strange_signs:
 
     menu:
         "上前盘问那个侍从":
-            $ change_stat("intrigue", 10)
             $ change_stat("power", 5)
+            $ change_stat("reputation", 5)
             "你走到那个侍从面前。"
             player "你是谁？我没见过你。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "回、回领主大人，小人是新来的。管事安排我在大厅服侍。"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "新来的？谁批准雇用你的？"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "是……是艾琳娜小姐。"
             "你记住了这个人的脸。他的眼神太躲闪了，不像一个普通的侍从。"
             "你决定暗中留意他。"
 
         "假装没看见，但暗中让人跟踪他":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             "你若无其事地走出大厅，但在走廊上低声吩咐一个卫兵。"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "看到大厅里那个新来的侍从了吗？跟着他，记录他的一切行踪。不要被发现。"
+            hide player_char_img
+            show soldier_generic_img at left with dissolve
             soldier "是，大人。"
 
         "不在意，继续去书房":
@@ -411,7 +596,7 @@ label ch3_fathers_study:
 
     "书房的布局你已经很熟悉了——一张大书桌、三面墙的书架、一个壁炉、一幅父亲的画像。"
 
-    "你深吸一口气，开始系统性的搜查。"
+    "你拢了拢衣领，开始系统性的搜查。"
 
     "首先，书桌。"
 
@@ -425,7 +610,7 @@ label ch3_fathers_study:
 
     menu:
         "仔细检查第三个抽屉的底部":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
             "你把抽屉完全抽出来，翻转过来。"
             "果然——底板是双层的。你用指甲撬开一个缝隙，发现里面有一张折叠的羊皮纸。"
             "上面画着一幅图——看起来像是城堡的地下结构图。"
@@ -460,6 +645,7 @@ label ch3_fathers_study:
 
     "折角所在的那一行写着：'第三，从第七栏起。'"
 
+    show player_char_img at left with dissolve
     player "这是……线索？"
 
     "你思考了一会儿。第三面墙，第七本书？"
@@ -536,13 +722,25 @@ label ch3_fathers_study:
 
     player "父亲……"
 
-    "你深吸一口气，继续翻看，逐页破译。"
+    "你继续翻看，逐页破译。"
 
     "『第十二年。暗百合的人又来了。这次带来的是一个女人——她说她是先王的侍女，亲眼看到了遗诏被篡改的过程。教会大主教费雷恩亲手销毁了原件，用假遗诏取而代之。伊莎贝拉成了摄政王后，而本应继承摄政权的……是我。』"
 
-    "你的手在颤抖。"
+    if testament_forged_known:
+        "日记的内容印证了你已经知道的事实。但亲眼看到父亲的笔迹写下这些，感觉完全不同。"
 
-    player "父亲……他本该是摄政者？"
+        if father_was_regent_known:
+            player "所以主教说的都是真的……父亲亲手记录了这一切。"
+        else:
+            player "父亲……他本该是摄政者？"
+    else:
+        "你的手在颤抖。"
+
+        player "父亲……他本该是摄政者？"
+
+    $ testament_forged_known = True
+    $ ferein_role_known = True
+    $ father_was_regent_known = True
 
     "『第十三年。我决定保密。如果这个真相泄露，会引发内战。我不想让无辜的人流血。但暗百合的人越来越急切——他们说王后的统治越来越残暴，必须有人站出来。』"
 
@@ -564,15 +762,21 @@ label ch3_fathers_study:
 
     "你的拳头不自觉地握紧了。"
 
-    "『第十四年，夏。我发现了一件更可怕的事。先王的死……可能也不是自然死亡。有人在他的酒中下了慢性毒药——暮色之露。而最有嫌疑的人，就是现在的王后。暮色之露是一种无色无味的毒药，需要连续服用数月才会致命。受害者看起来像是慢性病死亡，几乎无法被发现。但暗百合的炼金术士在先王的遗物中检测到了残留。』"
+    "『第十四年，夏。我发现了一件更可怕的事。先王的死……可能也不是自然死亡。有人在他的酒中下了慢性毒药——暮色之露。而最有嫌疑的人，就是现在的王后。暮色之露是一种无色无味的毒药，需要连续服用数月乃至数年才会致命——剂量越低，耗时越长，也越难被察觉。受害者看起来像是慢性病死亡，几乎无法被发现。但暗百合的炼金术士在先王的遗物中检测到了残留。』"
+
+    if queen_poisoned_king_known:
+        "你已经从别处得知了先王被毒杀的真相——但日记中的详细记录让这一切更加触目惊心。父亲亲自调查了毒药的来源和剂量。"
+
+        "这种冷血和耐心，让你再次不寒而栗。"
+    else:
+        "你感觉血液都要凝固了。"
+
+        "连续服用数月……先王在不知不觉中被自己的妻子毒杀了？"
+
+        "这种冷血和耐心，让你不寒而栗。"
 
     $ poison_evidence = True
-
-    "你感觉血液都要凝固了。"
-
-    "连续服用数月……先王在不知不觉中被自己的妻子毒杀了？"
-
-    "这种冷血和耐心，让你不寒而栗。"
+    $ queen_poisoned_king_known = True
 
     "『第十四年，秋。我派了一个信任的人去王都调查暮色之露的来源。他查到了——毒药是教会的炼金术士格温制造的。格温是费雷恩大主教的人。一切线索都指向教会——但教会是主谋还是工具？我还不确定。』"
 
@@ -586,6 +790,8 @@ label ch3_fathers_study:
 
     "『第十五年，夏。'影'来见我。她说暗百合内部出现了严重的裂痕。一个叫'暗焰'的派系被王后收买了，正在从内部瓦解组织。她怀疑暗焰的人就在我身边。她让我加倍小心。我问她暗焰的首领是谁。她说——'一个你认识的人。一个你不会怀疑的人。'我到死也没能查出那个人是谁。』"
 
+    $ darkflame_known = True
+
     "你盯着这段话。'一个你认识的人。一个你不会怀疑的人。'"
 
     "是谁？男爵？主教？还是……"
@@ -596,7 +802,10 @@ label ch3_fathers_study:
 
     "『第十五年，秋。我感觉自己的身体不太对。最近总是头晕，食欲不振，晚上盗汗。我怀疑……但我不敢验证。如果我真的被下了毒——暮色之露——那我还有多少时间？』"
 
-    "你的呼吸急促起来。"
+    if father_death_known:
+        "你早已从暗百合那里得知了父亲的死因。但读到父亲亲笔写下的这些文字——那种孤立无援的绝望——比任何转述都更加真实。"
+    else:
+        "你的呼吸急促起来。"
 
     "『第十五年，冬。我已经确定了。我的症状和先王当年的症状完全一致。有人在我的食物或酒中下了暮色之露。我不知道是谁——厨房？酒窖？还是某个我信任的人？我没有时间去追查了。我只能把最后的线索留给我的孩子。』"
 
@@ -613,7 +822,10 @@ label ch3_fathers_study:
 
     "父亲不只是知道暗百合——他与暗百合有深入的联系。"
 
-    "先王的遗诏被篡改。父亲本该是摄政者。先王可能是被毒杀的。"
+    if not testament_forged_known or not father_was_regent_known:
+        "先王的遗诏被篡改。父亲本该是摄政者。先王可能是被毒杀的。"
+    else:
+        "日记中的那些真相在脑海里翻涌——每一条都触目惊心。"
 
     "而父亲自己的死……"
 
@@ -639,7 +851,7 @@ label ch3_fathers_study:
 
     menu:
         "仔细观察壁炉的装饰图案":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
             "你退后一步，重新审视壁炉。"
             "壁炉的上方有一排装饰性的浮雕——六朵花。"
             "六朵花……向左三次，向右两次，再向左一次。"
@@ -654,7 +866,7 @@ label ch3_fathers_study:
             $ secret_passage_found = True
 
         "尝试按照'左三右二左一'的顺序敲击石砖":
-            $ change_stat("intrigue", 5)
+            $ change_stat("reputation", 5)
             "你沿着壁炉的石砖，按照指令的顺序敲击。"
             "左边第一块——没反应。左边第二块——没反应。左边第三块——"
             "你的指节碰到石砖时，感觉这块砖有些松动。"
@@ -668,11 +880,16 @@ label ch3_fathers_study:
             $ change_stat("power", 5)
             "你双手按在壁炉上，使出全力推动。"
             "石头纹丝不动。"
-            "你退后一步，擦了擦汗。蛮力不行，你需要用脑子。"
-            "你重新检查壁炉的每一个细节，终于注意到了上方的花朵浮雕。"
-            "六朵花——对应着那串指令。"
-            "旋转完毕后，壁炉缓缓打开。"
-            $ secret_passage_found = True
+            "你不甘心，又狠狠地撞了两下。"
+            "壁炉内部传来一声沉闷的'咔嗒'——但不是打开的声音。"
+            "是什么东西卡住了。"
+            "你试了试壁炉上方的花朵浮雕，但无论怎么旋转，它们都纹丝不动。"
+            "机关锁死了。"
+            player "该死……"
+            "父亲留下的线索到此中断了。壁炉后面的秘密，你暂时无法触及。"
+            "你只能另寻他法。"
+            $ secret_passage_found = False
+            jump ch3_no_passage
 
     "一股陈旧潮湿的空气扑面而来。"
 
@@ -682,13 +899,13 @@ label ch3_fathers_study:
 
     menu:
         "立刻进入":
-            $ change_stat("intrigue", 10)
+            $ change_stat("power", 5)
             "你毫不犹豫地踏上了石阶。"
             "石壁上爬满了苔藓，空气中弥漫着霉味。"
             "你的蜡烛在通道中投下摇曳的影子。"
 
         "先做好准备再进入":
-            $ change_stat("intrigue", 5)
+            $ change_stat("faith", 5)
             $ change_stat("power", 5)
             "你从墙上取下一把短剑，又多拿了几根蜡烛。"
             "在书桌上留了一张纸条——以防万一。"
@@ -698,6 +915,8 @@ label ch3_fathers_study:
             $ change_rel("rel_aldric", 10)
             $ change_stat("loyalty", 5)
             "你决定不独自冒险。你快步走出书房，找到了奥尔德里克。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "密道？我就知道你父亲藏了什么。"
             aldric "走吧，我和你一起去。"
             "有老骑士在身边，你安心了不少。"
@@ -711,6 +930,7 @@ label ch3_dark_lily_clues:
 
     $ set_mood("mystery")
     $ clear_weather()
+    $ dark_lily_exists_known = True
 
     "石阶向下延伸了大约三十步，然后变成了一条水平的隧道。"
 
@@ -756,7 +976,7 @@ label ch3_dark_lily_clues:
 
     "或者……下毒者。"
 
-    "你深吸一口气，继续前行。"
+    "你继续前行。"
 
     "隧道在前方分成了两条岔路。"
 
@@ -766,7 +986,7 @@ label ch3_dark_lily_clues:
 
     menu:
         "走左边——那边的墙壁上有更多刻文":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
             "你选择了左边的通道。"
             "这条通道更窄，你不得不侧身才能通过。"
             "但墙壁上的刻文越来越密集，仿佛在讲述一个完整的故事。"
@@ -776,6 +996,7 @@ label ch3_dark_lily_clues:
             "徽章背面刻着两个字——'信使'。"
             "还有一张羊皮纸，上面画着一幅地图——标注了从城堡到集市的一条秘密路线。"
             "地图上有一个地点被画了圈，旁边写着：'每月望日，子时。'"
+            show player_char_img at left with dissolve
             player "每月望日……今天是什么日子？"
             "你在心里算了算。今天正好是望日。"
             "这是命运的安排，还是某种巧合？"
@@ -816,7 +1037,7 @@ label ch3_dark_lily_clues:
 
     scene bg market with dissolve
     $ unlock_gallery("bg_market")
-    $ play_music("audio/music/great_hall.ogg", fadein=2.0)
+    $ play_music("audio/music/market_bustle.ogg", fadein=2.0)
 
     "傍晚时分的集市热闹非凡。"
 
@@ -840,41 +1061,59 @@ label ch3_dark_lily_clues:
 
     "店铺的招牌上写着——'百合草药'。"
 
+    show player_char_img at left with dissolve
     player "百合草药……"
 
     "你推门而入。"
 
     "一个老妇人坐在柜台后面，正在研磨什么东西。她没有抬头。"
 
+    show servant_generic_img at left with dissolve
     servant "客人要什么？治感冒？补身子？还是……别的？"
 
     "你注意到她的围裙上绣着一朵百合花——不是倒置的，但你直觉告诉你这不是巧合。"
 
     menu:
         "出示在密道中找到的银质徽章":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             "你从怀中取出那枚银质徽章，放在柜台上。"
             "老妇人终于抬起头来。她的眼睛在看到徽章的一瞬间猛然睁大。"
             servant "你……你是怎么得到这个的？"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "我父亲留给我的。"
             "老妇人盯着你看了很久。然后她慢慢站起身，走到门口，把'营业中'的牌子翻成了'已打烊'。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "跟我来。"
             "她推开了柜台后面的一扇暗门。"
 
         "提起暗百合的名字":
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "我不是来买药的。我想找暗百合。"
             "老妇人的研磨动作停了一秒，然后恢复了正常。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "暗百合？没听说过。您是在说花吗？百合花我们有卖。"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "你知道我说的不是花。"
             "你直视她的眼睛。"
             player "我是艾登堡的领主。我父亲和暗百合有联系。他已经不在了。现在，我需要找到他们。"
             "老妇人沉默了片刻。然后她锁上了门。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "……你确实长得像老领主。跟我来。"
 
         "假装普通客人，暗中观察":
             $ change_stat("intrigue", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "帮我配一副安神药。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "好的。需要加蜂蜜吗？"
             "你一边等她配药，一边暗中打量这间店铺。"
             "柜台后面的架子上摆满了各种草药，但有一个角落被布帘遮住了。"
@@ -883,7 +1122,7 @@ label ch3_dark_lily_clues:
             "你在暗处等了一个小时。"
             "终于，一个蒙面人从店铺的侧门走了出来。"
             "你悄悄跟了上去。"
-            "蒙面人在小巷中七拐八拐，最终消失在一栋废弃建筑的后门里。"
+            "蒙面人在小巷中七拐八拐，最终闪进了一栋废弃建筑的后门——门在身后无声合上。"
             "你记住了这个地点。明天晚上，你要再来。"
             jump ch3_study_return
 
@@ -899,18 +1138,30 @@ label ch3_dark_lily_clues:
 
     servant "老领主的孩子？"
 
+    hide servant_generic_img
+    show player_char_img at left with dissolve
     player "是。我是艾登堡的新领主。"
 
+    hide player_char_img
+    show servant_generic_img at left with dissolve
     servant "你来这里想要什么？"
 
+    hide servant_generic_img
+    show player_char_img at left with dissolve
     player "真相。"
 
     "男人和女人交换了一个眼神。"
 
+    hide player_char_img
+    show servant_generic_img at left with dissolve
     servant "在得到真相之前，你需要通过一个考验。"
 
+    hide servant_generic_img
+    show player_char_img at left with dissolve
     player "什么考验？"
 
+    hide player_char_img
+    show servant_generic_img at left with dissolve
     servant "信任的考验。"
 
     "男人从桌上拿起一杯酒，递到你面前。"
@@ -919,7 +1170,7 @@ label ch3_dark_lily_clues:
 
     menu:
         "毫不犹豫地喝下":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             $ change_rel("rel_lily", 10)
             "你接过酒杯，一饮而尽。"
             "酒液入喉，带着一股苦涩的草药味。你的视线模糊了一瞬，然后恢复了清明。"
@@ -928,12 +1179,20 @@ label ch3_dark_lily_clues:
             servant "我是暗百合的联络人。你可以叫我'桥'。"
 
         "先闻一闻":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
             "你接过酒杯，凑近鼻子。"
             "一股浓烈的草药味。你认出了其中几种——薄荷、迷迭香……还有一种你不认识的味道。"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "这是什么？"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "一种古老的草药配方。无害。但它能让人暂时无法说谎。"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "真话药？"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "可以这么理解。喝了它，我们会问你几个问题。你的回答将决定你是否值得信任。"
             "你犹豫了一下，然后喝了下去。"
             $ change_rel("rel_lily", 5)
@@ -941,10 +1200,18 @@ label ch3_dark_lily_clues:
         "拒绝喝":
             $ change_stat("power", 10)
             $ change_rel("rel_lily", -5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "我不喝来路不明的东西。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "那你怎么证明你值得信任？"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "我来到这里，就是我的诚意。如果我想对付你们，可以带一队士兵来。"
-            "男人沉默了片刻。"
+            "他打量了你一番。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "……也有道理。那我们换一种方式。"
             servant "回答我三个问题。如果你的回答让我满意，我会带你见我们的首领。"
 
@@ -954,36 +1221,64 @@ label ch3_dark_lily_clues:
 
     menu:
         "为了查明父亲的死因":
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "我的父亲不是自然死亡。我要找出真相。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "……不错。你的目标很明确。"
 
         "为了对抗王后和教会":
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "如果父亲的日记所言属实，那王后和教会欠我一个交代。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "你想要复仇？"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "我想要正义。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "希望你能分清这两者的区别。"
 
         "为了保护领地和领民":
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "有人在暗中威胁我的领地。农民失踪，符号出现——我需要知道发生了什么。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "你关心的是领民……这很好。"
 
     servant "第二个问题——如果查出真相后，发现你必须与整个王国为敌，你怎么办？"
 
     menu:
         "为了真相，即使与世界为敌也在所不惜":
-            $ change_stat("intrigue", 5)
+            $ change_stat("faith", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "真相不应该被埋没。不管代价多大。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "你的勇气令人钦佩。但勇气和鲁莽之间只有一线之隔。"
 
         "我会寻找盟友，集聚力量，再做打算":
-            $ change_stat("intrigue", 10)
+            $ change_stat("loyalty", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "一个人对抗整个王国是愚蠢的。我会寻找志同道合的人。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "聪明的回答。你父亲当年也是这么说的。"
 
         "我会权衡利弊，选择对领地最有利的道路":
-            $ change_stat("intrigue", 5)
+            $ change_stat("wealth", 5)
             $ change_stat("power", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "真相重要，但我的领民更重要。我会根据情况做出判断。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "务实。这是领主应有的品质。"
 
     servant "最后一个问题——你信任你身边的人吗？"
@@ -991,17 +1286,29 @@ label ch3_dark_lily_clues:
     menu:
         "我只信任自己":
             $ change_stat("power", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "在这个世界上，只有自己是可靠的。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "你的谨慎……有些过头了。但也许你是对的。"
 
         "我信任奥尔德里克和雷恩":
             $ change_stat("loyalty", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "有几个人是我可以依靠的。但信任也有限度。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "有限度的信任……这倒是健康的态度。"
 
         "我正在学习信任谁":
-            $ change_stat("intrigue", 5)
+            $ change_stat("reputation", 5)
+            hide servant_generic_img
+            show player_char_img at left with dissolve
             player "信任是需要时间验证的。我还在观察。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
             servant "最好的回答。你父亲花了十年才开始信任我们。"
 
     servant "很好。你通过了。"
@@ -1010,9 +1317,185 @@ label ch3_dark_lily_clues:
 
     "你点了点头，转身离开。"
 
-    "走出草药铺时，夜空中星辰满布。你深吸一口气，感觉自己正一步步踏入一个不可逆转的深渊。"
+    "走出草药铺时，夜空中星辰满布。你抬头看了一眼天，感觉自己正一步步踏入一个不可逆转的深渊。"
 
     jump ch3_study_return
+
+## ============================================================
+## 蛮力路线 — 密道被锁死，走替代路线
+## ============================================================
+
+label ch3_no_passage:
+
+    "壁炉后的秘密暂时无法触及。但你还有父亲的日记。"
+
+    "你重新坐回书桌前，继续破译那本密码日记。"
+
+    "虽然无法进入密道，但日记中的线索仍然指向了一个地方——"
+
+    "『如果壁炉的机关无法打开，不要绝望。去集市东北角的百合草药铺。那里是暗百合的一个联络点。铺子的老妇人叫「根」——出示你的家族印戒，她会认出你。』"
+
+    show player_char_img at left with dissolve
+    player "集市的草药铺……"
+
+    "父亲果然留了后手。即使一条路断了，还有另一条路。"
+
+    "但没有密道中的信使徽章，你该如何证明自己的身份？"
+
+    "你翻遍了书房的暗格，在一个上锁的小铁匣里找到了一封父亲的亲笔信——"
+
+    "信封上写着：'交给根'。"
+
+    $ collect_item("letter_father_2")
+
+    "你把信贴身收好。"
+
+    "你叫来了一个信任的侍女，让她帮你找一套普通人的衣服——粗布衬衫、麻布裤子、一件带兜帽的旧斗篷。"
+
+    "穿上后，镜子里的人像一个落魄的旅行者。脸上的疤痕反而增添了几分风霜感。"
+
+    player "应该不会被认出来。"
+
+    "你把短剑藏在斗篷里，从城堡侧门溜了出去。"
+
+    scene bg market with dissolve
+    $ unlock_gallery("bg_market")
+    $ play_music("audio/music/great_hall.ogg", fadein=2.0)
+
+    "傍晚的集市热闹非凡。叫卖声、锤击声、笑声——汇成一片喧嚣。"
+
+    "没有密道中的地图指引，你只能凭日记中的描述去找。"
+
+    "东北角。百合草药。"
+
+    "你在集市中穿行，留意着每一个可能的线索。"
+
+    "一个卖水果的摊贩偷偷往几个水果上画了百合花标记。"
+
+    "一个修鞋匠的旗帜角落绣着一朵几乎看不见的百合花。"
+
+    "你沿着这些隐秘的标记，最终来到集市东北角的一条幽暗小巷。"
+
+    "一家不起眼的草药铺还亮着灯。招牌上写着——'百合草药'。"
+
+    show player_char_img at left with dissolve
+    player "百合草药……"
+
+    "你推门而入。"
+
+    "一个老妇人坐在柜台后面，正在研磨什么东西。她没有抬头。"
+
+    show servant_generic_img at left with dissolve
+    servant "客官买什么药？"
+
+    menu:
+        "出示父亲的亲笔信":
+            hide servant_generic_img
+            show player_char_img at left with dissolve
+            player "这是我父亲留给你的。"
+            "老妇人接过信，仔细看了看信封上的笔迹。"
+            "她的手微微颤抖。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
+            servant "你是……老领主的孩子？"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
+            player "是的。"
+            "老妇人盯着你看了很久。然后她站起身，走到门口，翻过了'营业中'的牌子。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
+            servant "跟我来。"
+
+        "出示家族印戒":
+            "你从怀中取出那枚金鹰印戒。"
+            "老妇人的目光落在印戒上，瞳孔骤然收缩。"
+            servant "金鹰……你是艾登堡的继承人？"
+            hide servant_generic_img
+            show player_char_img at left with dissolve
+            player "我父亲让我来找你。"
+            "老妇人的目光在戒指和你的脸之间来回移动。然后她走到门口翻过了牌子。"
+            hide player_char_img
+            show servant_generic_img at left with dissolve
+            servant "跟我来。"
+
+    "她带你穿过后院，来到一间隐蔽的地下室。"
+
+    "和密道相比，这里简陋得多。但墙上挂着一幅百合花旗帜，桌上堆满了卷轴和信件。"
+
+    servant "你父亲是我们最重要的盟友之一。他的死……是一个巨大的损失。"
+
+    hide servant_generic_img
+    show player_char_img at left with dissolve
+    player "我在他的日记中得知了暗百合的存在。但壁炉后的机关被我弄坏了。"
+
+    hide player_char_img
+    show servant_generic_img at left with dissolve
+    servant "机关锁死了？"
+
+    "老妇人叹了口气。"
+
+    servant "那条密道是你父亲花了好几年修建的。但也罢——密道只是工具，重要的是你来了。"
+
+    servant "我叫'根'。暗百合在艾登堡的联络人。"
+
+    servant "你父亲留下了太多未完成的事。而你的敌人，不会给你太多时间。"
+
+    servant "三天后的子时，来城外的废弃磨坊。我们的首领会亲自见你。"
+
+    "你点了点头，转身离开。"
+
+    "走出草药铺时，夜空中星辰满布。虽然没有找到密道，但你找到了暗百合的人。"
+
+    "也许这条路更难走。不过，你不是一个人。"
+
+    jump ch3_study_return_no_passage
+
+label ch3_study_return_no_passage:
+
+    scene bg study with dissolve
+    $ unlock_gallery("bg_study")
+    $ play_music("audio/music/castle_calm.ogg", fadein=2.0)
+
+    "回到城堡后，你把今天的发现整理了一遍。"
+
+    "父亲的密码日记、集市上的暗百合联络人——"
+
+    "虽然壁炉后的密道被锁死了，但你仍然找到了通往真相的道路。"
+
+    "你在书桌上铺开一张大羊皮纸，开始画线索图。"
+
+    "中心写着'父亲之死'。"
+
+    "'暗百合'——父亲的盟友，草药铺是联络点。"
+    "'教会'——费雷恩篡改遗诏，马修斯可能知情。"
+    "'王后'——最大的嫌疑人。"
+    "'冯·哈根男爵'——行为可疑。"
+
+    "你坐在书桌前，继续翻看日记。"
+
+    "随着破译的深入，一个令人不安的事实浮出水面——父亲反复提到一个他称之为'影'的人。"
+
+    "『影今天又来了。她带来了一个惊人的消息——教会大主教费雷恩在去年已经秘密去世了。接任者是他的学生马修斯。但马修斯并不知道篡改遗诏的全部真相。』"
+
+    "『影的真实身份我始终不知道。她从不摘下面纱。但她的声音很年轻——也许三十出头。』"
+
+    "『影最后一次来见我是在三个月前。她说她感觉到了危险。如果她失去联系，让我去百合草药铺找根。』"
+
+    show player_char_img at left with dissolve
+    player "影……会是谁？"
+
+    "你继续翻看日记。后面的内容越来越沉重——"
+
+    "『我的身体每天都在衰弱。暮色之露的效果越来越明显了。我估计自己最多还有半年。』"
+
+    "你合上日记，揉了揉疲惫的眼睛。"
+
+    "窗外，天已经泛白了。"
+
+    player "父亲，你放心。就算密道打不开，我也会找到真相。"
+
+    ## 跳过密道探索，直接进入暗百合总部
+    jump ch3_dark_lily_hq
 
 label ch3_study_return:
 
@@ -1072,11 +1555,12 @@ label ch3_study_return:
 
     "『今天把最后一封信藏好了。壁炉后面的密道入口是最后一道防线。我在六朵花的机关上增加了一个新的保护——如果有人用错误的顺序操作三次，机关会锁死，密道入口将永远无法打开。这是为了防止敌人暴力破解。我的孩子——如果你读到这里，请记住：向左三次，向右两次，再向左一次。千万不要搞错顺序。』"
 
+    show player_char_img at left with dissolve
     player "我……差点搞错了。"
 
-    "你回想起刚才操作壁炉机关的情景。如果你选择了蛮力推动而不是仔细观察花朵浮雕——"
+    "你回想起刚才操作壁炉机关的情景。父亲在机关上设置了保护——错误操作三次就会锁死。"
 
-    "也许机关会锁死，密道就永远打不开了。"
+    "幸好你选择了仔细观察，而不是蛮力破解。"
 
     "父亲的谨慎挽救了一切。"
 
@@ -1135,6 +1619,7 @@ label ch3_tunnel_exploration:
 
     "你辨认出了其中一个——倒置的百合花。"
 
+    show player_char_img at left with dissolve
     player "暗百合……是先王的七近卫之一。"
 
     "壁画的最后一幅让你心头一震——"
@@ -1155,7 +1640,7 @@ label ch3_tunnel_exploration:
 
     menu:
         "走左边——有光的地方":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
             "你走向光亮。"
             "通道拐了两个弯后，空气中的温度开始变化——不再阴冷，反而有一种干燥温暖的感觉。"
             "光亮越来越强。你灭掉火把，仅靠通道中的光线就足以看清路。"
@@ -1165,7 +1650,7 @@ label ch3_tunnel_exploration:
             "矿石的排列不是随机的——它们形成了精美的图案，像星空一样布满整个天花板。"
             "房间大约有大厅的一半大小。四面墙壁上安装着木质的架子，上面整齐地摆放着卷轴和书籍。"
             "房间中央有一个石质的圆台，上面也摆满了卷轴。"
-            "你环顾四周，深深吸了一口气。"
+            "你环顾四周，用力眨了下眼。"
             player "这是……一个地下图书馆？"
             "这里是一个资料库——暗百合的资料库。"
             "你走到圆台前，小心地拿起第一卷卷轴。"
@@ -1185,6 +1670,7 @@ label ch3_tunnel_exploration:
             "『影卫——忠于先王遗志，誓死守护遗诏。首领代号为'影'。影卫主张通过和平手段、情报战和外交施压来恢复正统。他们相信暴力只会带来更多的暴力。』"
             "『铁刺——主张武力推翻王后，恢复正统。首领代号为'棘'。铁刺认为和平手段太慢、太软弱。他们在边境地区招募退伍军人和不满的农民，组建了一支秘密武装。』"
             "『暗焰——已被王后收买，成为叛徒。首领代号为'烬'。暗焰的成员大多是被利诱或威胁而叛变的。他们的任务是从内部瓦解暗百合，并向王后提供关于暗百合行动的情报。』"
+            $ darkflame_known = True
             player "三个派系……"
             "你意识到，暗百合远比你想象的更复杂。它不是一个铁板一块的组织，而是充满了内部矛盾和分歧。"
             "你又翻了几卷——发现了一份暗焰叛徒的名单。"
@@ -1193,10 +1679,10 @@ label ch3_tunnel_exploration:
             "暗焰的首领'烬'——至今身份不明。"
             "难怪之前有人试图暗杀你——那可能是暗焰派系干的。"
             "你把几份重要的卷轴塞进怀中。这些资料太珍贵了，你需要仔细研读。"
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
 
         "走中间——有水声的地方":
-            $ change_stat("intrigue", 5)
+            $ change_stat("wealth", 5)
             "你走向水声。"
             "通道的地面开始变得湿滑。你不得不放慢脚步，紧贴墙壁行走。"
             "水声越来越大，从轻柔的滴答声变成了哗哗的流水声。"
@@ -1218,10 +1704,10 @@ label ch3_tunnel_exploration:
             "脚印有大有小——至少有三个不同的人经常使用这条水路。"
             "你记住了这个出口的位置。然后划船原路返回。"
             "这条水路可以在紧急情况下用来撤离——这是一个重要的发现。"
-            $ change_stat("intrigue", 5)
+            $ change_stat("wealth", 5)
 
         "走右边——追踪脚印":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             "你蹲下来仔细观察脚印。"
             "脚印很小——是女人的脚印。而且很新，可能就在几个小时前留下的。"
             "你心中一动。城堡里的女性并不多——侍女、厨娘、还有……艾琳娜。"
@@ -1236,7 +1722,7 @@ label ch3_tunnel_exploration:
             "你推了推石墙——它是活动的。"
             "你只推开了一条缝，透过缝隙向里面看——"
             "你看到了一个女人的身影。她坐在桌前，正在写什么东西。"
-            "壁炉的火光照亮了她的侧脸。"
+            "有人走过门口，桌上的烛焰横了一下，又直了回来。"
             "是艾琳娜。"
             "你瞪大了眼睛。"
             player "艾琳娜……她知道密道的存在？"
@@ -1246,7 +1732,7 @@ label ch3_tunnel_exploration:
             "你迅速退回通道，轻轻关上石墙。"
             "你的心在狂跳。"
             "你需要时间消化这个发现。"
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
 
     "你在密道中待了足足四个小时。"
 
@@ -1268,7 +1754,7 @@ label ch3_tunnel_exploration:
 
     "你心里一紧。这个时间来敲门——"
 
-    show elena_img at center with dissolve
+    show elena_img at left with dissolve
     $ unlock_gallery("elena")
 
     elena "领主大人，还没休息吗？"
@@ -1281,7 +1767,7 @@ label ch3_tunnel_exploration:
 
     "这不是一个普通侍从的习惯。这是受过训练的人才有的本能。"
 
-    "你看着艾琳娜的脸，心中涌起复杂的情绪。"
+    "你看着艾琳娜的脸，张了张嘴，又合上了。"
 
     "如果那些脚印真的是她的……如果她送出的信鸽是在向某人汇报你的行踪……"
 
@@ -1289,22 +1775,40 @@ label ch3_tunnel_exploration:
 
     menu:
         "直接质问她是否知道密道的存在":
-            $ change_stat("intrigue", 5)
+            $ change_stat("power", 5)
             $ change_rel("rel_elena", -5)
+            hide elena_img
+            show player_char_img at left with dissolve
             player "艾琳娜，你去过城堡下面的密道吗？"
             "她的表情没有变化——太过完美的平静。"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "密道？领主大人在说什么？"
+            hide elena_img
+            show player_char_img at left with dissolve
             player "不要装了。我发现了那些通道。"
-            "短暂的沉默。"
+            "远处传来钟声，连敲了三下。"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "……领主大人发现了多少？"
+            hide elena_img
+            show player_char_img at left with dissolve
             player "足够多了。"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "那我们需要谈谈。但不是现在——这里不安全。"
             elena "明天，在花园里。我会告诉你一切。"
 
         "若无其事地与她交谈，暗中观察":
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
+            hide elena_img
+            show player_char_img at left with dissolve
             player "在整理父亲的遗物。你有什么事？"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "侍卫长让我转告您，明天上午有几个村长来请愿。关于失踪的农民。"
+            hide elena_img
+            show player_char_img at left with dissolve
             player "好的，我知道了。"
             "你仔细观察她的表情。她看起来很正常——和往常一样温和、得体。"
             "但你注意到她的靴子上有一点潮湿的泥土。"
@@ -1315,10 +1819,20 @@ label ch3_tunnel_exploration:
             $ change_stat("intrigue", 8)
             player "艾琳娜，你听说过暗百合吗？"
             "她微微一怔。"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "暗百合？那是一个古老的传说，不是吗？"
+            hide elena_img
+            show player_char_img at left with dissolve
             player "传说？什么样的传说？"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "据说是先王时代的一个秘密组织。但那都是很久以前的事了。"
+            hide elena_img
+            show player_char_img at left with dissolve
             player "如果我告诉你，这个组织现在依然存在呢？"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "……那就很值得担忧了。领主大人是在哪里听到这些的？"
             "她的反应……有些奇怪。不像是惊讶，更像是——警惕。"
 
@@ -1338,14 +1852,15 @@ label ch3_tunnel_exploration:
 
 label ch3_dark_lily_hq:
 
-    $ play_music("audio/music/night_mystery.ogg", fadein=2.0)
+    $ ch3_dark_lily_visited = True
+    $ play_music("audio/music/conspiracy.ogg", fadein=2.0)
     scene black with dissolve
 
     "三天后。子时。"
 
     "你独自来到城外的废弃磨坊。"
 
-    "月光照在破旧的磨坊上，投下诡异的影子。"
+    "破旧的磨坊在黑暗中像一具骨架。夜风灌进破窗，发出呜呜的声响。"
 
     "你推开吱呀作响的木门。"
 
@@ -1368,7 +1883,7 @@ label ch3_dark_lily_hq:
 
     "大厅中央有一个圆形的平台，上面站着一个人。"
 
-    show lily_master_img at center with dissolve
+    show lily_master_img at left with dissolve
     $ unlock_gallery("lily_master")
 
     lily_master "欢迎来到暗百合的中枢。"
@@ -1379,12 +1894,20 @@ label ch3_dark_lily_hq:
 
     lily_master "我是暗百合的首领——第十七代影主。你可以叫我……影。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "三天前的考验，是你安排的？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "是。我需要确认你是否值得信任。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "我通过了？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "你来了，这就是答案。"
 
     "她走下平台，来到你面前。"
@@ -1411,12 +1934,20 @@ label ch3_dark_lily_hq:
 
     "你注意到角落里有几个稻草人，上面插满了飞刀——每一把都正中要害。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "你们有多少人？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "影卫在这个地区有大约八十人。整个王国范围内，大约三百人。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "三百人……对抗整个王国的军队？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "我们不需要对抗军队。我们的武器是情报、渗透和策略。三百人足以撬动一个王国。"
 
     "她带你走进第二个房间——情报室。"
@@ -1429,8 +1960,12 @@ label ch3_dark_lily_hq:
 
     lily_master "在王都，我们有十二名暗探。在教会总部，有三名。在每个大领主的城堡里，至少有一名。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "这些人……他们知道自己在为谁工作吗？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "大部分只知道自己是某个秘密组织的成员。只有核心人员才知道暗百合的全貌。"
 
     "她指了指地图上艾登堡的位置。上面标着一个蓝色图钉和一个黄色图钉。"
@@ -1439,13 +1974,21 @@ label ch3_dark_lily_hq:
 
     lily_master "黄色……是一个双重身份的成员。在你身边。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "……艾琳娜。"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "你已经猜到了？"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "我在密道中发现了通向她房间的通路。"
 
-    lily_master "很好。你的观察力比你父亲更敏锐。他花了三年才发现艾琳娜的身份。"
+    hide player_char_img
+    show lily_master_img at left with dissolve
+    lily_master "很好。你的观察力比你父亲更敏锐。不过他当年也很快就察觉了——据说不到三个月。"
 
     "她带你走进第三个房间——炼金实验室。"
 
@@ -1453,8 +1996,12 @@ label ch3_dark_lily_hq:
 
     lily_master "这是我们的炼金实验室。暗百合在草药学和毒理学方面有很深的造诣。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "暮色之露……你们也能制造？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "能制造，也能检测。正是在这个实验室里，我们确认了你父亲的死因。"
 
     "她从架子上拿下一个小玻璃瓶。瓶子里是一种暗紫色的液体。"
@@ -1467,21 +2014,30 @@ label ch3_dark_lily_hq:
 
     lily_master "我们同时研发了解毒药——但太晚了。你父亲服用暮色之露已经超过六个月，解毒已经不可能了。"
 
-    "你握紧了拳头。"
+    "你的指甲掐进了掌心，掐出四道白印。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "如果早一点发现……"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "如果、如果。这个世界上没有如果。"
 
     lily_master "但我们可以确保同样的事不再发生。"
 
     "她转过身，带你走向最后一个房间。"
 
-    lily_master "暗百合成立于两百年前，由先王格里菲斯一世的贴身近卫建立。"
+    if not dark_lily_exists_known:
+        lily_master "暗百合成立于两百年前，由先王格里菲斯一世的贴身近卫建立。"
 
-    lily_master "格里菲斯一世预见到，自己死后，宫廷中的权力斗争将会撕裂这个王国。"
+        lily_master "格里菲斯一世预见到，自己死后，宫廷中的权力斗争将会撕裂这个王国。"
 
-    lily_master "所以他秘密组建了暗百合，赋予他们一个使命——守护王国的真正秩序。"
+        lily_master "所以他秘密组建了暗百合，赋予他们一个使命——守护王国的真正秩序。"
+    else:
+        lily_master "暗百合的历史，你应该已经有所了解了。"
+
+        lily_master "但你只知道表面。让我告诉你更多。"
 
     "她带你走进一间侧室。墙壁上挂满了画像——历代暗百合首领的画像。"
 
@@ -1489,32 +2045,68 @@ label ch3_dark_lily_hq:
 
     lily_master "从那以后，每一代影主都是如此——没有名字，没有身份，只有使命。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "两百年……你们一直在暗中活动？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "是的。大多数时候，王国的统治者是合法的，暗百合只需要默默观察。"
 
     lily_master "但二十年前，情况变了。"
 
     "她的声音变得沉重。"
 
-    lily_master "先王——格里菲斯七世，在驾崩前留下了一份遗诏。遗诏中指定的摄政者……是你的父亲。"
+    if not father_was_regent_known:
+        lily_master "先王——格里菲斯七世，在驾崩前留下了一份遗诏。遗诏中指定的摄政者……是你的父亲。"
 
-    player "我已经从父亲的日记中知道了这件事。"
+        hide lily_master_img
+        show player_char_img at left with dissolve
+        player "我的父亲？！"
 
-    lily_master "那你也知道，遗诏被篡改了。"
+        hide player_char_img
+        show lily_master_img at left with dissolve
+        lily_master "那你也知道，遗诏被篡改了。"
 
-    player "是教会大主教费雷恩干的。"
+        hide lily_master_img
+        show player_char_img at left with dissolve
+        player "是教会大主教费雷恩干的。"
+    else:
+        lily_master "先王——格里菲斯七世，在驾崩前留下了一份遗诏。遗诏中指定的摄政者……是你的父亲。"
 
-    lily_master "不完全是。费雷恩只是执行者。真正的策划者，是伊莎贝拉。"
+        hide lily_master_img
+        show player_char_img at left with dissolve
+        player "我已经从父亲的日记中知道了这件事。"
 
-    lily_master "她本是一个小国的公主，嫁给格里菲斯七世后野心膨胀。她想要的不是做一个王后——她想要绝对的权力。"
+        hide player_char_img
+        show lily_master_img at left with dissolve
+        lily_master "那你也知道，遗诏被篡改了。"
 
-    lily_master "格里菲斯七世发现了她的野心，在遗诏中刻意排除了她。"
+        hide lily_master_img
+        show player_char_img at left with dissolve
+        player "是教会大主教费雷恩干的。"
 
-    lily_master "但伊莎贝拉收买了费雷恩。在先王驾崩的那个夜晚，遗诏被调换了。"
+    hide player_char_img
+    show lily_master_img at left with dissolve
+    if not queen_poisoned_king_known:
+        lily_master "不完全是。费雷恩只是执行者。真正的策划者，是伊莎贝拉。"
 
+        lily_master "她本是一个小国的公主，嫁给格里菲斯七世后野心膨胀。她想要的不是做一个王后——她想要绝对的权力。"
+
+        lily_master "格里菲斯七世发现了她的野心，在遗诏中刻意排除了她。"
+
+        lily_master "但伊莎贝拉收买了费雷恩。在先王驾崩的那个夜晚，遗诏被调换了。"
+    else:
+        lily_master "不完全是。费雷恩只是执行者。幕后主使你应该也猜到了——伊莎贝拉。"
+
+        lily_master "但伊莎贝拉收买了费雷恩。在先王驾崩的那个夜晚，遗诏被调换了。"
+
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "如果你们知道这一切，为什么不站出来揭露？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "因为没有证据。"
 
     "她叹了一口气。"
@@ -1525,8 +2117,12 @@ label ch3_dark_lily_hq:
 
     lily_master "你的父亲也是这么想的。他选择了沉默。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "但后来……他被杀了。"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "是的。因为他发现了一个更大的秘密。"
 
     "她带你走进另一间房间。这间房间里只有一面墙有内容——一张巨大的人物关系图。"
@@ -1549,44 +2145,72 @@ label ch3_dark_lily_hq:
     $ father_death_known = True
     $ true_killer_known = True
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "同样的毒药……杀了先王，也杀了我父亲。"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "没错。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "下毒的人是谁？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "我们只能确认，毒药来自教会。但教会是否受伊莎贝拉的指使，我们没有直接证据。"
 
     lily_master "不过……有一个人可能知道真相。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "谁？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "你身边的那位——马修斯主教。"
 
     lily_master "他是费雷恩的学生。费雷恩在篡改遗诏后不久就死了，但他一定把一些秘密传给了马修斯。"
 
     lily_master "马修斯知道多少？他是同谋还是被蒙在鼓里？我们一直没能确定。"
 
-    "你沉默了许久。"
+    "你在心里反复咀嚼着这些名字和脉络。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "你说暗百合内部有三个派系。"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "你已经知道了？"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "在密道的资料库里看到的。影卫、铁刺、暗焰。"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "我领导的是影卫——最大的派系。我们主张通过和平手段恢复正统。"
 
     lily_master "铁刺是激进派，他们想要直接发动政变推翻王后。他们的首领是一个叫'棘'的人，身份不明。"
 
     lily_master "暗焰……是叛徒。他们已经被王后收买，成了王后的暗探。他们的任务是破坏暗百合的行动。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "之前暗杀我的人……"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "很可能是暗焰的人。他们想在你发现真相之前除掉你。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "你怎么知道他们不会再来？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "他们一定会再来。所以你需要暗百合的保护。"
 
     "她直视你的眼睛。"
@@ -1597,8 +2221,12 @@ label ch3_dark_lily_hq:
 
     lily_master "或者，走你自己的路。但我不保证你能活到看见日出。"
 
+    hide lily_master_img
+    show player_char_img at left with dissolve
     player "这是威胁吗？"
 
+    hide player_char_img
+    show lily_master_img at left with dissolve
     lily_master "这是现实。你已经知道了太多。暗焰的人不会放过你。"
 
     lily_master "如果你不在我们的保护下，你就是一个活靶子。"
@@ -1607,16 +2235,28 @@ label ch3_dark_lily_hq:
         "加入影卫":
             $ dark_lily_joined = True
             $ change_rel("rel_lily", 30)
-            $ change_stat("intrigue", 20)
+            $ change_stat("loyalty", 5)
             $ log_decision("第三章", "加入暗百合·影卫")
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "我父亲为真相而死。我不会辜负他的牺牲。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "好。从今天起，你是影卫的一员。"
             lily_master "你的代号是……'继承者'。"
             lily_master "我会安排影卫中最优秀的人手保护你。同时，我会把我们掌握的所有情报交给你。"
             lily_master "但你必须记住一件事——影卫的铁律是：不到万不得已，不流无辜人的血。"
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "我记住了。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "还有一件事……你身边的人中，有暗焰的内应。"
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "谁？"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "我不确定。但要小心。不要对任何人透露你加入了影卫。"
             "你郑重地点了点头。"
 
@@ -1624,23 +2264,39 @@ label ch3_dark_lily_hq:
             $ dark_lily_joined = True
             $ change_rel("rel_lily", -10)
             $ change_stat("power", 20)
-            $ change_stat("intrigue", 15)
+            $ change_stat("faith", 8)
             $ log_decision("第三章", "加入暗百合·铁荆棘")
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "和平手段太慢了。我父亲等了十年，等到的是一杯毒酒。"
-            player "铁刺的方式虽然激进，但至少有效。"
+            player "铁刺的方式激进，可它有效。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "……你确定？铁刺的方法会流很多血。"
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "必要的血，我愿意承担。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "我无法阻止你。但我希望你能三思。"
             lily_master "铁刺的首领'棘'，每月初一会在边境的一个据点出现。你可以去找他。"
             lily_master "但请记住——一旦踏上那条路，就没有回头的余地了。"
 
         "不加入任何派系，保持独立":
-            $ change_stat("intrigue", 10)
+            $ change_stat("faith", 5)
             $ change_stat("power", 5)
             $ log_decision("第三章", "保持独立，不加入暗百合")
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "我不会加入任何组织。我是艾登堡的领主，不是谁的棋子。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "独立？在这盘棋局中，没有人能独善其身。"
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "那我就做棋盘上的那个变数。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "……有趣。你比你父亲更有野心。"
             lily_master "好吧。即使你不加入我们，我也不会伤害你。"
             lily_master "但如果你需要帮助——老磨坊，随时。"
@@ -1650,12 +2306,24 @@ label ch3_dark_lily_hq:
             $ change_stat("power", 15)
             $ change_rel("rel_lily", -30)
             $ log_decision("第三章", "选择摧毁暗百合")
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "一个存在了两百年的秘密组织，内部分裂成三个派系，互相倾轧——"
             player "你们的存在本身就是王国不稳定的根源之一。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "你……什么意思？"
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "也许真正需要的不是揭露什么真相，而是让所有暗处的势力都消失。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "你想摧毁暗百合？"
+            hide lily_master_img
+            show player_char_img at left with dissolve
             player "如果那是必要的。"
+            hide player_char_img
+            show lily_master_img at left with dissolve
             lily_master "你太天真了。暗百合不是你能消灭的。"
             lily_master "但我不会和你为敌——前提是你不要做出愚蠢的事。"
             "你转身离开。身后，影的目光像刀一样刺在你的背上。"
@@ -1692,21 +2360,31 @@ label ch3_elena_secret:
 
     "你注意到，她在看的正是白色的百合花。"
 
-    show elena_img at center with dissolve
+    show elena_img at left with dissolve
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "艾琳娜。"
 
     "她转过身。她的表情平静如常，但你注意到她的眼睛下方有淡淡的黑眼圈——她昨晚也没睡好。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "领主大人，早安。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "我们需要谈谈。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "……我知道。"
 
     "她环顾四周，确认没有其他人在附近。"
 
     elena "但不是在这里。跟我来。"
+
+    hide elena_img with dissolve
 
     scene bg forest_path with dissolve
     $ unlock_gallery("bg_forest_path")
@@ -1715,158 +2393,554 @@ label ch3_elena_secret:
 
     "这里安静、隐蔽，远离城堡中任何可能偷听的人。"
 
-    elena "领主大人，我欠你一个解释。"
+    show elena_img at left with dissolve
 
-    player "从哪里开始？你知道密道的事？你是暗百合的人？还是王后的间谍？"
+    if dark_lily_destroyed:
+        elena "领主大人，我欠你一个解释。"
 
-    "艾琳娜深吸一口气。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "你确实欠我一个解释。"
 
-    elena "都是。"
+        player "我知道密道的事。我知道暗百合的事——那个组织已经被我摧毁了。"
 
-    player "……什么？"
+        player "所以你到底是谁的人？"
 
-    elena "我是王后安排到你身边的人。但同时……我也是暗百合的成员。"
+        "你注视着她的反应。提到暗百合的时候，她的瞳孔微微收缩了一下。"
 
-    elena "双重间谍。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "……你摧毁了暗百合。我知道。"
 
-    "你盯着她，心中翻涌着各种情绪——愤怒、震惊、困惑。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "你是暗百合的人。"
 
-    player "从什么时候开始的？"
+        "不是疑问，而是陈述。"
 
-    elena "从你父亲还在世的时候。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "……我曾经是。"
 
-    elena "五年前，王后派我来艾登堡，表面上是辅佐老领主处理政务，实际上是监视他。"
+        "你的手不自觉地按上了剑柄。"
 
-    elena "王后怀疑你的父亲在暗中调查遗诏的事，她需要有人汇报他的一举一动。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "继续说。"
 
-    player "所以你是帮凶。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "我是王后安排到你身边的人。但同时——我也曾是暗百合的成员。"
 
-    elena "不！"
+        elena "双重间谍。"
 
-    "她的声音猛然提高，然后又降了下来。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "双重间谍。"
 
-    elena "……我不是。听我说完。"
+        player "所以当我冒着生命危险摧毁那个组织的时候，你就站在我身边，假装什么都不知道？"
 
-    elena "我确实是王后派来的。但到了艾登堡之后，你的父亲……他发现了我的身份。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "我没有假装。但有很多事我确实无法告诉你——"
 
-    player "他发现了？"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "为什么？怕我连你一起清算？"
 
-    elena "你父亲远比王后想象的聪明。他用了不到三个月就查出了我的真实身份。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "……是的。我害怕。"
 
-    elena "但他没有揭穿我。他找我谈话，给我看了一些东西——先王的遗诏抄本、暮色之露的证据、教会的秘密。"
+        if not elena_spy_known:
+            elena "但请你听我说完。五年前，王后派我来艾登堡监视你的父亲。我是从王后的侍女学院——实际上是间谍培训营——毕业的。艾登堡是我的第四个任务。"
+        else:
+            elena "这些你已经知道了——王后派我来，间谍培训营出身。"
 
-    elena "他说：'你可以选择——继续做王后的棋子，或者做一个有良心的人。'"
+        if not elena_identity_exposed_known:
+            elena "但你的父亲不到三个月就查出了我的身份。"
 
-    "她的声音微微颤抖。"
+            elena "他没有揭穿我。他给了我一个选择——继续做王后的棋子，或者做一个有良心的人。"
 
-    elena "我选择了后者。"
+            elena "我选择了后者。你父亲把我引荐给了暗百合。从那以后，我向王后报告无害的信息，同时为暗百合收集真正重要的情报。"
+        else:
+            elena "你父亲早就看穿了我，给了我重新选择的机会。这些你都知道。"
 
-    "她停顿了一下，似乎在回忆那个改变一切的夜晚。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "那你为什么不阻止我摧毁暗百合？"
 
-    elena "你可能想知道我为什么会做出那个选择。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "因为你做了正确的决定。"
 
-    elena "我出生在王都的一个没落贵族家庭。父亲早逝，母亲改嫁。我被送进了王后的侍女学院。"
+        "你没有料到她会这么说。"
 
-    elena "侍女学院……听起来很优雅，但实际上是王后培养间谍和密探的地方。"
+        elena "暗百合已经不是你父亲当年加入的那个组织了。暗焰的渗透、内部的腐化——"
 
-    elena "我们从十二岁开始接受训练——情报收集、密码通信、伪装渗透、甚至……暗杀技术。"
+        elena "你摧毁的是一个已经变质的组织。我无法阻止你，也不应该阻止你。"
 
-    player "暗杀？"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "那你父亲的死呢？你事先知道吗？"
 
-    elena "是的。但我从来没有执行过暗杀任务。我的专长是渗透和情报。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "不知道。"
 
-    elena "毕业后，我被派往各个领地。艾登堡是我的第四个任务。"
+        "她的声音发颤。"
 
-    elena "在前三个任务中，我从来没有质疑过自己。王后说谁有问题，我就去监视谁。"
+        elena "下毒的人不是通过我的渠道。王后的间谍网不止我一个人——还有其他渠道，我至今不知道是谁。"
 
-    elena "但你的父亲不一样。"
+        elena "当我发现的时候……已经太晚了。那是我最大的遗憾。"
 
-    elena "他是我遇到过的第一个真正……善良的人。"
+        show elena_img sad at left with dissolve
 
-    elena "他不仅没有因为我是间谍而恨我，反而关心我的处境。他说：'一个十二岁就被训练成工具的孩子，不应该为别人的野心负责。'"
+        elena "你父亲对我有恩。他死后，我留下来是为了保护你。这一点从未改变。"
 
-    "她的声音发颤。你看到她的眼角闪着泪光。"
+        elena "无论你信不信——我对你的忠诚不是暗百合给我的任务。是你父亲用善意换来的。"
 
-    elena "那是我第一次觉得，自己不是一个工具，而是一个人。"
+        elena "如果你要因此惩罚我，我不会反抗。但请你先听完最后一件事。"
 
-    elena "你父亲把我介绍给了暗百合。从那以后，我就成了双重间谍——向王后报告无关紧要的信息，同时为暗百合收集真正重要的情报。"
+        menu:
+            "你的话一个字都不能信——暗百合余孽的借口罢了":
+                $ change_rel("rel_elena", -25)
+                $ change_stat("power", 5)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "暗百合的人最擅长的就是编故事。你怎么证明你说的不是另一套谎言？"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "……我无法证明。"
+                elena "但接下来的情报关系到你的生死。你可以不信任我，但请听完。"
+                "她的眼神黯淡了下去，但依然保持着最后的镇定。"
 
-    elena "每个月我会给王后写一份报告——内容都是经过暗百合审核的，只包含一些无害的信息。比如'老领主今天接见了商人'或者'领地的税收正常'之类的。"
+            "交出你掌握的所有情报——这是你唯一的出路":
+                $ change_rel("rel_elena", -5)
+                $ change_stat("intrigue", 8)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "暗百合已经不存在了，你的忠诚也就没有了约束。"
+                player "把你知道的一切都交出来。当作你这些年欺骗我的代价。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "好。我本来也打算这么做。"
+                elena "关于王后的布局、残余势力的动向——所有情报，我会全部告诉你。"
+                $ change_stat("loyalty", 5)
 
-    elena "王后从来没有怀疑过。她以为我是她最忠诚的耳目。"
+            "看在父亲的份上——我给你一次机会":
+                $ change_rel("rel_elena", 10)
+                $ change_stat("loyalty", 10)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "如果不是因为父亲信任过你，你现在已经在地牢里了。"
+                player "我给你一次机会。但如果你再有任何隐瞒——"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "不会了。我发誓——再不会有秘密。"
+                "她的肩膀微微松了下来——像是终于放下了什么沉重的东西。那不像是伪装。"
 
-    player "那你给暗百合的情报呢？"
+            "暗百合已经是过去式了——我只关心你现在的立场":
+                $ change_stat("loyalty", 5)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "过去的事追究起来没完没了。暗百合已经不存在了。"
+                player "我只问你一个问题——你现在，站在谁那边？"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "站在你这边。从你父亲给我选择的那天起，就一直是。"
+                elena "以前碍于暗百合的规矩不能坦白。现在没有什么能阻止我了。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "那就证明给我看。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "我这就证明。"
 
-    elena "那些才是真正重要的——王后的计划、教会的动向、宫廷中的阴谋。我利用王后对我的信任，获取了大量内部情报。"
+    elif dark_lily_joined:
+        elena "领主大人，我欠你一个解释。"
 
-    elena "这些情报帮助暗百合在很多关键时刻做出了正确的判断。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "从哪里开始？你知道密道的事？你是暗百合的人？还是王后的间谍？"
 
-    player "我父亲死的时候呢？你为什么没能保护他？"
+        "艾琳娜舔了下干裂的嘴唇。"
 
-    "艾琳娜低下了头。你看到一滴泪滑过她的脸颊。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "都是。"
 
-    elena "那是我最大的遗憾。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "……什么？"
 
-    elena "你父亲的死……我事先不知道。下毒的人不是通过我这个渠道。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "我是王后安排到你身边的人。但同时……我也是暗百合的成员。"
 
-    elena "王后对你父亲的监视不止我一个人。还有其他渠道，我不知道是谁。"
+        elena "双重间谍。"
 
-    elena "当我发现的时候……已经太晚了。"
+        "你盯着她，心中翻涌着各种情绪——愤怒、震惊、困惑。"
 
-    "她的眼眶微微泛红。"
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "从什么时候开始的？"
 
-    elena "你父亲对我有恩。他没有杀我，没有揭穿我，反而给了我一个重新选择的机会。"
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "从你父亲还在世的时候。"
 
-    elena "他死后，暗百合的首领——影，让我留在艾登堡，继续保护他的继承人。"
+        if not elena_spy_known:
+            elena "五年前，王后派我来艾登堡，表面上是辅佐老领主处理政务，实际上是监视他。"
 
-    elena "也就是你。"
+            elena "王后怀疑你的父亲在暗中调查遗诏的事，她需要有人汇报他的一举一动。"
 
-    menu:
-        "我无法信任你——双重间谍的话不可信":
-            $ change_rel("rel_elena", -20)
-            $ change_stat("power", 5)
-            player "你的每一句话都可能是谎言。一个双重间谍，我怎么知道你到底为谁效力？"
-            elena "……我理解你的怀疑。我不会要求你立刻信任我。"
-            elena "但请你看看我的行动——我保护过你多少次？暗杀事件那晚，是我先发现了刺客的踪迹，及时叫来了雷恩。"
-            player "也许那只是为了维持你的掩护。"
-            elena "那我无话可说。只能用时间来证明。"
-            "她转身，慢慢走回城堡。"
-            "你看着她的背影，心中五味杂陈。"
+            hide elena_img
+            show player_char_img at left with dissolve
+            player "所以你是帮凶。"
 
-        "证明你的忠诚——告诉我王后在策划什么":
-            $ change_rel("rel_elena", 5)
-            $ change_stat("intrigue", 15)
-            player "如果你真的站在我这边，就告诉我一些有价值的东西。"
-            elena "王后最近在集结力量。她对边境领主的忠诚度越来越不放心。"
-            elena "她计划在下个月召集所有领主入都觐见。名义上是朝贡，实际上是筛选——"
-            elena "对她不够忠诚的领主，会被找各种借口剥夺领地。"
-            player "包括我？"
-            elena "尤其是你。你父亲的事她以为处理干净了，但你最近的行为引起了她的注意。"
-            elena "那个新来的侍从——你注意到的那个——就是王后新派来的眼线。"
-            player "果然……"
-            elena "我可以帮你应付他。但你需要更加小心。"
-            $ change_stat("intrigue", 5)
+            hide player_char_img
+            show elena_img at left with dissolve
+            elena "不！"
 
-        "我相信你——父亲信任你，我也选择信任":
-            $ change_rel("rel_elena", 25)
-            $ change_stat("loyalty", 10)
-            player "父亲的判断力一向很准。他信任你，我也愿意给你一次机会。"
-            elena "领主大人……"
-            player "但如果我发现你在对我撒谎——"
-            elena "你不会的。我发誓。"
-            "她的眼神中有一种你从未见过的坚定。"
-            elena "从现在起，我会对你完全坦白。关于王后的计划、暗百合的动向——所有我知道的，都告诉你。"
-            player "好。那就从现在开始。"
+            "她的声音猛然提高，然后又降了下来。"
 
-        "你的双重身份太危险了——选一边站":
-            $ change_stat("intrigue", 10)
-            player "你不能一直脚踩两条船。迟早有一天会被两边同时发现。"
-            elena "……你说得对。"
-            player "选一边。现在。"
-            elena "我已经选了。从你父亲给我机会的那天起，我就选了这边。"
-            elena "但我需要继续维持王后那边的掩护。只有这样，我才能为你提供情报。"
-            player "那你必须非常小心。"
-            elena "我一直很小心。"
+            elena "……我不是。听我说完。"
+
+            elena "我确实是王后派来的。但到了艾登堡之后，你的父亲……他发现了我的身份。"
+
+            hide elena_img
+            show player_char_img at left with dissolve
+            player "他发现了？"
+
+            hide player_char_img
+            show elena_img at left with dissolve
+        else:
+            elena "王后派我来监视你父亲——这些你已经知道了。"
+
+        if not elena_identity_exposed_known:
+            elena "你父亲远比王后想象的聪明。他用了不到三个月就查出了我的真实身份。"
+
+            elena "但他没有揭穿我。他找我谈话，给我看了一些东西——先王的遗诏抄本、暮色之露的证据、教会的秘密。"
+
+            elena "他说：'你可以选择——继续做王后的棋子，或者做一个有良心的人。'"
+
+            "她的声音微微颤抖。"
+
+            elena "我选择了后者。"
+
+            "她停顿了一下，似乎在回忆那个改变一切的夜晚。"
+
+            elena "你可能想知道我为什么会做出那个选择。"
+
+            elena "我出生在王都的一个没落贵族家庭。父亲早逝，母亲改嫁。我被送进了王后的侍女学院。"
+
+            elena "侍女学院……听起来很优雅，但实际上是王后培养间谍和密探的地方。"
+
+            elena "我们从十二岁开始接受训练——情报收集、密码通信、伪装渗透、甚至……暗杀技术。"
+
+            hide elena_img
+            show player_char_img at left with dissolve
+            player "暗杀？"
+
+            hide player_char_img
+            show elena_img at left with dissolve
+            elena "是的。但我从来没有执行过暗杀任务。我的专长是渗透和情报。"
+
+            elena "毕业后，我被派往各个领地。艾登堡是我的第四个任务。"
+
+            elena "在前三个任务中，我从来没有质疑过自己。王后说谁有问题，我就去监视谁。"
+
+            elena "但你的父亲不一样。"
+
+            elena "他是我遇到过的第一个真正……善良的人。"
+
+            elena "他不仅没有因为我是间谍而恨我，反而关心我的处境。他说：'一个十二岁就被训练成工具的孩子，不应该为别人的野心负责。'"
+
+            "她的声音发颤。你看到她的眼角闪着泪光。"
+
+            show elena_img sad at left with dissolve
+
+            elena "那是我第一次觉得，自己不是一个工具，而是一个人。"
+
+            elena "你父亲把我介绍给了暗百合。从那以后，我就成了双重间谍——向王后报告无关紧要的信息，同时为暗百合收集真正重要的情报。"
+
+            elena "每个月我会给王后写一份报告——内容都是经过暗百合审核的，只包含一些无害的信息。比如'老领主今天接见了商人'或者'领地的税收正常'之类的。"
+
+            elena "王后从来没有怀疑过。她以为我是她最忠诚的耳目。"
+        else:
+            elena "你父亲识破了我的身份，给了我重新选择的机会——这些你都清楚。"
+
+            show elena_img sad at left with dissolve
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "那你给暗百合的情报呢？"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "那些才是真正重要的——王后的计划、教会的动向、宫廷中的阴谋。我利用王后对我的信任，获取了大量内部情报。"
+
+        elena "这些情报帮助暗百合在很多关键时刻做出了正确的判断。"
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "我父亲死的时候呢？你为什么没能保护他？"
+
+        "艾琳娜低下了头。你看到一滴泪滑过她的脸颊。"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "那是我最大的遗憾。"
+
+        elena "你父亲的死……我事先不知道。下毒的人不是通过我这个渠道。"
+
+        elena "王后对你父亲的监视不止我一个人。还有其他渠道，我不知道是谁。"
+
+        elena "当我发现的时候……已经太晚了。"
+
+        "她的眼眶微微泛红。"
+
+        elena "你父亲对我有恩。他没有杀我，没有揭穿我，反而给了我一个重新选择的机会。"
+
+        elena "他死后，暗百合的首领——影，让我留在艾登堡，继续保护他的继承人。"
+
+        elena "也就是你。"
+
+        menu:
+            "我无法信任你——双重间谍的话不可信":
+                $ change_rel("rel_elena", -20)
+                $ change_stat("power", 5)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "你的每一句话都可能是谎言。一个双重间谍，我怎么知道你到底为谁效力？"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "……我理解你的怀疑。我不会要求你立刻信任我。"
+                elena "但请你看看我的行动——我保护过你多少次？暗杀事件那晚，是我先发现了刺客的踪迹，及时叫来了雷恩。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "也许那只是为了维持你的掩护。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "那我无话可说。只能用时间来证明。"
+                "她转身，慢慢走回城堡。"
+                "你没有追上去。只是把门边她刚才靠过的那把椅子慢慢推回了原位。"
+
+            "证明你的忠诚——告诉我王后在策划什么":
+                $ change_rel("rel_elena", 5)
+                $ change_stat("intrigue", 8)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "如果你真的站在我这边，就告诉我一些有价值的东西。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "王后最近在集结力量。她对边境领主的忠诚度越来越不放心。"
+                elena "她计划在下个月召集所有领主入都觐见。名义上是朝贡，实际上是筛选——"
+                elena "对她不够忠诚的领主，会被找各种借口剥夺领地。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "包括我？"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "尤其是你。你父亲的事她以为处理干净了，但你最近的行为引起了她的注意。"
+                elena "那个新来的侍从——你注意到的那个——就是王后新派来的眼线。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "果然……"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "我可以帮你应付他。但你需要更加小心。"
+                $ change_stat("loyalty", 5)
+
+            "我相信你——父亲信任你，我也选择信任":
+                $ change_rel("rel_elena", 25)
+                $ change_stat("loyalty", 10)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "父亲的判断力一向很准。他信任你，我也愿意给你一次机会。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "领主大人……"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "但如果我发现你在对我撒谎——"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "你不会的。我发誓。"
+                "她的眼神中有一种你从未见过的坚定。"
+                elena "从现在起，我会对你完全坦白。关于王后的计划、暗百合的动向——所有我知道的，都告诉你。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "好。那就从现在开始。"
+
+            "你的双重身份太危险了——选一边站":
+                $ change_stat("loyalty", 5)
+                player "你不能一直脚踩两条船。迟早有一天会被两边同时发现。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "……你说得对。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "选一边。现在。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "我已经选了。从你父亲给我机会的那天起，我就选了这边。"
+                elena "但我需要继续维持王后那边的掩护。只有这样，我才能为你提供情报。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "那你必须非常小心。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "我一直很小心。"
+
+
+    else:
+        elena "领主大人，我欠你一个解释。"
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "确实。有些事我一直想问你。"
+
+        player "你和暗百合是什么关系？你又为谁工作？"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "……你察觉到了。"
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "你的行为有太多不合常理的地方。一个普通的管家不可能知道那么多秘密。"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "你说得对。我不是普通的管家。"
+
+        elena "我是王后安排到你身边的人。但同时——我也是暗百合的成员。"
+
+        elena "双重间谍。"
+
+        "双重间谍。这个词在你脑中反复回响。"
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "……继续说。"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        if not elena_spy_known:
+            elena "五年前，王后派我来艾登堡，监视你的父亲。我出身于没落贵族，十二岁被送进王后的侍女学院——实际上是间谍培训营。"
+
+            elena "毕业后被派往各地。艾登堡是我的第四个任务。"
+        else:
+            elena "王后派我来监视你父亲——间谍培训营出身，这些你都知道了。"
+
+        if not elena_identity_exposed_known:
+            elena "但你的父亲用不到三个月就查出了我的真实身份。"
+
+            elena "他没有揭穿我。他找我谈话，给我看了遗诏的抄本、暮色之露的证据。"
+
+            elena "他说：'你可以选择——继续做王后的棋子，或者做一个有良心的人。'"
+
+            elena "我选择了后者。"
+
+            hide elena_img
+            show player_char_img at left with dissolve
+            player "他把你介绍给了暗百合。"
+
+            hide player_char_img
+            show elena_img at left with dissolve
+            elena "是的。从那以后，我向王后报告无害的信息——'老领主今天接见了商人'之类的。"
+
+            elena "真正重要的情报——王后的计划、教会的动向——我传给暗百合。"
+        else:
+            elena "你父亲早就看穿了我，给了我选择的机会。这些你都知道了。"
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "你为什么现在告诉我这些？"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "因为局势已经到了不能再隐瞒的地步。"
+
+        elena "而且……你有权知道真相。关于你父亲的死，关于王后——你需要完整的信息。"
+
+        hide elena_img
+        show player_char_img at left with dissolve
+        player "我父亲的死——你事先知道吗？"
+
+        hide player_char_img
+        show elena_img at left with dissolve
+        elena "不知道。那是我最大的遗憾。"
+
+        elena "下毒的人不是通过我这个渠道。王后的间谍网不止我一个人。"
+
+        elena "当我发现的时候……已经太晚了。"
+
+        "她的声音微微颤抖。"
+
+        show elena_img sad at left with dissolve
+
+        elena "你父亲对我有恩。他死后，暗百合让我留下来保护你。"
+
+        elena "不管你怎么看待暗百合——保护你这件事，是我自己的选择。"
+
+        menu:
+            "双重间谍——你到底忠于谁？":
+                $ change_rel("rel_elena", -10)
+                $ change_stat("power", 5)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "一个人不可能同时效忠两个主人。你到底站在哪边？"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "我站在你父亲选择的那一边——真相的一边。"
+                elena "王后那边只是掩护。暗百合是手段。但我真正效忠的，是你父亲的遗志。"
+                "你注视着她的表情，试图判断她的话有几分可信。"
+
+            "这些情报有多可靠？证明你的价值":
+                $ change_rel("rel_elena", 5)
+                $ change_stat("intrigue", 8)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "坦白是一回事，有没有真本事是另一回事。"
+                player "告诉我一些能证明你价值的情报。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "王后正在集结力量。她计划召集所有领主入都觐见，筛选不够忠诚的人。"
+                elena "还有——那个新来的侍从，就是王后新派来的眼线。我可以帮你应付他。"
+                $ change_stat("loyalty", 5)
+
+            "父亲信任你的判断——我尊重他的选择":
+                $ change_rel("rel_elena", 20)
+                $ change_stat("loyalty", 10)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "父亲很少看走眼。如果他选择信任你，一定有他的道理。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "领主大人……"
+                elena "我不会辜负这份信任。从现在起，我会对你完全坦白。"
+                "她的眼神中多了一份你从未见过的真诚。"
+
+            "你的身份我知道了——暂时保持现状":
+                $ change_stat("loyalty", 5)
+                $ change_stat("intrigue", 3)
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "你作为双重间谍的身份，暂时对我来说是有用的。"
+                player "继续向王后报告无害信息，真正的情报交给我。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "明白。我会像以前一样维持掩护。"
+                elena "但这次，所有情报只对你一个人负责。"
+                hide elena_img
+                show player_char_img at left with dissolve
+                player "好。我们的合作关系从现在开始。"
+                hide player_char_img
+                show elena_img at left with dissolve
+                elena "是。"
 
     "无论你说了什么，有一件事你必须承认——"
 
@@ -1874,14 +2948,22 @@ label ch3_elena_secret:
 
     elena "还有一件事我必须告诉你。这可能是最重要的。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "还有什么？"
 
     "艾琳娜犹豫了一下，似乎在权衡该不该说。然后她下定了决心。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "暗百合内部的暗焰派系……他们的首领——代号'烬'——"
 
     elena "是冯·哈根男爵。"
 
+    $ baron_is_darkflame_known = True
+
+    hide elena_img
+    show player_char_img at left with dissolve
     player "什么？！"
 
     "你的大脑飞速运转。男爵——你的邻居、你的对手——竟然是暗焰的首领？"
@@ -1892,16 +2974,26 @@ label ch3_elena_secret:
 
     "一切都串联起来了。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "冯·哈根男爵表面上是你的对手，但他的势力远不止你看到的那些。"
 
-    elena "他不仅是一个领主——他是王后在边境地区的代理人。"
+    elena "他不仅是一个领主——最初，他是王后在边境地区的代理人。"
 
-    elena "他是暗焰的创始人之一。王后通过他控制暗百合内部的叛徒。"
+    elena "暗焰就是他替王后建的情报网。监控各领主、渗透暗百合、压制异见者——全是他的手笔。"
 
-    elena "之前的暗杀、领地内的骚乱、农民的失踪——很多都和他有关。"
+    elena "但后来王后做了一件让他永远无法原谅的事。从那以后，暗焰就不再听王后的了。"
 
+    elena "男爵没有解散这张网——他把它反过来对准了王后。从掌握情报的人，变成了必须行动的人。暗焰是手段，反叛才是目的。"
+
+    elena "之前的暗杀、领地内的骚乱、农民的失踪——都是他在为最终的清算蓄力。"
+
+    hide elena_img
+    show player_char_img at left with dissolve
     player "暗杀我的人……是男爵派的？"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "是暗焰的人。男爵提供资金和情报，暗焰提供人手和执行。"
 
     elena "暗杀失败后，男爵很恼火。他没想到你能活下来。"
@@ -1910,35 +3002,52 @@ label ch3_elena_secret:
 
     elena "那个新来的侍从就是他安排的。他的任务是监视你的一切行动，特别是你是否在调查你父亲的死因。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "那封要求'共同调查'的信呢？"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "那是另一层试探。如果你接受邀请，说明你还不知道他的真实身份。如果你拒绝——他就会更加警惕。"
 
-    "你沉默了一会儿。"
-
+    hide elena_img
+    show player_char_img at left with dissolve
     player "还有呢？男爵的势力到底有多大？"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "他在南部边境有大约五百名私兵。其中一部分是招募的雇佣兵，一部分是……"
 
     elena "你领地上失踪的那些农民。"
 
-    $ change_stat("intrigue", 10)
+    $ change_stat("power", 5)
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "那些失踪的农民……"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "被暗焰的人带走了。他们在森林里建了一个秘密营地，训练私兵。"
 
     elena "男爵在为王后准备一支暗中的军队。一旦你被召入都城，这支军队就会占领艾登堡。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "他们动作真快。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "所以你必须先下手为强。"
 
     hide elena_img with dissolve
 
     "你回到城堡，脑中不停地转着。"
 
-    "艾琳娜的信息太多了——男爵是暗焰首领、王后准备清洗领主、农民被抓去训练私兵——"
+    if not baron_is_darkflame_known:
+        "艾琳娜的信息太多了——男爵是暗焰首领、王后准备清洗领主、农民被抓去训练私兵——"
+    else:
+        "艾琳娜的信息太多了——王后准备清洗领主、农民被抓去训练私兵——"
 
     "每一条都是炸弹。"
 
@@ -1950,9 +3059,11 @@ label ch3_elena_secret:
 
 label ch3_truth_emerges:
 
-    $ play_music("audio/music/tension.ogg", fadein=2.0)
+    $ play_music("audio/music/revelation.ogg", fadein=2.0)
     scene bg study with dissolve
     $ unlock_gallery("bg_study")
+
+    $ trigger_random_event("rest")
 
     "你把自己关在书房里整整一天。"
 
@@ -1963,8 +3074,12 @@ label ch3_truth_emerges:
     "所有的证据和线索都铺开了——像一张棋盘上的棋子，等待你把它们连成一条线。"
 
     "父亲的密码日记——记录了十五年的调查。"
-    "密道中发现的卷轴——暗百合两百年的历史。"
-    "暗百合首领的证词——遗诏被篡改，先王被毒杀。"
+    if secret_passage_found:
+        "密道中发现的卷轴——暗百合两百年的历史。"
+    if not testament_forged_known or not queen_poisoned_king_known:
+        "暗百合首领的证词——遗诏被篡改，先王被毒杀。"
+    else:
+        "暗百合首领的证词——与日记中的发现相互印证。"
     "艾琳娜的情报——男爵是暗焰首领，王后在布局。"
     "暮色之露的残留物——毒药的直接证据。"
 
@@ -1974,19 +3089,37 @@ label ch3_truth_emerges:
 
     "从他出发，线索延伸到——"
 
-    "王后伊莎贝拉——动机：夺权。手段：收买费雷恩篡改遗诏。可能用暮色之露毒杀先王。"
+    if not testament_forged_known or not ferein_role_known or not queen_poisoned_king_known:
+        "王后伊莎贝拉——动机：夺权。手段：收买费雷恩篡改遗诏。可能用暮色之露毒杀先王。"
+    else:
+        "王后伊莎贝拉——你已经掌握了她的动机和手段。"
 
-    "教会大主教费雷恩——执行篡改遗诏。制造了暮色之露。事后被灭口（伪装成疾病死亡）。"
+    if not ferein_role_known:
+        "教会大主教费雷恩——执行篡改遗诏。制造了暮色之露。事后被灭口（伪装成疾病死亡）。"
+    else:
+        "教会大主教费雷恩——已知的关键执行者，死因可疑。"
 
     "主教马修斯——费雷恩的学生。知情程度未知。可能保存了费雷恩留下的东西。"
 
-    "你的父亲——发现真相，成为威胁。被暮色之露长期毒杀。死前留下密码日记和密道线索。"
+    if secret_passage_found:
+        "你的父亲——发现真相，成为威胁。被暮色之露长期毒杀。死前留下密码日记和密道线索。"
+    else:
+        "你的父亲——发现真相，成为威胁。被暮色之露长期毒杀。死前留下密码日记。"
 
-    "暗百合——先王七近卫之一创立的秘密组织。分裂为三派：影卫（正统）、铁刺（激进）、暗焰（叛徒）。"
+    if not dark_lily_exists_known:
+        "暗百合——先王七近卫之一创立的秘密组织。分裂为三派：影卫（正统）、铁刺（激进）、暗焰（叛徒）。"
+    else:
+        "暗百合——你已了解这个组织的历史和内部分裂。"
 
-    "冯·哈根男爵——暗焰首领'烬'。王后的走狗。招募私兵，绑架农民。"
+    if not baron_is_darkflame_known:
+        "冯·哈根男爵——暗焰首领'烬'。王后的走狗。招募私兵，绑架农民。"
+    else:
+        "冯·哈根男爵——暗焰首领，你已知道他的真面目。"
 
-    "你用红线连接了关键节点——从王后到费雷恩，从费雷恩到暮色之露，从暮色之露到父亲的死。"
+    if not ferein_role_known:
+        "你用红线连接了关键节点——从王后到费雷恩，从费雷恩到暮色之露，从暮色之露到父亲的死。"
+    else:
+        "你用红线连接了所有已知的关键节点——一条完整的罪恶链条。"
 
     "然后你又画了一条蓝线——从父亲到暗百合，从暗百合到你。"
 
@@ -1998,6 +3131,7 @@ label ch3_truth_emerges:
 
     "你盯着这张图看了很久。"
 
+    show player_char_img at left with dissolve
     player "还缺一个关键——直接证据。"
 
     "你的证据链已经很完整了：动机、手段、受害者、证人——"
@@ -2012,19 +3146,27 @@ label ch3_truth_emerges:
 
     "但费雷恩真的销毁了原始遗诏吗？"
 
-    "你回想父亲的日记——『费雷恩在篡改遗诏后不久就死了。』"
+    if not ferein_role_known:
+        "你回想父亲的日记——『费雷恩在篡改遗诏后不久就死了。』"
 
-    "一个人在做了这么大的事之后突然死去——这本身就很可疑。"
+        "一个人在做了这么大的事之后突然死去——这本身就很可疑。"
 
-    "你在图上标注了一个问号：'费雷恩之死——自然死亡？还是被灭口？'"
+        "你在图上标注了一个问号：'费雷恩之死——自然死亡？还是被灭口？'"
 
-    "如果是被灭口——那是谁干的？王后？"
+        "如果是被灭口——那是谁干的？王后？"
 
-    "一个可怕的推理在你脑中成形：王后利用费雷恩篡改遗诏后，为了灭口，杀了费雷恩。"
+        "一个可怕的推理在你脑中成形：王后利用费雷恩篡改遗诏后，为了灭口，杀了费雷恩。"
+    else:
+        "费雷恩的角色你已经很清楚了——篡改遗诏的执行者，随后离奇死亡。"
+
+        "你在图上标注了一个问号：'费雷恩之死——被灭口的可能性极大。'"
 
     "但费雷恩不是傻子。他一定知道自己的危险。"
 
-    "如果费雷恩没有销毁原件，而是藏了起来呢？"
+    if not ferein_role_known:
+        "如果费雷恩没有销毁原件，而是藏了起来呢？"
+    else:
+        "你已经知道费雷恩篡改了遗诏——但他真的销毁了原件吗？"
 
     "作为一个精明的教会高层，他一定会给自己留一条后路——'如果我死了，原件就会公之于众'之类的安排。"
 
@@ -2038,11 +3180,16 @@ label ch3_truth_emerges:
 
     player "马修斯……你到底知道多少？"
 
+    $ matthias_has_testament_known = True
+
     "你回忆与马修斯的每一次见面。他总是温和有礼，但有时候你能在他的眼中看到一丝……恐惧。"
 
     "不是对你的恐惧。是对某种更大的东西的恐惧。"
 
-    "也许他一直带着费雷恩的秘密，活在恐惧中——害怕被王后发现，害怕被牵连。"
+    if not matthias_has_testament_known:
+        "也许他一直带着费雷恩的秘密，活在恐惧中——害怕被王后发现，害怕被牵连。"
+    else:
+        "你越来越确信——马修斯手中握着关键的东西。"
 
     "如果是这样，那接近他需要技巧。不能吓到他，否则他可能会销毁一切。"
 
@@ -2052,19 +3199,19 @@ label ch3_truth_emerges:
 
     menu:
         "立刻去找马修斯主教":
-            $ change_stat("intrigue", 10)
+            $ change_stat("power", 5)
             player "答案可能就在马修斯手上。"
             "你起身，大步走出书房。"
             jump ch3_confront_bishop_early
 
         "先做好充分准备再去找他":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             player "不能贸然行动。我需要更多筹码。"
             "你决定先把手头的证据整理好，然后再去找马修斯。"
             jump ch3_prepare_evidence
 
         "派人暗中调查马修斯的行踪":
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
             $ change_stat("power", 5)
             player "先不打草惊蛇。让我看看马修斯最近在做什么。"
             "你叫来一个信任的侍卫，让他暗中跟踪主教的行踪。"
@@ -2076,31 +3223,48 @@ label ch3_confront_bishop_early:
     $ set_mood("tense")
     scene bg church_interior with dissolve
     $ unlock_gallery("bg_church_interior")
-    $ play_music("audio/music/great_hall.ogg", fadein=2.0)
+    $ play_music("audio/music/church_choir.ogg", fadein=2.0)
 
-    show bishop_img at center with dissolve
+    show bishop_img at left with dissolve
     $ unlock_gallery("bishop")
 
     bishop "领主大人，今天怎么有空来教堂？"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "马修斯，我直说了。费雷恩大主教——你的老师——他留下了什么东西给你吗？"
 
     "主教的脸色变了。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "你……你在说什么？"
 
-    player "先王的遗诏。原件。费雷恩篡改了遗诏，但他不可能真的销毁原件。太有价值了。"
+    hide bishop_img
+    show player_char_img at left with dissolve
+    if not matthias_has_testament_known:
+        player "先王的遗诏。原件。费雷恩篡改了遗诏，但他不可能真的销毁原件。太有价值了。"
+    else:
+        player "先王的遗诏原件。我知道费雷恩没有销毁它——而你是他最亲近的学生。"
 
     "主教沉默了很长时间。你可以看到他额头上冒出了细密的汗珠。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "领主大人，你不知道你在触碰什么。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "我知道。我还知道，我的父亲因为这件事被杀了。用的是暮色之露——教会的炼金术士才能制造的毒药。"
 
     "主教的手开始颤抖。"
 
+    show bishop_img sad at left with dissolve
+
     bishop "我……我不知道你在说什么。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "你知道。你的眼神出卖了你。"
 
     menu:
@@ -2111,39 +3275,65 @@ label ch3_confront_bishop_early:
             $ log_decision("第三章", "以武力威胁主教")
             player "马修斯，我可以选择把所有事情公之于众。教会篡改先王遗诏、制造毒药害人——"
             player "你觉得信徒们会怎么看？"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "你……你不能……"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "我可以。除非你告诉我真相。"
             "主教瘫坐在椅子上。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "……费雷恩临死前……确实给了我一样东西。"
             bishop "但他让我发誓，永远不要打开。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "那是什么？"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "一个密封的盒子。我一直锁在教堂的密室里。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "带我去。"
             "主教犹豫了一下，最终站起身来，领着你走向教堂的深处。"
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
 
         "利诱——'帮助我，我可以保护教会'":
             $ change_rel("rel_bishop", 10)
-            $ change_stat("intrigue", 10)
-            $ change_stat("faith", 5)
+            $ change_stat("wealth", 5)
+            $ change_stat("faith", 12)
             $ log_decision("第三章", "以利益收买主教")
             player "马修斯，我不是你的敌人。你的老师可能犯了错误，但那不是你的错。"
             player "帮助我找到真相，我会确保教会不受牵连。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "……你能做到吗？"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "我是领主。我的领地内，教会的安全由我保障。"
             "主教长叹一声。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "费雷恩确实留了一个盒子给我。他说那是'最后的保险'。"
             bishop "我一直不敢打开它。但如果你保证教会的安全……"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "我保证。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "跟我来。"
 
         "感情牌——'我只想知道父亲为什么死'":
             $ change_rel("rel_bishop", 5)
-            $ change_stat("intrigue", 5)
+            $ change_stat("faith", 5)
             $ log_decision("第三章", "以情理说服主教")
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "马修斯，我不关心政治。我只想知道，我的父亲是怎么死的。"
             player "他是一个好人。他不该那样死去。"
             "主教闭上了眼睛。你看到他的眼角有泪光。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "老领主……是一个好人。我也这么认为。"
             bishop "费雷恩的事……我知道一些。但我一直害怕面对。"
             bishop "好吧。跟我来。有些东西我保存了很多年，一直不敢看。"
@@ -2160,12 +3350,18 @@ label ch3_confront_bishop_early:
 
     "马修斯注意到你在看画像。"
 
+    show bishop_img at left with dissolve
+
     bishop "费雷恩大人……是一个复杂的人。他虔诚、博学、严格——但也有软弱的时候。"
 
     bishop "王后的压力……不是所有人都能抵挡的。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "你在为他辩解？"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "不。我在试图理解他。就像我试图理解自己为什么沉默了二十年一样。"
 
     "你没有回答。你们继续走。"
@@ -2192,10 +3388,12 @@ label ch3_confront_bishop_early:
 
     "保险柜的门发出刺耳的吱呀声——显然很久没有被打开过了。"
 
+    hide bishop_img with dissolve
+
     scene bg underground with dissolve
     $ unlock_gallery("bg_underground")
 
-    show bishop_img at center with dissolve
+    show bishop_img at left with dissolve
 
     bishop "这就是费雷恩留给我的。"
 
@@ -2219,6 +3417,8 @@ label ch3_confront_bishop_early:
 
     bishop "那封信……我从来没敢拆。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "我来。"
 
     "你先拆开了信。费雷恩的笔迹苍劲有力——"
@@ -2255,26 +3455,39 @@ label ch3_confront_bishop_early:
 
     "你手中拿着的不只是一张纸——这是一把能够推翻整个王国权力结构的钥匙。"
 
-    "二十年前，你的父亲本应该成为摄政者——辅佐年幼的王子治理国家。"
+    if not father_was_regent_known:
+        "二十年前，你的父亲本应该成为摄政者——辅佐年幼的王子治理国家。"
 
-    "如果遗诏没有被篡改，王后不会有任何权力，你的父亲不会死，王国也许会走上一条完全不同的道路。"
+        "如果遗诏没有被篡改，王后不会有任何权力，你的父亲不会死，王国也许会走上一条完全不同的道路。"
+    else:
+        "白纸黑字，印证了日记中的一切。父亲确实是先王指定的摄政者。"
 
     "但这一切都被一个女人的野心毁掉了。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "费雷恩没有销毁它。他留了一份……还有印章……作为保护自己的筹码。"
 
     bishop "但他还是被灭了口。而我……一直活在恐惧中，守着这个匣子，不敢看，不敢说。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "印章是关键。有了它，我们可以证明官方版本的遗诏是伪造的。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "是的。费雷恩在信中说得很清楚——官方遗诏上的印章是仿制的。对比细节就能看出差异。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "这意味着……我们不只有遗诏原件，还有证明伪造的物证。"
 
     "你感到一阵眩晕。这太重要了。这比你预想的还要有力。"
 
     player "你为什么不站出来？"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "因为我怕死。"
 
     "主教的声音很轻，充满了羞耻。"
@@ -2287,24 +3500,48 @@ label ch3_confront_bishop_early:
         "严厉斥责——'你的沉默害死了我的父亲'":
             $ change_rel("rel_bishop", -15)
             $ change_stat("power", 5)
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "如果你早些站出来，我的父亲就不用死！"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "我知道……我知道！我的罪孽深重……"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "但现在后悔已经来不及了。你能做的，就是帮我把这件事做到底。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "……是。我会的。这是我唯一能赎罪的方式。"
 
         "表示理解——'你也是受害者'":
             $ change_rel("rel_bishop", 15)
-            $ change_stat("faith", 5)
+            $ change_stat("faith", 12)
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "费雷恩的错不应该由你来承担。你保住了这份遗诏——这已经足够。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "领主大人……你和老领主一样宽容。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "但从现在起，你必须和我站在一起。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "我愿意。以上天之名，我愿意。"
 
         "冷静分析——'这份遗诏需要验证'":
-            $ change_stat("intrigue", 10)
+            $ change_stat("reputation", 5)
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "我们不能贸然使用这份遗诏。首先要确认它的真实性。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "你说得对。我可以安排教会的文书专家来鉴定。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "不行。教会里不知道还有没有暗焰的人。我们需要一个中立的专家。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "……你考虑得很周到。"
 
     hide bishop_img with dissolve
@@ -2328,21 +3565,31 @@ label ch3_prepare_evidence:
 
     "你回到书房，把所有的证据摊在桌上。"
 
-    "一、父亲的密码日记——记录了暗百合的联络和先王遗诏被篡改的事实。"
+    if not testament_forged_known:
+        "一、父亲的密码日记——记录了暗百合的联络和先王遗诏被篡改的事实。"
+    else:
+        "一、父亲的密码日记——你已熟知其中的每一条线索。"
 
     "二、暮色之露——毒杀先王和父亲的毒药，来源指向教会。"
 
     if poison_evidence:
         "三、毒药的残留物证——从父亲的遗物中提取。"
 
-    "四、暗百合首领的证词——尽管是口头的，但与其他证据相互印证。"
+    if dark_lily_joined:
+        "四、暗百合首领的证词——尽管是口头的，但与其他证据相互印证。"
+    elif not dark_lily_destroyed:
+        "四、关于暗百合的情报——虽然你未加入他们，但从各方渠道获得的信息相互印证。"
 
-    "五、艾琳娜的情报——男爵是暗焰首领，王后在暗中布局。"
+    if not baron_is_darkflame_known:
+        "五、艾琳娜的情报——男爵是暗焰首领，王后在暗中布局。"
+    else:
+        "五、艾琳娜的情报——关于男爵和王后的阴谋，你已了然于胸。"
 
     "这些证据单独来看都不够有力，但放在一起——"
 
     "一条完整的证据链正在形成。"
 
+    show player_char_img at left with dissolve
     player "还不够。我需要一个无法辩驳的铁证。"
 
     "你沉思良久。"
@@ -2353,7 +3600,12 @@ label ch3_prepare_evidence:
 
     "不管怎样，你目前能做的就是把已有的证据妥善保管，防止被人销毁。"
 
-    "你在书房的暗格里藏了一份副本，又通过密道把另一份副本送到了暗百合那里。"
+    if secret_passage_found and dark_lily_joined:
+        "你在书房的暗格里藏了一份副本，又通过密道把另一份副本送到了暗百合那里。"
+    elif secret_passage_found:
+        "你在书房的暗格里藏了一份副本，又通过密道把另一份副本藏在了地下通道深处的隐蔽角落。"
+    else:
+        "你在书房的暗格里藏了一份副本，又让奥尔德里克秘密地把另一份副本送到了安全的地方。"
 
     "鸡蛋不能放在一个篮子里。"
 
@@ -2361,7 +3613,19 @@ label ch3_prepare_evidence:
 
     "你靠在椅子上，闭上眼睛。"
 
-    "但你知道，风暴才刚刚开始。"
+    "但你知道，更大的风暴正从王都的方向聚拢过来。"
+
+    ## 扩展剧情：深度调查 / 森林探险 / 草药师支线 / 教团渗透 / 终局对峙
+    ## 必须在危机之前调用，否则玩家刚经历高潮又突然回到平静调查
+    call ch3_exp_investigation from _call_ch3_exp_investigation
+
+    ## 章节深化：暗百合仪式
+    if dark_lily_joined:
+        call ch3_deep_ritual from _call_ch3_dritual
+
+    ## NPC支线：暗百合考验
+    if dark_lily_joined:
+        call npc_lily_test from _call_npc_lt3
 
     ## ============================================================
     ## 第八部分：抉择时刻（~400行）
@@ -2380,6 +3644,8 @@ label ch3_critical_choice:
     show aldric_img at left with dissolve
     show captain_img at right with dissolve
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "我有一些事情要告诉你们。这些事情可能会改变一切。"
 
     "你犹豫了一下。一旦说出口，就没有回头的余地了。"
@@ -2392,19 +3658,28 @@ label ch3_critical_choice:
 
     "你从头开始，把一切都告诉了他们。"
 
-    "密码日记。暗百合。密道。暮色之露。先王遗诏被篡改。王后的阴谋。男爵是暗焰首领。艾琳娜的双重身份。"
+    if secret_passage_found and baron_is_darkflame_known:
+        "密码日记。暗百合。密道。暮色之露。先王遗诏被篡改。王后的阴谋。男爵是暗焰首领。艾琳娜的双重身份。"
+    elif secret_passage_found:
+        "密码日记。暗百合。密道。暮色之露。先王遗诏被篡改。王后的阴谋。"
+    elif baron_is_darkflame_known:
+        "密码日记。暗百合。暮色之露。先王遗诏被篡改。王后的阴谋。男爵是暗焰首领。艾琳娜的双重身份。"
+    else:
+        "你把已经掌握的一切——从父亲的日记到王后的阴谋——一五一十地告诉了他们。"
 
     "你说了整整一个小时。"
 
-    "说完后，大厅里一片沉默。只有壁炉中木柴噼啪作响的声音。"
+    "说完后，大厅里一片沉默。墙上那面褪色的织锦壁毯被穿堂风吹得微微鼓起，像有人在后面屏息窃听。"
 
     "奥尔德里克的表情像石头一样凝固。他的双手紧紧攥着椅子的扶手，指节发白。"
 
     "雷恩的手不自觉地握紧了剑柄。他的脸色从震惊变成了愤怒，又从愤怒变成了冷酷。"
 
-    "沉默持续了很长时间。"
+    show captain_img angry at right with dissolve
 
     "最终，是奥尔德里克先开口。"
+
+    show aldric_img sad at left with dissolve
 
     aldric "……我就知道。我就知道老领主的死不简单。"
 
@@ -2416,14 +3691,24 @@ label ch3_critical_choice:
 
     aldric "我应该发现的。我跟了他三十年，我应该发现的。"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "不是你的错，奥尔德里克。父亲自己都不确定，直到最后几个月才确认。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "所以……王后才是幕后黑手？先王、老领主——都是她杀的？"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "最大的嫌疑人。而且我们现在有了物证——先王的原始遗诏和私人印章。"
+
+    show captain_img angry at right with dissolve
 
     captain "那还等什么？直接公布出去！"
 
+    hide captain_img
+    show aldric_img at left with dissolve
     aldric "没那么简单。"
 
     "老骑士已经恢复了冷静。"
@@ -2434,33 +3719,53 @@ label ch3_critical_choice:
 
     aldric "到时候，不只是你，整个艾登堡都会被夷为平地。"
 
+    hide aldric_img
+    show captain_img at left with dissolve
     captain "那……我们怎么办？"
 
+    hide captain_img
+    show aldric_img at left with dissolve
     aldric "不管证据够不够，你现在处于极度危险中。王后迟早会发现你在调查。"
 
     aldric "也许她已经知道了——那个新来的侍从不是一直在监视你吗？"
 
+    hide aldric_img
+    show player_char_img at left with dissolve
     player "那个问题我已经在处理了。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "大人，您打算怎么做？"
 
-    "你环视了一下大厅。壁炉的火光在石墙上投下跳动的影子。"
+    "你环视了一下大厅。石墙上挂毯的花纹在昏暗中几乎辨认不出。"
 
     "这个大厅——你父亲曾在这里做出无数决定。现在轮到你了。"
 
     menu:
         "主动出击——收集更多证据，联合盟友，在适当的时候公开真相":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             $ change_stat("power", 5)
+            hide captain_img
+            show player_char_img at left with dissolve
             player "我们不能坐以待毙。但也不能鲁莽行动。"
             player "继续收集证据，同时秘密联合对王后不满的其他领主。"
             player "等时机成熟，我们一起行动。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "这是最稳妥的方案。但需要时间。"
-            captain "时间够吗？王后的召见——"
-            player "我会应召入都。但在那之前，我要确保艾登堡的安全。"
+            hide aldric_img
+            show captain_img at left with dissolve
+            captain "时间够吗？王后随时可能动手——"
+            hide captain_img
+            show player_char_img at left with dissolve
+            player "时机成熟时，我会亲赴王都。但在那之前，我要确保艾登堡的安全。"
             player "雷恩，你负责领地的防御。加强城墙，训练民兵。"
             player "奥尔德里克，你帮我联络其他可能的盟友。特别是那些和王后有嫌隙的领主。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "我认识几个。但他们是否愿意参与这种事……我不确定。"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "至少试试。"
             $ change_stat("loyalty", 5)
 
@@ -2469,39 +3774,79 @@ label ch3_critical_choice:
             $ change_stat("loyalty", 10)
             player "眼下最重要的是保护好自己和领地。"
             player "雷恩，我要你把艾登堡变成一座堡垒。加倍城防，储备粮食和武器。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "遵命。我会立刻着手。"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "奥尔德里克，你负责内部安全。清查城堡中所有可疑的人——特别是新来的。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "你是说那个新侍从？"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "他，还有其他任何可疑的人。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "交给我。"
 
-        "将计就计——利用王后的召见作为接近她的机会":
-            $ change_stat("intrigue", 20)
-            player "王后召我入都？那正好。"
-            aldric "你不是认真的吧？那可能是陷阱。"
-            player "也可能是机会。在王都，我可以接触到更多的信息和盟友。"
+        "深入虎穴——主动前往王都，在核心圈子中寻找机会":
+            $ change_stat("intrigue", 5)
+            hide aldric_img
+            show player_char_img at left with dissolve
+            player "我要去王都。"
+            hide player_char_img
+            show aldric_img at left with dissolve
+            aldric "主动送上门？那可能是自投罗网。"
+            hide aldric_img
+            show player_char_img at left with dissolve
+            player "也可能是唯一的机会。在王都，我可以接触到更多的信息和盟友。"
             player "而且，如果原始遗诏真的藏在教会的某个地方——王都是最可能的藏身之处。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "太危险了，大人。在王都，您没有自己的军队。"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "我不需要军队。我需要的是智慧和人脉。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "……你和你父亲一样固执。"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "但我会比他更小心。"
 
         "全面反击——联合暗百合，发动政变":
             if dark_lily_joined:
                 $ change_stat("power", 15)
-                $ change_stat("intrigue", 10)
+                $ change_stat("loyalty", 5)
                 $ change_rel("rel_lily", 10)
                 player "不能再等了。暗百合的力量加上我们自己的军队——"
+                hide player_char_img
+                show aldric_img at left with dissolve
                 aldric "政变？！你疯了吗？"
+                hide aldric_img
+                show player_char_img at left with dissolve
                 player "不是疯了，是清醒了。二十年的隐忍换来的是更多的牺牲。"
+                hide player_char_img
+                show captain_img at left with dissolve
                 captain "大人……我愿意跟随你，但这条路一旦开始就没有回头。"
+                hide captain_img
+                show player_char_img at left with dissolve
                 player "我知道。所以我们必须赢。"
             else:
                 $ change_stat("power", 10)
                 player "我想联合一切可以联合的力量，包括暗百合。"
+                hide player_char_img
+                show aldric_img at left with dissolve
                 aldric "暗百合？你信任他们？"
+                hide aldric_img
+                show player_char_img at left with dissolve
                 player "我不完全信任。但敌人的敌人就是朋友。"
+                hide player_char_img
+                show aldric_img at left with dissolve
                 aldric "暂时的朋友。别忘了，暗百合内部也有叛徒。"
+                hide aldric_img
+                show player_char_img at left with dissolve
                 player "我会小心的。"
 
     hide aldric_img with dissolve
@@ -2523,7 +3868,7 @@ label ch3_critical_choice:
 
 label ch3_church_intervention:
 
-    $ play_music("audio/music/great_hall.ogg", fadein=2.0)
+    $ play_music("audio/music/church_choir.ogg", fadein=2.0)
     scene bg church_interior with dissolve
     $ unlock_gallery("bg_church_interior")
 
@@ -2535,6 +3880,7 @@ label ch3_church_intervention:
 
     "开门一看——是教堂的一个小修士，满头大汗，气喘吁吁。"
 
+    show servant_generic_img at left with dissolve
     servant "领主……领主大人！主教大人让小人送这封信给您！他说万分紧急！"
 
     "你接过信。信封没有封蜡——说明主教来不及做正式的封印。"
@@ -2554,14 +3900,18 @@ label ch3_church_intervention:
 
     "你来到教堂的后厅。主教站在祭坛前，背对着你。他的肩膀在微微发抖。"
 
-    show bishop_img at center with dissolve
+    show bishop_img at left with dissolve
 
     "马修斯转过身。他的脸色苍白如纸，嘴唇微微发青——像是受了极大的惊吓。"
 
     bishop "领主大人，出事了。大事不好了。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "冷静。告诉我发生了什么。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "王都的教会总部……昨天深夜派人来了。不是普通的使者——"
 
     bishop "是一个审判官。"
@@ -2576,14 +3926,22 @@ label ch3_church_intervention:
 
     bishop "他带着六个武装护卫——每一个都佩戴着教会审判庭的徽章。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "一个审判官来这种偏远的地方？这不寻常。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "非常不寻常。审判官通常只在大教区活动。他们来到艾登堡——只有一个原因。"
 
     bishop "他……他在调查费雷恩的案子。"
 
-    player "什么？费雷恩已经死了二十年——"
+    hide bishop_img
+    show player_char_img at left with dissolve
+    player "什么？费雷恩早已秘密去世——"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "但有人重新打开了这个案子。赛巴斯蒂安说，教会总部最近收到了'可靠的举报'。"
 
     bishop "举报说费雷恩临终前留下了一些'危险的文件'——"
@@ -2592,8 +3950,12 @@ label ch3_church_intervention:
 
     "你的心猛然一紧。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "你告诉他了？"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "没有！我发誓我没有。我装作一无所知。"
 
     bishop "但赛巴斯蒂安不是好糊弄的人。他盯着我看了整整一分钟——像在读我的灵魂。"
@@ -2602,18 +3964,33 @@ label ch3_church_intervention:
 
     bishop "我否认了。但他显然不信。"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "是谁举报的？"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "我不知道。但消息的准确性——有人知道费雷恩留了东西给我。"
 
     bishop "能知道这件事的人……"
 
+    hide bishop_img
+    show player_char_img at left with dissolve
     player "暗焰。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "你也这么想？"
 
-    player "冯·哈根男爵——暗焰的首领。他一定有人渗透在教会内部。"
+    hide bishop_img
+    show player_char_img at left with dissolve
+    if not baron_is_darkflame_known:
+        player "冯·哈根男爵——暗焰的首领。他一定有人渗透在教会内部。"
+    else:
+        player "男爵的手一定伸进了教会内部。"
 
+    hide player_char_img
+    show bishop_img at left with dissolve
     bishop "赛巴斯蒂安明天就要正式搜查教堂的密室。他有权这么做——我无法拒绝。"
 
     bishop "如果他找到那个盒子……"
@@ -2630,47 +4007,95 @@ label ch3_church_intervention:
 
     menu:
         "今晚就把盒子转移走":
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "你能在今晚把盒子从密室里取出来吗？"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "可以……但如果审判官发现盒子不见了，他会怀疑我。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "那就让他怀疑。你的安全我来保障。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "……好。今晚子时，密室。"
             "你点了点头，转身离开教堂。"
             "你需要安排一个万全的计划。"
 
         "先见见这个审判官，摸清他的底细":
-            $ change_stat("intrigue", 10)
             $ change_stat("power", 5)
+            $ change_stat("reputation", 5)
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "我想见见这个审判官。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "你……你确定？他不是好惹的人。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "正因为如此，我更要亲自了解他。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "他叫赛巴斯蒂安。据说是教会中最冷酷的审判官之一。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "安排我和他见面。就说我是来欢迎教会使者的。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "好……好吧。"
 
         "让暗百合的人处理":
             if dark_lily_joined:
-                $ change_stat("intrigue", 15)
+                $ change_stat("intrigue", 8)
                 $ change_rel("rel_lily", 5)
+                hide bishop_img
+                show player_char_img at left with dissolve
                 player "我会联系影。暗百合有办法对付教会的审判官。"
+                hide player_char_img
+                show bishop_img at left with dissolve
                 bishop "暗百合？你真的和他们有联系？"
+                hide bishop_img
+                show player_char_img at left with dissolve
                 player "你不需要知道细节。但我不会让遗诏落入王后的手中。"
+                hide player_char_img
+                show bishop_img at left with dissolve
                 bishop "……我开始理解你父亲为什么信任暗百合了。"
             else:
-                $ change_stat("intrigue", 10)
+                $ change_stat("intrigue", 5)
+                hide bishop_img
+                show player_char_img at left with dissolve
                 player "我有一些……特殊的渠道可以处理这件事。"
+                hide player_char_img
+                show bishop_img at left with dissolve
                 bishop "什么渠道？"
+                hide bishop_img
+                show player_char_img at left with dissolve
                 player "你不需要知道。但你需要配合我。"
+                hide player_char_img
+                show bishop_img at left with dissolve
                 bishop "好。只要能保住那个盒子。"
 
         "将计就计——让审判官找到一个假的盒子":
-            $ change_stat("intrigue", 20)
+            $ change_stat("intrigue", 5)
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "马修斯，你还有别的密封盒子吗？大小差不多的。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "有……一个放圣物的盒子，大小相近。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "今晚把遗诏取出来，放进一些无关紧要的教会文件到原来的盒子里。"
             player "让审判官找到它。他拿走的是一个空壳。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "偷梁换柱……你的心思缜密得可怕。"
+            hide bishop_img
+            show player_char_img at left with dissolve
             player "在这盘棋局中，不缜密就会死。"
+            hide player_char_img
+            show bishop_img at left with dissolve
             bishop "……我明白了。今晚就办。"
 
     hide bishop_img with dissolve
@@ -2693,52 +4118,80 @@ label ch3_church_intervention:
 
     "在路上，你遇到了艾琳娜。她撑着一把伞，像是专门在等你。"
 
-    show elena_img at center with dissolve
+    show elena_img at left with dissolve
 
     elena "领主大人，我听说教堂来了一个审判官。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "消息传得真快。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "他叫赛巴斯蒂安·维克多。我在王都的时候就听说过他的名字。"
 
     elena "他是王后最信任的教会打手之一。表面上是审判官，实际上替王后做很多见不得光的事。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "你确定？"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "确定。他之前'调查'过另外两个对王后有威胁的地方主教。一个被免职，一个死在了审判过程中——'心脏病突发'。"
 
     "你的血液都凉了。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "所以他不只是来搜查的——他可能还要对马修斯动手。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "很有可能。王后想一石二鸟——拿到费雷恩留下的东西，同时消除马修斯这个知情者。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "我不能让这种事发生。"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "我有一个建议。"
 
     elena "赛巴斯蒂安有一个弱点——他贪财。教会审判官的俸禄其实很低，但他过着奢侈的生活。"
 
     elena "如果你能在他面前展示足够的利益——也许可以暂时拖住他。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "用钱买时间？"
 
+    hide player_char_img
+    show elena_img at left with dissolve
     elena "不只是钱。领地的支持、教会在艾登堡的特权——他在乎这些。"
 
     menu:
         "采纳艾琳娜的建议，同时做两手准备":
-            $ change_stat("intrigue", 10)
+            $ change_stat("loyalty", 5)
             $ change_stat("wealth", -5)
+            hide elena_img
+            show player_char_img at left with dissolve
             player "好主意。你帮我安排一次和赛巴斯蒂安的'偶遇'。让他觉得我是一个值得拉拢的人。"
             player "同时，我去安排证据的转移。"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "明白。我会处理好的。"
 
         "不信任她的判断，自己来处理":
-            $ change_stat("intrigue", 5)
             $ change_stat("power", 5)
+            $ change_stat("faith", 5)
+            hide elena_img
+            show player_char_img at left with dissolve
             player "我自有安排。你做好你的本职工作就行。"
+            hide player_char_img
+            show elena_img at left with dissolve
             elena "……是，领主大人。"
-            "你看到她的眼中闪过一丝失望。但她什么都没说，转身离开了。"
+            "她什么都没说，走的时候没回头。门关上的声音比平时重了一些。"
 
     hide elena_img with dissolve
 
@@ -2747,28 +4200,48 @@ label ch3_church_intervention:
 
     "回到城堡后，你立刻找来了雷恩。"
 
-    show captain_img at center with dissolve
+    show captain_img at left with dissolve
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "雷恩，教堂来了一个教会审判官——赛巴斯蒂安·维克多。这个人很危险。我需要你做几件事。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "审判官？我听说那些人有生杀予夺的权力。他们有权力搜查任何地方，甚至领主的城堡。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "理论上是的。但在我的领地上，没有我的允许，谁也别想横行霸道。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "需要我做什么？"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "三件事。第一，安排人手守住教堂附近的所有出入口。如果审判官试图带走什么东西或者带走什么人，我要第一时间知道。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "明白。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "第二，把城堡的安保提升到最高级别。我有一种预感，教会的审判官只是前奏，接下来可能还有更大的动作。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "大人……您是说……"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "我在说，做好最坏的打算。"
 
     "雷恩的表情凝重了。"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "我去安排。"
 
     hide captain_img with dissolve
@@ -2814,19 +4287,29 @@ label ch3_chapter_crisis:
 
     "你被急促的敲门声惊醒。"
 
-    show captain_img at center with dissolve
+    show captain_img at left with dissolve
 
     captain "大人！紧急情况！"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "怎么了？"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "城外发现了一支武装人员！大约两百人，正在从南面逼近！"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "什么？！"
 
+    hide player_char_img
+    show captain_img at left with dissolve
     captain "他们没有打旗帜，没有任何标识。但装备精良——全副武装。"
 
     "你迅速穿上衣甲，跑上城墙。"
+
+    hide captain_img with dissolve
 
     scene bg castle_exterior with dissolve
     $ unlock_gallery("bg_castle_exterior")
@@ -2840,12 +4323,20 @@ label ch3_chapter_crisis:
     show aldric_img at left with dissolve
     show captain_img at right with dissolve
 
+    hide captain_img
+    show aldric_img at left with dissolve
     aldric "他们来了。比我预想的快。"
 
+    hide aldric_img
+    show captain_img at left with dissolve
     captain "大人，城堡的守军只有一百五十人。敌人至少有两百。"
 
+    hide captain_img
+    show player_char_img at left with dissolve
     player "他们的目的是什么？攻城？"
 
+    hide player_char_img
+    show aldric_img at left with dissolve
     aldric "不。他们的目的是你。或者更准确地说——是你手中的证据。"
 
     aldric "消息走漏了。不知道是谁泄的密。"
@@ -2856,29 +4347,51 @@ label ch3_chapter_crisis:
         "全力防守——死守城堡":
             $ change_stat("power", 15)
             $ change_stat("loyalty", 10)
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "关闭所有城门！全军上墙！"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "遵命！"
             "号角声响彻艾登堡。城门轰然关闭，吊桥升起。"
             "士兵们迅速就位，弓箭手排列在城墙上。"
             "你站在城墙最显眼的位置，让所有人都能看到你。"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "他们以为两百人就能拿下艾登堡？告诉他们，他们错了！"
             "守军发出一声怒吼。士气高涨。"
             "敌人在城墙下停住了。他们似乎没想到城堡已经有了准备。"
             "双方对峙了一个上午。最终，敌人在午时撤退了。"
             "他们不是来攻城的——他们是来试探的。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "他们会再来。下一次，人数会更多。"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "那我们就用这段时间做准备。"
 
-        "派人突围求援":
+        "派人突围求援" if secret_passage_found:
             $ change_stat("loyalty", 5)
-            $ change_stat("intrigue", 5)
-            player "雷恩，派你最快的骑手从北门突围。去找最近的友好领主求援。"
+            $ change_stat("wealth", 5)
+            player "雷恩，派你最快的骑手突围求援。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "北门外也有敌人的哨骑——"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "那就用密道。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "密道？"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "城堡下面有密道通向外面。我发现的。奥尔德里克知道路线。"
             "奥尔德里克点了点头。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "我带人从密道出去。两天之内，援军就到。"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "去吧。小心。"
             "奥尔德里克带着两个信使消失在城堡地下。"
             "你则留在城墙上，指挥防御。"
@@ -2887,10 +4400,18 @@ label ch3_chapter_crisis:
             $ change_stat("power", 20)
             $ change_stat("loyalty", 5)
             player "他们还没有完成包围。南面的这支是主力——北面一定薄弱。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "大人想突围？"
+            hide captain_img
+            show player_char_img at left with dissolve
             player "不是突围。是反击。"
             player "我亲自带五十人从北门出击，绕到他们侧翼。雷恩，你带剩下的人守城。"
+            hide player_char_img
+            show captain_img at left with dissolve
             captain "大人！太危险了！"
+            hide captain_img
+            show aldric_img at left with dissolve
             aldric "让他去。他父亲年轻时也是这样——亲自上阵。"
             "你带着五十名精锐骑兵从北门冲出。"
             "正如你所料，敌人的主力集中在南面。北面只有少量哨骑。"
@@ -2899,13 +4420,23 @@ label ch3_chapter_crisis:
             "混战持续了不到半个小时。敌人撤退了，留下了十几具尸体。"
             "你俘虏了三个人。也许能从他们口中得到有用的信息。"
 
-        "通过密道转移证据——保命要紧":
-            $ change_stat("intrigue", 15)
+        "通过密道转移证据——保命要紧" if secret_passage_found:
+            $ change_stat("intrigue", 8)
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "证据比城堡重要。如果他们是冲着证据来的，就不能让他们得手。"
             player "奥尔德里克，你和雷恩守城。我从密道离开，把证据转移到安全的地方。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "你要独自走密道？"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "不是独自。艾琳娜知道密道的路线。她和我一起走。"
+            hide player_char_img
+            show aldric_img at left with dissolve
             aldric "……你确定？"
+            hide aldric_img
+            show player_char_img at left with dissolve
             player "确定。"
             "你回到书房，取出所有的证据——日记、遗诏副本、关系图——全部装进一个皮囊。"
             "然后，你和艾琳娜一起走进了壁炉后的密道。"
@@ -2922,6 +4453,12 @@ label ch3_chapter_crisis:
 
     "从现在起，每一步都是生死之间的博弈。"
 
+    ## 扩展/深化/NPC支线已移至抉择时刻之前（ch3_critical_choice上方）
+    ## 避免危机高潮后突然跳回平静调查场景
+
+    ## 治理报告
+    call gov_report from _call_gov_rep3
+
     ## ============================================================
     ## 第三章结尾
     ## ============================================================
@@ -2933,7 +4470,7 @@ label ch3_end:
     $ persistent.chapters_completed.add("chapter3")
 
     ## 章节结束统计
-    call show_chapter_summary("第三章", "暗百合")
+    call show_chapter_summary("第三章", "暗百合") from _call_show_chapter_summary_1
 
     if true_killer_known:
         $ unlock_achievement("truth_seeker")
@@ -2943,21 +4480,7 @@ label ch3_end:
     $ play_music("audio/music/tension.ogg", fadein=2.0)
     scene black with dissolve
 
-    "真相的碎片正在拼凑成一幅可怕的图画。"
-
-    "父亲被害。遗诏被篡改。王后不是合法的摄政。"
-
-    "教会是帮凶。暗百合内部分裂。暗焰随时可能发动下一次攻击。"
-
-    "如果这一切是真的——那整个王国的权力基础都是建立在谎言之上。"
-
-    "而你，一个小小的边境领主，正站在这个谎言的裂缝上。"
-
-    "裂缝正在扩大。"
-
-    "你不知道自己是会被吞没，还是能从中找到出路。"
-
-    "但有一件事你很清楚——退路已经没有了。"
+    "线索已经够了。现在需要的是决定。"
 
     "几天后，一封来自王都的信送到了艾登堡——"
 
@@ -2965,7 +4488,7 @@ label ch3_end:
 
     "『伊莎贝拉王后陛下宣召艾登堡领主入都觐见。不得推辞。』"
 
-    show elena_img at center with dissolve
+    show elena_img at left with dissolve
 
     elena "领主大人……王后召你入都。"
 
@@ -2978,11 +4501,13 @@ label ch3_end:
         elena "王后派我来监视你，但暗百合也安排我保护你。我一直身负双重使命。"
         elena "去王都的路上，我会保护你。这是影的命令，也是我自己的选择。"
         $ change_rel("rel_elena", 20)
-        $ change_stat("intrigue", 10)
+        $ change_stat("loyalty", 5)
     else:
         elena "但不管是什么……您不能不去。拒绝王后的宣召，等于公开叛逆。"
         elena "而且……也许王都才是解开所有谜团的地方。"
 
+    hide elena_img
+    show player_char_img at left with dissolve
     player "我会去的。"
 
     "你看了一眼窗外。天边乌云密布，一场暴风雨正在酝酿。"
@@ -3012,14 +4537,16 @@ label ch3_end:
     if dark_lily_joined:
         "你握紧了怀中暗百合的银质徽章。"
         "暗处的力量，将与你同行。"
-
-    if dark_lily_destroyed:
+    elif dark_lily_destroyed:
         "你握紧了腰间的短剑。"
         "不靠任何人。只靠自己。"
+    else:
+        "你低头看着自己的双手。"
+        "不选择，也是一种选择。"
 
     "暗百合的故事还远未结束。"
 
-    "而你的故事……才刚刚开始。"
+    "而你的故事……远未到落幕的时候。"
 
     scene black with dissolve
 

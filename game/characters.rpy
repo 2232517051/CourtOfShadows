@@ -3,30 +3,41 @@
 ## ============================================================
 
 ## 主角 - 新任艾登堡领主
-define player = Character("[player_name]", color="#c8b06b")
+define player = Character("[player_name]", color="#c8b06b", image="player_char")
 
 ## 核心角色
-define aldric = Character("奥尔德里克", color="#8b0000")
-define elena = Character("艾琳娜", color="#9370db")
-define bishop = Character("主教马修斯", color="#ffd700")
-define baron = Character("冯·哈根男爵", color="#2f4f4f")
-define captain = Character("队长雷恩", color="#4682b4")
-define queen = Character("伊莎贝拉王后", color="#800080")
-define merchant = Character("商人卡尔", color="#d2691e")
+define aldric = Character("奥尔德里克", color="#8b0000", image="aldric")
+define elena = Character("艾琳娜", color="#9370db", image="elena")
+define bishop = Character("主教马修斯", color="#ffd700", image="bishop")
+define baron = Character("冯·哈根男爵", color="#2f4f4f", image="baron")
+define captain = Character("队长雷恩", color="#4682b4", image="captain")
+define queen = Character("伊莎贝拉王后", color="#800080", image="queen")
+define merchant = Character("商人卡尔", color="#d2691e", image="merchant_karl")
 
 ## 第二章新增角色
-define assassin = Character("???", color="#333333")
+define assassin = Character("???", color="#333333", image="assassin_char")
 
 ## 第三章新增角色
-define lily_master = Character("暗百合首领", color="#2d1b4e")
+define lily_master = Character("暗百合首领", color="#2d1b4e", image="lily_master")
 
 ## 第四章新增角色
-define prince = Character("王子弗雷德里克", color="#4169e1")
+define prince = Character("王子弗雷德里克", color="#4169e1", image="prince")
+
+## 第二章会前交际角色
+define count_grey = Character("格雷伯爵", color="#6b8e6b", image="count_grey")
+define viscount_wells = Character("威尔斯子爵", color="#b8860b", image="viscount_wells")
+define countess_stein = Character("施泰因伯爵夫人", color="#708090", image="countess_stein")
+define storyteller = Character("说书人", color="#c8b890", image="storyteller")
+
+## 序章特殊角色
+define bertrand = Character("伯特兰爵士", color="#8b7355", image="bertrand")
 
 ## 通用角色
-define servant = Character("侍从", color="#a9a9a9")
-define soldier = Character("士兵", color="#708090")
+define servant = Character("侍从", color="#a9a9a9", image="servant_generic")
+define soldier = Character("士兵", color="#708090", image="soldier_generic")
 define crowd = Character("众人", color="#a9a9a9")
+define blacksmith_wife = Character("铁匠之妻", color="#c4a882", image="blacksmith_wife")
+define noble_lady = Character("贵族女子", color="#e8d098", image="noble_lady")
 
 ## ============================================================
 ## 数值系统
@@ -52,6 +63,26 @@ default rel_queen = 20
 default rel_prince = 0
 default rel_lily = 0
 
+# 勇气系统
+default courage = 50
+default max_courage = 100
+
+# 路线印记系统
+default path_marks_martial = 0
+default path_marks_scheme = 0
+default path_marks_faith = 0
+default path_marks_diplomacy = 0
+default path_active_martial = False
+default path_active_scheme = False
+default path_active_faith = False
+default path_active_diplomacy = False
+
+# 高属性代价标记（防止重复触发）
+default power_too_high = False
+default intrigue_too_high = False
+default wealth_too_high = False
+default faith_too_high = False
+
 # 第一章剧情标记
 default father_death_known = False
 default secret_passage_found = False
@@ -65,17 +96,36 @@ default merchant_deal = False
 default assassination_survived = False
 default council_outcome = ""
 
+# 信息揭示标记（"已知"flag体系）
+default testament_forged_known = False
+default ferein_role_known = False
+default matthias_has_testament_known = False
+default father_was_regent_known = False
+default queen_poisoned_king_known = False
+default father_poisoned_known = False
+default elena_spy_known = False
+default elena_identity_exposed_known = False
+default baron_is_darkflame_known = False
+default darkflame_known = False          # 知道"暗焰"这个派系的存在
+default dark_lily_exists_known = False
+default prince_imprisoned_known = False
+
 # 第三章剧情标记
 default dark_lily_joined = False
 default dark_lily_destroyed = False
 default true_killer_known = False
 default father_letters_found = False
+default ch3_dark_lily_visited = False
+default aldric_knows_passage = False
 default poison_evidence = False
 
 # 第四章剧情标记
 default queen_trust = False
 default prince_ally = False
 default prince_betrayed = False
+default prince_returned_willingly = False
+default prince_mentor_known = False
+default prince_trust_deep = False
 default elena_romance = False
 default court_faction = ""
 
@@ -203,10 +253,4 @@ init python:
             return msgs[1]
         return None
 
-    def clamp_stats():
-        store.power = max(0, min(100, store.power))
-        store.wealth = max(0, min(100, store.wealth))
-        store.faith = max(0, min(100, store.faith))
-        store.loyalty = max(0, min(100, store.loyalty))
-        store.reputation = max(0, min(100, store.reputation))
-        store.intrigue = max(0, min(100, store.intrigue))
+    ## clamp_stats() 已移至 attr_system.rpy，此处不再重复定义。

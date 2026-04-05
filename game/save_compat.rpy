@@ -41,6 +41,53 @@ label after_load:
         $ persistent.tutorial_seen = False
     if not hasattr(persistent, 'rating_asked'):
         $ persistent.rating_asked = False
+
+    ## ================================================================
+    ## 存档迁移：追溯补设"信息已知"flag（11个）
+    ## 问题：老存档在这些flag添加前已过揭示点，flag始终为False，
+    ##       导致后续守卫检查永远不触发"已知态"文本
+    ## 策略：根据玩家当前进度（章节完成记录 + 剧情标记）推断
+    ##       哪些信息应已获知，兜底补设。新存档不受影响。
+    ## ================================================================
+    python:
+        _ch = persistent.chapters_completed if persistent.chapters_completed else set()
+
+        ## 推断章节进度（兼容缺少 chapters_completed 的极老存档）
+        _past_ch2 = ("chapter1" in _ch) or father_death_known or alliance_baron or alliance_church or assassination_survived
+        _past_ch3 = ("chapter2" in _ch) or dark_lily_joined or dark_lily_destroyed or true_killer_known or father_letters_found or ch3_dark_lily_visited
+        _past_ch4 = ("chapter3" in _ch) or queen_trust or prince_ally or prince_betrayed
+
+        ## ---- 第二章揭示 ----
+        ## 父亲被毒杀（条件：调查过商人Karl，已有 poison_evidence）
+        if _past_ch2 and (father_death_known or poison_evidence):
+            father_poisoned_known = True
+
+        ## ---- 第三章主线揭示（父亲日记解读，必经剧情） ----
+        if _past_ch3:
+            testament_forged_known = True       # 遗诏被篡改
+            ferein_role_known = True             # 费雷恩销毁原件
+            father_was_regent_known = True       # 父亲本应是摄政者
+            queen_poisoned_king_known = True     # 王后毒杀先王
+            dark_lily_exists_known = True        # 暗百合组织存在
+            matthias_has_testament_known = True  # 马修斯持有遗诏线索
+
+        ## ---- 第三章条件揭示（暗百合线路） ----
+        ## elena身份 + 男爵暗焰身份在暗百合剧情中揭示
+        if _past_ch3 and (dark_lily_joined or dark_lily_destroyed or ch3_dark_lily_visited):
+            elena_spy_known = True              # 艾琳娜是三重间谍
+            elena_identity_exposed_known = True # 艾琳娜身份暴露
+            baron_is_darkflame_known = True     # 男爵是暗焰首领
+            darkflame_known = True              # 知道暗焰派系存在
+
+        ## elena身份也可能通过高好感随机事件揭示（interludes.rpy）
+        if _past_ch2 and rel_elena >= 40:
+            elena_spy_known = True
+            elena_identity_exposed_known = True
+
+        ## ---- 第四章揭示 ----
+        if _past_ch4:
+            prince_imprisoned_known = True      # 王子被软禁
+
     return
 
 
@@ -97,6 +144,8 @@ init 999 python:
             "dark_lily_destroyed": False,
             "true_killer_known": False,
             "father_letters_found": False,
+            "ch3_dark_lily_visited": False,
+            "aldric_knows_passage": False,
             "poison_evidence": False,
 
             ## 第四章剧情标记
