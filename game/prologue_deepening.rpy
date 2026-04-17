@@ -48,6 +48,7 @@ label prologue_deep_childhood_1:
 
     "母亲笑你笨。"
 
+    $ hide_all_chars("mother_img")
     show mother_img at left with dissolve
 
     mother "傻孩子，不是什么东西都能往嘴里放的。"
@@ -101,22 +102,26 @@ label prologue_deep_childhood_1:
             $ log_decision("序章深化", "询问毒药", "谋略+3")
 
             hide mother_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "母亲，那个白色的花叫什么名字？"
 
             "母亲愣了一下。然后她笑了——像是想笑又忍住了——或者根本不是笑。"
 
             hide player_child_img
+            $ hide_all_chars("mother_img")
             show mother_img at left with dissolve
             mother "你为什么想知道？"
 
             hide mother_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "我想知道。万一有坏人来，我可以保护你。"
 
             "母亲蹲下来，把你抱进怀里。她的身上有药草的味道，混着泥土的气息。"
 
             hide player_child_img
+            $ hide_all_chars("mother_img")
             show mother_img at left with dissolve
             mother "那种花叫铃兰。记住它。记住它的样子。"
 
@@ -134,12 +139,14 @@ label prologue_deep_childhood_1:
             $ log_decision("序章深化", "询问草药治病", "信仰+3")
 
             hide mother_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "母亲，那些能治病的花呢？你能教我吗？"
 
             "母亲的表情柔和了下来。她握着你的小手，带你走到花园的另一边。"
 
             hide player_child_img
+            $ hide_all_chars("mother_img")
             show mother_img at left with dissolve
             mother "这是金盏菊。把花瓣泡水，可以退烧。这是白芷，嚼碎了敷在伤口上能止血。"
 
@@ -164,6 +171,7 @@ label prologue_deep_childhood_1:
             $ log_decision("序章深化", "追问缘由", "谋略+2 信仰+1")
 
             hide mother_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "母亲，你为什么要跟我说这些？"
 
@@ -172,6 +180,7 @@ label prologue_deep_childhood_1:
             "六岁的孩子问出了大人才会问的问题。"
 
             hide player_child_img
+            $ hide_all_chars("mother_img")
             show mother_img at left with dissolve
             mother "因为……"
 
@@ -180,10 +189,12 @@ label prologue_deep_childhood_1:
             mother "因为总有一天你会需要知道这些。"
 
             hide mother_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "什么时候？"
 
             hide player_child_img
+            $ hide_all_chars("mother_img")
             show mother_img at left with dissolve
             mother "我不知道。但那一天会来的。到时候，你要记住母亲今天教你的每一句话。"
 
@@ -321,26 +332,31 @@ label prologue_deep_childhood_2:
 
             "父亲看到你的时候，脸上的表情经历了一次复杂的变化——先是惊讶，然后是怒气，最后变成了一种你说不清的东西。"
 
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
             father "你怎么在这里？"
 
             "他的声音很冷。你缩了缩肩膀，但没有后退。"
 
             hide father_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "我……我做噩梦了。然后听到声音……"
 
             hide player_child_img
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
             father "你听到了什么？"
 
             hide father_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "有人说百合。还有什么……誓约。"
 
             "油灯的火苗在父亲脸上投下阴影，让他看起来老了十岁。"
 
             hide player_child_img
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
             father "过来。"
 
@@ -349,10 +365,12 @@ label prologue_deep_childhood_2:
             father "听着，[player_name]。你今晚看到的、听到的，一个字都不能跟别人说。明白吗？"
 
             hide father_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "为什么？"
 
             hide player_child_img
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
             father "因为这是大人的事。"
 
@@ -422,6 +440,7 @@ label prologue_deep_childhood_3:
 
     "北境告急。蛮族入侵。国王征召各地领主出兵支援。父亲派出了自己最好的一队骑兵，由他最信任的老战友——伯特兰爵士——率领。"
 
+    $ hide_all_chars("bertrand_img")
     show bertrand_img at left with dissolve
 
     "伯特兰爵士已经五十多岁了。他的头发全白了，脸上有一道从额头到下巴的旧伤疤，据说是年轻时和一头熊搏斗留下的。他走路时右腿微微跛着——那是十年前的一场战役留下的纪念品。"
@@ -436,6 +455,7 @@ label prologue_deep_childhood_3:
 
     "你站在大门口，看着他检查马鞍上的束带。他注意到了你，朝你招了招手。"
 
+    $ hide_all_chars("bertrand_img")
     show bertrand_img at left with dissolve
     bertrand "过来，小家伙。"
 
@@ -466,14 +486,17 @@ label prologue_deep_childhood_3:
 
             "伯特兰爵士看着你，忽然笑了。那张布满皱纹和伤疤的脸因为笑容变得温和了一瞬间。"
 
+            $ hide_all_chars("bertrand_img")
             show bertrand_img at left with dissolve
             bertrand "好小子。但我得警告你——我年纪虽然大了，剑术可没退步。你要是赢不了我，可别哭鼻子。"
 
             hide bertrand_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "我才不会哭！"
 
             hide player_child_img
+            $ hide_all_chars("bertrand_img")
             show bertrand_img at left with dissolve
             bertrand "嗯。像你爹。你爹八岁的时候也这么说。后来我把他打哭了。"
 
@@ -495,10 +518,12 @@ label prologue_deep_childhood_3:
             $ log_decision("序章深化", "承诺变聪明", "谋略+3")
 
             hide player_child_img
+            $ hide_all_chars("bertrand_img")
             show bertrand_img at left with dissolve
 
             "伯特兰爵士挑了挑眉。然后他伸出粗糙的大手，拍了拍你的脑袋。"
 
+            $ hide_all_chars("bertrand_img")
             show bertrand_img at left with dissolve
             bertrand "聪明。这个答案比你爹小时候的好。他那时候说的是'我要把他们全砍了'。"
 
@@ -531,18 +556,21 @@ label prologue_deep_childhood_3:
             "你的眼眶一下子就红了。"
 
             hide bertrand_img
+            $ hide_all_chars("player_child_img")
             show player_child_img at left with dissolve
             player "你能不能不走……"
 
             "你的声音在发抖。你知道这很丢人——一个领主的儿子不应该哭。但你已经失去了母亲。你不想再失去任何人。"
 
             hide player_child_img
+            $ hide_all_chars("bertrand_img")
             show bertrand_img at left with dissolve
 
             "伯特兰爵士看着你。他的表情没有变，但他的眼睛里有什么东西动了一下。"
 
             "他再次蹲下来，这次膝盖发出了更大的响声。他把你拉进怀里，铠甲硌得你肩膀生疼，但你不在乎。"
 
+            $ hide_all_chars("bertrand_img")
             show bertrand_img at left with dissolve
             bertrand "嘿。听着。"
 
@@ -634,6 +662,7 @@ label prologue_deep_youth_1:
 
     "你正沉浸其中的时候，身后传来一个熟悉的声音。"
 
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
 
     friend_marcus "我就猜你在这种地方。下雨天不练剑就往图书馆钻，你可真够无聊的。"
@@ -661,20 +690,24 @@ label prologue_deep_youth_1:
             "你看了马库斯一眼。"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "你先出去。帮我看着门。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "你——"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "马库斯。你信得过我吗？"
 
             "他张了张嘴，又闭上了。最后他叹了口气。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left
 
             friend_marcus "你这人……行吧。但你只有一个时辰。超过了我就进来把你拖出去。"
@@ -705,15 +738,18 @@ label prologue_deep_youth_1:
             "你放下了手里的书。"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "你说得对。这些东西不该在这里。"
 
             hide player_teen_img with dissolve
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "那我们……"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "去找院长。"
 
@@ -753,11 +789,13 @@ label prologue_deep_youth_1:
 
             "你把那本最薄的笔记——某位前任院长的私人手记——塞进了袍子里面。"
 
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "你在干什么？！"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "安静。"
 
@@ -766,10 +804,12 @@ label prologue_deep_youth_1:
             player "我只拿这一本。其余的不碰。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "你疯了。万一——"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "不会有万一。这间密室积了这么厚的灰，说明很久没有人来过。少一本薄笔记，没人会注意到。"
 
@@ -829,6 +869,7 @@ label prologue_deep_youth_2:
 
     "男孩已经不哭了。他咬着嘴唇，眼睛里的光正在一点点熄灭。"
 
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
 
     friend_marcus "那个是……莱茵哈特家的小儿子？叫什么来着。反正是个出了名的恶霸。"
@@ -855,6 +896,7 @@ label prologue_deep_youth_2:
 
             "你走过去，站在那个男孩和伯爵小儿子之间。你比他高半个头。你的眼睛直视着他的。"
 
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "够了。"
 
@@ -961,6 +1003,7 @@ label prologue_deep_youth_2:
             "马库斯在旁边什么都看在眼里。他没有说你对，也没有说你错。他只是拍了拍你的肩膀。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "你这个人啊……"
@@ -997,9 +1040,11 @@ label prologue_deep_youth_3:
 
     "他没有开灯。在月光下，你只能看到他的轮廓。他的肩膀在微微颤抖。"
 
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
 
     hide friend_marcus_img
+    $ hide_all_chars("player_teen_img")
     show player_teen_img at left with dissolve
     player "马库斯？怎么了？"
 
@@ -1010,6 +1055,7 @@ label prologue_deep_youth_3:
     "然后他开口了。"
 
     hide player_teen_img
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
     friend_marcus "我有件事必须告诉你。如果我不说，我这辈子都不会安心。"
 
@@ -1061,6 +1107,7 @@ label prologue_deep_youth_3:
 
             "你伸出手，放在他的肩膀上。"
 
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "马库斯。"
 
@@ -1073,11 +1120,13 @@ label prologue_deep_youth_3:
             player "你告诉了我真相。这比什么都重要。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "可是我——"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "你做了错事。但你选择了坦白。这说明你是什么样的人。"
 
@@ -1090,16 +1139,19 @@ label prologue_deep_youth_3:
             player "至于你家的债务——让我想想办法。我父亲虽然不是王都最有权势的人，但他不是没有朋友。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "你……你不恨我？"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "我恨你没有早点告诉我。"
 
             "马库斯笑了。那是一种如释重负的笑，像是背了半年的石头终于放下了。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "[player_name]。我这条命是你的。从今天起，我不会再对你撒一句谎。"
 
@@ -1121,6 +1173,7 @@ label prologue_deep_youth_3:
 
             "你的后背对着他。你需要一点时间。"
 
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "半年。"
 
@@ -1129,11 +1182,13 @@ label prologue_deep_youth_3:
             player "半年来，你坐在我旁边吃饭、跟我一起练剑、陪我逛书摊——每一天，你都在监视我。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "我——"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "让我说完。"
 
@@ -1146,10 +1201,12 @@ label prologue_deep_youth_3:
             player "我需要时间。也许很长的时间。在那之前——我们之间保持距离。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "[player_name]……"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "你可以继续给伯爵的人报告。告诉他们我说了什么、做了什么。我不在乎。但——"
 
@@ -1180,31 +1237,37 @@ label prologue_deep_youth_3:
 
             player "马库斯。你说你把关于我的一切都报告给了伯爵？"
 
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "是……是的。"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "那，如果我告诉你一些我'不小心'透露的消息，你照样报告上去——伯爵会相信吗？"
 
             "马库斯茫然地看着你。他显然没有料到你会是这个反应。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "大概……会吧。他没有理由怀疑。"
 
             "你笑了。不是那种温暖的笑，而是一种更冷、更锐利的笑。"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "那就继续做你一直在做的事。但从今天起，你报告什么，由我来决定。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "你要……利用这个？"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "伯爵想监视我？很好。让他看到我想让他看到的东西。"
 
@@ -1217,11 +1280,13 @@ label prologue_deep_youth_3:
             "马库斯看着你的表情，像是第一次真正认识你。"
 
             hide player_teen_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "你……不生气吗？"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
             player "当然生气。但生气解决不了问题。"
 
@@ -1290,6 +1355,7 @@ label prologue_deep_adult_1:
 
     "'艾登堡的小鹰。'他笑了笑。'久仰大名。'"
 
+    $ hide_all_chars("player_young_img")
     show player_young_img at left with dissolve
     player "你认识我？"
 
@@ -1308,6 +1374,7 @@ label prologue_deep_adult_1:
     "'你回答我一个问题。怎么样？'"
 
     hide player_young_img
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
 
     friend_marcus "别答应。这个人不简单。"
@@ -1333,6 +1400,7 @@ label prologue_deep_adult_1:
 
             "那是你半个月的生活费。"
 
+            $ hide_all_chars("player_young_img")
             show player_young_img at left with dissolve
             player "够吗？"
 
@@ -1455,11 +1523,13 @@ label prologue_deep_adult_1:
 
             "你和马库斯离开了赌馆。走在暗巷里，夜风吹得你清醒了不少。"
 
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "你做了聪明的决定。那个人浑身上下都是危险。"
 
             hide friend_marcus_img
+            $ hide_all_chars("player_young_img")
             show player_young_img at left with dissolve
             player "我知道。但……"
 
@@ -1468,6 +1538,7 @@ label prologue_deep_adult_1:
             player "他说他知道关于我父亲的事。我有点好奇。"
 
             hide player_young_img
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
             friend_marcus "好奇害死猫。你不是猫。"
 
@@ -1519,6 +1590,7 @@ label prologue_deep_adult_2:
 
     "你的手握紧了短刀。"
 
+    $ hide_all_chars("player_young_img")
     show player_young_img at left with dissolve
     player "你是谁？怎么进来的？"
 

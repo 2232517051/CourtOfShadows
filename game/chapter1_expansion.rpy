@@ -203,6 +203,7 @@ label ch1_exp_kitchen_night:
 
     "你推开门——"
 
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
 
     "艾琳娜正站在灶台前，背对着你。她穿着一身朴素的亚麻裙，外面罩着围裙，正在往一个陶碗里倒热牛奶。"
@@ -218,12 +219,14 @@ label ch1_exp_kitchen_night:
     "你注意到她说的'老夫人'——那是指你的母亲。艾琳娜在你母亲去世前就已经在城堡里了？"
 
     hide elena_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "你认识我母亲？"
 
     "她的表情变得柔和了。"
 
     hide player_char_img
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "我很小的时候就被卖到了城堡。是夫人……是老夫人收留了我。她教我识字，教我做针线。她是个很温柔的人。"
 
@@ -243,6 +246,7 @@ label ch1_exp_kitchen_night:
             "艾琳娜有些局促地倒了两碗热牛奶，然后在你对面坐下。她坐得很端正，双手放在膝盖上，像是随时准备起身行礼。"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "放松。这又不是早朝。"
 
@@ -251,6 +255,7 @@ label ch1_exp_kitchen_night:
             "你们聊了很多。关于城堡，关于过去，关于父亲生前的日子。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "老领主……他不是一个容易亲近的人。但他对领民很好。每年冬天，他都会亲自巡查每个村庄，确保没有人挨冻受饿。"
 
@@ -265,10 +270,12 @@ label ch1_exp_kitchen_night:
             "你的心沉了一下。"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你看清了纸上的内容吗？"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "没有。但我看到了一个印记——百合花。倒置的百合花。"
 
@@ -277,10 +284,12 @@ label ch1_exp_kitchen_night:
             "你把牛奶喝完。它很甜，带着一丝肉桂的香气。"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "谢谢。以后如果你想起什么，随时来找我。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……是。"
 
@@ -292,12 +301,14 @@ label ch1_exp_kitchen_night:
             $ log_decision("第一章扩展", "礼貌谢绝艾琳娜的牛奶")
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "不用了，谢谢。我只是睡不着，出来走走。"
 
             "你的语气客气但有距离感。艾琳娜微微低头。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "是。如果您需要什么，随时吩咐。"
 
@@ -340,10 +351,12 @@ label ch1_exp_ramparts_night:
     captain "领主大人。深夜巡城？"
 
     hide captain_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "睡不着。你呢？"
 
     hide player_char_img
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "……也睡不着。"
 
@@ -368,12 +381,14 @@ label ch1_exp_ramparts_night:
             "你走到他身边，和他并肩站在城垛前。"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "如果自责有用，我应该比你更自责。我甚至不在他身边。"
 
             "雷恩的喉结动了动。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "……您跟老领主很像。他也从不怪别人。"
 
@@ -386,6 +401,7 @@ label ch1_exp_ramparts_night:
             "你伸出手，扶他起来。"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "不需要跪。站在我身边就好。"
 
@@ -401,6 +417,7 @@ label ch1_exp_ramparts_night:
             "雷恩的表情变得严肃。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "最后一周……老领主变得非常不安。他加强了城堡的守卫，但同时又打发走了几个老仆人。他说不信任他们。"
 
@@ -411,10 +428,12 @@ label ch1_exp_ramparts_night:
             captain "前一天晚上，他从书房出来，叫我过去。他跟我说了一句话：'如果我出了什么事，保护好我的儿子。别让他碰那些信。'"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "什么信？"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "他没说。第二天早上，我去叫他起床的时候……"
 
@@ -460,19 +479,23 @@ label ch1_exp_elena_encounter:
 
             "你从柱子后面走出来。"
 
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "艾琳娜。"
 
             "她吓得差点摔倒。灯笼在她手中剧烈晃动，影子在墙壁上疯狂摇摆。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "领——领主大人！我、我只是——"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你在地板下面藏了什么？"
 
@@ -487,6 +510,7 @@ label ch1_exp_elena_encounter:
             "你接过来一看——信封上没有收件人，但火漆上有一个模糊的百合花印记。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "这……这是老领主交给我保管的。他说如果他出了什么事，让我把这封信交给新领主。也就是……您。"
 
@@ -495,6 +519,7 @@ label ch1_exp_elena_encounter:
             "你看着手中的信，又看了看艾琳娜。她的眼中有恐惧，但没有欺骗。"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "……我先收下了。"
 
@@ -560,6 +585,7 @@ label ch1_exp_morning_council:
 
     "议事厅的长桌两侧坐着四个人——这是你作为新领主的第一次正式议事。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     aldric "少主，所有人都到齐了。请入座。"
@@ -582,18 +608,22 @@ label ch1_exp_morning_council:
     captain "他们有大约四十到五十人，藏身在铁匠峡谷的废弃矿洞里。地形易守难攻，强行进攻的话我们至少需要两百人。"
 
     hide captain_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "但我们的卫队目前只有一百二十人。其中一半分散在各个村庄和关隘。能调动的机动兵力最多六十人。"
 
     hide aldric_img
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "六十人攻一个有五十人防守的峡谷……伤亡会很大。"
 
     hide captain_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "领主大人，恕老朽直言——光靠艾登堡这点人，连匪帮都吃力。将来若有更大的麻烦，我们根本不够看。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "那就不靠人数。两百人守不住一座城，但两百人足够守住一个秘密。我们赢不了硬仗——但可以让别人替我们打。"
 
@@ -609,24 +639,29 @@ label ch1_exp_morning_council:
             $ log_decision("第一章扩展", "决定以军事手段剿匪")
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "调集所有能动的兵力。我们不能让匪患继续恶化。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "六十人未必够——"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "不需要正面强攻。我们先封锁峡谷的出入口，断水断粮。三天之内他们就会崩溃。同时派小股精锐从侧面的山路迂回，堵住他们的退路。"
 
             "雷恩思考了一会儿，手指在剑柄上敲了两下——那是他认真考虑某个提议时才有的动作。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "……围困加迂回。消耗最小，效果最大。这个方案可行。"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "一周内完成部署。商路每多断一天，我们就多损失一笔税收。"
 
@@ -643,10 +678,12 @@ label ch1_exp_morning_council:
             "显然没人想过这个问题。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "据说……黑狼帮的头目以前是个退伍老兵。北部山区今年遭了旱灾，庄稼绝收。那些'匪'里面有不少是走投无路的农民。"
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "所以他们不是天生的匪，是被逼的。"
 
@@ -655,10 +692,12 @@ label ch1_exp_morning_council:
             player "派使者去铁匠峡谷。告诉他们的头目——如果他们愿意放下武器，我可以给他们一条出路。退伍兵编入卫队，农民安排到领地的荒地上开垦。前三年免税。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "大人，这太——"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "太仁慈了？也许。但六十个士兵加上五十个归降的匪徒，就是一百一十人。这比强攻划算得多。"
 
@@ -676,21 +715,25 @@ label ch1_exp_morning_council:
             player "下个月有大型商队经过吧？"
 
             hide player_char_img
+            $ hide_all_chars("servant_generic_img")
             show servant_generic_img at left with dissolve
 
             servant "是、是的。格雷伯爵的秋粮商队，大约二十车。"
 
             hide servant_generic_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "把消息放出去。让黑狼帮知道这是一批大肥肉——但实际上，车里装的不是粮食，是我们的士兵。"
 
             "雷恩的眼神亮了起来。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "诱饵战术。等他们劫车的时候，我们从两翼包抄。"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "没错。在他们最松懈的时候一网打尽。"
 
@@ -704,6 +747,7 @@ label ch1_exp_morning_council:
     hide captain_img with dissolve
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "第二个议题——税收。"
 
@@ -717,9 +761,28 @@ label ch1_exp_morning_council:
 
     servant "也就是说……我们有三百金币的缺口。"
 
-    "你看了看账册。数字不会说谎。这个领地在财政上处于赤字状态。"
+    if prologue_study_focus == "commerce":
+        "你接过账册，目光迅速扫过每一行数字。修道院那些年的训练让你对数字有近乎本能的敏感。"
+        hide aldric_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "等等——关税二百？按照艾登堡的地理位置和过境商队数量，这个数字应该至少是三百五。"
+        player "还有，'其他一百'是什么？这个分类太模糊了。我要看明细。"
+        hide player_char_img
+        $ hide_all_chars("servant_generic_img")
+        show servant_generic_img at left with dissolve
+        servant "这、这……大人容我回去查……"
+        "书记官额头冒汗。你盯着他。"
+        "两天后，他交来的明细表揭露了一个事实：前任账房中饱私囊，每年至少吃掉八十金币。"
+        "你当即撤换了账房，堵住了这个漏洞。"
+        $ change_stat("wealth", 5)
+        $ change_stat("intrigue", 3)
+        "缺口从三百缩小到了一百多。但仍然需要开源或节流。"
+    else:
+        "你看了看账册。数字不会说谎。这个领地在财政上处于赤字状态。"
 
     hide servant_generic_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "老领主在世时靠积蓄填补了几年。但积蓄已经见底了。"
 
@@ -731,16 +794,19 @@ label ch1_exp_morning_council:
             $ log_decision("第一章扩展", "决定提高领地税率")
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "把农业税从十五提到二十。商业税从十提到十二。"
 
             "书记官的笔在纸上停住了。"
 
             hide player_char_img
+            $ hide_all_chars("servant_generic_img")
             show servant_generic_img at left with dissolve
             servant "大人……百姓们已经很难了。再加税的话——"
 
             hide servant_generic_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我知道。但城墙不修，来年哈根男爵一个冲锋就能踏平我们。卫队不养，匪患永远解决不了。"
 
@@ -765,10 +831,12 @@ label ch1_exp_morning_council:
             player "城墙修缮——先修北面和东面，其他方向暂缓，砍掉一半。卫队饷银——降低新兵薪水，老兵不动。行政开支——我不需要那么多侍从。砍掉三分之一。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "少主，这些削减可能影响——"
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我知道。不过这样做，领民就不会觉得新领主上任第一件事是搜刮他们。"
 
@@ -799,10 +867,12 @@ label ch1_exp_morning_council:
             "书记官目瞪口呆。"
 
             hide player_char_img
+            $ hide_all_chars("servant_generic_img")
             show servant_generic_img at left with dissolve
             servant "大人，这、这需要重新登记所有的——"
 
             hide servant_generic_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我知道。所以从现在开始做。一个月内完成全领地的田亩和商户普查。"
 
@@ -818,6 +888,7 @@ label ch1_exp_morning_council:
     hide servant_generic_img with dissolve
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "最后一个议题——邻近领主的动向。"
 
@@ -832,6 +903,7 @@ label ch1_exp_morning_council:
     "三个方向，三股势力。你捏了下眉心。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "关于男爵——先不动。让他越界扎营。一个月后如果他不撤，我们再谈。"
 
@@ -839,6 +911,8 @@ label ch1_exp_morning_council:
 
     player "关于主教——我会亲自去教堂拜访他。信仰是一面好盾牌，但不能让他把盾牌变成锁链。"
 
+    hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     aldric "少主……您比我预期的更像一个领主。"
@@ -881,6 +955,7 @@ label ch1_exp_training_yard:
     captain "领主大人。来视察训练吗？"
 
     hide captain_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "不只是视察。"
 
@@ -893,10 +968,12 @@ label ch1_exp_training_yard:
     "雷恩的表情没有变化，但他的嘴角微微一动——是赞赏，还是觉得你在胡来？你读不出来。"
 
     hide player_char_img
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "大人确定？我可不会手下留情。"
 
     hide captain_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "我希望你不会。"
 
@@ -913,6 +990,7 @@ label ch1_exp_training_yard:
         "他退了半步。眼中的审视变成了认真。"
 
         hide player_char_img
+        $ hide_all_chars("captain_img")
         show captain_img at left with dissolve
         captain "好。不是花架子。"
 
@@ -961,16 +1039,19 @@ label ch1_exp_training_yard:
                 "你把掉在地上的木剑捡起来。"
 
                 hide captain_img
+                $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "再来。"
 
                 "雷恩看了你一眼。"
 
                 hide player_char_img
+                $ hide_all_chars("captain_img")
                 show captain_img at left with dissolve
                 captain "您已经——"
 
                 hide captain_img
+                $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "再来。"
 
@@ -981,6 +1062,7 @@ label ch1_exp_training_yard:
                 "到第四次的时候，你的衣服已经被汗水浸透了，手臂酸痛得几乎抬不起来。雷恩终于收了剑。"
 
                 hide player_char_img
+                $ hide_all_chars("captain_img")
                 show captain_img at left with dissolve
                 captain "够了。您的底子不差，但缺实战经验。从明天起，每天来校场练一个时辰。三个月后，我保证您至少能撑二十个回合。"
 
@@ -1000,6 +1082,7 @@ label ch1_exp_training_yard:
                 "你把木剑放回架子，走到雷恩面前。"
 
                 hide captain_img
+                $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "我的剑术不行。但我想学。你愿意教我吗？"
 
@@ -1008,6 +1091,7 @@ label ch1_exp_training_yard:
                 "雷恩的表情柔和了一瞬。"
 
                 hide player_char_img
+                $ hide_all_chars("captain_img")
                 show captain_img at left with dissolve
                 captain "……明天清晨，日出时分。别迟到。"
 
@@ -1022,6 +1106,47 @@ label ch1_exp_training_yard:
                 $ ch1_exp_captain_respect = True
 
     hide captain_img with dissolve
+
+    if prologue_study_focus == "commerce" and ch1_exp_sparring_result == "defeat":
+        "离开校场的时候，你路过军械库。门敞开着，里面的情形一目了然——生锈的铁剑、开裂的盾牌、缝了又缝的皮甲。"
+        "你驻足片刻，心中已经有了盘算。"
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "（自言自语）北方集市上精铁的价格是一金币四磅，但如果从南方铁矿直接采买，能压到两银……"
+        hide player_char_img with dissolve
+        "你回到书房，花了一个时辰重新核算了军械采购的账目。按你的方案，同样的预算至少能多装备三十人。"
+        "你把方案交给奥尔德里克时，老骑士看了半天，抬起头来。"
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
+        aldric "少主……这比老领主的方案省了近四成。"
+        hide aldric_img with dissolve
+        "剑术你不行。但算账——这是你的战场。"
+        $ change_stat("wealth", 5)
+        $ change_stat("reputation", 3)
+    elif prologue_study_focus == "strategy" and ch1_exp_sparring_result == "defeat":
+        "离开校场时，你的身体在疼，但脑子比任何时候都清醒。"
+        "三个回合。雷恩的第一招永远是试探性的直刺，第二招是根据你的反应变招，第三招才是致命的。"
+        "你输在体术上，但你已经看穿了他的模式。"
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "（自言自语）如果我是指挥官，对付这种打法……应该先用轻步兵消耗他的第一波进攻，然后侧翼包抄。"
+        hide player_char_img with dissolve
+        "你把这个想法记了下来。也许哪天用得上——不是在校场上，而是在真正的战场上。"
+        $ change_stat("intrigue", 3)
+        $ change_stat("reputation", 3)
+    elif prologue_study_focus == "theology" and ch1_exp_sparring_result == "defeat":
+        "离开校场的路上，几个年轻士兵在背后窃窃私语。你听见了'三招'和'笑话'这两个词。"
+        "你停下脚步，转过身。"
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "圣典上说：'承认无知是智慧的开端，承认弱小是力量的起点。'"
+        player "我确实不会打仗。但我会学。就像你们每个人一样——从不会开始。"
+        hide player_char_img with dissolve
+        "窃窃私语停了。"
+        "一个年轻士兵犹豫了一下，朝你敬了个礼。然后第二个，第三个。"
+        "不是因为你的领主身份。是因为你的坦诚。"
+        $ change_stat("faith", 3)
+        $ change_stat("loyalty", 3)
 
     "离开校场的时候，你的全身都在疼。但你的脚步很稳。"
 
@@ -1045,6 +1170,7 @@ label ch1_exp_village_visit:
 
     "奥尔德里克建议你带上卫队和全套仪仗——'让百姓看到新领主的威严'。你拒绝了。"
 
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "我要看到的是真实的村庄，不是被提前排练好的表演。"
 
@@ -1083,6 +1209,7 @@ label ch1_exp_village_visit:
             player "艾琳娜，你带了药膏吗？"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
 
             elena "带了。金盏花膏，消肿止痛。"
@@ -1092,6 +1219,7 @@ label ch1_exp_village_visit:
             crowd "老领主……也这样。每次来村里都会问我们好不好……"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "路会修的。我保证。"
 
@@ -1129,6 +1257,7 @@ label ch1_exp_village_visit:
 
     "一个是商人——你认出他穿着格雷伯爵领地的商人制服。另一个是本地农民——粗糙的手掌，被太阳晒得黝黑的脸。"
 
+    $ hide_all_chars("merchant_karl_img")
     show merchant_karl_img at left with dissolve
 
     merchant "你这个骗子！你卖给我的粮食里掺了沙子！整整三十袋，每袋至少少了两成！"
@@ -1155,6 +1284,7 @@ label ch1_exp_village_visit:
             $ log_decision("第一章扩展", "亲自验秤验粮，公正裁决")
 
             hide merchant_karl_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "把粮食和秤都拿来。"
 
@@ -1268,15 +1398,18 @@ label ch1_exp_evening_feast:
 
     "你回到城堡时，发现大厅正在进行紧急的布置。仆人们穿梭忙碌着——铺桌布、摆银器、点蜡烛、挂织锦。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     aldric "少主——有客人来了。威尔斯子爵和两位地方骑士。他们说是'路过拜访'，但我们都知道，没有人会'路过'艾登堡。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "他们想干什么？"
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "试探您。老领主走了，所有人都想看看新领主是什么料。今晚的宴会将是您的第一次正式亮相。"
 
@@ -1304,6 +1437,7 @@ label ch1_exp_evening_feast:
 
     "右边是温德尔骑士——年纪更大，表情阴沉，像是永远在算计什么。"
 
+    $ hide_all_chars("viscount_wells_img")
     show viscount_wells_img at left with dissolve
 
     viscount_wells "啊，年轻的领主！终于见到真人了。令尊生前常常提到您——总是满口赞美。"
@@ -1311,6 +1445,7 @@ label ch1_exp_evening_feast:
     "你知道这是客套话。你父亲不是那种会'满口赞美'的人。"
 
     hide viscount_wells_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "子爵阁下远道而来，是艾登堡的荣幸。请入座。"
 
@@ -1319,22 +1454,26 @@ label ch1_exp_evening_feast:
     "前几道菜的时间里，对话一直维持着表面的礼貌——天气、收成、猎季。但你感觉到了暗流——威尔斯子爵的每一个问题都经过精心设计。"
 
     hide player_char_img
+    $ hide_all_chars("viscount_wells_img")
     show viscount_wells_img at left with dissolve
     viscount_wells "听说北部的匪患很严重？贵领地打算如何处理？"
 
     "这是第一次试探。如果你说正在处理，他会觉得你软弱。如果你说已经解决了，他会知道你在吹牛。"
 
     hide viscount_wells_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "正在处理中。我对结果很有信心。"
 
     "不多不少。子爵的笑容没变，但你注意到温德尔骑士和贝尔福骑士交换了一个眼神。"
 
     hide player_char_img
+    $ hide_all_chars("viscount_wells_img")
     show viscount_wells_img at left with dissolve
     viscount_wells "年轻人有自信是好事。不过如果需要帮助，我的骑士随时可以——"
 
     hide viscount_wells_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "多谢好意。但艾登堡的问题，由艾登堡自己解决。"
 
@@ -1345,6 +1484,7 @@ label ch1_exp_evening_feast:
     "几轮酒过后，气氛渐渐热络。这时候，威尔斯子爵提出了一个看似随意的建议——"
 
     hide player_char_img
+    $ hide_all_chars("viscount_wells_img")
     show viscount_wells_img at left with dissolve
     viscount_wells "按照惯例，新领主的第一次宴会应该致一段祝酒词。不知年轻的领主可有准备？"
 
@@ -1362,6 +1502,7 @@ label ch1_exp_evening_feast:
             $ log_decision("第一章扩展", "以谦逊姿态致祝酒词")
 
             hide viscount_wells_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "各位尊贵的客人——"
 
@@ -1457,6 +1598,7 @@ label ch1_exp_evening_feast:
 
     "你回到书房，卸下了一整晚的面具。肩膀终于塌了下来——演了一整晚的戏，比练一天的剑还累。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     "奥尔德里克推门进来，手里端着一杯热茶。他把茶放在你面前，然后在你对面坐下。"
@@ -1464,12 +1606,14 @@ label ch1_exp_evening_feast:
     aldric "少主今晚的表现……出乎所有人的意料。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "包括你？"
 
     "老管家微微笑了。"
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "包括我。"
 
@@ -1494,12 +1638,14 @@ label ch1_exp_evening_feast:
     "你伸手拿起了钥匙。金属冰凉地贴在掌心。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "谢谢你，奥尔德里克。"
 
     "老管家站起身，向你深深鞠了一躬。"
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "我侍奉过两代领主。第三代……我也会守到最后。"
 
@@ -1547,6 +1693,7 @@ label ch1_exp_evening_feast:
 
     "你闭上了眼睛。"
 
+    $ hide_all_chars("storyteller_img")
     show storyteller_img at left with dissolve
     storyteller "公元1347年。深秋。"
 

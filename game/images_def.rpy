@@ -29,6 +29,32 @@ image bg dungeon = Transform("images/bg_dungeon.webp", size=(1280, 720), fit="co
 image bg battlefield = Transform("images/bg_battlefield.webp", size=(1280, 720), fit="cover")
 
 ## ════════════════════════════════════════════════════════════
+## 背景图 - 别名映射（场景引用名 → 已有素材）
+## ════════════════════════════════════════════════════════════
+
+image bg_castle_corridor = Transform("images/bg_council_hall.webp", size=(1280, 720), fit="cover")
+image bg_castle_gate = Transform("images/bg_castle_exterior.webp", size=(1280, 720), fit="cover")
+image bg_road_night = Transform("images/bg_forest_path.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#667799"))
+image bg_road_dawn = Transform("images/bg_forest_path.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#ffddaa"))
+image bg_study_night = Transform("images/bg_study.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#667799"))
+image bg_bedroom = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
+
+## 空格分隔格式别名（scene bg xxx 引用）
+image bg castle_garden = Transform("images/bg_palace_garden.webp", size=(1280, 720), fit="cover")
+image bg castle_library = Transform("images/bg_study.webp", size=(1280, 720), fit="cover")
+image bg castle_interior = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
+image bg cellar = Transform("images/bg_underground.webp", size=(1280, 720), fit="cover")
+image bg town_market = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
+image bg tavern = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
+image bg player_room = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
+image bg marketplace = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
+image bg church = Transform("images/bg_church_interior.webp", size=(1280, 720), fit="cover")
+image bg village = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
+image bg castle_hall = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
+image bg castle_chapel = Transform("images/bg_castle_chapel.webp", size=(1280, 720), fit="cover")
+image bg castle_armory = Transform("images/bg_castle_armory.webp", size=(1280, 720), fit="cover")
+
+## ════════════════════════════════════════════════════════════
 ## 背景图 - 夜间变体（如果图片存在则使用专用夜景，否则用色调叠加模拟）
 ## ════════════════════════════════════════════════════════════
 
@@ -93,44 +119,120 @@ image bg palace_garden_dusk = ConditionSwitch(
 )
 
 ## ════════════════════════════════════════════════════════════
-## 角色立绘 - 默认表情（normal）
+## 角色立绘 - 默认表情（normal）- 全身用于 show
 ## ════════════════════════════════════════════════════════════
 
-image aldric_img = Transform("images/aldric.webp", zoom=0.45, yalign=1.0)
-image elena_img = Transform("images/elena.webp", zoom=0.45, yalign=1.0)
-image bishop_img = Transform("images/bishop.webp", zoom=0.45, yalign=1.0)
-image baron_img = Transform("images/baron.webp", zoom=0.45, yalign=1.0)
-image captain_img = Transform("images/captain.webp", zoom=0.45, yalign=1.0)
-image queen_img = Transform("images/queen.webp", zoom=0.45, yalign=1.0)
-image merchant_karl_img = Transform("images/merchant_karl.webp", zoom=0.45, yalign=1.0)
-image lily_master_img = Transform("images/lily_master.webp", zoom=0.45, yalign=1.0)
-image prince_img = Transform("images/prince.webp", zoom=0.45, yalign=1.0)
+## 核心角色
+image aldric_img = Transform("images/aldric.png", zoom=0.45, yalign=1.0)
+image elena_img = Transform("images/elena.png", zoom=0.45, yalign=1.0)
+image bishop_img = Transform("images/bishop.png", zoom=0.45, yalign=1.0)
+image baron_img = Transform("images/baron.png", zoom=0.45, yalign=1.0)
+image captain_img = Transform("images/captain.png", zoom=0.45, yalign=1.0)
+image queen_img = Transform("images/queen.png", zoom=0.45, yalign=1.0)
+image merchant_karl_img = Transform("images/merchant_karl.png", zoom=0.45, yalign=1.0)
+image lily_master_img = Transform("images/lily_master.png", zoom=0.45, yalign=1.0)
+image prince_img = Transform("images/prince.png", zoom=0.45, yalign=1.0)
+
+## 序章角色
+image mother_img = Transform("images/mother.png", zoom=0.45, yalign=1.0)
+image father_img = Transform("images/father.png", zoom=0.45, yalign=1.0)
+image tutor_img = Transform("images/tutor.png", zoom=0.45, yalign=1.0)
+image friend_marcus_img = Transform("images/friend_marcus.png", zoom=0.45, yalign=1.0)
+image bully_kid_img = Transform("images/bully_kid.png", zoom=0.45, yalign=1.0)
+image old_guard_img = Transform("images/old_guard.png", zoom=0.45, yalign=1.0)
+image servant_marta_img = Transform("images/servant_marta.png", zoom=0.45, yalign=1.0)
+image priest_thomas_img = Transform("images/priest_thomas.png", zoom=0.45, yalign=1.0)
+image noble_werner_img = Transform("images/noble_werner.png", zoom=0.45, yalign=1.0)
+image countess_hilda_img = Transform("images/countess_hilda.png", zoom=0.45, yalign=1.0)
+
+## 第二章会前交际角色
+image count_grey_img = Transform("images/count_grey.png", zoom=0.45, yalign=1.0)
+image viscount_wells_img = Transform("images/viscount_wells.png", zoom=0.45, yalign=1.0)
+image countess_stein_img = Transform("images/countess_stein.png", zoom=0.45, yalign=1.0)
+image storyteller_img = Transform("images/storyteller.png", zoom=0.45, yalign=1.0)
+image assassin_char_img = Transform("images/assassin_char.png", zoom=0.45, yalign=1.0)
+
+## 通用角色
+image blacksmith_wife_img = Transform("images/blacksmith_wife.png", zoom=0.45, yalign=1.0)
+image noble_lady_img = Transform("images/noble_lady.png", zoom=0.45, yalign=1.0)
+image soldier_generic_img = Transform("images/soldier_generic.png", zoom=0.45, yalign=1.0)
+image servant_generic_img = Transform("images/servant_generic.png", zoom=0.45, yalign=1.0)
+
+## 序章特殊角色
+image bertrand_img = Transform("images/bertrand.png", zoom=0.45, yalign=1.0)
+
+## 治理/NPC角色（新生成）
+image farmer_rep_img = Transform("images/farmer_rep.png", zoom=0.45, yalign=1.0)
+image healer_img = Transform("images/healer.png", zoom=0.45, yalign=1.0)
+image merchant_guild_img = Transform("images/merchant_guild.png", zoom=0.45, yalign=1.0)
+image tax_collector_img = Transform("images/tax_collector.png", zoom=0.45, yalign=1.0)
+image village_elder_img = Transform("images/village_elder.png", zoom=0.45, yalign=1.0)
+
+## 主角 (各时期)
+image player_char_img = Transform("images/player_char.png", zoom=0.45, yalign=1.0)
+image player_child_img = Transform("images/player_child.png", zoom=0.45, yalign=1.0)
+image player_teen_img = Transform("images/player_teen.png", zoom=0.45, yalign=1.0)
+image player_young_img = Transform("images/player_young.png", zoom=0.45, yalign=1.0)
 
 ## ════════════════════════════════════════════════════════════
-## 角色立绘 - 表情差分（angry / sad / happy）
+## 角色肖像 - side image (对话框旁自动显示头像)
+## 裁剪为头部区域，缩放到合适的对话框大小
+## ════════════════════════════════════════════════════════════
+
+init python:
+    # 所有有立绘的角色ID列表
+    _all_portrait_chars = [
+        "aldric", "elena", "bishop", "baron", "captain", "queen",
+        "merchant_karl", "lily_master", "prince",
+        "mother", "father", "tutor", "friend_marcus", "bully_kid",
+        "old_guard", "servant_marta", "priest_thomas", "noble_werner",
+        "countess_hilda", "count_grey", "viscount_wells", "countess_stein",
+        "storyteller", "assassin_char", "blacksmith_wife", "noble_lady",
+        "soldier_generic", "servant_generic",
+        # 序章特殊角色
+        "bertrand",
+        # 治理/NPC角色
+        "farmer_rep", "healer", "merchant_guild", "tax_collector", "village_elder",
+        # 主角 (成年/童年/少年/青年)
+        "player_char", "player_child", "player_teen", "player_young",
+    ]
+
+    # 为每个角色注册 side image (默认 + 表情差分)
+    # 完整立绘缩放到对话框高度 (不裁剪，保持完整图片)
+    # 768x1024 → 165x220
+    _side_size = (165, 220)
+    for _cn in _all_portrait_chars:
+        # 默认 side image
+        _base_path = f"images/{_cn}.png"
+        if renpy.loadable(_base_path):
+            renpy.image(f"side {_cn}", Transform(_base_path, size=_side_size))
+
+        # 表情差分 side image
+        for _ex in ["angry", "sad", "happy"]:
+            _expr_path = f"images/{_cn}_{_ex}.png"
+            if renpy.loadable(_expr_path):
+                renpy.image(f"side {_cn} {_ex}", Transform(_expr_path, size=_side_size))
+            elif renpy.loadable(_base_path):
+                renpy.image(f"side {_cn} {_ex}", Transform(_base_path, size=_side_size))
+
+## ════════════════════════════════════════════════════════════
+## 角色立绘 - 表情差分（angry / sad / happy）- 全身用于 show
 ## 如果表情图不存在，自动回退到默认立绘
 ## ════════════════════════════════════════════════════════════
 
 init python:
     # 定义所有角色和表情
-    _char_expressions = {
-        "aldric": ["angry", "sad", "happy"],
-        "elena": ["angry", "sad", "happy"],
-        "bishop": ["angry", "sad", "happy"],
-        "baron": ["angry", "sad", "happy"],
-        "captain": ["angry", "sad", "happy"],
-        "queen": ["angry", "sad", "happy"],
-        "prince": ["angry", "sad", "happy"],
-        "merchant_karl": ["angry", "sad", "happy"],
-        "lily_master": ["angry", "sad", "happy"],
-    }
+    _expr_list = ["angry", "sad", "happy"]
+    _char_expressions = {_cn: _expr_list for _cn in _all_portrait_chars}
 
     # 直接在 init python 块中注册表情图
+    # 使用空格分隔（如 "baron_img angry"）使表情变体与基础立绘共享同一 tag
+    # 这样 show baron_img angry 会自动替换 show baron_img，不会重叠
     for _cn, _exprs in _char_expressions.items():
         for _ex in _exprs:
-            _img_tag = f"{_cn}_img_{_ex}"
-            _expr_path = f"images/{_cn}_{_ex}.webp"
-            _base_path = f"images/{_cn}.webp"
+            _img_tag = f"{_cn}_img {_ex}"
+            _expr_path = f"images/{_cn}_{_ex}.png"
+            _base_path = f"images/{_cn}.png"
 
             if renpy.loadable(_expr_path):
                 renpy.image(_img_tag, Transform(_expr_path, zoom=0.45, yalign=1.0))

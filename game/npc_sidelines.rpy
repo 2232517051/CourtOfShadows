@@ -48,6 +48,7 @@ label npc_aldric_secret:
 
     "终于，三声缓慢的叩门声响起。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     "奥尔德里克推门而入。他没有穿平日整洁的管家服，而是一身旧棉衣，头发也不像往常那样梳得一丝不苟。"
@@ -61,12 +62,14 @@ label npc_aldric_secret:
     "你从未见过奥尔德里克这副模样。这个永远沉稳、永远从容的老人，此刻双手微微颤抖。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "坐下说，奥尔德里克。什么事让你这般不安？"
 
     "他缓缓落座，将铁盒放在桌上。生锈的锁扣被他用力掰开，里面是一柄断剑、一枚旧徽章，和一封泛黄的信。"
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "少主，我……并不是一直都是管家。"
 
@@ -77,10 +80,12 @@ label npc_aldric_secret:
     "你惊讶地看着这个你从小看到大的老人。他佝偻的身躯下，似乎还隐藏着某种早已被岁月磨去棱角的力量。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "皇家骑士……？"
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "是的。我曾经誓死效忠先王格里菲斯七世。那是一个……好人。一个好国王。"
 
@@ -125,6 +130,7 @@ label npc_aldric_secret:
             $ log_decision("NPC支线", "宽恕了奥尔德里克")
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你已经赎够了罪。这三十年来，你尽心尽力地守护着我们家。父亲信任你，我也信任你。"
 
@@ -133,6 +139,7 @@ label npc_aldric_secret:
             "你伸出手，握住老人粗糙的手掌。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "少主……"
 
@@ -150,20 +157,24 @@ label npc_aldric_secret:
             $ log_decision("NPC支线", "质问奥尔德里克为何隐瞒")
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你在我们身边三十年，为什么不把这些告诉父亲？他有权知道。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "……我怕。"
 
             aldric "我怕他知道真相后会看不起我。一个连国王都保护不了的骑士，有什么资格守在他身边？"
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "但父亲一直知道你的身份。他选择沉默，说明他信任你。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "是……也许您说得对。也许是我太懦弱了。"
 
@@ -186,6 +197,7 @@ label npc_aldric_secret:
             $ log_decision("NPC支线", "请求奥尔德里克重新拿起剑")
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "过去的事已经无法改变。但现在——我需要你。"
 
@@ -194,10 +206,12 @@ label npc_aldric_secret:
             "老人愣住了。他低头看着那柄断剑，手指抚过锈蚀的刃口。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "我……已经老了。手不如从前稳了，眼也花了。"
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "但你的经验还在。你知道如何战斗，如何布阵，如何训练士兵。"
 
@@ -208,6 +222,7 @@ label npc_aldric_secret:
             "在那一瞬间，你仿佛看到了三十年前那个意气风发的皇家骑士的影子。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "如果少主需要……那么，从明天起，我在后院等您。"
 
@@ -242,21 +257,25 @@ label npc_captain_past:
 
     "那是冯·哈根男爵的军徽。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
     hide captain_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "雷恩？你在看什么？"
 
     "他猛地回过神，将军徽攥进拳头。但他看到是你之后，紧绷的肩膀慢慢松了下来。"
 
     hide player_char_img
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "领主大人……我只是在想一些旧事。"
 
     "你在他身旁的垛口坐下。远处的群山在暮色中变得模糊，像是一幅褪色的旧画。"
 
     hide captain_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "我注意到每次提起男爵，你的反应都比常人激烈。"
 
@@ -265,6 +284,7 @@ label npc_captain_past:
     "风从山谷中吹来，带着松脂和泥土的气味。雷恩的目光变得很远。"
 
     hide player_char_img
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "……我曾经是男爵的人。"
 
@@ -317,12 +337,14 @@ label npc_captain_past:
             $ log_decision("NPC支线", "肯定了雷恩的选择")
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你做了正确的事。一个好的军人，应该知道什么命令可以服从，什么命令不能。"
 
             player "格伦瓦德的人因为你而活了下来。你是一个有良知的战士，我为此感到骄傲。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "……"
 
@@ -341,20 +363,24 @@ label npc_captain_past:
             $ log_decision("NPC支线", "从雷恩处获取男爵弱点")
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "这就解释了为什么男爵对我们领地始终怀有敌意。你在他的军队中抗命——对他来说这是奇耻大辱。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "不只是恨。男爵是一个绝不容许背叛的人。在他看来，我的存在就是对他权威的嘲讽。"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "那你一定很了解他。告诉我，他有什么弱点？"
 
             "雷恩犹豫了一下，然后压低了声音。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "男爵最大的弱点……是他的骄傲。他无法容忍任何人质疑他的判断。"
 
@@ -372,12 +398,14 @@ label npc_captain_past:
             $ log_decision("NPC支线", "雷恩承诺亲自对抗男爵")
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "男爵的野心越来越大。如果有一天战争不可避免……你准备好了吗？"
 
             "雷恩转过身来面对你。在暮色的映照下，他的表情变得如刀刃般冷硬。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "准备好了。"
 
@@ -388,10 +416,12 @@ label npc_captain_past:
             captain "不是为了复仇，是为了终结他的暴行。格伦瓦德不应该是最后一个差点被屠灭的村庄。"
 
             hide captain_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你不必独自面对他。"
 
             hide player_char_img
+            $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "我知道。但这是我的责任——作为一个曾经见证他残暴的人。"
 
@@ -426,9 +456,11 @@ label npc_elena_past:
 
     "她的动作快得几乎看不清，但每一次投掷之间，你都能感受到一种压抑的、几近疯狂的专注。"
 
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
 
     hide elena_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "艾琳娜？这么晚了……"
 
@@ -437,16 +469,19 @@ label npc_elena_past:
     "像一只被逼到角落的野猫。"
 
     hide player_char_img
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "……是你。"
 
     "她迅速收起匕首，但你注意到她的手在微微发抖。她的眼圈发红，像是刚哭过。"
 
     hide elena_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "你还好吗？"
 
     hide player_char_img
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "做了噩梦。老毛病了。"
 
@@ -457,10 +492,12 @@ label npc_elena_past:
     elena "你知道为什么你父亲收留我吗？"
 
     hide elena_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "他只说你是一个需要帮助的孤儿。"
 
     hide player_char_img
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "孤儿……哈。"
 
@@ -496,6 +533,9 @@ label npc_elena_past:
 
     elena "所以……现在你知道了。你身边的这个女人，是一个从十二岁起就被训练成间谍的工具。"
 
+    $ elena_spy_known = True
+    $ elena_identity_exposed_known = True
+
     elena "有时候我半夜醒来，发现自己手里不知什么时候又多了一把刀。本能反应。"
 
     elena "你……害怕吗？"
@@ -508,6 +548,7 @@ label npc_elena_past:
             $ log_decision("NPC支线", "安慰艾琳娜，承诺她是安全的")
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你现在安全了。"
 
@@ -522,6 +563,7 @@ label npc_elena_past:
             player "我也一样。在我眼里，你是艾琳娜。不是什么间谍，不是什么棋子。就是艾琳娜。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……"
 
@@ -541,22 +583,22 @@ label npc_elena_past:
             $ log_decision("NPC支线", "直接追问艾琳娜的过去")
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你说执行了七次任务。一共七个人？"
+            player "你说执行了三次任务。一共三个人？"
 
             "你的问题直接而冷静。艾琳娜看了你一眼——她的眼中没有愤怒，反而有一丝……释然。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
-            elena "七个。"
+            elena "三个。"
 
-            elena "第一个是商人，四十多岁。第二个是一个小贵族的管家。第三个……是一个牧师。"
+            elena "第一个是商人，四十多岁。第二个是一个小贵族的管家。"
 
-            "她一个一个数着，像是在念诵一段漫长的祷文。"
+            "她一个一个数着，像是在念诵一段简短却沉重的祷文。"
 
-            elena "第四个是一个放债人。第五个是另一个商人。第六个是一个退役军官。"
-
-            elena "第七个……是一个女人。他们说她是叛徒。我后来才知道，她只是想带自己的孩子离开侍女学院。"
+            elena "第三个……是一个女人。他们说她是叛徒。我后来才知道，她只是想带自己的孩子离开侍女学院。"
 
             "她的声音在最后一个人时微微颤抖。"
 
@@ -567,10 +609,12 @@ label npc_elena_past:
             "你沉默地消化着这些信息。这些不仅仅是故事——这是一个人的血泪史。"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "记住那些面孔是好事。说明你还有良知。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……也许吧。但有时候我宁愿忘记。"
 
@@ -582,6 +626,7 @@ label npc_elena_past:
             $ log_decision("NPC支线", "务实地看待艾琳娜的能力")
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你所经历的那些是不公平的，我承认。但现在我们面临真实的威胁。"
 
@@ -590,18 +635,21 @@ label npc_elena_past:
             "艾琳娜定定地看着你。你在她眼中看到了一丝失望，但很快被一种职业化的冷漠取代。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……我就知道。"
 
             elena "果然。到头来，每个人需要的都是我的刀。"
 
             hide elena_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "不——我需要的是你。但我不会假装你的技能不重要。我们都在这盘棋局上，我需要你最好的一面。"
 
             "她站起身来，拍了拍衣服上的草屑。暗中看不太清她的脸，但你从声音里听出她的表情恢复了平日的淡漠。"
 
             hide player_char_img
+            $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "行。你要用我的技能，可以。但别指望我会喜欢这样。"
 
@@ -642,6 +690,7 @@ label npc_bishop_confession:
 
     "推开教堂厚重的橡木门，烛光摇曳的圣堂中弥漫着浓重的酒气。"
 
+    $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
 
     "马修斯主教瘫坐在第一排长椅上，手中攥着一只银质酒壶。他的法袍歪斜，圣徽歪在一边。"
@@ -653,10 +702,12 @@ label npc_bishop_confession:
     "他的声音含糊不清，但眼神中有一种异样的清醒——那种喝了很多酒、反而变得可怕地清醒的状态。"
 
     hide bishop_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "主教，你喝醉了。让我送你回去。"
 
     hide player_char_img
+    $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
     bishop "醉了？不……不，我二十年来第一次这么清醒。"
 
@@ -667,6 +718,7 @@ label npc_bishop_confession:
     bishop "也许是因为……有些罪孽，连上帝都不愿意听。"
 
     hide bishop_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "你到底在说什么？"
 
@@ -675,6 +727,7 @@ label npc_bishop_confession:
     if bishop_doubt_done:
         # 玩家已经从 npc_bishop_doubt 中得知遗诏真相，跳过重复叙述
         hide player_char_img
+        $ hide_all_chars("bishop_img")
         show bishop_img at left with dissolve
         bishop "遗诏的事……你已经知道了。"
 
@@ -695,16 +748,19 @@ label npc_bishop_confession:
 
     else:
         hide player_char_img
+        $ hide_all_chars("bishop_img")
         show bishop_img at left with dissolve
         bishop "先王的遗诏。你听说过吗？"
 
         "你的心猛然一跳。先王格里菲斯七世的遗诏——关于王位继承的最后安排——一直是个谜团。有人说它被销毁了，有人说它根本不存在。"
 
         hide bishop_img
+        $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
         player "遗诏？那不是传说吗？"
 
         hide player_char_img
+        $ hide_all_chars("bishop_img")
         show bishop_img at left with dissolve
         bishop "不是传说。它存在过。"
 
@@ -754,6 +810,7 @@ label npc_bishop_confession:
             $ log_decision("NPC支线", "以信仰宽恕了主教")
 
             hide bishop_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你犯了错。但你花了二十年在赎罪。上帝看得到。"
 
@@ -762,10 +819,12 @@ label npc_bishop_confession:
             "主教呆呆地看着你，像是不敢相信自己听到的话。"
 
             hide player_char_img
+            $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "你……你不恨我？如果遗诏没被篡改，你的父亲也许——"
 
             hide bishop_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "也许。但'也许'改变不了已经发生的事。"
 
@@ -774,6 +833,7 @@ label npc_bishop_confession:
             "你从他手中抽走酒壶。他没有反抗，只是低下头，肩膀不停地颤抖。"
 
             hide player_char_img
+            $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "谢谢你……年轻的领主。谢谢你。"
 
@@ -788,22 +848,26 @@ label npc_bishop_confession:
             $ log_decision("NPC支线", "从主教处获取遗诏证据")
 
             hide bishop_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "主教，你说你把旧遗诏藏了起来——它还在吗？在哪里？"
 
             "主教抬起头，醉意似乎一瞬间消退了大半。他放下酒杯，身体坐直了。"
 
             hide player_char_img
+            $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "你……你想要它？"
 
             hide bishop_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "如果那份遗诏真的能证明先王的本意，它就是改变一切的筹码。"
 
             "主教闭上眼睛，嘴唇微动，像是在做最后一次祈祷。然后他伸手探入法袍的内袋，取出一把古铜色的小钥匙。"
 
             hide player_char_img
+            $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "教堂地下室。最深处有一个假墙——你推右边第三块石头，墙会打开。"
 
@@ -824,6 +888,7 @@ label npc_bishop_confession:
             $ log_decision("NPC支线", "用愧疚要求主教效忠")
 
             hide bishop_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你亲口说的——如果遗诏没被篡改，我父亲也许还活着。"
 
@@ -832,10 +897,12 @@ label npc_bishop_confession:
             "你的声音冷硬如铁。主教被你的语气惊醒了几分，恐惧取代了他脸上的醉意。"
 
             hide player_char_img
+            $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "我……我知道。"
 
             hide bishop_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "那就用行动来还。从今天起，你的每一分力量、每一条情报、每一份忠诚，都属于艾登堡。"
 
@@ -844,6 +911,7 @@ label npc_bishop_confession:
             "主教跪了下来。不是信徒的跪拜，而是一个罪人在审判者面前的臣服。"
 
             hide player_char_img
+            $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "我……明白了。从今以后，我是您的人。完全的，彻底的。"
 
@@ -878,6 +946,7 @@ label npc_village_quest:
 
     "中间站着一个白须飘飘的老人，正徒劳地试图拉开两家人。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     aldric "少主，那就是石泉村的村长——老汉斯。看起来出了什么纠纷。"
@@ -886,14 +955,17 @@ label npc_village_quest:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars("village_elder_img")
     show village_elder_img at left with dissolve
     village_elder "领主大人！您来得正好！老朽实在压不住这两家人了。"
 
     hide village_elder_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "怎么回事？"
 
     hide player_char_img
+    $ hide_all_chars("village_elder_img")
     show village_elder_img at left with dissolve
     village_elder "是水井的事。石泉村祖祖辈辈就靠村中那口老井吃水。"
 
@@ -906,6 +978,7 @@ label npc_village_quest:
     "你点点头。水源纠纷在农村是大事——关系到庄稼灌溉和日常饮水。"
 
     hide village_elder_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "让我去现场看看。"
 
@@ -915,10 +988,12 @@ label npc_village_quest:
 
     "然后你去查看了约根家新建的羊圈。地基挖掘确实切断了一条暗河支流——但问题是，这个地基的设计异常深，超出了建羊圈的需要。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "少主，这个地基……挖得太深了。建羊圈用不着挖这么深。"
 
     hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "是谁给约根出的主意，地基要挖这么深？"
 
@@ -929,6 +1004,7 @@ label npc_village_quest:
     "那个测量官不仅免费帮他做了地基设计，还给了他五个银币作为'鼓励'。"
 
     hide player_char_img
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "男爵的人……"
 
@@ -945,6 +1021,7 @@ label npc_village_quest:
             $ log_decision("NPC支线", "判水井归原来的铁匠家")
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "这口井由柯林家世代维护，优先使用权理应归他们。"
 
@@ -953,6 +1030,7 @@ label npc_village_quest:
             "铁匠柯林一家露出了感激的神色。牧羊人约根虽然不太情愿，但听到有补贴也没有再闹。"
 
             hide player_char_img
+            $ hide_all_chars("village_elder_img")
             show village_elder_img at left with dissolve
             village_elder "领主大人英明！这样两家人都能过下去了。"
 
@@ -964,6 +1042,7 @@ label npc_village_quest:
             $ log_decision("NPC支线", "判两家共享水源")
 
             hide village_elder_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "水源是公共资源，不应该属于任何一家。从今天起，石泉村的水井由村公所统一管理。"
 
@@ -972,6 +1051,7 @@ label npc_village_quest:
             "两家人面面相觑。这个方案不偏不倚——虽然谁都没有完全满意，但也都能接受。"
 
             hide player_char_img
+            $ hide_all_chars("village_elder_img")
             show village_elder_img at left with dissolve
             village_elder "领主大人这是大智慧啊！一碗水端平，两家都没话说。"
 
@@ -983,6 +1063,7 @@ label npc_village_quest:
             $ log_decision("NPC支线", "追查男爵破坏水源的阴谋")
 
             hide village_elder_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "这件事没有这么简单。约根，那个测量官长什么样？"
 
@@ -991,6 +1072,7 @@ label npc_village_quest:
             player "奥尔德里克，派人去周边村庄调查——是不是还有其他村子也出现过类似的'测量官'。"
 
             hide player_char_img
+            $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "是，少主。"
 
@@ -1001,6 +1083,7 @@ label npc_village_quest:
             "这是一个精心策划的、旨在削弱你领地边境经济的系统性阴谋。而幕后的黑手，指向了冯·哈根男爵。"
 
             hide aldric_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "男爵在不动一兵一卒的情况下，就想让我的边境村庄慢慢死掉。"
 
@@ -1015,10 +1098,13 @@ label npc_village_quest:
     "离开石泉村的时候，老汉斯一直送到村口。"
 
     hide player_char_img
+    $ hide_all_chars("village_elder_img")
     show village_elder_img at left with dissolve
     village_elder "领主大人，老朽活了七十多年，见过不少领主。您是最让人放心的一个。"
 
     "你向老人点头致意。也许在这个波谲云诡的权力游戏中，保护好这些最普通的百姓，才是你最重要的责任。"
+
+    hide village_elder_img with dissolve
 
     return
 
@@ -1039,6 +1125,7 @@ label npc_baron_honor:
 
     "你原本只是想从他口中获取军事情报，但谈话的方向出乎你的意料。"
 
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "海因里希，你为男爵效力多久了？"
 
@@ -1179,6 +1266,8 @@ label npc_baron_honor:
 
     "你需要做出选择——而这个选择，将影响你与男爵之间的最终结局。"
 
+    hide player_char_img with dissolve
+
     return
 
 ## ============================================================
@@ -1198,6 +1287,7 @@ label npc_lily_test:
 
     "你被召到了据点最深处的一间密室——暗百合首领亲自召见你。"
 
+    $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
 
     lily_master "来了。坐。"
@@ -1209,10 +1299,12 @@ label npc_lily_test:
     lily_master "你的能力毋庸置疑。但有一样东西，我还没有看清——你的判断力。"
 
     hide lily_master_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "判断力？"
 
     hide player_char_img
+    $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     lily_master "杀一个人容易。决定该不该杀一个人，难。"
 
@@ -1223,10 +1315,12 @@ label npc_lily_test:
     lily_master "过去三个月，王后的密探至少四次精准地出现在我们的接头地点。每一次都是在'夜莺'参与了联络之后。"
 
     hide lily_master_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "你查实了？"
 
     hide player_char_img
+    $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     lily_master "查实了。证据确凿。但这不是重点。"
 
@@ -1237,16 +1331,19 @@ label npc_lily_test:
     lily_master "这就是'夜莺'。真名玛莎。你来决定她的命运。"
 
     hide lily_master_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "等等——为什么让我来决定？"
 
     hide player_char_img
+    $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     lily_master "因为这是你的考验。暗百合不养没有判断力的人。"
 
     "你看着面前的年轻女人。她浑身发抖，但没有求饶。"
 
     hide lily_master_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "让我先和她谈谈。"
 
@@ -1273,6 +1370,7 @@ label npc_lily_test:
     "你转向暗百合首领。兜帽下看不清表情，但你感到首领也在审视着你的反应。"
 
     hide player_char_img
+    $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     lily_master "你听到了。一个叛徒，但理由是为了救自己的丈夫。如何处置？"
 
@@ -1288,14 +1386,17 @@ label npc_lily_test:
             $ log_decision("NPC支线", "放走了暗百合叛徒")
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "放她走。"
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "……理由？"
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "她不是为了钱，不是为了权力。她是为了救自己的家人。如果我们连这样的人都要杀——那我们和王后有什么区别？"
 
@@ -1306,6 +1407,7 @@ label npc_lily_test:
             "然后，一声低沉的笑从兜帽下传出。"
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "好。非常好。"
 
@@ -1332,6 +1434,7 @@ label npc_lily_test:
             $ log_decision("NPC支线", "处决了暗百合叛徒")
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "处决她。"
 
@@ -1342,6 +1445,7 @@ label npc_lily_test:
             player "今天放过她，明天就会有第二个、第三个。"
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "……冷酷。但有道理。"
 
@@ -1350,10 +1454,12 @@ label npc_lily_test:
             lily_master "你心里不舒服？"
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "不舒服。但这是必要的。"
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "是的。权力的本质就是做让自己不舒服的决定。"
 
@@ -1371,14 +1477,17 @@ label npc_lily_test:
             $ log_decision("NPC支线", "将叛徒变为双面间谍")
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "不杀她。也不放她走。利用她。"
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "……继续说。"
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "王后认为玛莎还在为她传递情报。我们不打破这个假象——反而通过玛莎向王后输送假情报。"
 
@@ -1387,10 +1496,12 @@ label npc_lily_test:
             "你能感到兜帽下的目光在反复审视你。"
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "风险很大。如果玛莎被识破，不仅她会死，我们的假情报渠道也会暴露。"
 
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "所以我们需要给她足够的动力。"
 
@@ -1407,6 +1518,7 @@ label npc_lily_test:
             "玛莎 \"我……我愿意。只要能救我丈夫，你们让我做什么都行。\""
 
             hide player_char_img
+            $ hide_all_chars("lily_master_img")
             show lily_master_img at left with dissolve
             lily_master "有胆识。也有算计。"
 

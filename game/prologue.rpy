@@ -163,6 +163,7 @@ label prologue_childhood:
 
     "庭院的另一边，卫兵们在换岗。铠甲碰撞的声音清脆而有节奏，像某种你听不懂的音乐。你停下来看他们，直到一个老卫兵朝你咧嘴一笑。"
 
+    $ hide_all_chars("old_guard_img")
     show old_guard_img at left with dissolve
 
     old_guard "小少爷，又跑出来啦？夫人到处找你呢。"
@@ -175,6 +176,7 @@ label prologue_childhood:
 
     "傍晚，女仆玛尔塔把你从庭院里捞回来，浑身是土。她一边给你擦脸一边唠叨。"
 
+    $ hide_all_chars("servant_marta_img")
     show servant_marta_img at left with dissolve
 
     servant_marta "少爷，您是领主的儿子，不能整天在泥地里打滚。明天要见格雷伯爵家的公子，您得体面些。"
@@ -193,6 +195,7 @@ label prologue_childhood:
 
     "他比你高半个头，圆滚滚的脸上带着一种你日后才学会辨认的表情——轻蔑。他身后跟着两个随从家的孩子，像两条尾巴。"
 
+    $ hide_all_chars("bully_kid_img")
     show bully_kid_img at left with dissolve
 
     bully_kid "哟，小领主。听说你连马都不敢骑？"
@@ -258,6 +261,7 @@ label prologue_childhood:
 
             "父亲放下手中的文书，听完你的话，皱起了眉头。"
 
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
 
             father "他推了你？"
@@ -309,6 +313,7 @@ label prologue_childhood:
 
     "你以前看过这面盾牌无数次。但这是第一次，父亲让你坐到他膝盖上，指着它给你讲。"
 
+    $ hide_all_chars("father_img")
     show father_img at left with dissolve
 
     father "这是我们家的徽章。认识吗？"
@@ -521,6 +526,7 @@ label prologue_childhood:
 
             "不知道过了多久，神父来了。他没有说话，只是在你身边坐下。"
 
+            $ hide_all_chars("priest_thomas_img")
             show priest_thomas_img at left with dissolve
 
             priest_thomas "上帝会照顾她的，孩子。"
@@ -644,6 +650,7 @@ label prologue_youth:
 
     "修道院的门房是个秃顶的老修士，登记你的名字时，眉毛抬了抬。"
 
+    $ hide_all_chars("tutor_img")
     show tutor_img at left with dissolve
 
     tutor "艾登堡的？嗯。你父亲年轻时也在这里读过书。那时候他打断了一个伯爵儿子的鼻梁骨。"
@@ -670,6 +677,7 @@ label prologue_youth:
 
     "你和一个叫马库斯的同学走得最近。他是个小贵族的儿子，话不多，但脑子很快。"
 
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
 
     friend_marcus "在这里，书本教你的东西只占一半。另一半，得自己学。"
@@ -707,6 +715,7 @@ label prologue_youth:
 
             "教策略的修士卢卡是个瘦小的老头，据说年轻时当过某位伯爵的幕僚。他不教你怎么打仗。他教你怎么不打仗就赢。"
 
+            $ hide_all_chars("tutor_img")
             show tutor_img at left with dissolve
 
             tutor "棋盘上最强的棋子不是王后。是卒。因为卒足够多，足够不起眼，没人会在意一个卒的走向。等他们注意到的时候，卒已经变成了王后。"
@@ -730,6 +739,7 @@ label prologue_youth:
 
             "教神学的神父托马斯是个矛盾的人。他对穷人慈悲，对权贵冷淡，对你严格到近乎刻薄。"
 
+            $ hide_all_chars("priest_thomas_img")
             show priest_thomas_img at left with dissolve
 
             priest_thomas "别背了。你把整本圣经背下来也没用。我问你——如果上帝是全能的，他为什么允许苦难存在？"
@@ -960,6 +970,7 @@ label prologue_youth:
 
             "然后他做了一件很少做的事——他站起来，走到你面前，拍了拍你的肩膀。"
 
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
             father "你长大了。"
 
@@ -988,6 +999,7 @@ label prologue_youth:
 
             "临走那天，父亲送你到城门口。以前从来没有过。"
 
+            $ hide_all_chars("father_img")
             show father_img at left with dissolve
             father "路上小心。"
 
@@ -1107,6 +1119,7 @@ label prologue_adult:
 
     "马库斯——你最好的朋友，现在是某位子爵的幕僚——在毕业酒会上搂着你的肩膀说："
 
+    $ hide_all_chars("friend_marcus_img")
     show friend_marcus_img at left with dissolve
 
     friend_marcus "你知道他们怎么叫你吗？'艾登堡的小鹰'。听着挺威风。不过我觉得你更像只鹌鹑。"
@@ -1148,6 +1161,7 @@ label prologue_adult:
 
     "施泰因伯爵夫人——一个五十多岁的女人，灰色的头发梳得一丝不苟，脸上的皱纹像刻出来的——朝你走来。"
 
+    $ hide_all_chars("countess_hilda_img")
     show countess_hilda_img at left with dissolve
 
     countess_hilda "艾登堡的小领主。终于见到真人了。"
@@ -1181,6 +1195,7 @@ label prologue_adult:
 
             "大厅安静了几秒。然后施泰因伯爵夫人鼓了一下掌。就一下。但足够了。"
 
+            $ hide_all_chars("countess_hilda_img")
             show countess_hilda_img at left with dissolve
 
             countess_hilda "年轻人，你有点意思。"
@@ -1233,6 +1248,7 @@ label prologue_adult:
 
             "马库斯凑过来，低声说："
 
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "你在干什么？那些大人物你一个都不搭理。"
@@ -1241,6 +1257,7 @@ label prologue_adult:
 
             "马库斯想了一会儿，笑了。"
 
+            $ hide_all_chars("friend_marcus_img")
             show friend_marcus_img at left with dissolve
 
             friend_marcus "行。你比我想的聪明。"

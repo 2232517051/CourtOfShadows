@@ -4,24 +4,40 @@
 
 label chapter4_start:
 
+    ## 安全重置：防止上一章过场动画的 _dismiss_pause 泄漏
+    $ _dismiss_pause = True
+    $ quick_menu = True
+    window auto
+
     $ renpy.force_autosave()
     $ snapshot_chapter_start()
     scene black with fade
 
-    call show_chapter("第四章", "王都风云", "踏入更大的棋局")
-    call show_recap("chapter3")
+    call show_chapter("第四章", "王都风云", "踏入更大的棋局") from _call_show_chapter_2
+    call show_recap("chapter3") from _call_show_recap_2
+    call apply_rel_chapter_effects from _call_rel_ch4
 
+    ## 章节过场动画
+    call cinematic_chapter4 from _call_cinematic_ch4
+
+    ## 章节间过渡：出发前夜 + Elena坦白
+    call interlude_ch3_ch4 from _call_interlude34
+    call interlude_ch3_ch4_confession from _call_interlude34_conf
+
+    ## NPC深度支线
+    call npc_elena_homeland from _call_npc_eh
+
+    ## NPC支线：男爵的隐藏荣誉
+    call npc_baron_honor from _call_npc_bh4
+
+    ## 章节深化
+    call ch4_deep_queen_weakness from _call_ch4_dqw
+    call ch4_deep_poet from _call_ch4_dpoet
+    call ch4_deep_dungeon_echo from _call_ch4_dde
+
+    $ trigger_random_event("travel")
 
     "从艾登堡到王都，骑马需要五天。"
-
-    "一路上，你反复思考着这次觐见的意义。"
-
-    if council_outcome == "反对":
-        "你在领主会议上反对了王后。这次召见，恐怕不会太友好。"
-    elif council_outcome == "支持":
-        "你支持了王后的新税法。也许她想当面表示感谢……或者提出更多要求。"
-    else:
-        "你的折中方案引起了关注。王后大概想亲自看看你是什么人。"
 
     ## ============================================================
     ## 旅途第一天：启程
@@ -38,13 +54,20 @@ label chapter4_start:
 
     "你骑在马上，回头望了一眼自己的城堡——晨光勾勒出塔楼的轮廓，像一尊沉默的巨人。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     $ unlock_gallery("captain")
 
     captain "领主大人，护卫队已经集结完毕。二十名骑兵，十名步兵，足够应对路上的意外。"
 
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "辎重呢？"
 
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "两辆马车。一辆装觐见的礼物和衣物，一辆装干粮和帐篷。"
 
     captain "按照行程，我们每天赶六十里路，第五天傍晚应该能到王都。"
@@ -62,9 +85,17 @@ label chapter4_start:
 
     if dark_lily_joined:
         elena "暗百合在沿途安排了三个接应点。如果遇到危险，我们可以迅速转移。"
+    else:
+        elena "我之前做情报工作时走过几次这条路，沿途有几条隐蔽的岔道。万一遇到麻烦，可以迅速脱离。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你对王都的路线很熟悉。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "我曾经……经常走这条路。"
 
     "她的语气里有一丝你捕捉不到的情绪。你没有追问。"
@@ -77,7 +108,14 @@ label chapter4_start:
 
     "老骑士没有挥手，只是静静地站着，像一根扎入城墙的铁钉。"
 
-    show aldric_img at center with dissolve
+    if not dark_lily_joined:
+        "你忽然想起，城镇酒馆里曾有老兵说过：'别看奥尔德里克现在是个管家，当年他替先王办的那些差事，知道的人早就入土了。'"
+        "你一直当作是醉话。但经历了这么多事之后，你开始觉得这个老骑士可能比你想象的复杂得多。"
+    else:
+        "你回头望着城墙上的身影，心里默默盘算着暗百合的据点位置。有他们在暗处接应，这一路至少不会是孤军深入。"
+
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     $ unlock_gallery("aldric")
 
     aldric "（远远地喊）一路平安，领主大人。艾登堡等您回来。"
@@ -90,7 +128,7 @@ label chapter4_start:
     ## 旅途第二天：路上的对话
     ## ============================================================
 
-    $ play_music("audio/music/castle_calm.ogg", fadein=2.0)
+    $ play_music("audio/music/forest_ambient.ogg", fadein=2.0)
     scene bg forest_path with dissolve
     $ unlock_gallery("bg_forest_path")
 
@@ -112,18 +150,30 @@ label chapter4_start:
 
     elena "领主大人，趁路上有空，我想和您谈谈觐见的事。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你说。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "伊莎贝拉王后……不是一个简单的女人。"
 
-    elena "先王驾崩后，她以摄政之名执掌大权，至今已有八年。"
+    elena "先王驾崩后，她以摄政之名执掌大权，至今已有二十年。"
 
-    elena "在这八年里，她铲除了至少五位不服从的领主。有的被指控叛国，有的……不明不白地死了。"
+    elena "在这二十年里，她铲除了至少五位不服从的领主。有的被指控叛国，有的……不明不白地死了。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "包括我父亲？"
 
-    "艾琳娜沉默了片刻。"
+    "艾琳娜的目光闪了一下。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "也许。但我目前没有证据。"
 
     elena "我想说的是——在王后面前，千万不要暴露你的底牌。"
@@ -134,32 +184,86 @@ label chapter4_start:
         "向艾琳娜询问更多关于王后的事":
             $ change_stat("intrigue", 5)
             $ change_rel("rel_elena", 5)
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你似乎对王后非常了解。"
-            elena "……因为我曾经在她身边待过。"
-            player "什么意思？"
-            elena "我在暗百合之前，最早是王后的侍女。她从小培养我，教我读书、骑马、用毒……"
-            elena "然后把我送到各个领主身边，充当她的耳目。"
-            player "所以你来艾登堡，也是她的安排？"
-            elena "最初是。但后来……"
-            "她的声音变得很轻。"
-            elena "后来的事情变得复杂了。"
-            player "你现在——为谁效力？"
-            elena "这个问题，等我想清楚了再回答您。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            if elena_spy_known:
+                elena "我在她身边待过好几年——这你已经知道了。"
+                elena "但了解一个人和面对一个人是两回事。我想告诉你一些……实用的东西。"
+            else:
+                elena "……因为我曾经在她身边待过。"
+                hide elena_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "什么意思？"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "我在暗百合之前，最早是王后的侍女。她从小培养我，教我读书、骑马、用毒……"
+                elena "然后把我送到各个领主身边，充当她的耳目。"
+                hide elena_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "所以你来艾登堡，也是她的安排？"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "最初是。但后来……"
+                "她的声音变得很轻。"
+                elena "后来的事情变得复杂了。"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            if elena_spy_known:
+                player "你真的不再听命于王后了？到了她的地盘上……我需要确认。"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "我在出发前那晚已经把一切告诉您了。我的答案不会变。"
+                elena "何况——王后若知道我背叛了她，等着我的可比等着您的更狠。"
+            else:
+                player "你现在——为谁效力？"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "这个问题，等我想清楚了再回答您。"
 
         "提醒自己保持警惕":
             $ change_stat("intrigue", 3)
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我记住了。谢谢你的忠告。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "不客气。保护您也是在保护我自己。"
 
         "问她王都有哪些值得注意的人物":
             $ change_stat("intrigue", 8)
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "除了王后，王都里还有谁需要注意？"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "王子弗雷德里克。先王唯一的儿子，今年二十二岁。"
             elena "他名义上是储君，但王后一直把持着权力，不肯还政于他。"
             elena "据说王子对此很不满，但他很聪明，从不公开表达不满。"
             elena "还有宫廷宰相蒙塔古伯爵——他是王后最忠诚的臣子，也是王室军队的统帅。"
             elena "最后是教廷驻王都的特使。教会在王都的影响力比你想象的大得多。"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "真是一团乱麻。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "王都从来不缺乱麻。缺的是能解开它们的人。"
 
     hide elena_img with dissolve
@@ -174,6 +278,8 @@ label chapter4_start:
 
     "一个老妇人跪在路边，向你的方向磕头。"
 
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
     servant "贵人行行好……我们三天没吃东西了……"
 
     menu:
@@ -181,8 +287,17 @@ label chapter4_start:
             $ change_stat("loyalty", 5)
             $ change_stat("reputation", 5)
             $ change_stat("wealth", -3)
+            hide servant_generic_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "停下。把一车干粮分给村民。"
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
             captain "可是领主大人，这些是我们五天的口粮……"
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "到了哈伦堡可以补给。他们不行。"
             "士兵们开始分发食物。村民们跪了一地，泪流满面。"
             "一个孩子跑过来，往你手里塞了一朵野花。"
@@ -205,7 +320,7 @@ label chapter4_start:
     ## 旅途第三天：夜间扎营
     ## ============================================================
 
-    $ play_music("audio/music/night_mystery.ogg", fadein=2.0)
+    $ play_music("audio/music/campfire.ogg", fadein=2.0)
     scene bg forest_path with dissolve
     $ unlock_gallery("bg_forest_path")
 
@@ -230,69 +345,133 @@ label chapter4_start:
         "那个人……是谁？"
         $ change_stat("intrigue", 5)
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
     captain "领主大人，该休息了。明天还要赶路。"
 
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "雷恩，你觉得王都是什么样的地方？"
 
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "嗯……我去过一次，跟着老领主。那时候我还是个新兵。"
 
     captain "怎么说呢——又大又吵。到处是人，到处是马车，空气里全是烤面包和马粪的味道。"
 
     captain "但最让我不舒服的是那些贵族的眼神。他们看人的方式……好像在看一件商品。"
 
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "所以你不喜欢王都？"
 
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "我是个武人，大人。我喜欢简单的东西。敌人在前面，我拔剑迎上去。"
 
     captain "王都的那些弯弯绕绕，不适合我。"
 
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "但适合我？"
 
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "老领主能在那些人中间周旋了一辈子，您肯定也行。"
 
     captain "况且——您还有我们保护您的安全，不是吗？"
 
     "雷恩笑了，露出他那排被风吹日晒得有些发黄的牙齿。"
 
+    show captain_img happy at left with dissolve
+
     "你不禁也笑了。在这片黑暗的森林中，这份朴实的忠诚让你感到一丝温暖。"
 
     hide captain_img with dissolve
 
-    show elena_img at center with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
 
     "夜深了，大部分人都已入睡。艾琳娜却还醒着，坐在火堆对面，目光落在跳动的火焰上。"
 
     elena "睡不着？"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "太多事情要想。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "领主大人……你有没有想过，如果你不是领主，你会做什么？"
 
     menu:
         "会做一个旅行者，去看看这个世界":
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "也许会骑着马，走遍每一个城镇和村庄。看看不同的人过着什么样的日子。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "听起来……很自由。"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你呢？如果你不是……你现在的身份，你想做什么？"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "我想开一家小酒馆。在某个没有人认识我的小镇上。"
             elena "每天做做饭，和客人聊聊天。不用防备任何人。"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "也许有一天你可以。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "也许吧。"
-            "她的嘴角微微上扬，但眼底的忧郁没有散去。"
+            "她轻轻嗯了一声，但眼底的忧郁没有散去。"
             $ change_rel("rel_elena", 5)
 
         "没想过。我生来就是领主的儿子":
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我从来没有选择的余地。生在这个家庭，就注定了这条路。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "……也是。我也一样。"
             elena "有些人的命运，从出生的那一刻就被写好了。"
             "火堆中的木头塌了一块，溅起一串火星。"
             $ change_rel("rel_elena", 3)
 
         "会做一个学者，去研究古代的历史":
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我对父亲书房里那些古老的文献很感兴趣。也许会去王都的大图书馆，当一个默默无闻的学者。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "你的气质确实更像学者，而不是领主。"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这是夸奖还是批评？"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "是观察。学者有学者的力量——他们用知识改变世界，而不是用刀剑。"
             $ change_stat("intrigue", 3)
             $ change_rel("rel_elena", 5)
@@ -304,6 +483,111 @@ label chapter4_start:
     "明天，你将进入王室直辖领地。一切都会变得不同。"
 
     "你闭上眼睛，在虫鸣和火焰的低语中，缓缓入睡。"
+
+    ## ============================================================
+    ## 旅途第四天：王室直辖领地
+    ## ============================================================
+
+    $ play_music("audio/music/forest_ambient.ogg", fadein=2.0)
+    scene bg forest_path with dissolve
+
+    "第四天。"
+
+    "一觉醒来，世界已经不同了。"
+
+    "昨夜还是参差的山路和野生的灌木丛，今早眼前却是笔直的石板大道和修剪齐整的行道树。"
+
+    "你们已经进入了王室直辖领地。"
+
+    "路面从泥土变成了平整的石板，道旁每隔百步便立着一根刻有王室徽记的石柱。远处的田野像被尺子量过一样整齐，金黄的麦浪一望无际。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "从这里开始，每一座驿站都有王室的耳目。说话做事，都要比昨天更小心。"
+
+    hide elena_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "前方两里有个驿站。要不要停下来补给？"
+
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    menu:
+        "停下补给，顺便打探消息":
+            $ change_stat("intrigue", 2)
+
+            player "停一下。水袋也该灌满了。"
+
+            hide player_char_img with dissolve
+
+            "驿站不大，但异常整洁——木桌擦得发亮，墙上挂着王室的旗帜。"
+
+            "驿站的管事是个面色红润的中年人，笑容热情得过了头。他一边替你们灌水，一边不停地打量队伍中的每个人。"
+
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "注意到了吗？他数了三遍我们有多少人。"
+
+            hide elena_img with dissolve
+
+            "离开驿站后，艾琳娜压低了声音。"
+
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "他会把我们的人数、行进方向、甚至您的长相报告上去。到王都之前，王后就会知道您来了。"
+
+            hide elena_img with dissolve
+
+        "不停，直接赶路":
+            $ change_stat("power", 2)
+
+            player "不停了。越少和人接触越好。"
+
+            hide player_char_img with dissolve
+
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "明白。全队加速！"
+            hide captain_img with dissolve
+
+            "队伍绕过驿站，沿着大道继续前行。路上遇到几队巡逻的王室骑兵——他们远远地注视着你们，但没有上前盘问。"
+
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "他们记住了我们的旗帜。不过没关系，到了这里，想隐藏行踪本来就不现实。"
+            hide elena_img with dissolve
+
+    "午后，一支挂着陌生旗帜的车队从对面驶来。华丽的马车、全副武装的护卫——显然也是某位前往王都的贵族。"
+
+    "对方的车队缓缓靠边让路。车帘掀起一角，一双眼睛打量了你片刻，便放下了帘子。"
+
+    "没有人打招呼。在王室直辖领地的大道上，陌生贵族之间保持距离是一种默契——你不知道对方站在哪一边。"
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "认出那面旗了。是北方海因里希伯爵的家徽。"
+
+    captain "他也去王都……看来不只我们收到了召见。"
+    hide captain_img with dissolve
+
+    "傍晚时分，队伍在一座废弃的路边神龛旁扎营。石砌的神龛已经长满了青苔，但圣母的雕像依然完好。"
+
+    "你坐在神龛的台阶上，看着远方的地平线。王都就在那个方向——明天傍晚，你就能看到它的城墙了。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "明天到了王都，一切都会不一样。在那里，笑容是武器，沉默是盾牌。"
+
+    elena "记住——不要轻信任何人的善意。包括那些看起来最真诚的人。"
+    hide elena_img with dissolve
+
+    "夜风从平原上吹来，带着麦田和泥土的气息。比山林里的风更温暖，也更沉重。"
+
+    "你裹紧披风，闭上了眼睛。"
+
+    "明天，王都。"
 
     ## ============================================================
     ## 旅途第五天：抵达王都
@@ -335,6 +619,7 @@ label chapter4_start:
 
     "你从未见过这样的景象。艾登堡和它相比，不过是棋盘角落里的一颗小卒。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
     captain "领主大人……这就是王都啊。"
@@ -351,18 +636,28 @@ label chapter4_start:
 
     elena "据说可以抵挡十万大军围攻一年。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "难怪税那么重。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "王后的野心和她的城墙一样大。"
 
     "她的声音里有一种复杂的情绪——敬畏中夹杂着厌恶。"
 
     hide elena_img with dissolve
 
+    "王都的城门比你记忆中更高。或者是你变矮了。"
+
     "你策马缓缓走向城门。越接近，城墙的压迫感就越强——仿佛一座巨大的石笼，等待着吞噬一切进入其中的人。"
 
     "城门口的卫兵验过你的通行令牌后，向你行了一个军礼。"
 
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
     soldier "艾登堡领主阁下，王宫已为您安排了住所。请随侍从前往。"
 
     "进入城门的那一刻，喧嚣像潮水般扑面而来。"
@@ -411,7 +706,8 @@ label chapter4_start:
 
     "但你知道，这种豪华背后，可能藏着无数双耳朵。"
 
-    show elena_img at center with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
 
     elena "这里有至少三个暗格可以藏人。窗帘后面、壁炉上方的通风口、还有床下的地板。"
 
@@ -419,8 +715,14 @@ label chapter4_start:
 
     elena "说话请小声。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你对这种地方太熟悉了。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "经验之谈。"
 
     hide elena_img with dissolve
@@ -432,6 +734,15 @@ label chapter4_start:
     "你深吸一口气，告诉自己——无论发生什么，都不能露出破绽。"
 
     "这场棋局，你不能输。"
+
+    ## ============================================================
+    ## 第四章扩展：王都探索与觐见准备
+    ## ============================================================
+    call ch4_exp_arrival from _call_ch4_exp_arrival
+    call ch4_exp_explore from _call_ch4_exp_explore
+    call ch4_exp_court_social from _call_ch4_exp_court_social
+    call ch4_exp_investigation from _call_ch4_exp_investigation
+    call ch4_exp_eve from _call_ch4_exp_eve
 
     ## ============================================================
     ## 场景1：王宫 - 觐见前
@@ -458,55 +769,100 @@ label ch4_palace:
 
     elena "领主大人，觐见的时间是巳时。在那之前，有几位前来拜访的贵族等在客厅。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "哪些人？"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "格雷伯爵、南方的威尔斯子爵，还有一位自称是教廷特使随从的人。"
 
     elena "他们来得这么早，恐怕不只是出于礼貌。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "让他们等着。我先见格雷伯爵。"
 
     hide elena_img with dissolve
 
-    "格雷伯爵是一个五十多岁的胖男人，穿着镶满宝石的外套，手指上戴着六枚戒指。"
+    "格雷伯爵穿着一件剪裁考究但朴素的深灰色长袍，花白的胡须修剪得一丝不苟。六十七岁的老伯爵虽然身形微胖，但举手投足间自有一股学者的沉稳气度。"
 
-    "他的笑容像是用蜂蜜做成的——甜腻得让人不舒服。"
+    "他看到你时微微点头，浑浊的老眼中闪过一丝精明的光。"
 
-    servant "领主大人！终于见到您了！"
+    hide player_char_img
+    $ hide_all_chars("count_grey_img")
+    show count_grey_img at left with dissolve
+    if grey_met:
+        count_grey "又见面了，领主大人！"
+        count_grey "自上次会议一别，听闻您在艾登堡做得风生水起，果然名不虚传。"
+    else:
+        count_grey "领主大人！终于见到您了！"
+        count_grey "久闻艾登堡新主英明果决，今日一见，果然仪表堂堂！"
 
-    servant "久闻艾登堡新主英明果决，今日一见，果然仪表堂堂！"
-
+    hide count_grey_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "伯爵过奖了。不知伯爵前来，有何赐教？"
 
-    servant "赐教不敢当。只是听说您也要觐见王后，想提前和您打个招呼。"
+    hide player_char_img
+    $ hide_all_chars("count_grey_img")
+    show count_grey_img at left with dissolve
+    count_grey "赐教不敢当。只是听说您也要觐见王后，想提前和您打个招呼。"
 
-    servant "觐见时，王后可能会提到边境军费分摊的事。如果您能在那个议题上支持我的提案……"
+    count_grey "觐见时，王后可能会提到边境军费分摊的事。如果您能在那个议题上支持我的提案……"
 
-    servant "伯爵府的门，将永远为您敞开。"
+    count_grey "伯爵府的门，将永远为您敞开。"
 
     menu:
         "答应帮忙，换取将来的支持":
             $ change_stat("intrigue", 5)
             $ change_stat("reputation", 3)
+            hide count_grey_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "伯爵的提案，我愿意考虑。但相应地，也许将来艾登堡需要帮助的时候……"
-            servant "那是自然！自然！我们互相帮助嘛！"
+            hide player_char_img
+            $ hide_all_chars("count_grey_img")
+            show count_grey_img at left with dissolve
+            count_grey "那是自然！自然！我们互相帮助嘛！"
             "格雷伯爵满面笑容地离开了。你不确定他的承诺值多少钱，但在王都多一个朋友总比多一个敌人好。"
 
         "婉拒，保持中立":
             $ change_stat("intrigue", 3)
+            hide count_grey_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "伯爵的好意我领了。但在听到具体提案之前，我不便表态。"
-            servant "哈哈……年轻人就是谨慎。好，好。那我们改日再谈。"
+            hide player_char_img
+            $ hide_all_chars("count_grey_img")
+            show count_grey_img at left with dissolve
+            count_grey "哈哈……年轻人就是谨慎。好，好。那我们改日再谈。"
             "格雷伯爵笑着离开了，但你注意到他眼中的笑意并没有到达眼底。"
 
         "直接问他觐见时需要注意什么":
             $ change_stat("intrigue", 8)
+            hide count_grey_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "伯爵是王都的常客。不知觐见王后时，有什么需要注意的？"
-            servant "哦？年轻人虚心请教，好事！好事！"
-            servant "记住一件事——王后问你什么，你都要回答。但不要回答她没有问的事。"
-            servant "还有，千万不要直视她的眼睛超过三秒。她不喜欢被人盯着看。"
-            servant "最后——如果她请你喝茶，不要喝。那只是试探你是否信任她。"
+            hide player_char_img
+            $ hide_all_chars("count_grey_img")
+            show count_grey_img at left with dissolve
+            count_grey "哦？年轻人虚心请教，好事！好事！"
+            count_grey "记住一件事——王后问你什么，你都要回答。但不要回答她没有问的事。"
+            count_grey "还有，千万不要直视她的眼睛超过三秒。她不喜欢被人盯着看。"
+            count_grey "最后——如果她请你喝茶，不要喝。那只是试探你是否信任她。"
+            hide count_grey_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "多谢伯爵指点。"
-            servant "不客气，不客气。年轻人前途无量啊！"
+            hide player_char_img
+            $ hide_all_chars("count_grey_img")
+            show count_grey_img at left with dissolve
+            count_grey "不客气，不客气。年轻人前途无量啊！"
 
     "送走几位访客后，你在房间里静坐了一会儿，理清思绪。"
 
@@ -534,7 +890,7 @@ label ch4_palace:
 
     show elena_img at right with dissolve
 
-    elena "领主大人，在王宫里，墙壁有耳朵。请谨言慎行。"
+    elena "领主大人，在王宫里，隔墙有耳。请谨言慎行。"
 
     if dark_lily_joined:
         elena "暗百合在宫中也有眼线。如果需要帮助，去花园的第三棵玫瑰花丛后面找。"
@@ -553,7 +909,7 @@ label ch4_palace:
 
     "那是先王的画像。一个面容刚毅的中年人。他的眼睛是深褐色的，嘴角带着一丝不易察觉的忧郁。"
 
-    "在他的画像下方，刻着一行字：'腓特烈二世，圣裁者，正义之盾。'"
+    "在他的画像下方，刻着一行字：'格里菲斯七世，圣裁者，正义之盾。'"
 
     "画像旁边就是伊莎贝拉王后的画像。她的目光冰冷而锐利，仿佛能穿透画框。"
 
@@ -607,6 +963,8 @@ label ch4_throne:
 
     "侍从高声通报——"
 
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
     servant "艾登堡领主，{b}[player_name]{/b}觐见！"
 
     "你沿着长长的红色地毯走向王座。"
@@ -615,7 +973,9 @@ label ch4_throne:
 
     "地毯的尽头，是七级台阶。台阶之上——"
 
-    show queen_img at center with dissolve
+    hide servant_generic_img
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     $ unlock_gallery("queen")
 
     "伊莎贝拉王后端坐在王座上。"
@@ -628,8 +988,14 @@ label ch4_throne:
 
     "你在台阶下站定，单膝跪地。"
 
+    hide queen_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "臣，艾登堡领主[player_name]，参见王后陛下。"
 
+    hide player_char_img
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "起来。"
 
     "她的声音不大，但在空旷的大厅中回荡，带着不容置疑的威严。"
@@ -652,8 +1018,14 @@ label ch4_throne:
 
     queen "艾登堡地处要冲，是北方通往王都的门户。你明白这意味着什么。"
 
+    hide queen_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "臣明白。艾登堡是王室的屏障。"
 
+    hide player_char_img
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "很好。不过光明白还不够，我需要你做到。"
 
     queen "我会给你一千枚金币和三百套军械，用于加强艾登堡的防务。"
@@ -663,26 +1035,60 @@ label ch4_throne:
     menu:
         "接受条件":
             $ log_decision("第四章", "接受王后的条件")
-            $ change_stat("wealth", 15)
+            $ change_stat("wealth", 25)
             $ change_stat("power", 5)
             $ change_rel("rel_queen", 5)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "臣领命。"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
             queen "很好。我喜欢爽快的人。"
 
         "提出附加条件——请求减免税赋":
             $ change_stat("intrigue", 5)
-            $ change_stat("wealth", 10)
-            player "臣愿效力。但艾登堡初经易主，百废待兴，若能减免一年税赋，臣必能更好地守卫北方。"
-            queen "（挑眉）你倒是不客气。"
-            "她沉吟片刻。"
-            queen "半年。减免半年。别让我失望。"
-            $ change_stat("wealth", 5)
+            $ change_stat("wealth", 18)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            if prologue_study_focus == "commerce":
+                player "臣愿效力。但容臣算一笔账——艾登堡年贡六百金币，北防开支至少八百。若陛下减免一年税赋，臣可将差额全部投入边防。对王室而言，这笔买卖比直接拨款更划算。"
+                hide player_char_img
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
+                queen "（微微一笑）你倒是把账算到我头上来了。"
+                "她沉吟片刻，手指轻叩扶手。"
+                queen "一年。减免一年。但我要看到成效。"
+                $ change_stat("wealth", 18)
+            else:
+                player "臣愿效力。但艾登堡初经易主，百废待兴，若能减免一年税赋，臣必能更好地守卫北方。"
+                hide player_char_img
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
+                queen "（挑眉）你倒是不客气。"
+                "她沉吟片刻。"
+                queen "半年。减免半年。别让我失望。"
+                $ change_stat("wealth", 12)
 
         "委婉表示需要更多支持":
             $ change_stat("reputation", 5)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "臣感激陛下的支持。但男爵势力庞大，仅凭艾登堡一地之力……"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
             queen "你是在讨价还价？"
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "臣是在如实禀报边境的形势。"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
             queen "……哼。我会让蒙塔古伯爵另拨五百人驻扎在艾登堡以南。这样你放心了？"
             $ change_stat("power", 8)
 
@@ -699,18 +1105,36 @@ label ch4_throne:
             "坚持立场——税法确实不合理":
                 $ change_stat("power", 10)
                 $ change_rel("rel_queen", -15)
+                hide queen_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "陛下，新税法加重了百姓负担。领地如果被压垮，王室的根基也会动摇。"
+                hide player_char_img
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
                 queen "你是在教我治国？"
+                hide queen_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "臣只是在陈述事实。"
                 "大厅中鸦雀无声。你能感觉到空气中的紧张几乎凝成了实质。"
+                show queen_img angry at left with dissolve
                 queen "（冷笑）倒是有几分胆量。"
                 queen "你父亲当年也是这样跟先王说话的。看来倔强是你们家族的通病。"
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
 
             "解释并示好——为了百姓，非为不敬":
                 $ change_stat("reputation", 10)
                 $ change_rel("rel_queen", 5)
+                hide queen_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "陛下，臣反对的不是税法本身，而是时机。艾登堡刚经历易主，百姓需要喘息。"
                 player "待局势稳定，臣定当足额缴纳。"
+                hide player_char_img
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
                 queen "嗯……这番话还算中听。"
                 queen "但我要你记住——下次在公开场合反对我之前，先来和我私下谈。"
                 queen "我不喜欢在人前被打脸。"
@@ -727,29 +1151,57 @@ label ch4_throne:
         "如实相告——提到暗百合" if father_death_known:
             $ change_rel("rel_queen", 10)
             $ change_stat("intrigue", -5)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "一个叫暗百合的组织。他们似乎与先王有关。"
             "王后的眼神闪过一丝……是惊讶？还是恐惧？你看得不太真切。"
-            queen "暗百合……那群疯子还没消停。"
-            queen "他们是一群危险的叛逆分子。你最好远离他们。"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
+            if dark_lily_destroyed:
+                queen "暗百合……你说的是那群被你铲除的叛逆分子？"
+                queen "干得好。那些人是这个王国的毒瘤。"
+            else:
+                queen "暗百合……那群疯子还没消停。"
+                queen "他们是一群危险的叛逆分子。你最好远离他们。"
             "你注意到她在说'叛逆分子'这四个字时，语气格外用力。仿佛这个词承载着比字面更重的分量。"
             $ queen_trust = True
 
         "只说不知——隐瞒暗百合":
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "臣还在调查。目前没有线索。"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
             queen "是吗。"
             "王后的目光停留在你脸上多了一秒。你不确定她是否相信了。"
             "但你的表情没有任何破绽。在艾琳娜的训练下，你已经学会了如何在权力者面前戴上面具。"
 
         "反问——『也许陛下比我更清楚？』" if intrigue >= 40:
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 8)
             $ change_rel("rel_queen", -10)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "也许陛下比臣更清楚是谁干的。"
             "大厅的空气瞬间凝固。"
             "你听到身后有人倒吸了一口凉气。"
+            show queen_img angry at left with dissolve
             queen "你在暗示什么？"
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "臣只是在想，谁会希望一个边境小领主死呢？"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
             queen "……你很大胆。大胆的人要么成为英雄，要么变成尸体。"
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
             queen "希望你是前者。"
             "她的嘴角浮现出一个意味深长的微笑。那个笑容让你的脊背一阵发凉。"
 
@@ -781,7 +1233,10 @@ label ch4_throne:
 
     show elena_img at right with dissolve
 
-    elena "（低声）领主大人，坐在您对面的是南方的威尔斯子爵——他和男爵是姻亲。"
+    if wells_met:
+        elena "（低声）对面是威尔斯子爵——领主会议上见过的。别忘了，他和男爵是姻亲。"
+    else:
+        elena "（低声）领主大人，坐在您对面的是南方的威尔斯子爵——他和男爵是姻亲。"
 
     elena "您左边的是教廷特使安德烈亚斯——教会在王都的代言人。"
 
@@ -803,6 +1258,7 @@ label ch4_throne:
 
     "宴会进行了大约半个时辰，一个年轻人姗姗来迟。"
 
+    $ hide_all_chars("prince_img")
     show prince_img at left with dissolve
     $ unlock_gallery("prince")
 
@@ -816,8 +1272,14 @@ label ch4_throne:
 
     prince "你就是艾登堡的新领主？听说你今天在母后面前表现得不错。"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "殿下过奖。"
 
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "别紧张。在宴会上，你可以放松一点。"
 
     "他端起酒杯，漫不经心地抿了一口。"
@@ -831,7 +1293,13 @@ label ch4_throne:
     menu:
         "试探王子的态度":
             $ change_stat("intrigue", 5)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下对这些密谋……怎么看？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "怎么看？"
             "他笑了，笑容中有一种与年龄不符的苍凉。"
             prince "我觉得它们很无聊。但也很危险。"
@@ -839,17 +1307,29 @@ label ch4_throne:
             $ change_rel("rel_prince", 5)
 
         "保持礼貌的距离":
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下风趣。臣对王都的规矩还不太熟悉。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "规矩？王都最大的规矩就是——没有规矩。只有利益。"
 
         "直接问他关于父亲的事":
             $ change_stat("intrigue", 8)
             $ change_rel("rel_prince", 3)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下……臣斗胆。您认识先父吗？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "你父亲？当然认识。他每年来王都觐见时，都会给我带一把小木剑。"
             prince "那时候我还是个孩子。你父亲是少数几个把我当孩子对待的大人。"
             prince "大多数人……只把我当一枚棋子。"
-            "他的眼中闪过一丝怀念。"
+            "他的声音放轻了，手指无意识地摩挲着酒杯的杯沿。"
 
     hide prince_img with dissolve
 
@@ -859,7 +1339,9 @@ label ch4_throne:
 
     "一位穿着鹅黄色裙子的年轻贵族女子走到你面前，微微行了一个屈膝礼。"
 
-    servant "领主大人，赏脸跳一支舞吗？"
+    $ hide_all_chars("noble_lady_img")
+    show noble_lady_img at left with dissolve
+    noble_lady "领主大人，赏脸跳一支舞吗？"
 
     menu:
         "接受邀请":
@@ -867,7 +1349,10 @@ label ch4_throne:
             "你站起身，伸出手。她笑了，把手放在你的掌心中。"
             "你并不擅长跳舞——在艾登堡的边境，没有人教过你这种贵族的礼仪。"
             "但你凭着直觉和一些生硬的步伐，勉强没有踩到她的脚。"
-            servant "领主大人跳得不错。"
+            noble_lady "领主大人跳得不错。"
+            hide noble_lady_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你不必客气。我知道自己像一只穿了靴子的熊。"
             "她笑了。周围几位贵族也投来了友善的目光。"
             "也许在王都，一支笨拙的舞蹈比一场精彩的演说更能赢得好感。"
@@ -875,7 +1360,10 @@ label ch4_throne:
         "婉拒——今晚不是跳舞的时候":
             $ change_stat("intrigue", 3)
             player "小姐的好意我心领了。但我不善舞蹈，怕失了礼数。"
-            servant "可惜。也许下次吧。"
+            hide player_char_img
+            $ hide_all_chars("noble_lady_img")
+            show noble_lady_img at left with dissolve
+            noble_lady "可惜。也许下次吧。"
             "她转身离去。你注意到她走向了教廷特使的身边——也许这次邀请并非出自好意。"
 
     "夜渐深。宴会上的人开始陆续离去。"
@@ -900,15 +1388,17 @@ label ch4_garden:
     $ set_mood("calm")
     $ set_weather("fireflies")
 
+    $ trigger_random_event("explore")
+
     "子时。"
 
     "你独自走进了宫廷花园。"
 
-    "月光如水，洒在修剪整齐的灌木和盛开的玫瑰上。夜风送来花香，混合着泥土的清冷气息。"
+    "夜风送来花香，混合着泥土的清冷气息。修剪整齐的灌木和盛开的玫瑰在暗中只剩下轮廓和气味。"
 
     "花园比你想象的大得多。蜿蜒的石径在花丛中穿行，两侧是大理石雕像——天使、骑士、神话中的英雄。"
 
-    "在月光下，那些雕像的影子拉得很长，像是在窃窃私语。"
+    "黑得只能看见轮廓，那些雕像的影子像是在窃窃私语。"
 
     "喷泉在花园中央静静地流淌，水声在寂静的夜里格外清晰。"
 
@@ -920,12 +1410,19 @@ label ch4_garden:
 
     "一个年轻人从花丛后走出来。他穿着华贵，但举止随意，像是在自家后院散步。"
 
-    show prince_img at center with dissolve
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
 
     prince "你来了。我还以为你不敢来。"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "殿下的邀请，臣怎敢不来。"
 
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "别那么拘谨。我约你出来不是谈公事的。"
 
     prince "嗯……好吧，也算是公事。"
@@ -934,17 +1431,25 @@ label ch4_garden:
 
     "你犹豫了一下，在他旁边坐了下来。"
 
-    "月光照在他的脸上，你第一次近距离看清了这个年轻的王子——"
+    "远处喷泉的水光映在他脸上，你第一次近距离看清了这个年轻的王子——"
 
     "他的眼睛是浅蓝色的，像冬天的天空。眼底有一种与他的年龄不相称的疲惫。"
 
     prince "你觉得今晚的宴会怎么样？"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "……很热闹。"
 
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "热闹？"
 
     "他笑了，但那笑容里没有一丝快乐。"
+
+    show prince_img sad at left with dissolve
 
     prince "那是一群披着人皮的狼在互相嗅闻。他们在判断谁是猎物，谁是同伴。"
 
@@ -952,11 +1457,17 @@ label ch4_garden:
 
     prince "你不知道哪一杯酒里有毒，哪一句话会被断章取义，哪一个微笑背后藏着匕首。"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "听起来……不像一个王子该过的生活。"
 
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "王子？王子不过是一个住在笼子里的囚犯，笼子是金做的罢了。"
 
-    "他沉默了一会儿，然后转头看着你。"
+    "他转头看着你。"
 
     prince "我母后……伊莎贝拉，她不是一个好的统治者。"
 
@@ -964,8 +1475,14 @@ label ch4_garden:
 
     prince "你在领地里，也感受到了吧？"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "百姓确实过得很辛苦。"
 
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "不只是百姓。连贵族们都开始动摇了。男爵的反叛只是开始。"
 
     prince "如果母后继续这样下去，用不了三年，这个国家就会陷入内战。"
@@ -980,18 +1497,36 @@ label ch4_garden:
         "问他理想中的王国是什么样子":
             $ change_stat("intrigue", 5)
             $ change_rel("rel_prince", 5)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下，如果有一天你坐上那个位置——你想建立一个什么样的王国？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "你是第一个问我这个问题的人。"
             "他抬头望着月亮，思索了一会儿。"
             prince "一个公平的王国。贵族和百姓不应该是狼和羊的关系。"
             prince "税收应该用在修路、建学堂、办济贫院上，而不是用来修建王后的城墙和宴会厅。"
             prince "我想让每一个孩子都有书读。让每一个农民都能吃饱饭。让正义不再只是有钱人的专利。"
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这是很好的愿景。但实现它需要付出巨大的代价。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "我知道。所以我需要愿意付出这个代价的人站在我身边。"
 
         "直接问他打算怎么做":
             $ change_stat("intrigue", 3)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "盟友……你打算怎么做？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "我不会弑母。这一点你放心。"
             prince "但我打算在合适的时机，联合足够多的领主，以和平的方式迫使她退位。"
             prince "先王的遗诏中本就规定了王子成年后应继承王位。母后一直压着不执行。"
@@ -1013,13 +1548,25 @@ label ch4_garden:
             $ prince_ally = True
             $ change_rel("rel_prince", 25)
             $ change_rel("rel_queen", -10)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下想要什么？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "很简单。当我登基的那天，我需要你的支持和你的兵。"
             prince "作为回报，你的领地将获得特许贸易权，税收减半。"
             prince "还有——你父亲的真正死因，以及凶手的名字。"
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "成交。但我需要先看到诚意。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "公平。明天，我会派人送一封信到你的住处。那里面有你想要的答案。"
-            "你们在月光下握了手。王子的手掌温暖而有力。"
+            "你们握了手。喷泉的水声盖过了一切，王子的手掌温暖而有力。"
             "也许他是真诚的。也许不是。"
             "但无论如何，你已经踏上了这条路。"
 
@@ -1027,7 +1574,13 @@ label ch4_garden:
             $ log_decision("第四章", "拒绝与王子结盟")
             $ change_rel("rel_prince", -10)
             $ change_stat("power", 5)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下的好意我心领了。但我只是一个边境领主，王都的事情太大了。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "可惜。但我理解。"
             prince "不过，你迟早会发现——在这个国家，没有人能置身事外。"
             prince "你父亲试过。他的下场你也看到了。"
@@ -1037,23 +1590,121 @@ label ch4_garden:
             $ change_rel("rel_queen", 25)
             $ change_rel("rel_prince", -30)
             $ prince_betrayed = True
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "殿下说得有理。我愿意效力。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "太好了！我就知道你是可以信任的人。"
             "你微笑着，心里已经在盘算如何将这件事报告给王后。"
             "在这个游戏里，每一步都必须精确。"
             "你和他握手时，手心是冷的。"
 
         "试探——问更多关于父亲的事":
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "在我做任何决定之前……先告诉我关于我父亲的事。"
-            prince "你父亲发现了母后篡改先王遗诏的证据。母后命教会的人除掉了他。"
-            prince "具体是谁动的手，我不知道。但下令的人是我的母亲。"
-            $ true_killer_known = True
-            "你闭上眼睛。尽管你已经有了心理准备，但亲耳听到这个真相，依然像一把刀。"
-            "月光依旧温柔，但你的世界已经不一样了。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
+            if not testament_forged_known:
+                prince "你父亲发现了母后篡改先王遗诏的证据。母后命教会的人除掉了他。"
+                prince "具体是谁动的手，我不知道。但下令的人是我的母亲。"
+                $ testament_forged_known = True
+                $ true_killer_known = True
+                "你闭上眼睛。尽管你已经有了心理准备，但亲耳听到这个真相，依然像一把刀。"
+                "月光依旧温柔，但你的世界已经不一样了。"
+            else:
+                prince "你应该已经知道了——遗诏的事，还有你父亲的死因。"
+                prince "下令的人，是我的母亲。这一点我可以亲口证实。"
+                $ true_killer_known = True
+                "从王子口中听到这句话，你心中的最后一丝疑虑也消散了。"
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "……我需要考虑。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
             prince "我会等你的答复。"
             prince "但别考虑太久。时间不站在我们这边。"
+
+    ## ── 王子的过去：导师之死（加深动机） ──
+
+    "夜风吹过花园，将一片花瓣卷到了王子的膝上。他低头看了看，苦笑了一声。"
+
+    prince "你知道我为什么要反对自己的母亲吗？"
+
+    prince "不只是因为她是一个糟糕的统治者。"
+
+    show prince_img sad at left
+
+    prince "我七岁的时候，有一个老骑士——他叫西里尔。是父王派来教我剑术和骑马的。"
+
+    prince "西里尔不是一个好老师。他喝酒，脾气暴躁，教我骑马的时候摔了我十七次。"
+
+    prince "但他是唯一一个从不把我当王子的人。"
+
+    prince "他叫我'小子'。揍我的时候跟揍自己孙子一样。"
+
+    "王子的声音变得很轻，像是怕惊醒什么人。"
+
+    prince "十岁那年的冬天，西里尔突然消失了。母后说他告老还乡了。"
+
+    prince "我信了。"
+
+    prince "直到三年后，一个醉酒的侍卫在我面前说漏了嘴——"
+
+    prince "西里尔死了。死在地牢里。因为他在教我读书时，给了我一本关于先王时期法律的旧书。"
+
+    prince "那本书里记载了王位继承的正统程序。"
+
+    prince "母后觉得他在蛊惑我。"
+
+    "王子抬起头，望着夜空。你看到他用力眨了几下眼睛，喉结滚动了一下。"
+
+    prince "一个老人，一辈子效忠王室，最后死在自己守护的城堡的地牢里。因为他给一个孩子看了一本书。"
+
+    menu:
+        "你在那之后就开始计划了？":
+            $ change_rel("rel_prince", 5)
+            $ prince_mentor_known = True
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "所以……从那时起，你就开始了？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
+            prince "不。从那时起，我开始假装。"
+            prince "假装不在乎。假装是一个只知道喝酒跳舞的纨绔王子。"
+            prince "十二年了。十二年的假装，只为了等一个机会。"
+            prince "而你——也许就是那个机会。"
+
+        "那你为什么不恨她？":
+            $ change_rel("rel_prince", 3)
+            $ prince_mentor_known = True
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "她杀了你的导师……你不恨她吗？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img at left with dissolve
+            prince "恨？"
+            prince "她是我的母亲。我恨她做的事，但我没办法恨她这个人。"
+            prince "也许这就是为什么我想用和平的方式解决——"
+            prince "我不想看到更多的血。西里尔的血已经够了。"
+
+        "保持沉默，不作评价":
+            $ prince_mentor_known = True
+            "你没有说话。有些痛苦，不需要语言来回应。"
+            "两个失去过重要之人的年轻人沉默地坐着，安静得能听见远处狗吠。"
+            "喷泉的水声填满了一切空隙。"
 
     hide prince_img with dissolve
 
@@ -1082,16 +1733,21 @@ label ch4_garden:
 
     "你来这里有一个明确的目的：查阅先王在位最后几年的宫廷记录。"
 
-    "如果王子说的是真的——王后篡改了先王遗诏——那么也许在这些旧档案中能找到蛛丝马迹。"
+    if testament_forged_known:
+        "如果王子说的是真的——王后篡改了先王遗诏——那么也许在这些旧档案中能找到蛛丝马迹。"
+    else:
+        "父亲的信中曾暗示先王临终前留下了重要文件。也许在这些旧档案中能找到蛛丝马迹。"
 
     menu:
         "仔细搜查先王最后三年的宫廷日志":
-            $ change_stat("intrigue", 10)
+            $ change_stat("intrigue", 5)
             "你在浩如烟海的档案中翻找了整整两个时辰。"
             "大多数文件都是例行公事——赐封、税赋、外交照会。"
             "但在先王驾崩前三个月的记录中，你发现了一些不寻常的条目——"
             "连续七天的宫廷日志被人撕掉了。只留下参差不齐的纸边。"
             "这七天——正好是先王病重到驾崩的那段时间。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "有人刻意销毁了这些记录……"
             "你还在角落里找到了一本看起来很不起眼的账本。翻开一看，竟然是先王私人药房的用药记录。"
             "记录的最后一页写着：'圣历四七三年秋，奉命配制{b}暮色之露{/b}解药一剂。未果。药材不足。'"
@@ -1133,9 +1789,20 @@ label ch4_garden:
 
     "回到房间后，你锁好门，把文件摊在桌上仔细研读。"
 
-    "烛光摇曳中，你的脑海里渐渐拼凑出一幅可怕的画面——"
+    "蜡烛烧了大半，蜡泪淌到桌面上。你的脑海里渐渐拼凑出一幅可怕的画面——"
 
-    "先王并非自然死亡。有人下毒。而遗诏很可能是伪造的。"
+    if queen_poisoned_king_known and testament_forged_known:
+        "文件印证了你已经知道的事实——先王被毒杀，遗诏是伪造的。但亲眼看到白纸黑字的证据，感觉完全不同。"
+    elif queen_poisoned_king_known:
+        "先王被毒杀——这你已经知道了。但文件揭示了更多：遗诏很可能是伪造的。"
+        $ testament_forged_known = True
+    elif testament_forged_known:
+        "遗诏被篡改——这你早有怀疑。但文件中还有更可怕的真相：先王并非自然死亡，有人下毒。"
+        $ queen_poisoned_king_known = True
+    else:
+        "先王并非自然死亡。有人下毒。而遗诏很可能是伪造的。"
+        $ queen_poisoned_king_known = True
+        $ testament_forged_known = True
 
     "你的父亲发现了这一切——所以他也死了。"
 
@@ -1143,12 +1810,19 @@ label ch4_garden:
 
     "你看着窗外夜色中的王宫剪影，那些高耸的塔尖像一排排锐利的牙齿，正等着吞噬下一个知道太多的人。"
 
-    show elena_img at center with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
 
     elena "领主大人，你今晚去了图书馆？"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你怎么知道？"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "你靴子上有图书馆地下室特有的灰白色粉尘。"
 
     "你低头看了一眼——确实如此。"
@@ -1161,19 +1835,38 @@ label ch4_garden:
             $ change_stat("intrigue", 3)
             "你把今晚的发现一五一十地告诉了她。"
             "艾琳娜的表情从平静变为凝重，最后变成了一种你从未见过的——恐惧。"
+            show elena_img sad at left with dissolve
             elena "如果这些是真的……你手中握着的，是足以颠覆整个王国的东西。"
             elena "你必须把文件藏好。最好不要放在身上——万一被搜身……"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你有什么建议？"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "花园的第三棵玫瑰丛后面有一个石头松动的缝隙。我小时候经常在那里藏东西。"
             elena "没有人知道那个地方。"
 
         "含糊其辞——找到了一些有趣的历史文献":
             $ change_stat("intrigue", 5)
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "只是一些老旧的档案。关于先王时代的宫廷记录。很枯燥。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "……你不想告诉我。"
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "不是不想。是不能。知道得越多越危险——这话你应该比我更懂。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "也对。"
-            "她的眼中闪过一丝失落，但很快就恢复了平静。"
+            "她把准备说的话咽了回去，话题转开了。"
 
     elena "还有一件事——我刚才在走廊上看到一个可疑的人。"
 
@@ -1181,8 +1874,14 @@ label ch4_garden:
 
     elena "我跟了他一段，他走进了王后寝宫方向的侧廊。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "王后的人？"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "很可能。她在监视你。"
 
     elena "从现在起，我们说任何重要的话，都去花园。只有露天的地方才相对安全。"
@@ -1227,21 +1926,28 @@ label ch4_elena:
 
     "这一刻，你几乎忘了自己身在何处。"
 
-    show elena_img at center with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
 
     elena "领主大人。"
 
     "她的声音从身后传来，轻得像一缕风。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你跟来了。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "保护您是我的职责。无论是王后的命令……还是我自己的选择。"
 
     "她在你旁边坐下，保持着恰到好处的距离——不太近，也不太远。"
 
     "夕阳的余晖洒在她的脸上，给她平时冷峻的面容镀上了一层柔和的金色。"
 
-    "月光下，你第一次认真地看着艾琳娜。"
+    "在这余晖中，你第一次认真地看着艾琳娜。"
 
     "她不像宫中那些涂脂抹粉的贵妇——她的美是一种刀刃般锋利的美，带着风霜和伤痕。"
 
@@ -1249,37 +1955,52 @@ label ch4_elena:
 
     elena "领主大人，来了王都之后……您有没有觉得这里和艾登堡很不一样？"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "当然不一样。这里更大、更复杂、也更危险。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "不是那个意思。我是说……人。"
 
     elena "在艾登堡，卖面包的老婆婆会叫你'好孩子'。铁匠看到你经过会大声打招呼。连城门口的守卫都知道你喜欢早起散步。"
 
     elena "而在这里——每个人看你的眼神都在估算你的价值。你是谁、你有多少兵、你站在哪边——这就是你的全部。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你在这样的环境里长大的。"
 
-    "艾琳娜沉默了很久。"
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    if elena_spy_known:
+        elena "我的过去……你已经知道了大部分。但有一件事我一直没说——"
 
-    elena "是的。我从七岁起就被送进了王宫。"
+        elena "那些任务里，有个男爵……后来被以叛国罪处死了。在绞刑架上，他一直在喊冤。"
+    else:
+        elena "我的过去……没落贵族的孤女，侍女学院的工具。"
 
-    elena "我不知道我的父母是谁。王后告诉我，是她收养了我——我应该感恩。"
+        elena "她们教我读书写字，也教我使毒、用剑、监视他人。十二岁的孩子，被一步步磨成了一件武器。"
 
-    elena "她教我读书写字，教我使毒、用剑、监视他人。她把我培养成了一件武器。"
+        elena "毕业后，我被派去各地执行任务。监视王后怀疑不忠的领主。艾登堡是我的第四个任务。"
 
-    elena "十四岁那年，她第一次派我去执行任务。监视一个她怀疑不忠的男爵。"
+        elena "有个男爵……后来被以叛国罪处死了。在绞刑架上，他一直在喊冤。"
 
-    elena "那个男爵……后来被以叛国罪处死了。在绞刑架上，他一直在喊冤。"
+        $ elena_spy_known = True
 
     elena "我不知道他是不是真的无辜。但我知道，是我提供的情报把他送上了绞刑架。"
 
     "她的声音很平静，像是在讲述别人的故事。但你看到她的手指紧紧地攥着衣角。"
 
-    elena "后来，我被送到暗百合。那些人告诉我，王后才是真正的敌人。"
+    elena "后来，你的父亲发现了我的身份。但他没有恨我——他说，一个十二岁就被训练成工具的孩子，不应该为别人的野心负责。"
 
-    elena "他们让我相信，我做的一切都是为了'正义'。"
+    elena "他把我介绍给了暗百合。他们说，王后才是真正的敌人。"
 
-    elena "但在暗百合……我依然只是一件武器。只是换了一个主人。"
+    elena "但在暗百合……我依然只是一枚棋子。只是换了一个主人。"
 
     elena "领主大人，从来没有人……像你这样对待我。"
 
@@ -1313,7 +2034,13 @@ label ch4_elena:
                 $ change_rel("rel_elena", 25)
                 "你伸出手，握住了她的。她的手微微发抖。"
                 "她的手比你想象的小。掌心有薄茧——那是多年使剑留下的痕迹。"
+                hide elena_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "无论接下来发生什么，我会保护你。"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
                 elena "……傻瓜。应该是我保护你才对。"
                 "她笑了。你从来没见过她这样笑。"
                 "不是那种训练出来的微笑，也不是面具般的礼貌。"
@@ -1325,8 +2052,14 @@ label ch4_elena:
             "感谢她的付出，但保持距离":
                 $ log_decision("第四章", "与艾琳娜保持距离")
                 $ change_rel("rel_elena", 10)
+                hide elena_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "艾琳娜，你不是任何人的工具。在艾登堡，你是自由的。"
                 player "不管以后怎样——你的人生应该由你自己决定。不是王后，不是暗百合，也不是我。"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
                 elena "……谢谢你。"
                 "她的声音很轻，但你听到了其中的重量。"
                 "像一个背负了太久重担的人，终于听到有人说：'你可以放下了。'"
@@ -1391,10 +2124,16 @@ label ch4_elena:
     elif prince_betrayed:
         "你在房间里写了一封密信，详细记录了王子昨晚的言行。"
         "然后，你叫来一个可靠的侍从。"
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "把这封信送到王后的侍女总管手中。亲手交，不要经过任何人。"
         "侍从领命而去。你靠在椅子上，闭上眼睛。"
         "你做的事是正确的……吗？"
         "你不确定。但你选择了这条路，就必须走到底。"
+    else:
+        "你靠在窗边，凝望着王都的晨雾。"
+        "王子昨晚的话仍在脑海中回荡。你没有做出任何承诺——既没有结盟，也没有背叛。"
+        "在这座充满阴谋的城市里，保持中立也许是最困难的选择。"
 
     "你正在思考下一步行动时——"
 
@@ -1404,7 +2143,7 @@ label ch4_elena:
 
 label ch4_betrayal:
 
-    $ play_music("audio/music/tension.ogg", fadein=1.0)
+    $ play_music("audio/music/betrayal.ogg", fadein=1.0)
     scene bg royal_palace with dissolve
     $ unlock_gallery("bg_royal_palace")
 
@@ -1414,6 +2153,7 @@ label ch4_betrayal:
 
     "砰砰砰——有人在猛烈地敲门。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
     captain "领主大人！大事不好！"
@@ -1424,7 +2164,7 @@ label ch4_betrayal:
         captain "王子殿下被逮捕了！说是谋反！"
         captain "而且……王后要见您。她说要'奖赏您的忠诚'。"
 
-        "你深吸了一口气。计划正在按预期进行。"
+        "计划正在按预期进行。"
 
         "但走出房间时，你看到走廊尽头——两个近卫正押着一个人走过。"
 
@@ -1446,7 +2186,13 @@ label ch4_betrayal:
         captain "有人向王后告发了王子殿下的密谋！"
         captain "王子被关进了地牢！而您的名字也在告密信上！"
         $ change_rel("rel_queen", -20)
+        hide captain_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "什么？！"
+        hide player_char_img
+        $ hide_all_chars("captain_img")
+        show captain_img at left with dissolve
         captain "告密信很详细——包括昨晚你们在花园密会的时间和内容。"
         captain "有人在暗中监视你们！"
 
@@ -1455,6 +2201,8 @@ label ch4_betrayal:
         elena "应该是王后的人。他们可能从一开始就在监视花园。"
         hide elena_img with dissolve
 
+        $ hide_all_chars("captain_img")
+        show captain_img at left with dissolve
         captain "领主大人，我们必须马上行动，否则下一个被抓的就是您！"
         captain "我已经让卫队做好了撤离准备。但时间不多——"
         captain "王宫的大门随时可能关闭。"
@@ -1471,7 +2219,8 @@ label ch4_betrayal:
 
         "这个选择——可能决定你余生的走向。"
 
-        show elena_img at center with dissolve
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
 
         elena "领主大人，我了解这座王宫。有三条路可以走。"
         elena "第一，去地牢救人。我知道地牢的布局和守卫换班的时间。"
@@ -1486,19 +2235,27 @@ label ch4_betrayal:
                 $ change_stat("power", 10)
                 $ change_rel("rel_prince", 30)
                 $ change_rel("rel_queen", -30)
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "我答应过他。我不能食言。"
                 jump ch4_rescue
 
             "撇清关系，否认一切":
-                $ change_stat("intrigue", 10)
+                $ change_stat("intrigue", 5)
                 $ change_rel("rel_prince", -20)
                 player "告诉所有人，我根本不认识王子。那天晚上我一直在房间里。"
                 "雷恩迟疑了一下，但还是点了头。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
                 captain "明白。我去安排人证。"
                 jump ch4_deny
 
             "趁乱逃离王都":
                 $ change_stat("power", -5)
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
                 player "我们走。现在就走，趁他们还没来抓我。"
                 jump ch4_escape
     else:
@@ -1509,7 +2266,7 @@ label ch4_betrayal:
     ## ============================================================
 
 label ch4_rescue:
-    $ play_music("audio/music/battle_prepare.ogg", fadein=1.0)
+    $ play_music("audio/music/dungeon_drip.ogg", fadein=1.0)
     scene bg dungeon with dissolve
     $ unlock_gallery("bg_dungeon")
     $ set_mood("battle")
@@ -1531,7 +2288,7 @@ label ch4_rescue:
         elena "暗百合的人已经打通了关节。"
         "几分钟后，你看到两个守卫突然打了个大大的哈欠，然后靠在墙上，缓缓滑坐下去——睡着了。"
         elena "迷香。无色无味。他们会睡到天亮。"
-        $ change_stat("intrigue", 10)
+        $ change_stat("intrigue", 5)
     else:
         "你用金币买通了一个看守。代价不菲。"
         $ change_stat("wealth", -15)
@@ -1547,7 +2304,8 @@ label ch4_rescue:
 
     "终于，在最深处的一间牢房前，你们停下了脚步。"
 
-    show prince_img at center with dissolve
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
 
     "王子蜷缩在牢房角落。他的嘴角有血迹，一只眼睛肿了起来。华贵的衣服已经破烂不堪。"
 
@@ -1555,12 +2313,21 @@ label ch4_rescue:
 
     prince "你来了……我以为你会弃我于不顾。"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我答应过的事不会食言。走吧。"
 
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "等等——他们审问了我。我什么都没说。但他们知道你的事了。"
 
     prince "你回不去艾登堡了……至少不能走大路。"
 
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "这些以后再说。先离开这里。"
 
     $ play_sound("audio/sfx/sword_draw.ogg")
@@ -1569,6 +2336,7 @@ label ch4_rescue:
 
     "在逃离的路上，你们遇到了一队巡逻的守卫。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
     captain "领主大人！前面有六个人！"
@@ -1576,6 +2344,9 @@ label ch4_rescue:
     menu:
         "硬闯——直接杀出去":
             $ change_stat("power", 5)
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "抽剑！"
             $ play_sound("audio/sfx/sword_draw.ogg")
             "你拔出剑，冲在最前面。"
@@ -1583,15 +2354,24 @@ label ch4_rescue:
             "你的剑法也许不如那些职业剑手，但你的决心弥补了技术的不足。"
             "雷恩挡下了一记劈砍，反手一剑刺穿了对方的肩膀。"
             "三分钟后，六个守卫全部倒下。没有人被杀死——你只用了剑背和剑柄。"
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
             captain "领主大人，您不杀他们？"
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "他们也是在执行命令。走。"
 
         "让艾琳娜想办法悄悄绕过":
             $ change_stat("intrigue", 8)
-            "艾琳娜消失在黑暗中。几秒后，你听到走廊另一端传来一声响动——像是什么东西倒了。"
+            "艾琳娜的脚步声一瞬间就没了。几秒后，你听到走廊另一端传来一声响动——像是什么东西倒了。"
             "守卫们立刻警觉起来，向声音的方向跑去。"
             "通道空了。你们迅速穿过。"
             "艾琳娜像一只猫一样无声无息地出现在你身后。"
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
             elena "走。快。他们马上会发现。"
 
     hide captain_img with dissolve
@@ -1622,7 +2402,8 @@ label ch4_rescue:
 
     "而王子——这个浑身是伤、却依然昂着头的年轻人——他用沙哑的声音说——"
 
-    show prince_img at center with dissolve
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
 
     prince "谢谢你。我不会忘记今晚。"
 
@@ -1632,9 +2413,9 @@ label ch4_rescue:
 
     "你没有说话。只是在黑暗中点了点头。"
 
-    "然后，你们消失在了夜色中，向着艾登堡的方向疾驰而去。"
+    "你们在夜色中疾驰了两个时辰，终于在一条偏僻的岔路口停下了马。"
 
-    jump ch4_end
+    jump ch4_prince_farewell
 
     ## ============================================================
     ## 场景5b：否认一切
@@ -1662,19 +2443,31 @@ label ch4_deny:
 
     "第二拨来的是一个近卫军官——他的态度就没那么友善了。"
 
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
     soldier "有人看到你那天晚上出现在花园。"
 
+    hide soldier_generic_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我的确去了花园。散步。一个人。"
 
+    hide player_char_img
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
     soldier "你遇到什么人了吗？"
 
+    hide soldier_generic_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "一只猫。它对我不太友好。"
 
     "军官盯着你看了很久。你回望着他，面无表情。"
 
     "最终，他转身离去。"
 
-    show elena_img at center with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
 
     elena "他们暂时没有证据。但你不能掉以轻心。"
 
@@ -1682,8 +2475,14 @@ label ch4_deny:
 
     elena "但如果他们继续审……"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我们必须尽快离开。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "明天戒严应该会解除。到时候你以'领地有急事'为由请辞，应该可以走。"
 
     hide elena_img with dissolve
@@ -1708,7 +2507,7 @@ label ch4_deny:
 
 label ch4_escape:
 
-    $ play_music("audio/music/tension.ogg", fadein=1.0)
+    $ play_music("audio/music/chase.ogg", fadein=1.0)
     scene bg forest_path with dissolve
     $ unlock_gallery("bg_forest_path")
 
@@ -1716,7 +2515,8 @@ label ch4_escape:
 
     "时间紧迫。你来不及收拾行李，只带了武器和那些从图书馆找到的文件。"
 
-    show elena_img at center with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
 
     elena "跟我走。我知道一条路。"
 
@@ -1741,10 +2541,14 @@ label ch4_escape:
 
     "雷恩带着卫队在城外五里的林子里接应。看到你浑身湿透、狼狈不堪的样子，他的脸上闪过一丝心疼。"
 
-    show captain_img at center with dissolve
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
 
     captain "领主大人！您没事吧？"
 
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "走。别停。他们很快就会追来。"
 
     hide captain_img with dissolve
@@ -1759,8 +2563,14 @@ label ch4_escape:
 
     elena "不要走大路。走林间小道。我知道一条近路，可以绕过王室直辖领地的哨卡。"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你对逃跑这件事……似乎很有经验。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "这不是我第一次从王都逃出来。"
 
     "她的语气很平淡，但你能听出其中的苦涩。"
@@ -1794,7 +2604,8 @@ label ch4_aftermath:
 
         "这一次，大厅里只有你和她。连侍从都被屏退了。"
 
-        show queen_img at center with dissolve
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
 
         queen "你做得很好。"
 
@@ -1856,7 +2667,8 @@ label ch4_aftermath:
 
         "期间，你尽量保持低调——不见客、不出门、只在房间里等消息。"
 
-        show elena_img at center with dissolve
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
 
         elena "戒严解除了。城门重新开放。"
 
@@ -1883,7 +2695,7 @@ label ch4_end:
     $ persistent.chapters_completed.add("chapter4")
 
     ## 章节结束统计
-    call show_chapter_summary("第四章", "王都风云")
+    call show_chapter_summary("第四章", "王都风云") from _call_show_chapter_summary_2
 
     $ play_music("audio/music/sad.ogg", fadein=2.0)
     scene black with dissolve
@@ -1935,7 +2747,114 @@ label ch4_end:
 
     "但这些现在都不重要了。"
 
-    show aldric_img at center with dissolve
+    ## ── 主教马修斯：遗诏证据交接 ──
+    if true_killer_known:
+        "你刚踏进城门，就看到一个意想不到的人在等着你。"
+
+        $ hide_all_chars("bishop_img")
+        show bishop_img at left with dissolve
+
+        bishop "领主大人……您终于回来了。"
+
+        "马修斯主教站在教堂门前，脸色苍白，眼窝深陷。显然这些天他也没怎么休息过。"
+
+        hide bishop_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "主教？你怎么在这里等我？"
+
+        hide player_char_img
+        $ hide_all_chars("bishop_img")
+        show bishop_img at left with dissolve
+
+        if testament_original_obtained:
+            bishop "您去王都的这些天，有人来翻查过教堂的档案室。"
+
+            bishop "他们没找到遗诏——多亏您之前就带走了。但这说明有人在追查。"
+
+            hide bishop_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你没事吧？"
+
+            hide player_char_img
+            $ hide_all_chars("bishop_img")
+            show bishop_img at left with dissolve
+            bishop "暂时没事。但我想告诉您——您手上那份遗诏是真的。如果需要，我愿意在任何人面前作证。"
+
+            bishop "因为您的父亲也问过我同样的问题——'你为什么信任我？'"
+
+            bishop "我的答案至今没变。"
+        else:
+            bishop "您去王都的这些天，我一直在想——关于那件事。"
+
+            "他压低了声音，左右张望了一下。"
+
+            bishop "那个……我答应您的东西。我想了很久，决定还是交给您保管比较安全。"
+
+            hide bishop_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你是说——"
+
+            hide player_char_img
+            $ hide_all_chars("bishop_img")
+            show bishop_img at left with dissolve
+            bishop "先王的遗诏原本。"
+
+            "他从教袍内层取出一个用蜡封密封的皮卷筒，双手颤抖着递过来。"
+
+            bishop "这些年来我一直藏在教堂地窖的暗格里。但最近……有人开始翻查教堂的档案室。"
+
+            bishop "我不知道是谁在找，但我不能冒这个险了。放在您手里，比放在我这里安全。"
+
+            $ testament_original_obtained = True
+
+            hide bishop_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "为什么信任我？"
+
+            "主教双手交握，指节微微发白。"
+
+            hide player_char_img
+            $ hide_all_chars("bishop_img")
+            show bishop_img at left with dissolve
+            bishop "因为您的父亲也问过我同样的问题。"
+
+        bishop "他说：'马修斯，总有一天真相需要一个足够勇敢的人来揭开。'"
+
+        bishop "二十年了。我每天都在向圣母忏悔。也许……是时候了。"
+
+        hide bishop_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "主教，你会因为这件事受到牵连。"
+
+        hide player_char_img
+        $ hide_all_chars("bishop_img")
+        show bishop_img at left with dissolve
+        bishop "我知道。但继续沉默下去，我的灵魂会先于我的身体死去。"
+
+        bishop "领主大人，不管您打算怎么使用这份遗诏——请答应我一件事。"
+
+        bishop "让真相以最少的代价被揭开。这个国家已经流了太多血了。"
+
+        hide bishop_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "我会的。谢谢你，马修斯。"
+
+        hide bishop_img with dissolve
+
+        "你把皮卷筒贴身藏好。这薄薄的一卷羊皮纸——比任何武器都更具有毁灭性的力量。"
+
+        "你现在手中握着的，是能够颠覆整个王国的真相。"
+
+        $ change_rel("rel_bishop", 15)
+
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
 
     aldric "领主大人，您回来了。"
 
@@ -1945,8 +2864,14 @@ label ch4_end:
 
     aldric "王都的事……我都听说了。"
 
+    hide aldric_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "消息传得倒是快。"
 
+    hide player_char_img
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "这种事情，瞒不住的。信鸽比马跑得快。"
 
     if prince_ally and not prince_betrayed:
@@ -1968,6 +2893,9 @@ label ch4_end:
         aldric "老臣多嘴一句——在权力的游戏中，感情是最大的弱点。"
         aldric "但也是最强的铠甲。"
         aldric "看你怎么用了。"
+    else:
+        aldric "还有——你身边那位艾琳娜小姐。"
+        aldric "她是个能干的人，但别忘了她的过去。信任要给，但要留三分。"
 
     "他走到窗前，看着远处的天空。几只乌鸦掠过城堡上方，叫声嘶哑。"
 
@@ -1979,14 +2907,26 @@ label ch4_end:
 
     aldric "而所有人都在看着艾登堡。看着你。"
 
+    hide aldric_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "为什么？"
 
+    hide player_char_img
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "因为你去了一趟王都，见了王后，见了王子——然后活着回来了。"
 
     aldric "在如今的局势下，活着从王都回来本身就是一种能力的证明。"
 
+    hide aldric_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "因为我们掌握着真相。"
 
+    hide player_char_img
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "真相是最危险的武器，领主大人。"
 
     aldric "它可以推翻王朝，也可以让持有它的人粉身碎骨。"
@@ -2006,8 +2946,14 @@ label ch4_end:
 
     elena "想什么呢？"
 
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "在想……从现在开始，每走一步都可能是最后一步。"
 
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "那就让每一步都值得。"
 
     hide elena_img with dissolve
@@ -2019,7 +2965,10 @@ label ch4_end:
 
     "在地图上，你用墨笔标注了几个关键的位置——"
 
-    "王都。男爵的领地。教会的据点。暗百合可能的藏身处。"
+    if dark_lily_destroyed:
+        "王都。男爵的领地。教会的据点。"
+    else:
+        "王都。男爵的领地。教会的据点。暗百合可能的藏身处。"
 
     "还有，最重要的——艾登堡。"
 
@@ -2027,9 +2976,11 @@ label ch4_end:
 
     "你的手指在地图上缓缓移动，最终停在了艾登堡的标记上。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "父亲……你当年是不是也坐在这里，看着同样的地图，思考着同样的问题？"
 
-    "没有人回答你。只有壁炉中的火焰在低声作响。"
+    "没有人回答你。窗外有风刮过城墙的垛口，发出低沉的呜咽声。"
 
     $ play_sound("audio/sfx/fire_crackle.ogg")
 
@@ -2047,11 +2998,14 @@ label ch4_end:
 
     "冬天就要过去了。"
 
-    "但真正的严寒——才刚刚开始。"
+    "但真正的严寒——不在天上，在人心里。"
 
     "风暴即将来临。"
 
-    "北方的男爵在磨刀。王都的王后在收网。暗百合在暗处注视着一切。"
+    if dark_lily_destroyed:
+        "北方的男爵在磨刀。王都的王后在收网。"
+    else:
+        "北方的男爵在磨刀。王都的王后在收网。暗百合在暗处注视着一切。"
 
     "而你——站在所有力量的交汇点上，手握着能改变一切的真相。"
 
