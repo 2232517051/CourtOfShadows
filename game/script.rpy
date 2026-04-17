@@ -280,7 +280,7 @@ label arrive_castle:
     "一个年纪约莫四十岁的妇人从人群中走出，朝你深深一礼。她的围裙上沾着面粉，但举止端庄。"
 
     hide soldier_generic_img
-    show servant_generic_img at left with dissolve
+    show servant_marta_img at left with dissolve
     servant "领主大人，奴婢是城堡的总管事玛格丽特。老领主在时，城堡的日常事务皆由奴婢打理。"
 
     servant "领主大人的寝室已经收拾好了。热水、干净的衣物都备下了。"
@@ -288,28 +288,28 @@ label arrive_castle:
     menu:
         "感谢她的周到安排":
             $ change_stat("loyalty", 3)
-            hide servant_generic_img
+            hide servant_marta_img
             show player_char_img at left with dissolve
             player "辛苦了，玛格丽特。一切照旧便好，不必特意改变什么。"
             hide player_char_img
-            show servant_generic_img at left with dissolve
+            show servant_marta_img at left with dissolve
             servant "是，领主大人。"
             "她愣了一下，像是想再说什么，最终只是低着头退回了人群中。你注意到她的眼圈也是红的。"
 
         "询问父亲最后几天的情况":
             $ change_stat("reputation", 3)
-            hide servant_generic_img
+            hide servant_marta_img
             show player_char_img at left with dissolve
             player "玛格丽特，父亲最后几天……可有什么异常？"
             "妇人犹豫了一下，压低了声音。"
             hide player_char_img
-            show servant_generic_img at left with dissolve
+            show servant_marta_img at left with dissolve
             servant "老领主临终前三天，不让任何人进入书房。连饭食都是放在门口的。"
             servant "最后是奥尔德里克大人破门而入，才发现……"
             "她没有说下去，只是低下了头。"
 
         "直接让她退下":
-            hide servant_generic_img
+            hide servant_marta_img
             show player_char_img at left with dissolve
             player "知道了。退下吧。"
             "妇人恭敬地退开。你没有多看她一眼——此刻你的心思全在别处。"
@@ -322,7 +322,7 @@ label arrive_castle:
 
     "画中的父亲约莫三十多岁的样子，正值壮年。他身穿铠甲，佩剑立于城堡之前，目光如炬，嘴角微微上扬——那是一种胸有成竹的自信，一种掌控一切的从容。"
 
-    "你已经快十年没有见到他了。上一次见面，你十二岁，他送你去王都的那天。他在城门口拍着你的肩膀说——"
+    "你已经快十年没有面对面坐下来和他好好说过话了。上一次那样，你十二岁，他送你去王都的那天。他在城门口拍着你的肩膀说——"
 
     "'去吧，孩子。学你能学的一切。等你回来的时候，这一切都是你的。'"
 
@@ -427,7 +427,7 @@ label great_hall:
             "你暗暗点头。一个不粉饰太平的将领，比一百个报喜不报忧的人更有价值。"
             $ change_rel("rel_captain", 10)
 
-    hide captain_img with dissolve
+    $ hide_all_chars()
     show bishop_img at left with dissolve
     $ unlock_gallery("bishop")
 
@@ -1071,6 +1071,8 @@ label first_night:
     jump after_letter_crisis
 
 label crisis_intrigue_letter_win:
+
+    scene bg study with dissolve
     $ log_decision("第一章", "识破密信陷阱")
     $ change_stat("intrigue", 10)
     $ change_courage(25)
@@ -1090,6 +1092,8 @@ label crisis_intrigue_letter_win:
     jump after_letter_crisis
 
 label crisis_intrigue_letter_lose:
+
+    scene bg study with dissolve
     $ log_decision("第一章", "密信陷阱中失算")
     $ change_stat("intrigue", -5)
     "你试图设下陷阱，但对方显然比你更老练。"
@@ -1106,6 +1110,8 @@ label crisis_intrigue_letter_lose:
     jump after_letter_crisis
 
 label after_letter_crisis:
+
+    scene bg study with dissolve
     "你继续翻阅桌上的文件。在一叠积压已久的信件中，你找到了几封有意思的东西——"
 
     "一封来自南方商人的信，提议开辟新的贸易路线，愿意预付一笔定金。"
@@ -1271,6 +1277,8 @@ label after_letter_crisis:
 
 label first_crisis:
 
+    scene bg study with dissolve
+
     $ play_music("audio/music/tension.ogg", fadein=1.0)
     $ set_mood("tense")
 
@@ -1335,6 +1343,8 @@ label first_crisis:
 
     ## ---- 外交路线 ----
 label crisis_diplomacy:
+
+    scene bg great_hall with dissolve
     $ log_decision("第一章", "选择外交手段化解边境危机")
     $ change_stat("wealth", -5)
     $ change_stat("reputation", 10)
@@ -1395,10 +1405,14 @@ label crisis_diplomacy:
     hide aldric_img with dissolve
     hide player_char_img with dissolve
 
+    $ unlock_achievement("diplomat")
+
     jump first_decree
 
     ## ---- 军事路线 ----
 label crisis_military:
+
+    scene bg castle_armory with dissolve
     $ log_decision("第一章", "选择以武力示强")
     $ change_stat("power", 15)
     $ change_stat("loyalty", 10)
@@ -1476,6 +1490,8 @@ label crisis_military:
     jump after_border_crisis
 
 label crisis_combat_border_win:
+
+    scene bg border_night with dissolve
     $ log_decision("第一章", "亲自击退边境夜袭")
     $ change_stat("power", 10)
     $ change_stat("reputation", 10)
@@ -1503,6 +1519,8 @@ label crisis_combat_border_win:
     jump after_border_crisis
 
 label crisis_combat_border_lose:
+
+    scene bg border_night with dissolve
     $ log_decision("第一章", "边境夜袭中负伤")
     $ change_stat("power", -5)
     $ change_stat("loyalty", 5)
@@ -1522,6 +1540,8 @@ label crisis_combat_border_lose:
     jump after_border_crisis
 
 label after_border_crisis:
+
+    scene bg border with dissolve
 
     "对峙又持续了一天。最终，男爵的军队悄然撤退。"
 
@@ -1554,10 +1574,14 @@ label after_border_crisis:
     hide aldric_img with dissolve
     hide player_char_img with dissolve
 
+    $ unlock_achievement("warrior")
+
     jump first_decree
 
     ## ---- 教会路线 ----
 label crisis_church:
+
+    scene bg church_interior with dissolve
     $ log_decision("第一章", "寻求教会帮助")
     $ change_stat("faith", 20)
     $ change_rel("rel_bishop", 20)
@@ -1626,10 +1650,14 @@ label crisis_church:
 
     "在这个世界上，人情债是最贵的。"
 
+    $ unlock_achievement("holy_man")
+
     jump first_decree
 
     ## ---- 间谍路线 ----
 label crisis_spy:
+
+    scene bg study with dissolve
     $ log_decision("第一章", "选择暗中行动")
     $ change_stat("intrigue", 5)
     $ change_rel("rel_elena", 10)
@@ -1708,6 +1736,7 @@ label crisis_spy:
             elena "我们称之为'消息渠道'。听起来更文雅一些。"
             "她第一次露出了真正的笑容——不是客套，不是敷衍，而是一种志同道合者之间的默契。"
             $ spy_network = True
+            $ unlock_achievement("spy_master_ch1")
 
         "不信任，自己派人":
             $ log_decision("第一章", "拒绝艾琳娜，自行派人")

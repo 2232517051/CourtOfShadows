@@ -1,0 +1,48 @@
+## ════════════════════════════════════════════════════════════
+## char_helpers.rpy — 立绘叠加防御性清理
+##
+## 设计目的:
+##   之前的立绘管理靠"手动 hide X → show Y"配对. 当 menu 分支漏写 hide,
+##   或从存档中段加载时, 残留立绘会叠加在新角色下方.
+##
+## 使用方式 (推荐):
+##   在切到新 NPC 前调一次 $ hide_all_chars()
+##   然后 show new_npc_img at left with dissolve
+##
+## 也可以指定不 hide 某个 tag:
+##   $ hide_all_chars("player_char_img")  # 只保留玩家立绘
+## ════════════════════════════════════════════════════════════
+
+init python:
+
+    CHAR_IMG_TAGS = [
+        "aldric_img", "assassin_char_img", "baron_img", "bertrand_img",
+        "bishop_img", "blacksmith_wife_img", "bully_kid_img", "captain_img",
+        "count_grey_img", "countess_hilda_img", "countess_stein_img",
+        "elena_img", "farmer_rep_img", "father_img", "friend_marcus_img",
+        "healer_img", "lily_master_img", "merchant_guild_img",
+        "merchant_karl_img", "mother_img", "noble_lady_img", "noble_werner_img",
+        "old_guard_img", "player_char_img", "player_child_img",
+        "player_teen_img", "player_young_img", "priest_thomas_img",
+        "prince_img", "queen_img", "servant_generic_img", "servant_marta_img",
+        "soldier_generic_img", "storyteller_img", "tax_collector_img",
+        "tutor_img", "village_elder_img", "viscount_wells_img",
+    ]
+
+    def hide_all_chars(*except_tags):
+        """Hide all known character sprites. Pass tag names to keep them.
+
+        Example:
+            hide_all_chars()                     # 清全部
+            hide_all_chars("captain_img")        # 保留 captain
+            hide_all_chars("captain_img", "bishop_img")
+        """
+        except_set = set(except_tags)
+        for img_tag in CHAR_IMG_TAGS:
+            if img_tag in except_set:
+                continue
+            # renpy.hide 接受 tag 名 (不带 _img 后缀也能, 但 image 定义里完整名是 foo_img)
+            try:
+                renpy.hide(img_tag)
+            except Exception:
+                pass
