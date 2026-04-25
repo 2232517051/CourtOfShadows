@@ -449,6 +449,9 @@ label gov_tax_restructure_followup:
 
             "改革稳步推进。贵族圈不再公开对抗，但暗中不满仍在。"
 
+    # 修 bug: 选了 ch1_exp_tax_decision = "restructure" 跳到这条 followup 的玩家, 之前没设 governance_tax_policy
+    # 导致治理报告读不到任何改革标记, 显示"税收制度尚未改革"。restructure 剧情对应"按收成比例征收, 大户多交"= 累进税制。
+    $ governance_tax_policy = "progressive"
     $ governance_events_seen.append("tax_reform")
     jump gov_tax_reform_end
 

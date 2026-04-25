@@ -276,11 +276,11 @@ screen crisis_event():
 
                     ## 成功率数值 — 颜色根据高低变化
                     if _chance >= 70:
-                        text "[_chance]%%" size 36 color "#2ecc71" bold True xalign 0.5
+                        text "[_chance]%" size 36 color "#2ecc71" bold True xalign 0.5
                     elif _chance >= 40:
-                        text "[_chance]%%" size 36 color "#f39c12" bold True xalign 0.5
+                        text "[_chance]%" size 36 color "#f39c12" bold True xalign 0.5
                     else:
-                        text "[_chance]%%" size 36 color "#e74c3c" bold True xalign 0.5
+                        text "[_chance]%" size 36 color "#e74c3c" bold True xalign 0.5
 
                     ## 成功率条
                     bar:

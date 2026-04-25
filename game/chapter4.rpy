@@ -2934,6 +2934,7 @@ label ch4_end:
             bishop "我不知道是谁在找，但我不能冒这个险了。放在您手里，比放在我这里安全。"
 
             $ testament_original_obtained = True
+            $ testament_from_bishop_hand = True
 
             hide bishop_img
             $ hide_all_chars("player_char_img")

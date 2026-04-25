@@ -152,6 +152,8 @@ default testament_forged_known = False
 default ferein_role_known = False
 default matthias_has_testament_known = False
 default testament_original_obtained = False
+## 区分获取路径: True = 主教亲手交皮卷筒 (chapter4); False = 钥匙开假墙自取 (npc_sidelines 选项 2)
+default testament_from_bishop_hand = False
 default ch3_prepared_first = False
 default father_was_regent_known = False
 default queen_poisoned_king_known = False
