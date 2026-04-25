@@ -176,6 +176,17 @@ label after_load:
                 or _past_ch3):
             dusk_dew_known = True
 
+        ## ---- 密道知情追溯（栀子 T+7 反馈） ----
+        ## chapter1_deepening 「告诉奥尔德里克和雷恩」选项叙事承诺告知两人，
+        ## 老版本只设 ch1_deep_cellar_choice="tell"，未同步 aldric/captain knows flag
+        ## random_events_new.rpy re_old_map_secret/shared 也承诺告知雷恩，
+        ## 老版本只设 aldric_knows_passage=True，未同步 captain_knows_passage
+        if getattr(store, "ch1_deep_cellar_choice", "") == "tell":
+            aldric_knows_passage = True
+            captain_knows_passage = True
+        if getattr(store, "aldric_knows_passage", False):
+            captain_knows_passage = True
+
     ## ================================================================
     ## 立绘叠加清理：旧存档保存时 layer 上可能堆了多个立绘
     ## Ren'Py 存档会序列化 layer 状态, 加载后 hide_all_chars 是运行时调用,
@@ -260,6 +271,7 @@ init 999 python:
             "father_letters_found": False,
             "ch3_dark_lily_visited": False,
             "aldric_knows_passage": False,
+            "captain_knows_passage": False,
             "poison_evidence": False,
             "elena_spy_known": False,
             "elena_identity_exposed_known": False,

@@ -5184,20 +5184,31 @@ label ch3_chapter_crisis:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "北门外也有敌人的哨骑——"
-            hide captain_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "那就用密道。"
+            if captain_knows_passage:
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "那就用密道——你和奥尔德里克都知道的那条。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "明白。我立刻安排骑手。"
+            else:
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "那就用密道。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "密道？"
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "城堡下面有密道通向外面。我发现的。奥尔德里克知道路线。"
+                "奥尔德里克点了点头。"
             hide player_char_img
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "密道？"
             hide captain_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "城堡下面有密道通向外面。我发现的。奥尔德里克知道路线。"
-            "奥尔德里克点了点头。"
-            hide player_char_img
             $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "我带人从密道出去。两天之内，援军就到。"

@@ -636,6 +636,7 @@ label re_old_map_explore:
     $ re_old_map_found = True
     $ secret_passage_found = True
     $ aldric_knows_passage = True
+    $ captain_knows_passage = True
 
     "你带着宝物和秘密返回地面，心中激荡不已。这条密道不仅是退路，更是一段被遗忘的历史。"
 
@@ -699,6 +700,7 @@ label re_old_map_secret:
     $ re_old_map_found = True
     $ secret_passage_found = True
     $ aldric_knows_passage = True
+    $ captain_knows_passage = True
 
     "三个人，一个秘密。在这座城堡里，这可能是保密效果最好的数字了。"
 

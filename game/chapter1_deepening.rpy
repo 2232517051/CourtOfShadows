@@ -1885,6 +1885,8 @@ label ch1_deep_cellar:
             $ log_decision("第一章深化", "告诉核心成员密道")
             $ change_stat("loyalty", 8)
             $ ch1_deep_cellar_choice = "tell"
+            $ aldric_knows_passage = True
+            $ captain_knows_passage = True
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve

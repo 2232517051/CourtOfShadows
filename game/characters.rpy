@@ -171,6 +171,7 @@ default true_killer_known = False
 default father_letters_found = False
 default ch3_dark_lily_visited = False
 default aldric_knows_passage = False
+default captain_knows_passage = False
 default poison_evidence = False
 
 # 第四章剧情标记
