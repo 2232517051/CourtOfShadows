@@ -21,7 +21,7 @@ define assassin = Character("???", color="#333333", image="assassin_char")
 define lily_master = Character("暗百合首领", color="#2d1b4e", image="lily_master")
 
 ## 第四章新增角色
-define prince = Character("王子弗雷德里克", color="#4169e1", image="prince")
+define prince = Character("弗雷德里克王子", color="#4169e1", image="prince")
 
 ## 第二章会前交际角色
 define count_grey = Character("格雷伯爵", color="#6b8e6b", image="count_grey")
@@ -34,10 +34,59 @@ define bertrand = Character("伯特兰爵士", color="#8b7355", image="bertrand"
 
 ## 通用角色
 define servant = Character("侍从", color="#a9a9a9", image="servant_generic")
+define maid = Character("侍女", color="#a9a9a9", image="servant_marta")
+
+## 通用角色 - 身份特化（拆分自泛用 servant，Character 名更清晰）
+define accountant = Character("账房", color="#a9a9a9", image="servant_generic")
+define caravan_hand = Character("车夫", color="#a9a9a9", image="servant_generic")
+define herald = Character("司仪", color="#a9a9a9", image="herald")
+define queen_envoy = Character("王后特使", color="#9370db", image="queen_envoy")
+## 药铺老妇人 = 暗百合联络人"根"，三个 Character 是同一个人的不同身份阶段：
+##   apothecary (柜台问客) → lily_interviewer (审问) → lily_root (揭示真名)
+## 共用同一张老妇人立绘
+define apothecary = Character("药铺老妇人", color="#8a7a6a", image="lily_root")
+define lily_interviewer = Character("老妇人", color="#6a5a5a", image="lily_root")
+define lily_root = Character("根", color="#5a6b5a", image="lily_root")
+define messenger = Character("信使", color="#a9a9a9", image="servant_generic")
+define beggar = Character("乞丐", color="#a9a9a9", image="beggar")
+define court_herald = Character("司礼官", color="#daa520", image="court_herald")
+define stable_boy = Character("马厩学徒", color="#a9a9a9", image="stable_boy")
+define herbalist_vera = Character("草药师薇拉", color="#7a8b6a", image="herbalist_vera")
+define scholar = Character("老学者", color="#a9a9a9", image="servant_generic")
+define refugee = Character("难民", color="#a9a9a9", image="servant_generic")
+define scout = Character("斥候", color="#a9a9a9", image="servant_generic")
+define heinrich = Character("海因里希", color="#708090", image="soldier_generic")
+define court_poet = Character("宫廷诗人", color="#8b3a3a", image="court_poet")
 define soldier = Character("士兵", color="#708090", image="soldier_generic")
+define deserter = Character("逃兵", color="#7a6a5a", image="soldier_generic")
 define crowd = Character("众人", color="#a9a9a9")
+define old_woman = Character("老妇人", color="#b8a898", image="old_woman")
+define farmer = Character("农民", color="#a89878", image="farmer_rep")
+define old_farmer = Character("老农", color="#8b7355", image="farmer_rep")
+define young_blacksmith = Character("铁匠", color="#6a5a4a", image="soldier_generic")
+define woman_refugee = Character("妇人", color="#c4a882", image="blacksmith_wife")
+define martin = Character("马丁", color="#8b7355", image="servant_generic")
+define young_soldier = Character("年轻士兵", color="#708090", image="soldier_generic")
+define baron_envoy = Character("男爵密使", color="#556677", image="servant_generic")
+define envoy = Character("特使", color="#9088a0", image="servant_generic")
+define retired_steward = Character("退休管家", color="#8b7355", image="servant_generic")
+define vanguard = Character("先锋官", color="#556677", image="soldier_generic")
+define carlos = Character("卡洛斯", color="#6a5a4a", image="soldier_generic")
+define servant_common = Character("仆人", color="#a9a9a9", image="servant_generic")
+define veteran = Character("老兵", color="#6a5a4a", image="soldier_generic")
+define little_girl = Character("小女孩", color="#e8d0b8", image="blacksmith_wife")
+define old_man = Character("老人", color="#8b7355", image="farmer_rep")
+define queen_rep = Character("王后方代表", color="#9370db", image="noble_werner")
+define baron_rep = Character("男爵方代表", color="#2f4f4f", image="noble_werner")
+define young_man = Character("少年", color="#a89878", image="servant_generic")
+define enemy_general = Character("敌将", color="#8b0000", image="soldier_generic")
+define young_mother = Character("年轻母亲", color="#c4a882", image="blacksmith_wife")
+define commander = Character("指挥官", color="#556677", image="soldier_generic")
+define wounded_man = Character("受伤男人", color="#6a5a4a", image="soldier_generic")
+define guard = Character("侍卫", color="#708090", image="soldier_generic")
 define blacksmith_wife = Character("铁匠之妻", color="#c4a882", image="blacksmith_wife")
 define noble_lady = Character("贵族女子", color="#e8d098", image="noble_lady")
+define housekeeper = Character("玛格丽特", color="#c4a882", image="servant_marta")
 
 ## ============================================================
 ## 数值系统
@@ -89,6 +138,8 @@ default secret_passage_found = False
 default spy_network = False
 default first_decree = ""
 
+default dark_lily_first_contact = False
+
 # 第二章剧情标记
 default alliance_baron = False
 default alliance_church = False
@@ -100,6 +151,8 @@ default council_outcome = ""
 default testament_forged_known = False
 default ferein_role_known = False
 default matthias_has_testament_known = False
+default testament_original_obtained = False
+default ch3_prepared_first = False
 default father_was_regent_known = False
 default queen_poisoned_king_known = False
 default father_poisoned_known = False
@@ -109,6 +162,7 @@ default baron_is_darkflame_known = False
 default darkflame_known = False          # 知道"暗焰"这个派系的存在
 default dark_lily_exists_known = False
 default prince_imprisoned_known = False
+default captain_truth_known = False  # 雷恩是否已从主角处得知真相（遗诏/毒杀）
 
 # 第三章剧情标记
 default dark_lily_joined = False
@@ -165,7 +219,7 @@ init python:
         "max_stat":         ("登峰造极", "任一属性达到100", False, "将任一属性提升至最高"),
         ## 隐藏成就 — 未解锁前不显示名称和描述
         "romeo":            ("权谋情圣", "与艾琳娜达成浪漫关系", True, "心 隐藏成就"),
-        "betrayer":         ("背信弃义", "背叛王子弗雷德里克", True, "! 隐藏成就"),
+        "betrayer":         ("背信弃义", "背叛弗雷德里克王子", True, "! 隐藏成就"),
         "merchant_prince":  ("商业巨擘", "财富达到100且与商人卡尔合作", True, "金 隐藏成就"),
         "lone_wolf":        ("独行之狼", "不与任何势力结盟通关", True, "狼 隐藏成就"),
         "silver_tongue":    ("银舌如蛇", "谋略达到100", True, "刃 隐藏成就"),

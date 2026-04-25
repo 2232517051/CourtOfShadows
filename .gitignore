@@ -1,6 +1,14 @@
 # 签名密钥（绝对不能上传）
 *.keystore
 
+# AI 生成资产脚本（含 DashScope / ElevenLabs / Suno API Key，禁止入库）
+# 已审计 20 个含 key 的脚本，全部命中下方 3 个 glob
+gen_*.py
+generate_*.py
+upgrade_*.py
+*_api_key.py
+voice_errors.log
+
 # Ren'Py 编译缓存
 game/cache/
 game/**/*.rpyc

@@ -111,6 +111,7 @@ label gov_tax_reform:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "一名身着灰色外套的中年男人走入大厅，手中抱着厚厚的账册。"
     "他的手指上沾着墨迹，目光锐利而疲惫——这是一个与数字打了半辈子交道的人。"
 
@@ -226,18 +227,22 @@ label gov_tax_progressive:
     tax_collector "英明的决断。我会立即着手拟定细则。"
     tax_collector "不过……贵族们恐怕不会善罢甘休。"
 
+    $ hide_all_chars()
     "果然，消息传出后，几位拥有大片庄园的小贵族联名写了抗议书。"
-    "据说冯·哈根男爵的反应最为激烈——他拍着桌子说这是'对贵族尊严的践踏'。"
+
+    "几天后，边境商队传来消息：冯·哈根男爵在他自己的宴席上，把艾登堡的新税制称为'荒唐的闹剧'。"
+    "他没有任何法理渠道干预你的内政，但他已经在贵族圈里散布这个说法——'艾登堡今天敢对自己的贵族动手，明天就敢对别人动手'。"
+    "几位原本与艾登堡保持中立的贵族，开始重新考虑他们的立场。"
 
     hide tax_collector_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
-    aldric "男爵已经在联络其他贵族了。您需要做好应对的准备。"
     aldric "不过……这确实是正确的做法。您父亲若在天之灵，应该会感到欣慰。"
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "消息像春风一样传遍了每个村庄。"
     "在河谷、在磨坊、在田间地头，农民们第一次觉得——这位新领主，或许真的不一样。"
 
@@ -248,7 +253,7 @@ label gov_tax_progressive:
     $ change_rel("rel_baron", -15)
 
     "声望提升。忠诚提升。短期财政略有损耗，但民心所向。"
-    "男爵的不满日益加深……"
+    "贵族圈的敌意正在暗中酝酿……"
 
     $ governance_events_seen.append("tax_reform")
     jump gov_tax_reform_end
@@ -282,6 +287,7 @@ label gov_tax_flat:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "统一税制推行后，贵族虽有不满但尚能接受。"
     "农民的负担略有减轻，但远不及他们期望的程度。"
     "街头巷尾，人们对新领主的评价是——不好不坏，中规中矩。"
@@ -312,6 +318,7 @@ label gov_tax_trade:
     show farmer_rep_img at left with dissolve
     farmer_rep "只要不再从我们身上刮油，怎么都好……"
 
+    $ hide_all_chars()
     "然而，商会的反应来得比预想的更快。"
     "一封措辞犀利的信件在当天下午就送到了你的书桌上。"
 
@@ -327,6 +334,7 @@ label gov_tax_trade:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "尽管如此，短期内，关税带来的收入确实可观。"
     "金库充盈了许多，但市场上的货物开始涨价——这是商人们无声的抗议。"
 
@@ -358,6 +366,7 @@ label gov_tax_reform_end:
     show player_char_img at left with dissolve
     player "父亲，你当年是怎么做的？"
 
+    $ hide_all_chars()
     "沉默中，似乎能听见远处村庄里传来的犬吠声。"
     "夜很深了。明天还有更多的决定等着你。"
 
@@ -481,6 +490,7 @@ label gov_famine_buy:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "三天后，满载粮食的马车队缓缓驶入艾登堡。"
     "村民们围在路边，看着那些沉甸甸的麻袋，眼中闪着泪光。"
 
@@ -488,6 +498,7 @@ label gov_famine_buy:
     show farmer_rep_img at left with dissolve
     farmer_rep "粮食来了！粮食来了！"
 
+    $ hide_all_chars()
     "米勒跑遍了每个村庄，亲手帮忙分发。"
     "孩子们抱着分到的面包，笑容比秋日的阳光还要灿烂。"
 
@@ -529,6 +540,7 @@ label gov_famine_ration:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "配给制推行后，每家每户只能领到勉强维持生存的口粮。"
     "街上的人们面色蜡黄，脚步虚浮。活着，仅仅是活着。"
 
@@ -539,6 +551,7 @@ label gov_famine_ration:
     farmer_rep "领主大人……配给的量实在太少了。"
     farmer_rep "孩子们整天哭着喊饿，老人们瘦得只剩骨头……"
 
+    $ hide_all_chars()
     "更糟的是，开始有人偷抢别人的配给。"
     "一场为了半袋面粉的斗殴导致两人受伤。"
 
@@ -548,6 +561,7 @@ label gov_famine_ration:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "漫长的冬天终于过去。勉强撑了过来，但代价是深重的民怨。"
 
     $ change_stat("loyalty", -10)
@@ -583,6 +597,7 @@ label gov_famine_castle:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "城堡的粮库大门打开的那一刻，守卫们面面相觑。"
     "但当他们看见第一批百姓——那些瘦骨嶙峋的老人、面黄肌瘦的孩子——"
     "没有一个人提出异议。"
@@ -593,6 +608,7 @@ label gov_famine_castle:
     "米勒跪在地上，泣不成声。"
     farmer_rep "老天爷派来了一个好人……一个真正的好人啊……"
 
+    $ hide_all_chars()
     "消息传遍了整个领地。"
     "人们口口相传——'新领主把自己的粮食分给了我们。'"
     "在所有关于权谋和阴谋的故事里，这个简单的善举，像一束光照进了黑暗。"
@@ -609,6 +625,7 @@ label gov_famine_castle:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "这是你做出的交换——用军事安全换民心。"
     "但愿在粮食补充之前，不会有敌人来敲门。"
 
@@ -644,6 +661,7 @@ label gov_famine_raid:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "两天后的清晨，雷恩队长率五十名精锐伏击了运粮队。"
     "战斗很快就结束了——男爵的护卫在意料之外的攻势面前几乎没有抵抗。"
 
@@ -677,6 +695,7 @@ label gov_famine_raid:
     $ change_rel("rel_baron", -25)
     $ famine_prevented = True
 
+    $ hide_all_chars()
     "粮食问题解决了，但一场更大的风暴正在酝酿。"
     "男爵不会忘记这个羞辱。"
 
@@ -718,6 +737,7 @@ label gov_building:
 
     "你翻开工程规划书，几个方案映入眼帘。"
 
+    $ hide_all_chars()
     menu:
         "本季度的建设重点是——"
 
@@ -758,6 +778,7 @@ label gov_build_school:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "学堂选址在村子中央的一块空地上。"
     "工匠们忙碌起来——搬运石材、架设房梁、铺设屋顶。"
     "村里的孩子们好奇地围在工地外面，叽叽喳喳地议论着。"
@@ -768,12 +789,28 @@ label gov_build_school:
     "你从城里请来了一位退休的文书做先生。"
     "开学那天，二十多个孩子坐在崭新的木凳上，眼睛里闪着从未有过的光芒。"
 
+    if ch1_deep_widow_verdict == "work":
+
+        $ hide_all_chars()
+        "人群散去时，你注意到教室最后一排，还有个少年在慢慢整理残留的木板和石笔。"
+
+        "那是当年被你判做工的少年汉斯。这些月来他一直留在城堡做杂务，今日是他主动请缨来帮忙布置学堂。"
+
+        "他比半年前瘦削挺拔了些。搬运木板时动作还不熟练，但每一次都很认真。"
+
+        "他把最后一支石笔摆正，像是在摆一件庄重的东西。"
+
+        "「先生，这本书放这儿可以吗？」他朝管家问道，声音里没有当初法庭上的颤抖。"
+
+        "你没有走过去。只是站在门口看了一会儿，然后去看别的。"
+
     $ hide_all_chars("farmer_rep_img")
     show farmer_rep_img at left with dissolve
     farmer_rep "领主大人，我……我一辈子不识字。"
     farmer_rep "但我的儿子——他昨天回来，给我念了一段书。"
     farmer_rep "我听不太懂，但那一刻，我觉得……一切辛苦都值了。"
 
+    $ hide_all_chars()
     "一个能读会写的农民，一个懂得记账的商贩，一个知晓战术的士兵——"
     "教育的种子一旦播下，它的回报将远超任何人的想象。"
 
@@ -824,13 +861,17 @@ label gov_build_clinic:
     show healer_img at left with dissolve
     healer "谢领主大人的信任！我不会让您失望的。"
 
-    "诊所建在学堂旁边——如果建了学堂的话。"
+    $ hide_all_chars()
+    "诊所选在城中心一处敞亮的石屋里——原本是一间久未启用的仓房。"
     "玛格丽特亲自监督施工，对每一个细节都要求严格。"
 
+    $ hide_all_chars("healer_img")
+    show healer_img at left with dissolve
     healer "窗户要开大一些，通风很重要。"
     healer "药房要和病房隔开，避免交叉感染。"
     healer "还需要一口深井——干净的水源是治病的基础。"
 
+    $ hide_all_chars()
     "诊所落成后，玛格丽特开始了她的工作。"
     "第一周就接诊了三十多人——骨折的、发烧的、难产的、被蛇咬的。"
     "在此之前，这些人的选择只有'扛着'或者'等死'。"
@@ -847,7 +888,7 @@ label gov_build_clinic:
     $ hide_all_chars("healer_img")
     show healer_img at left with dissolve
     healer "不是神迹，是医术。是知识。"
-    healer "如果领主大人再建一所学堂，我还想教几个年轻人学医。"
+    healer "将来若能在艾登堡办一所学堂，我还想教几个年轻人学医。"
     healer "一个人救不了所有人——但十个人、一百个人就可以。"
 
     $ change_health(20)
@@ -877,6 +918,7 @@ label gov_build_granary:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "粮仓建在地势较高的山丘上，远离河道——防止洪水浸泡。"
     "石基、木架、通风口、防鼠板——每一处设计都经过了深思熟虑。"
 
@@ -885,6 +927,7 @@ label gov_build_granary:
     tax_collector "按照规划，这座粮仓可以储存五千石粮食。"
     tax_collector "足以让整个领地在完全断粮的情况下支撑三个月。"
 
+    $ hide_all_chars()
     "粮仓落成后，你下令在每次收获后将一部分粮食存入。"
     "农民们起初有些不情愿——毕竟那是他们辛苦种出来的。"
     "但米勒帮你做了说服工作。"
@@ -897,6 +940,7 @@ label gov_build_granary:
     farmer_rep "现在领主大人帮我们建了粮仓，就是不想让那种事再发生！"
     farmer_rep "每家多交一点，关键时刻能救全村人的命！"
 
+    $ hide_all_chars()
     "在米勒的劝说下，大部分农户接受了存粮的安排。"
     "望着逐渐填满的粮仓，你心中有了一丝踏实。"
 
@@ -926,6 +970,7 @@ label gov_build_watchtower:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "望楼建在艾登堡北面的高岗上，那里视野开阔，可以远眺数十里。"
     "石造的塔身高三十尺，顶部设有瞭望台和烽火架。"
 
@@ -939,6 +984,7 @@ label gov_build_watchtower:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "第一次发挥作用是在一个月后的深夜——"
     "望楼的烽火突然亮起，紧接着旗语传来：北方有一队不明骑兵正在接近。"
 
@@ -978,6 +1024,7 @@ label gov_plague:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "两个字像铁锤一样砸在每个人的心上——"
     "瘟疫。"
 
@@ -989,6 +1036,7 @@ label gov_plague:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "恐慌比瘟疫本身传播得更快。"
     "市场上的人一夜之间少了大半。"
     "有人开始抢购食物和药材，有人连夜带着家人逃离。"
@@ -1033,6 +1081,7 @@ label gov_plague_clinic:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "接下来的两周是一场与死神的赛跑。"
     "玛格丽特几乎不眠不休，在隔离棚里穿梭、诊治、配药。"
     "她的手因为反复清洗而皲裂流血，但她连包扎的时间都不肯浪费。"
@@ -1043,6 +1092,7 @@ label gov_plague_clinic:
     $ hide_all_chars("healer_img")
     show healer_img at left with dissolve
     healer "控制住了。"
+    $ hide_all_chars()
     "玛格丽特说完这三个字，身体一软，差点倒在地上。"
     "她已经连续工作了四十个小时。"
 
@@ -1051,6 +1101,7 @@ label gov_plague_clinic:
     show player_char_img at left with dissolve
     player "送玛格丽特回去休息。从今天起，她的俸禄翻倍。"
 
+    $ hide_all_chars()
     "这场瘟疫恐慌的最终死亡人数——七人。"
     "在一个没有诊所的领地，这个数字可能是七十、七百。"
     "建诊所的决定，在此刻获得了最沉重也最珍贵的回报。"
@@ -1105,6 +1156,7 @@ label gov_plague_quarantine:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "封锁线建立后，村里传出了绝望的呼喊。"
     "有人试图翻越栅栏，被士兵推了回去。"
     "一个母亲抱着发烧的孩子，跪在封锁线外哭嚎——"
@@ -1147,6 +1199,7 @@ label gov_plague_healers:
 
     hide player_char_img with dissolve
 
+    $ hide_all_chars()
     "出乎意料的是，自愿者比预想的多得多。"
     "几个草药婆、两个退伍的军医、甚至一些普通农妇——"
     "她们抱着草药和干净的布匹，走进了那个人人避之不及的地方。"
@@ -1157,6 +1210,8 @@ label gov_plague_healers:
     "你为牺牲的志愿者举行了庄严的葬礼。"
     "全村人都来了。人们默默垂泪。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "她们是英雄。她们的名字将刻在艾登堡的纪念碑上。"
 
     $ change_stat("faith", 5)
@@ -1183,6 +1238,7 @@ label gov_plague_prayer:
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "主教带着十二名修士进入了疫区。"
     "他们日夜诵经、为病人擦拭身体、分发圣水和面包。"
     "与其说是医疗，不如说是一种精神上的抚慰。"
@@ -1195,6 +1251,7 @@ label gov_plague_prayer:
     show bishop_img at left with dissolve
     bishop "主听到了我们的祈祷。这是祂的恩典。"
 
+    $ hide_all_chars()
     "死亡人数——二十六人。不是最好的结果，也不是最坏的。"
     "但教会在这场危机中树立了崇高的形象。"
 
@@ -1232,6 +1289,7 @@ label gov_plague_burn:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "火焰在夜空中升起，将两个村庄吞没。"
     "浓烟遮蔽了星空，空气中弥漫着焦糊的味道。"
 
@@ -1242,6 +1300,7 @@ label gov_plague_burn:
     show farmer_rep_img at left with dissolve
     farmer_rep "我们的家……我们一辈子的心血……"
 
+    $ hide_all_chars()
     "瘟疫确实被彻底消灭了。"
     "但那两个村庄——连同村民们所有的财产、记忆、生活——也一起消失了。"
 
@@ -1312,6 +1371,7 @@ label gov_festival:
     show player_char_img at left with dissolve
     player "那我可不能错过。"
 
+    $ hide_all_chars()
     "你接过一块馅饼咬了一口。酥脆的面皮下是甜蜜温热的苹果馅——确实好吃。"
 
     "米勒得意地笑了，随即又一脸认真地说——"
@@ -1323,6 +1383,7 @@ label gov_festival:
     farmer_rep "这些日子……虽然不容易，但我们都觉得，日子在变好。"
     farmer_rep "有您在，我们心里踏实。"
 
+    $ hide_all_chars()
     "一个小女孩怯生生地走过来，递给你一束野花。"
     "她的脸蛋红扑扑的，眼睛明亮得像两颗星星。"
 
@@ -1331,6 +1392,7 @@ label gov_festival:
     show player_char_img at left with dissolve
     player "谢谢你，小姑娘。这是我收到过最好的礼物。"
 
+    $ hide_all_chars()
     "小女孩羞涩地笑了，然后一溜烟跑回了母亲身边。"
 
     "夕阳西下时，人们围坐在广场中央，等待你的讲话。"
@@ -1368,6 +1430,7 @@ label gov_festival_humble:
     player "吃饱喝足，尽情欢乐！"
     player "因为你们值得！"
 
+    $ hide_all_chars()
     "欢呼声如雷鸣般炸响。有人吹起口哨，有人抛起帽子。"
     "一个老妇人悄悄抹了抹眼泪。"
 
@@ -1391,6 +1454,7 @@ label gov_festival_vision:
 
     player "这是我的承诺——一个领主对他的子民的承诺！"
 
+    $ hide_all_chars()
     "掌声雷动。人们的眼中闪烁着希望的光芒。"
     "不知道这些承诺能否实现——但在这个瞬间，每个人都选择了相信。"
 
@@ -1417,6 +1481,7 @@ label gov_festival_honor:
     player "所以今晚的第一杯酒，敬他们。"
     player "敬所有离开的人。愿他们在另一个世界，也有丰收和欢笑。"
 
+    $ hide_all_chars()
     "你举起酒杯，一饮而尽。"
     "广场上千百人同时举杯——那一刻的沉默，比任何欢呼都更有力量。"
 
@@ -1442,6 +1507,7 @@ label gov_festival_end:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你独自走在回城堡的路上，身后是渐渐安静的广场。"
     "秋风拂面，带着谷物和篝火的香气。"
 
@@ -1564,6 +1630,7 @@ label gov_merchant_monopoly:
     merchant_guild "英明的决断！领主大人，您不会后悔的。"
     merchant_guild "这份协议将为艾登堡带来前所未有的繁荣。"
 
+    $ hide_all_chars()
     "克劳斯心满意足地离开了。他的脚步轻快——显然，这笔买卖的赢家是他。"
 
     "协议签署后，商会迅速接管了所有贸易通道。"
@@ -1578,6 +1645,7 @@ label gov_merchant_monopoly:
     farmer_rep "领主大人，这日子……又开始难过了。"
     farmer_rep "东西越来越贵，可我们赚的又没多。"
 
+    $ hide_all_chars()
     "金库是满了，但民心在流失。"
     "这就是垄断的代价——你卖了市场，买了金子，但贴进去的是百姓的信任。"
 
@@ -1623,6 +1691,7 @@ label gov_merchant_regulated:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "监管贸易推行后，市场保持了相对的活力。"
     "物价稳定，商人们虽有怨言但尚能接受。"
     "普通百姓几乎感受不到什么变化——这或许就是最好的治理：润物细无声。"
@@ -1666,6 +1735,7 @@ label gov_merchant_reject:
     show player_char_img at left with dissolve
     player "那就是你们自己的损失。路不止一条，走你们这条的也不止你们一家。"
 
+    $ hide_all_chars()
     "克劳斯微微一躬身，转身离开了。他没有再说话。"
     "但那个背影传达的信息很明确——这事没完。"
 
@@ -1678,6 +1748,7 @@ label gov_merchant_reject:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "自由贸易政策推行后，小商贩们如雨后春笋般涌现。"
     "市场比以前更热闹了，竞争让物价下降了一些。"
     "但商会果然开始搞小动作——部分供应链被切断，某些商品一时断了货。"
@@ -1846,6 +1917,7 @@ label gov_report:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你合上了报告，陷入沉思。"
     "数字冰冷无情——它们不会说谎，也不会安慰你。"
     "但正因如此，它们比任何谄媚的话语都更有价值。"

@@ -94,7 +94,6 @@ style gui_text:
 style button:
     properties gui.button_properties("button")
     hover_sound "audio/sfx/ui_hover.ogg"
-    activate_sound "audio/sfx/ui_click.ogg"
 
 style button_text is gui_text:
     properties gui.text_properties("button")
@@ -163,8 +162,8 @@ screen say(who, what):
 
         text what id "what"
 
-    if not renpy.variant("small"):
-        add SideImage() xalign 0.0 yalign 1.0
+    ## 对话肖像已禁用 — 使用大立绘 (show xxx_img) 代替
+    # add SideImage() xpos 110 yalign 1.0
 
 
 init python:
@@ -245,26 +244,61 @@ style input:
 screen choice(items):
     style_prefix "choice"
 
+    ## 防误触计时器：选项出现后短暂延迟才可点击
+    default choice_ready = False
+    timer 0.6 action SetScreenVariable("choice_ready", True)
+
     fixed:
-        ## 半透明暗色蒙层
-        add Solid("#0a081288")
+        ## 重要抉择模式：特殊视觉效果
+        if getattr(store, "important_choice", False):
+            add Solid("#0a0812cc")
+            ## 顶部提示
+            vbox:
+                xalign 0.5
+                yalign 0.12
+                spacing 6
+                add Solid("#d4a94260") xsize 160 ysize 1 xalign 0.5
+                text "— 重要抉择 —" size 22 color "#d4a942" xalign 0.5 outlines [(2, "#000000cc", 0, 0)]
+                text "请谨慎选择，此决定将影响后续剧情走向" size 14 color "#8a7e60" xalign 0.5
+                add Solid("#d4a94260") xsize 160 ysize 1 xalign 0.5
+        else:
+            add Solid("#0a081288")
 
         vbox:
             xalign 0.5
-            yalign 0.5
+            if renpy.variant("small"):
+                yalign 0.30
+                ## 限制最大高度，留出底部quick_menu空间，防止选项误触存档按钮
+                ymaximum 560
+            else:
+                yalign 0.45
             yfit True
             spacing 8
 
             for idx, i in enumerate(items):
+                ## 解析选项文本和提示：用 "|" 分隔，如 "选择王室|权力+10 声望-5"
+                $ _parts = i.caption.split("|", 1)
+                $ _caption = _parts[0]
+                $ _hint = _parts[1] if len(_parts) > 1 else ""
+
                 button:
-                    action i.action
+                    if choice_ready:
+                        action i.action
+                    else:
+                        action NullAction()
                     at choice_appear(idx * 0.1), choice_hover
                     xsize gui.choice_button_width
                     yalign 0.5
                     xalign 0.5
 
-                    background Solid("#1a152888")
-                    hover_background Solid("#2a2040cc")
+                    if not choice_ready:
+                        background Solid("#1a152866")
+                    elif getattr(store, "important_choice", False):
+                        background Solid("#1a1528cc")
+                        hover_background Solid("#2a2040ee")
+                    else:
+                        background Solid("#1a1528bb")
+                        hover_background Solid("#2a2040dd")
 
                     frame:
                         xfill True
@@ -272,13 +306,34 @@ screen choice(items):
                         ypadding 14
                         background None
 
-                        hbox:
-                            ## 选项序号
-                            text str(idx + 1) + "." size 20 color "#d4a94280" yalign 0.5 xsize 30
+                        vbox:
+                            spacing 4
+                            hbox:
+                                xfill True
+                                ## 选项序号
+                                text str(idx + 1) + "." size 20 color "#d4a942" yalign 0.0 xsize 30 outlines [(1, "#000000", 0, 0)]
 
-                            text i.caption:
-                                style "choice_button_text"
-                                yalign 0.5
+                                text _caption:
+                                    style "choice_button_text"
+                                    yalign 0.0
+                                    xfill True
+
+                            ## 后果提示
+                            if _hint:
+                                hbox:
+                                    xoffset 30
+                                    spacing 8
+                                    for _h in _hint.split():
+                                        if "+" in _h:
+                                            text _h size 13 color "#2ecc71"
+                                        elif "-" in _h:
+                                            text _h size 13 color "#e74c3c"
+                                        else:
+                                            text _h size 13 color "#8a7e60"
+
+    ## 重要抉择结束后自动重置标记
+    if getattr(store, "important_choice", False):
+        timer 0.1 action SetVariable("important_choice", False)
 
 
 style choice_vbox is vbox
@@ -294,7 +349,7 @@ style choice_button is default:
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
-    outlines [(1, "#00000080", 0, 0)]
+    outlines [(2, "#000000", 0, 0), (1, "#000000", 1, 1)]
 
 
 ################################################################################
@@ -316,15 +371,19 @@ screen quick_menu():
                 textbutton _("快进") action Skip() alternate Skip(fast=True, confirm=True)
                 textbutton _("自动") action Preference("auto-forward", "toggle")
                 textbutton _("存档") action ShowMenu('save')
+                textbutton _("读档") action ShowMenu('load')
                 textbutton _("快存") action QuickSave()
                 textbutton _("快读") action QuickLoad()
                 textbutton _("状态") action Show("stats_screen")
                 textbutton _("设置") action ShowMenu('preferences')
             else:
-                ## 手机: 精简快捷栏（空间有限）
+                ## 手机: 精简快捷栏
                 textbutton _("历史") action ShowMenu('history')
                 textbutton _("存档") action ShowMenu('save')
+                textbutton _("读档") action ShowMenu('load')
                 textbutton _("快存") action QuickSave()
+                textbutton _("快读") action QuickLoad()
+                textbutton _("快进") action Skip() alternate Skip(fast=True, confirm=True)
                 textbutton _("状态") action Show("stats_screen")
                 textbutton _("设置") action ShowMenu('preferences')
 
@@ -366,7 +425,6 @@ screen navigation():
             textbutton _("开始游戏"):
                 at menu_btn_hover
                 action Start()
-                activate_sound "audio/sfx/ui_confirm.ogg"
                 text_size 26
                 text_font "msyh.ttf"
 
@@ -385,7 +443,6 @@ screen navigation():
             textbutton _("宣传PV"):
                 at menu_btn_hover
                 action Start("pv_play")
-                activate_sound "audio/sfx/ui_confirm.ogg"
 
             textbutton _("游戏设置"):
                 at menu_btn_hover
@@ -417,18 +474,6 @@ screen navigation():
             textbutton _("决策日志"):
                 at menu_btn_hover
                 action ShowMenu("decision_journal")
-
-            textbutton _("物品背包 [[I]"):
-                at menu_btn_hover
-                action Show("inventory_screen")
-
-            textbutton _("制作工坊"):
-                at menu_btn_hover
-                action ShowMenu("crafting_screen")
-
-            textbutton _("队伍管理 [[C]"):
-                at menu_btn_hover
-                action Show("companions_screen")
 
             textbutton _("游戏设置"):
                 at menu_btn_hover
@@ -799,10 +844,11 @@ screen file_slots(title):
 
     default page_name_value = FilePageNameInputValue(pattern=_("第 {} 页"), auto=_("自动存档"), quick=_("快速存档"))
 
-    use game_menu(title):
+    use game_menu(title, scroll="viewport"):
 
-        fixed:
-            order_reverse True
+        vbox:
+            xfill True
+            spacing 10
 
             ## 页面标签
             button:
@@ -815,12 +861,14 @@ screen file_slots(title):
                     style "page_label_text"
                     value page_name_value
 
-            ## 存档槽位网格
-            grid gui.file_slot_cols gui.file_slot_rows:
+            ## 存档槽位网格（可滚动）
+            vpgrid:
                 style_prefix "slot"
+                cols gui.file_slot_cols
                 xalign 0.5
-                yalign 0.5
                 spacing gui.slot_spacing
+                mousewheel True
+                draggable True
 
                 for i in range(gui.file_slot_cols * gui.file_slot_rows):
                     $ slot = i + 1
@@ -845,13 +893,12 @@ screen file_slots(title):
             vbox:
                 style_prefix "page"
                 xalign 0.5
-                yalign 1.0
 
                 hbox:
                     xalign 0.5
                     spacing gui.page_spacing
 
-                    textbutton _("<<") action FilePagePrevious() activate_sound "audio/sfx/ui_page.ogg"
+                    textbutton _("<<") action FilePagePrevious()
                     key "save_page_prev" action FilePagePrevious()
 
                     if config.has_autosave:
@@ -863,7 +910,7 @@ screen file_slots(title):
                     for page in range(1, 10):
                         textbutton "[page]" action FilePage(page)
 
-                    textbutton _(">") action FilePageNext() activate_sound "audio/sfx/ui_page.ogg"
+                    textbutton _(">") action FilePageNext()
                     key "save_page_next" action FilePageNext()
 
                 if config.has_sync:
@@ -1296,7 +1343,6 @@ screen confirm(message, yes_action, no_action):
 
                 textbutton _("取消"):
                     action no_action
-                    activate_sound "audio/sfx/ui_cancel.ogg"
                     text_size 22
                     text_color "#8a7e60"
                     text_hover_color "#c8b890"
@@ -1328,8 +1374,73 @@ style confirm_prompt_text:
 
 
 ################################################################################
+## 更新检查弹窗（好游快爆）
+################################################################################
+
+screen update_notice(new_ver="3.1", update_url="https://www.3839.com/a/"):
+    modal True
+    zorder 200
+    style_prefix "confirm"
+
+    add Solid("#000000bb")
+
+    frame:
+        at overlay_fade
+
+        vbox:
+            xalign 0.5
+            yalign 0.5
+            spacing 20
+
+            add Solid("#d4a94260") xsize 200 ysize 1 xalign 0.5
+
+            text "发现新版本" size 28 color "#d4a942" xalign 0.5 outlines [(2, "#000000cc", 0, 0)]
+
+            null height 5
+
+            text "当前版本：v[config.version]" size 18 color "#8a7e60" xalign 0.5
+            text "最新版本：v[new_ver]" size 18 color "#c9a84c" xalign 0.5
+
+            null height 5
+
+            text "建议前往好游快爆下载最新版本\n获取更多内容和修复" size 16 color "#6a5e48" xalign 0.5 text_align 0.5
+
+            add Solid("#d4a94260") xsize 200 ysize 1 xalign 0.5
+
+            null height 10
+
+            hbox:
+                xalign 0.5
+                spacing 60
+
+                textbutton "立即更新":
+                    action OpenURL(update_url)
+                    text_size 22
+                    text_color "#d4a942"
+                    text_hover_color "#ffd866"
+                    text_outlines [(2, "#000000cc", 0, 0)]
+
+                textbutton "稍后再说":
+                    action Hide("update_notice")
+                    text_size 22
+                    text_color "#8a7e60"
+                    text_hover_color "#c8b890"
+                    text_outlines [(2, "#000000cc", 0, 0)]
+
+
+################################################################################
 ## 跳过提示
 ################################################################################
+
+transform delayed_blink(delay, cycle):
+    alpha .5
+    pause delay
+    block:
+        linear .2 alpha 1.0
+        pause .2
+        linear .2 alpha 0.5
+        pause (cycle - .6)
+        repeat
 
 screen skip_indicator():
     zorder 100
@@ -1426,7 +1537,8 @@ screen nvl(dialogue, items=None):
                         action i.action
                         style "nvl_button"
 
-    add SideImage() xalign 0.0 yalign 1.0
+    ## 对话肖像已禁用 — 使用大立绘 (show xxx_img) 代替
+    # add SideImage() xalign 0.0 yalign 1.0
 
 style nvl_window is default
 style nvl_entry is default

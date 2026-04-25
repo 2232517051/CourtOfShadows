@@ -32,11 +32,11 @@ label ch4_exp_arrival:
     scene bg royal_palace with dissolve
     $ set_mood("normal")
 
-    "第二天清晨，你在丝绸床单上醒来。"
+    "又是一个清晨。王都的头几天已经在观察、打探和夜巡里悄悄溜走——今天，你在丝绸床单上醒来。"
 
     "窗外传来王都特有的喧嚣——远处钟楼的晨钟、街上马车的辘辘声、还有卖花女清脆的叫卖。"
 
-    "你花了几秒钟才想起自己身在何处。这不是艾登堡的石砌卧室，而是王都贵宾馆的华丽套房。"
+    "这不是艾登堡的石砌卧室，而是王都贵宾馆的华丽套房。你至今对这里的豪华没习惯。"
 
     $ play_sound("audio/sfx/knock.ogg")
 
@@ -70,6 +70,7 @@ label ch4_exp_arrival:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你穿戴整齐后下了楼。"
 
     "大厅里站着一个瘦高的男人，身穿紫色的宫廷制服，胸前挂着银质的礼典徽章。"
@@ -86,6 +87,7 @@ label ch4_exp_arrival:
     show player_char_img at left with dissolve
     player "有劳了。"
 
+    $ hide_all_chars()
     narrator "礼典官从袖中取出一卷羊皮纸，展开后足有三尺长。"
 
     narrator "「首先，关于称谓——」"
@@ -98,6 +100,8 @@ label ch4_exp_arrival:
 
     narrator "「王后开口前，不可主动说话。王后未许可前，不可落座。王后未示意前，不可抬头直视。」"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "规矩还真多。"
 
     narrator "礼典官面无表情地说：「这已经是简化版了。完整版有七十二条。」"
@@ -110,6 +114,7 @@ label ch4_exp_arrival:
 
             player "请详细说明。我不想在王后面前失礼。"
 
+            $ hide_all_chars()
             narrator "礼典官罕见地露出一丝赞许的神色。"
 
             narrator "「很好。大多数地方领主都觉得这些是无聊的繁文缛节。」"
@@ -211,6 +216,7 @@ label ch4_exp_arrival:
     hide elena_img with dissolve
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "你换上一件朴素的灰色外套，把艾登堡的家徽藏进里衣。"
 
     "镜子里的你看起来像一个富裕的商人或者小贵族的管家——不起眼，但也不寒酸。"
@@ -286,6 +292,7 @@ label ch4_exp_explore:
             $ ch4_exp_explored_slums = True
             call ch4_exp_explore_slums from _call_exp_slums
 
+    $ hide_all_chars()
     "时间在不知不觉中流逝。"
 
     "日头渐高，街上的行人越来越多。你意识到你们已经在外面逛了快两个时辰。"
@@ -296,6 +303,7 @@ label ch4_exp_explore:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     menu:
         "去南区的集市" if not ch4_exp_explored_market:
             $ ch4_exp_explored_market = True
@@ -331,7 +339,7 @@ label ch4_exp_explore_market:
 
     "南区的集市是王都最热闹的地方。"
 
-    "数百个摊位沿街排开，从东方的香料到北境的毛皮，从矮人锻造的精钢到精灵丝织的轻纱——你能在这里找到整个大陆的货物。"
+    "数百个摊位沿街排开，从东方的香料到北境的毛皮，从山地工坊的精钢到南方织工的轻纱——你能在这里找到整个大陆的货物。"
 
     "叫卖声此起彼伏，各种语言和口音混在一起，像一首嘈杂的交响乐。"
 
@@ -355,6 +363,7 @@ label ch4_exp_explore_market:
     show player_char_img at left with dissolve
     player "这位兄台，最近生意怎么样？"
 
+    $ hide_all_chars()
     narrator "胖老板警惕地看了你一眼，然后露出职业笑容。"
 
     narrator "「嘿，爷，您是外地来的吧？看您穿戴就知道是有身份的人。」"
@@ -396,16 +405,22 @@ label ch4_exp_explore_market:
             $ change_stat("intrigue", 5)
             $ ch4_exp_merchant_tip = True
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我是北边来做皮草生意的。听说王都机会多。"
 
+            $ hide_all_chars()
             narrator "「机会是多，就是税也多。不过只要打点好关系，还是能赚的。」"
 
             narrator "「对了，爷，您要是做大买卖，建议去拜拜大教堂。不是求神——是求人。」"
 
             narrator "「教堂的总管事和税务官是连襟。只要教堂那边说一句话，税能少两成。」"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "教会的手伸得够长的。"
 
+            $ hide_all_chars()
             narrator "「在王都，教会的手比王后的手还长。您可别说是我说的。」"
 
             "你笑着点点头，默默记下了这条信息。"
@@ -434,6 +449,7 @@ label ch4_exp_explore_market:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你沉默地走过一排又一排空荡荡的店面，心中对这座城市的真实状况有了更深的认知。"
 
     "繁华只是表象。在光鲜的外衣下，王都正在慢慢窒息。"
@@ -470,6 +486,7 @@ label ch4_exp_explore_cathedral:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你沿着中殿走向祭坛。半路上，一个穿着白色法袍的年轻神职人员拦住了你。"
 
     narrator "「先生，您是来祈祷的吗？还是来捐献的？」"
@@ -490,6 +507,7 @@ label ch4_exp_explore_cathedral:
 
             player "金灯。"
 
+            $ hide_all_chars()
             "你掏出钱袋。年轻神职人员的态度立刻殷勤了三分。"
 
             narrator "「请跟我来。我带您去圣光厅——那里是点长明灯的专用殿堂。」"
@@ -498,8 +516,11 @@ label ch4_exp_explore_cathedral:
 
             narrator "「先生看起来不像本地人。最近王都来了不少外地贵客——大概都是为了觐见吧。」"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "听说主教马修斯也来了？"
 
+            $ hide_all_chars()
             "年轻神职人员的脚步顿了一下。"
 
             narrator "「……主教大人确实来了。昨天到的。他住在教堂后面的主教府。」"
@@ -518,19 +539,25 @@ label ch4_exp_explore_cathedral:
             $ change_stat("faith", 8)
             $ ch4_exp_cathedral_prayer = True
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我来祈祷。"
 
+            $ hide_all_chars()
             "你走到一排长椅前跪下，双手合十。"
 
             "你不确定自己信不信神。但在这个充满阴谋和危险的地方，向某种更高的存在祈求庇护，至少能让你心安一些。"
 
             "你闭上眼睛，在心中默默祈祷。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "（如果有神在听……请指引我。让我找到真相，保护我在乎的人。）"
 
+            $ hide_all_chars()
             "不知过了多久，你睁开眼睛。教堂的光影在你眼中流转，像一幅活的画。"
 
-            "你感到一种久违的平静——仿佛在这片刻的宁静中，所有的忧虑都被暂时搁下了。"
+            "你感到一种久违的平静。"
 
             "起身时，你注意到旁边跪着一个老妇人。她抬起头，用浑浊的眼睛看着你。"
 
@@ -543,8 +570,11 @@ label ch4_exp_explore_cathedral:
         "不进教堂，在外面观察":
             $ change_stat("intrigue", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我在外面看看就好。"
 
+            $ hide_all_chars()
             "你没有进入教堂，而是绕着建筑走了一圈。"
 
             "教堂后面是一片封闭的庭院——主教府。高墙上拉着铁丝网，门口有教会武装守卫把守。"
@@ -562,6 +592,7 @@ label ch4_exp_explore_cathedral:
 
             hide elena_img with dissolve
 
+            $ hide_all_chars()
             "你默默记下了这些细节。教会在王都的势力比你预想的要强大得多——他们不仅有信仰，还有刀。"
 
     "离开大教堂区域时，你回头看了一眼那座宏伟的建筑。"
@@ -595,6 +626,7 @@ label ch4_exp_explore_slums:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你走过一个拐角，看到一群孩子围在一个破桶边，争抢着什么。"
 
     "走近一看——他们在抢一块发霉的面包。"
@@ -623,6 +655,7 @@ label ch4_exp_explore_slums:
             show player_char_img at left with dissolve
             player "你们的父母呢？"
 
+            $ hide_all_chars()
             narrator "女孩的眼神黯了一下。「死了。病死的、饿死的、被抓走的……各种死法。」"
 
             narrator "「上个月，灰区死了好多人。官面上说是疫病。但我看见了——是穿黑衣的人半夜来的。」"
@@ -650,6 +683,7 @@ label ch4_exp_explore_slums:
             $ change_stat("intrigue", 5)
             $ ch4_exp_slum_info = True
 
+            $ hide_all_chars()
             "你没有掏钱——在贫民区露财是很危险的事。但你把这一切都看在了眼里。"
 
             "你注意到墙壁上有一些用炭笔画的符号——一朵倒挂的百合花。"
@@ -667,6 +701,7 @@ label ch4_exp_explore_slums:
 
             hide elena_img with dissolve
 
+            $ hide_all_chars()
             "你还注意到，灰区的街角站着一些纹着特殊纹身的壮汉——他们不像乞丐，更像是某种地下秩序的维护者。"
 
             "在这个被王后遗忘的角落，另一套规则在悄然运转。"
@@ -735,6 +770,7 @@ label ch4_exp_court_social:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你端起一杯酒，开始在人群中游走。"
 
     "这是另一种战场——没有刀剑，但同样致命。"
@@ -763,6 +799,7 @@ label ch4_exp_court_social:
             show player_char_img at left with dissolve
             player "莱因哈特大臣阁下，久仰大名。鄙人艾登堡领主[player_name]。"
 
+            $ hide_all_chars()
             narrator "莱因哈特转过身来，灰色的眼睛在你脸上停留了两秒——就像在扫描一份文件。"
 
             narrator "「啊，年轻的艾登堡领主。我读过关于您的报告。」"
@@ -776,8 +813,11 @@ label ch4_exp_court_social:
                     $ change_stat("reputation", 3)
                     $ ch4_exp_reinhart_favor += 1
 
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
                     player "大臣过奖了。初来乍到，还请多多指教。"
 
+                    $ hide_all_chars()
                     narrator "「客气了。在王都，'指教'是不值钱的。但如果您需要'建议'——我的门总是开着的。」"
 
                     narrator "他递过一张烫金的名帖。「有空来喝茶。」"
@@ -788,8 +828,11 @@ label ch4_exp_court_social:
                     $ change_stat("intrigue", 5)
                     $ ch4_exp_reinhart_favor -= 1
 
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
                     player "说到家父……他生前对王都的政局也多有关注。不知大臣与他可曾有过交集？"
 
+                    $ hide_all_chars()
                     narrator "莱因哈特的微笑凝固了不到一秒——如果你不是全神贯注地盯着他，根本不会注意到。"
 
                     narrator "「令尊……是位可敬的人。他的去世是王国的损失。」"
@@ -803,8 +846,11 @@ label ch4_exp_court_social:
                 "客套几句后找理由离开":
                     $ change_stat("intrigue", 2)
 
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
                     player "多谢。初到王都，想多和各位前辈认识认识。先失陪了。"
 
+                    $ hide_all_chars()
                     narrator "「请便。」"
 
                     "他目送你离开，灰色的眼睛在你背后停留了片刻——你能感觉到那道目光的重量。"
@@ -850,16 +896,22 @@ label ch4_exp_court_social:
     if steinfurt_met:
         narrator "「艾登堡的小领主，又见面了。」"
 
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "伯爵夫人别来无恙。"
 
+        $ hide_all_chars()
         narrator "「无恙？在这种场合能无恙的人，要么是蠢货，要么是狠角色。」"
 
         narrator "「上次会议匆匆一面，没来得及细聊。你父亲——很有城府的男人，但不够狠。」"
     else:
         narrator "「你就是新任的艾登堡领主？比我想象的年轻。」"
 
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "伯爵夫人眼力过人。"
 
+        $ hide_all_chars()
         narrator "「在我这个年纪，看人看得多了。」"
 
         narrator "「你父亲我见过几面。很有城府的男人——但不够狠。」"
@@ -874,8 +926,11 @@ label ch4_exp_court_social:
             $ change_rel("rel_queen", -2)
             $ ch4_exp_countess_trust += 2
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "所以伯爵夫人一定是够狠的那种人。"
 
+            $ hide_all_chars()
             narrator "伯爵夫人哼了一声，算是认了——那是你今晚见过的第一个真实的反应。"
 
             narrator "「聪明的孩子。你父亲要是有你一半的锋利，也不至于——」"
@@ -886,8 +941,11 @@ label ch4_exp_court_social:
 
             narrator "「我倒想知道——你来王都，除了觐见王后，还有什么打算？」"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "学习。观察。了解这个国家的真实状况。"
 
+            $ hide_all_chars()
             narrator "「好回答。不露底牌，也不装蒜。」"
 
             narrator "「年轻人，如果你在王都需要一个……不那么偏向王后的朋友，我的府邸在北区玫瑰街尽头。」"
@@ -900,8 +958,11 @@ label ch4_exp_court_social:
             $ change_stat("reputation", 3)
             $ ch4_exp_countess_trust += 1
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "家父或许不够狠。但他是一个正直的人。"
 
+            $ hide_all_chars()
             narrator "「正直？」伯爵夫人哼了一声，「在这种地方，正直是最大的奢侈品。」"
 
             narrator "「不过——我尊重正直的人。尤其是在这个满口谎言的宫廷里。」"
@@ -911,8 +972,11 @@ label ch4_exp_court_social:
         "保持距离，礼貌客套":
             $ change_stat("intrigue", 2)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "伯爵夫人过誉了。在下初来乍到，不敢妄言。"
 
+            $ hide_all_chars()
             narrator "「又一个谨小慎微的年轻人。」她摇了摇头，「也罢。这种地方，小心总是没错的。」"
 
             "她转过身去，继续和女伴交谈，像是已经对你失去了兴趣。"
@@ -946,7 +1010,7 @@ label ch4_exp_court_social:
 
         narrator "「但没人敢说。上一个公开替王子说话的贵族……现在还在地牢里关着呢。」"
 
-        "你默默记下了这些信息。王子弗雷德里克——先王唯一的儿子，二十二岁。"
+        "你默默记下了这些信息。弗雷德里克王子——先王唯一的儿子，二十二岁。"
 
         "如果先王的遗诏是真的，那王位本就应该传给他。而王后一直抓着权力不放，甚至不惜软禁自己的亲生儿子。"
 
@@ -1002,6 +1066,7 @@ label ch4_exp_investigation:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "你接过拓本。上面的字迹模糊但勉强可读——"
 
     narrator "「……三号目标已到。密切监视。如有异动，立即向暗焰汇报。——伏笔」"
@@ -1039,6 +1104,7 @@ label ch4_exp_investigation:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你在房间里来回踱步，思考着下一步的行动。"
 
     "晚宴上获得的信息、贫民区听到的传闻、现在这张纸条——所有的碎片都在指向一个方向。"
@@ -1046,22 +1112,27 @@ label ch4_exp_investigation:
     "王后在这座城市布下了天罗地网。而你已经走入了网中。"
 
     menu:
-        "夜探王宫图书馆，寻找遗诏线索":
+        "夜探王宫图书馆，寻找遗诏线索" if not testament_original_obtained:
             $ change_stat("intrigue", 8)
             $ change_stat("courage", -10)
             call ch4_exp_inv_library from _call_exp_inv_lib
+
+        "夜探王宫图书馆，查阅伪遗诏相关档案" if testament_original_obtained:
+            $ change_stat("intrigue", 8)
+            $ change_stat("courage", -10)
+            call ch4_exp_inv_library from _call_exp_inv_lib2
 
         "在贵宾馆附近偷听，看看有没有人在监视":
             $ change_stat("intrigue", 5)
             call ch4_exp_inv_eavesdrop from _call_exp_inv_eaves
 
-        "联络暗百合（如果已加入）或独自分析线索":
-            if dark_lily_joined:
-                $ change_stat("intrigue", 7)
-                call ch4_exp_inv_lily_contact from _call_exp_inv_lily
-            else:
-                $ change_stat("intrigue", 5)
-                call ch4_exp_inv_solo from _call_exp_inv_solo
+        "联络暗百合在王都的接头人" if dark_lily_joined:
+            $ change_stat("intrigue", 7)
+            call ch4_exp_inv_lily_contact from _call_exp_inv_lily
+
+        "独自分析手头的线索" if not dark_lily_joined:
+            $ change_stat("intrigue", 5)
+            call ch4_exp_inv_solo from _call_exp_inv_solo
 
     "夜色渐深。行动结束后，你回到贵宾馆的房间。"
 
@@ -1115,6 +1186,7 @@ label ch4_exp_inv_library:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你在图书馆对面的暗巷中等了半个时辰。"
 
     "终于，你看到两个守卫交接班。趁着交接的间隙，你贴着墙根快速移动，从一扇没锁的侧窗翻了进去。"
@@ -1260,6 +1332,7 @@ label ch4_exp_inv_eavesdrop:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你和艾琳娜悄悄摸到联络站的外墙下。"
 
     "墙上有一扇通风窗，用铁栅栏封着。透过栅栏，你能隐约看到里面的灯光，听到模糊的对话声。"
@@ -1340,6 +1413,7 @@ label ch4_exp_inv_lily_contact:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你和艾琳娜在夜色的掩护下来到药材街。"
 
     "老陈药铺的门已经关了，但后门留了一条缝。"
@@ -1356,6 +1430,7 @@ label ch4_exp_inv_lily_contact:
     show player_char_img at left with dissolve
     player "有没有去年的暮色兰花？"
 
+    $ hide_all_chars()
     "老者的动作停顿了一瞬——真的只是一瞬。然后他站起身来，走到店铺最里面，拨开一道暗门上的药材帘子。"
 
     narrator "「跟我来。」"
@@ -1374,8 +1449,11 @@ label ch4_exp_inv_lily_contact:
         "开门见山，直接询问暗焰在王都的势力":
             $ change_stat("intrigue", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "暗焰在王都的势力有多大？"
 
+            $ hide_all_chars()
             narrator "「比你想象的大。也比我们想象的大。」"
 
             narrator "「暗焰已经渗透了王宫守卫、王都密探、甚至部分教会武装。」"
@@ -1384,8 +1462,11 @@ label ch4_exp_inv_lily_contact:
 
             narrator "「冯·哈根男爵虽然不在王都，但他的触手无处不在。」"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "那你们呢？影卫在王都有多少人？"
 
+            $ hide_all_chars()
             narrator "「不到一百。但每一个都是精锐。」"
 
             narrator "「我们的优势不在人数——在于信息网络。暗焰的渗透是广而浅，我们的渗透是窄而深。」"
@@ -1397,8 +1478,11 @@ label ch4_exp_inv_lily_contact:
         "询问明天觐见有什么特殊情况":
             $ change_stat("intrigue", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我听说明天的觐见不是普通觐见。王后有什么特殊安排？"
 
+            $ hide_all_chars()
             narrator "蒙面人歪了歪头。"
 
             narrator "「我们也在查这件事。目前只知道两点——」"
@@ -1417,8 +1501,11 @@ label ch4_exp_inv_lily_contact:
             $ change_stat("power", 5)
             $ change_rel("rel_lily", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "明天觐见时，能否安排人在暗中接应？"
 
+            $ hide_all_chars()
             narrator "「已经安排了。觐见厅的三名侍从中，有一个是我们的人。」"
 
             narrator "「如果出现危险，他会发出暗号——杯子落地的声音。」"
@@ -1427,8 +1514,11 @@ label ch4_exp_inv_lily_contact:
 
             narrator "「暗道通向王宫地下的排水渠，从那里可以出城。」"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "但愿用不到。"
 
+            $ hide_all_chars()
             narrator "「但愿。不过——以王后的手段，做最坏的打算总是明智的。」"
 
     "密会持续了约半个时辰。"
@@ -1470,7 +1560,7 @@ label ch4_exp_inv_solo:
     else:
         elena "间接力量还有暗焰——男爵那边的人，你已经知道了。"
 
-    elena "潜在的反对力量：施泰因伯爵夫人为首的地方领主派、被软禁的王子弗雷德里克、以及……"
+    elena "潜在的反对力量：施泰因伯爵夫人为首的地方领主派、被软禁的弗雷德里克王子、以及……"
 
     elena "以及影卫——暗百合的正统派。但他们的势力在王都有限。"
 
@@ -1503,6 +1593,7 @@ label ch4_exp_inv_solo:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你沉思了很久。"
 
     "最终，你在纸上写下了三个关键词——遗诏、暮色之露、王子。"
@@ -1519,7 +1610,7 @@ label ch4_exp_inv_solo:
     else:
         "暮色之露的事你早已心知肚明。如果能把毒药的证据公之于众……"
 
-    "而王子弗雷德里克——他是唯一合法的继承人。如果能把他从软禁中解救出来……"
+    "而弗雷德里克王子——他是唯一合法的继承人。如果能把他从软禁中解救出来……"
 
     "但这一切，都要等过了明天的觐见之后才能谋划。"
 
@@ -1629,13 +1720,22 @@ label ch4_exp_eve:
             show captain_img at left with dissolve
 
             if testament_forged_known:
-                captain "……我的天。"
+                if captain_truth_known:
+                    captain "……我早就猜到了八九分。"
 
-                "雷恩的脸色变得铁青。"
+                    "雷恩沉默了几秒，火光在他眼里跳动。"
 
-                captain "难怪……难怪他后来一直在暗中调查教会。他一定是在找遗诏的线索。"
+                    captain "您愿意再说一遍，说明您已经准备好面对这一切。我会跟着您走下去。"
+                else:
+                    captain "……我的天。"
 
-                captain "然后他死了。"
+                    "雷恩的脸色变得铁青。"
+
+                    captain "难怪……难怪他后来一直在暗中调查教会。他一定是在找遗诏的线索。"
+
+                    captain "然后他死了。"
+
+                    $ captain_truth_known = True
             else:
                 captain "……"
 
@@ -1717,6 +1817,7 @@ label ch4_exp_eve:
 
     elena "睡前喝一杯。薰衣草泡的，有助于安神。"
 
+    $ hide_all_chars()
     "她把一杯递给你，自己端着另一杯在窗边坐下。"
 
     "窗外透进来一缕微光，映在她的脸上——那张总是带着冷静面具的脸，在此刻有一种你很少看到的柔和。"
@@ -1858,6 +1959,7 @@ label ch4_exp_eve:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "艾琳娜离开后，你独自站在窗前。"
 
     "远处，王宫的轮廓在黎明中渐渐清晰——白色的穹顶、高耸的尖塔、如同皇冠般的城垛。"
@@ -1874,6 +1976,7 @@ label ch4_exp_eve:
     show player_char_img at left with dissolve
     player "（低声）父亲……你没能做到的事，我会替你做完。"
 
+    $ hide_all_chars()
     "你合上窗户。"
 
     "该来的总会来。"

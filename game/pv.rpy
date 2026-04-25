@@ -138,7 +138,6 @@ screen pv_skip_btn():
         text_hover_color "#d4a942"
         text_font "msyh.ttf"
         action Jump("pv_end")
-        activate_sound "audio/sfx/ui_click.ogg"
 
 
 ################################################################################
@@ -166,10 +165,10 @@ label pv_play:
     play music "audio/music/sad.ogg" fadein 3.0
 
     ## 年代背景
-    show text "{color=#8a7e60}{size=18}公元1347年 · 深秋{/size}{/color}" at pv_text_fade(0.3) as pvt1
+    show expression Text("{color=#c8b890}{size=26}公元1347年 · 深秋{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_fade(0.3) as pvt1
     pause 3.5
 
-    show text "{color=#c8b890}{size=28}一封讣告，改变了一切。{/size}{/color}" at pv_text_fade(0.0) as pvt2
+    show expression Text("{color=#e8dcc0}{size=36}一封讣告，改变了一切。{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_fade(0.0) as pvt2
     pause 3.5
 
     ## ══════════════════════════════════════════
@@ -181,7 +180,7 @@ label pv_play:
 
     play sound "audio/sfx/horse_gallop.ogg"
 
-    show text "{color=#e0d8c8}{size=22}父亲骤逝，你从王都匆匆赶回\n接手这片守护了三十年的领地。{/size}{/color}" at pv_text_rise(0.5) as pvt3
+    show expression Text("{color=#e8dcc0}{size=28}父亲骤逝，你从王都匆匆赶回\n接手这片守护了三十年的领地。{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.5) as pvt3
     pause 4.0
     hide pvt3 with dissolve
 
@@ -193,25 +192,25 @@ label pv_play:
     play sound "audio/sfx/crowd_murmur.ogg"
     pause 0.5
 
-    show text "{color=#d4a942}{size=24}权力的棋盘已经摆好{/size}{/color}" at pv_text_rise(0.3) as pvt4
+    show expression Text("{color=#ffd866}{size=32}权力的棋盘已经摆好{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.3) as pvt4
     pause 2.5
     hide pvt4 with dissolve
 
     ## 角色快闪
-    show aldric at pv_char_flash(0.2, 0.0) as pv_c1
-    show text "{color=#8b0000}{size=16}奥尔德里克 — 忠诚的老骑士{/size}{/color}" at pv_text_rise(0.0) as pvtc1
+    show aldric_img at pv_char_flash(0.2, 0.0) as pv_c1
+    show expression Text("{color=#ff6b6b}{size=22}奥尔德里克 — 忠诚的老骑士{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pvtc1
     pause 2.0
     hide pvtc1 with dissolve
     hide pv_c1 with dissolve
 
-    show elena at pv_char_flash(0.5, 0.0) as pv_c2
-    show text "{color=#9370db}{size=16}艾琳娜 — 来自王宫的神秘使者{/size}{/color}" at pv_text_rise(0.0) as pvtc2
+    show elena_img at pv_char_flash(0.5, 0.0) as pv_c2
+    show expression Text("{color=#c8a2ff}{size=22}艾琳娜 — 来自王宫的神秘使者{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pvtc2
     pause 2.0
     hide pvtc2 with dissolve
     hide pv_c2 with dissolve
 
-    show baron at pv_char_flash(0.8, 0.0) as pv_c3
-    show text "{color=#2f4f4f}{size=16}冯·哈根男爵 — 野心勃勃的邻国领主{/size}{/color}" at pv_text_rise(0.0) as pvtc3
+    show baron_img at pv_char_flash(0.8, 0.0) as pv_c3
+    show expression Text("{color=#7ecfcf}{size=22}冯·哈根男爵 — 野心勃勃的邻国领主{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pvtc3
     pause 2.0
     hide pvtc3 with dissolve
     hide pv_c3 with dissolve
@@ -228,10 +227,10 @@ label pv_play:
     play sound "audio/sfx/sword_draw.ogg"
     pause 0.8
 
-    show text "{color=#e74c3c}{size=26}边境告急{/size}{/color}" at pv_text_fade(0.0) as pvt5
+    show expression Text("{color=#ff4444}{size=34}边境告急{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_fade(0.0) as pvt5
     pause 2.5
 
-    show text "{color=#c8b890}{size=20}男爵的铁骑已在边境集结\n你的第一场考验来临{/size}{/color}" at pv_text_rise(0.0) as pvt6
+    show expression Text("{color=#e8dcc0}{size=26}男爵的铁骑已在边境集结\n你的第一场考验来临{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pvt6
     pause 3.5
     hide pvt6 with dissolve
 
@@ -241,30 +240,30 @@ label pv_play:
 
     ## 教堂
     scene bg_church_interior at pv_slow_zoom_out with Dissolve(0.3)
-    show bishop at pv_char_flash(0.5, 0.0) as pv_c4
-    show text "{color=#ffd700}{size=18}信仰，还是权术？{/size}{/color}" at pv_text_rise(0.2) as pvt7
+    show bishop_img at pv_char_flash(0.5, 0.0) as pv_c4
+    show expression Text("{color=#ffd866}{size=24}信仰，还是权术？{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.2) as pvt7
     pause 2.0
     hide pvt7 with dissolve
 
     ## 地下密室
     scene bg_underground at pv_slow_zoom_in with Dissolve(0.3)
-    show lily_master at pv_char_flash(0.5, 0.0) as pv_c5
-    show text "{color=#2d1b4e}{size=18}暗百合……父亲死亡的真相{/size}{/color}" at pv_text_rise(0.2) as pvt8
+    show lily_master_img at pv_char_flash(0.5, 0.0) as pv_c5
+    show expression Text("{color=#b88aff}{size=24}暗百合……父亲死亡的真相{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.2) as pvt8
     pause 2.0
     hide pvt8 with dissolve
 
     ## 王宫
     scene bg_throne_room at pv_pan_left with Dissolve(0.3)
-    show queen at pv_char_flash(0.3, 0.0) as pv_c6
-    show prince at pv_char_flash(0.7, 0.0) as pv_c7
-    show text "{color=#800080}{size=18}王都暗流涌动，每个人都是棋子{/size}{/color}" at pv_text_rise(0.2) as pvt9
+    show queen_img at pv_char_flash(0.3, 0.0) as pv_c6
+    show prince_img at pv_char_flash(0.7, 0.0) as pv_c7
+    show expression Text("{color=#d4a0ff}{size=24}王都暗流涌动，每个人都是棋子{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.2) as pvt9
     pause 2.5
     hide pvt9 with dissolve
 
     ## 战场
     scene bg_battlefield at pv_slow_zoom_in with Dissolve(0.3)
     play sound "audio/sfx/sword_draw.ogg"
-    show text "{color=#c0392b}{size=22}内战一触即发{/size}{/color}" at pv_text_fade(0.0) as pvt10
+    show expression Text("{color=#ff4444}{size=30}内战一触即发{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_fade(0.0) as pvt10
     pause 2.0
 
     ## ══════════════════════════════════════════
@@ -278,26 +277,26 @@ label pv_play:
     stop music fadeout 2.0
 
     ## 核心问题
-    show text "{color=#d4a942}{size=30}你将如何书写自己的命运？{/size}{/color}" at pv_text_fade(0.3) as pvt11
+    show expression Text("{color=#ffd866}{size=40}你将如何书写自己的命运？{/size}{/color}", outlines=[(3, "#000000", 0, 0)]) at pv_text_fade(0.3) as pvt11
     pause 3.0
 
     scene black with dissolve
     pause 0.5
 
     ## 五个结局预告
-    show text "{color=#c0392b}{size=18}铁腕领主 — 以铁与血铸就和平{/size}{/color}" at pv_text_rise(0.0) as pve1
+    show expression Text("{color=#ff6b6b}{size=24}铁腕领主 — 以铁与血铸就和平{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pve1
     pause 1.5
     hide pve1 with dissolve
-    show text "{color=#2c3e50}{size=18}影中之王 — 在阴影中操控一切{/size}{/color}" at pv_text_rise(0.0) as pve2
+    show expression Text("{color=#8ecae6}{size=24}影中之王 — 在阴影中操控一切{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pve2
     pause 1.5
     hide pve2 with dissolve
-    show text "{color=#f39c12}{size=18}圣光守护 — 以信仰之光驱散黑暗{/size}{/color}" at pv_text_rise(0.0) as pve3
+    show expression Text("{color=#ffd866}{size=24}圣光守护 — 以信仰之光驱散黑暗{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pve3
     pause 1.5
     hide pve3 with dissolve
-    show text "{color=#27ae60}{size=18}人民领主 — 守护最平凡的幸福{/size}{/color}" at pv_text_rise(0.0) as pve4
+    show expression Text("{color=#7ecf7e}{size=24}人民领主 — 守护最平凡的幸福{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pve4
     pause 1.5
     hide pve4 with dissolve
-    show text "{color=#3498db}{size=18}真相大白 — 正义也许会迟到{/size}{/color}" at pv_text_rise(0.0) as pve5
+    show expression Text("{color=#8ecae6}{size=24}真相大白 — 正义也许会迟到{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pve5
     pause 1.5
     hide pve5 with dissolve
 
@@ -330,12 +329,12 @@ label pv_play:
     pause 3.0
 
     ## Tagline
-    show text "{color=#c8b890}{size=18}{font=msyh.ttf}五个结局  九位角色  无数种命运{/font}{/size}{/color}" at pv_pos_tagline as pvtagline
+    show expression Text("{color=#e0d8c8}{size=24}{font=msyh.ttf}五个结局  九位角色  无数种命运{/font}{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_pos_tagline as pvtagline
 
     pause 3.0
 
     ## 平台信息
-    show text "{color=#6a5e48}{size=14}{font=msyh.ttf}即将登陆 TapTap · Steam{/font}{/size}{/color}" at pv_pos_platform as pvplatform
+    show expression Text("{color=#c8b890}{size=18}{font=msyh.ttf}即将登陆 TapTap · Steam{/font}{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_pos_platform as pvplatform
 
     pause 4.0
 
@@ -354,6 +353,6 @@ label pv_end:
     pause 1.0
 
     $ quick_menu = True
-    $ _dismiss_pause = False
+    $ _dismiss_pause = True
 
     return

@@ -51,10 +51,13 @@ label npc_aldric_secret:
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
+    $ hide_all_chars()
     "奥尔德里克推门而入。他没有穿平日整洁的管家服，而是一身旧棉衣，头发也不像往常那样梳得一丝不苟。"
 
     "他手里端着一个锈迹斑斑的铁盒，像是从地窖深处翻出来的旧物。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "少主……打扰您了。"
 
     aldric "我知道现在时辰不早，但有些话……如果今晚不说，我怕自己明天又会找借口拖下去。"
@@ -75,7 +78,7 @@ label npc_aldric_secret:
 
     "他拿起那枚徽章，上面刻着一头展翅的雄鹰——那是旧王国皇家骑士团的标志，你在历史书中见过。"
 
-    aldric "三十年前，我是国王的近卫骑士。我的名字不叫奥尔德里克·管家，而是奥尔德里克·冯·布伦纳——皇家骑士团第七席。"
+    aldric "三十年前，我是国王的近卫骑士。你们叫了我三十年的管家。但我的真名是奥尔德里克·冯·布伦纳——皇家骑士团第七席。"
 
     "你惊讶地看着这个你从小看到大的老人。他佝偻的身躯下，似乎还隐藏着某种早已被岁月磨去棱角的力量。"
 
@@ -147,6 +150,7 @@ label npc_aldric_secret:
 
             aldric "谢谢您……谢谢您。"
 
+            $ hide_all_chars()
             "那一夜，你们在书房中一直谈到天明。他给你讲述了许多关于先王的故事，关于父亲年轻时的往事。"
 
             "你对奥尔德里克的了解，在这一夜之间变得无比深刻。"
@@ -184,6 +188,7 @@ label npc_aldric_secret:
 
             aldric "也许……是时候了。"
 
+            $ hide_all_chars()
             "你接过信函。封蜡上的雄鹰印记依然清晰。这封三十年前的密信，也许藏着改变一切的秘密。"
 
             "你小心翼翼地打开信封，扫了一眼内容——这关乎王位继承的真相。"
@@ -217,6 +222,7 @@ label npc_aldric_secret:
 
             player "我们即将面对的敌人不简单。我需要一个真正上过战场的人来教导我。"
 
+            $ hide_all_chars()
             "奥尔德里克缓缓站起身来，挺直了那弯曲了三十年的脊背。"
 
             "在那一瞬间，你仿佛看到了三十年前那个意气风发的皇家骑士的影子。"
@@ -228,6 +234,7 @@ label npc_aldric_secret:
 
             aldric "三十年的生锈不是一天能磨去的。但我会把我所知道的一切，都传授给您。"
 
+            $ hide_all_chars()
             "从那天起，每天黎明时分，你都能在后院看到奥尔德里克的身影。他手持木剑，一招一式虽已迟缓，却依然带着旧日骑士的凛然风骨。"
 
             "你在他的指导下，剑术突飞猛进。"
@@ -348,10 +355,13 @@ label npc_captain_past:
             show captain_img at left with dissolve
             captain "……"
 
+            $ hide_all_chars()
             "雷恩没有说话，但你看到他握着军徽的手终于松开了。"
 
             "他将那枚被划花的军徽用力扔下城墙。铜片在空中翻了几个跟头，很快就看不见了。"
 
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
             captain "过去的就让它过去吧。现在，我只为艾登堡而战。"
 
             "你拍了拍他的肩膀。这个沉默寡言的队长，此刻眼中闪烁着你从未见过的光芒。"
@@ -433,6 +443,7 @@ label npc_captain_past:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "夜幕完全降临。你们一同走下城墙，回到温暖的灯火中。"
 
     "关于雷恩的过去，你终于知道了全貌。这个铁骨铮铮的汉子，曾经为了无辜的生命付出过惨痛的代价。"
@@ -464,6 +475,7 @@ label npc_elena_past:
     show player_char_img at left with dissolve
     player "艾琳娜？这么晚了……"
 
+    $ hide_all_chars()
     "她猛地回头。在那一瞬间，你看到她眼中闪过一丝你从未见过的东西——不是警惕，是恐惧。"
 
     "像一只被逼到角落的野猫。"
@@ -485,20 +497,52 @@ label npc_elena_past:
     show elena_img at left with dissolve
     elena "做了噩梦。老毛病了。"
 
+    $ hide_all_chars()
     "她在树下坐下来，双手抱着膝盖。月光穿过树叶的缝隙，在她身上投下斑驳的光影。"
 
     "你在她身边坐下。森林中传来猫头鹰的低鸣和远处溪水的声响。"
 
-    elena "你知道为什么你父亲收留我吗？"
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    ## 完全中立叙事——不依赖 elena_spy_known flag 判定玩家认知
+    ## flag 在其它场景继续工作；本段只让艾琳娜讲、玩家听，旁白不做任何"已知/未知"预设
+    elena "有件事我该告诉你——我来艾登堡不是偶然。"
+
+    elena "我真正的身份，是王后派来监视你父亲的眼线。从第一天踏进艾登堡起，我每一步都在向王都传递情报。"
+
+    $ hide_all_chars()
+    "她的声音很轻，但每个字都像钉入空气里。你没有打断她——今晚她显然要把一切讲清楚。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+
+    ## 以下为公共部分：无论玩家之前是否知道"父亲识破艾琳娜"，
+    ## 这段关键前提都必须在此场景显式讲出，才能让后面"为什么留下我"的问题成立
+    elena "你父亲远比王后想象的聪明。不到三个月，他就查出了我的真实身份。"
+
+    elena "我以为自己死定了。但他没有揭穿我——他找我谈话，给我看了一些东西：先王遗诏的抄本、暮色之露的证据、教会的秘密。"
+
+    elena "然后他问了我一个……我从来没人问过的问题。'孩子，你自己想要什么？'"
+
+    elena "所以——你知道为什么他明明识破了我，还愿意让我留在艾登堡吗？"
+
+    $ elena_spy_known = True
+    $ elena_identity_exposed_known = True
+    ## 此处艾琳娜也提及"暮色之露"，兜底设定认知 flag
+    $ dusk_dew_known = True
 
     hide elena_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "他只说你是一个需要帮助的孤儿。"
+    player "……说实话，我不知道。父亲生前从没跟我提过你。"
+
+    player "我对你的来历只知道奥尔德里克告诉我的那一层——王后派来的侍从。"
 
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
+    elena "也是——他给我的公开身份是'需要帮助的孤儿'。连你都没告诉。"
+
     elena "孤儿……哈。"
 
     "她苦笑了一声。那笑容比哭还让人心碎。"
@@ -571,6 +615,7 @@ label npc_elena_past:
 
             elena "你跟你父亲一样。说话总是让人……"
 
+            $ hide_all_chars()
             "她没有说完。但那个夜晚，月光下的老橡树见证了两个人之间某种无言的承诺。"
 
             "也许不是爱情——至少现在还不是。但比信任更深，比依赖更重。"
@@ -655,6 +700,7 @@ label npc_elena_past:
 
             elena "还有——别再用那种可怜的眼神看我。我最讨厌被可怜。"
 
+            $ hide_all_chars()
             "她走得比来的时候快。你隐约觉得，自己刚才也许说错了话。"
 
             "但在残酷的权谋世界中，有些时候务实比温情更重要——你试着这么告诉自己。"
@@ -663,7 +709,7 @@ label npc_elena_past:
 
     "夜色渐深，你独自坐在老橡树下，思考着艾琳娜的过去。"
 
-    "一个在黑暗中长大的少女，身上背负着七条人命的重量。"
+    "一个在黑暗中长大的少女，身上背负着三条人命的重量。"
 
     "而你的父亲，曾是她在这个世界上唯一的光。"
 
@@ -693,10 +739,13 @@ label npc_bishop_confession:
     $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
 
+    $ hide_all_chars()
     "马修斯主教瘫坐在第一排长椅上，手中攥着一只银质酒壶。他的法袍歪斜，圣徽歪在一边。"
 
     "在他面前的祭坛上，十字架在烛光中投下巨大的阴影。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "啊……年轻的领主。来……来找老朽忏悔的吗？"
 
     "他的声音含糊不清，但眼神中有一种异样的清醒——那种喝了很多酒、反而变得可怕地清醒的状态。"
@@ -780,7 +829,13 @@ label npc_bishop_confession:
 
         "他用力闭上眼睛，似乎在重温那段可怕的记忆。"
 
-        bishop "我那时候只是一个年轻的副主教，什么都不知道。直到多年后我被调到艾登堡，在整理旧档案时发现了一封费雷恩的密信——里面提到了这笔交易的全部细节。"
+        bishop "那晚我就在场——作为他的随身副主教，端着烛台，什么都没来得及反应。"
+
+        bishop "调包之后，他把那份原件递给我，命令我拿去销毁。他信任我——以为我会按命令执行。"
+
+        bishop "我接过原件走出房间，在烧毁它之前的最后一刻……我没有下手。我把它藏了起来。"
+
+        bishop "这二十年来，那份原件一直在我手里。我没敢告诉任何人——直到今天对你说出这些。"
 
         bishop "我本该站出来揭发。但我害怕。害怕教会的报复，害怕牵连家人。于是我选择了沉默——这沉默，比亲手犯罪更可耻。"
 
@@ -837,6 +892,7 @@ label npc_bishop_confession:
             show bishop_img at left with dissolve
             bishop "谢谢你……年轻的领主。谢谢你。"
 
+            $ hide_all_chars()
             "你在教堂中陪他坐了很久，直到他酒醒。从那以后，主教再也没有喝过酒。"
 
             "而他对你的信仰和忠诚，变得比任何时候都更加坚定。"
@@ -881,6 +937,65 @@ label npc_bishop_confession:
 
             "你将钥匙贴身收好。这把小小的钥匙，也许打开的不仅仅是一个铁箱，还有整个王国的命运之锁。"
 
+            ## ── 玩家亲自下地下室取遗诏 ──
+            hide bishop_img with dissolve
+            $ hide_all_chars()
+
+            "主教的酒意再度涌上，他靠着长椅合上双眼，呼吸渐渐沉稳。酒壶从他松开的手中滑落，在石板上发出轻响。"
+
+            "你不打算等到明天。"
+
+            scene bg underground with dissolve
+            $ unlock_gallery("bg_underground")
+
+            "你提着一盏油灯，顺着教堂侧翼的石阶向下走。空气逐层变得阴冷潮湿，弥漫着陈年熏香与霉味交织的气息。"
+
+            "地下室比想象中深。灯火照在壁画上——天使与恶魔的搏斗、圣徒的殉道，颜色早已斑驳。"
+
+            "最深处是一面看似平常的石墙。你从右向左数——一块、两块、第三块。"
+
+            "你伸手按住那块石头，用力向内推。"
+
+            "短暂的寂静之后，机括的低鸣传来。石墙缓缓让开，露出一个隐藏的壁龛。"
+
+            "壁龛中静静放着一个铁箱，箱身刻着教会的十字徽记，锁孔蒙着一层薄灰——显然多年未被打开。"
+
+            "你从怀中取出那把古铜色的小钥匙，插入锁孔。"
+
+            "钥匙转动的一瞬，锁簧清脆作响——箱盖轻轻弹开。"
+
+            "里面衬着褪色的红绒。上面摆放着三样东西。"
+
+            "第一样——一份泛黄的羊皮卷，蜡封上印着皇家徽章，完好如初。"
+
+            "第二样——一枚金色印章，展翅的鹰，是先王格里菲斯七世的私人纹章。"
+
+            "第三样——一张折叠的便笺，封口写着：'致我的学生马修斯——仅在极端情况下拆阅。'"
+
+            "你先拆开了便笺。费雷恩的笔迹苍劲有力——"
+
+            "『马修斯，如果你在读这封信，说明我已经不在了。这个匣子里有两样东西你必须守护：先王的原始遗诏和他的私人印章。』"
+
+            "『没有这枚印章，任何人都无法证明遗诏是伪造的——因为印章只有一枚。官方版本上的印章是仿制的。对比细节，就能证明哪份是真、哪份是假。』"
+
+            "你展开羊皮卷。顶端的皇家徽章以金粉绘制，与印章纹样分毫不差。正文是先王的亲笔——字迹颤抖，那是一个垂死之人留下的最后意志。"
+
+            "遗诏的内容明确得令人心悸——摄政权属于你的父亲，王后不得干政。"
+
+            "你的手微微发抖。二十年的秘密，就躺在你手里。"
+
+            $ testament_original_obtained = True
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "（这份遗诏……加上印章……就是推翻整个谎言的物证。）"
+
+            $ hide_all_chars()
+            "你小心地将羊皮卷、印章、便笺一并收入怀中，合上铁箱，把石块推回原位——墙面重新合拢，没有留下任何痕迹。"
+
+            scene bg church_interior with dissolve
+            "你走出地下室时，主教仍在长椅上熟睡。他不会察觉壁龛已被打开；也不会知道，从这一刻起，真正的博弈才刚刚开始。"
+
         "你欠我父亲一条命，主教。":
             $ change_stat("power", 5)
             $ change_rel("rel_bishop", -5)
@@ -917,6 +1032,7 @@ label npc_bishop_confession:
 
             bishop "无论您需要什么——教会的资源、情报网络、甚至是……不那么光彩的手段——我都会为您做到。"
 
+            $ hide_all_chars()
             "你冷冷地看着跪在地上的主教。你不确定自己是否做得太过分了，但在这个弱肉强食的世界里，善良是一种奢侈品。"
 
             "而一个完全忠诚的主教，比一个被良心折磨的主教有用得多。"
@@ -997,6 +1113,7 @@ label npc_village_quest:
     show player_char_img at left with dissolve
     player "是谁给约根出的主意，地基要挖这么深？"
 
+    $ hide_all_chars()
     "你叫来了牧羊人约根。这是个老实巴交的汉子，一问之下，他支支吾吾地说出了实情。"
 
     "一个月前，一个自称是'男爵派来的测量官'的人来到村子，告诉约根说他家地下有矿脉，让他往深里挖。"
@@ -1008,6 +1125,7 @@ label npc_village_quest:
     show aldric_img at left with dissolve
     aldric "男爵的人……"
 
+    $ hide_all_chars()
     "你和奥尔德里克交换了一个眼神。这不是一个单纯的邻里纠纷——有人在背后操纵。"
 
     "如果男爵系统性地破坏边境村庄的水源，不出三年，这些村庄就会因为无水可用而废弃。到时候，男爵就能不费一兵一卒地蚕食你的领地。"
@@ -1076,6 +1194,7 @@ label npc_village_quest:
             show aldric_img at left with dissolve
             aldric "是，少主。"
 
+            $ hide_all_chars()
             "三天后，调查结果让你倒吸一口凉气。"
 
             "不仅石泉村——周边五个村庄都遭到了类似的操纵。有的是水源被破坏，有的是牧场被引导放牧过度，还有的是农田被建议种植错误的作物。"
@@ -1089,6 +1208,7 @@ label npc_village_quest:
 
             player "好手段……但现在我知道了。"
 
+            $ hide_all_chars()
             "你下令加强边境村庄的安全巡查，驱逐一切来历不明的外人。同时将这条重要情报记录在案——如果将来与男爵交涉，这就是铁证。"
 
             "至于水井纠纷，你简单地判了两家共享，然后用公款修复了水脉。"
@@ -1129,63 +1249,85 @@ label npc_baron_honor:
     show player_char_img at left with dissolve
     player "海因里希，你为男爵效力多久了？"
 
-    "海因里希 \"二十三年。从我十六岁入伍到现在。\""
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    heinrich "二十三年。从我十六岁入伍到现在。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "二十三年……你了解男爵吗？"
 
-    "海因里希 \"领主大人，我知道您和男爵是对头。但在您判我之前，我能不能……说几句话？\""
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    heinrich "领主大人，我知道您和男爵是对头。但在您判我之前，我能不能……说几句话？"
 
     "你示意他继续。"
 
-    "海因里希 \"所有人都说男爵是个暴君、一个野心家、一头只知道吞噬的野兽。但是……他不只是那样。\""
+    heinrich "所有人都说男爵是个暴君、一个野心家、一头只知道吞噬的野兽。但是……他不只是那样。"
 
     "你挑了挑眉。"
 
-    "海因里希 \"二十年前。北方蛮族大举南侵。王廷的援军迟迟不到——因为伊莎贝拉王后认为北方边境'不值得浪费军费'。\""
+    heinrich "二十年前。北方蛮族大举南侵。王廷的援军迟迟不到——因为伊莎贝拉王后认为北方边境'不值得浪费军费'。"
 
-    "海因里希 \"整个北部边境只有男爵一支军队。蛮族的兵力是我们的三倍。所有人都在撤退——只有男爵说：'不退。'\""
+    heinrich "整个北部边境只有男爵一支军队。蛮族的兵力是我们的三倍。所有人都在撤退——只有男爵说：'不退。'"
 
     "老兵挺直了佝偻的腰，声音里有了不一样的东西。"
 
-    "海因里希 \"他带着我们三百人，死守格伦瓦德隘口七天七夜。第三天的时候，蛮族突破了左翼防线。男爵亲自带着骑兵去堵口。\""
+    heinrich "他带着我们三百人，死守格伦瓦德隘口七天七夜。第三天的时候，蛮族突破了左翼防线。男爵亲自带着骑兵去堵口。"
 
-    "海因里希 \"那一战……他失去了左眼。一支蛮族的箭射穿了他的面甲。但他没有倒下。他用独眼指挥了剩下四天的战斗。\""
+    heinrich "那一战……他失去了左眼。一支蛮族的箭射穿了他的面甲。但他没有倒下。他用独眼指挥了剩下四天的战斗。"
 
-    "海因里希 \"第七天，蛮族退了。格伦瓦德全村两千多人——男女老少——保住了性命。\""
+    heinrich "第七天，蛮族退了。格伦瓦德全村两千多人——男女老少——保住了性命。"
 
     "你陷入了沉思。你听过北方蛮族入侵的历史，但从来没有听说过男爵在其中扮演的角色。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "以他的战功，为什么还只是个男爵？"
 
-    "海因里希 \"这个问题我们也问过。他每次都推辞封赏——说什么'边疆之臣不敢僭越'。\""
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    heinrich "这个问题我们也问过。他每次都推辞封赏——说什么'边疆之臣不敢僭越'。"
 
-    "海因里希 \"后来我才想明白。一个男爵养三百私兵，没人会多看一眼。但如果是伯爵养三百私兵——王都的眼睛就全盯过来了。\""
+    heinrich "后来我才想明白。一个男爵养三百私兵，没人会多看一眼。但如果是伯爵养三百私兵——王都的眼睛就全盯过来了。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "王后没有派援军？"
 
+    $ hide_all_chars()
     "海因里希苦笑了一下。"
 
-    "海因里希 \"不仅没有援军。战后，王后还削减了男爵的军饷，说他'擅自开战，耗费国库'。\""
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    heinrich "不仅没有援军。战后，王后还削减了男爵的军饷，说他'擅自开战，耗费国库'。"
 
-    "海因里希 \"但那还不是最让男爵心寒的事。\""
+    heinrich "但那还不是最让男爵心寒的事。"
 
     "老兵的声音变得沉重。"
 
-    "海因里希 \"男爵的第一任妻子——艾玛夫人。她是一个温柔善良的女人，在战争期间负责后方的伤员救治。\""
+    heinrich "男爵的第一任妻子——艾玛夫人。她是一个温柔善良的女人，在战争期间负责后方的伤员救治。"
 
-    "海因里希 \"战后不久，王后以'通敌叛国'的罪名逮捕了艾玛夫人。说她在战争中私通蛮族——纯粹是莫须有的罪名。\""
+    heinrich "战后不久，王后以'通敌叛国'的罪名逮捕了艾玛夫人。说她在战争中私通蛮族——纯粹是莫须有的罪名。"
 
-    "海因里希 \"审判……不，那算不上审判。那只是一场表演。三天后，艾玛夫人被处决了。\""
+    heinrich "审判……不，那算不上审判。那只是一场表演。三天后，艾玛夫人被处决了。"
 
-    "海因里希 \"男爵跪在刑场上，一声没哭。但从那以后……他就变了。\""
+    heinrich "男爵跪在刑场上，一声没哭。但从那以后……他就变了。"
 
     "地牢中的空气似乎变得更加寒冷。你终于理解了男爵身上那股不可理喻的仇恨和偏执的根源。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "所以他恨王后。"
 
-    "海因里希 \"不只是恨。他要报复。他要让王后付出代价。这就是他这些年来所有行动的核心——不是野心，是复仇。\""
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    heinrich "不只是恨。他要报复。他要让王后付出代价。这就是他这些年来所有行动的核心——不是野心，是复仇。"
 
-    "海因里希 \"我不是在替他开脱。他做的很多事确实过分了。但领主大人……他不是一个纯粹的恶人。他是一个被逼成恶人的人。\""
+    heinrich "我不是在替他开脱。他做的很多事确实过分了。但领主大人……他不是一个纯粹的恶人。他是一个被逼成恶人的人。"
 
     "这些信息彻底改变了你对男爵的认知。一个守护村庄的英雄、一个失去妻子的丈夫、一个被国家背叛的忠臣——这些形象与你之前认识的那个冷酷阴鸷的男爵截然不同。"
 
@@ -1196,6 +1338,8 @@ label npc_baron_honor:
             $ baron_peace_path = True
             $ log_decision("NPC支线", "了解真相后考虑与男爵和谈")
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "也许……我一直在用错误的方式看待男爵。"
 
             player "如果他的真正敌人是王后，而不是我——那么我们之间也许存在谈判的空间。"
@@ -1204,13 +1348,20 @@ label npc_baron_honor:
 
             player "海因里希，如果我放你回去，你能把一封信带给男爵吗？"
 
-            "海因里希 \"领主大人……您是认真的？\""
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            heinrich "领主大人……您是认真的？"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我是认真的。这个世界上已经有太多仇恨了。如果能化干戈为玉帛，为什么不试试？"
 
+            $ hide_all_chars()
             "老兵看着你的眼睛，似乎在判断你是否真诚。最后，他缓缓点了点头。"
 
-            "海因里希 \"好。我把信带到。但我不能保证男爵会怎么做——他心里的仇恨太深了。\""
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            heinrich "好。我把信带到。但我不能保证男爵会怎么做——他心里的仇恨太深了。"
 
             "你花了一整夜写那封信。你知道这也许是一步险棋，但有时候，和平的代价比战争的代价要小得多。"
 
@@ -1219,19 +1370,27 @@ label npc_baron_honor:
             $ change_stat("power", 3)
             $ log_decision("NPC支线", "承认真相但不改变立场")
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我理解他的遭遇。但这不能成为他侵略邻邦、残害无辜的理由。"
 
             player "一个人的痛苦不能成为制造更多痛苦的借口。"
 
+            $ hide_all_chars()
             "海因里希低下了头。他知道你说得没错。"
 
-            "海因里希 \"也许吧。但人……不是总能做到理性的。\""
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            heinrich "也许吧。但人……不是总能做到理性的。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我记住了你告诉我的这些。也许有一天我会需要这些信息。但今天——我不会因为同情而放松警惕。"
 
+            $ hide_all_chars()
             "你让人好好照料海因里希的伤，然后走出了地牢。"
 
-            "你心中多了一份复杂的情感。男爵的故事让你感到同情，但你知道——在权谋的世界里，同情是最奢侈的东西。"
+            "男爵的故事让你感到同情，但你知道——在权谋的世界里，同情是最奢侈的东西。"
 
             "你不能因为理解一个敌人，就忘记他仍然是一个敌人。"
 
@@ -1240,18 +1399,26 @@ label npc_baron_honor:
             $ baron_blackmail_option = True
             $ log_decision("NPC支线", "打算利用男爵的过去")
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "有趣……非常有趣。"
 
             "你的大脑开始高速运转。男爵对王后的仇恨、他失去妻子的伤痛——这些都是可以被利用的弱点。"
 
             player "海因里希，你还知道关于艾玛夫人案件的更多细节吗？比如……参与审判的法官、伪证的证人？"
 
+            $ hide_all_chars()
             "海因里希不安地看着你。"
 
-            "海因里希 \"领主大人……您想做什么？\""
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            heinrich "领主大人……您想做什么？"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我想做能做的事。如果男爵的仇恨能被引导——比如引导向正确的方向——那对所有人都是好事。不是吗？"
 
+            $ hide_all_chars()
             "海因里希咬了咬嘴唇。他意识到自己可能说得太多了。"
 
             "但无论如何，信息已经在你手中了。男爵的痛处、他的执念、他那个被冤杀的妻子——这些都是棋局上有力的筹码。"
@@ -1324,10 +1491,13 @@ label npc_lily_test:
     show lily_master_img at left with dissolve
     lily_master "查实了。证据确凿。但这不是重点。"
 
+    $ hide_all_chars()
     "首领拍了拍手。密室的侧门打开了，两个黑衣人押着一个蒙着头的人走进来。"
 
     "黑布被揭开。你看到的是一个年轻女人——大约二十五六岁，面色苍白，眼中有恐惧，也有一丝……坦然。"
 
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
     lily_master "这就是'夜莺'。真名玛莎。你来决定她的命运。"
 
     hide lily_master_img
@@ -1351,6 +1521,7 @@ label npc_lily_test:
 
     player "玛莎，为什么出卖暗百合？"
 
+    $ hide_all_chars()
     "她用沙哑的声音回答。"
 
     "玛莎 \"……我丈夫。他被王后的人抓了。关在王都的黑狱里。\""
@@ -1359,8 +1530,11 @@ label npc_lily_test:
 
     "你心中一沉。这不是一个简单的背叛故事。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你有孩子吗？"
 
+    $ hide_all_chars()
     "玛莎 \"两个。最大的五岁，最小的……还在吃奶。\""
 
     "她的泪水终于落了下来。"
@@ -1374,6 +1548,7 @@ label npc_lily_test:
     show lily_master_img at left with dissolve
     lily_master "你听到了。一个叛徒，但理由是为了救自己的丈夫。如何处置？"
 
+    $ hide_all_chars()
     "密室中陷入了沉寂。火把的噼啪声格外刺耳。你面前是一个年轻的母亲——一个为了丈夫而背叛组织的女人。"
 
     "这不是黑与白、对与错那么简单的事。"
@@ -1402,6 +1577,7 @@ label npc_lily_test:
 
             player "暗百合存在的意义是什么？是维护弱者的利益。玛莎就是弱者之一。"
 
+            $ hide_all_chars()
             "密室中寂静了很长时间。你甚至开始担心首领会不会翻脸。"
 
             "然后，一声低沉的笑从兜帽下传出。"
@@ -1421,6 +1597,7 @@ label npc_lily_test:
 
             lily_master "至于你丈夫——我们会想办法。"
 
+            $ hide_all_chars()
             "玛莎瘫坐在地上，泣不成声。"
 
             "你走出密室的时候，首领在背后说了一句：'你通过了。'"
@@ -1465,6 +1642,7 @@ label npc_lily_test:
 
             lily_master "你通过了考验。不是因为你做了正确的决定——而是因为你做了艰难的决定，并且承担了它的重量。"
 
+            $ hide_all_chars()
             "你走出密室。走廊里回荡着远处隐约传来的哭声，像一根细针，扎在你心口。"
 
             "你告诉自己这是必要的。你重复了很多次。但今夜，你知道自己不会睡得好。"
@@ -1511,6 +1689,7 @@ label npc_lily_test:
 
             player "但如果你再次背叛……"
 
+            $ hide_all_chars()
             "你没有说完。你不需要说完。"
 
             "玛莎看着你，眼中的恐惧慢慢被一种绝望的希望取代。"
@@ -1528,6 +1707,7 @@ label npc_lily_test:
 
             lily_master "如果你出了任何差错——不会有第二次机会。"
 
+            $ hide_all_chars()
             "玛莎颤抖着点了点头。你在暗百合中多了一枚棋子——但这枚棋子是活的，有感情的，有软肋的。"
 
             "使用她的时候，你需要格外小心。因为人心是世界上最难控制的武器。"

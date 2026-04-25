@@ -1,0 +1,182 @@
+{
+  "main_theme": {
+    "status": "done",
+    "task_id": "036e27a4-e2e9-40c0-b383-ea20494a4714",
+    "clip_id": "316045e9-3e77-41cb-aa20-f53599e8a357",
+    "duration": 81.72
+  },
+  "castle_calm": {
+    "status": "done",
+    "task_id": "cb9740af-9633-45f3-b05c-e656e1184640",
+    "clip_id": "6b2a8043-077c-4355-a57c-57de6a60335c",
+    "duration": 169.48
+  },
+  "great_hall": {
+    "status": "done",
+    "task_id": "845db2ca-9fe2-43f4-9b2c-52821fa6af75",
+    "clip_id": "44a2f888-16eb-42f3-a96e-27f02f38deec",
+    "duration": 90
+  },
+  "night_mystery": {
+    "status": "done",
+    "task_id": "02253541-831e-4f19-97c7-5049a1ea45d4",
+    "clip_id": "198df630-945a-4383-8e1b-18352b718864",
+    "duration": 129.08
+  },
+  "tension": {
+    "status": "done",
+    "task_id": "fd00b218-635b-4e57-b7e3-c05a4608a81c",
+    "clip_id": "64f111fd-f06c-45ea-9ae9-f88a5e27b593",
+    "duration": 82.8
+  },
+  "sad": {
+    "status": "done",
+    "task_id": "eaca298a-2f29-44ca-8569-466c85e97018",
+    "clip_id": "7d5b2b26-d693-476e-8f19-135ae603634e",
+    "duration": 221.12
+  },
+  "battle_prepare": {
+    "status": "done",
+    "task_id": "62914030-d741-486f-8d9c-d7ac25351040",
+    "clip_id": "0dc041aa-a0b3-4ed2-8a88-9730fa78a717",
+    "duration": 116.84
+  },
+  "victory": {
+    "status": "done",
+    "task_id": "6fd209f3-6f56-4863-a9a3-799e4cf33453",
+    "clip_id": "8bdf02f7-c008-4d6e-8af6-916e90e10f9f",
+    "duration": 201.6
+  },
+  "tavern_lively": {
+    "status": "done",
+    "task_id": "d53fa7ae-fb70-4da9-b2e5-390eb03a6d27",
+    "clip_id": "4a7ab553-cd71-414f-9619-0e97dffdc518",
+    "duration": 124.52
+  },
+  "forest_ambient": {
+    "status": "done",
+    "task_id": "78f3effd-4225-4de2-9292-bcf8c4745b23",
+    "clip_id": "e19b9084-2abe-4285-bcc3-0789fa98dcd0",
+    "duration": 105.72
+  },
+  "rain_storm": {
+    "status": "done",
+    "task_id": "0e9cc8cf-0042-4313-b006-268e2f99d947",
+    "clip_id": "0aae0eb0-de19-439c-ac61-38dd5d99f166",
+    "duration": 129.92
+  },
+  "market_bustle": {
+    "status": "done",
+    "task_id": "fec7f847-a0da-4571-8107-a50476ba6fa4",
+    "clip_id": "1b73f531-0c0f-4b8e-b66b-8725118857bd",
+    "duration": 111.16
+  },
+  "church_choir": {
+    "status": "done",
+    "task_id": "f1baa92a-2a72-46ce-99ab-54584a772101",
+    "clip_id": "72e2886d-8916-4d65-8ac1-00a39b290993",
+    "duration": 211.8
+  },
+  "dungeon_drip": {
+    "status": "done",
+    "task_id": "caf9a7c6-2817-4130-a5bf-a920bba78622",
+    "clip_id": "6d0b78df-e228-40a7-a0a3-e4c12a5fcd38",
+    "duration": 240
+  },
+  "harbor_waves": {
+    "status": "done",
+    "task_id": "fd99a3ec-6b3b-4145-8e46-be3f32a3cd31",
+    "clip_id": "f1e4661f-d3c7-4268-bc92-cfde6c77a44a",
+    "duration": 156.88
+  },
+  "campfire": {
+    "status": "done",
+    "task_id": "5e384034-160c-471c-aea1-6d99eef3a6eb",
+    "clip_id": "9fd15c3c-d333-46bc-ac69-9e8b1d2c9393",
+    "duration": 240
+  },
+  "war_drums": {
+    "status": "done",
+    "task_id": "ac86c5f0-3d39-4964-a8f3-1fa9e9f781b0",
+    "clip_id": "9d1ce3a5-04aa-42f6-98c6-7d7cd0813003",
+    "duration": 82.32
+  },
+  "coronation": {
+    "status": "done",
+    "task_id": "8fb76b20-956b-4833-b7b1-0985d0eb3dbf",
+    "clip_id": "11cb5471-ce19-4ee2-8110-ee9e5e9aceaa",
+    "duration": 207.56
+  },
+  "conspiracy": {
+    "status": "done",
+    "task_id": "4791c389-eae1-4c59-9772-4bf5c610eac7",
+    "clip_id": "11258145-527d-4f11-99b6-8a2068238bbe",
+    "duration": 112.36
+  },
+  "chase": {
+    "status": "done",
+    "task_id": "e94af16a-e400-4fa3-93eb-32923382ef59",
+    "clip_id": "bda75d54-ca9b-42bb-b258-02ea0325896f",
+    "duration": 92.6
+  },
+  "romance": {
+    "status": "done",
+    "task_id": "6f389635-044d-47c6-b2ff-8348a79a265a",
+    "clip_id": "8cb987d6-7580-4140-a06e-eb5dd44dff42",
+    "duration": 240
+  },
+  "grief": {
+    "status": "done",
+    "task_id": "ceb3da4f-e900-42c9-81f4-ebfe944323b2",
+    "clip_id": "81f4ee3d-ec3f-4aec-bfce-79cabf90d7d9",
+    "duration": 96.6
+  },
+  "revelation": {
+    "status": "done",
+    "task_id": "9086ef82-26fc-45fc-b472-7eddc261d31d",
+    "clip_id": "3febd41e-e252-4d75-b21f-f5205236ace8",
+    "duration": 63.52
+  },
+  "betrayal": {
+    "status": "done",
+    "task_id": "4754ef04-e54e-4e8b-bf42-88ee584fdbc4",
+    "clip_id": "614e004b-ce6c-487a-9db7-5f70417982bb",
+    "duration": 180.36
+  },
+  "hope": {
+    "status": "done",
+    "task_id": "5507afef-153f-4de2-b0e4-978093ceb59d",
+    "clip_id": "d6f3137b-a593-4937-af46-9fda52ab332f",
+    "duration": 129.12
+  },
+  "winter_wind": {
+    "status": "done",
+    "task_id": "ec92acbd-e257-4de7-9308-902610fdd1dc",
+    "clip_id": "ce8a0e23-ed59-4fbd-93a5-a1a28c078303",
+    "duration": 177.84
+  },
+  "dawn": {
+    "status": "done",
+    "task_id": "d4e83613-69d8-4f10-8faf-8fedce978663",
+    "clip_id": "ad58d70e-8e80-4bc3-8a64-d3b844483a07",
+    "duration": 77.48
+  },
+  "ritual": {
+    "status": "done",
+    "task_id": "61c4c1b4-4385-4dae-bf46-028925a1304a",
+    "clip_id": "7ebd460b-6715-4bab-bd16-af7fc88ac730",
+    "duration": 240
+  },
+  "throne": {
+    "status": "done",
+    "task_id": "2230aaab-92ca-42cc-a206-b1b92318907c",
+    "clip_id": "012733d1-d224-4da5-bf96-8cd441d1e0a6",
+    "duration": 106.64
+  },
+  "escape": {
+    "status": "done",
+    "task_id": "b498ad15-5e8c-4f2b-a883-b4679d92a699",
+    "clip_id": "3f4c0211-e596-4b1e-9dd0-93875bbda62c",
+    "duration": 176.96
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "bell_toll": {
+    "status": "done",
+    "duration": 5.0
+  },
+  "crowd_murmur": {
+    "status": "done",
+    "duration": 8.0
+  },
+  "door_knock": {
+    "status": "done",
+    "duration": 3.0
+  },
+  "fire_crackle": {
+    "status": "done",
+    "duration": 8.0
+  },
+  "horse_gallop": {
+    "status": "done",
+    "duration": 5.0
+  },
+  "sword_draw": {
+    "status": "done",
+    "duration": 2.0
+  },
+  "ui_cancel": {
+    "status": "done",
+    "duration": 0.5
+  },
+  "ui_click": {
+    "status": "done",
+    "duration": 0.5
+  },
+  "ui_confirm": {
+    "status": "done",
+    "duration": 0.5
+  },
+  "ui_hover": {
+    "status": "done",
+    "duration": 0.5
+  },
+  "ui_page": {
+    "status": "done",
+    "duration": 1.0
+  },
+  "scene_change": {
+    "status": "done",
+    "duration": 1.5
+  },
+  "letter_open": {
+    "status": "done",
+    "duration": 2.0
+  },
+  "footsteps": {
+    "status": "done",
+    "duration": 3.0
+  },
+  "thunder": {
+    "status": "done",
+    "duration": 5.0
+  },
+  "coin_drop": {
+    "status": "done",
+    "duration": 2.0
+  },
+  "heartbeat": {
+    "status": "done",
+    "duration": 4.0
+  }
+}

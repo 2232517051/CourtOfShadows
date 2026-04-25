@@ -30,23 +30,33 @@ label ch2_deep_spy:
 
     "他大约四十来岁，面容平平无奇——正是那种在任何宴会上都不会引起注意的人。"
 
-    "仆人" "大人，能否借一步说话？"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    servant_common "大人，能否借一步说话？"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "你是谁？有什么事？"
 
+    $ hide_all_chars()
     "他左右环顾了一下，确认大厅里已经没有旁人。"
 
-    "仆人" "小的名叫马丁，在城堡里做杂役已有十年。"
-    "仆人" "这十年里，小的听到过很多不该听到的事情……"
-    "仆人" "各位领主的私下谈话、密信往来、暗中交易——小的都略知一二。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    servant_common "小的名叫马丁，在城堡里做杂役已有十年。"
+    servant_common "这十年里，小的听到过很多不该听到的事情……"
+    servant_common "各位领主的私下谈话、密信往来、暗中交易——小的都略知一二。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你为什么要告诉我这些？"
 
-    "马丁" "因为小的需要一位靠山。"
-    "马丁" "老领主在世时，对小的颇为照顾。如今他走了……"
-    "马丁" "小的想继续为艾登堡效力，但需要有人保护小的。"
+    $ hide_all_chars()
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "因为小的需要一位靠山。"
+    martin "老领主在世时，对小的颇为照顾。如今他走了……"
+    martin "小的想继续为艾登堡效力，但需要有人保护小的。"
 
     "他的眼神中带着几分恳切，但我注意到他的手指微微发抖。"
     "是紧张，还是在演戏？"
@@ -56,19 +66,29 @@ label ch2_deep_spy:
 
     "但他的衣服内衬似乎比外面的粗布要好得多——有人在暗中资助他。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你现在为谁工作？如实说。"
 
+    $ hide_all_chars()
     "马丁的表情僵了一瞬。"
 
-    "马丁" "小的……小的只是一个普通仆人——"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "小的……小的只是一个普通仆人——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "别在我面前耍花招。你衣服内衬的绸缎可不是仆人买得起的。"
 
+    $ hide_all_chars()
     "马丁终于叹了口气。"
 
-    "马丁" "……是男爵大人。他让小的留意您的一举一动。"
-    "马丁" "但小的说的也是真话——小的确实想为您效力。"
-    "马丁" "男爵给的钱不少，但他不是个好主子。他把人当棋子用完就扔。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "……是男爵大人。他让小的留意您的一举一动。"
+    martin "但小的说的也是真话——小的确实想为您效力。"
+    martin "男爵给的钱不少，但他不是个好主子。他把人当棋子用完就扔。"
 
     "这倒是个有趣的局面。一个男爵安插的间谍，主动来投诚。"
     "他可能真心想换主人，也可能这本身就是男爵的另一层圈套。"
@@ -90,17 +110,24 @@ label ch2_deep_spy_recruit:
     player "好。从今天起，你为我做事。"
     player "男爵那边，你直接告诉他你被我发现了，已经无法继续。"
 
-    "马丁" "大人英明！小的这就——"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "大人英明！小的这就——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "但有一个条件。"
 
     "我走近一步，压低声音。"
 
     player "如果你再敢脚踩两条船，我会让你知道什么叫真正的代价。"
 
+    $ hide_all_chars()
     "马丁的脸色一白，连连点头。"
 
-    "马丁" "小的明白！小的对天发誓，绝不背叛大人！"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "小的明白！小的对天发誓，绝不背叛大人！"
 
     "此后数日，马丁果然带来了一些有用的情报——"
     "比如男爵正在秘密购买粮食，以及某位领主的妻子与教廷有着不为人知的联系。"
@@ -124,22 +151,34 @@ label ch2_deep_spy_double:
     player "马丁，你很聪明——但还不够聪明。"
     player "我不会让你离开男爵。恰恰相反，你要继续为他工作。"
 
-    "马丁" "大人的意思是……"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "大人的意思是……"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你继续向男爵汇报关于我的消息——但只汇报我想让他知道的。"
     player "同时，你把男爵那边的真正情报带给我。"
 
+    $ hide_all_chars()
     "马丁话说到一半断了，随即低下头，深深一揖。"
 
-    "马丁" "大人果然深谋远虑。小的愿意效劳。"
-    "马丁" "不过……如果男爵发现了呢？他的手段可不温柔。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "大人果然深谋远虑。小的愿意效劳。"
+    martin "不过……如果男爵发现了呢？他的手段可不温柔。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "如果你做得够好，他不会发现。"
     player "如果你做得不好——那你也用不着担心男爵了，因为我会先找到你。"
 
+    $ hide_all_chars()
     "马丁咽了口口水。"
 
-    "马丁" "小的……小的一定竭尽全力。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "小的……小的一定竭尽全力。"
 
     "我转身离去，心中已经在盘算该让男爵'知道'些什么。"
     "一个精心编织的假情报网，比一千个士兵都要管用。"
@@ -157,18 +196,28 @@ label ch2_deep_spy_refuse:
     show player_char_img at left with dissolve
     player "不必了。"
 
-    "马丁" "大人？"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "大人？"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "一个连主人都能背叛的人，我不需要。"
     player "你回去告诉男爵——他的手段太低级了。"
 
+    $ hide_all_chars()
     "马丁的脸上闪过一丝慌乱。"
 
-    "马丁" "大人，小的是真心——"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    martin "大人，小的是真心——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "如果你是真心的，那就更不能用了。因为一个真心背叛旧主的人，迟早也会背叛新主。"
     player "走吧。我不会为难你。"
 
+    $ hide_all_chars()
     "马丁呆立片刻，终于低着头退了出去。"
 
     "门关上了。我把他坐过的椅子挪回原处，顺手擦掉了桌上他留下的水渍。"
@@ -212,6 +261,7 @@ label ch2_deep_baron_letter:
     elena "男爵的私信。我的人在他的信使经过河谷时截获的。"
     elena "信使已经被放走了——他不知道信被拆开过。我们用了特殊手法重新封好。"
 
+    $ hide_all_chars()
     "我展开信纸。字迹苍劲有力，但仔细看，某些笔画有微微的颤抖。"
 
     "信上写着——"
@@ -237,6 +287,7 @@ label ch2_deep_baron_letter:
     elena "是的。某种消耗性的疾病，可能是风痹症，也可能更严重。"
     elena "这解释了很多事情——他为什么这么急切，为什么不顾一切地扩张势力。"
 
+    $ hide_all_chars()
     "男爵弗雷德里克——那个在议事厅里咄咄逼人、似乎永远精力充沛的铁腕人物。"
     "原来他一直在和时间赛跑。"
 
@@ -424,6 +475,7 @@ label ch2_deep_church_midnight:
     $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
 
+    $ hide_all_chars()
     "主教大人跪在圣坛前，双手合十，身体微微颤抖。"
     "烛火将他的影子投射在墙壁上，巨大而孤独。"
 
@@ -434,6 +486,8 @@ label ch2_deep_church_midnight:
     "我站在门口犹豫了一下。这显然是一个非常私密的时刻。"
     "但他已经察觉到了我的存在。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "……进来吧。这是神的殿堂，不拒绝任何人。"
 
     "我走进教堂，在他身后几步远的地方停下。"
@@ -449,10 +503,13 @@ label ch2_deep_church_midnight:
     bishop "叫我马修斯就好。在这里，在这个时辰，没有什么主教。"
     bishop "只有一个……向上天寻求答案的老人。"
 
+    $ hide_all_chars()
     "他站起身来，膝盖发出轻微的咔嚓声。面容上的疲惫比白天深了十倍。"
 
     "他在长椅上坐下，示意我也坐。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "你也睡不着？"
 
     hide bishop_img
@@ -545,6 +602,7 @@ label ch2_deep_church_doubt:
     $ change_stat("faith", 5)
     $ change_rel("rel_bishop", 10)
 
+    $ hide_all_chars()
     "那个夜晚，我们又聊了很久——关于生死、关于意义、关于那些永远没有答案的问题。"
     "月亮移过教堂的彩色玻璃窗，在地面上投下变幻的光影。"
 
@@ -659,6 +717,7 @@ label ch2_deep_church_tool:
     $ change_stat("intrigue", 5)
     $ change_rel("rel_bishop", 3)
 
+    $ hide_all_chars()
     "那晚之后，主教看我的眼神变了。"
     "不再只有慈祥和亲切——多了一丝敬畏，和一丝难以言说的距离。"
 
@@ -699,6 +758,7 @@ label ch3_deep_ritual:
     show player_char_img at left with dissolve
     player "明白了。"
 
+    $ hide_all_chars()
     "通道尽头是一扇沉重的铁门。艾琳娜敲了三下，停顿，再敲两下。"
 
     "门开了。"
@@ -716,17 +776,23 @@ label ch3_deep_ritual:
     $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
 
+    $ hide_all_chars()
     "影主站在石台后方，今晚她没有戴兜帽。"
     "一张沉静而威严的面容，深褐色的眼睛在烛光中闪烁着锐利的光芒。"
     "唯有那双眼睛，深邃得像两口枯井，让人不敢久视。"
 
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
     lily_master "今夜，有新的花瓣要加入我们的花冠。"
     lily_master "上前来。"
 
+    $ hide_all_chars()
     "两个年轻人走向石台，浑身发抖。他们是新加入的成员——今晚是他们的入会仪式。"
 
     "百合之主从袍中取出一把精致的银刀。刀刃上镌刻着蔷薇的花纹。"
 
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
     lily_master "暗百合的第一条戒律——鲜血为盟，至死不渝。"
 
     "她将银刀递给第一个年轻人。"
@@ -734,20 +800,27 @@ label ch3_deep_ritual:
     lily_master "割开你的手掌。让你的血滴在百合花上。"
     lily_master "从此刻起，你的生命属于组织，你的秘密属于组织，你的死亡——也属于组织。"
 
+    $ hide_all_chars()
     "年轻人颤抖着接过刀，在手掌上划了一道口子。"
     "鲜血滴落在白色的百合花瓣上，殷红色缓缓洇开。"
 
     "吟唱声骤然升高，然后戛然而止。"
 
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
     lily_master "你已被接纳。起来吧，暗百合的花瓣。"
 
+    $ hide_all_chars()
     "第二个年轻人也完成了同样的仪式。"
 
     "然后——百合之主的目光转向了我。"
 
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
     lily_master "我们的新成员。艾登堡的领主。"
     lily_master "你已经宣过誓了。今夜，你以正式成员的身份见证我们的仪式。"
 
+    $ hide_all_chars()
     "她的目光在我身上停留了一瞬——像是在确认什么。"
 
     "我感受到身旁艾琳娜微微松了口气。"
@@ -774,6 +847,7 @@ label ch3_deep_ritual_join:
     show player_char_img at left with dissolve
     player "我愿意。"
 
+    $ hide_all_chars()
     "我毫不犹豫地划开手掌。痛感如电流般窜过全身。"
     "鲜血滴落在百合花上——此刻花瓣已经被三个人的血浸透，变成了深红色。"
 
@@ -788,6 +862,7 @@ label ch3_deep_ritual_join:
     lily_master "组织会保护你，帮助你，引导你。"
     lily_master "但记住——百合花凋谢时，花瓣也随之消亡。我们一荣俱荣，一损俱损。"
 
+    $ hide_all_chars()
     "吟唱声再次响起，这次更加热烈。黑袍人们依次走过来，无声地向我点头致意。"
 
     "仪式结束后，艾琳娜在通道里叫住了我。"
@@ -884,6 +959,7 @@ label ch3_deep_ritual_document:
     show lily_master_img at left with dissolve
     lily_master "当然。但不要想太久。"
 
+    $ hide_all_chars()
     "仪式结束后，我立刻在一张羊皮纸上画下了大厅的布局草图。"
     "每一个细节都可能在将来救我一命——或者毁掉暗百合。"
 
@@ -934,10 +1010,13 @@ label ch3_deep_captain_scar:
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
+    $ hide_all_chars()
     "他坐在一张木椅上，衬衣半解，一个侍女正在帮他包扎左肋的伤口。"
     "但我注意到——他更痛苦的不是新伤，而是左肩上一道从锁骨延伸到肩胛的旧疤。"
     "那道疤痕像一条蜿蜒的蜈蚣，泛着可怕的紫红色，看起来从未完全愈合。"
 
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "你来了，大人。我没事——皮肉伤。"
 
     hide captain_img
@@ -965,26 +1044,48 @@ label ch3_deep_captain_scar:
     hide player_char_img
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
-    captain "……你父亲知道。但他从不提起，因为他知道我不愿意说。"
+    if captain_past_done:
+        ## 玩家已在 npc_captain_past 听过格伦瓦德完整往事（12年前/鞭刑/流放/父亲救）
+        ## 此处不重复，只补城墙那天他没讲的那部分——肩膀烙铁审讯
+        captain "……格伦瓦德那次，我在城墙上对你讲过一半。"
 
-    "他给自己倒了一杯酒，一饮而尽。"
+        captain "五十鞭、流放、你父亲救我——那些你都知道了。但有一段我没讲。"
 
-    captain "七年前，我还在男爵的军队里做军官。"
-    captain "有一天，男爵命令我们屠杀一个村子——因为那个村子的长老拒绝多交两成税。"
+        "他给自己倒了一杯酒，一饮而尽。"
 
-    captain "我拒绝了。"
+        captain "鞭刑之前，男爵把我关在地牢里三天三夜。"
+        captain "他们用烧红的铁条在我肩膀上烙——说每烙一下，就问我一次：'你还敢抗命吗？'"
 
-    captain "然后男爵的人把我关进了地牢。三天三夜。"
-    captain "他们用烧红的铁条在我肩膀上烙——说每烙一下，就问我一次：'你还敢抗命吗？'"
+        "他拉开衬衣，让你看到伤疤的全貌。不是一道——是十几道烙痕叠在一起。"
 
-    "他拉开衬衣，让我看到伤疤的全貌。不是一道——是十几道烙痕叠在一起。"
+        captain "我每次都回答：'不杀平民。'"
 
-    captain "我每次都回答：'不杀平民。'"
+        "他的声音平静得可怕，像是在讲述别人的故事。"
 
-    "他的声音平静得可怕，像是在讲述别人的故事。"
+        captain "那三天，我以为自己出不去了。现在想来，能撑过来的原因只有一个——他们每次问的那个问题，我每次都知道自己的答案。"
+    else:
+        captain "……你父亲知道。但他从不提起，因为他知道我不愿意说。"
 
-    captain "男爵判了我五十鞭，然后流放。我被丢在荒野里等死。第三天，你父亲的巡逻队发现了我。"
-    captain "从那天起，我就发誓效忠你的父亲——现在，效忠于你。"
+        "他给自己倒了一杯酒，一饮而尽。"
+
+        captain "十二年前，我还在男爵的军队里做军官。"
+        captain "有一天，男爵命令我们屠杀一个村子——因为那个村子的长老拒绝多交两成税。"
+
+        captain "我拒绝了。"
+
+        captain "然后男爵的人把我关进了地牢。三天三夜。"
+        captain "他们用烧红的铁条在我肩膀上烙——说每烙一下，就问我一次：'你还敢抗命吗？'"
+
+        "他拉开衬衣，让我看到伤疤的全貌。不是一道——是十几道烙痕叠在一起。"
+
+        captain "我每次都回答：'不杀平民。'"
+
+        "他的声音平静得可怕，像是在讲述别人的故事。"
+
+        captain "男爵判了我五十鞭，然后流放。我被丢在荒野里等死。第三天，你父亲的巡逻队发现了我。"
+        captain "从那天起，我就发誓效忠你的父亲——现在，效忠于你。"
+
+        $ captain_past_done = True  ## 既然这里讲了完整版，同步 set 避免后续再重讲
 
     "这时门被推开了。"
 
@@ -1007,10 +1108,13 @@ label ch3_deep_captain_scar:
     show elena_img at left with dissolve
     elena "闭嘴，坐好。"
 
+    $ hide_all_chars()
     "艾琳娜的语气不容置疑。她从随身的皮囊中取出药膏和绷带，开始仔细地处理旧伤。"
     "她的动作很轻，但雷恩还是不自觉地皱了几次眉。"
 
-    elena "这些疤痕的底层组织已经坏死了……我用暗百合的特殊药膏试试。"
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "这些疤痕的底层组织已经坏死了……我这儿有一种特殊配方的药膏，试试吧。"
     elena "完全消除做不到，疼痛会减轻不少。"
 
     hide elena_img
@@ -1018,6 +1122,7 @@ label ch3_deep_captain_scar:
     show captain_img at left with dissolve
     captain "……谢了。"
 
+    $ hide_all_chars()
     "他的声音里有一丝不好意思——这个铁骨铮铮的汉子，在接受温柔时反而手足无措。"
 
     "我看着这一幕，心中感慨万千。"
@@ -1058,7 +1163,7 @@ label ch3_deep_scar_vengeance:
     hide player_char_img
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
-    captain "我等这句话等了七年。"
+    captain "我等这句话等了十二年。"
 
     hide captain_img
     $ hide_all_chars("elena_img")
@@ -1145,6 +1250,7 @@ label ch3_deep_scar_promise:
     show elena_img at left with dissolve
     elena "……"
 
+    $ hide_all_chars()
     "艾琳娜无声地微笑了一下，继续包扎伤口。"
 
     "过了一会，雷恩才重新转过头来，目光变得无比坚定。"
@@ -1183,7 +1289,7 @@ label ch3_deep_cure:
 
     "艾琳娜在桌上铺开了一张泛黄的羊皮纸——上面画满了植物图谱和复杂的化学配方。"
 
-    elena "这是暗百合的毒药手册——其中一页。"
+    elena "这是一页毒理学手稿——我以前在侍女学院抄录过的。"
     elena "看这里——'影月草'。"
 
     hide elena_img
@@ -1194,6 +1300,7 @@ label ch3_deep_cure:
     if father_poisoned_known or queen_poisoned_king_known:
         "这个名字让我的心猛然一沉——你已经知道，暮色之露正是杀死父亲的毒药。而影月草，就是它的原料。"
     else:
+        $ hide_all_chars()
         "这个名字让我的血液一瞬间变冷。"
         "影月草——暮色之露的原料。杀死我父亲的，就是用这种植物炼制的毒药。"
         $ father_poisoned_known = True
@@ -1234,16 +1341,20 @@ label ch3_deep_cure:
     elena "毒与药，本就是一体两面。"
     elena "问题是——我需要活的影月草才能尝试。而我恰好知道一处秘密花圃的位置。"
 
-    "三天后，我们从暗百合的秘密花圃中取得了影月草的样本。"
+    "三天后，艾琳娜从艾登堡北境松林深处的一处隐秘谷地带回了影月草的样本。"
 
     scene bg study with dissolve
     show elena_img at left with dissolve
 
+    $ hide_all_chars()
     "艾琳娜在书房里支起了一套简陋的蒸馏装置——烧瓶、冷凝管和各种奇形怪状的玻璃容器。"
     "影月草被小心地切成薄片，浸泡在一种澄清的液体中。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "必须精确控制温度。太高会分解有效成分，太低则无法激活解毒因子。"
 
+    $ hide_all_chars()
     "她的动作极其谨慎——处理的毕竟是世界上最致命的毒素之一。"
     "我在旁边帮忙递器具，同时也在学习整个过程。"
 
@@ -1255,8 +1366,8 @@ label ch3_deep_cure:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "暗百合不只有刺客。还有炼药师、调香师、草药学家……"
-    elena "我在组织里学了五年的毒理学。前辈说我是他见过的最有天赋的学生。"
+    elena "侍女学院不只教礼仪、诗文和琴棋。还教毒理学和解剖学——她们说女人的武器不是刀剑，是别人看不见的东西。"
+    elena "我在那里学了五年毒理学。前辈说我是他见过最有天赋的学生。"
 
     "她苦笑了一下。"
 
@@ -1267,6 +1378,7 @@ label ch3_deep_cure:
     show player_char_img at left with dissolve
     player "你现在正在用它救人。这就够了。"
 
+    $ hide_all_chars()
     "她看了我一眼，没有说话，但手上的动作更加稳定了。"
 
     "几个小时后，一小瓶浅绿色的液体静静地放在桌上。"
@@ -1277,6 +1389,7 @@ label ch3_deep_cure:
     elena "成功了。这就是影月草解毒剂。"
     elena "一滴就能中和足以杀死三个人的毒素。"
 
+    $ hide_all_chars()
     "我拿起那个小瓶，对着烛光端详。浅绿色的液体在瓶中微微摇晃——"
     "看起来那么无害，那么平静。就像它的另一面——毒药——也是那么无害、那么平静。"
 
@@ -1416,6 +1529,7 @@ label ch3_deep_cure_poison:
     show player_char_img at left with dissolve
     player "我答应你。"
 
+    $ hide_all_chars()
     "桌上多了第二个小瓶——紫黑色的液体，像是浓缩了的夜色。"
     "一瓶救命，一瓶夺命。"
     "它们并排摆放着，像是一个关于人性的隐喻。"
@@ -1467,9 +1581,12 @@ label ch4_deep_queen_weakness:
     $ hide_all_chars("queen_img")
     show queen_img at left with dissolve
 
+    $ hide_all_chars()
     "王后站在画像前，姿态不再是白天那个不怒自威的铁血女王。"
     "她的肩膀微微塌下来，像是一棵被压弯了的树。"
 
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "……又是一天。"
 
     "她对着画像说话，声音轻得像叹息。"
@@ -1492,6 +1609,7 @@ label ch4_deep_queen_weakness:
 
     queen "想你了。"
 
+    $ hide_all_chars()
     "就这两个字。轻轻的，碎碎的，像深秋最后一片落叶。"
 
     "我退后了一步。脚下的石板发出了极其细微的声响——"
@@ -1499,8 +1617,11 @@ label ch4_deep_queen_weakness:
 
     "王后的身体瞬间绷紧。"
 
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "谁在外面？"
 
+    $ hide_all_chars()
     "她的声音一瞬间恢复了白天的凛冽。"
 
     "我来不及躲藏。"
@@ -1510,6 +1631,8 @@ label ch4_deep_queen_weakness:
 
     "铁血女王在害怕。不是害怕我——是害怕被人看到脆弱的一面。"
 
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "你看到了多少？"
 
     "她的声音像结冰的湖面——表面平静，下面是致命的深渊。"
@@ -1539,6 +1662,7 @@ label ch4_deep_queen_empathy:
     player "我的父亲也去世了。有些夜晚，我也会对着他留下的东西说话。"
     player "好像……只要我说了，他就还在某个地方听着。"
 
+    $ hide_all_chars()
     "沉默。漫长的沉默。"
 
     "然后王后做了一件我完全没有预料到的事——"
@@ -1656,13 +1780,14 @@ label ch4_deep_queen_leave:
     show player_char_img at left with dissolve
     player "陛下恕罪。我迷路了——"
 
+    $ hide_all_chars()
     "我不等她回答，转身快步离开。"
 
     "身后没有追兵的脚步声。她选择了放我走。"
 
     "回到自己的房间后，我靠在门上长出了一口气。"
 
-    "铁血女王也有人性的一面。这个认知在我心中翻涌。"
+    "铁血女王也有人性的一面。"
     "但我选择了不去触碰它——无论是用善意还是用恶意。"
 
     "有些秘密，最安全的处理方式就是当它不存在。"
@@ -1693,27 +1818,36 @@ label ch4_deep_poet:
 
     "觥筹交错间，一个清亮的声音突然穿透了嘈杂——"
 
-    "宫廷诗人" "诸位大人，容小生献上新作一首——"
-    "宫廷诗人" "题为《北来的鹰》。"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "诸位大人，容小生献上新作一首——"
+    court_poet "题为《北来的鹰》。"
 
+    $ hide_all_chars()
     "大厅安静了下来。所有人的目光都转向了角落里那个手持琴弦的年轻人。"
     "他大约二十五六岁，容貌清秀，有一种不属于这个粗犷国度的精致。"
 
-    "宫廷诗人" "北方飞来一只鹰，"
-    "宫廷诗人" "羽翼未丰志已凌。"
-    "宫廷诗人" "不知王庭风云险，"
-    "宫廷诗人" "且看雏鸟能几程？"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "北方飞来一只鹰，"
+    court_poet "羽翼未丰志已凌。"
+    court_poet "不知王庭风云险，"
+    court_poet "且看雏鸟能几程？"
 
+    $ hide_all_chars()
     "大厅里响起了一阵意味深长的笑声。"
     "不用想也知道——这首诗说的就是我。北方来的年轻领主，不知天高地厚。"
 
     "但接下来的一段，让笑声戛然而止——"
 
-    "宫廷诗人" "莫笑少年骨未坚，"
-    "宫廷诗人" "老木参天也曾纤。"
-    "宫廷诗人" "他日若遂凌云志，"
-    "宫廷诗人" "敢教日月换新天。"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "莫笑少年骨未坚，"
+    court_poet "老木参天也曾纤。"
+    court_poet "他日若遂凌云志，"
+    court_poet "敢教日月换新天。"
 
+    $ hide_all_chars()
     "先贬后褒——这个诗人很会拿捏分寸。既让其他贵族发笑，又不至于真正得罪我。"
 
     "宴会结束后，我注意到这个诗人并没有和其他宾客一起离开——"
@@ -1730,29 +1864,45 @@ label ch4_deep_poet:
     show player_char_img at left with dissolve
     player "有意思的通讯方式。"
 
+    $ hide_all_chars()
     "诗人猛然转身，脸上的血色在月光下可见地褪去。"
 
-    "宫廷诗人" "你——你怎么——"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "你——你怎么——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你的诗写得不错。但你更大的才华似乎是——情报工作？"
 
+    $ hide_all_chars()
     "我从他手中夺过信鸽，取下了那封信。"
     "信是用一种我不认识的文字写的——但信封上有一个纹章。"
     "一头戴冠的狮子——那是南方莱昂王国的标志。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "莱昂王国的间谍。伪装成宫廷诗人。"
 
+    $ hide_all_chars()
     "诗人的挣扎只持续了几秒。然后他放弃了。"
 
-    "宫廷诗人" "……是的。我叫卡洛斯。莱昂王国外交密使——或者说，间谍。"
-    "宫廷诗人" "你打算怎么处理我？交给王后？"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "……是的。我叫卡洛斯。莱昂王国外交密使——或者说，间谍。"
+    court_poet "你打算怎么处理我？交给王后？"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "那取决于你告诉我什么。"
 
+    $ hide_all_chars()
     "卡洛斯苦笑了一下。"
 
-    "宫廷诗人" "我在这个宫廷里已经潜伏了两年。我比大多数贵族都了解这里的秘密。"
-    "宫廷诗人" "所以——你是要用我交换王后的恩宠，还是……有别的想法？"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "我在这个宫廷里已经潜伏了两年。我比大多数贵族都了解这里的秘密。"
+    court_poet "所以——你是要用我交换王后的恩宠，还是……有别的想法？"
 
     menu:
         "和他交朋友——莱昂的情报对我很有价值":
@@ -1770,21 +1920,32 @@ label ch4_deep_poet_befriend:
     show player_char_img at left with dissolve
     player "卡洛斯——你的诗真的写得不错。"
 
-    "宫廷诗人" "……什么？"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "……什么？"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我是认真的。'敢教日月换新天'——有气魄。"
     player "一个有才华的人不应该困在这种危险的工作里。"
 
-    "宫廷诗人" "你在同情我？"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "你在同情我？"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我在和你交朋友。"
     player "你有你的任务，我有我的困境。也许我们可以互相帮助。"
     player "我不会揭发你。你也可以时不时分享一些——莱昂那边的有趣消息。"
 
+    $ hide_all_chars()
     "卡洛斯瞪大了眼睛，然后——出人意料地——笑了。"
 
-    "宫廷诗人" "你是我见过的最奇怪的领主。"
-    "宫廷诗人" "好吧。就当我交了一个奇怪的朋友。"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "你是我见过的最奇怪的领主。"
+    court_poet "好吧。就当我交了一个奇怪的朋友。"
 
     $ ch4_deep_court_poet = True
     $ change_stat("intrigue", 5)
@@ -1800,12 +1961,18 @@ label ch4_deep_poet_expose:
     show player_char_img at left with dissolve
     player "把你交给王后——是最稳妥的选择。"
 
+    $ hide_all_chars()
     "卡洛斯的脸色变得惨白。"
 
-    "宫廷诗人" "你知道她会怎么处置我吗？这个女人——"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "你知道她会怎么处置我吗？这个女人——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我知道。但我需要她的信任，超过我需要你的情报。"
 
+    $ hide_all_chars()
     "我叫来了守卫。"
 
     "第二天，王后当着全体朝臣的面宣布了这个消息——一个莱昂间谍被艾登堡领主揭发。"
@@ -1831,25 +1998,41 @@ label ch4_deep_poet_recruit:
     show player_char_img at left with dissolve
     player "为莱昂工作有什么好处？他们付你多少？"
 
-    "宫廷诗人" "……每月五十金币。加上事成之后的一块封地。"
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "……每月五十金币。加上事成之后的一块封地。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我出双倍。而且不用你冒生命危险。"
 
-    "卡洛斯" "你要我……为你工作？"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    carlos "你要我……为你工作？"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你有才华，有经验，还有现成的情报网。"
     player "为一个远在千里之外的国王卖命，不如为一个近在眼前的领主效力。"
     player "我保护你的安全，你为我收集情报。公平交易。"
 
+    $ hide_all_chars()
     "卡洛斯沉思了很久。"
 
-    "卡洛斯" "……我需要想想。"
-    "卡洛斯" "但我可以告诉你一件事作为见面礼——"
-    "卡洛斯" "莱昂王国正在和男爵秘密接触。他们想在北方扶植一个亲莱昂的势力。"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    carlos "……我需要想想。"
+    carlos "但我可以告诉你一件事作为见面礼——"
+    carlos "莱昂王国正在和男爵秘密接触。他们想在北方扶植一个亲莱昂的势力。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "有意思。这个消息很有价值。"
 
-    "卡洛斯" "算是投名状吧。给我三天时间考虑你的提议。"
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    carlos "算是投名状吧。给我三天时间考虑你的提议。"
 
     $ ch4_deep_court_poet = True
     $ change_stat("intrigue", 8)
@@ -1890,14 +2073,15 @@ label ch4_deep_dungeon_echo:
 
     "然后——在角落里，我看到了一段让我呼吸骤停的文字——"
 
-    "'{i}我叫埃德蒙·艾登堡。今天是我被关押的第一百三十天。{/i}'"
+    "'{i}我叫康拉德·冯·艾登。今天是我被关押的第一百三十天。{/i}'"
     "'{i}女王不会释放我，因为我知道太多。{/i}'"
     "'{i}但我不后悔。有些事情必须有人说出来。{/i}'"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "埃德蒙·艾登堡……"
+    player "康拉德·冯·艾登……"
 
+    $ hide_all_chars()
     "那是我的祖父。"
 
     "我用手指轻轻触摸那些刻痕。石壁冰凉，但我仿佛能感受到祖父刻字时的体温。"
@@ -1918,7 +2102,7 @@ label ch4_deep_dungeon_echo:
 
     "最后一行字迹特别深，像是用尽了全身的力气——"
 
-    "'{i}一年的黑暗，换来所有人的自由。值了。——埃德蒙·艾登堡{/i}'"
+    "'{i}一年的黑暗，换来所有人的自由。值了。——康拉德·冯·艾登{/i}'"
 
     "我在那面墙前站了很久。"
 
@@ -1953,6 +2137,7 @@ label ch4_deep_dungeon_peace:
     player "您用一年的苦难换来了和平。我不会让您的牺牲白费。"
     player "这一代——由我来终结仇恨。"
 
+    $ hide_all_chars()
     "我从地上捡起一块碎石，在祖父的铭文旁边刻下了自己的文字——"
 
     "'{i}三代恩怨，到此为止。——您的孙子{/i}'"
@@ -1981,6 +2166,7 @@ label ch4_deep_dungeon_rebellion:
 
     player "我不会再忍了。"
 
+    $ hide_all_chars()
     "我在祖父的铭文旁刻下——"
 
     "'{i}忍耐的时代结束了。——您的孙子{/i}'"
@@ -2001,6 +2187,7 @@ label ch4_deep_dungeon_fate:
     player "也许……这就是艾登堡家族的宿命。"
     player "每一代都要面对王室的考验。每一代都要做出自己的选择。"
 
+    $ hide_all_chars()
     "祖父选择了牺牲。父亲选择了隐忍。"
     "而我——还不知道自己的选择是什么。"
 
@@ -2010,6 +2197,8 @@ label ch4_deep_dungeon_fate:
     "我跪了下来，在潮湿的地牢里低声祈祷——"
     "不是向神祈祷，而是向祖先。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "给我力量。给我智慧。让我做出正确的选择。"
 
     $ change_stat("faith", 5)
@@ -2046,36 +2235,46 @@ label ch5_deep_deserter:
     show player_char_img at left with dissolve
     player "带他上来。"
 
+    $ hide_all_chars()
     "两个士兵押着一个瘦小的年轻人走上前来。"
     "他大约二十岁出头，脸上满是泥垢和擦伤，衣服破烂不堪。"
     "最引人注目的是他的眼睛——充满恐惧，像一只被猎犬追到绝路的兔子。"
 
-    "逃兵" "大……大人饶命！我不是……我不是故意要——"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "大……大人饶命！我不是……我不是故意要——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "先别急。告诉我你的名字和经历。"
 
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
     "逃兵努力控制住颤抖。"
 
-    "逃兵" "我叫……我叫托马斯。从莱顿村来的。"
-    "逃兵" "三个月前，王后的征兵官到村里抓壮丁。"
-    "逃兵" "我是铁匠的儿子——从没拿过剑。但他们不管这些。"
-    "逃兵" "拒绝入伍的人被当场吊死在村口的大树上。我亲眼看见……"
+    deserter "我叫……我叫托马斯。从莱顿村来的。"
+    deserter "三个月前，王后的征兵官到村里抓壮丁。"
+    deserter "我是铁匠的儿子——从没拿过剑。但他们不管这些。"
+    deserter "拒绝入伍的人被当场吊死在村口的大树上。我亲眼看见……"
 
     "他的声音哽住了。"
 
-    "逃兵" "我老婆怀了孩子——六个月了。她一个人在家里……"
-    "逃兵" "我不能死。至少不能死在一场我根本不理解的战争里。"
-    "逃兵" "所以昨天晚上换岗的时候，我跑了。"
+    deserter "我老婆怀了孩子——六个月了。她一个人在家里……"
+    deserter "我不能死。至少不能死在一场我根本不理解的战争里。"
+    deserter "所以昨天晚上换岗的时候，我跑了。"
 
     hide player_char_img
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "大人，按照战时法律，逃兵应当就地正法。这是常规。"
 
+    $ hide_all_chars()
     "托马斯扑通一声跪在地上，额头磕在泥地里。"
 
-    "逃兵" "大人……求您了……我只想回家看我老婆一眼……"
-    "逃兵" "就一眼……"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "大人……求您了……我只想回家看我老婆一眼……"
+    deserter "就一眼……"
 
     "我看着这个跪在地上的年轻人。"
     "他的手上有老茧——那是铁锤留下的。这确实是一双铁匠的手，不是士兵的手。"
@@ -2108,13 +2307,19 @@ label ch5_deep_deserter_execute:
     show player_char_img at left with dissolve
     player "执行军法。"
 
+    $ hide_all_chars()
     "托马斯的身体像被抽去了骨头一样瘫软下来。"
 
-    "逃兵" "不……不！大人！求您——我的孩子——"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "不……不！大人！求您——我的孩子——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "把他带下去。让其他俘虏看着。"
     player "然后传令全军——凡有逃亡者，格杀勿论。"
 
+    $ hide_all_chars()
     "两个士兵架起了托马斯。他疯狂挣扎，哭喊声回荡在城墙间。"
 
     "雷恩看了我一眼，没有说话。他转身执行了命令。"
@@ -2152,12 +2357,18 @@ label ch5_deep_deserter_release:
     player "但你要答应我一件事——不管这场仗最后谁赢了，你好好活着。"
     player "你的孩子需要一个父亲。"
 
+    $ hide_all_chars()
     "托马斯泣不成声。他伏在地上，额头磕得咚咚作响。"
 
-    "逃兵" "大人的恩德……小的来世做牛做马——"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "大人的恩德……小的来世做牛做马——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "不需要来世。这辈子做个好父亲就够了。走吧。"
 
+    $ hide_all_chars()
     "我让人给他换了平民的衣服，塞了一些干粮和几枚铜币。"
     "晨雾很快吞没了他的身影。我低头看了看自己的手——干粮的碎屑还粘在指缝里。我拍了拍手，深深地呼了一口气。"
 
@@ -2175,6 +2386,7 @@ label ch5_deep_deserter_release:
     $ change_stat("loyalty", 10)
     $ change_stat("reputation", 5)
 
+    $ hide_all_chars()
     "此后的几天，一个奇怪的现象出现了——"
     "越来越多的王后军逃兵开始主动向艾登堡投降，而不是逃回自己的村庄。"
     "因为消息已经传开了——艾登堡的领主，不杀俘虏。"
@@ -2189,22 +2401,36 @@ label ch5_deep_deserter_recruit:
     show player_char_img at left with dissolve
     player "你说你是铁匠的儿子？"
 
-    "逃兵" "是……是的。"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "是……是的。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我们缺铁匠。不缺刽子手。"
     player "你愿意为艾登堡打铁吗？修补铠甲、锻造武器——用你真正擅长的本事。"
 
+    $ hide_all_chars()
     "托马斯难以置信地抬起头。"
 
-    "逃兵" "大人……您是认真的？"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "大人……您是认真的？"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我从不开空头支票。"
     player "但有个条件——等这场仗打完了，你告诉我所有你知道的关于王后军队的事。"
     player "营地布局、后勤路线、士气状况——任何细节都有用。"
 
-    "逃兵" "我知道！我全都知道！"
-    "逃兵" "我跟着军需官搬过物资——我知道他们的粮草从哪里运来！"
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    deserter "我知道！我全都知道！"
+    deserter "我跟着军需官搬过物资——我知道他们的粮草从哪里运来！"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "很好。雷恩，给他安排到铁匠铺去。顺便让人给他的妻子带个口信——她丈夫还活着。"
 
     hide player_char_img
@@ -2245,6 +2471,7 @@ label ch5_deep_prayer:
     $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
 
+    $ hide_all_chars()
     "士兵们穿着还没擦亮的铠甲，手上还沾着磨刀石的粉末。"
     "妇女们牵着孩子，有些怀里还抱着襁褓中的婴儿。"
     "老人们拄着拐杖，步履蹒跚但坚定。"
@@ -2252,6 +2479,8 @@ label ch5_deep_prayer:
 
     "主教站在圣坛前，今晚他穿的是最华丽的法袍——仿佛这是最盛大的节日。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "孩子们——今晚，我不讲经文。"
     bishop "因为明天的太阳升起时，我们中的一些人——也许再也看不到第二天的日落。"
 
@@ -2261,6 +2490,7 @@ label ch5_deep_prayer:
     bishop "不是祈求胜利——虽然我们都渴望胜利。"
     bishop "而是祈求——无论明天发生什么——我们都能无愧于心。"
 
+    $ hide_all_chars()
     "他跪了下来。全教堂的人跟着跪了下来。"
     "铠甲撞击地面的声音、衣裙窸窣的声音、孩子不安的哼哼声——然后，一切归于寂静。"
 
@@ -2277,10 +2507,13 @@ label ch5_deep_prayer:
 
     "主教从圣坛后面走出来，走到我面前。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "他们需要听你说几句。"
 
+    $ hide_all_chars()
     "所有人的目光都转向了我。"
-    "数百双眼睛——恐惧的、期待的、坚定的、迷茫的——在烛火中闪烁。"
+    "数百双眼睛在烛火中闪烁，恐惧、期待、坚定、迷茫，都有。"
 
     "这些就是我要保护的人。不是抽象的'子民'——而是活生生的面孔。"
     "那个铁匠在最后一排默默站着。前排的老妇人在擦眼泪。"
@@ -2321,17 +2554,23 @@ label ch5_deep_prayer_inspire:
     player "明天，当敌人的旗帜出现在地平线上——记住你身后的人。"
     player "然后问自己——你愿意让他们落入敌人手中吗？"
 
+    $ hide_all_chars()
     "篝火噼啪作响。然后——一个士兵站了起来。"
 
-    "士兵" "绝不！"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    soldier "绝不！"
 
     "更多的人站起来。声音越来越大。"
 
-    "众人" "绝不！！"
+    crowd "绝不！！"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "明天，我会骑在最前面。如果要死，我第一个死。"
     player "但我不打算死——因为我还有太多的承诺没有兑现！"
 
+    $ hide_all_chars()
     "教堂里爆发出雷鸣般的欢呼声。士兵们用拳头捶打铠甲——铿锵声震耳欲聋。"
 
     $ ch5_deep_final_prayer = True
@@ -2358,10 +2597,15 @@ label ch5_deep_prayer_honest:
 
     player "我害怕对不起你们的信任。"
 
+    $ hide_all_chars()
     "一个老兵慢慢开口了。"
 
-    "老兵" "大人……我们也害怕。"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    veteran "大人……我们也害怕。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我知道。所以我不会假装一切都会好的。"
     player "也许明天我们会赢。也许不会。但有一件事我可以保证——"
     player "无论结局如何，我会和你们在一起。直到最后。"
@@ -2370,6 +2614,7 @@ label ch5_deep_prayer_honest:
     player "是你们。是这个家。是我父亲留给我的信念——"
     player "人可以被打败，但不能被击垮。"
 
+    $ hide_all_chars()
     "教堂里很安静。没有欢呼，没有口号。"
     "但我看到了一些比那更珍贵的东西——"
     "每一张脸上，恐惧仍在，但它们的眼神中多了一样东西。"
@@ -2403,7 +2648,7 @@ label ch5_deep_prayer_silent:
     "在这一刻，没有尊卑，没有贫富，没有主仆。"
     "只有一群即将共同面对命运的人。"
 
-    "不知道过了多久。也许是一分钟，也许是一个小时。"
+    "不知道过了多久。"
 
     "当我睁开眼睛时，蜡烛已经短了一截。"
     "但每一张面孔都平静了。恐惧没有消失——它被一种更深沉的力量所包裹。"
@@ -2412,6 +2657,7 @@ label ch5_deep_prayer_silent:
     show bishop_img at left with dissolve
     bishop "……"
 
+    $ hide_all_chars()
     "主教没有说话。他只是默默地流泪——不是悲伤的泪，是被深深感动的泪。"
 
     $ ch5_deep_final_prayer = True
@@ -2522,7 +2768,7 @@ label ch5_deep_letter_aldric_path:
 
 label ch5_deep_letter_choice:
 
-    "信写好了。沉甸甸的，仿佛承载着一整段人生的重量。"
+    "信写好了，沉甸甸的。"
 
     "我该怎么处理它？"
 
@@ -2546,7 +2792,10 @@ label ch5_deep_letter_seal:
     player "如果明天日落时我没有回来——把这封信交给该收到它的人。"
     player "如果我回来了——把信还给我。我亲手烧掉它。"
 
-    "侍卫" "是，大人。"
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    guard "是，大人。"
 
     "他接过信，像接过一件圣物般郑重。"
 
@@ -2574,14 +2823,18 @@ label ch5_deep_letter_tear:
     player "我不需要遗书。"
     player "因为我——不会——死。"
 
+    $ hide_all_chars()
     "不是盲目的自信。是一种近乎偏执的意志。"
     "父亲死了，我活了下来。暗杀没有成功，我活了下来。"
     "王后的阴谋、男爵的刀锋、暗百合的毒药——什么都没有杀死我。"
 
     "明天也一样。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我还有太多事没有做完。死神想带走我——他得排队。"
 
+    $ hide_all_chars()
     "我拿起一杯酒，一饮而尽。酒液灼烧着喉咙——像是活着的证明。"
 
     $ change_stat("power", 5)
@@ -2596,12 +2849,15 @@ label ch5_deep_letter_give:
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
+    $ hide_all_chars()
     "我去找了奥尔德里克。"
     "这个时辰，他应该已经睡了——但我发现他房间的灯还亮着。"
 
     "推开门，老管家正坐在桌前，手里拿着一个小小的木雕——"
     "那是我五岁时送给他的生日礼物。歪歪扭扭的小马，连腿都不对称。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "大人？这么晚了——"
 
     hide aldric_img
@@ -2625,6 +2881,7 @@ label ch5_deep_letter_give:
     show player_char_img at left with dissolve
     player "拿着。"
 
+    $ hide_all_chars()
     "他伸出手——那双曾经把幼年的我从马背上接下来的手——现在布满了皱纹和老年斑。"
 
     "他的手在颤抖。"
@@ -2636,6 +2893,7 @@ label ch5_deep_letter_give:
     aldric "老奴伺候了这个家三十余年。看着您的父亲从少年变成领主，又看着您从婴儿长成大人。"
     aldric "如果……如果您明天……"
 
+    $ hide_all_chars()
     "他的声音越来越低，最终完全说不下去了。"
 
     "六十多岁的老人把脸埋进了双手里——"
@@ -2668,6 +2926,7 @@ label ch5_deep_letter_give:
     show player_char_img at left with dissolve
     player "你已经为我做了所有你能做的。现在——换我来保护你了。"
 
+    $ hide_all_chars()
     "我们在那个小房间里待了很久。没有再说话。"
     "窗外传来夜莺的歌声。明天就是决战了。"
 

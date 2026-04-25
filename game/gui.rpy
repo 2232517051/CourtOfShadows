@@ -14,7 +14,6 @@ define config.check_conflicting_properties = True
 ## 音效 — UI交互反馈
 ################################################################################
 
-define gui.activate_sound = "audio/sfx/ui_click.ogg"
 define gui.hover_sound = "audio/sfx/ui_hover.ogg"
 
 
@@ -123,8 +122,8 @@ define gui.choice_button_borders = Borders(120, 12, 120, 12)
 define gui.choice_button_text_font = "msyh.ttf"
 define gui.choice_button_text_size = 24
 define gui.choice_button_text_xalign = 0.5
-define gui.choice_button_text_idle_color = "#e0d8c8"
-define gui.choice_button_text_hover_color = "#ffd866"
+define gui.choice_button_text_idle_color = "#f5efe0"
+define gui.choice_button_text_hover_color = "#ffe082"
 define gui.choice_button_text_insensitive_color = "#4a403888"
 
 
@@ -254,7 +253,32 @@ define gui.language = "unicode"
 
 
 ################################################################################
-## 移动端适配 — TapTap/Android
+## 桌面端适配 — Windows/Mac/Linux
+################################################################################
+
+init python:
+
+    @gui.variant
+    def pc():
+
+        ## 桌面端存档页: 3列3行=9格/页
+        gui.file_slot_cols = 3
+        gui.file_slot_rows = 3
+        gui.slot_button_width = 320
+        gui.slot_button_height = 240
+        gui.slot_spacing = 20
+
+        ## 滚动条细一些（鼠标操作精度高）
+        gui.scrollbar_size = 10
+        gui.slider_size = 28
+
+        ## 快捷栏
+        gui.quick_button_text_size = 14
+        gui.quick_button_borders = Borders(16, 6, 16, 0)
+
+
+################################################################################
+## 移动端适配 — Android/iOS
 ################################################################################
 
 init python:
@@ -297,11 +321,11 @@ init python:
         gui.dialogue_ypos = 60
         gui.dialogue_width = 1100
 
-        ## 选项按钮全宽
+        ## 选项按钮全宽（缩小内边距防止选项过多时溢出误触底栏）
         gui.choice_button_width = 1200
-        gui.choice_button_text_size = 30
-        gui.choice_button_borders = Borders(80, 14, 80, 14)
-        gui.choice_spacing = 12
+        gui.choice_button_text_size = 28
+        gui.choice_button_borders = Borders(60, 10, 60, 10)
+        gui.choice_spacing = 8
 
         ## 导航按钮加大间距
         gui.navigation_spacing = 14
@@ -322,9 +346,9 @@ init python:
         gui.history_name_xpos = 200
         gui.history_text_xpos = 220
 
-        ## 存档页: 手机2列
+        ## 存档页: 手机2列4行=8格/页
         gui.file_slot_cols = 2
-        gui.file_slot_rows = 2
+        gui.file_slot_rows = 4
         gui.slot_button_width = 400
         gui.slot_button_height = 280
         gui.slot_spacing = 16

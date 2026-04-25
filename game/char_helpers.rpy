@@ -16,17 +16,20 @@
 init python:
 
     CHAR_IMG_TAGS = [
-        "aldric_img", "assassin_char_img", "baron_img", "bertrand_img",
-        "bishop_img", "blacksmith_wife_img", "bully_kid_img", "captain_img",
-        "count_grey_img", "countess_hilda_img", "countess_stein_img",
-        "elena_img", "farmer_rep_img", "father_img", "friend_marcus_img",
-        "healer_img", "lily_master_img", "merchant_guild_img",
-        "merchant_karl_img", "mother_img", "noble_lady_img", "noble_werner_img",
-        "old_guard_img", "player_char_img", "player_child_img",
-        "player_teen_img", "player_young_img", "priest_thomas_img",
-        "prince_img", "queen_img", "servant_generic_img", "servant_marta_img",
-        "soldier_generic_img", "storyteller_img", "tax_collector_img",
-        "tutor_img", "village_elder_img", "viscount_wells_img",
+        "aldric_img", "assassin_char_img", "baron_img", "beggar_img",
+        "bertrand_img", "bishop_img", "blacksmith_wife_img", "bully_kid_img",
+        "captain_img", "count_grey_img", "countess_hilda_img",
+        "countess_stein_img", "court_herald_img", "court_poet_img", "elena_img",
+        "farmer_rep_img", "father_img", "friend_marcus_img", "healer_img",
+        "herald_img", "herbalist_vera_img", "lily_master_img", "lily_root_img",
+        "merchant_guild_img", "merchant_karl_img", "mother_img",
+        "noble_lady_img", "noble_werner_img", "old_guard_img", "old_woman_img",
+        "player_char_img", "player_child_img", "player_teen_img",
+        "player_young_img", "priest_thomas_img", "prince_img", "queen_img",
+        "queen_envoy_img", "servant_generic_img", "servant_marta_img",
+        "soldier_generic_img", "stable_boy_img", "storyteller_img",
+        "tax_collector_img", "tutor_img", "village_elder_img",
+        "viscount_wells_img",
     ]
 
     def hide_all_chars(*except_tags):

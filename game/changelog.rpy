@@ -1,0 +1,543 @@
+## ============================================================
+## 更新日志 - Changelog
+## changelog.rpy
+## ============================================================
+
+screen changelog_screen():
+    tag menu
+    use game_menu(_("更新日志"), scroll="viewport"):
+        vbox:
+            spacing 16
+
+            ## 标题
+            hbox:
+                spacing 8
+                text "【卷】" size 24 color "#d4a942" yalign 0.5
+                text "更新日志" size 26 color "#d4a942" font "msyh.ttf"
+
+            null height 8
+
+            ## ── v3.10 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.10" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "角色死亡状态一致性审计" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.31" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 暗百合死亡状态
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "暗百合被摧毁后的「复活」修复（10处）" size 18 color "#e74c3c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第四章：地图标注、章末旁白不再无条件提及暗百合据点和暗处注视" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第四章：王后对话新增已摧毁分支——「被你铲除的叛逆分子」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第四章扩展：灰区暗百合标记新增已摧毁分支——「旧标记，余党还没来得及清理」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第五章：Elena列举势力、地图描述、战局旁白不再无条件提及暗百合" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 幕间：驿站老板暗百合涂鸦传闻新增已摧毁分支" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 随机事件：丰收节传单不再硬编码暗百合标记，改为通用可疑人物" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 同伴系统：暗百合密探「影」在组织被摧毁后不再可招募" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 弗雷德里克王子
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "弗雷德里克王子背叛后的「复活」修复（3处）" size 18 color "#f39c12" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 真相结局尾声：被背叛时写信对象改为「摄政议会」而非「弗雷德里克国王」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 真相结局审判：判决交给「摄政议会」而非「弗雷德里克国王」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 影之王结局：新增prince_betrayed专属分支——背叛叙述而非「他以为你是朋友」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.9 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.9" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "死旗激活 & 叙事补强" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.31" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 死旗激活
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "死旗激活（设而未检的flag全面启用）" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第五章议事厅：奥尔德里克请战、队长重申誓约、艾琳娜私下嘱令、主教全力支持等条件对话" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第五章扩展：主教献出教会老兵、艾琳娜汇报敌军补给弱点、密道引导加成、百合双面间谍情报" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第五章扩展：新增「用把柄反威胁男爵」菜单选项（需baron_blackmail_option）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 结局篇：队长回忆五年前誓言、王后最终处置分支、男爵命运分支、百合双面遗产、奥尔德里克老兵回忆" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 共激活11个死旗，新增1个条件菜单选项，所有触发均为if条件包裹，不影响原有流程" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 叙事补强
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "叙事一致性补强" size 18 color "#f39c12" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 补强父亲身份：序章暗示先王对父亲的特殊信任，第一章老兵旁证「国王交给最信得过的人」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 补强男爵低爵：海因里希解释男爵故意不升爵——「男爵养私兵没人管，伯爵养私兵就是威胁」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 补强兵力叙事：奥尔德里克与主角确立「以小博大」战略定调——这点人守不住城，但能守住秘密" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 补强男爵双面身份：艾琳娜详述暗焰从王后情报网到反叛工具的演变——「暗焰是手段，反叛才是目的」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.8 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.8" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "叙事矛盾全面梳理修复（第二批）" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.26" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 直接矛盾修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "直接矛盾修复" size 18 color "#e74c3c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 统一父亲发现艾琳娜身份时间：百合首领「三年」修正为「不到三个月」（与艾琳娜本人说法一致）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 统一队长来历：「父亲派小队偷袭地牢」修正为「鞭刑五十后流放，巡逻队在野外发现」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正队长回忆时间：「十二年前先王还在世」→「二十多年前」（先王二十年前驾崩）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正密道修建时长：「花了十年」→「花了好几年」（第十五年开始修，只剩五年）" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 叙事重复清理
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "叙事重复清理" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 艾琳娜身世从重复5次缩减为1次完整+4次简短引用（第4/5章深度对话、NPC支线）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 主教「伪善者」对话、「信徒被卖给王后」对话、「遗诏摄政人选」对话各去除重复段落" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 逻辑一致性
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "逻辑一致性修正" size 18 color "#f39c12" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 双重/三重间谍回退修复：三重身份揭示后不再退回说「双重间谍」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 统一暗百合历史为「两百年」：「上百年」→「两百年」，「王国建立之初」→「两百多年」，「比王国还古老」→「和王国一样古老」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 施泰因伯爵夫人丈夫去世时间：早期对话去掉「去年」，改用模糊时间「在南方战役中战死」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.7 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.7" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "CG跳过崩溃修复" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.25" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "崩溃修复" size 18 color "#e74c3c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复第二至五章过场动画点击「跳过」后退回主菜单的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 根本原因：跳过函数调用 renpy.return_statement() 在 jump 进入的章节里落点错误" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复方式：改用 renpy.dismiss() 驱散暂停，各 cinematic label 自行检测跳过标志并自然返回" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.6 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94215")
+                hbox:
+                    spacing 8
+                    text "v3.6" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "属性系统重构 & 好感度系统重做" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.25" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 属性系统重构
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "属性系统重构（布兰特设计哲学）" size 18 color "#f39c12" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 引入五段阶位系统：每属性分5阶，每阶有专属名称与颜色（如「铁腕领主」「腹黑帝王」）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 阶位突破叙事弹窗：升阶/降阶时弹出专属文字，反映世界对你改变的反应" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 骰子判定系统：危机检定改为 1d10 + 属性加成 vs 难度，结果分大成功/成功/失败/大失败" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 路线印记系统：铁血/谋士/圣光/外交四条路线，积累3枚印记激活专属路线" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 高属性双面代价：权力/谋略/财富/信仰达到80时触发一次性负面事件" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 全局增益缩放（×0.4）：属性成长节奏更合理，专注某一属性需要跨越多章才能达顶" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 好感度系统重做
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "好感度系统重做" size 18 color "#e91e8c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 阈值突破弹窗：关系越过敌视/警惕/中立/友善/信任节点时弹出后果说明" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 章节被动效果：每章开头根据各NPC好感度自动应用属性加成/惩罚" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 奥尔德里克（信任）→ 谋略+4 / 深度敌对 → 谋略-4、声望-3" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 队长雷恩（信任）→ 权力+3、忠诚+3 / 深度敌对 → 权力-4、忠诚-4" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 主教马修斯（信任）→ 信仰+4、声望+3 / 深度敌对 → 信仰-5、声望-4" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 艾琳娜、冯·哈根男爵、伊莎贝拉王后亦有各自专属被动效果" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 章节开头汇总面板：清晰展示本章受哪些NPC关系影响及具体数值" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.5 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94215")
+                hbox:
+                    spacing 8
+                    text "v3.5" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "叙事一致性全面修正" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.24" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 崩溃修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "崩溃修复" size 18 color "#e74c3c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复第一章深化剧情结尾 AttributeError：rel_elena 属性引用错误导致崩溃" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 叙事一致性修正
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "叙事一致性修正" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 统一雷恩跟随年数：第四章扩展「二十年」修正为「十五年」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正管家奥尔德里克服务年数：「四十年」→「三十余年」，与主线三十年描述一致" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正结局中管家年龄：「七十岁」→「六十五岁」（十五岁入门五十年后）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正结局中管家台词：「跟了费雷恩大人」→「跟了您的父亲」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正父亲治理年数：「四十年」→「近三十年」（符合 1298-1347 时间线）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正费雷恩复活漏洞：第三章「已经死了二十年」→「早已秘密去世」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正第四章扩展情报「大主教费雷恩来王都」→「大主教马修斯来王都」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 明确影月草与暮色之露的关系：影月草为原料，暮色之露为提炼毒药" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 扩充暮色之露描述：「数月才致命」补充为「数月乃至数年，剂量越低越难察觉」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.4 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94215")
+                hbox:
+                    spacing 8
+                    text "v3.4" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "剧情重复修复 & 体验优化" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.22" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 剧情修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "剧情逻辑修复" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复主教教堂场景中「西里尔」与王子老师重名造成玩家混淆的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复遗诏剧情在同一章中重复出现两次的问题（主教正式告白 & 醉酒忏悔）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 已知信息不再重复解释：若玩家已从其他途径得知遗诏真相，对话自动调整" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 体验优化
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "操作体验优化" size 18 color "#27ae60" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 手机端快捷栏新增「快进」按钮，支持快速跳过已读剧情" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 12
+
+            ## ── v3.3 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94215")
+                hbox:
+                    spacing 8
+                    text "v3.3" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "大规模Bug修复 & 平衡性调整" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.03.21" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 崩溃/UI修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "崩溃与UI修复" size 18 color "#e74c3c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复背包界面打开后返回游戏卡死/闪退的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复队伍管理界面关闭后游戏无响应的问题（tag menu冲突）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复商店界面关闭需要双击的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 背包/队伍/商店界面现在可以点击暗色遮罩区域直接关闭" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复第一章深化剧情结尾闪退崩溃的问题（属性引用错误）" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 剧情逻辑修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "剧情逻辑修复" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复第三章扩展剧情在危机高潮之后才播放，导致时间线错乱的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复第二章奥尔德里克勋章故事重复播放两次的问题（秘密揭示→徽章传承顺序颠倒）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复暗百合首领人设矛盾：统一为女性首领「影」，铁刺派艾德蒙改为分裂势力头目" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复深化仪式场景中暗百合首领性别与主线不一致的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复密道逻辑漏洞：前期选择不告诉任何人，后续不再无条件提及密道" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复已加入暗百合后仪式场景仍询问是否加入的矛盾" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 立绘修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "立绘显示修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复结局中暗百合首领立绘因tag不匹配无法正常隐藏的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复多处角色立绘在同一位置重叠的问题（第四章王子/第五章艾琳娜/序章马库斯）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复NPC支线中奥尔德里克立绘闪烁及村长立绘残留的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复深化场景中hide对象错误导致艾琳娜立绘未正确隐藏的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复第五章王后立绘连续show两次导致闪烁的问题" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 平衡性
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "平衡性调整" size 18 color "#f39c12" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 大幅调整属性分配：谋略(intrigue)不再独占大部分选项奖励" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 勇敢/果断的行动现在提升武力而非谋略" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 信任/联盟/感情类选项现在提升忠诚而非谋略" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 观察/学术/调查类选项现在提升声望而非谋略" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 信仰/道德/信念类选项现在提升信仰而非谋略" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 同一菜单的多个选项不再全部给予相同属性，鼓励多样化选择" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 削减序章中过高的单次属性增量（+10→+5）" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 其他
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "其他改进" size 18 color "#2ecc71" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 收藏品系统现在读档重玩时也会显示提示（标注「已收集」）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 感谢TapTap社区玩家的详细反馈！" size 14 color "#d4a942" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.2 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94210")
+                hbox:
+                    spacing 8
+                    text "v3.2" size 22 color "#8a7e60" font "msyh.ttf" bold True yalign 0.5
+                    text "剧情修正 & Bug修复版" size 16 color "#6a5e48" font "msyh.ttf" yalign 0.5
+                    text "2026.03.20" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## Bug修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "Bug修复" size 18 color "#2ecc71" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复同伴管理界面选择/装备/解散操作后游戏卡死的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复决策日志不随存档保存，读档后显示错误记录的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复部分属性变化（幕间/NPC支线/治理）不显示通知弹窗的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复第二章扩展内容（领主会议）大部分场景没有背景音乐的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复平衡调试面板操作后界面卡死的问题" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 剧情修正
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "剧情修正" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 统一先王驾崩时间线（全部修正为二十年前）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 统一艾琳娜身世（没落贵族→侍女学院→间谍→双重间谍）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正管家奥尔德里克讲述先王之死时两段叙事自相矛盾的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 统一管家服务年限（三十年）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正遗诏伪造者身份：王后策划，大主教费雷恩执行" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正原始遗诏内容：指定主角父亲为唯一摄政者" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正队长雷恩服务年限、格伦瓦德村人口、北境入侵时间线" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 流程修复
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "流程修复" size 18 color "#e67e22" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复第二章领主大会闭幕日在开幕前播放的时间线倒置问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复第五章战争会议重复（相同情报简报讲两遍）的问题" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
+            ## ── v3.1 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94210")
+                hbox:
+                    spacing 8
+                    text "v3.1" size 22 color "#8a7e60" font "msyh.ttf" bold True yalign 0.5
+                    text "最终定稿版" size 16 color "#6a5e48" font "msyh.ttf" yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152815")
+                vbox:
+                    spacing 6
+                    text "· 五章完整剧情，35万字" size 14 color "#8a7e60" font "msyh.ttf"
+                    text "· 六维属性系统 + 角色好感度" size 14 color "#8a7e60" font "msyh.ttf"
+                    text "· 五个独特结局 + 隐藏结局" size 14 color "#8a7e60" font "msyh.ttf"
+                    text "· NPC深度支线、同伴系统、制作系统、治理系统" size 14 color "#8a7e60" font "msyh.ttf"
+                    text "· 画廊、音乐室、成就、章节选择" size 14 color "#8a7e60" font "msyh.ttf"
+                    text "· New Game+ 与隐藏成就" size 14 color "#8a7e60" font "msyh.ttf"
+
+            null height 16
+
+            ## 底部
+            frame:
+                xalign 0.5
+                xpadding 24
+                ypadding 12
+                background Solid("#1a152840")
+                text "感谢每一位玩家的反馈，让权谋之庭变得更好" size 14 color "#8a7e60" font "msyh.ttf"

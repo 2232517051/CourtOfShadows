@@ -11,6 +11,26 @@ define audio.battle_prepare = "audio/music/battle_prepare.ogg"
 define audio.night_mystery = "audio/music/night_mystery.ogg"
 define audio.victory = "audio/music/victory.ogg"
 define audio.sad = "audio/music/sad.ogg"
+define audio.tavern_lively = "audio/music/tavern_lively.ogg"
+define audio.forest_ambient = "audio/music/forest_ambient.ogg"
+define audio.rain_storm = "audio/music/rain_storm.ogg"
+define audio.market_bustle = "audio/music/market_bustle.ogg"
+define audio.church_choir = "audio/music/church_choir.ogg"
+define audio.dungeon_drip = "audio/music/dungeon_drip.ogg"
+define audio.harbor_waves = "audio/music/harbor_waves.ogg"
+define audio.campfire = "audio/music/campfire.ogg"
+define audio.war_drums = "audio/music/war_drums.ogg"
+define audio.coronation = "audio/music/coronation.ogg"
+define audio.conspiracy = "audio/music/conspiracy.ogg"
+define audio.chase = "audio/music/chase.ogg"
+define audio.romance = "audio/music/romance.ogg"
+define audio.grief = "audio/music/grief.ogg"
+define audio.revelation = "audio/music/revelation.ogg"
+define audio.betrayal = "audio/music/betrayal.ogg"
+define audio.hope = "audio/music/hope.ogg"
+define audio.winter_wind = "audio/music/winter_wind.ogg"
+define audio.dawn = "audio/music/dawn.ogg"
+define audio.ritual = "audio/music/ritual.ogg"
 
 ## 音效定义
 define audio.sfx_door_knock = "audio/sfx/door_knock.ogg"
@@ -19,6 +39,9 @@ define audio.sfx_fire_crackle = "audio/sfx/fire_crackle.ogg"
 define audio.sfx_horse_gallop = "audio/sfx/horse_gallop.ogg"
 define audio.sfx_crowd_murmur = "audio/sfx/crowd_murmur.ogg"
 define audio.sfx_bell_toll = "audio/sfx/bell_toll.ogg"
+
+## 主菜单背景音乐
+define config.main_menu_music = "audio/music/main_theme.ogg"
 
 ## 音乐频道设置
 init python:

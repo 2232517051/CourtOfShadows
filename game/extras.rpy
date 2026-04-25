@@ -182,7 +182,6 @@ screen codex_detail(char_name="", char_title="", char_color="#d4a942", char_brie
                 text_color "#8a7e60"
                 text_hover_color "#d4a942"
                 action Hide("codex_detail")
-                activate_sound "audio/sfx/ui_click.ogg"
 
     key "K_ESCAPE" action Hide("codex_detail")
     key "mouseup_3" action Hide("codex_detail")
@@ -192,20 +191,22 @@ screen codex_detail(char_name="", char_title="", char_color="#d4a942", char_brie
 ## 2. 决策日志系统 (Decision Journal)
 ################################################################################
 
+default _decisions = []
+
 init python:
     ## 决策记录: 列表 of (章节, 选择描述, 结果简述)
     ## 在剧情中通过 log_decision() 记录
-    _decisions = []
+    ## 使用 default 变量，确保决策日志随存档保存/加载
 
     def log_decision(chapter, choice, result=""):
         """记录一个决策。用法: $ log_decision("第一章", "选择外交手段", "与男爵达成停战")"""
-        _decisions.append((chapter, choice, result))
+        store._decisions.append((chapter, choice, result))
 
     def get_decisions():
-        return _decisions
+        return store._decisions
 
     def get_decisions_by_chapter(ch):
-        return [(c, choice, result) for c, choice, result in _decisions if c == ch]
+        return [(c, choice, result) for c, choice, result in store._decisions if c == ch]
 
 screen decision_journal():
     tag menu
@@ -355,7 +356,6 @@ screen world_map():
                         ysize 40
                         background None
                         action Show("map_location_detail", loc_name=loc_name, loc_desc=loc_desc, loc_icon=loc_icon)
-                        activate_sound "audio/sfx/ui_click.ogg"
 
                         vbox:
                             spacing 2
@@ -449,17 +449,31 @@ init python:
             "致忠诚的执行者：\n\n新任艾登堡领主的能力已经得到验证。根据观察报告，他（值得信任/需要监控）。\n\n继续执行原定计划。铁矿的归属关系到王国的军事命脉，不可让它落入不可控的势力手中。\n\n必要时...采取一切手段。\n\n——I.R."),
     }
 
+    collectible_hints = {
+        "war_map":         "据说压在某张旧桌的暗格里，很少有人记得去翻。",
+        "lily_symbol":     "有些身份的证物，只有在最不经意的搜身里才会露出来。",
+        "poison_bottle":   "一个空瓶子，被人藏在商人也会路过的地方。",
+        "letter_father_1": "父亲生前没说出口的话，往往藏在最常去却最少被打扫的房间。",
+        "letter_father_2": "另一封信，只有走进某个不该被知道的地方的人，才有机会看到。",
+        "baron_pact":      "贵族之间的默契，总会在某场会议的角落留下一纸。",
+        "queen_decree":    "只有走进她的宫殿，并且走得足够深的人，才碰得到这种东西。",
+        "elena_locket":    "一枚遗落的挂坠盒。它的主人还没决定是否让你看到它。",
+    }
+
     if persistent.collectibles_found is None:
         persistent.collectibles_found = set()
 
     def collect_item(item_id):
         """收集一个物品。用法: $ collect_item("letter_father_1")"""
-        if item_id not in persistent.collectibles_found:
-            persistent.collectibles_found.add(item_id)
-            if item_id in collectible_items:
-                name = collectible_items[item_id][0]
+        already_had = item_id in persistent.collectibles_found
+        persistent.collectibles_found.add(item_id)
+        if item_id in collectible_items:
+            name = collectible_items[item_id][0]
+            if already_had:
+                renpy.show_screen("collectible_found_toast", item_name=name + "（已收集）")
+            else:
                 renpy.show_screen("collectible_found_toast", item_name=name)
-                renpy.play("audio/sfx/ui_confirm.ogg", channel="sound")
+            renpy.play("audio/sfx/ui_confirm.ogg", channel="sound")
 
 screen collectible_found_toast(item_name=""):
     zorder 260
@@ -564,7 +578,7 @@ screen collectibles_screen():
                                         text "?" xalign 0.5 yalign 0.5 size 18 color "#2a2040"
                                     vbox:
                                         text "???" size 16 color "#3a3040" font "msyh.ttf"
-                                        text "在游戏中探索发现" size 12 color "#2a2030"
+                                        text collectible_hints.get(_cid, "在游戏中探索发现") size 12 color "#2a2030"
 
 
 ## 收藏品详情
@@ -840,18 +854,18 @@ screen chapter_summary(ch_name="第一章", ch_title="新主登基"):
                 text_color "#d4a942"
                 text_hover_color "#ffd866"
                 text_font "msyh.ttf"
-                action Hide("chapter_summary")
-                activate_sound "audio/sfx/ui_confirm.ogg"
+                action Return()
 
-    key "K_RETURN" action Hide("chapter_summary")
-    key "K_SPACE" action Hide("chapter_summary")
+    key "K_RETURN" action Return()
+    key "K_SPACE" action Return()
+    key "mouseup_1" action Return()
+
+    ## 安全超时：30秒后自动继续
+    timer 30.0 action Return()
 
 ## 便捷调用 label
 label show_chapter_summary(ch_name="第一章", ch_title="新主登基"):
-    show screen chapter_summary(ch_name, ch_title)
-    pause
-    hide screen chapter_summary
-    with dissolve
+    call screen chapter_summary(ch_name, ch_title)
     return
 
 

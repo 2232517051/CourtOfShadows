@@ -139,17 +139,25 @@ label ch5_war_clouds:
 
     "一个白发苍苍的老农跪在地上，身体在发抖。"
 
-    "老农" "领主大人！求您救救我们啊！北边的村子说看到了军队的旗帜！"
+    $ hide_all_chars("farmer_rep_img")
+    show farmer_rep_img at left with dissolve
+    old_farmer "领主大人！求您救救我们啊！北边的村子说看到了军队的旗帜！"
 
-    "老农" "上次打仗的时候，我还是个孩子……那些兵就像蝗虫一样，抢走了一切……"
+    old_farmer "上次打仗的时候，我还是个孩子……那些兵就像蝗虫一样，抢走了一切……"
 
+    $ hide_all_chars()
     "一个年轻的铁匠站出来，眼中带着愤怒。"
 
-    "铁匠" "领主大人，让我们拿起武器吧！我们愿意为保卫家园而战！"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    young_blacksmith "领主大人，让我们拿起武器吧！我们愿意为保卫家园而战！"
 
+    $ hide_all_chars()
     "旁边的一个妇人紧紧抱着孩子，泪水无声地流淌。"
 
-    "妇人" "大人……我丈夫去年冬天病死了……只剩我和孩子……我们能去哪里呢……"
+    $ hide_all_chars("blacksmith_wife_img")
+    show blacksmith_wife_img at left with dissolve
+    woman_refugee "大人……我丈夫去年冬天病死了……只剩我和孩子……我们能去哪里呢……"
 
     "你看着这些惶恐的面孔，肩膀沉了下去——铠甲好像比早上重了几斤。"
 
@@ -161,6 +169,7 @@ label ch5_war_clouds:
             show player_char_img at left with dissolve
             player "我向你们发誓——只要我还站在这里，就不会让任何人伤害你们。"
             player "艾登堡的城墙会保护每一个人。"
+            $ hide_all_chars()
             "老农泪流满面地磕头。铁匠挺起了胸膛。妇人紧紧地抱着孩子，终于不再颤抖。"
             "你的承诺像一颗石子投入湖面，在民间荡起了层层涟漪。人们开始称你为'守护者'。"
             $ change_stat("reputation", 2)
@@ -168,6 +177,8 @@ label ch5_war_clouds:
         "坦率地告知形势严峻":
             $ change_stat("reputation", 2)
             $ change_stat("intrigue", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我不会欺骗你们。形势确实严峻。但我也不会坐以待毙。"
             player "我需要你们的合作——能拿武器的，协助守城。老弱妇孺，在城堡里避难。"
             player "大家齐心协力，我们才能撑过去。"
@@ -175,8 +186,11 @@ label ch5_war_clouds:
 
         "用强硬的语气让他们冷静下来":
             $ change_stat("power", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "都给我冷静！恐慌解决不了任何问题！"
             player "回去做好你们的本职工作。守城的事，交给我和士兵。"
+            $ hide_all_chars()
             "人群安静了下来。有些人看起来被你的威严震慑住了，有些人则面露不安。"
             "混乱暂时被压制了。至于人心——那是另一回事。"
 
@@ -213,12 +227,15 @@ label ch5_war_clouds:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "把笔记给我。我要仔细研究。"
+            $ hide_all_chars()
             "你花了一整夜研读父亲的笔记。字迹工整，条理清晰——你仿佛看到了一个从未了解过的父亲。"
             "笔记中标注了三条从艾登堡通往北方森林的隐蔽小道，以及河流在春季涨水时的通行情况。"
             "这些信息在即将到来的战争中可能至关重要。"
 
         "感慨地收起笔记":
             $ change_stat("loyalty", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "父亲……即使在天上，也在守护着我们。"
             hide player_char_img
             $ hide_all_chars("aldric_img")
@@ -257,6 +274,7 @@ label ch5_war_clouds:
         aldric "这里、这里、还有这里——地形狭窄，适合伏击。王后军人多，但地利在我们这边。"
         hide aldric_img with dissolve
 
+        $ hide_all_chars()
         "没有间谍网络的精准情报，你只能依靠老兵的直觉和地形的优势。但有时候，经验比情报更可靠。"
 
     "你的手指在地图上缓缓移动，仿佛在下一盘巨大的棋局。"
@@ -319,10 +337,12 @@ label ch5_war_clouds:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "窗外，一只信鸽扑棱着翅膀落在窗台上。"
 
     "你取下它脚上绑着的纸卷。"
 
+    $ hide_all_chars("baron_img")
     show baron_img angry at left with dissolve
     $ unlock_gallery("baron")
 
@@ -339,8 +359,10 @@ label ch5_war_clouds:
 
     hide baron_img with dissolve
 
+    $ hide_all_chars()
     "几乎同时，一名王室使者也到达了艾登堡。"
 
+    $ hide_all_chars("queen_img")
     show queen_img angry at left with dissolve
     $ unlock_gallery("queen")
 
@@ -348,6 +370,7 @@ label ch5_war_clouds:
 
     hide queen_img with dissolve
 
+    $ hide_all_chars()
     "两封信，两个威胁。你被夹在中间，进退维谷。"
 
     "但你知道——真正的选择，不是站在谁那一边，而是你想成为什么样的人。"
@@ -426,6 +449,7 @@ label ch5_factions_move:
     if dark_lily_destroyed:
         "王后军从南面来，男爵联军从北面来。教会在观望。"
     else:
+        $ hide_all_chars()
         "王后军从南面来，男爵联军从北面来。教会在观望，暗百合在暗处。"
 
     "而你——站在所有力量的交汇点上。"
@@ -463,34 +487,47 @@ label ch5_factions_move:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "难民中有一个老人，自称是北方一个小领地的退休管家。"
 
     "他带来了一个重要的消息——"
 
-    "退休管家" "领主大人，我在来的路上亲眼看到了男爵的军队。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    retired_steward "领主大人，我在来的路上亲眼看到了男爵的军队。"
 
-    "退休管家" "他们的骑兵确实强大，但步兵的装备很差。很多人连像样的铠甲都没有。"
+    retired_steward "他们的骑兵确实强大，但步兵的装备很差。很多人连像样的铠甲都没有。"
 
-    "退休管家" "另外，男爵军的粮草辎重走的是另一条路——沿着河谷的小道。"
+    retired_steward "另外，男爵军的粮草辎重走的是另一条路——沿着河谷的小道。"
 
-    "退休管家" "只有不到一百人护送。如果有人切断那条补给线……"
+    retired_steward "只有不到一百人护送。如果有人切断那条补给线……"
 
     menu:
         "记下这个情报，留待日后使用":
             $ change_stat("intrigue", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "谢谢你的消息。你会得到妥善的安置。"
             "你把这个情报默默记在心里。也许有一天会用得上。"
 
         "追问更多细节":
             $ change_stat("intrigue", 5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "那条河谷小道的具体位置在哪里？护卫部队有多少人？都是什么编制？"
-            "退休管家" "老朽记性不太好了……但大致的位置我可以在地图上指出来。"
+            $ hide_all_chars()
+            $ hide_all_chars("servant_generic_img")
+            show servant_generic_img at left with dissolve
+            retired_steward "老朽记性不太好了……但大致的位置我可以在地图上指出来。"
             "你把老人带到书房，在地图上标注了男爵军补给线的位置。"
             "这条信息可能在关键时刻改变战局。"
 
         "不太在意这些细节":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "好的，辛苦了。去休息吧。"
-            "你没有太在意这个细节。也许这是个错误，也许不是。"
+            $ hide_all_chars()
+            "你没有太在意这个细节。"
 
     "时间一天天过去。空气中的紧张气氛越来越浓。"
 
@@ -501,13 +538,15 @@ label ch5_factions_move:
 
     "一个穿着华丽斗篷的中年人，自称是王后的特使。"
 
-    "王后特使" "领主大人，王后陛下派我来传达她的最后提议。"
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
+    queen_envoy "领主大人，王后陛下派我来传达她的最后提议。"
 
-    "王后特使" "如果您愿意在即将到来的战争中支持王室——"
+    queen_envoy "如果您愿意在即将到来的战争中支持王室——"
 
-    "王后特使" "王后承诺战后封您为侯爵，并将北方三个领地的管辖权交给您。"
+    queen_envoy "王后承诺战后封您为侯爵，并将北方三个领地的管辖权交给您。"
 
-    "王后特使" "此外，王室将免除艾登堡未来五年的赋税。"
+    queen_envoy "此外，王室将免除艾登堡未来五年的赋税。"
 
     menu:
         "表示会认真考虑":
@@ -515,53 +554,89 @@ label ch5_factions_move:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "这是一个很有诚意的提议。请转告王后陛下，我需要时间考虑。"
-            "王后特使" "当然。但请不要等太久——时间不站在任何人这边。"
+            $ hide_all_chars()
+            $ hide_all_chars("queen_envoy_img")
+            show queen_envoy_img at left with dissolve
+            queen_envoy "当然。但请不要等太久——时间不站在任何人这边。"
             "特使走后，你把这个提议记在了心里——但没有做出承诺。"
 
         "委婉拒绝":
             $ change_stat("reputation", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "请转告王后陛下，艾登堡珍视与王室的关系。"
             player "但在这种敏感时期，我需要先确保我领地百姓的安全。"
-            "王后特使" "……我明白了。希望您不会后悔这个决定。"
+            $ hide_all_chars("queen_envoy_img")
+            show queen_envoy_img at left with dissolve
+            queen_envoy "……我明白了。希望您不会后悔这个决定。"
 
         "直接拒绝":
             $ change_stat("power", 2)
             $ change_rel("rel_queen", -5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "回去告诉王后——我不是用爵位和金钱可以收买的。"
-            "王后特使" "领主大人，这恐怕不是一个明智的——"
+            $ hide_all_chars("queen_envoy_img")
+            show queen_envoy_img at left with dissolve
+            queen_envoy "领主大人，这恐怕不是一个明智的——"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "送客。"
+            $ hide_all_chars()
             "特使面色铁青地离开了。你知道这可能激怒王后，但你不在乎。"
 
     "特使离开后不到两个时辰，又有一个人来了——"
 
     "这次是男爵的密使。他不像王后的特使那样大张旗鼓，而是悄悄从后门进来的。"
 
-    "男爵密使" "领主大人，男爵阁下让我转达——"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    baron_envoy "领主大人，男爵阁下让我转达——"
 
-    "男爵密使" "如果您加入联军，男爵承诺事成之后与您平分北方的权力。"
+    baron_envoy "如果您加入联军，男爵承诺事成之后与您平分北方的权力。"
 
-    "男爵密使" "您将成为男爵之下、万人之上的人物。"
+    baron_envoy "您将成为男爵之下、万人之上的人物。"
 
     menu:
         "表示会认真考虑":
             $ change_stat("intrigue", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "告诉男爵，我需要时间。"
-            "男爵密使" "男爵给您三天时间。三天之后如果没有回复——他会把您视为敌人。"
+            $ hide_all_chars("servant_generic_img")
+            show servant_generic_img at left with dissolve
+            baron_envoy "男爵给您三天时间。三天之后如果没有回复——他会把您视为敌人。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我听到了。"
 
         "委婉拒绝":
             $ change_stat("reputation", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "感谢男爵的好意。但我有自己的考量。"
-            "男爵密使" "……男爵不会高兴的。"
+            $ hide_all_chars("servant_generic_img")
+            show servant_generic_img at left with dissolve
+            baron_envoy "……男爵不会高兴的。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "请转达我的敬意。"
 
         "试图从密使那里套取更多情报":
             $ change_stat("intrigue", 4)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "男爵联军现在的情况怎么样？实力如何？"
-            "男爵密使" "联军……实力很强。北方最精锐的骑兵都在我们这边。"
+            $ hide_all_chars("servant_generic_img")
+            show servant_generic_img at left with dissolve
+            baron_envoy "联军……实力很强。北方最精锐的骑兵都在我们这边。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "那后勤呢？粮草够吗？"
             "密使犹豫了一下。"
-            "男爵密使" "……足够支撑整场战役。"
+            $ hide_all_chars("servant_generic_img")
+            show servant_generic_img at left with dissolve
+            baron_envoy "……足够支撑整场战役。"
             "他说话时眼神闪烁——你知道他在撒谎。这证实了你之前得到的情报——男爵军的后勤确实是弱点。"
 
     "送走了男爵的密使后，你独自在书房里坐了很久。"
@@ -581,18 +656,26 @@ label ch5_factions_move:
 
     "一个小女孩跑到城墙下面，仰着头对你喊——"
 
-    "小女孩" "大人！大人！你会保护我们吗？"
+    $ hide_all_chars("blacksmith_wife_img")
+    show blacksmith_wife_img at left with dissolve
+    little_girl "大人！大人！你会保护我们吗？"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "会的。"
 
-    "小女孩" "拉钩？"
+    $ hide_all_chars()
+    $ hide_all_chars("blacksmith_wife_img")
+    show blacksmith_wife_img at left with dissolve
+    little_girl "拉钩？"
 
     "你忍不住笑了。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "拉钩。"
 
+    $ hide_all_chars()
     "小女孩满意地跑走了。她掉了一根头绳在地上——你弯腰捡起来，攥在手心里。决意更加坚定了。"
 
     "不管你最终选择什么路——有一件事是确定的。"
@@ -743,6 +826,7 @@ label ch5_military_deploy:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "军事准备基本就绪。但你知道——在真正的战争中，计划永远赶不上变化。"
 
     "你能做的，就是尽一切可能做好准备——然后在变化来临时迅速应对。"
@@ -826,6 +910,7 @@ label ch5_preparation:
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "你环顾四周——奥尔德里克、雷恩、艾琳娜、马修斯，每一张面孔都写满了坚定。"
 
     "一切已经就绪。现在只剩下最后的决定。"
@@ -886,23 +971,31 @@ label ch5_counsel_all:
             hide aldric_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "奥尔德里克……你觉得父亲当年，是因为什么被杀的？"
-            hide player_char_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "……"
-            aldric "老领主太正直了。他发现了一个不该发现的秘密，而且他不愿意保持沉默。"
-            aldric "如果他能像其他领主一样假装看不见……也许还活着。"
-            aldric "但那样的话，他就不是老领主了。"
             if true_killer_known:
-                aldric "您已经知道了真相。如何运用这个真相，就看您的决断了。"
-                aldric "但请记住——真相是一把双刃剑。它能伸张正义，也能引发更大的混乱。"
+                player "奥尔德里克……父亲的事，我们都心知肚明了。明天之后，他也该瞑目了。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……是啊。"
+                aldric "老领主等这一天，等了二十年。我替他等了二十年。"
+                aldric "真相是一把双刃剑，领主大人。它能伸张正义，也能引发更大的混乱——但不论结局如何，您不是一个人在扛。"
+            else:
+                player "奥尔德里克……你觉得父亲当年，是因为什么被杀的？"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……"
+                aldric "老领主太正直了。他发现了一个不该发现的秘密，而且他不愿意保持沉默。"
+                aldric "如果他能像其他领主一样假装看不见……也许还活着。"
+                aldric "但那样的话，他就不是老领主了。"
             hide aldric_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我明白了。谢谢你。"
 
         "感谢他的建议":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你说得对。我会慎重考虑的。"
             hide player_char_img
             $ hide_all_chars("aldric_img")
@@ -978,13 +1071,13 @@ label ch5_counsel_all:
         player "我也是。"
 
     menu:
-        "问他对战争的看法":
-            player "你上过战场吗？"
+        "问他对这一仗最担心什么":
+            player "两军对垒——这次比西境那场更难打。你最担心什么？"
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "小规模的冲突，打过几次。但像这样两军对垒的大战……没有。"
-            captain "不过，我训练士兵的时候总会告诉他们一句话——"
+            captain "西境那年我们只有一个方向要守。这次我们既要防北墙，也要防内鬼。"
+            captain "我训练士兵时总说一句话——"
             captain "'活着回来比当英雄更重要。'"
             captain "领主大人，如果开战的话，请不要亲自冲在最前面。"
             hide captain_img
@@ -1100,6 +1193,8 @@ label ch5_counsel_all:
         player "你也是，艾琳娜。"
 
     if dark_lily_joined:
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "对了，暗百合方面也有消息。"
         elena "首领让我转告你——组织在这次行动中可以提供三十名精锐刺客的支援。"
         elena "不多，但如果用在关键位置上，效果会远超一支普通军队。"
@@ -1108,6 +1203,8 @@ label ch5_counsel_all:
         show player_char_img at left with dissolve
         player "暗百合的效率，我向来不怀疑。"
     else:
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "外部援助方面——我联系了几个旧日的线人。不算正规军，但关键时刻能帮上忙。"
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -1344,6 +1441,7 @@ label ch5_final_night:
         aldric "……领主大人。我侍奉您的父亲三十年，侍奉您将近一年。"
         aldric "这一年里，我看着您从一个懵懂的年轻人，成长为一个真正的领主。"
         aldric "明天不管发生什么，我都会在您身边。"
+        $ hide_all_chars("aldric_img")
         show aldric_img sad at left with dissolve
         aldric "就像当年在您父亲身边一样——只是这一次，我不会再让悲剧重演。"
         "老管家的眼眶泛红了。你别过脸去，盯着墙上那幅父亲的旧画看了好一会儿。"
@@ -1359,6 +1457,7 @@ label ch5_final_night:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你走下城楼，来到庭院里。"
 
     "篝火旁，几个士兵正在低声交谈。"
@@ -1373,18 +1472,29 @@ label ch5_final_night:
     show player_char_img at left with dissolve
     player "别起来。让我也坐一会儿。"
 
+    $ hide_all_chars()
     "你在篝火旁坐了下来。士兵们面面相觑，有些不知所措。"
 
     "一个年轻的士兵——看起来不到二十岁——紧张地握着手中的剑。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你叫什么名字？"
 
-    "年轻士兵" "回……回领主大人，小的叫汤姆。"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    young_soldier "回……回领主大人，小的叫汤姆。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "汤姆，你害怕吗？"
 
-    "年轻士兵" "……害怕。但我更怕让领主大人失望。"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    young_soldier "……害怕。但我更怕让领主大人失望。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "害怕是正常的。不害怕的人才有问题。"
 
     hide player_char_img
@@ -1399,7 +1509,10 @@ label ch5_final_night:
     show player_char_img at left with dissolve
     player "你呢？你为什么而战？"
 
-    "老兵" "为了我在城里的老婆和三个孩子。只要他们平安，我什么都愿意做。"
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    veteran "为了我在城里的老婆和三个孩子。只要他们平安，我什么都愿意做。"
 
     "你环顾篝火旁的每一张脸。年轻的，年老的；紧张的，平静的。"
 
@@ -1409,6 +1522,8 @@ label ch5_final_night:
         "举杯共饮，鼓舞士气":
             $ change_stat("loyalty", 3)
             $ change_stat("reputation", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "雷恩，把酒拿出来。今晚每人一杯。"
             hide player_char_img
             $ hide_all_chars("captain_img")
@@ -1418,15 +1533,19 @@ label ch5_final_night:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "该省的时候省，该花的时候花。明天就要打仗了，让弟兄们暖暖身子。"
+            $ hide_all_chars()
             "酒壶传了一圈又一圈。渐渐地，气氛不再那么凝重了。"
             "有人开始哼起了家乡的歌，有人讲起了荤笑话，还有人红着眼眶说起了远方的亲人。"
             "你静静地听着，火光映在你的脸上。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "弟兄们。明天不管发生什么——我为你们骄傲。"
             "篝火旁沉默了一瞬。然后，所有人齐声说道——"
             crowd "'为了艾登堡！'"
 
         "安静地陪伴他们":
             $ change_stat("loyalty", 2)
+            $ hide_all_chars()
             "你没有说太多话，只是安静地坐在篝火旁。"
             "有时候，领主的存在本身就是最好的鼓舞。"
             "士兵们知道——他们的领主没有躲在城堡里，而是和他们坐在同一堆篝火旁。"
@@ -1474,6 +1593,7 @@ label ch5_final_night:
         show player_char_img at left with dissolve
         player "我很荣幸被你破例。"
 
+        $ hide_all_chars("elena_img")
         show elena_img sad at left with dissolve
 
         elena "别得意。如果你明天死了，我会恨你一辈子。"
@@ -1547,6 +1667,7 @@ label ch5_final_night:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "花园里恢复了寂静。你抬头望向满天星斗。"
 
     "父亲，你在天上看着我吗？"
@@ -1612,6 +1733,7 @@ label ch5_final_choice:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你站了起来，环顾四周。"
 
     "这些人——奥尔德里克、雷恩、艾琳娜——还有城堡外那些等待你命令的士兵和百姓。"
@@ -1654,6 +1776,7 @@ label ch5_final_choice:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "是！全军听令！"
+            $ hide_all_chars()
             "大厅中响起了铠甲的碰撞声和脚步声。战争的机器开始运转。"
             jump ending_iron_lord
 
@@ -1669,6 +1792,7 @@ label ch5_final_choice:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "明白。"
+            $ hide_all_chars()
             "一个精密的阴谋开始在暗处展开——像一张无形的大网，笼罩了整个战场。"
             jump ending_shadow_king
 
@@ -1684,6 +1808,7 @@ label ch5_final_choice:
             $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "教会……愿意承担这个使命。"
+            $ hide_all_chars()
             "你与教会联手，开始了一场用信仰对抗武力的战争。"
             jump ending_holy_guardian
 
@@ -1699,6 +1824,7 @@ label ch5_final_choice:
             $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "领主大人……"
+            $ hide_all_chars()
             "你做出了一个出乎所有人意料的决定——放弃争霸，全力守护。"
             jump ending_peoples_lord
 
@@ -1710,6 +1836,7 @@ label ch5_final_choice:
             show player_char_img at left with dissolve
             player "这个王国建立在一个谎言之上。是时候让真相大白了。"
             player "我的父亲为此付出了生命。我不能让他白死。"
+            $ hide_all_chars()
             "你从怀中取出那份尘封多年的遗诏复本，在阳光下展开。"
             "这一刻，你不是在为自己而战——而是在为二十年前被掩盖的正义而战。"
             jump ending_truth
@@ -1839,6 +1966,7 @@ label ending_iron_lord:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "遵命！"
+            $ hide_all_chars()
             "三天后，前线传来消息——敌军已经开始宰杀战马充饥。"
             "战斗还没开始，胜负已经倾斜了。"
 
@@ -1854,6 +1982,7 @@ label ending_iron_lord:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "明白。我今夜就安排人去接触。"
+            $ hide_all_chars()
             "第二天，回信来了——雇佣兵同意在战斗最激烈时'调转枪头'。"
             "一枚埋在敌军内部的棋子，已经就位了。"
 
@@ -1948,15 +2077,21 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我的士兵在流血，我怎么能躲在后面？"
+            $ hide_all_chars()
             "消息传开后，你的军队士气暴涨，而敌军则开始恐惧——这个年轻的领主不是个花架子。"
             "一个年轻的士兵——就是前夜篝火旁的汤姆——在你身边奋勇作战。"
             "他的动作还很生涩，但眼中有着不输任何老兵的决心。"
-            "年轻士兵" "领主大人！我掩护您！"
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            young_soldier "领主大人！我掩护您！"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "好小子！跟紧我！"
 
         "让雷恩指挥前锋，自己统领全局":
             $ change_stat("intrigue", 3)
             $ change_stat("power", 2)
+            $ hide_all_chars()
             "你站在山丘上，用旗语指挥部队的行动。"
             "雷恩率领前锋以精妙的战术击溃了敌军斥候。"
             "你的冷静和判断力让整支军队像一台精密的机器一样运转。"
@@ -1967,11 +2102,17 @@ label ending_iron_lord:
 
     "房屋被烧毁，田地被践踏。一个老人坐在废墟上，茫然地看着天空。"
 
-    "老人" "他们来了……像蝗虫一样……拿走了一切……"
+    $ hide_all_chars("farmer_rep_img")
+    show farmer_rep_img at left with dissolve
+    old_man "他们来了……像蝗虫一样……拿走了一切……"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "是谁干的？"
 
-    "老人" "穿铠甲的人……我分不清是哪边的……对我们来说都一样……"
+    $ hide_all_chars("farmer_rep_img")
+    show farmer_rep_img at left with dissolve
+    old_man "穿铠甲的人……我分不清是哪边的……对我们来说都一样……"
 
     "战争的残酷不在于战场上的厮杀——而在于那些被波及的无辜之人。"
 
@@ -1979,6 +2120,8 @@ label ending_iron_lord:
         "留下一些食物和士兵保护这里":
             $ change_stat("loyalty", 3)
             $ change_stat("power", -1)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "留十个人在这里。帮老百姓重建家园。"
             hide player_char_img
             $ hide_all_chars("captain_img")
@@ -1992,7 +2135,10 @@ label ending_iron_lord:
 
         "记住这一切，继续前进":
             $ change_stat("power", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "记住这些。记住战争的代价。等一切结束了，我们会回来重建。"
+            $ hide_all_chars()
             "你带着沉重的心情继续前进。战争不会因为你的同情而停下脚步。"
 
     "第三天和第四天，你又遇到了几次小规模遭遇。"
@@ -2024,6 +2170,7 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "全军出击！一鼓作气冲垮他们！"
+            $ hide_all_chars()
             "战鼓擂响。你的军队如洪流般冲向敌阵。"
             "铁与铁的碰撞，血与血的交融。战场上响彻着惨叫和呐喊。"
             "正面强攻是最残酷的战法，但你的士兵们凭着一股不屈的意志，硬是撕开了敌军的防线。"
@@ -2032,11 +2179,14 @@ label ending_iron_lord:
         "采用迂回战术，先攻击敌军侧翼":
             $ change_stat("intrigue", 3)
             $ change_stat("power", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "雷恩，带两百人从树林绕到敌军右翼。我在正面吸引他们的注意力。"
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "是！"
+            $ hide_all_chars()
             "你的计划完美地执行了。当雷恩的部队从侧翼杀出时，敌军阵脚大乱。"
             "一场漂亮的迂回战，让你以最小的代价取得了最大的战果。"
 
@@ -2047,13 +2197,17 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "结成防御阵型。盾墙在前，长矛在后。让他们先来攻。"
+            $ hide_all_chars()
             "敌军发起了一波又一波的冲锋，但你的防线像磐石一样岿然不动。"
             "随着进攻的失败，敌军的士气开始下降。终于，你看到了破绽——"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "全军反击！！！"
             "你的反攻势不可挡。疲惫的敌军在你凌厉的攻势下迅速崩溃。"
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "战斗持续了整整一天。从黎明打到黄昏。"
 
     "中午时分，战局一度胶着。"
@@ -2072,13 +2226,17 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "跟我来！"
+            $ hide_all_chars()
             "你带着最后的预备队冲向了左翼。你的出现重新点燃了士兵们的斗志。"
             "在你的带领下，摇摇欲坠的防线重新稳固了下来。"
             "敌军看到你的旗帜出现在左翼，犹豫了一瞬——就是这一瞬间的犹豫，改变了战局。"
 
         "命令右翼迂回，从侧面攻击敌军":
             $ change_stat("intrigue", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "左翼继续坚守！右翼绕到敌军后方——给我咬住他们！"
+            $ hide_all_chars()
             "你的命令被迅速执行。右翼的部队以一个大胆的弧线绕到了敌军身后。"
             "当敌人发现自己被两面夹击时，已经来不及了。"
 
@@ -2093,18 +2251,26 @@ label ending_iron_lord:
             $ change_stat("power", 5)
             "你集中了所有能调动的骑兵，形成了一个锋利的箭头阵型。"
             "目标只有一个——敌军主将。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "随我冲！！！"
+            $ hide_all_chars()
             "铁蹄声如雷。你的骑兵像一把利剑，直接刺入了敌军的心脏。"
             "敌将的护卫拼死抵抗，但挡不住你势不可挡的冲锋。"
             "当你的剑尖指向敌将的咽喉时——他扔下了手中的武器。"
-            "敌将" "……我投降。"
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            enemy_general "……我投降。"
             "主将被俘的消息传开后，敌军的抵抗迅速瓦解。"
 
         "围而不攻，逼迫敌军投降":
             $ change_stat("intrigue", 4)
             $ change_stat("loyalty", 2)
             "你没有急于求成。相反，你命令部队从三面包围敌军，只留下一条退路。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "让他们跑。追击的时候总比死战的伤亡小。"
+            $ hide_all_chars()
             "果然，被包围的敌军开始从那条唯一的退路逃散。"
             "没有了阵型的溃兵毫无威胁。你的骑兵在后面追击，收获了大量俘虏。"
 
@@ -2195,6 +2361,7 @@ label ending_iron_lord:
         elena "……好吧。但之后必须让医官看看。"
         hide elena_img with dissolve
 
+    $ hide_all_chars()
     "战争结束了。你活了下来。"
 
     "接下来的日子里，你率军北上，接收了战败一方的领地。"
@@ -2217,6 +2384,7 @@ label ending_iron_lord:
 
     aldric "领主大人，王都来了使者。"
 
+    $ hide_all_chars()
     "使者带来了一个令人意外的消息——各方势力请求谈判。"
 
     "你的军事胜利让所有人都明白了一个道理——艾登堡不是好惹的。"
@@ -2266,6 +2434,7 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "士兵是无辜的，放他们回家。但挑起战争的人——必须付出代价。"
+            $ hide_all_chars()
             "你在城门前公开处决了三名主要战犯。"
             "从那以后，再没有人敢轻视艾登堡的旗帜。"
             "但也有人在背后说——这个年轻的领主，比他父亲更冷酷。"
@@ -2273,6 +2442,8 @@ label ending_iron_lord:
         "吞并领地——将战败方纳入版图|权力+15 财富+10 管理压力大":
             $ change_stat("power", 15)
             $ change_stat("wealth", 18)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "战败者的领地归入艾登堡管辖。派驻官员，接管税收和防务。"
             hide player_char_img
             $ hide_all_chars("elena_img")
@@ -2376,6 +2547,7 @@ label ending_iron_lord:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "但有时在深夜，你会想起战场上那些倒下的人。"
 
     "你赢了。但你失去了一些永远无法挽回的东西。"
@@ -2405,6 +2577,7 @@ label ending_iron_lord:
         "她握住你的手。在黑暗中，这份温暖让你感到安心。"
         hide elena_img with dissolve
     else:
+        $ hide_all_chars()
         "有时在深夜醒来，你会独自走到城墙上，看着远方沉默的原野。"
         "没有人在身边。但城中安睡的百姓，就是你继续前行的理由。"
 
@@ -2528,7 +2701,7 @@ label ending_shadow_king:
 
     baron "艾登堡领主果然识时务。这份情报价值连城。"
 
-    "男爵" "传令下去——我们在鹰隼峡设伏，打王后军一个措手不及！"
+    baron "传令下去——我们在鹰隼峡设伏，打王后军一个措手不及！"
 
     hide baron_img with dissolve
 
@@ -2553,6 +2726,7 @@ label ending_shadow_king:
 
     hide queen_img with dissolve
 
+    $ hide_all_chars()
     "王后军的骑兵突袭了溪谷镇——但那里早已被你暗中清空。"
 
     "男爵的伏击圈也扑了个空——因为你提供的路线图有一个'微小的错误'。"
@@ -2586,6 +2760,7 @@ label ending_shadow_king:
     show player_char_img at left with dissolve
     player "旗鼓相当。正是我们需要的结果。"
 
+    $ hide_all_chars()
     "双方激战了两天。"
 
     "第一天傍晚——"
@@ -2632,6 +2807,7 @@ label ending_shadow_king:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "正合我意。"
+            $ hide_all_chars()
             "假消息像毒药一样在男爵联军中蔓延。"
             "果然，第二天的战斗中，维克托领主的部队突然撤出了战场。"
             "男爵的防线出现了巨大的缺口——但王后军也因为追击而阵型散乱。"
@@ -2648,6 +2824,7 @@ label ending_shadow_king:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "饥饿的军队不会有耐心进行长期战斗。他们会更加疯狂地进攻——然后更快地崩溃。"
+            $ hide_all_chars()
             "你的小队完美地执行了任务。第二天，双方的士兵开始因为饥饿而变得暴躁。"
             "战斗变得更加血腥和混乱——正是你需要的。"
 
@@ -2696,6 +2873,7 @@ label ending_shadow_king:
             $ change_stat("reputation", 3)
             player "我提议——双方各退三十里。由我和教会共同主持和谈。"
             player "所有争议领地由中立方裁定归属。战俘全部释放。"
+            $ hide_all_chars()
             "这个方案看似公平，实际上——中立方裁定的权力在你手中。"
             "双方都太疲惫了，没有人仔细思考其中的含义。他们只想停战。"
 
@@ -2765,6 +2943,7 @@ label ending_shadow_king:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "十年后。"
 
     "你坐在书房里，面前是一份份密报。"
@@ -2815,6 +2994,7 @@ label ending_shadow_king:
         "你们在沉默中分享着彼此的孤独。在这座权力的巅峰上，只有你们两个人。"
         hide elena_img with dissolve
     else:
+        $ hide_all_chars()
         "夜深了。书房里只有你一个人。"
         "你放下密报，望向窗外。夜色沉沉，只有远处城墙上巡逻兵的火把在移动。这座你亲手编织的权力之网，在黑暗中无声运转。"
         "你赢了一切，却发现——站在巅峰的人，总是孤独的。"
@@ -2871,6 +3051,7 @@ label ending_holy_guardian:
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "你的计划分为三步。"
 
     "第一步——召集。以教会的名义，邀请所有参战方参加一场和平会议。"
@@ -2922,6 +3103,7 @@ label ending_holy_guardian:
 
     queen "主教大人，你让我和叛逆坐在同一张桌子上，这本身就是对王室的侮辱。"
 
+    $ hide_all_chars("baron_img")
     show baron_img angry at left with dissolve
 
     baron "叛逆？是谁先背叛了先王的遗志？"
@@ -2942,6 +3124,8 @@ label ending_holy_guardian:
         "用理性分析说服双方":
             $ change_stat("intrigue", 3)
             $ change_stat("faith", 8)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "让我们算一笔账。这场战争打了十天，双方各损失了多少？"
             player "如果继续打下去，最后的结果只有一个——两败俱伤，让外敌趁虚而入。"
             player "和平对所有人都有利。这不是信仰的问题，是常识。"
@@ -2951,6 +3135,7 @@ label ending_holy_guardian:
     hide queen_img with dissolve
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "谈判持续了整整三天。"
 
     "第一天——互相指责。"
@@ -2960,9 +3145,11 @@ label ending_holy_guardian:
 
     "双方代表一坐下就开始互相指责。"
 
-    "王后方代表" "叛军必须无条件投降！这是王室的底线！"
+    $ hide_all_chars("noble_werner_img")
+    show noble_werner_img at left with dissolve
+    queen_rep "叛军必须无条件投降！这是王室的底线！"
 
-    "男爵方代表" "投降？王后先交出篡改遗诏的证据！"
+    baron_rep "投降？王后先交出篡改遗诏的证据！"
 
     "眼看谈判就要破裂——"
 
@@ -2977,8 +3164,11 @@ label ending_holy_guardian:
 
         "提出一个折衷方案缓和气氛":
             $ change_stat("intrigue", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "两位，我理解你们的立场。但请允许我提一个建议——"
             player "我们先不讨论谁对谁错。我们先讨论一个更基本的问题——如何停止流血。"
+            $ hide_all_chars()
             "双方犹豫了一下，但最终点了头。至少，他们愿意继续谈。"
 
     "第二天——讨价还价。"
@@ -3029,6 +3219,7 @@ label ending_holy_guardian:
             $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "教廷敕令——任何继续战争的人，将被逐出教会，其灵魂永堕地狱。"
+            $ hide_all_chars()
             "大厅里一片死寂。在这个信仰的时代，这个威胁比任何军事力量都要可怕。"
             "双方的代表面面相觑。他们可以不怕死——但没有人不怕下地狱。"
 
@@ -3057,13 +3248,16 @@ label ending_holy_guardian:
 
     player "第五——教会监督一切。任何违反协议的人，将被逐出教会。"
 
+    $ hide_all_chars()
     "大厅里没有人说话。蜡烛芯爆了一下，溅出一粒火星。"
 
     "然后——"
 
-    "王后方代表" "……王后陛下可以接受这些条件。但第四条需要修改——"
+    $ hide_all_chars("noble_werner_img")
+    show noble_werner_img at left with dissolve
+    queen_rep "……王后陛下可以接受这些条件。但第四条需要修改——"
 
-    "男爵方代表" "男爵阁下原则上同意。但需要在第三条中加入——"
+    baron_rep "男爵阁下原则上同意。但需要在第三条中加入——"
 
     "又一轮讨价还价。但这次，方向已经明确了——和平。"
 
@@ -3083,6 +3277,7 @@ label ending_holy_guardian:
 
     bishop "和平协议……达成了。"
 
+    $ hide_all_chars()
     "教堂的钟声响了起来。庄严而悠远，回荡在整个城镇。"
 
     "外面的百姓们听到钟声，爆发出了欢呼。"
@@ -3137,6 +3332,7 @@ label ending_holy_guardian:
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "但代价是——教会的影响力渗透到了生活的每一个角落。"
 
     "法律要符合教义，教育要以经文为本，商业要得到教会的许可。"
@@ -3197,6 +3393,7 @@ label ending_holy_guardian:
         "她微笑了。那个笑容让你相信——一切都值得。"
         hide elena_img with dissolve
 
+    $ hide_all_chars()
     "圣光守护者的道路，是一条永无止境的旅途。"
 
     "但只要还有人在黑暗中需要光明，你就不会停下脚步。"
@@ -3246,6 +3443,7 @@ label ending_peoples_lord:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你下达了一系列命令——"
 
     "第一，加固城墙。每一块松动的石头都要重新加固。"
@@ -3281,6 +3479,7 @@ label ending_peoples_lord:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "城门外，排着长长的队伍。"
 
     "老人、孩子、妇女、伤兵——他们拖着疲惫的身躯，带着仅有的一点家当。"
@@ -3289,7 +3488,9 @@ label ending_peoples_lord:
 
     "一个抱着婴儿的年轻母亲跪在城门口。"
 
-    "年轻母亲" "大人！求求您收留我们！我的孩子……他已经两天没吃东西了……"
+    $ hide_all_chars("blacksmith_wife_img")
+    show blacksmith_wife_img at left with dissolve
+    young_mother "大人！求求您收留我们！我的孩子……他已经两天没吃东西了……"
 
     menu:
         "亲自接过孩子，下令安置难民":
@@ -3300,14 +3501,18 @@ label ending_peoples_lord:
             show player_char_img at left with dissolve
             player "不用跪。在艾登堡，没有人需要下跪。"
             player "来人，把她们安排到暖和的地方去。给孩子找些热牛奶。"
+            $ hide_all_chars()
             "年轻母亲泣不成声地感谢你。你的举动被城中的人看在眼里。"
             "那一天，你不再只是一个领主——你成了所有无家可归者的希望。"
 
         "下令开放粮仓，分发食物":
             $ change_stat("loyalty", 3)
             $ change_stat("wealth", -5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "开放粮仓！每个难民一碗粥、一块面包。"
             player "安排住处——教堂、仓库、马厩——只要能遮风挡雨的地方都用上。"
+            $ hide_all_chars()
             "城中迅速忙碌起来。在你的组织下，难民们被有序地安置。"
 
     "接下来的日子，是艰难的守城战。"
@@ -3321,7 +3526,9 @@ label ending_peoples_lord:
 
     "他们的旗帜上满是泥土和血迹，士兵们的眼中有一种掠夺的狂热。"
 
-    "指挥官" "城中之人听着！打开城门，交出粮食和财物，我们可以不伤害你们！"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    commander "城中之人听着！打开城门，交出粮食和财物，我们可以不伤害你们！"
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -3337,6 +3544,7 @@ label ending_peoples_lord:
             show player_char_img at left with dissolve
             player "告诉他们——艾登堡不接受威胁。"
             player "如果他们敢进攻，我会让他们知道什么叫做代价。"
+            $ hide_all_chars()
             "你的声音从城墙上传下去，清晰而坚定。"
             "敌军的指挥官犹豫了。他看着城墙上密密麻麻的守军，做出了判断——"
             "攻城的代价太高。他们转向了别处。"
@@ -3344,6 +3552,8 @@ label ending_peoples_lord:
         "用外交手段化解危机":
             $ change_stat("intrigue", 3)
             $ change_stat("wealth", -3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "派人出去谈判。给他们一些粮食——作为'过路费'。让他们走。"
             hide player_char_img
             $ hide_all_chars("captain_img")
@@ -3357,18 +3567,24 @@ label ending_peoples_lord:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "第九天，又有一批难民到来。这次是从南方来的——王后军经过的地方也不好过。"
 
     "一个受伤的男人被同伴搀扶着走进来。他的左臂缠着血迹斑斑的绷带。"
 
-    "受伤男人" "大人……我们村被烧了……我老婆还在里面……没出来……"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    wounded_man "大人……我们村被烧了……我老婆还在里面……没出来……"
 
     "他说着说着就哭了。你的牙关咬紧，颊骨绷出一条线。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "不管是哪边干的——这种行为是不可饶恕的。"
 
     player "战争是领主之间的事。伤害百姓的军队，不配称为军队。"
 
+    $ hide_all_chars()
     "你的话被城中的人传开了。越来越多的人开始相信——在这场战争中，只有艾登堡是安全的。"
 
     "第十天，城中的人口已经翻了一倍。粮食开始变得紧张。"
@@ -3399,6 +3615,8 @@ label ending_peoples_lord:
         "组织城内生产自给自足":
             $ change_stat("intrigue", 2)
             $ change_stat("wealth", 8)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "在城内所有空地上种植快速生长的蔬菜。组织妇女和老人进行加工和保存食物。"
             player "另外，派人在夜间从城外的森林里打猎和采集。"
             hide player_char_img
@@ -3408,6 +3626,7 @@ label ending_peoples_lord:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "第十一天，城里出现了一个感人的场景——"
 
     "一群孩子自发地组成了'小小搬运队'，帮忙把物资从仓库搬到各个分发点。"
@@ -3441,6 +3660,7 @@ label ending_peoples_lord:
     show player_char_img at left with dissolve
     player "调预备队去支援！弓箭手压制云梯下的士兵！"
 
+    $ hide_all_chars()
     "你在城墙上来回奔跑，指挥防御。箭矢从你耳边呼啸而过。"
 
     "第一天，你击退了四次进攻。"
@@ -3464,6 +3684,7 @@ label ending_peoples_lord:
     show captain_img at left with dissolve
     captain "他们撤退了！"
 
+    $ hide_all_chars()
     "你从城垛上探出头去。敌军确实在撤退——匆忙而混乱。"
 
     "原来，战场上的形势发生了变化。另一支军队在他们的后方出现，迫使他们不得不撤退。"
@@ -3506,6 +3727,7 @@ label ending_peoples_lord:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你击退了每一支试图劫掠你领地的军队——无论他们举着谁的旗帜。"
 
     "在你的城墙之下，有被你收留的王后军逃兵，也有男爵联军的伤兵。"
@@ -3565,6 +3787,7 @@ label ending_peoples_lord:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "十年后。"
 
     "艾登堡已经不再是一个领地——它是一个小小的国度。"
@@ -3605,6 +3828,7 @@ label ending_peoples_lord:
         "她靠在你的肩上，微笑着看着这片你们共同守护的土地。"
         hide elena_img with dissolve
     else:
+        $ hide_all_chars()
         "你站在城楼上，看着脚下这座繁荣的城镇。"
         "孩子们在街道上奔跑嬉戏，商人们在集市上讨价还价，农民们在田间劳作。"
         "这就是你选择的'胜利'——不是征服，而是守护。"
@@ -3676,6 +3900,7 @@ label ending_truth:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你的计划是这样的——"
 
     "在两军交战之前，以'紧急和谈'的名义召集所有关键人物。"
@@ -3763,16 +3988,20 @@ label ending_truth:
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "证据就在这里。"
+                $ hide_all_chars()
                 "你拿出了毒药的鉴定报告、购买记录，以及一个证人的书面证词。"
                 "每一份都是铁证。"
 
         "用道义压力迫使真相浮出水面":
             $ change_stat("faith", 10)
             $ change_stat("reputation", 5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "王后陛下，我没有必要伪造这样的东西。"
             player "如果我想的是权力，我有一百种更简单的方法。"
             player "我公布真相，是因为我的父亲为此付出了生命。二十年了。"
             player "一个儿子为父亲讨回公道——这有什么错吗？"
+            $ hide_all_chars()
             "你的话语击中了在场每一个人的心。许多人的脸上露出了同情的表情。"
             "王后的反驳在这种道义压力面前，显得苍白无力。"
 
@@ -3808,6 +4037,7 @@ label ending_truth:
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
         player "主教大人，你是否愿意在圣母面前发誓，你对此一无所知？"
+        $ hide_all_chars()
         "主教低下了头。"
         "漫长的沉默。"
         "然后——"
@@ -3818,6 +4048,17 @@ label ending_truth:
         "他的沉默和坦白，就是最响亮的证词。"
 
     hide bishop_img with dissolve
+
+    ## 王子盟友路线的隐形好感预警：议会抉择前的侧笔，提示玩家当前王子心态
+    if prince_ally and not prince_betrayed:
+        if rel_prince < 25:
+            "议会召开前夕，你托人给王子捎了口信。"
+            "来人带回的只有一句话：'他听完了。'"
+            "他听完了。没别的。"
+        elif rel_prince < 40:
+            "你最近一次见到王子，是在一场酒宴的远处角落。"
+            "他朝你举了举杯，然后转过头去和别人说话。"
+            "那杯酒他没喝完。"
 
     if prince_ally and not prince_betrayed:
         ## 好感度过低：王子被迫反水
@@ -3830,12 +4071,15 @@ label ending_truth:
     $ hide_all_chars("queen_img")
     show queen_img at left with dissolve
 
+    $ hide_all_chars()
     "大厅里的空气仿佛凝固了。所有人都看向王后，等待她的反应。"
 
     "但伊莎贝拉王后没有崩溃。她甚至没有慌张。"
 
     "她缓缓站起身来，环顾大厅，目光扫过每一张面孔——那是一个统治了二十年的女人才有的目光。"
 
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "说完了？"
 
     "她的声音平静得令人不寒而栗。"
@@ -3893,12 +4137,15 @@ label ending_truth:
             player "但我想请问——如果任何人都可以用'为了大局'来杀人，那法律还有什么意义？"
             player "今天你为了王国杀了我父亲。明天别人也可以为了'大局'杀你。后天呢？"
             player "如果这个先例被允许，那在座的每一位——你们谁能保证自己不会成为下一个'必要的牺牲'？"
+            $ hide_all_chars()
             "你的话像一盆冷水泼在了那些开始动摇的人脸上。"
             "几个领主交换了眼神，缓缓点了头。"
 
         "承认她的功绩，但要求以法律裁决":
             $ change_stat("reputation", 3)
             $ change_stat("loyalty", 5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "王后陛下，我不否认你的功绩。这二十年的和平，有你的心血。"
             player "但我的父亲也是一个为了王国甘愿付出一切的人。他不该死得不明不白。"
             player "我不是来复仇的。我是来让真相回到它该在的地方。"
@@ -3906,6 +4153,8 @@ label ending_truth:
 
         "提出谈判——给她一条体面的退路":
             $ change_stat("intrigue", 8)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "王后陛下，你说得对。你确实为这个国家付出了很多。"
             player "所以我不想把事情做绝。"
             player "你可以选择体面地退位。保留王太后的尊号，保留你的私产。"
@@ -3915,10 +4164,13 @@ label ending_truth:
 
         "要求严惩——正义不能打折":
             $ change_stat("power", 5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "够了，王后。你的功绩不能为你赎罪。"
             player "篡改遗诏是叛国。毒杀忠良是谋杀。无论动机如何，罪就是罪。"
             player "在场的各位是见证人——今天，正义不会再缺席。"
 
+    $ hide_all_chars()
     "王后沉默了很长时间。"
 
     "她的目光掠过大厅里的每一张脸——她在寻找支持者。"
@@ -3930,10 +4182,13 @@ label ending_truth:
     show queen_img at left with dissolve
     queen "……"
 
+    $ hide_all_chars()
     "终于，她重新坐回了王座。不是瘫坐——而是端正地、一丝不苟地坐好。"
 
     "就像她这二十年来每一天做的那样。"
 
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "我不会求饶。求饶不是伊莎贝拉做的事。"
 
     queen "但我有一个条件。"
@@ -3942,10 +4197,13 @@ label ending_truth:
 
     queen "这一切，从头到尾，都是我一个人的决定。"
 
+    $ hide_all_chars()
     "即便在最后一刻，她想的仍然不是自己。"
 
     "你不禁对这个女人生出了一种复杂的情绪——恨不起来，也原谅不了。"
 
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
     queen "裁决吧。"
 
     "她的声音平静如水。没有眼泪，没有哀求。一个政治家最后的尊严。"
@@ -4092,6 +4350,7 @@ label ending_truth:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
         elena "……笨蛋。"
+        $ hide_all_chars()
         "但她笑了。那个笑容比春天的花更灿烂。"
         "春天来了。新的故事正在开始。"
         hide elena_img with dissolve

@@ -68,9 +68,12 @@ label ending_truth_epilogue:
 
         prince "各位爱卿，南北两方的争端已经持续了三个月。朕需要一个解决方案。"
 
+        $ hide_all_chars()
         "弗雷德里克国王——曾经那个迷茫的王子，如今已成长为一位沉稳的君主。"
         "但在遇到棘手问题时，他依然会习惯性地看向你。"
 
+        $ hide_all_chars("prince_img")
+        show prince_img at left with dissolve
         prince "[player_name]公爵，你怎么看？"
 
         hide prince_img
@@ -121,6 +124,7 @@ label ending_truth_epilogue:
             show prince_img at left with dissolve
             prince "人不能只被最后的错误定义。这也是你教会朕的。"
 
+            $ hide_all_chars()
             "你微微颔首。五年前的那些事——背叛、阴谋、真相——如今都成了历史的一页。"
             "但历史的教训，永远不应被遗忘。"
 
@@ -140,6 +144,7 @@ label ending_truth_epilogue:
         player "我提议设立公开价格委员会，让双方的成本和利润全部透明化。"
         player "只有在阳光下，才不会有暗箱操作的空间。"
 
+        $ hide_all_chars()
         "委员们纷纷点头。五年来，你用'透明'二字治理这个国家，成效有目共睹。"
         "腐败减少了，税收增加了，百姓的信任也在一点一点建立起来。"
 
@@ -194,9 +199,12 @@ label ending_truth_epilogue:
         show elena_img at left with dissolve
         elena "你开会的时候。"
 
+        $ hide_all_chars()
         "你苦笑着摇头。当年那个在暗巷里收集情报的间谍少女，如今已是王国的情报总监。"
         "也是你的妻子。"
 
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "怎么，不高兴我先斩后奏？"
 
         hide elena_img
@@ -223,6 +231,7 @@ label ending_truth_epilogue:
         show elena_img at left with dissolve
         elena "嗯。值得。"
 
+        $ hide_all_chars()
         "五年前你们在黑暗中并肩作战，如今在阳光下携手同行。"
         "有些东西——比权力、比爵位、比一切荣耀都更珍贵。"
 
@@ -261,11 +270,14 @@ label ending_truth_epilogue:
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
+    $ hide_all_chars()
     "奥尔德里克。"
 
     "六十五岁的老管家，白发苍苍，背已微驼。"
     "但他坚持要陪你走这段路。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "领主大人……不，公爵大人。您走慢些。"
 
     hide aldric_img
@@ -278,6 +290,7 @@ label ending_truth_epilogue:
     show aldric_img at left with dissolve
     aldric "那……可不行。规矩不能乱。"
 
+    $ hide_all_chars()
     "你笑着摇头，放慢了脚步。"
 
     "小路尽头，是一座简朴的墓碑。"
@@ -317,9 +330,12 @@ label ending_truth_epilogue:
 
     player "我继承了你的选择。这就够了。"
 
+    $ hide_all_chars()
     "你从怀中取出一封信——那是多年前从父亲书房里找到的最后一封家书。"
     "信纸已经泛黄，字迹却依然清晰。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你在信里说，'最重要的不是你拥有什么，而是你守护什么。'"
 
     player "我一直记得。"
@@ -377,6 +393,7 @@ label ending_truth_epilogue:
 
     aldric "能看到您成为今天的您——这已经是最好的结局了。"
 
+    $ hide_all_chars()
     "你没有说话。你只是上前一步，紧紧握住了老管家的手。"
 
     "那双手——曾经为你准备早餐、为你整理衣冠、在你彷徨时拍着你肩膀的手——"
@@ -394,6 +411,7 @@ label ending_truth_epilogue:
     show aldric_img at left with dissolve
     aldric "……领主大人。"
 
+    $ hide_all_chars()
     "老管家再也忍不住，佝偻着身子，默默哭了起来。"
 
     "秋风卷着落叶，在你们周围轻轻旋转。"
@@ -427,11 +445,14 @@ label ending_truth_epilogue:
 
     player "但真相只是一扇门。门后面，永远有新的问题等着你。"
 
+    $ hide_all_chars()
     "你站起身，走到窗前。"
 
     "远处传来守夜人换岗的脚步声，铁器上凝了一层露水。"
     "远处传来守夜人悠长的号角声。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "真相的代价从未停止。"
 
     player "但我已经不害怕了。"
@@ -439,6 +460,7 @@ label ending_truth_epilogue:
     player "因为我知道——只要我们敢于面对真相，就没有什么是不可战胜的。"
 
     if prince_ally and not prince_betrayed:
+        $ hide_all_chars()
         "你回到书桌前，提起笔，开始给弗雷德里克国王写信。"
 
         "信的开头是——"
@@ -536,6 +558,7 @@ label ending_iron_epilogue:
     show player_char_img at left with dissolve
     player "好。让他们开始。"
 
+    $ hide_all_chars()
     "号角响起。铁骑如潮水般涌过检阅台前，马蹄声震动大地。"
 
     "每一个士兵都向你行注目礼——眼中带着敬畏，也带着一丝……恐惧。"
@@ -561,6 +584,7 @@ label ending_iron_epilogue:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "阅兵结束后，你独自走回营帐。"
 
     "营帐里有一面铜镜。你在镜前站定，看着镜中的自己。"
@@ -576,12 +600,15 @@ label ending_iron_epilogue:
     show player_char_img at left with dissolve
     player "……父亲？"
 
+    $ hide_all_chars()
     "不。那不是父亲。"
 
     "那是你想象中父亲看着你时的表情。"
     "不是骄傲。不是欣慰。"
     "是……失望。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "……"
 
     "你闭上眼，然后转身离开了铜镜。"
@@ -596,31 +623,45 @@ label ending_iron_epilogue:
 
     "拉维尼亚帝国。东方最强大的国家。他们的疆域是你的王国的三倍。"
 
-    "特使" "久仰大名，公爵大人。拉维尼亚皇帝陛下派我前来，是为了表达友好之意。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    envoy "久仰大名，公爵大人。拉维尼亚皇帝陛下派我前来，是为了表达友好之意。"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "友好？你们的军队刚刚吞并了三个邻国。这就是你们表达友好的方式？"
 
-    "特使" "那些小国……不值一提。皇帝陛下感兴趣的，是与贵国建立平等的同盟关系。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    envoy "那些小国……不值一提。皇帝陛下感兴趣的，是与贵国建立平等的同盟关系。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "平等？"
 
-    "特使" "当然。毕竟在整个西方，只有您的军事力量值得我们尊重。"
+    $ hide_all_chars()
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    envoy "当然。毕竟在整个西方，只有您的军事力量值得我们尊重。"
 
-    "特使" "您在五年内建立了一支五千人的精锐铁骑。这在军事史上堪称奇迹。"
+    envoy "您在五年内建立了一支五千人的精锐铁骑。这在军事史上堪称奇迹。"
 
-    "特使" "皇帝陛下说——'能让铁骑之主成为朋友，远比让他成为敌人更明智。'"
+    envoy "皇帝陛下说——'能让铁骑之主成为朋友，远比让他成为敌人更明智。'"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "转告你的皇帝——我对同盟没有兴趣。"
 
     player "但如果他的军队敢踏入我的国土一步——"
 
     player "他将会明白'铁骑之主'这个称号不是浪得虚名。"
 
+    $ hide_all_chars()
     "特使的笑容僵了一瞬，随即更深地鞠了一躬。"
 
-    "特使" "大人果然如传闻中一样……令人敬畏。我会如实转告陛下的。"
+    $ hide_all_chars("servant_generic_img")
+    show servant_generic_img at left with dissolve
+    envoy "大人果然如传闻中一样……令人敬畏。我会如实转告陛下的。"
 
     "特使离开后，大厅安静了下来。"
 
@@ -735,10 +776,13 @@ label ending_iron_epilogue:
     show player_char_img at left with dissolve
     player "刘易斯……佩恩……莫根……"
 
+    $ hide_all_chars()
     "你认识其中一些名字。他们曾经是活生生的人——有家人，有梦想，有害怕的事情。"
 
     "如今，他们只是石碑上一个个冰冷的字。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "三百七十二人。"
 
     player "三百七十二条命。"
@@ -747,6 +791,7 @@ label ending_iron_epilogue:
 
     player "值得吗？"
 
+    $ hide_all_chars()
     "没有人回答你。只有风声。"
 
     "你在纪念碑前站了很久，直到夕阳完全沉入地平线。"
@@ -834,6 +879,7 @@ label ending_iron_epilogue:
 
     aldric "而如今……"
 
+    $ hide_all_chars()
     "老管家没有说完。但你听懂了。"
 
     "你变成了你祖父的样子。"
@@ -857,6 +903,7 @@ label ending_iron_epilogue:
 
             player "我不会犯同样的错误。"
 
+            $ hide_all_chars()
             "你转身离开了村庄。步伐沉稳而决绝。"
 
             "身后，一扇窗户悄悄开了一条缝。一双孩子的眼睛从缝隙中看着你远去的背影。"
@@ -870,25 +917,34 @@ label ending_iron_epilogue:
         "不。这不是我想要的。必须改变。":
             $ epilogue_iron_choice = "change"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "……不。"
 
             player "这不是我想要的。"
 
             player "我拿起剑，是为了保护他们——不是为了让他们害怕我。"
 
+            $ hide_all_chars()
             "你朝村庄里走去。"
 
             "你敲开了第一扇门。一个颤抖的农妇打开了门。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "不用怕。我只是……想问问，你们过得好吗？"
 
+            $ hide_all_chars()
             "农妇愣住了。她大概从未想过——那个令人闻风丧胆的铁血公爵会站在她家门口，"
             "用这么温和的语气说话。"
 
             "\"大人……我们……我们很好……\""
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "如果有什么困难，可以告诉我。我来这里，不是来吓人的。"
 
+            $ hide_all_chars()
             "那天晚上，你在村子里待了很久。"
             "你听了农民们的抱怨，看了他们破旧的房屋，摸了他们龟裂的手。"
 
@@ -1009,6 +1065,7 @@ label ending_shadow_epilogue:
     show player_char_img at left with dissolve
     player "不错。但你在宣读第三条政令时犹豫了一下。下次注意。"
 
+    $ hide_all_chars()
     "\"是，大人。\""
 
     "你挥了挥手，他退了出去。"
@@ -1017,9 +1074,12 @@ label ending_shadow_epilogue:
 
     "你走到王座前，用手轻轻触碰了一下扶手——但没有坐下。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "坐上去太显眼了。"
 
     if dark_lily_joined:
+        $ hide_all_chars()
         "你转身走向暗门。一条只有你知道的密道通向你真正的'办公室'——"
         "城堡地下深处的暗百合总部。"
 
@@ -1047,6 +1107,7 @@ label ending_shadow_epilogue:
 
         player "东部边境有一支来历不明的雇佣兵——查清他们的雇主。"
 
+        $ hide_all_chars()
         "你一条一条地下达指令。冷静、精准、毫无犹豫。"
 
         "整个王国就像一台精密的机器，而你是唯一掌握所有齿轮的人。"
@@ -1084,6 +1145,7 @@ label ending_shadow_epilogue:
 
         player "东部边境有一支来历不明的雇佣兵——查清他们的雇主。"
 
+        $ hide_all_chars()
         "你一条一条地下达指令。冷静、精准、毫无犹豫。"
 
         "整个王国就像一台精密的机器，而你是唯一掌握所有齿轮的人。"
@@ -1113,9 +1175,12 @@ label ending_shadow_epilogue:
         show elena_img at left with dissolve
         elena "因为我在等你。"
 
+        $ hide_all_chars()
         "她转过身。你等眼睛适应了黑暗才看清她的脸。"
         "美丽——但不再像从前那样明亮。有什么东西在她眼底，像一潭深水。"
 
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "我有话要对你说。"
 
         hide elena_img
@@ -1204,6 +1269,7 @@ label ending_shadow_epilogue:
 
         hide elena_img with dissolve
 
+        $ hide_all_chars()
         "你站在花园里，一个人。"
         "月亮很亮。但你的影子很长。"
 
@@ -1226,6 +1292,7 @@ label ending_shadow_epilogue:
         $ hide_all_chars("lily_master_img")
         show lily_master_img at left with dissolve
 
+        $ hide_all_chars()
         "暗百合的上一任首领——老影主。"
 
         "你已经五年没有见过这个人了。"
@@ -1338,6 +1405,7 @@ label ending_shadow_epilogue:
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
 
+        $ hide_all_chars()
         "你的老师——退休的间谍大师奥尔德里克。"
 
         "五年前，是他教会你情报战的一切技巧——伪装、渗透、信息操控。"
@@ -1348,6 +1416,8 @@ label ending_shadow_epilogue:
         "他消瘦憔悴，脸色灰白，走路时要扶着拐杖。"
         "曾经那个精明干练的间谍，如今看上去风烛残年。"
 
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
         aldric "好久不见了……我的学生。"
 
         hide aldric_img
@@ -1439,6 +1509,7 @@ label ending_shadow_epilogue:
         hide aldric_img with dissolve
 
 
+    $ hide_all_chars()
     "门关上了。密室里只剩下你一个人。"
 
     ## —— 第四幕：父亲的信 ——
@@ -1481,6 +1552,7 @@ label ending_shadow_epilogue:
 
     player "……对不起。"
 
+    $ hide_all_chars()
     "你看了看四周——地图、暗器、密码本、情报卷宗。"
 
     "这就是你的世界。一个没有阳光的世界。"
@@ -1586,10 +1658,13 @@ label ending_faith_epilogue:
 
     player "你们准备好了吗？"
 
+    $ hide_all_chars()
     "\"我们准备好了！\""
 
     "你举起长剑，依次触碰每个人的肩膀。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "以真理之名，以正义之名，以你们心中不灭的光——"
 
     player "起立吧，真理骑士。"
@@ -1681,12 +1756,15 @@ label ending_faith_epilogue:
     show player_char_img at left with dissolve
     player "东翼的穹顶还需要加固。冬天的雪很重，不能有任何隐患。"
 
+    $ hide_all_chars()
     "\"是，大人！\""
 
     "你蹲下身，检查一块基石的接缝。"
 
     "\"大人，您不用亲自动手的……\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "我父亲说过——'如果你不亲手触摸泥土，你就不会理解脚下的大地。'"
 
     if elena_romance:
@@ -1770,6 +1848,7 @@ label ending_faith_epilogue:
         show elena_img at left with dissolve
         elena "……信你一次。"
 
+        $ hide_all_chars()
         "她的笑容在阳光下很温暖。"
         "你们的爱不是轰轰烈烈的传奇。"
         "但就像这座正在建造的教堂——一砖一瓦，日积月累，坚不可摧。"
@@ -1793,6 +1872,7 @@ label ending_faith_epilogue:
     show player_char_img at left with dissolve
     player "当然可以。"
 
+    $ hide_all_chars()
     "男孩犹豫了一下，然后鼓起勇气——"
 
     "\"上帝真的存在吗？\""
@@ -1805,6 +1885,8 @@ label ending_faith_epilogue:
         "\"是的。上帝存在，他一直在看着我们。\"":
             $ epilogue_faith_answer = "yes"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "是的。上帝存在。"
 
             player "你看不见他，摸不到他。但你能感受到他。"
@@ -1815,23 +1897,29 @@ label ending_faith_epilogue:
 
             player "他不在天上。他在你心里。在每一个善良的念头里。"
 
+            $ hide_all_chars()
             "男孩想了想，点了点头。"
 
             "\"那……他为什么不帮我妈妈？妈妈生病的时候，我每天都祈祷。但她还是走了。\""
 
             "你蹲下身，和他平视。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我不知道。"
 
             player "但我知道——你的妈妈一定也在某个地方看着你。"
 
             player "就像上帝一样。看不见，但一直都在。"
 
+            $ hide_all_chars()
             "男孩的眼睛红了。但他没有哭。他只是紧紧抱住了你。"
 
         "\"我不知道。但善良是真实的。\"":
             $ epilogue_faith_answer = "goodness"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "老实说……我不知道。"
 
             player "这个问题太大了，连最聪明的人都回答不了。"
@@ -1844,21 +1932,27 @@ label ending_faith_epilogue:
 
             player "但不管上帝存不存在——做一个善良的人，永远不会错。"
 
+            $ hide_all_chars()
             "男孩歪着头想了一会儿。"
 
             "\"那……善良也会消失吗？就像我妈妈一样？\""
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "不会。善良不会消失。"
 
             player "你妈妈对你的爱——那份善良——现在就在你心里。"
 
             player "只要你记得她，善良就会一直存在。"
 
+            $ hide_all_chars()
             "男孩低下头，小声说了一句：'我会记得的。'"
 
         "\"答案在你自己心里。\"":
             $ epilogue_faith_answer = "heart"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这是一个很好的问题。我很高兴你敢问。"
 
             player "但这个问题的答案——不在我这里。"
@@ -1871,14 +1965,18 @@ label ending_faith_epilogue:
 
             player "到时候——不管答案是什么——记得要对自己诚实。"
 
+            $ hide_all_chars()
             "男孩眨了眨大眼睛。"
 
             "\"可是……如果我找到的答案和别人不一样呢？\""
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "那就更好了。真理从来不害怕不同的声音。"
 
             player "记住——永远不要因为害怕而放弃思考。"
 
+            $ hide_all_chars()
             "男孩认真地点了点头。\"我记住了。\""
 
     "你摸了摸男孩的头。蜡烛的光芒柔和而温暖。"
@@ -1902,6 +2000,7 @@ label ending_faith_epilogue:
     show player_char_img at left with dissolve
     player "……"
 
+    $ hide_all_chars()
     "你不知道该说什么。"
     "五年来你说过无数次祈祷词，但此刻——"
     "你只是静静地跪着。"
@@ -1922,10 +2021,13 @@ label ending_faith_epilogue:
     "不是某本经书里写的答案。"
     "而是一个孩子敢于提问的勇气本身——就是答案。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "在所有的结局中，这个最安静。"
 
     player "也许……这就够了。"
 
+    $ hide_all_chars()
     "你站起身，走出了教堂。"
 
     "外面，暮色四合。第一颗星星出现在天际。"
@@ -2047,6 +2149,7 @@ label ending_peoples_epilogue:
     show player_char_img at left with dissolve
     player "等等——我不会这个步子——"
 
+    $ hide_all_chars()
     "\"不要紧！跟着节拍就好！\""
 
     "周围的人都笑了。不是嘲笑——是那种看到一个朋友出糗时，发自内心的快乐。"
@@ -2077,9 +2180,12 @@ label ending_peoples_epilogue:
 
         "你站在人群后面，用力忍住了眼眶中的热意。"
 
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "……这比什么公爵头衔都值钱。"
 
     if built_clinic:
+        $ hide_all_chars()
         "丰收节的另一个亮点——是诊所新馆的落成仪式。"
 
         "五年前你建造的简陋诊所，如今已经扩建成了一座正式的医馆。"
@@ -2089,6 +2195,8 @@ label ending_peoples_epilogue:
 
         "\"玛格丽特大夫\"" "大人，新馆今天正式开业！我想请您剪彩。"
 
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "剪彩？我又不是什么大人物。"
 
         "\"玛格丽特大夫\"" "在艾登堡，您是最大的人物。"
@@ -2099,6 +2207,7 @@ label ending_peoples_epilogue:
 
         player "所以呢？"
 
+        $ hide_all_chars()
         "\"玛格丽特大夫\"" "所以您的膝盖不是伤了，是缺乏锻炼。"
 
         "周围的人都笑了。你也笑了。"
@@ -2117,9 +2226,12 @@ label ending_peoples_epilogue:
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
+    $ hide_all_chars()
     "老管家坐在门前的摇椅上，膝盖上盖着一条毛毯。"
     "他的白发在秋风中轻轻飘动。面前放着一杯已经凉了的茶。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "大人……您来了。"
 
     hide aldric_img
@@ -2204,6 +2316,7 @@ label ending_peoples_epilogue:
 
     aldric "我终于可以种花了。"
 
+    $ hide_all_chars()
     "他的声音很轻。但每一个字都像一颗种子，落在你心里。"
 
     "你没有说话。你只是把手搭在他的肩上。"
@@ -2211,6 +2324,8 @@ label ending_peoples_epilogue:
     "老管家再也忍不住，浑浊的泪水顺着满是皱纹的脸颊流了下来。"
     "他哭得像一个孩子——虽然他已经七十岁了。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "大人……谢谢您。"
 
     aldric "能在这里看着您长大……能看到艾登堡变成今天的样子……"
@@ -2233,6 +2348,7 @@ label ending_peoples_epilogue:
     show player_char_img at left with dissolve
     player "值了。"
 
+    $ hide_all_chars()
     "秋风卷起几片花瓣，落在老管家的膝盖上。"
 
     "他笑着拂去花瓣，像是在整理一件很珍贵的东西。"
@@ -2278,6 +2394,7 @@ label ending_peoples_epilogue:
     show aldric_img at left with dissolve
     aldric "嗯。我会种很多。每一朵都用您和老领主的名字来命名。"
 
+    $ hide_all_chars()
     "你站起身，拍了拍他的肩膀，然后转身离开。"
 
     "走了几步，你回头看了一眼——"
@@ -2329,10 +2446,13 @@ label ending_peoples_epilogue:
 
     player "第四，耐心。好的治理不是一天建成的。它需要时间，需要信任，需要无数次的犯错和改正。"
 
+    $ hide_all_chars()
     "管事认真地记录着。"
 
     "\"可是……如果农民不配合呢？如果有人偷税呢？如果——\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你问的这些问题——其实只有一个答案。"
 
     player "一个领主的力量不在于他有多少士兵，而在于有多少人愿意为他而战。"
@@ -2341,10 +2461,13 @@ label ending_peoples_epilogue:
 
     player "当百姓爱戴你的时候，你不需要士兵——因为每一个人都是你的守护者。"
 
+    $ hide_all_chars()
     "管事站起身，深深鞠了一躬。"
 
     "\"多谢公爵大人赐教。我会一字不差地转告我家伯爵。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "回去告诉你们伯爵——如果他愿意，可以亲自来。"
 
     player "我会带他去田里走走。那里比大厅更适合学习治理。"
@@ -2408,6 +2531,7 @@ label ending_peoples_epilogue:
     show player_char_img at left with dissolve
     player "谢谢。这是我吃过的最好的面包。"
 
+    $ hide_all_chars()
     "老太太笑了。满脸的皱纹挤在一起，像一朵盛开的花。"
 
     "\"大人，您是好人。这辈子能遇到您这样的领主，是我们艾登堡的福气。\""
@@ -2426,8 +2550,11 @@ label ending_peoples_epilogue:
     "金色的屋顶。升起的炊烟。远处田野里收割后的金色残茬。"
     "以及——到处可见的笑脸。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "这就是值得守护的一切。"
 
+    $ hide_all_chars()
     "你继续朝前走。"
 
     "夕阳越来越低，但你的影子越来越长。"
@@ -2439,6 +2566,45 @@ label ending_peoples_epilogue:
     "而你——会一直在这里。守护着这一切平凡而珍贵的日常。"
 
     "直到你白发苍苍的那一天。"
+
+
+    ## —— 第五幕：晚年与远讯 ——
+
+    "你的白发一年比一年多。艾登堡的麦子一年比一年熟得更稳。"
+
+    "偶尔有远方的商队路过，捎来一些王都的消息。"
+
+    "关于王后的消息越来越少。有人说她病了，有人说她累了，有人说她的派系散了。"
+
+    "关于南方的消息越来越多。几十个领地的代表坐在一张桌上，一条条把旧律改了——不是靠剑，是靠耐心。"
+
+    "弗雷德里克王子回来过一次，又离开了。有人说他选择了另一种生活。"
+
+    "你听着，点点头，然后回头去看田里的稻穗。"
+
+    "那都是很远的事。远得像隔着一条大河。"
+
+
+    ## —— 第六幕：无字的石头 ——
+
+    "你是在一个平凡的春日清晨走的。"
+
+    "没有号角，没有仪仗。按你留下的嘱咐——只在你最喜欢的那棵苹果树下，埋了一块无字的石头。"
+
+    "艾登堡没有乱。第二天，铁匠的锤声照常响起，孩子们照常去学堂，面包照常出炉。"
+
+    "这是你给这片土地最后的礼物——它已经不再需要你。"
+
+
+    ## —— 第七幕：史册一角 ——
+
+    "很多年后——也许几十年，也许更久——一位写史的人翻到一段闲笔。"
+
+    "那段闲笔写道：「在旧秩序落幕之前很久，北境有一座叫艾登堡的小领地。那里的农人不下跪，贵族不苛税，孩子都识字。当时没有人把它当回事。」"
+
+    "闲笔只写了这几行。翻页就过去了。"
+
+    "而翻页之后——旧秩序如何一点点落下的——是另外的人，用另外的半生，才写到末尾的。"
 
 
     ## ── 旧秩序的落幕 ──
@@ -2530,6 +2696,7 @@ label ending_father_son_epilogue:
     show player_char_img at left with dissolve
     player "还差一声告别。"
 
+    $ hide_all_chars()
     "你看着父亲的书桌。墨水瓶旁有一只干枯的鹅毛笔，笔尖朝下搁着，像是主人刚放下一样。"
 
     "桌上还摆着父亲用过的墨水瓶、羽毛笔、还有一个磨得发亮的镇纸。"
@@ -2555,14 +2722,20 @@ label ending_father_son_epilogue:
     "他坐在他的旧椅子上，就像从前那样——一只手撑着头，微微侧着身子。"
     "好像他只是在等你来敲门，就像十年前的每一个傍晚一样。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "……父亲？"
 
+    $ hide_all_chars()
     "\"你来了。\""
 
     "他的声音——和你记忆中一模一样。低沉、温和、带着一丝你小时候最熟悉的笑意。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你……你是——"
 
+    $ hide_all_chars()
     "\"坐下吧。\""
 
     "你不知道这是梦境，还是幻觉，还是别的什么。"
@@ -2577,28 +2750,37 @@ label ending_father_son_epilogue:
 
     "\"长大了。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "……十年了。"
 
+    $ hide_all_chars()
     "\"是啊。十年了。\""
 
     "他叹了一口气。不是悲伤的叹息——更像是一声漫长的释然。"
 
     "\"你做到了我做不到的事。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "什么？"
 
+    $ hide_all_chars()
     "\"活下来。而且——不仅仅是活下来。\""
 
     "\"你找到了真相。你守护了这片土地。你没有被仇恨吞噬。\""
 
     "\"你比我强。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "不。我只是……继承了你留下的东西。"
 
     player "你的信念。你的正义。你教给我的一切。"
 
     player "如果不是你——"
 
+    $ hide_all_chars()
     "\"嘘。\""
 
     "父亲微微摇头。他伸出手——"
@@ -2609,8 +2791,11 @@ label ending_father_son_epilogue:
 
     "\"我只有一个遗憾。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "什么？"
 
+    $ hide_all_chars()
     "\"没有看着你长大。\""
 
     "\"没有看到你第一次骑马。没有看到你第一次举起剑。\""
@@ -2621,6 +2806,8 @@ label ending_father_son_epilogue:
 
     "\"这些……都是我亏欠你的。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你不亏欠我任何东西。"
 
     player "你用你的生命——你的死亡——教会了我什么是勇气。"
@@ -2629,12 +2816,16 @@ label ending_father_son_epilogue:
 
     player "你一直在我身边。从来没有离开过。"
 
+    $ hide_all_chars()
     "父亲看着你。那双和你如此相似的眼睛里，有光在闪动。"
 
     "\"……是吗。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "是。"
 
+    $ hide_all_chars()
     "蜡烛在轻轻作响。烛泪沿着铜座缓缓流下。"
 
     "然后——父亲笑了。"
@@ -2645,8 +2836,11 @@ label ending_father_son_epilogue:
 
     "\"我该走了。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "父亲——"
 
+    $ hide_all_chars()
     "\"别难过。我去的地方没有阴谋，没有战争，没有毒药。\""
 
     "\"只有安宁。\""
@@ -2655,16 +2849,22 @@ label ending_father_son_epilogue:
 
     "\"照顾好自己。照顾好奥尔德里克——那个老顽固大概要把你烦死了。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "……他很好。"
 
+    $ hide_all_chars()
     "\"照顾好艾登堡。照顾好——你爱的人。\""
 
     "他的身影越来越淡。像是晨雾在阳光下慢慢消散。"
 
     "\"我的孩子。我为你骄傲。\""
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "父亲——等一下——"
 
+    $ hide_all_chars()
     "你站起来，伸出手——"
 
     "但你的手穿过了空气。"
@@ -2696,8 +2896,11 @@ label ending_father_son_epilogue:
 
     "因为你找到了。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "再见，父亲。"
 
+    $ hide_all_chars()
     "你轻轻关上了书房的门。"
 
     "锁舌咔哒一声，落入了锁扣。"

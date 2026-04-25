@@ -37,6 +37,7 @@ label re_wandering_poet:
 
     aldric "他唱的是……关于王国北方战事的歌谣。歌词里提到了一些……我们尚未听闻的消息。"
 
+    $ hide_all_chars()
     "你来到城墙上，俯瞰城门。果然，一个瘦高的男人正坐在石阶上，手指灵活地拨弄着一把破旧的鲁特琴。"
 
     "他的歌声浑厚悠远，带着一种走过千山万水的沧桑感。围观的百姓越来越多，有人鼓掌，有人落泪。"
@@ -131,6 +132,7 @@ label re_wandering_poet_send:
 
     captain "大人英明。这年头，陌生人还是少接触为好。"
 
+    $ hide_all_chars()
     "诗人收下食物，冲你举了举手中的干粮算是道谢，转身走向暮色中的远方。"
 
     "山道上很快空无一人。风把他留下的脚印一点点抹平。那些远方的消息、那些未知的故事——像是从未来过一样。"
@@ -357,7 +359,7 @@ label re_fortune_teller_believe:
 
     "「走吧，年轻人。该来的终究会来。但至少……你不再是蒙着眼走进暴风雨的人了。」"
 
-    "你起身离开，心中翻涌着复杂的情绪。这些话也许只是老妇人的胡言乱语，但如果——如果她说的是真的呢？"
+    "你起身离开。这些话也许只是老妇人的胡言乱语，但如果——如果她说的是真的呢？"
 
     "「不要相信送花的人。」这句话像一根刺，深深扎进你的脑海。"
 
@@ -516,6 +518,7 @@ label re_smuggler_arrest:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "走私商人和他的同伙被投入地牢，货物被封存。你修书一封，将此事上报王都——截获走私物资、缉拿盗匪，这是一笔不小的功劳。"
 
     "几日后，王后的回信到了。信中对你的忠诚大加赞赏，并赏赐了一笔可观的奖金。"
@@ -577,6 +580,7 @@ label re_old_map:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "你赶到现场，只见暗格中放着一个锈迹斑斑的铁盒。打开铁盒，里面是一张泛黄的羊皮纸地图，以及一封密封的书信。"
 
     "地图上画的是城堡的地下结构——但比你所知的要复杂得多。在城堡的东翼地基下方，赫然标注着一条{b}通往城外森林的秘密通道{/b}。"
@@ -654,6 +658,7 @@ label re_old_map_seal:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "密道入口被牢牢封死了。你将地图和书信锁进书房的保险箱，以防将来需要。"
 
     "这意味着你放弃了可能存在的宝藏和退路，但也确保了没有人能通过这条通道偷偷潜入城堡。"
@@ -686,6 +691,7 @@ label re_old_map_secret:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "你点了点头。密道暂时不探索，但也不封死——它是一张底牌，等到最关键的时刻再翻开。"
 
     $ change_stat("intrigue", 8)
@@ -728,6 +734,7 @@ label re_ghost_night:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "很快，更多的报告涌来。有人看到白影飘过大厅，有人听到墙壁里传来低语，有人在地窖里发现了不属于任何人的脚印。"
 
     "城堡里弥漫着一种不安的气氛。年纪大的仆人开始念叨起古老的传说——据说艾登堡建在一座更古老的堡垒遗址上，那里曾经发生过一场惨烈的屠杀。"
@@ -771,6 +778,7 @@ label re_ghost_night_investigate:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "你沿着粉末的痕迹追踪，最终在北塔的一间废弃储藏室里，找到了一个瑟瑟发抖的人——穿着仆人的衣服，身上还残留着白色的粉末。"
 
     "审问之后，真相浮出水面：此人是哈根男爵安插在城堡中的眼线。他趁暴风雨之夜制造鬼魂恐慌，目的是在混乱中溜进你的书房窃取文件。"
@@ -825,14 +833,18 @@ label re_ghost_night_pray:
 
     bishop "大人，您来了。在这样的夜晚，信仰是最好的盾牌。"
 
+    $ hide_all_chars()
     "你和主教一起跪在祭坛前，诵读了一段古老的驱邪祈祷文。声音庄严肃穆，在空旷的礼拜堂中回荡。"
 
     "不知过了多久，暴风雨渐渐平息了。当你走出礼拜堂时，外面的走廊安静而祥和——再也没有人报告看到白影。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "看，神的力量从不辜负虔诚的心。"
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "也许是巧合，也许是信仰的力量。但有一点是确定的——主教因为今晚的事对你更加信任了。而你的百姓也看到了一个敬畏神灵的领主。"
 
     $ change_stat("faith", 10)
@@ -907,6 +919,7 @@ label re_orphan_shelter:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "消息传开后，百姓们对你的评价空前地高。在这个冷酷的世道里，一个愿意收留孤儿的领主，值得追随。"
 
     $ change_stat("loyalty", 10)
@@ -964,6 +977,7 @@ label re_orphan_turn_away:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你转身走回城堡，没有再回头。"
 
     $ change_stat("power", 3)
@@ -1133,6 +1147,7 @@ label re_duel_proxy:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "塞德里克打量了雷恩一番，眼中掠过一丝赞赏。「好。」"
 
     "两人的决斗比你预想的更加精彩。雷恩的剑法质朴刚猛，没有花哨的技巧，每一剑都是战场上磨砺出来的杀招。"
@@ -1157,6 +1172,7 @@ label re_duel_proxy:
     $ change_stat("power", 3)
     $ re_duel_met = True
 
+    $ hide_all_chars()
     "塞德里克带着满意离去了。而雷恩在之后的日子里，话虽然还是一样少，但你分明感觉到他的脊背挺得更直了。"
 
     "——你信任他。在这座充满猜疑的城堡里，这比任何赏赐都重。"
@@ -1289,6 +1305,7 @@ label re_harvest_ration:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "冬天比预想的漫长，但配给制度运转良好。到春天来临的时候，虽然家家户户都瘦了一圈，但没有一个人饿死。"
 
     $ change_stat("loyalty", 8)
@@ -1313,6 +1330,7 @@ label re_harvest_buy:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "钱花出去了，百姓有了过冬的口粮。经济上的窟窿需要很长时间才能填补。不过这个冬天，没有人会饿死。"
 
     $ change_stat("wealth", -8)
@@ -1341,6 +1359,7 @@ label re_harvest_civilian:
 
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "这个冬天很难熬。士兵们的训练强度被迫降低，军营里的抱怨声此起彼伏。但百姓们知道——是军人让出了自己嘴里的粮食来养活他们。"
 
     "开春之后，参军报名处排起了前所未有的长队。那些曾经被军粮养活的年轻人，如今要亲手拿起武器回报这份恩情。"

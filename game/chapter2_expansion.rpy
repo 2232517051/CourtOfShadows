@@ -33,6 +33,11 @@ default ch2_exp_grey_favor = False
 default grey_met = False
 default steinfurt_met = False
 default wells_met = False
+default karl_met = False
+default bishop_met = False
+default prince_met = False
+default dusk_dew_known = False
+default lily_trial_passed = False
 default ch2_exp_stein_trust = False
 default ch2_exp_werner_humiliated = False
 default ch2_exp_private_count = 0
@@ -274,6 +279,7 @@ label ch2_exp_preparations:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你独自坐在烛光中，消化着奥尔德里克传授的情报。"
 
     "窗外的风更大了，吹得窗棂嘎嘎作响。明天的会议，将是一场真正的考验。"
@@ -657,6 +663,8 @@ label ch2_exp_grand_hall:
             $ change_rel("rel_hilda", -5)
             $ log_decision("第二章扩展", "主张外交解决边境")
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "在讨论军事手段之前，我想提一个也许不太受欢迎的建议——我们有没有试过和蛮族谈判？"
 
             "全场哗然。"
@@ -698,6 +706,8 @@ label ch2_exp_grand_hall:
             $ change_rel("rel_hilda", 5)
             $ log_decision("第二章扩展", "提出互助同盟方案")
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "联军是一个好想法，但实施起来困难重重。指挥权的问题就够吵上三天三夜。"
 
             player "不如换个思路——建立轮值制度。各领地的军队轮流到北方驻防，每次三个月。这样既分担了压力，又不涉及统一指挥权的敏感问题。"
@@ -812,6 +822,8 @@ label ch2_exp_grand_hall:
             $ change_rel("rel_hilda", 5)
             $ log_decision("第二章扩展", "主张贸易管控")
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "自由贸易听起来很美好，但现实是——如果完全开放商路，外来的廉价商品会摧毁本地的手工业。"
 
             player "我的领地有很多依靠手工业为生的百姓。如果他们的生计被打破，社会动荡在所难免。"
@@ -896,6 +908,23 @@ label ch2_exp_private_audiences:
     "你的时间有限，最多只能安排两次私下会面。"
 
     $ ch2_exp_private_count = 0
+
+    if ch1_deep_widow_verdict == "pardon":
+
+        $ hide_all_chars()
+        "走廊的侧窗投入午后的金色光线。就在你思考着如何分配时间时，一个熟悉的身影从走廊转角匆匆走过。"
+
+        "那个少年——偷面包的汉斯。他手里端着一个茶盘，几缕蒸汽从茶杯口升起。"
+
+        "他看到了你，突然停下脚步。眼睛里闪过一瞬间的惊慌，随即他深深低了头。"
+
+        "那是一个完全不同的姿态。不是受审时被迫的低眉顺眼，而是一种内在的——敬畏。"
+
+        "他小心翼翼地端正茶盘，生怕茶水溅出来。手还是会抖，但不是来自恐惧。"
+
+        "「大人。」他轻声说，声音比半年前沉稳多了。「茶还是热的。」"
+
+        "然后他继续向前走。步履还是个少年的模样，但茶盘端得平平稳稳，没有一滴溅出。"
 
 label ch2_exp_private_choose:
 
@@ -1259,6 +1288,7 @@ label ch2_exp_meet_grey:
     show count_grey_img at left with dissolve
     count_grey "打开看看。"
 
+    $ hide_all_chars()
     "你小心翼翼地拆开信封。里面是一张薄薄的纸条，上面只有一行潦草的字迹——"
 
     "「信任奥尔德里克。远离百合花。」"
@@ -1452,13 +1482,17 @@ label ch2_exp_banquet:
 
     "夜幕降临，哈伦堡的宴会厅灯火通明。"
 
+    "这是会议前夜的欢迎宴——不是议事，只是旧识新交之间的寒暄与试探。明日的正式会议才是真正的战场。"
+
     "巨大的枝形吊灯上插满了蜡烛，将整个大厅照得如同白昼。长桌上摆满了丰盛的菜肴——烤全羊、炖野猪、蜜渍水果、新鲜出炉的面包。"
 
     "乐师们在角落里演奏着轻快的曲调。侍从们端着酒壶穿梭其间，不断给宾客们添酒。"
 
     "这是一场表面上的欢宴。但你知道，真正的较量往往在酒杯的碰撞声中展开。"
 
-    "五位领主各自坐在自己的位置上。你注意到，座位的安排很有讲究——"
+    "你环视一圈——冯·哈根男爵并未到场。据说他的车队傍晚才过莱因河，赶不上今夜的宴席，明日会议上才会与你正面相见。"
+
+    "已经到场的几位领主各自散坐在长桌两侧。你注意到，座位的安排很有讲究——"
 
     "你被安排在格雷伯爵和施泰因伯爵夫人之间。维尔纳公子在你的对面，不时投来挑衅的目光。"
 
@@ -1489,6 +1523,7 @@ label ch2_exp_banquet:
 
     noble_werner "但无论如何，希望我们都能证明自己配得上手中的权力。尤其是——某些刚刚继位的年轻领主。"
 
+    $ hide_all_chars()
     "嘲讽之意溢于言表。其他领主的反应各不相同——威尔斯子爵尴尬地咳嗽，施泰因伯爵夫人皱起了眉头，希尔达伯爵夫人面无表情地看着你。"
 
     "格雷伯爵轻轻碰了碰你的手肘。"
@@ -1609,6 +1644,7 @@ label ch2_exp_banquet:
 
             viscount_wells "这个年轻人——有趣！我喜欢！"
 
+            $ hide_all_chars()
             "甚至施泰因伯爵夫人也露出了难得的微笑。只有维尔纳公子的脸色很难看。"
 
     "宴会继续进行。酒越来越多，气氛越来越热。"
@@ -1633,6 +1669,7 @@ label ch2_exp_banquet:
 
     hide noble_werner_img with dissolve
 
+    $ hide_all_chars()
     "宴会在午夜时分结束。宾客们陆续散去。你独自走在回房的路上，脑中翻涌着今日的种种见闻。"
 
     "忽然——"
@@ -1681,6 +1718,7 @@ label ch2_exp_night_intrigue:
             show player_char_img at left with dissolve
             player "站住！你是谁？"
 
+            $ hide_all_chars()
             "黑影猛地转身。你等了一瞬让眼睛适应黑暗，才看到了一张蒙着面纱的脸，只露出一双惊慌的眼睛。"
 
             "那双眼睛——你觉得似曾相识。"
@@ -1755,10 +1793,13 @@ label ch2_exp_night_intrigue:
                     show player_char_img at left with dissolve
                     player "维尔纳家族如果真的在与蛮族勾结，那就是所有领主的威胁。不只是王后关心这件事。"
 
+                    $ hide_all_chars()
                     "你们摸着黑一起翻找档案，只靠一根快烧到底的蜡烛。终于，在一个落满灰尘的抽屉最底层，你发现了那份协议的副本。"
 
                     "文件上的内容让你倒吸一口凉气——维尔纳老伯爵不只是和蛮族通商，他还在向蛮族出售武器。"
 
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
                     player "这……如果公之于众，维尔纳家族就完了。"
 
                     hide player_char_img
@@ -1824,6 +1865,8 @@ label ch2_exp_night_intrigue:
                     $ change_courage(5)
                     $ log_decision("第二章扩展", "揭发艾琳娜的间谍身份")
 
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
                     player "你知道你在做什么吗？在领主会议期间偷取机密文件——这是死罪。"
 
                     hide player_char_img
@@ -1862,6 +1905,7 @@ label ch2_exp_night_intrigue:
             $ change_stat("intrigue", 10)
             $ log_decision("第二章扩展", "暗中跟踪夜间潜入者")
 
+            $ hide_all_chars()
             "你压低身子，沿着墙壁的阴影悄悄跟了上去。"
 
             "黑影的动作很专业——每到一个转角都会停下来观察，确认没有人才继续前行。但你更小心。"
@@ -1913,6 +1957,7 @@ label ch2_exp_night_intrigue:
                     $ change_stat("reputation", 5)
                     $ log_decision("第二章扩展", "向格雷伯爵报告暗百合间谍")
 
+                    $ hide_all_chars()
                     "你决定找格雷伯爵。以他的威望和经验，他最有能力处理这件事。"
 
                     "第二天清晨，你在图书室里找到了老伯爵。他听完你的叙述后，脸色变得很凝重。"
@@ -1932,6 +1977,7 @@ label ch2_exp_night_intrigue:
                     $ change_stat("intrigue", 8)
                     $ log_decision("第二章扩展", "暂时隐瞒暗百合间谍信息")
 
+                    $ hide_all_chars()
                     "你决定暂时不说。在权谋之庭中，信息就是权力。而你现在拥有了一份别人都不知道的信息。"
 
                     "这份筹码，你要在最关键的时刻打出去。"
@@ -1944,9 +1990,10 @@ label ch2_exp_night_intrigue:
             $ ch2_exp_night_choice = "ignore"
             $ log_decision("第二章扩展", "选择不介入夜间事件")
 
+            $ hide_all_chars()
             "你犹豫了一下，最终决定不去冒险。"
 
-            "也许那只是一个失眠的侍从，也许是什么都不是。你刚到这里，还没有足够的实力去应对未知的危险。"
+            "也许那只是一个失眠的侍从。你刚到这里，还没有足够的实力去应对未知的危险。"
 
             "你转身回了自己的房间，锁好门，但一夜未能安睡。"
 
@@ -1969,16 +2016,16 @@ label ch2_exp_night_intrigue:
 
 label ch2_exp_aftermath:
 
-    scene bg study with dissolve
+    scene bg council_hall with dissolve
     $ play_music("audio/music/dawn.ogg", fadein=2.0)
 
-    "领主会议的第二天——闭幕日。"
+    "——第二天清晨。闭幕签字。"
 
-    "清晨的阳光照进哈伦堡的大厅。经过昨天的辩论、交际和夜间的波折，你感到疲惫但头脑清醒。"
+    "经过昨日那场漫长的辩论，你回到了同一间议事厅。空气里还残留着昨夜宴会香料酒的淡淡余味，但圆桌上已经换上了崭新的羊皮纸和数支蘸饱墨水的鹅毛笔。"
 
-    "今天只有一件事——签署会议的最终决议。"
+    "今天没有争吵，也没有试探。所有议题昨日已经辩完，现在只剩最后一步——把共识落在纸上。"
 
-    "五位领主再次围坐在圆桌旁。格雷伯爵主持了最后的总结。"
+    "昨日席上的几位领主陆续就座，位置与昨日一致。格雷伯爵清了清嗓子，主持了最后的总结。"
 
     $ hide_all_chars("count_grey_img")
     show count_grey_img at left with dissolve
@@ -2015,6 +2062,7 @@ label ch2_exp_aftermath:
 
     count_grey "以上决议，需要三位以上的领主签字方能生效。"
 
+    $ hide_all_chars()
     "一个一个，领主们在羊皮纸上签下了自己的名字。"
 
     "轮到维尔纳公子时，他犹豫了一下。"
@@ -2032,6 +2080,7 @@ label ch2_exp_aftermath:
     else:
         noble_werner "总得有人让步。今天就算我做了一回好人。"
 
+    $ hide_all_chars()
     "五位领主全部签字。决议正式生效。"
 
     "会议结束后，领主们纷纷告辞。你站在哈伦堡的城门前，目送着一辆辆马车驶离。"
@@ -2069,6 +2118,7 @@ label ch2_exp_aftermath:
 
     hide count_grey_img with dissolve
 
+    $ hide_all_chars()
     "马车渐行渐远，消失在蜿蜒的山路上。"
 
     "你深深地吸了一口气。冬日的空气冷冽清新，但你心中的火焰比任何时候都烧得旺盛。"

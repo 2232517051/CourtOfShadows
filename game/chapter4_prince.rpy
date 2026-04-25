@@ -136,6 +136,7 @@ label ch4_prince_farewell:
             $ hide_all_chars("prince_img")
             show prince_img at left with dissolve
             prince "那你就当我已经死了。继续做你该做的事。"
+            $ hide_all_chars()
             "他说得很平静。像是在说一件与自己无关的事。"
             "但你注意到他握着缰绳的手在微微发抖。"
 
@@ -164,6 +165,7 @@ label ch4_prince_farewell:
             show player_char_img at left with dissolve
             player "弗雷德里克。我们刚从地牢里死里逃生。你不会仅仅因为'战略考量'就要回去。"
             player "告诉我真正的原因。"
+            $ hide_all_chars()
             "王子沉默了很久。长到你以为他不会回答了。"
             "然后他开口了，声音很低。"
             hide player_char_img
@@ -181,6 +183,7 @@ label ch4_prince_farewell:
             prince "同父异母。母后从来不承认她的存在。她是父王和一个侍女的女儿。"
             prince "母后把她养在后宫最偏僻的院子里。没有名字，没有身份。像一只笼子里的鸟。"
             prince "她今年十四岁。如果我不回去……就没有人保护她了。"
+            $ hide_all_chars()
             "你感到一阵刺痛。这个年轻人背负的东西比你想象的多得多。"
 
     $ prince_returned_willingly = True
@@ -211,6 +214,7 @@ label ch4_prince_farewell:
 
     prince "任何看到这枚徽章的人都会知道，持有者是弗雷德里克王子唯一信任的人。"
 
+    $ hide_all_chars()
     "你接过徽章。银子在晨光中闪着微弱的光。"
 
     "它很轻。但你知道它代表的东西，比你见过的任何金银都要沉重。"
@@ -303,6 +307,7 @@ label ch5_prince_letter:
 
     prince "用它。在最需要的时候。"
 
+    $ hide_all_chars()
     "你翻过信纸。背面密密麻麻地写满了蝇头小楷——日期、人名、命令、剂量。"
 
     "触目惊心。"
@@ -316,20 +321,31 @@ label ch5_prince_letter:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "殿下，当战争到来的那一天，我需要你站出来。不是为了我，是为了这个国家。"
+            $ hide_all_chars()
             "你写了一封简短但坚定的回信。"
             "少年信使把信藏在鞋底，还没等你说完就走了。"
 
         "回信：让他千万保重，不要冒险":
             $ change_rel("rel_prince", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你已经做得够多了。保护好自己。等一切尘埃落定，我们再见面。"
+            $ hide_all_chars()
             "你犹豫了一下，又加了一句：'活着。这是命令。'"
 
         "不回信——信使可能被跟踪" if intrigue >= 60:
             $ change_stat("intrigue", 5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "信使，你来的路上有没有被人跟踪？"
-            "少年" "我……我不确定。出城的时候有人盯了我一会儿……"
+            $ hide_all_chars("servant_generic_img")
+            show servant_generic_img at left with dissolve
+            young_man "我……我不确定。出城的时候有人盯了我一会儿……"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "那就不回信了。回去告诉殿下三个字：'知道了。'"
             player "越短越安全。如果他们截获了这封空口信，也什么都查不到。"
+            $ hide_all_chars()
             "少年点点头，迅速离开了。"
             "你将信纸上的内容仔细抄录了一份，然后把原件放在烛火上烧成了灰烬。"
 
@@ -362,20 +378,26 @@ label ch5_prince_betrayal:
     show prince_img at left with dissolve
     prince "我有话要说。"
 
+    $ hide_all_chars()
     "王子从人群中走出来。他穿着一身白色的礼服，脸上的表情平静而庄重。"
 
     "你松了一口气。王子终于站出来了。"
 
     "但接下来的话——"
 
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "我要在圣母面前，在所有人面前——"
 
     prince "告发一个叛逆者。"
 
+    $ hide_all_chars()
     "他转向你。"
 
     "你的血液凝固了。"
 
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
     prince "这个人——艾登堡领主——在王都期间密谋推翻王后。"
 
     prince "他利用我对王国的忧虑，诱导我参与他的阴谋。"
@@ -389,6 +411,7 @@ label ch5_prince_betrayal:
     show player_char_img at left with dissolve
     player "弗雷德里克……你在干什么？"
 
+    $ hide_all_chars()
     "王子看着你。他的眼神很复杂——不是胜利者的得意，也不是背叛者的愧疚。"
 
     "而是一种深深的、无奈的疲倦。"
@@ -444,6 +467,7 @@ label ch5_prince_betrayal:
 
         "沉默。不给他们更多弹药":
             $ change_stat("intrigue", 5)
+            $ hide_all_chars()
             "你一言不发。只是看着王子，看了很久。"
             "你在他的眼睛里寻找那个在月光下跟你说'你是我的兄弟'的人。"
             "也许还在。也许已经不在了。"
@@ -475,6 +499,7 @@ label ch5_prince_confronts_queen:
     show queen_img at left with dissolve
     queen "弗雷德里克——"
 
+    $ hide_all_chars()
     "王子从人群的后方走出来。"
 
     "他穿着一身白色的礼服——不是华贵的宫廷款式，而是素净、简朴的骑士制服。"
@@ -511,6 +536,7 @@ label ch5_prince_confronts_queen:
 
     prince "是时候结束了。"
 
+    $ hide_all_chars()
     "王后看着自己的儿子，眼中第一次出现了脆弱。"
 
     "那个精明强干、不可一世的女人，在儿子的话语面前崩塌了——哪怕只是一瞬间。"
@@ -535,6 +561,7 @@ label ch5_prince_confronts_queen:
 
     prince "那棵玫瑰还在。但花园的主人，已经忘了当初的心意。"
 
+    $ hide_all_chars()
     "王后的嘴唇在颤抖。你从未见过她这个样子。"
 
     "整个大厅鸦雀无声。"

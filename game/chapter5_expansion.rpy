@@ -175,6 +175,7 @@ label ch5_exp_war_council:
         $ ch5_exp_council_unity += 1
 
     if alliance_baron:
+        $ hide_all_chars()
         "你想起与男爵之间微妙的关系。他曾是你的盟友——至少表面上是。"
         "也许这份旧日的联系，可以在关键时刻被利用。"
         $ ch5_exp_council_unity += 1
@@ -197,6 +198,7 @@ label ch5_exp_war_council:
         hide elena_img with dissolve
         $ ch5_exp_council_unity += 1
 
+    $ hide_all_chars()
     "你仔细听完了所有人的意见，目光落回地图上。"
 
     "四条路，每一条都有风险。但你必须选一条。"
@@ -234,6 +236,7 @@ label ch5_exp_war_council:
             show player_char_img at left with dissolve
             player "我们不需要赢——只需要撑到两支大军打完。当鹬蚌相争的时候，我们做那个渔翁。"
 
+            $ hide_all_chars()
             "众人点头。这是最保守、也最稳妥的策略。"
 
             "但你知道——被动等待意味着把命运交给别人。而你从不喜欢这样做。"
@@ -243,6 +246,8 @@ label ch5_exp_war_council:
             $ change_stat("power", 5)
             $ change_stat("reputation", 3)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "等待不是我的风格。在敌人合流之前，我们要先发制人。"
 
             hide aldric_img
@@ -279,6 +284,8 @@ label ch5_exp_war_council:
             $ change_stat("intrigue", 5)
             $ change_stat("reputation", 2)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "正面打不过，那就让他们自己打自己。"
 
             $ hide_all_chars("elena_img")
@@ -309,6 +316,7 @@ label ch5_exp_war_council:
 
             hide elena_img with dissolve
 
+            $ hide_all_chars()
             "信息战没有硝烟，但杀伤力丝毫不逊于真刀真枪。"
 
         "外交斡旋——以谈判化解战争" if alliance_church or faith >= 50:
@@ -316,6 +324,8 @@ label ch5_exp_war_council:
             $ change_stat("faith", 3)
             $ change_stat("reputation", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "战争不是唯一的解决方式。如果能不流血就化解这场危机——"
 
             $ hide_all_chars("bishop_img")
@@ -407,6 +417,7 @@ label ch5_exp_mobilize:
     show player_char_img at left with dissolve
     player "让我看看。"
 
+    $ hide_all_chars()
     "你沿着城墙走了一圈。石阶上被来回搬运的脚步磨得光滑，城垛上新铺了一层灰浆。"
 
     "每隔二十步就有一个弓箭手的位置，旁边整齐地摆着箭筒和火油罐。"
@@ -421,8 +432,11 @@ label ch5_exp_mobilize:
             $ change_stat("power", 3)
             $ ch5_exp_defender_bonus += 3
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "雷恩，调三十人过来。我要在两天内把东南角加固到和其他地方一样坚固。"
 
+            $ hide_all_chars()
             "铁匠们连夜赶制了铁钉和铁栓，用来加固松动的石块。"
 
             "石匠们用新的灰浆重新填补了每一条裂缝。一些老兵甚至在城墙内侧堆起了土坡——即使城墙被攻破，土坡也能减缓敌军的推进。"
@@ -434,20 +448,27 @@ label ch5_exp_mobilize:
             $ change_stat("loyalty", 3)
             $ change_stat("power", 2)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "城墙的事交给石匠。我更担心的是人手不够。"
 
             player "从难民和领民中再征召一百名志愿者。不需要他们上阵杀敌，能守城就行。"
 
+            $ hide_all_chars()
             "消息传出后，报名的人比预想的多。"
 
             "铁匠的儿子，面包师的学徒，甚至一个独臂的退伍老兵——他们都来了。"
 
             "老兵站在队列最前面，用仅剩的左手举着一把生锈的剑。"
 
-            "老兵" "领主大人，我右手没了，但左手还能砍人。"
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            veteran "领主大人，我右手没了，但左手还能砍人。"
 
             "你走上前，握住了他的手。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你的勇气比一千把剑都锋利。"
 
             "民兵们爆发出了一阵欢呼。他们或许不是精锐，但保卫家园的决心不输任何人。"
@@ -458,10 +479,13 @@ label ch5_exp_mobilize:
             $ change_stat("intrigue", 2)
             $ ch5_exp_defender_bonus += 2
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "城墙可以慢慢修，但物资必须现在就囤够。"
 
             player "奥尔德里克，把金库打开。我要买下方圆五十里内所有能买到的粮食、药草和铁矿。"
 
+            $ hide_all_chars()
             "接下来两天，一批又一批的物资被运进城堡。粮仓被塞得满满当当，连走廊里都堆起了麻袋。"
 
             "铁匠铺的炉火昼夜不息，源源不断地锻造箭头、枪尖和铁蒺藜。"
@@ -823,6 +847,7 @@ label ch5_exp_mobilize:
     hide bishop_img with dissolve
 
     if ch5_exp_npc_farewells >= 4:
+        $ hide_all_chars()
         "和每一个人谈完之后，你感到一种奇特的平静。"
         "不是因为恐惧消失了，而是因为你知道——无论发生什么，你不是一个人在战斗。"
         $ change_stat("loyalty", 3)
@@ -864,27 +889,41 @@ label ch5_exp_last_night:
     show player_char_img at left with dissolve
     player "写不出来？"
 
-    "年轻士兵" "领主大人！我——"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    young_soldier "领主大人！我——"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "坐下，坐下。不用起身。"
 
-    "年轻士兵" "我想给我娘写封信……但不知道该说什么。"
+    $ hide_all_chars()
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    young_soldier "我想给我娘写封信……但不知道该说什么。"
 
-    "年轻士兵" "说'我很好'？她肯定不信。说'我害怕'？她会更担心。"
+    young_soldier "说'我很好'？她肯定不信。说'我害怕'？她会更担心。"
 
-    "年轻士兵" "说'如果我回不来'……我连想都不敢想。"
+    young_soldier "说'如果我回不来'……我连想都不敢想。"
 
     menu:
         "告诉他写真心话就好":
             $ ch5_exp_night_mood = "resolute"
             $ change_stat("loyalty", 2)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你就写——'娘，我想你了。等打完仗，我就回去看你。'"
 
-            "年轻士兵" "这……也行吗？"
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            young_soldier "这……也行吗？"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你娘不需要知道你在做什么。她只需要知道你想她了。"
 
+            $ hide_all_chars()
             "年轻人想了想，认真地点了点头。然后低下头，重新开始写。"
 
             "这一次，他没有撕。"
@@ -893,17 +932,27 @@ label ch5_exp_last_night:
             $ ch5_exp_night_mood = "melancholy"
             $ change_stat("reputation", 2)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "把笔给我。我来写。"
 
-            "年轻士兵" "领主大人？！"
+            $ hide_all_chars()
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            young_soldier "领主大人？！"
 
             "你接过笔，在纸上写了几行字。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "'您的儿子在艾登堡一切安好。他是一个勇敢的战士，领主大人为他骄傲。等春花开了，他就回家。'"
 
+            $ hide_all_chars()
             "年轻人接过信纸，读了一遍又一遍。眼眶红了。"
 
-            "年轻士兵" "谢谢您……领主大人。"
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            young_soldier "谢谢您……领主大人。"
 
         "拍拍他的肩，什么都不说":
             $ ch5_exp_night_mood = "fierce"
@@ -915,7 +964,7 @@ label ch5_exp_last_night:
 
             "年轻人挺直了腰板。"
 
-            "年轻士兵" "领主大人，明天我一定不会给您丢脸。"
+            young_soldier "领主大人，明天我一定不会给您丢脸。"
 
     "你站起身，继续在城堡中游走。"
 
@@ -1207,6 +1256,7 @@ label ch5_exp_last_night:
             "跪下祈祷":
                 $ change_stat("faith", 3)
 
+                $ hide_all_chars()
                 "你走到圣母像前，缓缓跪下。"
 
                 "你不知道该说什么。但当膝盖触碰到冰冷的石地面时，所有的重压似乎轻了一些。"
@@ -1221,6 +1271,7 @@ label ch5_exp_last_night:
             "站在一旁默默注视":
                 $ change_stat("intrigue", 1)
 
+                $ hide_all_chars()
                 "你没有跪下。但你站在阴影中，注视着烛光中的圣母像。"
 
                 "那张慈悲的面容在摇曳的火光中仿佛活了过来。她的眼睛似乎在看着你，带着一种无言的悲悯。"
@@ -1299,6 +1350,7 @@ label ch5_exp_skirmish:
     show captain_img at left with dissolve
     captain "大约三百骑兵，打着男爵的旗号。他们在城北的山坡上列阵！"
 
+    $ hide_all_chars()
     "你快步登上城楼。北方的山坡上，果然整齐地排列着一队骑兵。"
 
     "晨曦中，他们的铠甲反射着暗淡的金光。旗帜上绣着冯·哈根男爵的狼首徽章——一只张着血盆大口的黑狼。"
@@ -1309,11 +1361,13 @@ label ch5_exp_skirmish:
 
     "他在城墙下停住，仰头大喊——"
 
-    "先锋官" "城内领主听着！冯·哈根男爵的先锋部队已经到达！"
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
+    vanguard "城内领主听着！冯·哈根男爵的先锋部队已经到达！"
 
-    "先锋官" "男爵再次给你机会——打开城门，加入联军！否则——"
+    vanguard "男爵再次给你机会——打开城门，加入联军！否则——"
 
-    "先锋官" "我们将把这座城堡从地图上抹去！"
+    vanguard "我们将把这座城堡从地图上抹去！"
 
     "你站在城垛后面，冷冷地看着他。"
 
@@ -1327,10 +1381,13 @@ label ch5_exp_skirmish:
             show player_char_img at left with dissolve
             player "弓手。"
 
+            $ hide_all_chars()
             "旁边的弓箭手会意，搭箭拉弦。箭矢呼啸而出——精准地射断了那面白旗的旗杆。"
 
             "先锋官的马受惊跳了几步。他的脸色铁青，拨马回去了。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这就是我的回答。"
 
             "城墙上的士兵爆发出一阵叫好声。但你知道——这意味着谈判的窗口彻底关闭了。"
@@ -1338,9 +1395,14 @@ label ch5_exp_skirmish:
         "冷静地拒绝":
             $ change_stat("reputation", 2)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "回去告诉男爵——艾登堡不接受威胁。但如果他愿意以平等的身份对话，我们的大门敞开。"
 
-            "先锋官" "你会后悔的！"
+            $ hide_all_chars()
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            vanguard "你会后悔的！"
 
             "他拨马转身，扬起一阵尘土。"
 
@@ -1373,6 +1435,7 @@ label ch5_exp_skirmish:
     show captain_img at left with dissolve
     captain "领主大人，怎么应对？"
 
+    $ hide_all_chars()
     "你快速分析了局势。三百骑兵，不足以攻城，但足以造成压力。他们的真正目的是侦察。"
 
     "如果你让他们轻松得到情报，主力到达后会制定出针对性的攻击方案。"
@@ -1414,6 +1477,7 @@ label ch5_exp_skirmish:
 
             hide captain_img with dissolve
 
+            $ hide_all_chars()
             "准备工作在紧张中完成。城门缓缓打开，像一个张开的嘴巴。"
 
             "敌军骑兵果然犹豫了。他们在远处观望了一会儿，然后先锋官挥了挥手——约五十骑开始朝城门方向慢慢推进。"
@@ -1428,14 +1492,18 @@ label ch5_exp_skirmish:
 
             $ play_sound("audio/sfx/fire_burst.ogg")
 
+            $ hide_all_chars()
             "壕沟里的干草和火油轰然燃起，火墙瞬间蹿起两丈高！"
 
             "冲在最前面的骑兵来不及勒马，连人带马栽入了火海。惨叫声和马的嘶鸣声混在一起。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "弓手！放箭！"
 
             $ play_sound("audio/sfx/arrow_fly.ogg")
 
+            $ hide_all_chars()
             "箭雨从城门两侧的埋伏位置倾泻而出。混乱中的骑兵成了活靶子。"
 
             "不到一刻钟，敌军先锋就陷入了彻底的混乱。残余的骑兵拼命后撤，丢下了十几具尸体和更多受伤的战马。"
@@ -1453,6 +1521,8 @@ label ch5_exp_skirmish:
             $ ch5_exp_skirmish_tactic = "frontal"
             $ change_stat("power", 3)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "所有弓手上城墙！准备滚石和火油！"
 
             $ hide_all_chars("captain_img")
@@ -1462,6 +1532,7 @@ label ch5_exp_skirmish:
 
             hide captain_img with dissolve
 
+            $ hide_all_chars()
             "敌军骑兵开始向城墙逼近。他们排成松散的队形，试图减少弓箭的杀伤。"
 
             "但城墙上的弓手们训练有素。"
@@ -1472,14 +1543,18 @@ label ch5_exp_skirmish:
 
             $ play_sound("audio/sfx/arrow_fly.ogg")
 
+            $ hide_all_chars()
             "第一轮箭雨落下，几名骑兵翻身落马。但其他人迅速散开，从不同方向逼近。"
 
             "他们不是来攻城的——而是在城墙下来回奔驰，用弓箭向城墙上射击，试图压制守军。"
 
             "一支流箭擦过你的耳畔。你连眼睛都没眨。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "稳住！不要浪费箭矢！只打有把握的目标！"
 
+            $ hide_all_chars()
             "双方你来我往地交锋了将近一个时辰。敌军留下了二十多具尸体，但城墙上也有伤亡——五名弓手中箭，其中两人伤势较重。"
 
             "最终，敌军鸣金收兵，退出了射程。"
@@ -1496,6 +1571,8 @@ label ch5_exp_skirmish:
             $ ch5_exp_skirmish_tactic = "lure"
             $ change_stat("intrigue", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "让城墙上只留十个弓手。其余人全部隐藏起来。"
 
             $ hide_all_chars("captain_img")
@@ -1517,11 +1594,14 @@ label ch5_exp_skirmish:
 
             hide captain_img with dissolve
 
+            $ hide_all_chars()
             "敌军骑兵试探性地逼近。城墙上稀稀拉拉地射出几支箭——故意偏了不少。"
 
             "骑兵们越发大胆，甚至有人驰到城墙下嘲笑。"
 
-            "先锋官" "就这点人？男爵说得没错——这座城堡就是一只纸老虎！"
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            vanguard "就这点人？男爵说得没错——这座城堡就是一只纸老虎！"
 
             "你在城墙后面听着他们的嘲笑，面无表情。"
 
@@ -1550,14 +1630,23 @@ label ch5_exp_skirmish:
         show player_char_img at left with dissolve
         player "汤姆？"
 
-        "年轻士兵" "领主……大人……"
+        $ hide_all_chars("soldier_generic_img")
+        show soldier_generic_img at left with dissolve
+        young_soldier "领主……大人……"
 
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "你会没事的。大夫说只是擦伤。"
 
-        "年轻士兵" "我……我没给您丢脸吧？"
+        $ hide_all_chars("soldier_generic_img")
+        show soldier_generic_img at left with dissolve
+        young_soldier "我……我没给您丢脸吧？"
 
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "你是最勇敢的战士。"
 
+        $ hide_all_chars()
         "他笑了笑。然后闭上了眼睛。"
 
         "你站在伤兵棚外面，感到一种锥心的痛。"
@@ -1583,6 +1672,7 @@ label ch5_exp_skirmish:
         show captain_img at left with dissolve
         captain "是！"
 
+        $ hide_all_chars()
         "俘虏的供词印证了之前的情报——男爵主力约两千人，预计两天后到达。"
         "此外，你还得到了一个重要消息——男爵军中有一批从西方雇来的攻城器械师。"
         "如果他们带来了投石车或攻城塔……城墙的优势就会大打折扣。"
@@ -1628,6 +1718,7 @@ label ch5_exp_skirmish:
         elena "你越来越可怕了，领主大人。"
         hide elena_img with dissolve
 
+    $ hide_all_chars()
     "前哨战结束了。但每个人都知道——这只是暴风雨前的闪电。"
 
     "真正的风暴，正在地平线上聚集。"
@@ -1656,6 +1747,7 @@ label ch5_exp_eve_of_battle:
 
     "第一封：王后伊莎贝拉的亲笔信。印着王室火漆，字迹端庄而冰冷。"
 
+    $ hide_all_chars("queen_img")
     show queen_img angry at left with dissolve
     $ unlock_gallery("queen")
 
@@ -1673,6 +1765,7 @@ label ch5_exp_eve_of_battle:
 
     hide queen_img with dissolve
 
+    $ hide_all_chars()
     "你放下王后的信。五个领地的管辖权——这个诱饵比上次更大了。"
 
     "但你比谁都清楚——王后的承诺和她的毒药一样不可信。"
@@ -1705,8 +1798,11 @@ label ch5_exp_eve_of_battle:
             $ change_stat("power", 2)
             $ change_rel("rel_queen", -10)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "不需要回信。沉默就是最好的答案。"
 
+            $ hide_all_chars()
             "你把王后的信扔进了壁炉。火焰吞噬了那些华丽的辞藻和虚伪的承诺。"
 
             "让她来吧。该来的总会来。"
@@ -1715,6 +1811,8 @@ label ch5_exp_eve_of_battle:
             $ ch5_exp_queen_ultimatum = "accept"
             $ change_stat("intrigue", 5)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "回信告诉她——我接受条件。请蒙塔古伯爵派一支小队来接收城堡。"
 
             $ hide_all_chars("elena_img")
@@ -1735,6 +1833,7 @@ label ch5_exp_eve_of_battle:
 
     "第二封信：男爵的密函。没有火漆，用粗糙的麻纸包裹，字迹潦草。"
 
+    $ hide_all_chars("baron_img")
     show baron_img angry at left with dissolve
     $ unlock_gallery("baron")
 
@@ -1775,6 +1874,8 @@ label ch5_exp_eve_of_battle:
             $ ch5_exp_baron_response = "exploit"
             $ change_stat("intrigue", 4)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这封信透露了不少信息。"
 
             $ hide_all_chars("elena_img")
@@ -1847,102 +1948,94 @@ label ch5_exp_eve_of_battle:
         scene bg dungeon with dissolve
         $ unlock_gallery("bg_dungeon")
 
+        $ hide_all_chars()
         "第三封信——如果能叫信的话——是一片黑色的纸片，上面只有两行字，墨迹在烛光下隐隐发亮。"
 
-        $ hide_all_chars("lily_master_img")
-        show lily_master_img at left with dissolve
-        $ unlock_gallery("lily_master")
+        "你认得那笔迹——暗百合首领亲书。"
 
-        lily_master "年轻的领主。暗百合已经做好了准备。"
+        "「年轻的领主。暗百合已经做好了准备。」"
 
-        lily_master "在男爵军中，我们有十二个人。在王后军中，有八个。"
+        "「在男爵军中，我们有十二个人。在王后军中，有八个。」"
 
-        lily_master "你只需要给一个信号——任何时候——他们就会行动。"
+        "「你只需要给一个信号——任何时候——他们就会行动。」"
 
-        lily_master "但请记住：暗百合只行动一次。一次之后，他们的身份就会暴露。"
+        "「但请记住：暗百合只行动一次。一次之后，他们的身份就会暴露。」"
 
-        lily_master "所以——选择最好的时机。"
+        "「所以——选择最好的时机。」"
 
         if lily_double_agent:
-            lily_master "对了——你安插的那个双面间谍传回了一份绝密情报。"
-            lily_master "男爵的军师与伯爵有私下联络。他们可能在密谋单独停战，把男爵架空。"
-            lily_master "这个情报价值连城——你可以用它来分化敌军指挥层。"
+            "纸片的背面还有一段更小的字——"
+
+            "「对了——你安插的那个双面间谍传回了一份绝密情报。」"
+
+            "「男爵的军师与伯爵有私下联络。他们可能在密谋单独停战，把男爵架空。」"
+
+            "「这个情报价值连城——你可以用它来分化敌军指挥层。」"
             $ change_stat("intrigue", 3)
+
+        "信末没有署名。只有一朵小小的暗色百合印记。"
 
         menu:
             "指示他们在关键战役时制造混乱":
                 $ ch5_exp_lily_advice_taken = True
                 $ change_stat("intrigue", 5)
 
-                hide lily_master_img
-                $ hide_all_chars("player_char_img")
-                show player_char_img at left with dissolve
-                player "告诉他们——等双方主力交战最激烈的时候再行动。"
+                "你在回信的空白处落笔——字迹斟酌了许久。"
 
-                player "在男爵军中散布假消息说后方被偷袭。在王后军中放火烧粮草。"
+                "「等双方主力交战最激烈的时候再行动。」"
 
-                hide player_char_img
-                $ hide_all_chars("lily_master_img")
-                show lily_master_img at left with dissolve
-                lily_master "简洁而致命。我喜欢。"
+                "「在男爵军中散布假消息说后方被偷袭。在王后军中放火烧粮草。」"
 
-                lily_master "信号是什么？"
+                "「信号——城楼上升起三面黑旗。」"
 
-                hide lily_master_img
-                $ hide_all_chars("player_char_img")
-                show player_char_img at left with dissolve
-                player "城楼上升起三面黑旗。"
-
-                hide player_char_img
-                $ hide_all_chars("lily_master_img")
-                show lily_master_img at left with dissolve
-                lily_master "三面黑旗。明白了。"
+                "你将纸片封入蜡丸，交给等在窗外的暗影信使。"
 
             "让暗百合暗杀男爵军中的关键将领":
                 $ ch5_exp_lily_advice_taken = True
                 $ change_stat("intrigue", 4)
                 $ change_stat("power", 2)
 
-                hide lily_master_img
-                $ hide_all_chars("player_char_img")
-                show player_char_img at left with dissolve
-                player "男爵联军的指挥系统本就混乱。如果在战前夜除掉一两个关键将领——"
+                "你落笔回复——字迹冷硬如刀。"
 
-                hide player_char_img
-                $ hide_all_chars("lily_master_img")
-                show lily_master_img at left with dissolve
-                lily_master "群龙无首。联军就会自行瓦解。"
+                "「男爵联军的指挥系统本就混乱。战前夜除掉一两个关键将领——联军就会自行瓦解。」"
 
-                lily_master "但暗杀是有风险的。如果失败了，我们的人就全部暴露。"
+                "「暗杀有风险。若失败，你们的人会暴露。」"
 
-                hide lily_master_img
-                $ hide_all_chars("player_char_img")
-                show player_char_img at left with dissolve
-                player "我相信暗百合的能力。"
+                "「但我相信暗百合的能力。」"
 
-                hide player_char_img
-                $ hide_all_chars("lily_master_img")
-                show lily_master_img at left with dissolve
-                lily_master "你的信任，我收下了。"
+                "你合起蜡丸，将它交予窗外的信使。对方没有回话，只留下一片压低的羽毛作为回执。"
 
             "暂时保留这张底牌":
                 $ ch5_exp_lily_advice_taken = False
 
-                hide lily_master_img
-                $ hide_all_chars("player_char_img")
-                show player_char_img at left with dissolve
-                player "还不是时候。我需要看到战场上的局势才能做判断。"
+                "你提笔作答——字句简短。"
 
-                hide player_char_img
-                $ hide_all_chars("lily_master_img")
-                show lily_master_img at left with dissolve
-                lily_master "谨慎。这是一种美德——只要它不变成犹豫。"
+                "「还不是时候。我需要看到战场上的局势才能做判断。」"
 
-                lily_master "我的人会等待你的信号。但不要让他们等太久。"
+                "几天后，一片新的黑色纸片又悄无声息地出现在书桌上。"
 
-        hide lily_master_img with dissolve
+                "「谨慎。这是一种美德——只要它不变成犹豫。」"
+
+                "「我的人会等待你的信号。但不要让他们等太久。」"
+
+    elif dark_lily_destroyed:
+        $ hide_all_chars()
+        "第三封信——来自一个没有署名的人。字迹歪歪扭扭，写在一块破布上。"
+
+        "'城中有人记得你父亲的恩情。如果你需要帮助，在城墙上挂一面黑旗。'"
+
+        "你盯着这块破布看了很久。暗百合虽已被你铲除，可你父亲这些年在城中留下的善意，仍在悄无声息地流转。"
+
+        menu:
+            "把黑旗备好，以防万一":
+                $ change_stat("intrigue", 2)
+                "你把一面黑旗放在了城楼的角落。不一定会用——但有备无患。"
+
+            "忽略这封信":
+                "你把破布扔到了一边。陌生人的善意，代价往往比你想象的要大。"
 
     else:
+        $ hide_all_chars()
         "第三封信——来自一个没有署名的人。字迹歪歪扭扭，写在一块破布上。"
 
         "'城中有暗百合的旧人。如果你需要帮助，在城墙上挂一面黑旗。'"
@@ -2035,6 +2128,7 @@ label ch5_exp_eve_of_battle:
             show player_char_img at left with dissolve
             player "整支军队就会陷入混乱。到时候城内也全力出击，一举破敌。"
 
+            $ hide_all_chars()
             "这是一个高风险高回报的策略。一旦成功，可以以少胜多。但如果那五十人被发现——你就少了五分之一的兵力。"
 
         "圣盾阵——以教会之名化解敌意" if alliance_church or faith >= 60:
@@ -2042,6 +2136,8 @@ label ch5_exp_eve_of_battle:
             $ change_stat("faith", 5)
             $ change_stat("reputation", 3)
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "在城墙上升起教会的旗帜。让主教率领教士们站在最前面。"
 
             player "蒙塔古伯爵是虔诚的信徒。他的士兵也是。当他们看到教会的旗帜——"
@@ -2066,6 +2162,7 @@ label ch5_exp_eve_of_battle:
 
             hide bishop_img with dissolve
 
+            $ hide_all_chars()
             "这是一个用信仰作为武器的策略。它可能瓦解南方王后军的进攻意志——但对不信教的北方男爵联军无效。"
 
         "民堡阵——全民皆兵，守护家园" if loyalty >= 50:

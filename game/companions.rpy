@@ -122,12 +122,15 @@ init python:
     ## ================================================================
 
     def is_companion_available(comp_id):
-        """检查同伴是否可招募（章节 + 好感度）"""
+        """检查同伴是否可招募（章节 + 好感度 + 状态检查）"""
         data = companion_data.get(comp_id)
         if not data:
             return False
         ## 主菜单/游戏未开始时不可招募
         if store.main_menu or not getattr(store, 'first_decree', ''):
+            return False
+        ## 暗百合密探：组织被摧毁则不可招募
+        if comp_id == "comp_lily_agent" and getattr(store, 'dark_lily_destroyed', False):
             return False
         ch = _get_current_chapter_num()
         if ch < data["recruit_chapter"]:
@@ -410,14 +413,20 @@ screen companion_toast(comp_name="", is_recruit=True):
 ## ================================================================
 
 screen companions_screen():
-    tag menu
+    ## 去掉 tag menu — 避免与Ren'Py内置游戏菜单冲突导致卡死
     modal True
     zorder 150
 
     default selected_companion = None
     default equip_mode = None  # None / "weapon" / "armor"
 
-    add Solid("#000000aa") at stats_overlay_show
+    ## 暗色遮罩 — 点击遮罩区域关闭
+    button:
+        background Solid("#000000aa")
+        xfill True
+        yfill True
+        action Hide("companions_screen")
+        at stats_overlay_show
     key "K_ESCAPE" action Hide("companions_screen")
     key "K_c" action Hide("companions_screen")
     key "game_menu" action Hide("companions_screen")
@@ -754,7 +763,7 @@ screen companions_screen():
                                                     text_size 12
                                                     text_color "#e74c3c"
                                                     text_hover_color "#ff6b6b"
-                                                    action [Function(unequip_companion, selected_companion, "weapon"), renpy.restart_interaction]
+                                                    action [Function(unequip_companion, selected_companion, "weapon"), Function(renpy.restart_interaction)]
                                             else:
                                                 text "空" size 13 color "#4a4030" yalign 0.5
 
@@ -768,7 +777,7 @@ screen companions_screen():
                                                             text_size 11
                                                             text_color "#d4a942"
                                                             text_hover_color "#ffd866"
-                                                            action [Function(equip_companion, selected_companion, _wid, "weapon"), renpy.restart_interaction]
+                                                            action [Function(equip_companion, selected_companion, _wid, "weapon"), Function(renpy.restart_interaction)]
 
                                     ## 护甲槽
                                     frame:
@@ -794,7 +803,7 @@ screen companions_screen():
                                                     text_size 12
                                                     text_color "#e74c3c"
                                                     text_hover_color "#ff6b6b"
-                                                    action [Function(unequip_companion, selected_companion, "armor"), renpy.restart_interaction]
+                                                    action [Function(unequip_companion, selected_companion, "armor"), Function(renpy.restart_interaction)]
                                             else:
                                                 text "空" size 13 color "#4a4030" yalign 0.5
 
@@ -807,7 +816,7 @@ screen companions_screen():
                                                             text_size 11
                                                             text_color "#d4a942"
                                                             text_hover_color "#ffd866"
-                                                            action [Function(equip_companion, selected_companion, _aid, "armor"), renpy.restart_interaction]
+                                                            action [Function(equip_companion, selected_companion, _aid, "armor"), Function(renpy.restart_interaction)]
 
                                     add Solid("#d4a94220") xsize 1.0 ysize 1
 
@@ -837,13 +846,13 @@ screen companions_screen():
                                                         text_size 12
                                                         text_color "#d4a942"
                                                         text_hover_color "#ffd866"
-                                                        action [Function(set_active_companion, selected_companion, 0), renpy.restart_interaction]
+                                                        action [Function(set_active_companion, selected_companion, 0), Function(renpy.restart_interaction)]
                                                 else:
                                                     textbutton "移除":
                                                         text_size 12
                                                         text_color "#e74c3c"
                                                         text_hover_color "#ff6b6b"
-                                                        action [Function(set_active_companion, None, 0), renpy.restart_interaction]
+                                                        action [Function(set_active_companion, None, 0), Function(renpy.restart_interaction)]
 
                                         ## 槽位2
                                         $ _slot1 = store.active_companions[1]
@@ -865,13 +874,13 @@ screen companions_screen():
                                                         text_size 12
                                                         text_color "#d4a942"
                                                         text_hover_color "#ffd866"
-                                                        action [Function(set_active_companion, selected_companion, 1), renpy.restart_interaction]
+                                                        action [Function(set_active_companion, selected_companion, 1), Function(renpy.restart_interaction)]
                                                 else:
                                                     textbutton "移除":
                                                         text_size 12
                                                         text_color "#e74c3c"
                                                         text_hover_color "#ff6b6b"
-                                                        action [Function(set_active_companion, None, 1), renpy.restart_interaction]
+                                                        action [Function(set_active_companion, None, 1), Function(renpy.restart_interaction)]
 
                                     null height 8
 
@@ -881,7 +890,7 @@ screen companions_screen():
                                         text_size 14
                                         text_color "#e74c3c80"
                                         text_hover_color "#e74c3c"
-                                        action [Function(dismiss_companion, selected_companion), SetScreenVariable("selected_companion", None), renpy.restart_interaction]
+                                        action [Function(dismiss_companion, selected_companion), SetScreenVariable("selected_companion", None), Function(renpy.restart_interaction)]
 
 
 ## ================================================================
@@ -896,7 +905,7 @@ init python:
             renpy.show_screen("companions_screen")
         renpy.restart_interaction()
 
-    config.underlay.append(renpy.Keymap(c=toggle_companions))
+    # config.underlay.append(renpy.Keymap(c=toggle_companions))  # 已移除：队伍管理UI入口暂不开放
 
 
 ## ================================================================

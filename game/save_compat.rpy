@@ -53,13 +53,34 @@ label after_load:
         _ch = persistent.chapters_completed if persistent.chapters_completed else set()
 
         ## 推断章节进度（兼容缺少 chapters_completed 的极老存档）
-        _past_ch2 = ("chapter1" in _ch) or father_death_known or alliance_baron or alliance_church or assassination_survived
-        _past_ch3 = ("chapter2" in _ch) or dark_lily_joined or dark_lily_destroyed or true_killer_known or father_letters_found or ch3_dark_lily_visited
-        _past_ch4 = ("chapter3" in _ch) or queen_trust or prince_ally or prince_betrayed
+        ## save_compat 的职责就是兜底老存档 —— 任何裸变量访问都可能 NameError
+        _past_ch2 = (
+            ("chapter1" in _ch)
+            or getattr(store, "father_death_known", False)
+            or getattr(store, "alliance_baron", False)
+            or getattr(store, "alliance_church", False)
+            or getattr(store, "assassination_survived", False)
+        )
+        ## 修复：("chapter2" in _ch) 仅说明完成了第二章，玩家可能在第三章日记场景之前
+        ## 使用 father_letters_found 或 ("chapter3" in _ch) 确保日记已读
+        _past_ch3 = (
+            ("chapter3" in _ch)
+            or getattr(store, "father_letters_found", False)
+            or getattr(store, "dark_lily_joined", False)
+            or getattr(store, "dark_lily_destroyed", False)
+            or getattr(store, "true_killer_known", False)
+            or getattr(store, "ch3_dark_lily_visited", False)
+        )
+        ## 修复：王子被软禁是第五章揭示，需要完成第四章才确保已知
+        _past_ch4 = (
+            ("chapter4" in _ch)
+            or getattr(store, "prince_ally", False)
+            or getattr(store, "prince_betrayed", False)
+        )
 
         ## ---- 第二章揭示 ----
         ## 父亲被毒杀（条件：调查过商人Karl，已有 poison_evidence）
-        if _past_ch2 and (father_death_known or poison_evidence):
+        if _past_ch2 and (getattr(store, "father_death_known", False) or getattr(store, "poison_evidence", False)):
             father_poisoned_known = True
 
         ## ---- 第三章主线揭示（父亲日记解读，必经剧情） ----
@@ -70,23 +91,101 @@ label after_load:
             queen_poisoned_king_known = True     # 王后毒杀先王
             dark_lily_exists_known = True        # 暗百合组织存在
             matthias_has_testament_known = True  # 马修斯持有遗诏线索
+            if not hasattr(store, 'ch3_prepared_first'):
+                ch3_prepared_first = False
 
         ## ---- 第三章条件揭示（暗百合线路） ----
         ## elena身份 + 男爵暗焰身份在暗百合剧情中揭示
-        if _past_ch3 and (dark_lily_joined or dark_lily_destroyed or ch3_dark_lily_visited):
+        if _past_ch3 and (
+            getattr(store, "dark_lily_joined", False)
+            or getattr(store, "dark_lily_destroyed", False)
+            or getattr(store, "ch3_dark_lily_visited", False)
+        ):
             elena_spy_known = True              # 艾琳娜是三重间谍
             elena_identity_exposed_known = True # 艾琳娜身份暴露
             baron_is_darkflame_known = True     # 男爵是暗焰首领
             darkflame_known = True              # 知道暗焰派系存在
 
         ## elena身份也可能通过高好感随机事件揭示（interludes.rpy）
-        if _past_ch2 and rel_elena >= 40:
+        if _past_ch2 and getattr(store, "rel_elena", 0) >= 40:
             elena_spy_known = True
             elena_identity_exposed_known = True
+
+        ## elena 身份通过 npc_elena_past 支线揭露 (npc_sidelines.rpy L458+)
+        ## 该支线末尾必然 set elena_spy_known=True；老存档若走过此支线但 flag 丢失，兜底
+        if getattr(store, "elena_dark_past_done", False):
+            elena_spy_known = True
+            elena_identity_exposed_known = True
+            dusk_dew_known = True  # 支线里艾琳娜也提及遗诏/暮色之露/教会秘密
+
+        ## 注：不以 "_past_ch3 + rel_elena >= 20" 作为追溯条件——chapter3 有多条分支，
+        ## 只有暗百合/主动对峙/高好感随机事件等特定路径才触发揭露。用户可能只
+        ## 读过父亲日记、好感度增长到 20 就被误判；过宽兜底反而制造"玩家不知道
+        ## 却被说成已知"的错觉。仅在明确证据的分支下才追溯。
 
         ## ---- 第四章揭示 ----
         if _past_ch4:
             prince_imprisoned_known = True      # 王子被软禁
+
+        ## ---- 领主初见标记追溯 ----
+        ## wells_met/grey_met/steinfurt_met 在领主会议(chapter2.rpy L1541+)首次 set=True
+        ## 老存档加载新版本时这些 flag 可能残留 False, 导致"重复初见"台词
+        ## 任何 chapter2 之后的进度都保证三位领主已见过
+        if _past_ch2 or getattr(store, "council_outcome", ""):
+            wells_met = True
+            grey_met = True
+            steinfurt_met = True
+            ## 商人卡尔在 chapter2 会后集市偶遇(ch2_after_council L2052+)是强制剧情
+            ## 因此 past_ch2 必然见过卡尔
+            karl_met = True
+            ## 主教马修斯在 chapter1 主教来访(script.rpy L466+)是必经剧情
+            ## past_ch2 必然见过主教
+            bishop_met = True
+            ## chapter2 开头 L56 强制 call npc_captain_past (城墙雷恩往事)
+            ## past_ch2 必然听过完整的格伦瓦德往事
+            captain_past_done = True
+
+        ## ---- 纵横捭阖成就追授 ----
+        ## 修复 bug：该成就原无任何 unlock_achievement 调用点，
+        ## 已走过"折中"分支的老存档需要补发
+        if getattr(store, 'council_outcome', '') == "折中":
+            if 'council_master' not in persistent.achievements:
+                persistent.achievements.add('council_master')
+
+        ## ---- 王子弗雷德里克初见追溯 ----
+        ## prince 在 chapter4 王都宴会(chapter4.rpy L1277)才首次登场
+        if _past_ch4:
+            prince_met = True
+
+        ## ---- 遗诏原件持有追溯 ----
+        ## 主教醉酒忏悔里给了地下室钥匙 (bishop_gave_key=True)，
+        ## 或 chapter4 主教直接交出皮卷筒 (testament_original_obtained=True)
+        ## 都说明玩家实际持有原件。若老存档因版本旧丢失 flag，追溯补设。
+        if getattr(store, "bishop_gave_key", False):
+            testament_original_obtained = True
+            matthias_has_testament_known = True
+
+        ## ---- 暮色之露认知追溯 ----
+        ## 多条路径可触发首次接触: 卡尔情报(ch2_after_council)、暗百合磨坊(ch2_end)、
+        ## 父亲日记(ch3)、暗百合首领揭秘(ch3)、艾琳娜坦白(ch3)
+        ## 任一毒药相关 flag 为 True 都说明玩家必然已接触过"暮色之露"这个词
+        if (getattr(store, "poison_evidence", False)
+                or getattr(store, "father_poisoned_known", False)
+                or getattr(store, "queen_poisoned_king_known", False)
+                or getattr(store, "dark_lily_first_contact", False)
+                or _past_ch3):
+            dusk_dew_known = True
+
+    ## ================================================================
+    ## 立绘叠加清理：旧存档保存时 layer 上可能堆了多个立绘
+    ## Ren'Py 存档会序列化 layer 状态, 加载后 hide_all_chars 是运行时调用,
+    ## 对已存档的 layer 残留无追溯效果 —— 必须在 after_load 主动清一次
+    ##
+    ## 代价：若存档点正好卡在双人同屏(at left + at right)对话中，
+    ##       加载后会暂时缺失一侧立绘，下一次 show 指令会补回来
+    ## 收益：彻底解决旧存档立绘重合/堆叠现象
+    ## ================================================================
+    $ hide_all_chars()
 
     return
 
@@ -138,6 +237,21 @@ init 999 python:
             "merchant_deal": False,
             "assassination_survived": False,
             "council_outcome": "",
+            "wells_met": False,
+            "grey_met": False,
+            "steinfurt_met": False,
+            "karl_met": False,
+            "bishop_met": False,
+            "prince_met": False,
+            "dusk_dew_known": False,
+            "dark_lily_first_contact": False,
+            "captain_past_done": False,
+            "lily_trial_passed": False,
+            "bishop_gave_key": False,
+            "bishop_confession_done": False,
+            "testament_original_obtained": False,
+            "matthias_has_testament_known": False,
+            "stein_origin_revealed": False,
 
             ## 第三章剧情标记
             "dark_lily_joined": False,
@@ -147,6 +261,10 @@ init 999 python:
             "ch3_dark_lily_visited": False,
             "aldric_knows_passage": False,
             "poison_evidence": False,
+            "elena_spy_known": False,
+            "elena_identity_exposed_known": False,
+            "elena_dark_past_done": False,
+            "elena_trust_deep": False,
 
             ## 第四章剧情标记
             "queen_trust": False,

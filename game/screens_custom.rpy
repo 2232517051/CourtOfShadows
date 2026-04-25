@@ -14,6 +14,8 @@ init python:
     }
 
     ## 关系数据
+    ## 王子条带 prince_met 守卫, 由 screen 渲染时过滤（见 L319 附近 for 循环）
+    ## 避免第四章前剧透"王子是谁"
     relation_data = [
         ("rel_aldric", "奥尔德里克", "管家", "#8b0000"),
         ("rel_elena", "艾琳娜", "侍女", "#9370db"),
@@ -21,6 +23,7 @@ init python:
         ("rel_baron", "冯·哈根男爵", "贵族", "#2f4f4f"),
         ("rel_captain", "队长雷恩", "军队", "#4682b4"),
         ("rel_queen", "伊莎贝拉王后", "王室", "#800080"),
+        ("rel_prince", "弗雷德里克王子", "王室", "#4169e1"),
     ]
 
     ## 关系等级阈值
@@ -48,12 +51,17 @@ transform stats_overlay_show:
         ease 0.2 alpha 0.0
 
 screen stats_screen():
-    tag menu
     modal True
     zorder 150
 
-    ## 半透明暗色遮罩
-    add Solid("#000000aa") at stats_overlay_show
+    ## 半透明暗色遮罩（点击遮罩关闭面板）
+    button:
+        background Solid("#000000aa")
+        xfill True
+        yfill True
+        action Hide("stats_screen")
+        at stats_overlay_show
+
     key "K_ESCAPE" action Hide("stats_screen")
     key "K_s" action Hide("stats_screen")
 
@@ -256,6 +264,47 @@ screen stats_screen():
 
                         null height 12
 
+                        ## ─── 勇气系统 ─── ##
+                        hbox:
+                            spacing 6
+                            text "火" size 18 color "#d4a942" yalign 0.5
+                            text "勇气" size 18 color "#d4a942" font "msyh.ttf"
+
+                        null height 4
+
+                        vbox:
+                            spacing 2
+                            hbox:
+                                $ _c_color = get_courage_color()
+                                $ _c_level = get_courage_level()
+                                text "火 勇气" size 14 color "#e0d8c8" xsize 70
+                                text _c_level size 12 color _c_color yalign 0.5
+                                text "[courage]/[max_courage]" size 14 color _c_color xalign 1.0 bold True
+                            bar:
+                                value StaticValue(courage, max_courage)
+                                xmaximum 360
+                                ysize 8
+                                left_bar Solid(_c_color)
+                                right_bar Solid("#1a1528")
+                            if courage <= 20:
+                                text "! 勇气不足，大胆选项将不可用" size 10 color "#8b1a1a"
+
+                        ## 伤势显示
+                        if crisis_injuries > 0:
+                            null height 4
+                            hbox:
+                                spacing 6
+                                text "伤势：" size 14 color "#e74c3c" font "msyh.ttf"
+                                for _inj_i in range(3):
+                                    if _inj_i < crisis_injuries:
+                                        text "X" size 16 color "#e74c3c" bold True
+                                    else:
+                                        text "O" size 16 color "#4a4a4a"
+                            if crisis_injuries >= 2:
+                                text "! 濒死状态！" size 10 color "#ff0000"
+
+                        null height 12
+
                         ## 分割线
                         add Solid("#d4a94220") xsize 1.0 ysize 1
 
@@ -271,47 +320,49 @@ screen stats_screen():
 
                         ## 关系列表（含等级进度提示）
                         for var_name, char_name, title, char_color in relation_data:
-                            $ rel_val = getattr(store, var_name, 0)
-                            $ rel_pct = (rel_val + 100) / 200.0
-                            ## 等级划分: 敌对(<-50), 冷淡(<-10), 中立(<20), 友好(<60), 亲密(>=60)
-                            $ rel_label = "敌对" if rel_val < -50 else ("冷淡" if rel_val < -10 else ("中立" if rel_val < 20 else ("友好" if rel_val < 60 else "亲密")))
-                            $ rel_color = "#e74c3c" if rel_val < -50 else ("#e67e22" if rel_val < -10 else ("#8a7e60" if rel_val < 20 else ("#2ecc71" if rel_val < 60 else "#d4a942")))
-                            ## 距下一等级还差多少
-                            $ _next_label, _next_gap = get_next_rel_info(rel_val)
+                            ## 王子条第四章登场前隐藏, 防剧透
+                            if var_name != "rel_prince" or getattr(store, "prince_met", False):
+                                $ rel_val = getattr(store, var_name, 0)
+                                $ rel_pct = (rel_val + 100) / 200.0
+                                ## 等级划分: 敌对(<-50), 冷淡(<-10), 中立(<20), 友好(<60), 亲密(>=60)
+                                $ rel_label = "敌对" if rel_val < -50 else ("冷淡" if rel_val < -10 else ("中立" if rel_val < 20 else ("友好" if rel_val < 60 else "亲密")))
+                                $ rel_color = "#e74c3c" if rel_val < -50 else ("#e67e22" if rel_val < -10 else ("#8a7e60" if rel_val < 20 else ("#2ecc71" if rel_val < 60 else "#d4a942")))
+                                ## 距下一等级还差多少
+                                $ _next_label, _next_gap = get_next_rel_info(rel_val)
 
-                            frame:
-                                xfill True
-                                ypadding 8
-                                xpadding 12
-                                background Solid("#1a152800")
+                                frame:
+                                    xfill True
+                                    ypadding 8
+                                    xpadding 12
+                                    background Solid("#1a152800")
 
-                                vbox:
-                                    spacing 3
-
-                                    hbox:
-                                        xfill True
-                                        hbox:
-                                            spacing 8
-                                            text char_name size 15 color char_color font "msyh.ttf" bold True yalign 0.5
-                                            text title size 11 color "#6a5e48" yalign 0.5
+                                    vbox:
+                                        spacing 3
 
                                         hbox:
-                                            xalign 1.0
-                                            spacing 6
-                                            text rel_label size 12 color rel_color yalign 0.5
-                                            text "[rel_val]" size 13 color rel_color bold True yalign 0.5
+                                            xfill True
+                                            hbox:
+                                                spacing 8
+                                                text char_name size 15 color char_color font "msyh.ttf" bold True yalign 0.5
+                                                text title size 11 color "#6a5e48" yalign 0.5
 
-                                    ## 好感度条 (-100 到 100, 居中为0)
-                                    bar:
-                                        value StaticValue(rel_pct, 1.0)
-                                        xmaximum 380
-                                        ysize 5
-                                        left_bar Solid(rel_color)
-                                        right_bar Solid("#1a1528")
+                                            hbox:
+                                                xalign 1.0
+                                                spacing 6
+                                                text rel_label size 12 color rel_color yalign 0.5
+                                                text "[rel_val]" size 13 color rel_color bold True yalign 0.5
 
-                                    ## 距下一等级提示
-                                    if _next_label and _next_gap > 0 and rel_val < 100:
-                                        text "距「[_next_label]」还需 +[_next_gap]" size 10 color "#4a4040"
+                                        ## 好感度条 (-100 到 100, 居中为0)
+                                        bar:
+                                            value StaticValue(rel_pct, 1.0)
+                                            xmaximum 380
+                                            ysize 5
+                                            left_bar Solid(rel_color)
+                                            right_bar Solid("#1a1528")
+
+                                        ## 距下一等级提示
+                                        if _next_label and _next_gap > 0 and rel_val < 100:
+                                            text "距「[_next_label]」还需 +[_next_gap]" size 10 color "#4a4040"
 
                         null height 12
 
@@ -340,7 +391,7 @@ screen stats_screen():
                             text "• 与教会结盟" size 13 color "#8a7e60"
                         if dark_lily_joined:
                             text "• 加入了暗百合" size 13 color "#8a7e60"
-                        if dark_lily_destroyed:
+                        elif dark_lily_destroyed:
                             text "• 摧毁了暗百合" size 13 color "#8a7e60"
                         if elena_romance:
                             text "• 与艾琳娜的浪漫" size 13 color "#9370db"
@@ -387,3 +438,91 @@ screen stat_change_notify(stat_name, old_val, new_val):
             text "[sign][delta]" size 18 color color bold True yalign 0.5
 
     timer 2.0 action Hide("stat_change_notify")
+
+
+################################################################################
+## 自定义名字输入界面 — 解决手机端 renpy.input 卡住问题
+################################################################################
+
+default _name_input_value = "亚瑟"
+
+screen name_input_screen():
+    modal True
+    zorder 200
+
+    add Solid("#0a0812ee")
+
+    frame:
+        xalign 0.5
+        yalign 0.45
+        xpadding 50
+        ypadding 40
+        xminimum 600
+        xmaximum 700
+        background Solid("#1a1528f0")
+
+        vbox:
+            spacing 20
+            xalign 0.5
+
+            ## 标题
+            text "为你的角色命名" size 28 color "#d4a942" font "msyh.ttf" xalign 0.5 outlines [(2, "#000000cc", 0, 0)]
+
+            add Solid("#d4a94230") xsize 400 ysize 1 xalign 0.5
+
+            ## 提示
+            text "你是艾登堡的新任领主。\n请输入你的名字：" size 16 color "#c8b890" font "msyh.ttf" xalign 0.5 text_align 0.5
+
+            null height 6
+
+            ## 输入框（带明显边框）
+            frame:
+                xalign 0.5
+                xminimum 380
+                xmaximum 420
+                xpadding 20
+                ypadding 14
+                background Solid("#0f0d1a")
+
+                input:
+                    value VariableInputValue("_name_input_value")
+                    length 12
+                    pixel_width 360
+                    size 26
+                    color "#ffe8a0"
+                    font "msyh.ttf"
+                    xalign 0.5
+
+            null height 6
+
+            ## 按钮区
+            hbox:
+                spacing 20
+                xalign 0.5
+
+                ## 确认按钮（大而明显）
+                button:
+                    xsize 200
+                    ysize 56
+                    background Solid("#d4a94230")
+                    hover_background Solid("#d4a94260")
+                    action Return("confirm")
+
+                    text "确认" size 22 color "#d4a942" font "msyh.ttf" xalign 0.5 yalign 0.5
+
+                ## 使用默认名字
+                button:
+                    xsize 200
+                    ysize 56
+                    background Solid("#1a152860")
+                    hover_background Solid("#1a152890")
+                    action Return("default")
+
+                    vbox:
+                        xalign 0.5
+                        yalign 0.5
+                        text "使用默认" size 18 color "#8a7e60" font "msyh.ttf" xalign 0.5
+                        text "「亚瑟」" size 14 color "#6a5e48" font "msyh.ttf" xalign 0.5
+
+            ## 底部提示
+            text "输入后点击「确认」按钮即可" size 13 color "#4a4030" font "msyh.ttf" xalign 0.5

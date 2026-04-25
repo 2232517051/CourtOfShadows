@@ -14,6 +14,7 @@ default ch3_cult_leader_fate = ""
 default ch3_ancient_ruin_found = False
 default ch3_antidote_learned = False
 default ch3_witness_count = 0
+default stein_origin_revealed = False
 
 ## ============================================================
 ## 第一部分：调查序列 — Investigation Sequence (~500行)
@@ -23,16 +24,34 @@ label ch3_exp_investigation:
 
     scene bg castle_library with dissolve
 
-    "你决定系统性地调查暗百合组织。零散的线索太多，是时候把它们串联起来了。"
+    if dark_lily_joined:
+        "你加入暗百合之后，更清楚这个组织的水远比表面深。影能告诉你的只是一部分——暗焰的渗透、外围的招募、那些还游离在组织边缘的盟友和敌人，都需要你自己去梳理。"
 
-    "你在书房中铺开一张大羊皮纸，将目前掌握的所有信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
+        "你在书房中铺开一张大羊皮纸，把接触过的所有信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
 
-    "每一条线索都像是拼图的碎片。但拼图的全貌，你还看不清。"
+        "每一条线索都还是碎片。身在局中，反而更需要一张看全局的图。"
+    elif dark_lily_destroyed:
+        "暗百合虽然已被你铲除，但缴获的档案和残余的网络里还有太多未解之谜。是时候把线索串起来了。"
+
+        "你在书房中铺开一张大羊皮纸，把缴获和自己收集的信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
+
+        "每一条都需要重新定位。谁是真正的盟友，谁只是被牵连的卒子——你必须把棋盘重新看清。"
+    else:
+        "你决定系统性地调查暗百合组织。零散的线索太多，是时候把它们串联起来了。"
+
+        "你在书房中铺开一张大羊皮纸，将目前掌握的所有信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
+
+        "每一条线索都像是拼图的碎片。但拼图的全貌，你还看不清。"
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
-    aldric "少主，您打算如何展开调查？"
+    if dark_lily_joined:
+        aldric "少主，您打算从哪里切入？"
+    elif dark_lily_destroyed:
+        aldric "少主，接下来从哪里入手清理残局？"
+    else:
+        aldric "少主，您打算如何展开调查？"
 
     "你放下鹅毛笔，看着地图上标注的几个关键地点。"
 
@@ -41,11 +60,24 @@ label ch3_exp_investigation:
 
     player "我们有三个方向可以切入。"
 
-    player "第一，通过外交渠道——联系周边领地的领主，看看暗百合是否也渗透了他们的地盘。"
+    if dark_lily_joined:
+        player "第一，通过外交——借影的关系网，看看周边领地里哪些贵族已经在组织里。"
 
-    player "第二，直接行动——带兵搜查已知的可疑地点，用武力逼迫暗百合现身。"
+        player "第二，直接行动——带兵清查那些被暗焰叛徒渗透的据点，把内鬼揪出来。"
 
-    player "第三，暗中渗透——伪装身份，潜入暗百合的外围组织，从内部获取情报。"
+        player "第三，深入组织——进一步卷入核心圈，让影把她还没说的真相一并告诉我。"
+    elif dark_lily_destroyed:
+        player "第一，通过外交渠道——联系周边领地的领主，看看还有没有暗百合的残党藏身。"
+
+        player "第二，直接行动——带兵清扫缴获档案里标注的可疑据点。"
+
+        player "第三，暗中调查——派人伪装，潜入残党可能的藏身地，确保没有漏网之鱼。"
+    else:
+        player "第一，通过外交渠道——联系周边领地的领主，看看暗百合是否也渗透了他们的地盘。"
+
+        player "第二，直接行动——带兵搜查已知的可疑地点，用武力逼迫暗百合现身。"
+
+        player "第三，暗中渗透——伪装身份，潜入暗百合的外围组织，从内部获取情报。"
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
@@ -79,9 +111,18 @@ label ch3_exp_investigate_diplomatic:
 
     scene bg castle_library with dissolve
 
-    "你决定以外交手段展开调查。当天便写了三封信，分别寄给格雷伯爵、威尔斯子爵和施泰因伯爵夫人。"
+    if dark_lily_joined:
+        "你决定以外交手段切入——不是冲着暗百合本身，而是借外部领主的消息判断暗焰在其他地盘的渗透范围。"
 
-    "信中你小心地措辞——没有直接提及暗百合，只是询问他们的领地是否也出现了「异常失踪事件」。"
+        "当天你便写了三封信，寄给格雷伯爵、威尔斯子爵和施泰因伯爵夫人。信里只字不提你和组织的关系，只询问他们领地里是否也出现了「异常失踪事件」。"
+    elif dark_lily_destroyed:
+        "你决定以外交手段追查残党。当天便写了三封信，寄给格雷伯爵、威尔斯子爵和施泰因伯爵夫人——询问他们领地里是否也有「异常失踪事件」的尾巴。"
+
+        "信里措辞谨慎——你不想让任何人知道你已经亲手清空了暗百合的核心。"
+    else:
+        "你决定以外交手段展开调查。当天便写了三封信，分别寄给格雷伯爵、威尔斯子爵和施泰因伯爵夫人。"
+
+        "信中你小心地措辞——没有直接提及暗百合，只是询问他们的领地是否也出现了「异常失踪事件」。"
 
     "五天后，回信陆续到来。"
 
@@ -139,6 +180,8 @@ label ch3_exp_investigate_diplomatic:
 
             "她的话像一把冰锥，直直插入你的心脏。"
 
+            $ stein_origin_revealed = True
+
             hide countess_stein_img with dissolve
             hide player_char_img with dissolve
 
@@ -149,6 +192,7 @@ label ch3_exp_investigate_diplomatic:
             $ change_stat("reputation", 8)
             $ change_stat("loyalty", 3)
 
+            $ hide_all_chars()
             "你提出了一个大胆的方案——四个领地联合组建一支秘密调查队，共享暗百合的情报。"
 
             "格雷伯爵和威尔斯子爵同意了。施泰因伯爵夫人也勉强点头，但她的条件是——调查结果只在四人之间共享，不报告王廷。"
@@ -196,11 +240,17 @@ label ch3_exp_investigate_forceful:
     hide captain_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "那就一百人。暗百合在我们眼皮底下活动了太久，是时候让他们知道谁才是这片土地的主人。"
+    if dark_lily_joined:
+        player "那就一百人。暗焰叛徒在我们眼皮底下活动了太久——我要把他们从组织内部连根拔起。"
+    elif dark_lily_destroyed:
+        player "那就一百人。残党还没清完，不能给他们喘息的机会。"
+    else:
+        player "那就一百人。暗百合在我们眼皮底下活动了太久，是时候让他们知道谁才是这片土地的主人。"
 
     hide player_char_img with dissolve
     hide captain_img with dissolve
 
+    $ hide_all_chars()
     "第二天拂晓，你率领一百名全副武装的士兵进入了北部森林。"
 
     "搜查行动持续了整整三天。你们翻遍了每一条小路、每一处洞穴、每一个废弃的木屋。"
@@ -220,6 +270,7 @@ label ch3_exp_investigate_forceful:
             $ change_stat("power", 8)
             $ change_courage(5)
 
+            $ hide_all_chars()
             "你拔出佩剑：「全军突入！」"
 
             "士兵们鱼贯而入。地下通道曲折幽暗，但你的人训练有素，队形丝毫不乱。"
@@ -266,13 +317,30 @@ label ch3_exp_investigate_cunning:
 
     scene bg tavern with dissolve
 
-    "你选择了最危险、也可能回报最大的路线——渗透。"
+    if dark_lily_joined:
+        "你选择了最危险也可能回报最大的路线——作为组织成员，悄悄摸清外围那些被暗焰拉拢的人底细。"
 
-    "第一步，你需要一个切入点。暗百合不接受陌生人——你需要一个介绍人。"
+        "影能告诉你的是核心圈；外围已经变质的那些，你得自己去探。"
 
-    "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
 
-    "你决定从酒馆开始。暗百合的外围人员一定混迹在城镇的底层社会中。"
+        "你决定从酒馆开始——暗焰的爪牙一定混迹在城镇的底层社会中。"
+    elif dark_lily_destroyed:
+        "你选择了最危险也可能回报最大的路线——追踪残党。"
+
+        "核心虽已清空，底层那些被暗百合雇来的爪牙还在。你要确保每一个都被揪出来。"
+
+        "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+
+        "你决定从酒馆开始。这类人一定混迹在城镇的底层社会中。"
+    else:
+        "你选择了最危险、也可能回报最大的路线——渗透。"
+
+        "第一步，你需要一个切入点。暗百合不接受陌生人——你需要一个介绍人。"
+
+        "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+
+        "你决定从酒馆开始。暗百合的外围人员一定混迹在城镇的底层社会中。"
 
     "你换上朴素的衣服，遮住佩剑上的家族纹章，独自走进了城镇最混乱的酒馆——「断头斧」。"
 
@@ -305,6 +373,7 @@ label ch3_exp_investigate_cunning:
             show player_char_img at left with dissolve
             player "一个对百合花感兴趣的人。"
 
+            $ hide_all_chars()
             "远处酒馆里传来一阵笑声，又迅速被夜色吞没。"
 
             "然后他低声说：「月落时分——」"
@@ -332,6 +401,7 @@ label ch3_exp_investigate_cunning:
             show assassin_char_img at left with dissolve
             assassin "三天后，旧磨坊。别迟到。"
 
+            $ hide_all_chars()
             "他站起身，走到拐角处头也没回。你低头看纸条——上面画着一朵百合花和一个地点的简图。"
 
             "你成功打入了暗百合的外围。"
@@ -498,6 +568,7 @@ label ch3_exp_forest_expedition:
             $ change_stat("power", 8)
             $ change_courage(10)
 
+            $ hide_all_chars()
             "你拒绝了所有人的陪同，只带了一把剑、一壶水和地图，独自走进了森林。"
 
             "这也许是你做过的最鲁莽的决定。但你的直觉告诉你——暗百合不会伤害一个独自前来的人。"
@@ -537,11 +608,18 @@ label ch3_exp_forest_expedition:
     $ play_music("audio/music/ritual.ogg", fadein=2.0)
     "遗迹的中心是一座圆形的祭坛，用白色大理石砌成。祭坛中央嵌着一块黑色的石碑。"
 
-    "石碑上刻着文字——这次你能读懂了。那是中世纪的拉丁文：\n\n「吾等以百合为誓，守护弱者，对抗暴政。\n　当权力腐化时，吾等是暗夜中的利刃。\n　当信仰堕落时，吾等是黎明前的烛火。\n　百合虽暗，心向光明。」"
+    "石碑上刻着文字——这次你能读懂了。那是中世纪的拉丁文："
+
+    "「吾等以百合为誓，守护弱者，对抗暴政。\n　当权力腐化时，吾等是暗夜中的利刃。」"
+
+    "「当信仰堕落时，吾等是黎明前的烛火。\n　百合虽暗，心向光明。」"
 
     "你站在石碑前，感到一种奇异的庄严感。"
 
-    "暗百合的初心——守护弱者，对抗暴政。和施泰因伯爵夫人说的一样。"
+    if stein_origin_revealed:
+        "暗百合的初心——守护弱者，对抗暴政。和施泰因伯爵夫人说的一样。"
+    else:
+        "暗百合的初心——守护弱者，对抗暴政。石碑上的字句让那些在你脑中盘旋多时的碎片第一次有了形状。"
 
     "那么，是什么让它走到了今天这一步？"
 
@@ -620,9 +698,9 @@ label ch3_exp_herbalist:
 
     "她的眼睛是你见过的最奇特的颜色——琥珀色，像是凝固了的蜂蜜。"
 
-    show servant_generic_img at right with dissolve
+    show herbalist_vera_img at right with dissolve
 
-    hide servant_generic_img
+    hide herbalist_vera_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "您是……领主大人？"
@@ -638,19 +716,19 @@ label ch3_exp_herbalist:
     "她微微一笑。"
 
     hide player_char_img
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
-    servant "森林里没有秘密。何况，您的佩剑上有家族纹章。请进吧——我煮了新鲜的薄荷茶。"
+    $ hide_all_chars("herbalist_vera_img")
+    show herbalist_vera_img at left with dissolve
+    herbalist_vera "森林里没有秘密。何况，您的佩剑上有家族纹章。请进吧——我煮了新鲜的薄荷茶。"
 
     "你走进小屋。屋内的每一面墙上都挂着药草，架子上摆满了装着各色粉末和液体的瓶瓶罐罐。空气中弥漫着草药特有的清苦芬芳。"
 
     $ ch3_herbalist_met = True
 
-    servant "我叫薇拉。草药师。或者如村民们称呼的——女巫。"
+    herbalist_vera "我叫薇拉。草药师。或者如村民们称呼的——女巫。"
 
     "她自嘲地笑了笑。"
 
-    hide servant_generic_img
+    hide herbalist_vera_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "我不信巫术。但我需要你的知识。"
@@ -662,33 +740,33 @@ label ch3_exp_herbalist:
     "薇拉接过布片，嗅了嗅，又用手指蘸了一点黑色液体尝了尝。你几乎要出声阻止，但她已经吐了出来。"
 
     hide player_char_img
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
-    servant "曼陀罗、乌头、夜影草，以及……一种我很少见到的东西。暗百合精华。"
+    $ hide_all_chars("herbalist_vera_img")
+    show herbalist_vera_img at left with dissolve
+    herbalist_vera "曼陀罗、乌头、夜影草，以及……一种我很少见到的东西。暗百合精华。"
 
-    hide servant_generic_img
+    hide herbalist_vera_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "你知道暗百合？"
 
     hide player_char_img
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
-    servant "那种植物。不是那个组织。"
+    $ hide_all_chars("herbalist_vera_img")
+    show herbalist_vera_img at left with dissolve
+    herbalist_vera "那种植物。不是那个组织。"
 
     "她走到架子前，取下一个装着紫黑色花瓣的玻璃瓶。"
 
-    servant "暗百合——学名 Lilium Tenebris。一种只在深林中生长的稀有百合花。它的花粉有极强的致幻效果，提炼后可以制成……"
+    herbalist_vera "暗百合——学名 Lilium Tenebris。一种只在深林中生长的稀有百合花。它的花粉有极强的致幻效果，提炼后可以制成……"
 
-    hide servant_generic_img
+    hide herbalist_vera_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "迷药。"
 
     hide player_char_img
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
-    servant "比迷药更可怕。高浓度的暗百合精华会完全摧毁一个人的意志。服用者在清醒后，会无条件服从给药者的命令。"
+    $ hide_all_chars("herbalist_vera_img")
+    show herbalist_vera_img at left with dissolve
+    herbalist_vera "比迷药更可怕。高浓度的暗百合精华会完全摧毁一个人的意志。服用者在清醒后，会无条件服从给药者的命令。"
 
     "你的心沉了下去。这解释了为什么失踪的农民们——如果他们还活着——会如此驯服地跟随暗百合。"
 
@@ -698,30 +776,31 @@ label ch3_exp_herbalist:
             $ change_stat("wealth", -5)
             $ ch3_antidote_learned = True
 
-            hide servant_generic_img
+            hide herbalist_vera_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "如果暗百合精华有这种效果，那一定有解药。"
 
             hide player_char_img
-            $ hide_all_chars("servant_generic_img")
-            show servant_generic_img at left with dissolve
-            servant "有。但制作很复杂，需要几种稀有材料。"
+            $ hide_all_chars("herbalist_vera_img")
+            show herbalist_vera_img at left with dissolve
+            herbalist_vera "有。但制作很复杂，需要几种稀有材料。"
 
             "她列了一张清单——白松露、雪莲花露、银鱼肝油，以及一小块月光石。"
 
-            servant "给我三天时间和这些材料。我可以制作出足以解除十人药效的解药。"
+            herbalist_vera "给我三天时间和这些材料。我可以制作出足以解除十人药效的解药。"
 
-            hide servant_generic_img
+            hide herbalist_vera_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你的报酬呢？"
 
             hide player_char_img
-            $ hide_all_chars("servant_generic_img")
-            show servant_generic_img at left with dissolve
-            servant "不要钱。但有一个条件——如果您找到了活着的失踪者，让我见见他们。我需要研究暗百合精华对人体的长期影响。"
+            $ hide_all_chars("herbalist_vera_img")
+            show herbalist_vera_img at left with dissolve
+            herbalist_vera "不要钱。但有一个条件——如果您找到了活着的失踪者，让我见见他们。我需要研究暗百合精华对人体的长期影响。"
 
+            $ hide_all_chars()
             "你同意了。"
 
             "三天后，薇拉如约交付了一小瓶碧绿色的解药。她还教了你一个简单的急救方法——如果有人被暗百合精华迷晕，用冷水浇头加上薰衣草精油可以暂时恢复神志。"
@@ -730,7 +809,7 @@ label ch3_exp_herbalist:
             $ change_stat("intrigue", 8)
             $ change_stat("faith", -3)
 
-            hide servant_generic_img
+            hide herbalist_vera_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我想更系统地了解毒药学。不仅是暗百合——所有常见的毒药和解药。"
@@ -738,13 +817,13 @@ label ch3_exp_herbalist:
             "薇拉看了你一眼，琥珀色的眼睛里闪过一丝好奇。"
 
             hide player_char_img
-            $ hide_all_chars("servant_generic_img")
-            show servant_generic_img at left with dissolve
-            servant "学毒药学的领主……有意思。"
+            $ hide_all_chars("herbalist_vera_img")
+            show herbalist_vera_img at left with dissolve
+            herbalist_vera "学毒药学的领主……有意思。"
 
             "在接下来的一个下午，薇拉给你上了一堂毒药学速成课。你学会了辨认十几种常见毒药的气味和症状，以及对应的急救方法。"
 
-            servant "记住最重要的一条——大多数毒药都有气味。如果你的酒闻起来有杏仁味，不要喝。"
+            herbalist_vera "记住最重要的一条——大多数毒药都有气味。如果你的酒闻起来有杏仁味，不要喝。"
 
             "你把这些知识刻在了脑海中。在这个充满暗杀和阴谋的世界里，懂得毒药或许能救你一命。"
 
@@ -752,7 +831,7 @@ label ch3_exp_herbalist:
             $ change_stat("loyalty", 5)
             $ change_stat("rel_elena", 3)
 
-            hide servant_generic_img
+            hide herbalist_vera_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你说你只知道暗百合这种植物，不知道暗百合组织。但我不完全相信你。"
@@ -760,28 +839,29 @@ label ch3_exp_herbalist:
             "薇拉停下了手中的动作，安静地看着你。"
 
             hide player_char_img
-            $ hide_all_chars("servant_generic_img")
-            show servant_generic_img at left with dissolve
-            servant "您很敏锐。"
+            $ hide_all_chars("herbalist_vera_img")
+            show herbalist_vera_img at left with dissolve
+            herbalist_vera "您很敏锐。"
 
-            servant "好吧。我确实知道一些。我的母亲曾经是暗百合的成员——她是一名治疗师。组织内部称她为「花匠」。"
+            herbalist_vera "好吧。我确实知道一些。我的母亲曾经是暗百合的成员——她是一名治疗师。组织内部称她为「花匠」。"
 
-            servant "但那是很久以前的事了。母亲在暗百合分裂后就离开了。她说……组织变质了。新的领导者不再保护弱者，而是利用弱者。"
+            herbalist_vera "但那是很久以前的事了。母亲在暗百合分裂后就离开了。她说……组织变质了。新的领导者不再保护弱者，而是利用弱者。"
 
-            servant "母亲在我十五岁时去世。临终前她告诉我——如果有一天艾登堡的领主来找我，告诉他：「你父亲是好人。」"
+            herbalist_vera "母亲在我十五岁时去世。临终前她告诉我——如果有一天艾登堡的领主来找我，告诉他：「你父亲是好人。」"
 
             "你的喉咙一阵哽塞。"
 
-            hide servant_generic_img
+            hide herbalist_vera_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你母亲认识我父亲？"
 
             hide player_char_img
-            $ hide_all_chars("servant_generic_img")
-            show servant_generic_img at left with dissolve
-            servant "我想是的。不过她从不愿意多说。她只是反复叮嘱我——把草药学好，总有一天会用得上。"
+            $ hide_all_chars("herbalist_vera_img")
+            show herbalist_vera_img at left with dissolve
+            herbalist_vera "我想是的。不过她从不愿意多说。她只是反复叮嘱我——把草药学好，总有一天会用得上。"
 
+            $ hide_all_chars()
             "也许那一天，就是今天。"
 
     ## ── 草药师浪漫支线（可选） ──
@@ -791,9 +871,9 @@ label ch3_exp_herbalist:
     "她递给你一小束干燥的薰衣草。"
 
     hide player_char_img
-    show servant_generic_img at right with dissolve
+    show herbalist_vera_img at right with dissolve
 
-    servant "放在枕头下面。可以帮助安眠。"
+    herbalist_vera "放在枕头下面。可以帮助安眠。"
 
     "你们的手指在交接薰衣草时短暂地碰到了一起。"
 
@@ -804,12 +884,13 @@ label ch3_exp_herbalist:
 
             "薇拉的眼睛弯了弯。"
 
-            servant "我知道。"
+            herbalist_vera "我知道。"
 
             "她转身走回屋里，但在门口停了一下。"
 
-            servant "下次来，我教您泡一种很特别的茶。只有我和……故人知道配方。"
+            herbalist_vera "下次来，我教您泡一种很特别的茶。只有我和……故人知道配方。"
 
+            $ hide_all_chars()
             "你的心跳快了半拍。不知道是因为她的话，还是因为「故人」这个词暗含的意味。"
 
             "你带着薰衣草和满腹的新知识回到了城堡。"
@@ -821,7 +902,7 @@ label ch3_exp_herbalist:
 
             "回城的路上，你的思绪全部集中在暗百合精华和解药上。浪漫？在这个时代，那是最奢侈的东西。"
 
-    hide servant_generic_img with dissolve
+    hide herbalist_vera_img with dissolve
     hide player_char_img with dissolve
 
     if ch3_dark_lily_visited or dark_lily_joined:
@@ -863,10 +944,13 @@ label ch3_exp_cult_infiltration:
     show aldric_img at left with dissolve
     aldric "那至少……让我教您几个暗百合内部的暗号和手势。这些是……你父亲曾经告诉我的。"
 
+    $ hide_all_chars()
     "老管家的话让你心中一紧。他果然知道更多。"
 
     "在接下来的一个时辰里，奥尔德里克教了你六个暗号、三种手势，以及一段用于进入集会的口令。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "记住——进去后不要说话，不要摘掉面罩，不要主动接近任何人。观察，记忆，然后安全撤离。"
 
     hide aldric_img with dissolve
@@ -893,6 +977,7 @@ label ch3_exp_cult_infiltration:
     hide assassin_char_img with dissolve
     hide player_char_img with dissolve
 
+    $ hide_all_chars()
     "门开了。你走入黑暗之中。"
 
     "磨坊的地下有一条长长的通道。通道尽头是一个用蜡烛照亮的地下大厅。"
@@ -924,6 +1009,7 @@ label ch3_exp_cult_infiltration:
 
     lily_master "我们需要更……直接的手段。"
 
+    $ hide_all_chars()
     "你感到背脊发凉。这不是暗百合的正式集会——这是铁刺派的秘密会议，一个从暗百合分裂出来的激进派系。"
 
     "接下来的内容更加令人震惊——铁刺派首领谈到了一个计划：在下个月的领主会议上制造混乱，趁机暗杀几位「阻碍正义」的贵族。"
@@ -967,6 +1053,7 @@ label ch3_exp_cult_infiltration:
         "趁乱留下记号「标记几个关键人物」":
             $ change_stat("intrigue", 8)
 
+            $ hide_all_chars()
             "你悄悄从口袋里取出事先准备的荧光粉末——一种薇拉给你的特殊草药粉，在月光下会发出微弱的绿光。"
 
             "在人们起身移动时，你装作不经意地将粉末撒在了几个关键人物的斗篷上。"
@@ -1080,6 +1167,7 @@ label ch3_exp_confrontation:
 
             player "把面罩摘下来。"
 
+            $ hide_all_chars()
             "然后，他慢慢摘下了铁百合的面罩。"
 
             "你看到了那张脸，心猛然一沉。"
@@ -1173,6 +1261,7 @@ label ch3_exp_confrontation:
 
             player "游戏结束了。"
 
+            $ hide_all_chars()
             "铁刺派首领看着你，慢慢摘下了自己的铁百合面罩。"
 
             "他的脸你不认识，但他的下一句话击碎了你所有的心理防线。"
@@ -1182,6 +1271,7 @@ label ch3_exp_confrontation:
 
             lily_master "你和你父亲一样聪明。不愧是我的侄子。"
 
+            $ hide_all_chars()
             "叔叔。铁刺派的首领是你的叔叔。"
 
             "你感到世界在脚下崩塌。"

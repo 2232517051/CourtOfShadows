@@ -342,16 +342,19 @@ default extra_gold = 0
 init python:
 
     def get_gold():
-        """获取当前金币总数"""
-        return store.wealth * 5 + store.extra_gold
+        """获取当前金币总数（下限为0，永不为负）"""
+        return max(0, store.wealth * 5 + store.extra_gold)
 
     def set_gold(amount):
         """设置金币数量 (调整 extra_gold)"""
         store.extra_gold = amount - store.wealth * 5
 
     def modify_gold(delta):
-        """增减金币"""
+        """增减金币（扣减后保证总金币不低于0）"""
         store.extra_gold += delta
+        # 确保金币总数不为负
+        if store.wealth * 5 + store.extra_gold < 0:
+            store.extra_gold = -(store.wealth * 5)
 
     def get_max_inventory_slots():
         """背包最大容量: 20 + power // 15"""
@@ -712,12 +715,18 @@ style inv_section_text is default:
 ################################################################################
 
 screen inventory_screen():
-    tag menu
     modal True
     zorder 150
 
-    ## 暗色遮罩
-    add Solid("#000000bb") at inv_overlay_show
+    default _inv_selected = None
+
+    ## 暗色遮罩 — 点击遮罩区域关闭
+    button:
+        background Solid("#000000bb")
+        xfill True
+        yfill True
+        action Hide("inventory_screen")
+        at inv_overlay_show
     key "K_ESCAPE" action Hide("inventory_screen")
     key "K_i" action Hide("inventory_screen")
     key "game_menu" action Hide("inventory_screen")
@@ -1057,7 +1066,7 @@ screen inventory_screen():
                             hbox:
                                 spacing 8
                                 text "买入:" size 12 color "#6a5e48" font "msyh.ttf"
-                                text "[_sel_info[price]]金" size 12 color "#ffd866" font "msyh.ttf"
+                                text "[_sel_info[\"price\"]]金" size 12 color "#ffd866" font "msyh.ttf"
                                 text "卖出:" size 12 color "#6a5e48" font "msyh.ttf"
                                 $ _sell_p = get_sell_price(_inv_selected)
                                 text "[_sell_p]金" size 12 color "#ffd866" font "msyh.ttf"
@@ -1166,14 +1175,21 @@ screen inventory_screen():
 ################################################################################
 
 screen shop_screen():
-    tag menu
+    ## 去掉 tag menu — 避免与Ren'Py内置游戏菜单冲突
     modal True
     zorder 150
 
-    ## 暗色遮罩
-    add Solid("#000000cc") at inv_overlay_show
-    key "K_ESCAPE" action Hide("shop_screen")
-    key "game_menu" action Hide("shop_screen")
+    default _inv_selected = None
+
+    ## 暗色遮罩 — 点击关闭
+    button:
+        background Solid("#000000cc")
+        xfill True
+        yfill True
+        action [Hide("shop_screen"), Return()]
+        at inv_overlay_show
+    key "K_ESCAPE" action [Hide("shop_screen"), Return()]
+    key "game_menu" action [Hide("shop_screen"), Return()]
 
     ## 商店提示变量
     default _shop_msg = ""
@@ -1228,7 +1244,7 @@ screen shop_screen():
                             text_size 20
                             text_color "#6a5e48"
                             text_hover_color "#d4a942"
-                            action Hide("shop_screen")
+                            action [Hide("shop_screen"), Return()]
 
             add Solid("#d4a94230") xsize 1.0 ysize 2
 
@@ -1550,7 +1566,7 @@ init python:
             renpy.show_screen("inventory_screen")
         renpy.restart_interaction()
 
-    config.underlay.append(renpy.Keymap(K_i=_toggle_inventory))
+    # config.underlay.append(renpy.Keymap(K_i=_toggle_inventory))  # 已移除：背包UI入口暂不开放
 
 
 ################################################################################
@@ -1574,9 +1590,7 @@ label open_market(name, stock):
     $ store._shop_name = name
     $ store._shop_stock = list(stock)
     $ store._inv_selected = None
-    show screen shop_screen
-    pause
-    hide screen shop_screen
+    call screen shop_screen
     return
 
 ## 初始化背包 (游戏开始时调用)

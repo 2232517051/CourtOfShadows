@@ -89,6 +89,7 @@ label ch1_deep_father_grave:
 
     player "这座城堡比我记忆中的要破旧。城墙有三处需要修补，粮仓的存粮只够撑过冬天。你都知道的，对吗？你什么都知道，只是……来不及了。"
 
+    $ hide_all_chars()
     "你闭上眼睛。"
 
     "一段记忆从脑海深处浮了上来——不是你刻意去想，而是它自己来找你的。"
@@ -140,6 +141,7 @@ label ch1_deep_father_grave:
 
     player "我不知道自己能不能做好。但我会试。"
 
+    $ hide_all_chars()
     "你站起身来。晨雾开始消散，阳光从云层的缝隙中落下来，在墓碑上投下金色的光斑。"
 
     "你从腰间抽出了短剑。剑柄上镶着家族的徽章——一只展翅的灰隼。"
@@ -151,8 +153,11 @@ label ch1_deep_father_grave:
 
             "你单膝跪地，将短剑横放在墓碑前。剑身上映出了你的倒影——一张年轻的、倔强的脸。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "父亲，我以艾登家族的名义起誓——我会成为你未能成为的那种领主。不是仁慈，不是残暴，而是足够强大，强大到没人敢欺负我们的人。"
 
+            $ hide_all_chars()
             "你把短剑从墓碑前拾起，剑柄被露水浸得冰凉。清晨的冷风灌进衣领，带走了最后一丝犹豫。"
 
             "你拿起剑，重新插回剑鞘。金属碰撞的声响清脆而坚决。"
@@ -165,8 +170,11 @@ label ch1_deep_father_grave:
 
             "你把花束放在墓碑前，然后双手合十，低下了头。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "……愿上主赐予您安息。愿您的灵魂在彼岸找到您在此世未曾拥有的平静。"
 
+            $ hide_all_chars()
             "你不确定自己信的是哪个神。但此刻，你愿意相信——在某个地方，父亲能听到你的声音。"
 
             "风吹过，花瓣微微颤动，像是一个无声的回应。"
@@ -178,6 +186,8 @@ label ch1_deep_father_grave:
 
             "你什么都没做。你只是又蹲了下来，把额头抵在冰冷的墓碑上。"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "……父亲，我不想装了。"
 
             player "我很怕。真的很怕。每天早上醒来的第一个念头就是——我还不够格。我不知道怎么当一个领主。我甚至不知道怎么不让别人看出我在害怕。"
@@ -188,6 +198,7 @@ label ch1_deep_father_grave:
 
             player "……但我不会逃。这一点我可以向你保证。"
 
+            $ hide_all_chars()
             "你在那里待了很久。久到露水打湿了你的膝盖，久到晨雾散尽，阳光完全照进了树林。"
 
     "你站起身，转身向回走。"
@@ -195,10 +206,13 @@ label ch1_deep_father_grave:
     hide player_char_img
     show aldric_img at right with dissolve
 
+    $ hide_all_chars()
     "奥尔德里克就站在白桦树旁。他的老脸上看不出什么表情，但你注意到他的眼眶微微泛红。"
 
     "他没有问你说了什么。他只是默默地和你并肩走了一段，然后开口道："
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "大人……"
 
     aldric "您父亲生前有一句话，我一直记得。"
@@ -217,6 +231,7 @@ label ch1_deep_father_grave:
 
     aldric "他种下的种子已经发芽了。"
 
+    $ hide_all_chars()
     "你没有回答。但你加快了脚步。"
 
     "城堡在等着你。"
@@ -286,6 +301,7 @@ label ch1_deep_patrol:
     show captain_img at left with dissolve
     captain "您父亲要求的。他说，'了解你的土地，就像了解你手中剑的每一道纹路。'"
 
+    $ hide_all_chars()
     "雷恩的声音在提到你父亲时微微一顿，然后很快恢复了平稳。"
 
     "你们继续向北，经过了两个小村子。村民们看到领主巡逻队经过，纷纷停下手中的活计，有人行礼，有人只是目送。你能感受到那些目光里混杂着好奇、期待和不确定。"
@@ -296,6 +312,8 @@ label ch1_deep_patrol:
 
     "河水不深，但水流湍急。一座木桥横跨其上——或者说，曾经横跨其上。桥面中间断了一截，木板斜斜地插在水里，像一排歪掉的牙齿。"
 
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "该死。"
 
     "雷恩勒住马，脸色沉了下来。"
@@ -343,6 +361,7 @@ label ch1_deep_patrol:
             show captain_img at left with dissolve
             captain "明白了。我会安排。"
 
+            $ hide_all_chars()
             "你不经意间回头——河对岸，几个村民站在断桥那头远远地望着你们。他们可能听不清你说了什么，但他们看到了你停下来，看到了你指着桥说了很多话。"
 
             "有时候，看到就够了。"
@@ -361,6 +380,7 @@ label ch1_deep_patrol:
             show captain_img at left with dissolve
             captain "……好的，大人。"
 
+            $ hide_all_chars()
             "雷恩的语气平淡，但你能感觉到他有一丝失望。不过这是更理性的选择——你不能见一个修一个，那样很快就会把有限的资源耗尽。"
 
             "你看了一眼对岸，在心里默默说：再等几天。"
@@ -385,6 +405,7 @@ label ch1_deep_patrol:
             show player_char_img at left with dissolve
             player "那就让他们想办法。领主不能事事包办。"
 
+            $ hide_all_chars()
             "雷恩没有再说什么。但他策马转身时，你看到他的嘴角抿成了一条直线。"
 
             "你告诉自己这是对的。你不能当一个烂好人。但胃里那一点微妙的不适感，一直到你们离开那条河才慢慢消散。"
@@ -412,6 +433,8 @@ label ch1_deep_patrol:
     "他站起来，目光扫过树林深处。"
 
     captain "从东面来——那是克雷恩男爵的地界。"
+
+    captain "克雷恩是格雷伯爵的附庸——小封地，就夹在我们和格雷伯爵主领之间。这几年他和伯爵走得不近，倒是和王都那边有些小动作。"
 
     hide captain_img
     $ hide_all_chars("player_char_img")
@@ -543,6 +566,7 @@ label ch1_deep_patrol:
     show captain_img at left with dissolve
     captain "赫尔曼。我认识你。去年你卖给驻军一批箭头，有三成是次品。"
 
+    $ hide_all_chars()
     "赫尔曼的笑容僵了一瞬，但立刻恢复了。"
 
     "「雷恩队长说笑了！那不过是一点小小的误会……」"
@@ -557,6 +581,8 @@ label ch1_deep_patrol:
 
     "你记住了每一个字。商人的闲话里，有时藏着比密探报告更有价值的东西。"
 
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "走吧，大人。天色不早了。"
 
     "你们和商人告别，策马返回城堡。"
@@ -608,6 +634,7 @@ label ch1_deep_court:
     show player_char_img at left with dissolve
     player "明白了。"
 
+    $ hide_all_chars()
     "你坐到椅子上。木头在你的重量下微微嘎吱了一声。"
 
     "你环顾大厅。所有的目光都聚焦在你身上。"
@@ -623,6 +650,7 @@ label ch1_deep_court:
 
     aldric "原告——柏恩农场的约瑟。被告——磨坊坡的塞巴斯。争议标的——十二只绵羊。"
 
+    $ hide_all_chars()
     "粗壮的那个先开口了，声音像破锣。"
 
     "「大人！我的羊被他偷了！十二只！前天早上一数，少了十二只，然后我就在他的羊圈里看到了它们！」"
@@ -643,6 +671,7 @@ label ch1_deep_court:
     show aldric_img at left with dissolve
     aldric "是的。我派人去看了两家的羊圈。约瑟的羊圈围栏有一处大洞，足够羊钻过去。而塞巴斯的羊圈就在约瑟羊圈的下坡方向，中间隔了不到二百步。"
 
+    $ hide_all_chars()
     "也就是说——羊可能是自己跑过去的。"
 
     "两个人的脸色都不太好看。"
@@ -682,6 +711,7 @@ label ch1_deep_court:
 
             player "十二只羊判给塞巴斯。约瑟，回去把围栏修好。如果你能证明那些羊身上有你的标记，可以来重新申诉。"
 
+            $ hide_all_chars()
             "约瑟的脸涨得通红，但在卫兵的目光下，他低着头退下了。"
 
             "大厅里响起了一阵窃窃私语。有人觉得这判决太严了，但也有人在点头——至少这个领主做事有章法。"
@@ -692,6 +722,8 @@ label ch1_deep_court:
             $ change_stat("wealth", 3)
             $ ch1_deep_sheep_verdict = "fine"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "你们两个为了十二只羊闹到领主法庭来，浪费了所有人的时间。"
 
             "你的声音不高，但整个大厅都安静了。"
@@ -702,6 +734,7 @@ label ch1_deep_court:
 
             player "下次再有这种鸡毛蒜皮的事，先去找村长调解。村长解决不了的，再来找我。听明白了吗？"
 
+            $ hide_all_chars()
             "两个人忙不迭地点头，几乎是逃一样退出了大厅。"
 
             "你能感觉到大厅里的气氛变了——人们看你的眼神里，多了一些……敬畏。"
@@ -719,6 +752,7 @@ label ch1_deep_court:
     show aldric_img at left with dissolve
     aldric "原告——面包师弗里茨。被告——寡妇玛格丽特之子汉斯。罪名——盗窃。"
 
+    $ hide_all_chars()
     "面包师先说话了。"
 
     "「大人，这小崽子偷了我三个黑麦面包！我亲眼看到的！他从后门钻进来，抓起面包就跑。我追了两条街才把他按住。」"
@@ -762,6 +796,7 @@ label ch1_deep_court:
 
             player "你偷了东西。这是事实。但你为了家人，不是为了自己。我今天放了你。但你要记住——下次有困难，来城堡找管家。不要走这条路。"
 
+            $ hide_all_chars()
             "少年的嘴唇颤了颤。"
 
             "「……谢谢大人。」"
@@ -774,6 +809,8 @@ label ch1_deep_court:
             $ change_stat("reputation", 8)
             $ ch1_deep_widow_verdict = "pay"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "弗里茨，你的面包钱——三个铜币——从我的私库里出。你没有损失。"
 
             "面包师的怒气立刻消了大半。"
@@ -784,10 +821,13 @@ label ch1_deep_court:
 
             player "去找管家奥尔德里克登记。从今天起，你家每月可以从领地的救济粮仓领取基本口粮，直到你的孩子们长大到可以做工为止。"
 
+            $ hide_all_chars()
             "寡妇愣住了。然后她磕了一个头，一个极重的头，额头撞在石板地上，发出闷闷的声响。"
 
             "「大人……大人的恩德……」"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "别磕了。带你儿子回去吧。"
 
             "大厅里有人在鼓掌。你制止了——法庭不是表演的地方。但你注意到，很多人的目光变了。"
@@ -798,6 +838,8 @@ label ch1_deep_court:
             $ change_stat("faith", 3)
             $ ch1_deep_widow_verdict = "work"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "汉斯。你偷了面包，这是事实。法律就是法律，不能因为理由好听就视而不见。"
 
             "少年又低下了头。寡妇的呼吸急促起来。"
@@ -808,6 +850,7 @@ label ch1_deep_court:
 
             player "这不是惩罚。这是机会。你愿意吗？"
 
+            $ hide_all_chars()
             "少年缓缓抬起头。他看了看母亲，又看了看你。"
 
             "「……我愿意。」"
@@ -827,6 +870,7 @@ label ch1_deep_court:
     show aldric_img at left with dissolve
     aldric "原告——丝绸商人维克多。被告——税务官格哈特。争议——维克多声称上一次缴税时被多收了三十枚银币。"
 
+    $ hide_all_chars()
     "商人维克多拱手行礼，姿态从容。"
 
     "「大人，我做的是正经生意。上个月我运了一批丝绸到领地内售卖，按照税率应缴纳七十枚银币。但格哈特大人收了我一百枚。多出来的三十枚，我要求退还。」"
@@ -866,6 +910,7 @@ label ch1_deep_court:
 
             player "我不凭任何人的一面之词下判断。账本会告诉我真相。"
 
+            $ hide_all_chars()
             "商人微微点头，似乎对这个结果很满意。而税务官……你注意到他的手在微微发抖。"
 
             "你决定之后仔细看看那些账本。如果税务官真的在中饱私囊，这绝不只是三十枚银币的问题。"
@@ -875,8 +920,11 @@ label ch1_deep_court:
             $ change_stat("power", 5)
             $ ch1_deep_tax_verdict = "trust_collector"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "外邦商品税是写在律法里的。不管以前有没有执行，规矩就是规矩。维克多，三十枚银币不退。"
 
+            $ hide_all_chars()
             "商人的脸沉了下来，但他没有争辩。他只是深深地鞠了一躬。"
 
             "「大人说的是。」"
@@ -892,12 +940,15 @@ label ch1_deep_court:
             $ change_stat("reputation", 8)
             $ ch1_deep_tax_verdict = "trust_merchant"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "一条十五年没执行过的税法，突然拿出来用在一个商人身上——格哈特，你觉得这合理吗？"
 
             "税务官的嘴唇动了动，但没发出声音。"
 
             player "退还维克多三十枚银币。如果要恢复外邦商品税，需要我正式颁布法令。在那之前，一切按旧规矩来。"
 
+            $ hide_all_chars()
             "维克多的脸上浮现出了笑意。他深深鞠躬。"
 
             "「大人英明。」"
@@ -937,6 +988,7 @@ label ch1_deep_market:
 
     elena "把帽子压低一点。你的脸还不至于家喻户晓，但不怕一万，只怕万一。"
 
+    $ hide_all_chars()
     "你拉了拉帽檐，跟着她走进了艾登堡的集市。"
 
     "你以前只从城堡的窗户上远远看过这个集市。走进来才发现，它比你想象的要大得多——也混乱得多。"
@@ -945,6 +997,8 @@ label ch1_deep_market:
 
     "叫卖声、讨价还价声、孩子的笑声、鸡的咯咯声——所有的声音混在一起，嗡嗡地震动着你的耳膜。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "看那边——那个卖布的。"
 
     "她用下巴指了指一个中年男人的摊位。他在兜售看上去品质不错的染布。"
@@ -1001,6 +1055,7 @@ label ch1_deep_market:
 
     elena "那个卖苹果的姑娘，她的围裙口袋里鼓鼓的。不是钱，钱没那么重。是刀。"
 
+    $ hide_all_chars()
     "你越听越心惊。这个看似平凡的集市底下，藏着一整个你从未想象过的暗流。"
 
     ## ── 发现黑市 ──
@@ -1009,8 +1064,11 @@ label ch1_deep_market:
 
     "但艾琳娜径直走向了其中一间仓库的侧门。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "跟我来。不要说话。"
 
+    $ hide_all_chars()
     "她推开了一扇半掩的门。你跟着走了进去。"
 
     "里面——出乎意料地——灯火通明。"
@@ -1023,6 +1081,8 @@ label ch1_deep_market:
 
     "而且这些不是猎人用的工具——这是战斗用的武器。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "看到了吧。有人在你的领地里经营着一个武器黑市。"
 
     "你压低了声音。"
@@ -1069,6 +1129,7 @@ label ch1_deep_market:
             show elena_img at left with dissolve
             elena "……明白了。"
 
+            $ hide_all_chars()
             "她的语气平淡，但你能感觉到她有些遗憾——也许她觉得这是一个更大棋局的线索，而你选择了最直接但未必最聪明的方式。"
 
             "但有些时候，直接就是最好的。"
@@ -1277,6 +1338,7 @@ label ch1_deep_elena_lesson:
 
     elena "拆开看看。"
 
+    $ hide_all_chars()
     "你揭开蜡封，展开信纸。上面写着一行看似毫无意义的文字："
 
     "'山中无虎，猴王称霸。东风不起，残叶满阶。'"
@@ -1385,6 +1447,7 @@ label ch1_deep_elena_lesson:
 
     elena "您父亲去世前的最后几个月，身体急速衰退。所有人都说是操劳过度。但——"
 
+    $ hide_all_chars()
     "她没有说完。但那半句话的重量，像一块巨石，压在了房间里每一寸空气上。"
 
     "你盯着那个绿色的瓶子。手指微微发抖。"
@@ -1411,6 +1474,7 @@ label ch1_deep_elena_lesson:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你一个人坐在书房里。油灯的火焰在微微跳动。"
 
     "你看着桌上残留的那封密码信，脑海里反复回响着艾琳娜最后那句半截的话。"
@@ -1489,14 +1553,18 @@ label ch1_deep_old_guard:
     show player_char_img at left with dissolve
     player "别动。躺着说。"
 
+    $ hide_all_chars()
     "你拉了一把椅子，坐到他的床边。"
 
     "老人的嘴唇动了动。声音像是从很远的地方传来的，像一阵风穿过枯枝。"
 
     "「大人……谢谢您来。老头子……还以为见不到您了。」"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "你要见我，我就来。——你感觉怎么样？"
 
+    $ hide_all_chars()
     "他咧嘴笑了。没有几颗牙齿了。"
 
     "「快死了。但不怕。怕死的人当不了四十三年的兵。」"
@@ -1591,12 +1659,15 @@ label ch1_deep_old_guard:
             $ change_stat("power", 5)
             $ ch1_deep_guard_funeral = "military"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "全副甲胄入殓。灰隼旗覆棺。卫兵列队送行。"
 
             "你停了停。"
 
             player "号角——吹三声。一声送别，一声致敬，一声……替所有没能等到他离开的人。"
 
+            $ hide_all_chars()
             "那天的葬礼，城堡的每一个人都来了。号角声在山谷间回荡，像是大地在为一个老兵唱最后的歌。"
 
             "卫兵们站得笔直。有几个年轻的在偷偷擦眼泪。"
@@ -1606,6 +1677,8 @@ label ch1_deep_old_guard:
             $ change_stat("loyalty", 8)
             $ ch1_deep_guard_funeral = "peaceful"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "他有家人吗？"
 
             hide player_char_img
@@ -1618,6 +1691,7 @@ label ch1_deep_old_guard:
             show player_char_img at left with dissolve
             player "把他葬在妻子旁边。仪式从简——他守了四十三年的岗，够累了。让他安安静静地走。"
 
+            $ hide_all_chars()
             "葬礼在一个有阳光的下午举行。只有几个相熟的老卫兵和他的女儿在场。"
 
             "你站在远处看着。没有号角，没有旗帜。只有风声，和一个女人低低的啜泣。"
@@ -1629,8 +1703,11 @@ label ch1_deep_old_guard:
             $ change_stat("reputation", 8)
             $ ch1_deep_guard_funeral = "tower"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "从今天起，城堡的西塔改名为'弗雷德里克塔'。在塔底刻一块铭牌——上面写：弗雷德里克，忠诚卫士，守望四十三年。"
 
+            $ hide_all_chars()
             "大厅里安静了一瞬。然后几个老卫兵——弗雷德里克的同辈人——缓缓地、用力地点了头。"
 
             "一座塔以一个普通卫兵的名字命名。这在艾登堡的历史上从未发生过。"
@@ -1788,6 +1865,8 @@ label ch1_deep_cellar:
             $ change_stat("intrigue", 8)
             $ ch1_deep_cellar_choice = "secret"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "留着它。但只有你和我知道。如果有一天我们需要跑——这就是最后的退路。"
 
             hide player_char_img
@@ -1807,6 +1886,8 @@ label ch1_deep_cellar:
             $ change_stat("loyalty", 8)
             $ ch1_deep_cellar_choice = "tell"
 
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "叫奥尔德里克和雷恩来。他们是我最信任的人。这种事不应该瞒着他们。"
 
             hide player_char_img
@@ -1830,6 +1911,7 @@ label ch1_deep_cellar:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "那天夜里，你又把父亲的笔记本翻了一遍。那些密码文字在烛光下跳动着，像是无数等待被破解的秘密在对你眨眼。"
 
     "父亲留下的不只是一座城堡和一个头衔。"
@@ -1925,10 +2007,13 @@ label ch1_deep_sunset:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
 
+        $ hide_all_chars()
         "艾琳娜走到你身旁。她没有说话，只是和你一起看着渐渐暗下去的天空。"
 
         "过了很久——或者很短，在这种时刻你分不清——她轻声说："
 
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "漂亮的日落。"
 
         hide elena_img
@@ -1956,10 +2041,13 @@ label ch1_deep_sunset:
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
 
+        $ hide_all_chars()
         "奥尔德里克缓缓走到你身旁。他的步伐比白天更慢——老骨头怕冷，傍晚的风对他不太友好。"
 
         "他看了你一眼，没有问你在想什么。这是他的体贴。"
 
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
         aldric "大人，厨房准备了热汤。"
 
         hide aldric_img
@@ -1972,16 +2060,20 @@ label ch1_deep_sunset:
         show aldric_img at left with dissolve
         aldric "好。"
 
+        $ hide_all_chars()
         "他就站在那里陪着你。你们一起看着天色一点一点暗下去，像是一扇慢慢关上的门。"
 
         "然后他说了一句很轻很轻的话——轻到你几乎以为是风声："
 
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
         aldric "……您父亲也喜欢在这个位置看日落。"
 
         "你没有回答。"
 
         hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "夜色完全降临了。"
 
     "你最后看了一眼那片被星光覆盖的领地。那些村庄里亮着的灯火，每一盏都是一个家庭。他们在吃晚饭，在讲故事给孩子听，在盘算明天的活计。"

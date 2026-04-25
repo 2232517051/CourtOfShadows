@@ -38,8 +38,22 @@ image bg_road_night = Transform("images/bg_forest_path.webp", size=(1280, 720), 
 image bg_road_dawn = Transform("images/bg_forest_path.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#ffddaa"))
 image bg_study_night = Transform("images/bg_study.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#667799"))
 image bg_bedroom = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
+image bg_ancient_ruins = Transform("images/bg_ancient_ruins.webp", size=(1280, 720), fit="cover")
+image bg_crypt = Transform("images/bg_crypt.webp", size=(1280, 720), fit="cover")
+
+## 下划线别名（pv.rpy 等使用 scene bg_xxx 格式）
+image bg_battlefield = Transform("images/bg_battlefield.webp", size=(1280, 720), fit="cover")
+image bg_border = Transform("images/bg_border.webp", size=(1280, 720), fit="cover")
+image bg_castle_exterior = Transform("images/bg_castle_exterior.webp", size=(1280, 720), fit="cover")
+image bg_church_interior = Transform("images/bg_church_interior.webp", size=(1280, 720), fit="cover")
+image bg_great_hall = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
+image bg_throne_room = Transform("images/bg_throne_room.webp", size=(1280, 720), fit="cover")
+image bg_underground = Transform("images/bg_underground.webp", size=(1280, 720), fit="cover")
 
 ## 空格分隔格式别名（scene bg xxx 引用）
+image bg bedroom = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
+image bg ancient_ruins = Transform("images/bg_ancient_ruins.webp", size=(1280, 720), fit="cover")
+image bg crypt = Transform("images/bg_crypt.webp", size=(1280, 720), fit="cover")
 image bg castle_garden = Transform("images/bg_palace_garden.webp", size=(1280, 720), fit="cover")
 image bg castle_library = Transform("images/bg_study.webp", size=(1280, 720), fit="cover")
 image bg castle_interior = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
@@ -157,6 +171,15 @@ image blacksmith_wife_img = Transform("images/blacksmith_wife.png", zoom=0.45, y
 image noble_lady_img = Transform("images/noble_lady.png", zoom=0.45, yalign=1.0)
 image soldier_generic_img = Transform("images/soldier_generic.png", zoom=0.45, yalign=1.0)
 image servant_generic_img = Transform("images/servant_generic.png", zoom=0.45, yalign=1.0)
+image old_woman_img = Transform("images/old_woman.png", zoom=0.45, yalign=1.0)
+image herbalist_vera_img = Transform("images/herbalist_vera.png", zoom=0.45, yalign=1.0)
+image lily_root_img = Transform("images/lily_root.png", zoom=0.45, yalign=1.0)
+image queen_envoy_img = Transform("images/queen_envoy.png", zoom=0.45, yalign=1.0)
+image stable_boy_img = Transform("images/stable_boy.png", zoom=0.45, yalign=1.0)
+image herald_img = Transform("images/herald.png", zoom=0.45, yalign=1.0)
+image beggar_img = Transform("images/beggar.png", zoom=0.45, yalign=1.0)
+image court_herald_img = Transform("images/court_herald.png", zoom=0.45, yalign=1.0)
+image court_poet_img = Transform("images/court_poet.png", zoom=0.45, yalign=1.0)
 
 ## 序章特殊角色
 image bertrand_img = Transform("images/bertrand.png", zoom=0.45, yalign=1.0)
@@ -188,7 +211,9 @@ init python:
         "old_guard", "servant_marta", "priest_thomas", "noble_werner",
         "countess_hilda", "count_grey", "viscount_wells", "countess_stein",
         "storyteller", "assassin_char", "blacksmith_wife", "noble_lady",
-        "soldier_generic", "servant_generic",
+        "soldier_generic", "servant_generic", "old_woman",
+        "herbalist_vera", "lily_root", "queen_envoy", "stable_boy",
+        "herald", "beggar", "court_herald", "court_poet",
         # 序章特殊角色
         "bertrand",
         # 治理/NPC角色

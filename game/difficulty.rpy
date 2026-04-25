@@ -27,6 +27,20 @@ init 1 python:
             return int(delta * cfg["negative"])
         return 0
 
+    def _diminishing_returns(current_val, raw_delta):
+        """递减收益：属性越高，增益越少，防止一章就满的问题
+        0-40: 100%增益 | 40-60: 70% | 60-80: 40% | 80+: 20%
+        负面效果不受递减影响"""
+        if raw_delta <= 0:
+            return raw_delta
+        if current_val >= 80:
+            return max(1, int(raw_delta * 0.2))
+        elif current_val >= 60:
+            return max(1, int(raw_delta * 0.4))
+        elif current_val >= 40:
+            return max(1, int(raw_delta * 0.7))
+        return raw_delta
+
     ## 覆写 change_stat 和 change_rel，加入难度倍率
     _original_change_stat = change_stat
     _original_change_rel = change_rel
@@ -35,6 +49,9 @@ init 1 python:
         adjusted = get_difficulty_multiplier(delta)
         if adjusted == 0 and delta != 0:
             adjusted = 1 if delta > 0 else -1
+        ## 递减收益：属性越高增益越少
+        current = getattr(store, stat, 0)
+        adjusted = _diminishing_returns(current, adjusted)
         _original_change_stat(stat, adjusted)
 
     def change_rel_with_difficulty(rel, delta):
@@ -87,7 +104,6 @@ screen difficulty_select():
                     background Solid("#1a152860" if _selected else "#1a152830")
                     hover_background Solid("#1a152880")
                     action SetField(persistent, "difficulty", diff_key)
-                    activate_sound "audio/sfx/ui_click.ogg"
 
                     hbox:
                         spacing 14
@@ -122,8 +138,7 @@ screen difficulty_select():
                 text_color "#d4a942"
                 text_hover_color "#ffd866"
                 text_font "msyh.ttf"
-                action Hide("difficulty_select")
-                activate_sound "audio/sfx/ui_confirm.ogg"
+                action Return()
 
 
 ################################################################################

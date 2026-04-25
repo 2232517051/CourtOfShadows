@@ -41,6 +41,7 @@ label npc_merchant_karl_past:
 
     "你注意到卡尔没有像往常一样忙着清点货物。他独自坐在一个空木箱上，盯着手里的什么东西出神。"
 
+    $ hide_all_chars("merchant_karl_img")
     show merchant_karl_img at left with dissolve
 
     "走近了你才看清——那是一枚铜制的商会徽章，磨损得几乎看不清上面的纹饰。"
@@ -232,11 +233,14 @@ label npc_merchant_karl_past:
 
     merchant "夜深了，领主大人。感谢您愿意听一个老商人絮叨。"
 
+    $ hide_all_chars()
     "他走入暮色之中。那个弓着腰的背影，比平日里精明干练的商人卡尔，显得苍老了十岁。"
 
     "你低头看着手掌——关于王都的税吏、关于被碾碎的商号、关于复仇——这些碎片在你脑海中慢慢拼成一幅更大的画面。"
 
     "伊莎贝拉的统治之下，又有多少个温特菲尔德？"
+
+    hide merchant_karl_img with dissolve
 
     return
 
@@ -256,6 +260,7 @@ label npc_captain_war_story:
 
     "他独自坐在垛口边，手里端着一壶酒，却似乎一口都没喝。他的目光越过原野，看向北方远处灰蒙蒙的山脊。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
     hide captain_img
@@ -433,9 +438,12 @@ label npc_captain_war_story:
 
     captain "走吧，天冷了。明天还有一队新兵要训练——那些小子连刀都握不稳，跟我当年一样。"
 
+    $ hide_all_chars()
     "他粗糙的笑声消散在夜风里。而你站在城墙上多停留了一会儿，望着北方那片看不见的山脊。"
 
     "风的味道——你还闻不出来。但你记住了雷恩的话。"
+
+    hide captain_img with dissolve
 
     return
 
@@ -458,6 +466,7 @@ label npc_bishop_doubt:
 
     "教堂后门通向一间狭小的忏悔室。烛光摇曳中，马修斯跪在圣像前，但他没有在祈祷——他只是低着头，一动不动。"
 
+    $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
 
     "你轻轻敲了敲门框。他转过头，眼底的疲惫像经年的灰尘一样厚。"
@@ -503,11 +512,11 @@ label npc_bishop_doubt:
                 $ change_stat("intrigue", 3)
                 $ change_rel("rel_bishop", 3)
 
-                bishop "我不知道。大主教应该销毁了，但那个人一向谨慎——他也许留了一份副本作为保险。"
+                bishop "存在。"
 
-                bishop "如果原始遗诏还在，那它就是推翻王后摄政合法性的最有力证据。"
+                bishop "那晚我对你说过——费雷恩让我销毁它，但我没有。那份原件还在一个只有我知道的地方，这二十年没被任何人发现。"
 
-                bishop "但要找到它，就必须深入教会的核心档案馆——那地方比王宫还难进。"
+                bishop "时机合适时我会交给你。到那天，我也就该准备面对我应得的后果了。"
 
             "你在怀疑自己的信仰？":
                 $ change_stat("faith", 5)
@@ -577,11 +586,15 @@ label npc_bishop_doubt:
                 $ change_stat("intrigue", 3)
                 $ change_rel("rel_bishop", 3)
 
-                bishop "我不知道。大主教应该销毁了，但那个人一向谨慎——他也许留了一份副本作为保险。"
+                "主教的眼神躲闪了一瞬。他看着手中的杯子，没有立刻回答。"
 
-                bishop "如果原始遗诏还在，那它就是推翻王后摄政合法性的最有力证据。"
+                bishop "……存在。"
 
-                bishop "但要找到它，就必须深入教会的核心档案馆——那地方比王宫还难进。"
+                bishop "我不该告诉你的——但你既然问了，我也不想再骗你。"
+
+                bishop "如果它的下落泄露出去，藏它的人和知情的人都活不过三天。所以现在，我只能告诉你这些：它还在。在一个安全的地方。"
+
+                bishop "当时机合适，当我有足够的勇气——我会把它交给一个能用它揭开真相的人。也许……就是你。"
 
             "你在怀疑自己的信仰？":
                 $ change_stat("faith", 5)
@@ -679,11 +692,14 @@ label npc_bishop_doubt:
 
     bishop "请您……替我保守这个秘密。"
 
+    $ hide_all_chars()
     "你点头，转身走出忏悔室。身后传来低沉的诵经声——不知是祈祷，还是忏悔。"
 
     "走出教堂时，夜空中繁星密布。你忽然想——在那些星星背后，真的有什么在注视着这一切吗？"
 
     "如果有，他一定很失望。"
+
+    hide bishop_img with dissolve
 
     return
 
@@ -704,8 +720,10 @@ label npc_elena_homeland:
 
     "你在花园的角落发现了艾琳娜。她站在一棵光秃秃的老梧桐树下，仰着头看飞舞的雪花。"
 
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
 
+    $ hide_all_chars()
     "她没有穿平时那身利落的深色衣裙，而是裹着一件明显过大的灰色斗篷——那是士兵们的制式斗篷，不知道她从哪里弄来的。"
 
     "最让你意外的是她的表情。那张永远冷静、永远带着几分算计的脸上，此刻只有一种你从未见过的东西——柔软。"
@@ -722,7 +740,10 @@ label npc_elena_homeland:
 
     elena "我家乡也会下雪。比这里更大、更密。"
 
-    "你从未听她提起过家乡。事实上，关于她的过去，你知道的几乎为零。"
+    if elena_spy_known:
+        "你从未听她提起过家乡。她的间谍身份你已经知道了，但关于她真正的出身——那个人，而非那件武器——你一无所知。"
+    else:
+        "你从未听她提起过家乡。事实上，关于她的过去，你知道的几乎为零。"
 
     hide elena_img
     show player_char_img at left with dissolve
@@ -750,15 +771,26 @@ label npc_elena_homeland:
 
     "她的声音突然变冷了，像是有什么开关被触动。"
 
-    elena "你已经知道我是谁了——侍女学院出来的间谍，王后的棋子，后来变成暗百合的人。"
+    if elena_spy_known:
+        elena "你已经知道我是谁了——侍女学院出来的间谍，王后的棋子，后来变成暗百合的人。"
+    else:
+        elena "我不是你以为的那种人。我是侍女学院训练出来的间谍——王后的棋子。"
+        $ elena_spy_known = True
+        if dark_lily_exists_known:
+            elena "后来变成暗百合的人。"
+        else:
+            elena "后来我背叛了她，加入了一个叫暗百合的组织。"
+            $ dark_lily_exists_known = True
 
     elena "但你不知道的是——那些年我到底害了多少人。"
 
     "她的手不自觉地攥紧了斗篷的边缘。"
 
+    elena "艾登堡之前，我执行过三次任务。每一次，都意味着一个家族的崩塌。"
+
     hide elena_img
     show player_char_img at left with dissolve
-    player "第四个……你来艾登堡之前，已经……"
+    player "第四个……就是艾登堡。你来之前，已经毁过三个人家？"
 
     hide player_char_img
     show elena_img at left with dissolve
@@ -817,10 +849,13 @@ label npc_elena_homeland:
 
     if elena_romance:
 
+        $ hide_all_chars()
         "你走近她。雪花落在你们两个人的肩头。"
 
         "她没有躲开——这对一个习惯了保持距离的人来说，本身就是一种信任。"
 
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "……你为什么对我这么好？"
 
         hide elena_img
@@ -856,6 +891,7 @@ label npc_elena_homeland:
         show elena_img at left with dissolve
         elena "谢谢你。"
 
+        $ hide_all_chars()
         "雪继续下着。你们并肩站在老梧桐树下，肩膀几乎靠在一起。"
 
         "这或许是自你们相识以来，她第一次卸下了所有的盔甲。"
@@ -881,19 +917,25 @@ label npc_elena_homeland:
 
         elena "也许吧。至少在艾登堡……我不再觉得自己只是一颗棋子了。"
 
+    $ hide_all_chars()
     "雪渐渐停了。花园里一片银白。"
 
     "艾琳娜将那件灰色斗篷裹紧了一些，向你微微点头。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "领主大人，今天的话……请忘了吧。明天我还是那个冷面的情报官。"
 
+    $ hide_all_chars()
     "但你知道你不会忘。"
 
-    "那个在雪中仰头的少女，那个失去了父母和哥哥的孤儿，那个被迫成为棋子却从未放弃温柔的女人——这些碎片拼在一起，才是完整的艾琳娜。"
+    "那个在雪中仰头的少女，那个父亲早逝、母亲改嫁后被独自留下的孤儿，那个被迫成为棋子却从未放弃温柔的女人——这些碎片拼在一起，才是完整的艾琳娜。"
 
     "你终于理解了她为什么总是在白天戴着面具。"
 
     "因为面具之下的东西，太脆弱了。"
+
+    hide elena_img with dissolve
 
     return
 
@@ -913,6 +955,7 @@ label npc_aldric_promise:
 
     "奥尔德里克端着一杯热茶走进来——这是他每晚都会做的事。但今晚，他手里除了茶杯，还多了一个小小的锦盒。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
     aldric "少主，请先喝茶。"
@@ -945,6 +988,7 @@ label npc_aldric_promise:
 
     aldric "格里菲斯七世给了我这个。"
 
+    $ hide_all_chars()
     "他打开锦盒。"
 
     "里面是一枚银质徽章，比一般的军徽小得多，大约只有一枚银币大小。正面刻着一柄剑与一面盾交叉的图案，细节精致得像是出自王宫最好的工匠之手。"
@@ -978,13 +1022,20 @@ label npc_aldric_promise:
     if aldric_personal_done:
         aldric "少主，还记得我跟您说过先王遇刺的事吗？那晚的刺客……其实只是最后一击。"
 
-        aldric "后来我查明了真相。刺客只是表象——先王在那之前已经被人下了整整两年的慢性毒药。"
-
-        aldric "是暮色之露。王后用了整整两年，慢慢地、一滴一滴地毒杀了他。刺客不过是在先王油尽灯枯时，来收割最后一口气的。"
+        if queen_poisoned_king_known:
+            aldric "您已经知道了吧——暮色之露。王后用了整整两年。刺客不过是来收割最后一口气的。"
+        else:
+            aldric "后来我查明了真相。刺客只是表象——先王在那之前已经被人下了整整两年的慢性毒药。"
+            aldric "是暮色之露。王后用了整整两年，慢慢地、一滴一滴地毒杀了他。刺客不过是在先王油尽灯枯时，来收割最后一口气的。"
+            $ queen_poisoned_king_known = True
     else:
         aldric "二十年前，先王驾崩。我没能保护他——我在千里之外的艾登堡，接到消息时已经晚了三天。"
 
-        aldric "后来我才知道，是暮色之露。王后用了整整两年，慢慢地、一滴一滴地毒杀了他。"
+        if queen_poisoned_king_known:
+            aldric "您已经知道真相了——暮色之露。王后用了整整两年。"
+        else:
+            aldric "后来我才知道，是暮色之露。王后用了整整两年，慢慢地、一滴一滴地毒杀了他。"
+            $ queen_poisoned_king_known = True
 
     aldric "两年……先王一定很痛苦。他一定知道有人在害他。但他什么都没说——也许是为了保护什么人，也许是因为证据不够，也许……只是因为他太善良了。"
 
@@ -1083,10 +1134,13 @@ label npc_aldric_promise:
 
             aldric "在您需要它的那一天——它一定在这里等您。"
 
+    $ hide_all_chars()
     "夜渐渐深了。奥尔德里克帮你续上茶，又往炉子里添了两块柴，然后向你行礼告退。"
 
     "走到门口时，他停下了脚步。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "少主。"
 
     hide aldric_img
@@ -1107,6 +1161,7 @@ label npc_aldric_promise:
     show aldric_img at left with dissolve
     aldric "'奥尔德里克，我的时间不多了。请替我看着那孩子。不是让他成为我——而是让他成为他自己。'"
 
+    $ hide_all_chars()
     "门轻轻关上了。"
 
     "你独自坐在书房里。窗外的夜色浓得像墨，风从窗缝钻进来，带着深秋的凉意。"
@@ -1118,5 +1173,7 @@ label npc_aldric_promise:
     "你将这句话低声念了一遍。然后又念了一遍。"
 
     "直到窗外的天空露出第一丝灰白。"
+
+    hide aldric_img with dissolve
 
     return

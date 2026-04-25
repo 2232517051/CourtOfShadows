@@ -130,6 +130,7 @@ label arrive_castle:
 
     "士兵们列成两排，铠甲上沾满了雨水，长矛笔直地指向阴沉的天空。他们的面容肃穆，但你能感觉到他们在偷偷打量你。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img sad at left with dissolve
     $ unlock_gallery("aldric")
 
@@ -139,6 +140,7 @@ label arrive_castle:
 
     aldric "老臣奥尔德里克，在此恭迎。请恕老臣未能保住老领主……"
 
+    $ hide_all_chars()
     "他的声音哽住了。身后的士兵们同时单膝跪地，甲胄的碰撞声在雨中回响。"
 
     "你如何回应？"
@@ -194,6 +196,7 @@ label arrive_castle:
 
     $ play_sound("audio/sfx/door_knock.ogg")
 
+    $ hide_all_chars()
     "沉重的铁闸在绞盘的吱嘎声中缓缓升起。你走过吊桥，脚下的木板在雨水中发出沉闷的回响。"
 
     "护城河的水面泛着灰绿色的光，散发出一股陈腐的气息。几只乌鸦停在城墙的垛口上，歪着头打量你——这座城堡新的主人。"
@@ -210,29 +213,34 @@ label arrive_castle:
 
     "马厩里传来马匹打响鼻的声音。你走过去，看见一个满脸雀斑的少年正在给一匹黑马刷毛。他发现你的目光后，吓得手中的刷子差点掉在地上。"
 
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
-    servant "领、领主大人！小的……小的是马厩的学徒，叫……叫汤米……"
+    $ hide_all_chars("stable_boy_img")
+    show stable_boy_img at left with dissolve
+    stable_boy "领、领主大人！小的……小的是马厩的学徒，叫……叫汤米……"
 
+    $ hide_all_chars()
     "少年的声音像是被捏住脖子的鹅，又尖又颤。他的膝盖磕在地上，发出一声闷响。"
 
     "你注意到他的衣服打了好几个补丁，双手通红——那是长期在寒冷中劳作留下的冻疮痕迹。"
 
     "旁边的铁匠铺里，一个光着膀子的壮汉正在敲打一块烧红的铁。火星四溅，映红了他汗涔涔的脸。看到你，他放下铁锤，粗声粗气地喊了一声。"
 
-    hide servant_generic_img
+    hide stable_boy_img
     $ hide_all_chars("soldier_generic_img")
     show soldier_generic_img at left with dissolve
     soldier "新领主来了！大伙儿，行礼！"
 
+    $ hide_all_chars()
     "几个正在搬运木桶的士兵闻声停下手中的活计，朝你的方向笨拙地弯腰行礼。他们的动作参差不齐——有人鞠躬，有人单膝跪地，有人只是呆呆地站着。"
 
     "你看得出来，这些人不是训练有素的精锐。他们的铠甲陈旧，有的缺了护肩，有的头盔上有明显的凹痕。但他们的眼神中有一种东西——一种在逆境中仍然没有熄灭的倔强。"
 
     "一个年迈的老兵拄着一根拐杖，从墙根的阴影中慢慢走出来。他的左腿从膝盖以下就没有了——那是某场战役留下的代价。"
 
+    $ hide_all_chars("soldier_generic_img")
+    show soldier_generic_img at left with dissolve
     soldier "老朽……曾在老领主麾下效力三十年。领主大人……您长得真像您父亲年轻时候。"
 
+    $ hide_all_chars()
     "老兵多站了一会儿没走，嘴唇微微颤抖。那不是对新领主的敬畏，而是对旧主的怀念在新主身上找到了寄托。"
 
     "庭院中的所有人都在看着你。仆人们、士兵们、铁匠、马夫——他们等着你说些什么，做些什么。对他们来说，你的第一句话，就是艾登堡未来的风向标。"
@@ -277,6 +285,7 @@ label arrive_castle:
         "沉默地巡视，不发一言":
             $ change_stat("intrigue", 5)
             $ log_decision("第一章", "沉默巡视城堡庭院")
+            $ hide_all_chars()
             "你什么也没说。你只是慢慢地走过庭院的每一个角落，用目光丈量着一切。"
             "马厩的门闩松了，你看在眼里。铁匠铺的烟囱歪了，你记在心里。水井旁的排水沟堵了，你也注意到了。"
             "你没有夸奖任何人，也没有责备任何人。你只是看着，像一只刚刚落在高处的鹰，俯瞰着自己的领地。"
@@ -294,9 +303,9 @@ label arrive_castle:
     hide soldier_generic_img
     $ hide_all_chars("servant_marta_img")
     show servant_marta_img at left with dissolve
-    servant "领主大人，奴婢是城堡的总管事玛格丽特。老领主在时，城堡的日常事务皆由奴婢打理。"
+    housekeeper "领主大人，奴婢是城堡的总管事玛格丽特。老领主在时，城堡的日常事务皆由奴婢打理。"
 
-    servant "领主大人的寝室已经收拾好了。热水、干净的衣物都备下了。"
+    housekeeper "领主大人的寝室已经收拾好了。热水、干净的衣物都备下了。"
 
     menu:
         "感谢她的周到安排":
@@ -308,7 +317,7 @@ label arrive_castle:
             hide player_char_img
             $ hide_all_chars("servant_marta_img")
             show servant_marta_img at left with dissolve
-            servant "是，领主大人。"
+            housekeeper "是，领主大人。"
             "她愣了一下，像是想再说什么，最终只是低着头退回了人群中。你注意到她的眼圈也是红的。"
 
         "询问父亲最后几天的情况":
@@ -321,8 +330,8 @@ label arrive_castle:
             hide player_char_img
             $ hide_all_chars("servant_marta_img")
             show servant_marta_img at left with dissolve
-            servant "老领主临终前三天，不让任何人进入书房。连饭食都是放在门口的。"
-            servant "最后是奥尔德里克大人破门而入，才发现……"
+            housekeeper "老领主临终前三天，不让任何人进入书房。连饭食都是放在门口的。"
+            housekeeper "最后是奥尔德里克大人破门而入，才发现……"
             "她没有说下去，只是低下了头。"
 
         "直接让她退下":
@@ -330,6 +339,7 @@ label arrive_castle:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "知道了。退下吧。"
+            $ hide_all_chars()
             "妇人恭敬地退开。你没有多看她一眼——此刻你的心思全在别处。"
 
     ## --- 穿过走廊，路过父亲的画像 ---
@@ -340,11 +350,11 @@ label arrive_castle:
 
     "画中的父亲约莫三十多岁的样子，正值壮年。他身穿铠甲，佩剑立于城堡之前，目光如炬，嘴角微微上扬——那是一种胸有成竹的自信，一种掌控一切的从容。"
 
-    "你已经快十年没有面对面坐下来和他好好说过话了。上一次那样，你十二岁，他送你去王都的那天。他在城门口拍着你的肩膀说——"
+    "你已经快八年没有面对面和他好好说过话了。上一次，是你十四岁那年短暂的回家探亲。"
 
-    "'去吧，孩子。学你能学的一切。等你回来的时候，这一切都是你的。'"
+    "那几天他已经苍老得让你心惊——头发白了大半，咳嗽一声像要把肺咳出来。但你们都假装没注意到。在那间熟悉的书房里，你们聊了一个下午，又好像什么都没真正说出口。"
 
-    "他没有说'如果我不在了'。他大概以为自己会永远在这里。"
+    "那次分别时，他没有告诉你'如果我不在了'。他大概以为自己还能等到你下一次回家。"
 
     "你以为他也会永远在这里。"
 
@@ -356,7 +366,10 @@ label arrive_castle:
 
         "向画像轻声许诺":
             $ change_stat("loyalty", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我会守住艾登堡的，父亲。"
+            $ hide_all_chars()
             "你的声音很轻，轻到只有画中的父亲和你自己能听见。"
             "画中的父亲依然微笑着，目光平静地注视着前方——注视着某个你看不见的远方。"
 
@@ -459,11 +472,16 @@ label great_hall:
     show bishop_img at left with dissolve
     $ unlock_gallery("bishop")
 
+    $ hide_all_chars()
     "主教是一个体态圆润的中年人，穿着一身金色镶边的白色法袍。他的手指上戴着一枚硕大的紫水晶戒指，在烛光下闪烁着幽冷的光。"
 
     "他的笑容温和而得体，但你注意到他的眼睛——那双眼睛精明、冷静，与那张笑脸完全不搭调。"
 
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
     bishop "主教马修斯，代表圣母教会，向新任领主致以祝福。"
+
+    $ bishop_met = True
 
     bishop "愿圣光庇护艾登堡，也庇护年轻的领主。"
 
@@ -510,6 +528,7 @@ label great_hall:
             show bishop_img at left with dissolve
             bishop "……"
             "主教的笑容冻结了一瞬。随即，他恢复了那副温和的面具。"
+            $ hide_all_chars("bishop_img")
             show bishop_img angry at left with dissolve
             bishop "教会为艾登堡超度亡灵，安抚人心，在瘟疫时施粥救济，在饥荒时开仓放粮。教会做的事情，比领主大人想象的要多得多。"
             "他的语气平静，但每一个字都像是淬了毒的针。"
@@ -518,6 +537,7 @@ label great_hall:
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "一个身着朴素衣裙的年轻女子站在角落，向你微微欠身。"
 
     "她的位置选得很巧妙——远离壁炉的光亮，半隐在一根石柱的阴影中。如果不是刻意留意，你几乎会忽略她的存在。"
@@ -556,6 +576,7 @@ label great_hall:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "领主大人客气了。"
+            $ hide_all_chars()
             "她歪了下头，像是在打量一件有趣的东西。"
             "那种笑容像是在说'我知道你在想什么'，又像是在说'你不知道我在想什么'。"
             "无论如何，这个女人绝非普通的侍从。"
@@ -583,6 +604,7 @@ label great_hall:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "嗯，辛苦了。奥尔德里克，给她安排住处。"
+            $ hide_all_chars()
             "你不动声色，但暗暗记下了这枚棋子。"
             "她的来意、她的能力、她的忠诚——这些问题的答案，你会慢慢找到。"
             "不急。在权力的游戏中，最先亮出底牌的人，往往最先出局。"
@@ -616,6 +638,7 @@ label great_hall:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你独自一人，站在父亲曾经生活了三十年的房间里。"
 
     "你决定看看——"
@@ -682,6 +705,7 @@ label great_hall:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你环顾桌旁的面孔。雷恩坐在你的右手边，笔直的腰背一如他的为人——端正、警惕。主教马修斯坐在桌尾，优雅地切着鹿肉，时不时与旁边的人交换几句低语。"
 
     "艾琳娜坐在一个不起眼的位置，安静地用餐。但你注意到她的目光一直在移动——她在观察每一个人。"
@@ -768,6 +792,7 @@ label great_hall:
 
     hide bishop_img with dissolve
 
+    $ hide_all_chars()
     "晚宴持续了将近两个时辰。酒过三巡之后，人们的话匣子渐渐打开了。"
 
     "磨坊主格伦抱怨粮价太低，猎场管事老布鲁诺说森林里的猎物比去年少了一半，两个村长则你一言我一语地诉说着今年秋收不尽如人意。"
@@ -800,6 +825,7 @@ label great_hall:
 
     player "我真的能做好吗……"
 
+    $ hide_all_chars()
     "你喃喃自语。夜风把你的声音卷走了，没有人听见。"
 
     "——或者说，你以为没有人听见。"
@@ -815,10 +841,13 @@ label great_hall:
 
     elena "领主大人也睡不着？"
 
+    $ hide_all_chars()
     "艾琳娜披着一件深色的斗篷，站在几步之外。月色下，她的面容半明半暗，那双沉静的眼睛映着星光，像两面深不见底的古井。"
 
     "她走到你身旁，也将双手撑在城垛上，目光投向远方。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "我在王都的时候，常常在宫墙上看夜景。从高处看下去，一切都显得很小，很安静。好像世间的纷争和算计，都被黑暗吞没了。"
 
     elena "但那只是错觉。黑暗中发生的事情，往往比白天更多。"
@@ -905,6 +934,7 @@ label great_hall:
 
     elena "夜深了。领主大人早些歇息吧。明天……会很忙的。"
 
+    $ hide_all_chars()
     "她最后看了你一眼，然后转身沿着城墙走去。她的身影在月光下越来越小，最终消融在塔楼的阴影中。"
 
     "你又独自站了一会儿。头顶的星空寂静无声，脚下的大地沉沉入眠。"
@@ -1041,6 +1071,7 @@ label great_hall:
     hide captain_img with dissolve
     hide player_char_img with dissolve
 
+    $ hide_all_chars()
     "雷恩单手捶了一下胸甲，转身大步离去。铁靴踩在城墙石砖上，声响干脆利落，渐渐远去。"
 
     "你独自站在城墙上，俯瞰着沉睡中的领地。"
@@ -1137,6 +1168,7 @@ label first_night:
         "烧掉它——不想卷入阴谋":
             $ log_decision("第一章", "烧毁密信，不愿卷入阴谋")
             $ change_stat("power", 5)
+            $ hide_all_chars()
             "你将信扔进壁炉。火焰瞬间吞噬了那张羊皮纸。"
             "黑色的火漆在火中融化，散发出一股刺鼻的气味。百合花的图案在火焰中扭曲、变形，最终化为一缕青烟。"
             "不管是什么人在玩什么把戏，你不打算按别人的剧本走。"
@@ -1304,6 +1336,7 @@ label after_letter_crisis:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "三个人给出了三种视角——内政、军事、情报。拼在一起，就是艾登堡此刻面临的全貌：内有困境，外有强敌，而你只有一副刚刚摸到的牌。"
 
     "你靠在椅背上，手指交叉抵在下巴上。大厅里安静了片刻——所有人都在等你的回应。"
@@ -1330,6 +1363,8 @@ label after_letter_crisis:
             $ change_stat("loyalty", 5)
             $ change_stat("wealth", 18)
             $ log_decision("第一章", "晨议立场: 优先内政")
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "男爵的威胁是真实的，但我们自己的问题更紧迫。佃农流失、粮食减产、城堡失修——这些才是根基。"
             player "一座从内部腐烂的城堡，即使有再高的城墙也守不住。"
             $ hide_all_chars("aldric_img")
@@ -1351,6 +1386,7 @@ label after_letter_crisis:
             "你不知道这是恭维还是试探。但你选择把它当作恭维。"
             hide elena_img with dissolve
 
+    $ hide_all_chars()
     "晨议结束，众人各自散去。阳光依然没有穿透云层——天空低沉，像是压在艾登堡上方的一块灰色铅板。"
 
     "你回到书房，继续整理昨夜未看完的文件。"
@@ -1400,10 +1436,13 @@ label first_crisis:
 
     captain "他们打着'护送吊唁使团'的旗号，但那阵仗……不像是来吊丧的。"
 
+    $ hide_all_chars()
     "两百人。你的卫队只有四十人。"
 
     "你感到胃部一阵收紧。这是你作为领主面对的第一个威胁——而它来得比你预想的要快得多。"
 
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "哨所的斥候说，他们扎了大营，支起了攻城用的帐篷。如果只是吊唁，根本不需要这种阵仗。"
 
     captain "而且，他们的骑兵已经在我们的边境线上巡弋了。就差一步就踏入我们的领地了。"
@@ -1423,6 +1462,7 @@ label first_crisis:
 
     hide aldric_img with dissolve
 
+    $ hide_all_chars()
     "你的拳头在桌子底下攥紧了。第一晚。才到艾登堡的第一晚，你就要面对这样的局面。"
 
     "你看了一眼窗外的夜空。云层终于散开了一角，露出几颗冷清的星光。"
@@ -1466,10 +1506,13 @@ label crisis_diplomacy:
     show aldric_img at left with dissolve
     aldric "领主大人英明。以退为进，不失为上策。"
 
+    $ hide_all_chars()
     "你花了一个时辰斟酌使者带去的信件。每一个字、每一个措辞都经过了反复推敲——既要表达诚意，又不能露出软弱。"
 
     "你在信中写道：'尊敬的冯·哈根男爵阁下：承蒙阁下遣使吊唁，本领主不胜感激。先父在世时常言，与邻为善乃治国之本。艾登堡的铁矿产出丰富，然独享不如共利。本领主愿与阁下坦诚商议合作之事，以期两地共荣。'"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "好文笔。有理有节，不卑不亢。"
 
     hide aldric_img
@@ -1494,6 +1537,7 @@ label crisis_diplomacy:
     baron "（信件）年轻的领主，你的诚意让我刮目相看。"
     baron "我愿意撤回军队，但有一个条件——在下月的领主会议上，我希望与你当面详谈。"
 
+    $ hide_all_chars()
     "你读着信上那苍劲有力的字迹，把信纸折好放在桌上，手指在上面弹了一下。男爵的口气是居高临下的——他仍然把你当成一个可以摆布的年轻人。"
 
     "但他同意撤军了。这就够了。"
@@ -1547,6 +1591,7 @@ label crisis_military:
 
     "雷恩的眼中燃起了一团火。你看得出，这个军人等这道命令已经等了很久。"
 
+    $ hide_all_chars("captain_img")
     show captain_img happy at left with dissolve
 
     hide captain_img
@@ -1603,6 +1648,7 @@ label crisis_military:
     call crisis_encounter from _call_crisis_encounter_1
 
     ## 退缩的情况
+    $ hide_all_chars()
     "你命令雷恩自行处理夜袭，自己留在营帐中指挥全局。"
     "雷恩虽然勉强击退了敌人，但损失不小。士兵们私下议论着领主的勇气。"
     $ change_stat("loyalty", -5)
@@ -1626,6 +1672,7 @@ label crisis_combat_border_win:
 
     "你在混战中砍翻了一个敌兵——这是你第一次真正意义上的杀人。热血溅在你的面颊上，腥甜的气味让你反胃，但你咬牙稳住了身形。"
 
+    $ hide_all_chars("captain_img")
     show captain_img happy at left with dissolve
     captain "领主大人……您竟然亲自……"
     show player_char_img at right with dissolve
@@ -1655,6 +1702,7 @@ label crisis_combat_border_lose:
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "领主大人！您受伤了！快退到后方！"
+    $ hide_all_chars()
     "你咬着牙，在雷恩的掩护下退回营帐。血从手臂上的伤口渗出，浸透了衬衣。"
     "虽然你的冲锋没能改变战局，但士兵们看到了你的勇气——一个敢流血的领主，至少值得追随。"
     hide captain_img with dissolve
@@ -1673,6 +1721,7 @@ label after_border_crisis:
     captain "他们走了！领主大人，您赢了！"
 
     $ play_music("audio/music/victory.ogg", fadein=1.0)
+    $ hide_all_chars()
     "士兵们欢呼起来。但奥尔德里克的脸上没有笑容。"
 
     "农民们把长矛往地上一扔，用粗糙的嗓门高喊着你的名字。一个满脸泥土的壮汉甚至跪在地上朝你磕头——也许他真的觉得你是一位英勇的领主，也许他只是庆幸自己不用死在边境上。"
@@ -1681,6 +1730,7 @@ label after_border_crisis:
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
+    $ hide_all_chars("aldric_img")
     show aldric_img sad at left with dissolve
 
     aldric "领主大人，我们赢了面子，但也结了仇。男爵不会忘记这次的屈辱。"
@@ -1747,6 +1797,7 @@ label crisis_church:
             $ hide_all_chars("bishop_img")
             show bishop_img at left with dissolve
             bishop "领主大人果然虔诚。放心，有教会在，无人敢犯艾登堡。"
+            $ hide_all_chars()
             "主教双手合十，做出一副感恩戴德的姿态。但他的眼睛在笑——那是赢家的笑。"
             "你不知道这笔账日后会不会让你后悔。但此刻，你需要教会的力量。"
 
@@ -1776,6 +1827,7 @@ label crisis_church:
     hide player_char_img with dissolve
 
     $ play_sound("audio/sfx/bell_toll.ogg")
+    $ hide_all_chars()
     "三天后，男爵撤军了。教会的面子，他还是要给的。"
 
     "据说主教写给男爵的信措辞极为严厉——以逐出教会相威胁。对于一个还需要教会为他的统治背书的男爵来说，这个代价太大了。"
@@ -1801,6 +1853,7 @@ label crisis_spy:
 
     player "我需要先弄清楚男爵的真实意图。"
 
+    $ hide_all_chars()
     "你按住了想要立刻行动的冲动。两百人对四十人——硬碰硬是不智之举。外交谈判需要时间。求助教会则要付出代价。"
 
     "但如果能摸清男爵的底牌，一切就不一样了。"
@@ -1844,6 +1897,7 @@ label crisis_spy:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "领主大人放心。"
+            $ hide_all_chars()
             "她点了下头，什么都没多说，转身走了。斗篷角刮过门框，然后走廊又安静了下来。"
             "你看着她离去的方向，心中泛起复杂的情绪——你在信任一个你还不了解的人。但有时候，下注本身就是一种智慧。"
             hide elena_img with dissolve
@@ -1859,6 +1913,7 @@ label crisis_spy:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "好。非常好。"
+            $ hide_all_chars()
             "你靠在椅背上，脑中快速盘算。男爵虚张声势，实力不足，财力枯竭，而且还有一个急需解决的家务事。这些弱点，每一个都可以利用。"
             "有了这些情报，你从容地派出使者，不卑不亢地提出了条件。"
             "男爵很快就撤了军。他不知道你是怎么摸清他底牌的。"
@@ -1878,6 +1933,7 @@ label crisis_spy:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你的意思是……建立一个间谍网？"
+            $ hide_all_chars("elena_img")
             show elena_img happy at left with dissolve
             elena "我们称之为'消息渠道'。听起来更文雅一些。"
             "她第一次露出了真正的笑容——不是客套，不是敷衍，而是一种志同道合者之间的默契。"
@@ -1897,6 +1953,7 @@ label crisis_spy:
             show captain_img at left with dissolve
             captain "是，领主大人。"
             hide captain_img with dissolve
+            $ hide_all_chars()
             "五天后，侦察兵带回了一些有用的消息，但不如预期详尽。"
             "男爵的军队确实是在虚张声势，但更多细节无从得知。"
             "士兵不是间谍——他们能看到营帐的数量，但看不到男爵书桌上的账本。"
@@ -1947,6 +2004,7 @@ label first_decree:
 
     aldric "第四，城堡年久失修，上个月西塔的屋顶还塌了一块。"
 
+    $ hide_all_chars()
     "他放下清单，目光殷切地看着你。你知道他有自己的倾向，但他克制住了——这个决定必须由你来做。"
 
     "大厅里其他人也都看着你。雷恩攥着剑柄，目光灼灼；主教双手交叠在胸前，嘴角含着一丝深不可测的微笑；艾琳娜靠在石柱旁，安静地等待。"
@@ -1985,6 +2043,7 @@ label first_decree:
             show captain_img at left with dissolve
             captain "是！我这就去安排！"
             hide captain_img with dissolve
+            $ hide_all_chars()
             "卫队从四十人扩充到了六十人。边境巡逻加倍。"
             "消息传到男爵耳中时，他一定会重新掂量进犯艾登堡的代价。"
             "然而，军费的增加让本就紧张的财政更加捉襟见肘。"
@@ -2032,6 +2091,7 @@ label first_decree:
             show aldric_img at left with dissolve
             aldric "老臣遵命。这就去安排。"
             hide aldric_img with dissolve
+            $ hide_all_chars()
             "消息传开，百姓们对新领主感恩戴德。"
             "有人在村口立了你的长生牌位——这在艾登堡是从未有过的事。几个老人甚至流着泪说，这是三十年来他们吃的第一顿饱饭。"
             "但金库已经见底了。"
@@ -2068,6 +2128,7 @@ label first_decree:
             show captain_img at left with dissolve
             captain "交给我！"
             hide captain_img with dissolve
+            $ hide_all_chars()
             "两周后，雷恩剿灭了三个匪窝，商路重新畅通。"
             "缴获的赃物中有一些值钱的东西——几匹绸缎、一箱铜器、还有一袋银币。"
             "税收开始恢复，但剿匪中损失了五名士兵。"
@@ -2096,6 +2157,7 @@ label first_decree:
             show aldric_img at left with dissolve
             aldric "领主大人做事周全。老臣佩服。"
             hide aldric_img with dissolve
+            $ hide_all_chars()
             "修缮工作有条不紊地展开。西塔的屋顶补好了，城墙的裂缝也被填上。"
             "水井清理出了半尺厚的淤泥，储水量提高了三成。几扇朽烂的大门换成了新的橡木门，铁制的合页和锁扣也全部更新。"
             "更重要的是，工人在修缮地下室时发现了一条密道——"
@@ -2182,6 +2244,7 @@ label first_decree:
 
     hide elena_img with dissolve
 
+    $ hide_all_chars()
     "你独自在书房中坐了很久。"
 
     "窗外的夜色如墨，偶尔有一两声夜枭的鸣叫从远处的树林传来。蜡烛烧了一半，蜡泪沿着烛台淌下来，时间不早了。"
@@ -2199,6 +2262,7 @@ label first_decree:
 
     hide player_char_img with dissolve
 
+    $ hide_all_chars()
     "你低声说出这句话。然后站起身，走向寝室。"
 
     "明天还有很多事要做。后天也是。大后天也是。"
@@ -2220,9 +2284,6 @@ label first_decree:
 
     ## NPC支线：村长请求
     call npc_village_quest from _call_npc_vq1
-
-    ## 治理系统：税务改革
-    call gov_tax_reform from _call_gov_tax1
 
     ## ============================================================
     ## 第一章结尾
@@ -2255,17 +2316,20 @@ label chapter1_end:
 
     $ hide_all_chars("baron_img")
     show baron_img at left with dissolve
+    $ hide_all_chars()
     "男爵在筹划他的下一步棋。"
     "他的书房里铺开了一张艾登堡的地图。他的手指在铁矿的位置上来回摩挲，眼中闪烁着贪婪的光。"
     hide baron_img with dissolve
 
     $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
+    $ hide_all_chars()
     "主教向王都发出了密信。"
     "那封信用教会专用的密码写成，即使被截获也无人能读懂。信中写了什么，只有收信人和圣母知道。"
     hide bishop_img with dissolve
 
     show elena_img at right with dissolve
+    $ hide_all_chars()
     "艾琳娜在深夜写下了什么报告。"
     "她的鹅毛笔在羊皮纸上沙沙作响，烛光将她的影子投在墙壁上。她写到某一处时，停下笔沉思了很久——然后划掉了那句话，换了另一种措辞。"
     hide elena_img with dissolve
@@ -2280,11 +2344,7 @@ label chapter1_end:
 
     "满月之夜就要到了。"
 
-    call show_chapter("第一章", "新主登基 · 完", "") from _call_show_chapter_5
-
-    "当前状态："
-    "权力: [power] | 财富: [wealth] | 信仰: [faith]"
-    "忠诚: [loyalty] | 声望: [reputation] | 谋略: [intrigue]"
+    scene black with dissolve
 
     $ renpy.force_autosave()
 

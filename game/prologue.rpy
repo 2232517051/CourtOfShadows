@@ -202,10 +202,12 @@ label prologue_childhood:
 
     "你没说话。你确实不敢骑马。但你不想让他知道。"
 
+    $ hide_all_chars("bully_kid_img")
     show bully_kid_img angry at left with dissolve
 
     bully_kid "我爹说，你们家迟早要完。你爹就知道守着这破城堡，连块新地都打不下来。"
 
+    $ hide_all_chars()
     "他伸手推了你一把。不算很重，但足够让你踉跄两步。身后那两个孩子笑了。"
 
     "你的手指绷直了，指节发白。"
@@ -236,10 +238,12 @@ label prologue_childhood:
 
             father "打赢了？"
 
+            $ hide_all_chars()
             "你点头。"
 
             "你偷偷抬眼看他，发现他嘴角似乎有一丝不易察觉的弧度。"
 
+            $ hide_all_chars("father_img")
             show father_img happy at left with dissolve
 
             father "下次别打脸。容易留证据。"
@@ -252,6 +256,7 @@ label prologue_childhood:
             $ prologue_bully_choice = "report"
             $ log_decision("序章", "向父亲告状", "忠诚+5")
 
+            $ hide_all_chars()
             "你转身跑了。不是因为害怕——你去找父亲。"
 
             "这不公平。他比你大，还带了帮手。你要让大人来主持公道。"
@@ -286,6 +291,7 @@ label prologue_childhood:
             $ prologue_bully_choice = "endure"
             $ log_decision("序章", "忍耐费利克斯", "谋略+5")
 
+            $ hide_all_chars()
             "你没动。"
 
             "费利克斯又推了你一下，你还是没动。他似乎觉得无趣了，'哼'了一声，带着他的跟班走了。"
@@ -299,6 +305,12 @@ label prologue_childhood:
             "那天晚上你睡不着。不是因为委屈。你在想——他为什么敢这样对你？因为他爹比你爹厉害吗？"
 
             "你翻了个身，盯着天花板。五岁的你第一次开始思考'力量'这个词。"
+
+    ## ──────────────────────────────────────
+    ## 童年深化场景 (6岁春 母亲的花园)
+    ## ──────────────────────────────────────
+
+    call prologue_deep_childhood_1 from _call_pdc1
 
     ## ──────────────────────────────────────
     ## 场景2：父亲教认家族徽章
@@ -334,6 +346,7 @@ label prologue_childhood:
 
     father "先王曾对我说过一句话——'有些信任比血脉更重。'我到今天都没忘。"
 
+    $ hide_all_chars()
     "他没有再说下去。你后来很多年才明白——那不是一句客套话，是一个小领主与一位国王之间不该存在的某种纽带。"
 
     "你那时不懂这句话的重量。你只是好奇。"
@@ -344,6 +357,8 @@ label prologue_childhood:
             $ prologue_father_question = "war"
             $ log_decision("序章", "询问战争故事", "权力+3")
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "打过。"
 
             "他的眼神变了。变得很远，好像在看一个你看不见的地方。"
@@ -367,18 +382,24 @@ label prologue_childhood:
 
             "父亲看了你一眼。那个眼神很复杂。你长大后才学会辨认——那是惊讶，混着一丝……警惕？"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "什么秘密？"
 
+            $ hide_all_chars()
             "你说，每个家族都有秘密嘛。故事里都是这么说的。"
 
             "他沉默了好久。久到你以为他不会回答了。"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "有。"
 
             "就一个字。"
 
             father "但秘密之所以是秘密，是因为知道的人越少越好。等你长大了，我再告诉你。"
 
+            $ hide_all_chars()
             "他在骗你。你能感觉到。不是没有秘密——是秘密太重，他不想让一个六岁的孩子背。"
 
             "但你记住了。他说了'有'。"
@@ -388,22 +409,28 @@ label prologue_childhood:
             $ prologue_father_question = "faith"
             $ log_decision("序章", "询问信仰传统", "信仰+3")
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "因为人需要信仰。"
 
             "他说得很平静，没有平时跟神父说话时的那种客套。"
 
             father "不一定是信上帝。但你要信点什么。哪怕是信你自己。"
 
+            $ hide_all_chars()
             "你歪着头想了想。"
 
             "你说，那你信什么？"
 
             "父亲没有马上回答。他看着壁炉里跳动的火焰，很久。"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "我信这面盾牌。信这座城堡。信你母亲。信你。"
 
             "他低头看你，罕见地露出一个笑容。"
 
+            $ hide_all_chars("father_img")
             show father_img happy at left with dissolve
 
             father "够了吗？"
@@ -435,6 +462,7 @@ label prologue_childhood:
 
     "有一天，女仆玛尔塔蹲下来，握着你的手。她的眼睛是红的。"
 
+    $ hide_all_chars("servant_marta_img")
     show servant_marta_img sad at left with dissolve
 
     servant_marta "少爷……夫人想见您。"
@@ -443,6 +471,7 @@ label prologue_childhood:
 
     "你走进房间。母亲躺在床上，脸色白得像窗外的雪。她瘦了很多，手腕细得像树枝。但她看到你的时候，笑了。"
 
+    $ hide_all_chars("mother_img")
     show mother_img sad at left with dissolve
 
     mother "过来。让我看看你。"
@@ -451,10 +480,13 @@ label prologue_childhood:
 
     mother "长高了。"
 
+    $ hide_all_chars()
     "你不知道该说什么。你想说'你什么时候好'，但话到嘴边变成了沉默。因为你看到了她眼睛里的东西——一个七岁的孩子不该看懂的东西。"
 
     "告别。"
 
+    $ hide_all_chars("mother_img")
+    show mother_img at left with dissolve
     mother "听话。别让你父亲太操心。"
 
     "她停了停，像是在攒最后一点力气。"
@@ -536,15 +568,13 @@ label prologue_childhood:
             "你不知道该不该信。但你宁愿信。"
 
     ## ──────────────────────────────────────
-    ## 童年深化场景
+    ## 童年深化场景 (7岁地窖密语)
     ## ──────────────────────────────────────
 
-    call prologue_deep_childhood_1 from _call_pdc1
     call prologue_deep_childhood_2 from _call_pdc2
-    call prologue_deep_childhood_3 from _call_pdc3
 
     ## ──────────────────────────────────────
-    ## 童年尾声
+    ## 童年尾声：葬礼
     ## ──────────────────────────────────────
 
     scene black with fade
@@ -558,6 +588,12 @@ label prologue_childhood:
     "七岁的你失去了母亲。"
 
     "你不知道的是，你即将失去的远不止这些。"
+
+    ## ──────────────────────────────────────
+    ## 童年深化场景 (8岁伯特兰爵士的告别)
+    ## ──────────────────────────────────────
+
+    call prologue_deep_childhood_3 from _call_pdc3
 
     scene black with dissolve
     pause 0.5
@@ -684,6 +720,7 @@ label prologue_youth:
 
     hide friend_marcus_img with dissolve
 
+    $ hide_all_chars()
     "他说这话的时候，正帮你把墨水从衬衫上洗掉——被一个高年级的学生'不小心'泼的。"
 
     "半年后，你开始选择自己的方向。修道院允许学生在基础课之外选修一门专长。"
@@ -722,6 +759,7 @@ label prologue_youth:
 
             hide tutor_img with dissolve
 
+            $ hide_all_chars()
             "你花了三年学这些东西。如何读懂一封信里没写出来的意思。如何从一个人的语气判断他在撒谎。如何让两个互相敌对的人同时觉得你站在他们那边。"
 
             "马库斯说你越来越像条蛇。你不置可否。"
@@ -746,6 +784,7 @@ label prologue_youth:
 
             hide priest_thomas_img with dissolve
 
+            $ hide_all_chars()
             "这个问题你想了三天。"
 
             "三年后，你成了修道院里最好的辩手。不是因为你说得对，而是因为你懂得什么时候该沉默。"
@@ -810,10 +849,12 @@ label prologue_youth:
 
             "两个人同时看向你。托马斯的脸色瞬间变了。另一个人——黑袍，兜帽，你看不清他的脸。"
 
+            $ hide_all_chars("priest_thomas_img")
             show priest_thomas_img angry at left with dissolve
 
             priest_thomas "……你怎么在这里？"
 
+            $ hide_all_chars()
             "你的声音在发抖，但你没有退。"
 
             "你说：你们在说我父亲。我听到了。"
@@ -822,10 +863,13 @@ label prologue_youth:
 
             "然后托马斯笑了。一种你从未在他脸上见过的笑容——温和的，安抚的，假的。"
 
+            $ hide_all_chars("priest_thomas_img")
+            show priest_thomas_img at left with dissolve
             priest_thomas "孩子，你听错了。我们在讨论教区的事务。'艾登'是一个教区的名字。跟你父亲没有关系。"
 
             hide priest_thomas_img with dissolve
 
+            $ hide_all_chars()
             "你不信。但那个黑袍人已经站了起来，身量很高，你不得不仰着头看他。"
 
             "他没有说话。只是看了你一眼。那一眼让你后背发凉。"
@@ -873,6 +917,12 @@ label prologue_youth:
             "你不确定他是在保护你，还是在看着你。"
 
     ## ──────────────────────────────────────
+    ## 少年深化场景 (13岁禁书)
+    ## ──────────────────────────────────────
+
+    call prologue_deep_youth_1 from _call_pdy1
+
+    ## ──────────────────────────────────────
     ## 场景3：回家探亲
     ## ──────────────────────────────────────
 
@@ -897,18 +947,23 @@ label prologue_youth:
 
     "他看到你的时候，眼睛亮了一下。只是一下。"
 
+    $ hide_all_chars("father_img")
     show father_img sad at left with dissolve
 
     father "回来了。"
 
+    $ hide_all_chars()
     "两个字。没有拥抱。没有'我想你了'。这是你的父亲。"
 
     "你坐在他对面，想找话说。但你发现——你不知道该跟他说什么。两年的距离，像一堵看不见的墙。"
 
     "他咳嗽了几声。不是普通的咳嗽——深的，从肺里翻出来的那种。"
 
+    $ hide_all_chars("father_img")
+    show father_img at left with dissolve
     father "学得怎么样？"
 
+    $ hide_all_chars()
     "你说了一些。考试成绩、老师的评价、选修的课程。他听着，偶尔点头。你说不准他是在听还是在想别的事。"
 
     "你注意到书桌上摞着厚厚一叠信件。有些已经拆开了，有些还没有。最上面那封的火漆是你不认识的纹章——不是鹰，是某种蛇形的图案。"
@@ -927,26 +982,37 @@ label prologue_youth:
 
             "他的手停了。"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "没什么。"
 
+            $ hide_all_chars()
             "你不信。你说：我不是小孩了。"
 
             "他抬起头看你。很久。像是在衡量你是否真的不是小孩了。"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "……有些事，知道了反而不好。"
 
+            $ hide_all_chars()
             "又是这句话。和六岁时一模一样。"
 
             "但这次你没有放弃。你说：如果有人要对你不利，我需要知道。"
 
             "他沉默了。壁炉里的火'噼啪'作响。"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "你在修道院……听到了什么？"
 
+            $ hide_all_chars()
             "他的语气变了。不再是父亲对儿子的口吻。更像是……一个将领在问斥候。"
 
             "你犹豫了一下，把那天晚上听到的事告诉了他。他听完后，什么都没说。只是把桌上的那叠信件翻过去，让你看不到封面。"
 
+            $ hide_all_chars("father_img")
+            show father_img at left with dissolve
             father "回去之后，别太相信那个托马斯。"
 
             hide father_img with dissolve
@@ -958,6 +1024,7 @@ label prologue_youth:
             $ prologue_father_visit = "comfort"
             $ log_decision("序章", "安慰父亲", "忠诚+5")
 
+            $ hide_all_chars()
             "你没有问。"
 
             "不是不想问。是你看到了他眼角的疲惫，看到了那双发抖的手，你不忍心再给他增加任何负担。"
@@ -974,6 +1041,7 @@ label prologue_youth:
             show father_img at left with dissolve
             father "你长大了。"
 
+            $ hide_all_chars()
             "三个字。但你听出了很多东西。骄傲。欣慰。还有一种说不清的……歉意？"
 
             "那天晚上你失眠了。你躺在儿时的床上，听着窗外的风声，想起母亲，想起这座城堡，想起父亲那双发抖的手。"
@@ -1008,10 +1076,9 @@ label prologue_youth:
             "他的声音平静如常。但他站在那里看你走了很远，很远。你回头看了一眼，他还在。"
 
     ## ──────────────────────────────────────
-    ## 少年深化场景
+    ## 少年深化场景 (14岁街头 → 15岁月夜)
     ## ──────────────────────────────────────
 
-    call prologue_deep_youth_1 from _call_pdy1
     call prologue_deep_youth_2 from _call_pdy2
     call prologue_deep_youth_3 from _call_pdy3
 
@@ -1126,11 +1193,19 @@ label prologue_adult:
 
     hide friend_marcus_img with dissolve
 
+    $ hide_all_chars()
     "你踹了他一脚。他笑着躲开了。"
 
     "毕业之后你没有回家。父亲来信说，让你留在王都'开阔眼界'。你觉得这话后面有别的意思，但你没有追问。"
 
     "你在王都租了一间小公寓，靠父亲寄来的不多不少的钱过日子。你旁听法庭的审判，去市场学讨价还价，在酒馆里听商人们吹牛。"
+
+    ## ──────────────────────────────────────
+    ## 青年深化场景 (19岁赌馆 → 20岁暗夜来客)
+    ## ──────────────────────────────────────
+
+    call prologue_deep_adult_1 from _call_pda1
+    call prologue_deep_adult_2 from _call_pda2
 
     "三年。你从一个学生变成了一个——怎么说呢——还算懂事的年轻人。"
 
@@ -1172,6 +1247,7 @@ label prologue_adult:
 
     hide countess_hilda_img with dissolve
 
+    $ hide_all_chars()
     "你不知道这是夸奖还是警告。你选择当作夸奖。"
 
     "她把你介绍给了几个人。你记住了两张脸——"
@@ -1202,6 +1278,7 @@ label prologue_adult:
 
             hide countess_hilda_img with dissolve
 
+            $ hide_all_chars()
             "接下来的一个小时，不断有人走过来跟你搭话。有人夸你，有人试探你，有人只是来看看'那个说大话的年轻人'长什么样。"
 
             "你喝了太多酒。说了太多话。但你不后悔。"
@@ -1253,6 +1330,7 @@ label prologue_adult:
 
             friend_marcus "你在干什么？那些大人物你一个都不搭理。"
 
+            $ hide_all_chars()
             "你说：大人物不缺朋友。"
 
             "马库斯想了一会儿，笑了。"
@@ -1349,13 +1427,6 @@ label prologue_adult:
     "公元1347年。深秋。"
 
     "你的父亲走了。"
-
-    ## ──────────────────────────────────────
-    ## 青年深化场景
-    ## ──────────────────────────────────────
-
-    call prologue_deep_adult_1 from _call_pda1
-    call prologue_deep_adult_2 from _call_pda2
 
     ## ──────────────────────────────────────
     ## 序章尾声：骑马赶回

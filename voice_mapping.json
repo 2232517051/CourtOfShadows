@@ -1,0 +1,92 @@
+{
+  "prol_narr_0001.mp3": {
+    "filename": "prol_narr_0001.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 141,
+    "chinese": "你五岁。",
+    "english": "You are five years old.",
+    "status": "done",
+    "file_size_kb": 23.4
+  },
+  "prol_narr_0002.mp3": {
+    "filename": "prol_narr_0002.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 143,
+    "chinese": "夏天。城堡的庭院里长满了野草，蒲公英的白色绒毛在午后的阳光中飘荡。你追着它们跑，光着脚踩在温热的石板上。",
+    "english": "Summer. The castle courtyard overflows with wild grass, and the white down of dandelions drifts in the afternoon sun. You chase after them, barefoot on the warm stone.",
+    "status": "done",
+    "file_size_kb": 160.9
+  },
+  "prol_narr_0003.mp3": {
+    "filename": "prol_narr_0003.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 145,
+    "chinese": "世界很大。大到你跑不到尽头。",
+    "english": "The world is vast, stretching beyond the farthest reaches one can run.",
+    "status": "done",
+    "file_size_kb": 66.6
+  },
+  "prol_narr_0004.mp3": {
+    "filename": "prol_narr_0004.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 147,
+    "chinese": "庭院的另一边，卫兵们在换岗。铠甲碰撞的声音清脆而有节奏，像某种你听不懂的音乐。你停下来看他们，直到一个老卫兵朝你咧嘴一笑。",
+    "english": "On the other side of the courtyard, the guards were changing shifts. The clinking of armor was crisp and rhythmic, like a music you couldn't quite understand. You paused to watch them, until an old guard grinned at you.",
+    "status": "done",
+    "file_size_kb": 184.2
+  },
+  "prol_narr_0005.mp3": {
+    "filename": "prol_narr_0005.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 151,
+    "chinese": "你没理他，继续追蒲公英。五岁的你还不懂什么叫规矩。",
+    "english": "You ignored him and continued chasing the dandelions. At five years old, you knew nothing of rules.",
+    "status": "done",
+    "file_size_kb": 91.1
+  },
+  "prol_narr_0006.mp3": {
+    "filename": "prol_narr_0006.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 155,
+    "chinese": "傍晚，女仆玛尔塔把你从庭院里捞回来，浑身是土。她一边给你擦脸一边唠叨。",
+    "english": "At dusk, the maid Martha fetched you from the courtyard, covered in dirt. As she wiped your face, she chattered on.",
+    "status": "done",
+    "file_size_kb": 103.8
+  },
+  "prol_narr_0007.mp3": {
+    "filename": "prol_narr_0007.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 159,
+    "chinese": "你不知道格雷伯爵是谁。你只知道他的儿子费利克斯很胖，上次来的时候偷了你的木剑。",
+    "english": "You do not know who the Earl of Grey is. You only know that his son, Felix, is plump and stole your wooden sword the last time he visited.",
+    "status": "done",
+    "file_size_kb": 116.8
+  },
+  "prol_narr_0008.mp3": {
+    "filename": "prol_narr_0008.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 167,
+    "chinese": "第二天。费利克斯来了。",
+    "english": "On the second day, Felix arrived.",
+    "status": "done",
+    "file_size_kb": 37.2
+  },
+  "prol_narr_0009.mp3": {
+    "filename": "prol_narr_0009.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 169,
+    "chinese": "他比你高半个头，圆滚滚的脸上带着一种你日后才学会辨认的表情——轻蔑。他身后跟着两个随从家的孩子，像两条尾巴。",
+    "english": "He stands half a head taller than you, his round face bearing an expression you would only learn to recognize later—contempt. Trailing behind him are two children of his retinue, like twin tails.",
+    "status": "done",
+    "file_size_kb": 182.9
+  },
+  "prol_narr_0010.mp3": {
+    "filename": "prol_narr_0010.mp3",
+    "rpy_file": "game/prologue.rpy",
+    "line_num": 173,
+    "chinese": "你没说话。你确实不敢骑马。但你不想让他知道。",
+    "english": "You said nothing. Indeed, you were afraid of riding a horse. But you did not wish for him to know.",
+    "status": "done",
+    "file_size_kb": 88.3
+  }
+}

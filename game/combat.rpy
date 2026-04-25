@@ -67,6 +67,23 @@ default combat_reward_wealth = 0
 default combat_reward_reputation = 0
 default combat_reward_text = ""
 
+## ── 姿态系统 (HWR风格 OFF/DEF) ──
+default combat_stance = "balanced"       ## "offensive" / "defensive" / "balanced"
+
+## ── 流血状态 ──
+default combat_player_bleed_turns = 0    ## 玩家流血剩余回合
+default combat_player_bleed_dmg = 0      ## 每回合流血伤害
+default combat_enemy_bleed_turns = 0     ## 敌人流血剩余回合
+default combat_enemy_bleed_dmg = 0       ## 每回合流血伤害
+
+## ── 眩晕 ──
+default combat_player_stunned = False    ## 玩家下回合被眩晕
+default combat_enemy_stunned = False     ## 敌人下回合被眩晕
+
+## ── 连击/恢复 ──
+default combat_combo_count = 0           ## 连续命中次数
+default combat_respite_stacks = 0        ## 恢复能量（命中累积，可消耗恢复体力）
+
 ## 动画控制
 default combat_hit_flash = False
 default combat_enemy_hit_flash = False
@@ -84,6 +101,7 @@ init python:
     ENEMY_DATABASE = {
 
         ## ── 简单 ──
+        ## ── 简单 ──
         "bandit": {
             "name": "流寇",
             "desc": "游荡在艾登堡外的亡命之徒",
@@ -94,7 +112,9 @@ init python:
             "dodge": 8,
             "crit": 5,
             "stamina": 80,
-            "ai": "aggressive",    ## aggressive / balanced / defensive
+            "ai": "aggressive",
+            "has_shield": False,
+            "armor_coverage": {"head": 0, "neck": 0, "body": 20, "limbs": 0},
             "loot_power": (3, 5),
             "loot_wealth": (2, 4),
             "loot_reputation": (1, 2),
@@ -111,6 +131,8 @@ init python:
             "crit": 8,
             "stamina": 90,
             "ai": "aggressive",
+            "has_shield": True,
+            "armor_coverage": {"head": 10, "neck": 0, "body": 30, "limbs": 10},
             "loot_power": (4, 6),
             "loot_wealth": (3, 6),
             "loot_reputation": (2, 3),
@@ -129,6 +151,8 @@ init python:
             "crit": 5,
             "stamina": 100,
             "ai": "balanced",
+            "has_shield": True,
+            "armor_coverage": {"head": 30, "neck": 10, "body": 60, "limbs": 30},
             "loot_power": (4, 6),
             "loot_wealth": (2, 4),
             "loot_reputation": (2, 3),
@@ -145,6 +169,8 @@ init python:
             "crit": 10,
             "stamina": 90,
             "ai": "aggressive",
+            "has_shield": False,
+            "armor_coverage": {"head": 20, "neck": 5, "body": 40, "limbs": 15},
             "loot_power": (3, 6),
             "loot_wealth": (4, 7),
             "loot_reputation": (1, 3),
@@ -163,6 +189,8 @@ init python:
             "crit": 20,
             "stamina": 100,
             "ai": "aggressive",
+            "has_shield": False,
+            "armor_coverage": {"head": 10, "neck": 0, "body": 25, "limbs": 10},
             "loot_power": (5, 8),
             "loot_wealth": (3, 5),
             "loot_reputation": (2, 4),
@@ -179,6 +207,8 @@ init python:
             "crit": 8,
             "stamina": 100,
             "ai": "defensive",
+            "has_shield": True,
+            "armor_coverage": {"head": 50, "neck": 20, "body": 80, "limbs": 40},
             "loot_power": (5, 7),
             "loot_wealth": (2, 4),
             "loot_reputation": (3, 5),
@@ -195,6 +225,8 @@ init python:
             "crit": 10,
             "stamina": 100,
             "ai": "balanced",
+            "has_shield": True,
+            "armor_coverage": {"head": 40, "neck": 15, "body": 70, "limbs": 35},
             "loot_power": (5, 8),
             "loot_wealth": (3, 6),
             "loot_reputation": (2, 4),
@@ -213,6 +245,8 @@ init python:
             "crit": 12,
             "stamina": 100,
             "ai": "defensive",
+            "has_shield": True,
+            "armor_coverage": {"head": 60, "neck": 30, "body": 90, "limbs": 50},
             "loot_power": (6, 8),
             "loot_wealth": (4, 6),
             "loot_reputation": (3, 5),
@@ -231,6 +265,8 @@ init python:
             "crit": 12,
             "stamina": 100,
             "ai": "balanced",
+            "has_shield": True,
+            "armor_coverage": {"head": 50, "neck": 25, "body": 85, "limbs": 45},
             "loot_power": (8, 12),
             "loot_wealth": (6, 10),
             "loot_reputation": (5, 8),
@@ -247,6 +283,8 @@ init python:
             "crit": 22,
             "stamina": 100,
             "ai": "aggressive",
+            "has_shield": False,
+            "armor_coverage": {"head": 20, "neck": 5, "body": 35, "limbs": 15},
             "loot_power": (7, 10),
             "loot_wealth": (5, 8),
             "loot_reputation": (4, 7),
@@ -263,6 +301,8 @@ init python:
             "crit": 18,
             "stamina": 100,
             "ai": "aggressive",
+            "has_shield": False,
+            "armor_coverage": {"head": 35, "neck": 15, "body": 55, "limbs": 30},
             "loot_power": (8, 12),
             "loot_wealth": (5, 8),
             "loot_reputation": (6, 10),
@@ -458,6 +498,17 @@ init python:
         store.combat_show_damage = False
         store.combat_damage_text = ""
 
+        ## 新系统重置
+        store.combat_stance = "balanced"
+        store.combat_player_bleed_turns = 0
+        store.combat_player_bleed_dmg = 0
+        store.combat_enemy_bleed_turns = 0
+        store.combat_enemy_bleed_dmg = 0
+        store.combat_player_stunned = False
+        store.combat_enemy_stunned = False
+        store.combat_combo_count = 0
+        store.combat_respite_stacks = 0
+
         ## 初始化奖励
         store.combat_reward_power = 0
         store.combat_reward_wealth = 0
@@ -499,6 +550,8 @@ init python:
         """返回 (damage_mult, accuracy_mod, injury_type)"""
         if part == "head":
             return (1.5, -15, "head")
+        elif part == "neck":
+            return (2.0, -25, "neck")
         elif part == "body":
             return (1.0, 0, "body")
         elif part == "limbs":
@@ -506,8 +559,73 @@ init python:
         return (1.0, 0, "body")
 
     def get_body_part_name(part):
-        names = {"head": "头部", "body": "躯干", "limbs": "四肢"}
+        names = {"head": "头部", "neck": "颈部", "body": "躯干", "limbs": "四肢"}
         return names.get(part, "躯干")
+
+    ## ──────────────── 姿态系统 ────────────────
+
+    def get_stance_mods():
+        """返回当前姿态的修正值 (dmg_mult, dodge_mod, stamina_cost_mod, stamina_regen)"""
+        stance = store.combat_stance
+        if stance == "offensive":
+            return (1.20, -10, 5, 0)       ## +20%伤害, -10闪避, +5体力消耗, 无回合回复
+        elif stance == "defensive":
+            return (0.80, 15, -5, 8)        ## -20%伤害, +15闪避, -5体力消耗, 每回合+8体力
+        else:  ## balanced
+            return (1.0, 0, 0, 3)           ## 标准, 每回合+3体力
+
+    def get_stance_name():
+        names = {"offensive": "攻势", "defensive": "守势", "balanced": "均衡"}
+        return names.get(store.combat_stance, "均衡")
+
+    def get_stance_color():
+        colors = {"offensive": "#e74c3c", "defensive": "#3498db", "balanced": "#d4a942"}
+        return colors.get(store.combat_stance, "#d4a942")
+
+    ## ──────────────── 流血系统 ────────────────
+
+    def apply_bleed_tick():
+        """回合开始时处理流血伤害"""
+        if store.combat_player_bleed_turns > 0:
+            store.combat_player_hp = max(0, store.combat_player_hp - store.combat_player_bleed_dmg)
+            store.combat_player_bleed_turns -= 1
+            add_combat_log("你正在流血！失去 %d HP（剩余%d回合）" % (store.combat_player_bleed_dmg, store.combat_player_bleed_turns))
+        if store.combat_enemy_bleed_turns > 0:
+            store.combat_enemy_hp = max(0, store.combat_enemy_hp - store.combat_enemy_bleed_dmg)
+            store.combat_enemy_bleed_turns -= 1
+            add_combat_log("%s 正在流血！失去 %d HP" % (store.combat_enemy_name, store.combat_enemy_bleed_dmg))
+
+    def inflict_bleed(target, dmg, turns):
+        """给目标施加流血 target='player'/'enemy'"""
+        if target == "player":
+            store.combat_player_bleed_dmg = dmg
+            store.combat_player_bleed_turns = turns
+        else:
+            store.combat_enemy_bleed_dmg = dmg
+            store.combat_enemy_bleed_turns = turns
+
+    ## ──────────────── 护甲覆盖 ────────────────
+
+    def check_armor_coverage(enemy_id, body_part):
+        """检查护甲是否激活（按部位覆盖率），返回True=护甲生效"""
+        enemy = ENEMY_DATABASE.get(enemy_id, {})
+        coverage = enemy.get("armor_coverage", {})
+        cover_pct = coverage.get(body_part, 0)
+        return _combat_random.randint(1, 100) <= cover_pct
+
+    ## ──────────────── 恢复机制 (Respite) ────────────────
+
+    def gain_respite(amount):
+        """获得恢复能量（命中/击杀时触发）"""
+        store.combat_respite_stacks = min(9, store.combat_respite_stacks + amount)
+
+    def use_respite():
+        """消耗恢复能量恢复体力（自动在每回合开始触发）"""
+        if store.combat_respite_stacks >= 3:
+            recover = store.combat_respite_stacks * 3
+            store.combat_player_stamina = min(store.combat_player_max_stamina, store.combat_player_stamina + recover)
+            add_combat_log("恢复能量释放！+%d 体力" % recover)
+            store.combat_respite_stacks = 0
 
     ## ──────────────── 玩家攻击 ────────────────
 
@@ -515,10 +633,14 @@ init python:
         """
         执行玩家攻击
         attack_type: "slash" / "heavy"
-        body_part: "head" / "body" / "limbs"
+        body_part: "head" / "body" / "limbs" / "neck"
         """
-        ## 消耗体力
+        ## 姿态修正
+        stance_dmg, stance_dodge, stance_stamina, _ = get_stance_mods()
+
+        ## 消耗体力（姿态影响）
         stamina_cost = 10 if attack_type == "slash" else 20
+        stamina_cost = max(5, stamina_cost + stance_stamina)
         store.combat_player_stamina = max(0, store.combat_player_stamina - stamina_cost)
 
         ## 清除上回合防御/闪避状态
@@ -538,8 +660,11 @@ init python:
         base_accuracy = 85 if attack_type == "slash" else 70
         base_accuracy += part_acc_mod
 
-        ## 敌人闪避（含闪避姿态加成）
-        enemy_dodge = store.combat_enemy_dodge + store.combat_enemy_dodge_bonus
+        ## 敌人闪避（含闪避姿态加成）——被眩晕时闪避为0
+        if store.combat_enemy_stunned:
+            enemy_dodge = 0
+        else:
+            enemy_dodge = store.combat_enemy_dodge + store.combat_enemy_dodge_bonus
 
         ## 命中判定
         hit_chance = max(10, min(95, base_accuracy - hit_pen - enemy_dodge))
@@ -548,24 +673,30 @@ init python:
 
         if not hit:
             add_combat_log("你对%s使用%s —— 未命中！(%d%%)" % (part_name, atk_name, hit_chance))
-            store.combat_enemy_dodge_bonus = 0  ## 消耗闪避加成
+            store.combat_enemy_dodge_bonus = 0
+            store.combat_combo_count = 0  ## 连击中断
             return False
 
-        ## 伤害计算
+        ## 伤害计算（含姿态加成）
         base_dmg = store.combat_player_attack
         if attack_type == "heavy":
             base_dmg = int(base_dmg * 1.5)
-        base_dmg = int(base_dmg * part_dmg_mult * dmg_mult)
+        base_dmg = int(base_dmg * part_dmg_mult * dmg_mult * stance_dmg)
 
         ## 暴击
         is_crit = roll_crit(store.combat_player_crit)
         if is_crit:
             base_dmg = int(base_dmg * 1.8)
 
-        ## 敌人防御（防御姿态减半伤害由敌方处理）
+        ## 护甲覆盖检查——护甲激活则额外减伤
+        armor_blocked = check_armor_coverage(store.combat_enemy_id, body_part)
+
+        ## 敌人防御
         reduction = store.combat_enemy_defense
         if store.combat_enemy_defend_active:
             reduction = int(reduction * 2)
+        if armor_blocked:
+            reduction = int(reduction * 1.5)  ## 护甲激活，防御力×1.5
 
         final_dmg = max(1, base_dmg - reduction)
 
@@ -576,6 +707,30 @@ init python:
         ## 造成伤害
         store.combat_enemy_hp = max(0, store.combat_enemy_hp - final_dmg)
 
+        ## ── 恢复机制 (Respite) ──
+        store.combat_combo_count += 1
+        gain_respite(2)  ## 每次命中+2恢复能量
+
+        ## ── 流血判定：颈部攻击30%概率，头部猛击15%概率 ──
+        bleed_chance = 0
+        if body_part == "neck":
+            bleed_chance = 30
+        elif body_part == "head" and attack_type == "heavy":
+            bleed_chance = 15
+        elif is_crit:
+            bleed_chance = 10
+
+        if bleed_chance > 0 and _combat_random.randint(1, 100) <= bleed_chance:
+            bleed_dmg = max(2, final_dmg // 4)
+            inflict_bleed("enemy", bleed_dmg, 3)
+            add_combat_log("造成流血！每回合 %d 伤害，持续3回合" % bleed_dmg)
+
+        ## ── 眩晕判定：头部猛击20%概率 ──
+        if body_part == "head" and attack_type == "heavy" and not store.combat_enemy_stunned:
+            if _combat_random.randint(1, 100) <= 20:
+                store.combat_enemy_stunned = True
+                add_combat_log("%s 被击晕了！下回合无法行动！" % store.combat_enemy_name)
+
         ## 动画标记
         store.combat_enemy_hit_flash = True
         store.combat_show_damage = True
@@ -584,7 +739,9 @@ init python:
 
         ## 日志
         crit_text = "【暴击！】" if is_crit else ""
-        add_combat_log("你%s攻击%s%s —— 造成 %d 伤害 %s" % (atk_name, part_name, crit_text, final_dmg, ("(防御中)" if store.combat_enemy_defend_active else "")))
+        armor_text = "(护甲减免)" if armor_blocked else ""
+        defend_text = "(防御中)" if store.combat_enemy_defend_active else ""
+        add_combat_log("你%s攻击%s%s —— %d伤害 %s%s" % (atk_name, part_name, crit_text, final_dmg, armor_text, defend_text))
 
         ## 清除敌人防御/闪避状态
         store.combat_enemy_dodge_bonus = 0
@@ -592,13 +749,51 @@ init python:
 
         return True
 
+    ## ──────────────── 盾击 ────────────────
+
+    def player_shield_bash():
+        """盾击：消耗15体力，造成轻伤害，削减敌人体力，概率眩晕"""
+        store.combat_player_stamina = max(0, store.combat_player_stamina - 15)
+        store.combat_defend_active = False
+
+        ## 轻微伤害（攻击力的30%）
+        bash_dmg = max(1, int(store.combat_player_attack * 0.3))
+        store.combat_enemy_hp = max(0, store.combat_enemy_hp - bash_dmg)
+
+        ## 削减敌人体力
+        stamina_drain = _combat_random.randint(10, 20)
+        store.combat_enemy_stamina = max(0, store.combat_enemy_stamina - stamina_drain)
+
+        ## 眩晕判定 (30%)
+        stunned = _combat_random.randint(1, 100) <= 30
+        if stunned:
+            store.combat_enemy_stunned = True
+
+        ## 动画
+        store.combat_enemy_hit_flash = True
+        store.combat_show_damage = True
+        store.combat_damage_text = str(bash_dmg)
+        store.combat_damage_pos = "enemy"
+
+        ## 日志
+        stun_text = "眩晕！" if stunned else ""
+        add_combat_log("盾击！造成%d伤害，削减%d体力 %s" % (bash_dmg, stamina_drain, stun_text))
+
+        ## 恢复能量
+        gain_respite(1)
+
+        store.combat_enemy_dodge_bonus = 0
+
     ## ──────────────── 玩家防御 ────────────────
 
     def player_defend():
-        """玩家选择防御"""
+        """玩家选择防御（守势下额外恢复）"""
         store.combat_defend_active = True
-        store.combat_player_stamina = min(store.combat_player_max_stamina, store.combat_player_stamina + 15)
-        add_combat_log("你举盾防御，恢复 15 体力（伤害减半）")
+        recover = 15
+        if store.combat_stance == "defensive":
+            recover = 22  ## 守势防御恢复更多
+        store.combat_player_stamina = min(store.combat_player_max_stamina, store.combat_player_stamina + recover)
+        add_combat_log("你举盾防御，恢复 %d 体力（伤害减半）" % recover)
 
     ## ──────────────── 玩家闪避姿态 ────────────────
 
@@ -657,38 +852,46 @@ init python:
         """执行敌人回合"""
         enemy = ENEMY_DATABASE.get(store.combat_enemy_id, {})
         ai_type = enemy.get("ai", "balanced")
-        fatigue_level = get_fatigue_level(store.combat_enemy_stamina)
+        has_shield = enemy.get("has_shield", False)
+
+        ## ── 眩晕检查 ──
+        if store.combat_enemy_stunned:
+            store.combat_enemy_stunned = False
+            add_combat_log("%s 处于眩晕状态，无法行动！" % store.combat_enemy_name)
+            return
 
         ## 清除敌人上回合的防御/闪避
         store.combat_enemy_defend_active = False
 
-        ## AI决策
+        ## AI决策（增加盾击选项）
         if store.combat_enemy_stamina <= 15:
-            ## 体力极低，优先防御恢复
             action = "defend"
         elif ai_type == "aggressive":
             roll = _combat_random.randint(1, 100)
             if store.combat_enemy_hp < store.combat_enemy_max_hp * 0.3:
-                ## 血量低，有概率防御
                 if roll <= 30:
                     action = "defend"
                 elif roll <= 50:
                     action = "heavy"
                 else:
                     action = "slash"
-            elif roll <= 20:
+            elif has_shield and roll <= 15:
+                action = "shield_bash"
+            elif roll <= 30:
                 action = "heavy"
-            elif roll <= 40:
+            elif roll <= 45:
                 action = "dodge_stance"
             else:
                 action = "slash"
         elif ai_type == "defensive":
             roll = _combat_random.randint(1, 100)
-            if roll <= 30:
+            if has_shield and roll <= 20:
+                action = "shield_bash"
+            elif roll <= 40:
                 action = "defend"
-            elif roll <= 50:
+            elif roll <= 55:
                 action = "dodge_stance"
-            elif roll <= 70:
+            elif roll <= 75:
                 action = "slash"
             else:
                 action = "heavy"
@@ -696,14 +899,16 @@ init python:
             roll = _combat_random.randint(1, 100)
             if roll <= 15:
                 action = "defend"
-            elif roll <= 30:
+            elif has_shield and roll <= 25:
+                action = "shield_bash"
+            elif roll <= 35:
                 action = "dodge_stance"
-            elif roll <= 55:
+            elif roll <= 60:
                 action = "slash"
             else:
                 action = "heavy"
 
-        ## 执行敌方行动
+        ## ── 执行敌方行动 ──
         if action == "defend":
             store.combat_enemy_defend_active = True
             store.combat_enemy_stamina = min(100, store.combat_enemy_stamina + 15)
@@ -716,6 +921,24 @@ init python:
             add_combat_log("%s 进入闪避姿态。" % store.combat_enemy_name)
             return
 
+        if action == "shield_bash":
+            store.combat_enemy_stamina = max(0, store.combat_enemy_stamina - 15)
+            bash_dmg = max(1, int(store.combat_enemy_attack * 0.3))
+            store.combat_player_hp = max(0, store.combat_player_hp - bash_dmg)
+            stamina_drain = _combat_random.randint(8, 16)
+            store.combat_player_stamina = max(0, store.combat_player_stamina - stamina_drain)
+            stun_roll = _combat_random.randint(1, 100) <= 25
+            if stun_roll:
+                store.combat_player_stunned = True
+            store.combat_hit_flash = True
+            store.combat_show_damage = True
+            store.combat_damage_text = str(bash_dmg)
+            store.combat_damage_pos = "player"
+            stun_txt = "你被击晕了！" if stun_roll else ""
+            add_combat_log("%s 盾击！%d伤害，削%d体力 %s" % (store.combat_enemy_name, bash_dmg, stamina_drain, stun_txt))
+            store.combat_defend_active = False
+            return
+
         ## 攻击动作
         is_heavy = (action == "heavy")
         stamina_cost = 20 if is_heavy else 10
@@ -724,9 +947,11 @@ init python:
         hit_pen, _, dmg_mult = get_fatigue_penalties(store.combat_enemy_stamina)
         base_accuracy = 70 if is_heavy else 85
 
-        ## 随机选择攻击部位
+        ## 随机选择攻击部位（新增颈部5%）
         part_roll = _combat_random.randint(1, 100)
-        if part_roll <= 15:
+        if part_roll <= 5:
+            body_part = "neck"
+        elif part_roll <= 18:
             body_part = "head"
         elif part_roll <= 75:
             body_part = "body"
@@ -736,8 +961,9 @@ init python:
         part_dmg_mult, part_acc_mod, injury_type = get_body_part_mod(body_part)
         base_accuracy += part_acc_mod
 
-        ## 玩家闪避（含闪避姿态加成）
-        player_dodge = store.combat_player_dodge + store.combat_dodge_bonus
+        ## 玩家闪避（含姿态加成和闪避姿态）
+        _, stance_dodge_mod, _, _ = get_stance_mods()
+        player_dodge = store.combat_player_dodge + store.combat_dodge_bonus + stance_dodge_mod
         _, dodge_pen, _ = get_fatigue_penalties(store.combat_player_stamina)
 
         hit_chance = max(10, min(95, base_accuracy - hit_pen - max(0, player_dodge - dodge_pen)))
@@ -750,7 +976,14 @@ init python:
         store.combat_dodge_bonus = 0
 
         if roll > hit_chance:
-            add_combat_log("%s %s你的%s —— 你成功闪避！(%d%%)" % (store.combat_enemy_name, atk_name, part_name, hit_chance))
+            add_combat_log("%s %s你的%s —— 闪避！(%d%%)" % (store.combat_enemy_name, atk_name, part_name, hit_chance))
+            ## ── 反击判定：守势+防御状态下25%概率反击 ──
+            if store.combat_stance == "defensive" and store.combat_defend_active:
+                if _combat_random.randint(1, 100) <= 25:
+                    counter_dmg = max(1, int(store.combat_player_attack * 0.5))
+                    store.combat_enemy_hp = max(0, store.combat_enemy_hp - counter_dmg)
+                    add_combat_log("反击！你趁机造成 %d 伤害！" % counter_dmg)
+                    store.combat_enemy_hit_flash = True
             return
 
         ## 计算伤害
@@ -779,18 +1012,32 @@ init python:
         ## 造成伤害
         store.combat_player_hp = max(0, store.combat_player_hp - final_dmg)
 
-        ## 受伤判定（20%概率在对应部位造成持续伤）
+        ## ── 流血判定（颈部攻击25%概率）──
+        if body_part == "neck" and _combat_random.randint(1, 100) <= 25:
+            bleed_dmg = max(2, final_dmg // 4)
+            inflict_bleed("player", bleed_dmg, 3)
+            add_combat_log("你被割伤了颈部！流血 %d/回合" % bleed_dmg)
+
+        ## ── 眩晕判定（头部猛击15%概率）──
+        if body_part == "head" and is_heavy and _combat_random.randint(1, 100) <= 15:
+            store.combat_player_stunned = True
+            add_combat_log("你被击晕了！下回合无法行动！")
+
+        ## 受伤判定（20%概率）
         if body_part != "body" or is_heavy:
             if _combat_random.randint(1, 100) <= 20:
                 if injury_type == "head" and store.injury_head == 0:
                     store.injury_head = 1
-                    add_combat_log("你的头部受到了创伤！（-10谋略，持续1章）")
+                    add_combat_log("头部创伤！（-10谋略，持续1章）")
+                elif injury_type == "neck" and store.injury_head == 0:
+                    store.injury_head = 1
+                    add_combat_log("颈部割伤！（-10谋略，持续1章）")
                 elif injury_type == "limbs" and store.injury_limb == 0:
                     store.injury_limb = 1
-                    add_combat_log("你的四肢受了伤！（-10闪避，持续1章）")
+                    add_combat_log("四肢受伤！（-10闪避，持续1章）")
                 elif injury_type == "body" and store.injury_body == 0:
                     store.injury_body = 1
-                    add_combat_log("你的躯干受到重伤！（-5权力,-5忠诚，持续1章）")
+                    add_combat_log("躯干重伤！（-5权力,-5忠诚，持续1章）")
 
         ## 动画标记
         store.combat_hit_flash = True
@@ -801,7 +1048,7 @@ init python:
         ## 日志
         crit_text = "【暴击！】" if is_crit else ""
         defend_text = "(防御中)" if store.combat_defend_active else ""
-        add_combat_log("%s %s你的%s%s —— 造成 %d 伤害 %s" % (store.combat_enemy_name, atk_name, part_name, crit_text, final_dmg, defend_text))
+        add_combat_log("%s %s你的%s%s —— %d伤害 %s" % (store.combat_enemy_name, atk_name, part_name, crit_text, final_dmg, defend_text))
 
         ## 清除玩家防御状态
         store.combat_defend_active = False
@@ -1026,6 +1273,18 @@ screen combat_screen():
                         ypadding 2
                         background Solid("#2ecc7130")
                         text "风 闪避姿态" size 11 color "#2ecc71" font "msyh.ttf"
+                if combat_enemy_bleed_turns > 0:
+                    frame:
+                        xpadding 6
+                        ypadding 2
+                        background Solid("#e7283c30")
+                        text "血 流血[combat_enemy_bleed_turns]" size 11 color "#e7283c" font "msyh.ttf"
+                if combat_enemy_stunned:
+                    frame:
+                        xpadding 6
+                        ypadding 2
+                        background Solid("#f39c1230")
+                        text "晕 眩晕" size 11 color "#f39c12" font "msyh.ttf"
 
 
     ## ═══════════════════════════════════════════
@@ -1145,14 +1404,18 @@ screen combat_screen():
 
                 text "[combat_player_stamina]/[combat_player_max_stamina]" size 11 color "#8a7e60" yalign 0.5 xsize 70 text_align 1.0
 
-            ## 疲劳状态
+            ## 疲劳 + 姿态
             $ _p_fatigue = get_fatigue_level(combat_player_stamina)
             $ _p_fatigue_c = get_fatigue_color(_p_fatigue)
             $ _p_fatigue_n = get_fatigue_name(_p_fatigue)
             hbox:
-                spacing 6
+                spacing 8
                 text "疲劳:" size 12 color "#6a5e48" font "msyh.ttf" yalign 0.5
                 text _p_fatigue_n size 13 color _p_fatigue_c font "msyh.ttf" bold True yalign 0.5
+                text "|" size 12 color "#4a403060" yalign 0.5
+                $ _stance_n = get_stance_name()
+                $ _stance_c = get_stance_color()
+                text _stance_n size 13 color _stance_c font "msyh.ttf" bold True yalign 0.5
 
             ## 战斗属性一览
             hbox:
@@ -1161,6 +1424,8 @@ screen combat_screen():
                 text "防[combat_player_defense]" size 11 color "#3498db"
                 text "闪[combat_player_dodge]%%" size 11 color "#2ecc71"
                 text "暴[combat_player_crit]%%" size 11 color "#f39c12"
+                if combat_respite_stacks > 0:
+                    text "气[combat_respite_stacks]" size 11 color "#9b59b6"
 
             ## 状态标记
             hbox:
@@ -1177,6 +1442,18 @@ screen combat_screen():
                         ypadding 2
                         background Solid("#2ecc7130")
                         text "风 闪避" size 11 color "#2ecc71" font "msyh.ttf"
+                if combat_player_bleed_turns > 0:
+                    frame:
+                        xpadding 5
+                        ypadding 2
+                        background Solid("#e7283c30")
+                        text "血 流血[combat_player_bleed_turns]" size 11 color "#e7283c" font "msyh.ttf"
+                if combat_player_stunned:
+                    frame:
+                        xpadding 5
+                        ypadding 2
+                        background Solid("#f39c1230")
+                        text "晕 眩晕" size 11 color "#f39c12" font "msyh.ttf"
                 if injury_head > 0:
                     frame:
                         xpadding 5
@@ -1212,15 +1489,32 @@ screen combat_screen():
             vbox:
                 spacing 6
 
-                text "* 行动" size 15 color "#d4a942" font "msyh.ttf"
+                ## 行动标题 + 姿态切换
+                hbox:
+                    spacing 12
+                    text "* 行动" size 15 color "#d4a942" font "msyh.ttf" yalign 0.5
 
-                grid 2 3:
+                    ## 姿态切换按钮（不消耗回合）
+                    $ _st_c = get_stance_color()
+                    $ _st_n = get_stance_name()
+                    button:
+                        xsize 80
+                        ysize 26
+                        background Solid(_st_c + "30")
+                        hover_background Solid(_st_c + "50")
+                        action Function(toggle_stance)
+                        vbox:
+                            xalign 0.5
+                            yalign 0.5
+                            text _st_n size 13 color _st_c font "msyh.ttf" xalign 0.5
+
+                grid 2 4:
                     spacing 6
 
                     ## 斩击
                     button:
                         xsize 135
-                        ysize 52
+                        ysize 48
                         background Solid("#2a1f3c")
                         hover_background Solid("#3a2f50")
                         action [SetVariable("combat_attack_type", "slash"), SetVariable("combat_targeting", True)]
@@ -1229,13 +1523,13 @@ screen combat_screen():
                         vbox:
                             xalign 0.5
                             yalign 0.5
-                            text "剑 斩击" size 15 color "#e0d8c8" font "msyh.ttf" xalign 0.5
-                            text "消耗10体力" size 10 color "#6a5e48" xalign 0.5
+                            text "剑 斩击" size 14 color "#e0d8c8" font "msyh.ttf" xalign 0.5
+                            text "消耗10体力" size 9 color "#6a5e48" xalign 0.5
 
                     ## 猛击
                     button:
                         xsize 135
-                        ysize 52
+                        ysize 48
                         background Solid("#2a1f3c")
                         hover_background Solid("#3a2f50")
                         action [SetVariable("combat_attack_type", "heavy"), SetVariable("combat_targeting", True)]
@@ -1244,13 +1538,28 @@ screen combat_screen():
                         vbox:
                             xalign 0.5
                             yalign 0.5
-                            text "锤 猛击" size 15 color "#e0d8c8" font "msyh.ttf" xalign 0.5
-                            text "1.5x伤 消耗20" size 10 color "#6a5e48" xalign 0.5
+                            text "锤 猛击" size 14 color "#e0d8c8" font "msyh.ttf" xalign 0.5
+                            text "1.5x伤 消耗20" size 9 color "#6a5e48" xalign 0.5
+
+                    ## 盾击（新增！）
+                    button:
+                        xsize 135
+                        ysize 48
+                        background Solid("#2a2a1a")
+                        hover_background Solid("#3a3a2a")
+                        action Function(shield_bash_and_next)
+                        sensitive (combat_player_stamina >= 15)
+
+                        vbox:
+                            xalign 0.5
+                            yalign 0.5
+                            text "盾 盾击" size 14 color "#f1c40f" font "msyh.ttf" xalign 0.5
+                            text "削体+晕 消耗15" size 9 color "#6a5e48" xalign 0.5
 
                     ## 防御
                     button:
                         xsize 135
-                        ysize 52
+                        ysize 48
                         background Solid("#1a2a3c")
                         hover_background Solid("#2a3a50")
                         action Function(player_defend_and_next)
@@ -1258,13 +1567,13 @@ screen combat_screen():
                         vbox:
                             xalign 0.5
                             yalign 0.5
-                            text "盾 防御" size 15 color "#3498db" font "msyh.ttf" xalign 0.5
-                            text "减伤50% +15体" size 10 color "#6a5e48" xalign 0.5
+                            text "盾 防御" size 14 color "#3498db" font "msyh.ttf" xalign 0.5
+                            text "减伤50% +体力" size 9 color "#6a5e48" xalign 0.5
 
                     ## 闪避姿态
                     button:
                         xsize 135
-                        ysize 52
+                        ysize 48
                         background Solid("#1a3c2a")
                         hover_background Solid("#2a503a")
                         action Function(dodge_stance_and_next)
@@ -1273,13 +1582,13 @@ screen combat_screen():
                         vbox:
                             xalign 0.5
                             yalign 0.5
-                            text "风 闪避" size 15 color "#2ecc71" font "msyh.ttf" xalign 0.5
-                            text "闪避+30% 消耗5" size 10 color "#6a5e48" xalign 0.5
+                            text "风 闪避" size 14 color "#2ecc71" font "msyh.ttf" xalign 0.5
+                            text "闪避+30% 消耗5" size 9 color "#6a5e48" xalign 0.5
 
                     ## 使用物品
                     button:
                         xsize 135
-                        ysize 52
+                        ysize 48
                         background Solid("#3c2a1a")
                         hover_background Solid("#503a2a")
                         action Show("combat_items_panel")
@@ -1287,13 +1596,13 @@ screen combat_screen():
                         vbox:
                             xalign 0.5
                             yalign 0.5
-                            text "药 物品" size 15 color "#f39c12" font "msyh.ttf" xalign 0.5
-                            text "使用物品" size 10 color "#6a5e48" xalign 0.5
+                            text "药 物品" size 14 color "#f39c12" font "msyh.ttf" xalign 0.5
+                            text "使用物品" size 9 color "#6a5e48" xalign 0.5
 
                     ## 撤退
                     button:
                         xsize 135
-                        ysize 52
+                        ysize 48
                         background Solid("#3c1a1a")
                         hover_background Solid("#501a1a")
                         action Function(retreat_and_check)
@@ -1302,8 +1611,11 @@ screen combat_screen():
                             xalign 0.5
                             yalign 0.5
                             $ _retreat_pct = min(90, 60 + int(intrigue * 0.3))
-                            text "退 撤退" size 15 color "#e74c3c" font "msyh.ttf" xalign 0.5
-                            text "成功率[_retreat_pct]%%" size 10 color "#6a5e48" xalign 0.5
+                            text "退 撤退" size 14 color "#e74c3c" font "msyh.ttf" xalign 0.5
+                            text "成功率[_retreat_pct]%%" size 9 color "#6a5e48" xalign 0.5
+
+                    ## 占位（2x4 grid需要8个元素）
+                    null
 
 
     ## ═══════════════════════════════════════════
@@ -1324,14 +1636,14 @@ screen combat_screen():
 
                 text "选择攻击部位" size 18 color "#d4a942" font "msyh.ttf" xalign 0.5
 
-                hbox:
-                    spacing 12
+                grid 2 2:
+                    spacing 10
                     xalign 0.5
 
                     ## 头部
                     button:
                         xsize 130
-                        ysize 80
+                        ysize 75
                         background Solid("#3c1a1a")
                         hover_background Solid("#501a1a")
                         action Function(execute_player_attack, body_part="head")
@@ -1340,14 +1652,30 @@ screen combat_screen():
                             xalign 0.5
                             yalign 0.5
                             spacing 2
-                            text "头部" size 16 color "#e74c3c" font "msyh.ttf" xalign 0.5 bold True
-                            text "1.5x伤害" size 11 color "#c8b890" xalign 0.5
-                            text "-15%命中" size 11 color "#e74c3c" xalign 0.5
+                            text "头部" size 15 color "#e74c3c" font "msyh.ttf" xalign 0.5 bold True
+                            text "1.5x伤 -15%%命中" size 10 color "#c8b890" xalign 0.5
+                            text "可眩晕" size 10 color "#f39c12" xalign 0.5
+
+                    ## 颈部（新增！）
+                    button:
+                        xsize 130
+                        ysize 75
+                        background Solid("#4a1a2a")
+                        hover_background Solid("#601a2a")
+                        action Function(execute_player_attack, body_part="neck")
+
+                        vbox:
+                            xalign 0.5
+                            yalign 0.5
+                            spacing 2
+                            text "颈部" size 15 color "#ff6b6b" font "msyh.ttf" xalign 0.5 bold True
+                            text "2.0x伤 -25%%命中" size 10 color "#c8b890" xalign 0.5
+                            text "可流血" size 10 color "#e7283c" xalign 0.5
 
                     ## 躯干
                     button:
                         xsize 130
-                        ysize 80
+                        ysize 75
                         background Solid("#2a2a3c")
                         hover_background Solid("#3a3a50")
                         action Function(execute_player_attack, body_part="body")
@@ -1356,14 +1684,14 @@ screen combat_screen():
                             xalign 0.5
                             yalign 0.5
                             spacing 2
-                            text "躯干" size 16 color "#e0d8c8" font "msyh.ttf" xalign 0.5 bold True
-                            text "1.0x伤害" size 11 color "#c8b890" xalign 0.5
-                            text "标准命中" size 11 color "#8a7e60" xalign 0.5
+                            text "躯干" size 15 color "#e0d8c8" font "msyh.ttf" xalign 0.5 bold True
+                            text "1.0x伤 标准命中" size 10 color "#c8b890" xalign 0.5
+                            text "最稳妥" size 10 color "#8a7e60" xalign 0.5
 
                     ## 四肢
                     button:
                         xsize 130
-                        ysize 80
+                        ysize 75
                         background Solid("#1a3c2a")
                         hover_background Solid("#2a503a")
                         action Function(execute_player_attack, body_part="limbs")
@@ -1372,9 +1700,9 @@ screen combat_screen():
                             xalign 0.5
                             yalign 0.5
                             spacing 2
-                            text "四肢" size 16 color "#2ecc71" font "msyh.ttf" xalign 0.5 bold True
-                            text "0.75x伤害" size 11 color "#c8b890" xalign 0.5
-                            text "+10%命中" size 11 color "#2ecc71" xalign 0.5
+                            text "四肢" size 15 color "#2ecc71" font "msyh.ttf" xalign 0.5 bold True
+                            text "0.75x伤 +10%%命中" size 10 color "#c8b890" xalign 0.5
+                            text "高命中" size 10 color "#2ecc71" xalign 0.5
 
                 ## 取消按钮
                 textbutton "取消":
@@ -1560,6 +1888,10 @@ screen combat_victory():
                         xfill True
                         text "回合数" size 13 color "#6a5e48" font "msyh.ttf"
                         text "[combat_turn]" size 13 color "#c8b890" xalign 1.0
+                    hbox:
+                        xfill True
+                        text "最长连击" size 13 color "#6a5e48" font "msyh.ttf"
+                        text "[combat_combo_count]" size 13 color "#c8b890" xalign 1.0
 
             null height 10
             add Solid("#d4a94230") xsize 350 ysize 1 xalign 0.5
@@ -1700,6 +2032,7 @@ init python:
         ## 检查敌人是否被击败
         if store.combat_enemy_hp <= 0:
             store.combat_phase = "victory"
+            gain_respite(5)  ## 击杀+5恢复能量
         else:
             store.combat_phase = "enemy"
 
@@ -1717,6 +2050,28 @@ init python:
         store.combat_phase = "enemy"
         renpy.restart_interaction()
 
+    def shield_bash_and_next():
+        """盾击后切换到敌人回合"""
+        player_shield_bash()
+        if store.combat_enemy_hp <= 0:
+            store.combat_phase = "victory"
+        else:
+            store.combat_phase = "enemy"
+        renpy.restart_interaction()
+
+    def toggle_stance():
+        """切换姿态: balanced -> offensive -> defensive -> balanced"""
+        if store.combat_stance == "balanced":
+            store.combat_stance = "offensive"
+            add_combat_log("切换至【攻势】: +20%%伤害, -10闪避")
+        elif store.combat_stance == "offensive":
+            store.combat_stance = "defensive"
+            add_combat_log("切换至【守势】: +15闪避, -20%%伤害, 可反击")
+        else:
+            store.combat_stance = "balanced"
+            add_combat_log("切换至【均衡】: 标准战斗状态")
+        renpy.restart_interaction()
+
     def use_item_and_next(item_id):
         """使用物品后切换到敌人回合"""
         use_combat_item(item_id)
@@ -1728,7 +2083,6 @@ init python:
         if attempt_retreat():
             store.combat_phase = "retreat"
         else:
-            ## 撤退失败，敌人回合
             store.combat_phase = "enemy"
         renpy.restart_interaction()
 
@@ -1748,9 +2102,32 @@ label combat_start_internal:
     ## 主循环
     label .combat_loop:
 
-        ## 等待玩家行动（combat_screen 中的按钮会修改 combat_phase）
+        ## ── 回合开始：流血结算 ──
+        $ apply_bleed_tick()
+
+        ## 流血致死检查
+        if combat_enemy_hp <= 0:
+            $ combat_phase = "victory"
+            jump .combat_victory
+        if combat_player_hp <= 0:
+            $ combat_phase = "defeat"
+            jump .combat_defeat
+
+        ## ── 姿态体力自动回复 ──
+        $ _s_dmg, _s_dodge, _s_cost, _s_regen = get_stance_mods()
+        $ combat_player_stamina = min(combat_player_max_stamina, combat_player_stamina + _s_regen)
+
+        ## ── 恢复机制自动触发 ──
+        $ use_respite()
+
+        ## ── 眩晕检查：玩家被眩晕则跳过行动 ──
+        if combat_player_stunned:
+            $ combat_player_stunned = False
+            $ add_combat_log("你处于眩晕状态，无法行动！")
+            $ combat_phase = "enemy"
+
+        ## 等待玩家行动
         if combat_phase == "player":
-            ## 等待玩家操作
             $ ui.interact()
 
         ## 检查战斗结束条件
@@ -1820,7 +2197,7 @@ label combat_start_internal:
 label combat_start(enemy_id="bandit"):
     $ _combat_ok = init_combat(enemy_id)
     if _combat_ok:
-        call combat_start_internal
+        call combat_start_internal from _call_combat_start_internal
     else:
         "（错误：未找到敌人数据 [enemy_id]）"
     return
@@ -1971,5 +2348,5 @@ label combat_with_preview(enemy_id="bandit"):
     show screen combat_preview(enemy_id)
     $ _preview_result = ui.interact()
     if _preview_result == "fight":
-        call combat_start(enemy_id)
+        call combat_start(enemy_id) from _call_combat_start
     return

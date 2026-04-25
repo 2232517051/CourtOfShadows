@@ -189,22 +189,22 @@ screen balance_debug():
                                         text_size 11
                                         text_color "#e74c3c"
                                         text_hover_color "#ff6b6b"
-                                        action [SetVariable(_stat_key, max(0, _sv - 10)), renpy.restart_interaction]
+                                        action [SetVariable(_stat_key, max(0, _sv - 10)), Function(renpy.restart_interaction)]
                                     textbutton "-5":
                                         text_size 11
                                         text_color "#e78c3c"
                                         text_hover_color "#ffaa6b"
-                                        action [SetVariable(_stat_key, max(0, _sv - 5)), renpy.restart_interaction]
+                                        action [SetVariable(_stat_key, max(0, _sv - 5)), Function(renpy.restart_interaction)]
                                     textbutton "+5":
                                         text_size 11
                                         text_color "#3cbe7c"
                                         text_hover_color "#6bffaa"
-                                        action [SetVariable(_stat_key, min(100, _sv + 5)), renpy.restart_interaction]
+                                        action [SetVariable(_stat_key, min(100, _sv + 5)), Function(renpy.restart_interaction)]
                                     textbutton "+10":
                                         text_size 11
                                         text_color "#2ecc71"
                                         text_hover_color "#6bff9b"
-                                        action [SetVariable(_stat_key, min(100, _sv + 10)), renpy.restart_interaction]
+                                        action [SetVariable(_stat_key, min(100, _sv + 10)), Function(renpy.restart_interaction)]
 
                 null height 4
 
@@ -267,7 +267,7 @@ screen balance_debug():
                                     text_size 11
                                     text_color "#d4a942"
                                     text_hover_color "#ffd866"
-                                    action [ToggleVariable(_flag_name), renpy.restart_interaction]
+                                    action [ToggleVariable(_flag_name), Function(renpy.restart_interaction)]
 
                 null height 4
                 add Solid("#d4a94230") xsize 1.0 ysize 1

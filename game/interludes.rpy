@@ -7,7 +7,7 @@
 label interlude_ch1_ch2:
 
     scene bg_castle_corridor with dissolve
-    play music "audio/music/ambient_night.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/night_mystery.ogg" fadeout 2.0 fadein 3.0
 
     "夜已深沉。你回到书房，烛火在风中摇曳不定。"
 
@@ -20,6 +20,7 @@ label interlude_ch1_ch2:
     else:
         "关于父亲的死，你知道的仍然太少。或许有些事情，注定要在日后才能浮出水面。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "少主，有一封信。"
 
@@ -33,6 +34,7 @@ label interlude_ch1_ch2:
     show aldric_img at left with dissolve
     aldric "是的。信使说……领主会议将在三周后召开。所有持有封地的贵族必须出席。"
 
+    $ hide_all_chars()
     "你拆开信函。洋皮纸上的字迹工整而冰冷："
 
     "{i}致艾登堡领主：兹令各领地之主于霜月十五日齐聚王都，参加年度领主会议。届时将商讨边境防务、税制改革及继承法修订等议题。缺席者将被视为对王座的不敬。{/i}"
@@ -65,12 +67,15 @@ label interlude_ch1_ch2:
     else:
         "王都对你来说几乎是未知的领域。你需要在抵达前尽可能多地了解局势。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "少主，还有一件事。"
 
     "老管家的声音压得很低。"
 
     aldric "您父亲……在去世前几周，曾频繁与一个来自南方的商人通信。我在整理旧文书时发现了这些。"
 
+    $ hide_all_chars()
     "他递上几张泛黄的纸条。字迹潦草，像是匆忙写就。"
 
     "大部分内容是关于货物交易的寻常通信，但有一行字格外醒目——"
@@ -95,12 +100,18 @@ label interlude_ch1_ch2:
 
         "交给奥尔德里克去追查这个商人。":
             $ change_rel("rel_aldric", 3)
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
             aldric "我会尽力的，少主。"
+            $ hide_all_chars()
             "老管家郑重地将纸条收好。对他而言，守护艾登堡家族的秘密已是毕生使命。"
 
     "窗外，第一片雪花飘落。"
 
     "冬天要来了。而你即将踏上前往王都的路。"
+
+    "临行前，奥尔德里克送来了秋季的税收账册。你治下的几个村庄虽然不富裕，但粮税和工匠税的收入总算填上了一部分亏空。"
+    $ change_stat("wealth", 3)
 
     "在那里，更大的风暴正在酝酿。"
 
@@ -115,12 +126,13 @@ label interlude_ch1_ch2:
 label interlude_ch2_ch3:
 
     scene bg_road_night with dissolve
-    play music "audio/music/travel_theme.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/forest_ambient.ogg" fadeout 2.0 fadein 3.0
 
     "从王都返回的路上，马车在泥泞的道路上颠簸前行。"
 
     "窗外起风了。初冬的寒意渗进石墙的每一道缝隙。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "领主大人，前方的桥被洪水冲毁了。我们需要绕道。"
 
@@ -144,6 +156,7 @@ label interlude_ch2_ch3:
         "走山路，我们赶时间。":
             $ change_stat("courage", 5)
             captain "明白。弟兄们，戒备！"
+            $ hide_all_chars()
             "车队转向山路。松林在两侧合拢，像一道黑色的幕墙。"
 
             "行至半途，你听到了远处的哭声。"
@@ -160,6 +173,7 @@ label interlude_ch2_ch3:
                     hide captain_img
                     show player_char_img at left with dissolve
                     player "到了艾登堡，我会安排人照顾你。"
+                    $ hide_all_chars()
                     "女人泪流满面地道谢。她不知道，她带来的消息将改变一切。"
                     "瘟疫。正从南方蔓延而来。"
 
@@ -168,6 +182,7 @@ label interlude_ch2_ch3:
                     hide player_char_img
                     show captain_img at left with dissolve
                     captain "同意。这种手法太常见了。"
+                    $ hide_all_chars()
                     "车队加速驶过。你回头看了一眼那个蜷缩的身影，心中五味杂陈。"
                     "但后来你听说了从南方传来的瘟疫消息。也许那个女人说的是真的。"
 
@@ -185,6 +200,7 @@ label interlude_ch2_ch3:
 
     scene bg_castle_gate with dissolve
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "少主！您终于回来了！"
 
@@ -205,6 +221,7 @@ label interlude_ch2_ch3:
     if alliance_church:
         "你立刻想到了主教马修斯。教会的修道院或许有治疗的经验。"
     else:
+        $ hide_all_chars()
         "你需要帮助。但在这个时候，能信任谁？"
 
     "你站在城堡的大门前，望向远方灰蒙蒙的天际线。"
@@ -224,12 +241,13 @@ label interlude_ch2_ch3:
 label interlude_ch3_ch4:
 
     scene bg_study_night with dissolve
-    play music "audio/music/intrigue_theme.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/conspiracy.ogg" fadeout 2.0 fadein 3.0
 
     "雨季过去了。艾登堡的空气里多了泥土翻新的味道。"
 
     "一阵敲门声打断了你的沉思。"
 
+    $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "打扰了，领主大人。"
 
@@ -237,6 +255,7 @@ label interlude_ch3_ch4:
 
     elena "这封信是今晚刚到的。送信的人……骑了三天三夜没有停歇。马都跑死了。"
 
+    $ hide_all_chars()
     "你接过信。蜡封上不是王室的百合纹章，而是一个你从未见过的标记——"
 
     "一只被锁链缠绕的鹰。"
@@ -249,6 +268,7 @@ label interlude_ch3_ch4:
     show elena_img at left with dissolve
     elena "弗雷德里克王子。"
 
+    $ hide_all_chars()
     "你拆开信。王子的字迹凌乱而急促："
 
     "{i}致艾登堡领主：我被囚禁了。王后以「保护」之名将我软禁在秋水宫。她要对王国做出不可挽回的事。我需要能信任的人。如果你还记得父辈的誓约——请来。{/i}"
@@ -280,6 +300,8 @@ label interlude_ch3_ch4:
         "先核实消息——这可能是王后设下的圈套。":
             $ change_stat("intrigue", 5)
             "你将信反复翻看，甚至对着烛光检查是否有隐写的文字。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这封信可能是伪造的。在确认之前，我不会贸然行动。"
             hide player_char_img
             show elena_img at left with dissolve
@@ -292,6 +314,8 @@ label interlude_ch3_ch4:
             $ change_stat("power", 3)
             $ change_rel("rel_prince", -5)
             "你将信放下，揉了揉太阳穴。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "艾登堡刚经历了瘟疫，我的人民需要我在这里。"
             hide player_char_img
             show elena_img at left with dissolve
@@ -317,7 +341,12 @@ label interlude_ch3_ch4:
         show player_char_img at left with dissolve
         player "从我继承这个位置的那一天起，就没有简单过。"
 
+    $ hide_all_chars()
     "你走到窗前。远处窗口透出的暖光星星点点，庭院里安静得能听见自己的呼吸。"
+
+    "奥尔德里克在你的书桌上留了一份简报：经过几个月的治理，领地的税收比去年同期增长了不少。"
+    "至少在财政上，艾登堡正在从你父亲去世后的混乱中慢慢恢复。"
+    $ change_stat("wealth", 5)
 
     "远处，王都的方向，仿佛有什么东西在等待着你。"
 
@@ -335,55 +364,41 @@ label interlude_ch3_ch4:
 
 label interlude_ch4_ch5:
 
-    scene bg_road_dawn with dissolve
-    play music "audio/music/fate_theme.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/revelation.ogg" fadeout 2.0 fadein 3.0
+    scene bg castle_exterior with dissolve
 
-    "回程的路上，你一言不发。"
+    "回到艾登堡的第三天。"
 
-    "清晨的雾还没散。远处传来第一声鸡鸣。"
+    "你原以为回到自己的领地就能安心，但不安比在王都时更甚。"
 
-    show captain_img at left with dissolve
-    captain "领主大人，要在前面的驿站歇一歇吗？弟兄们骑了一天了。"
+    "消息像雪片一样飞来——"
 
-    menu:
-        "你的决定？"
+    if dark_lily_destroyed:
+        "「有人在王都城墙上发现了一些奇怪的标记。不过据说那个组织已经被铲除了。」"
+        "传言总是落后几个月。但局势确实在变。"
+    else:
+        "「有人在王都城墙上发现了暗百合的标记。就画在王宫对面！」"
 
-        "歇一会儿吧。":
-            "车队在驿站停下。你走进驿站的小院，要了一壶热茶。"
+        if dark_lily_joined:
+            "暗百合的动作比你想象的更大胆。"
+        else:
+            "暗百合。这个名字现在出现在了王都的城墙上。局势在加速恶化。"
 
-            "驿站老板是个话多的老头。他一边擦桌子一边絮叨着各地的传闻。"
+    "「南方三个伯爵联名上书，要求召开紧急议会。」"
 
-            "「听说了吗？南方三个伯爵联名上书，要求召开紧急议会。」"
-            "「还有人说，边境那边的蛮族又在集结了。」"
-            if dark_lily_destroyed:
-                "「最离谱的是——有人在王都城墙上发现了一些奇怪的标记。不过据说那个组织已经被铲除了。」"
-                "驿站老板的消息总是落后几个月。你没有纠正他。"
-            else:
-                "「最离谱的是——有人在王都城墙上发现了暗百合的标记。就画在王宫对面！」"
+    $ change_stat("intrigue", 2)
 
-                if dark_lily_joined:
-                    "你的手指在茶杯上微微收紧。暗百合的动作比你想象的更大胆。"
-                else:
-                    "暗百合。这个名字现在出现在了王都的城墙上。局势在加速恶化。"
-
-            $ change_stat("intrigue", 2)
-
-        "不停，连夜赶路。":
-            $ change_stat("courage", 3)
-            captain "是，领主大人。"
-            "马蹄声在夜色中急促地敲击着。你的脑海中翻涌着无数念头。"
-
-    "当艾登堡的城塔终于出现在地平线上时，你感到一阵奇怪的轻松——"
-
-    "和一阵更深的不安。"
+    "你正在书房里消化这些情报，门外传来急促的脚步声。"
 
     scene bg_castle_gate with dissolve
 
-    "城门口，奥尔德里克已经在等你了。他身边站着一个你不认识的人。"
+    "你赶到城门口。奥尔德里克已经在那里了。他身边站着一个你不认识的人。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "少主，这位是……"
 
+    $ hide_all_chars()
     "那人向前一步，行了一个标准的王室礼节。"
 
     "「艾登堡领主大人。我是王后陛下的特使。奉命传达王后的旨意。」"
@@ -403,14 +418,20 @@ label interlude_ch4_ch5:
             hide aldric_img
             show player_char_img at left with dissolve
             player "请转告王后陛下，艾登堡永远忠于王座。"
+            $ hide_all_chars()
             "特使满意地点头离去。"
             "但你知道，每一份报告都将是一场精心设计的表演——向王后展示她想看到的，隐藏她不该知道的。"
 
         "提出异议但不拒绝。":
             $ change_stat("reputation", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这份旨意……是否适用于所有领地？还是只有边境？"
+            $ hide_all_chars()
             "特使脸上闪过一丝不悦。"
             "「所有边境领地，领主大人。这是为了王国的安全。」"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "我理解。但我希望我的异议能被记录在案。"
             "你接过羊皮纸，但你的态度表明了一切。"
 
@@ -418,10 +439,16 @@ label interlude_ch4_ch5:
             $ change_stat("courage", 5)
             $ change_rel("rel_queen", -8)
             $ change_stat("reputation", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "根据先王颁布的《领地自治法》，王室无权对领地实施单方面监管。"
+            $ hide_all_chars()
             "特使的脸色变了。"
             "「领主大人，我劝您——」"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "请转告王后：艾登堡尊重王座，但不接受违法的命令。"
+            $ hide_all_chars()
             "特使冷冷地看了你一眼，转身离去。"
             "这意味着战争。不是刀剑的战争，而是更危险的那种。"
 
@@ -453,6 +480,7 @@ label interlude_ch4_ch5:
     aldric "还有，修道院报告说……有修士看到了奇怪的人在墓地附近徘徊。每到月圆之夜就会出现。"
 
     if father_letters_found:
+        $ hide_all_chars()
         "墓地。你父亲就葬在那里。"
         "有人在深夜造访你父亲的墓……这绝不是巧合。"
     else:
@@ -483,7 +511,7 @@ label interlude_ch4_ch5:
 label interlude_ch1_ch2_dream:
 
     scene black with dissolve
-    play music "audio/music/ambient_night.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/night_mystery.ogg" fadeout 2.0 fadein 3.0
 
     "你不记得自己是什么时候睡着的。"
 
@@ -503,6 +531,7 @@ label interlude_ch1_ch2_dream:
 
     "他在写信。鹅毛笔的沙沙声在寂静的房间里格外清晰。"
 
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "父亲……？"
 
@@ -516,6 +545,7 @@ label interlude_ch1_ch2_dream:
         show aldric_img at left with dissolve
         aldric "你来了。"
 
+        $ hide_all_chars()
         "不——那不是奥尔德里克的声音。是父亲的。在梦里，所有的声音都混在一起。"
 
         "他缓缓转过身来。你看到了他的脸——苍白如纸，眼眶深陷，嘴唇上带着一层不自然的灰紫色。"
@@ -556,6 +586,7 @@ label interlude_ch1_ch2_dream:
         show player_char_img at left with dissolve
         player "您在写什么？"
 
+        $ hide_all_chars()
         "他停下笔，似乎在斟酌措辞。"
 
         "「给一个老朋友的信。关于……一些陈年旧事。」"
@@ -653,7 +684,7 @@ label interlude_ch1_ch2_dream:
 label interlude_ch2_ch3_ambush:
 
     scene bg_road_night with dissolve
-    play music "audio/music/combat_theme.ogg" fadeout 1.0 fadein 2.0
+    play music "audio/music/battle_prepare.ogg" fadeout 1.0 fadein 2.0
 
     "车队进入暗林谷后，气氛骤然变了。"
 
@@ -661,9 +692,11 @@ label interlude_ch2_ch3_ambush:
 
     "你注意到队长雷恩的手已经按在了剑柄上。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "都打起精神来。这地方我不喜欢。"
 
+    $ hide_all_chars()
     "他的声音压得很低，但在寂静的夜里，每一个字都清晰无比。"
 
     "你正要说什么，突然——"
@@ -674,12 +707,15 @@ label interlude_ch2_ch3_ambush:
 
     play sound "audio/sfx/sword_clash.ogg"
 
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "伏击！全体戒备！保护领主！"
 
     "黑暗中爆发出一阵呐喊声。火把从树林两侧同时亮起，将整个山谷照得忽明忽暗。"
 
     if dark_lily_joined:
 
+        $ hide_all_chars()
         "你在火光中看清了袭击者的面容——黑色面罩，轻便的皮甲，腰间别着淬毒的短刀。"
 
         "这不是山贼。山贼不会有这种装备，也不会有这种训练有素的包抄阵型。"
@@ -772,6 +808,7 @@ label interlude_ch2_ch3_ambush:
             hide captain_img
             show player_char_img at left with dissolve
             player "我是艾登堡领主！攻击我就是对王座宣战！你们每一个人都将被处以绞刑！"
+            $ hide_all_chars()
             "你的声音在山谷中回荡。"
             "几个袭击者明显犹豫了。一个年轻的甚至开始后退。"
             "他们可能是拿钱办事，但没人愿意为了几个金币搭上全家的性命。"
@@ -780,6 +817,7 @@ label interlude_ch2_ch3_ambush:
             hide player_char_img
             show captain_img at left with dissolve
             captain "说得好，领主大人。但还是躲好——"
+            $ hide_all_chars()
             "雷恩解决了最后两个不长眼的家伙。"
 
     "战斗在几分钟内结束了。"
@@ -788,6 +826,8 @@ label interlude_ch2_ch3_ambush:
 
     "雷恩擦了擦剑上的血，走到你身边。他的呼吸平稳得令人惊讶，仿佛刚才的一切不过是一次例行巡逻。"
 
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
     captain "都结束了，领主大人。"
 
     hide captain_img
@@ -819,6 +859,7 @@ label interlude_ch2_ch3_ambush:
     "你命令护卫搜查袭击者的尸体和物品。"
 
     if dark_lily_joined:
+        $ hide_all_chars()
         "正如你所料——暗焰的标记无处不在。毒药、密码本、以及一封写着你名字的处决令。"
         "冯·哈根男爵比你想象的更急于除掉你。"
         $ change_rel("rel_baron", -5)
@@ -838,6 +879,8 @@ label interlude_ch2_ch3_ambush:
 
     "有这样一个人在身边——你突然觉得，这条危机四伏的路，并不像之前想的那么难走。"
 
+    hide captain_img with dissolve
+
     return
 
 ## ── 第三章后elena的坦白 ──────────────────────────────
@@ -845,15 +888,17 @@ label interlude_ch2_ch3_ambush:
 label interlude_ch3_ch4_confession:
 
     scene bg_study_night with dissolve
-    play music "audio/music/intrigue_theme.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/conspiracy.ogg" fadeout 2.0 fadein 3.0
 
     "那天晚上，你处理完一天的公务，正准备吹灭蜡烛。"
 
     "门外传来两声轻叩。不是奥尔德里克那种稳重的叩门方式——更轻，更犹豫。"
 
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "进来。"
 
+    $ hide_all_chars()
     "艾琳娜推门而入。她没有穿平时那件深蓝色的管事裙装，而是一件朴素的灰色斗篷，兜帽半掩着她的面容。"
 
     "她反手关上门，顿了一下，才转过身来。"
@@ -927,10 +972,13 @@ label interlude_ch3_ch4_confession:
 
         elena "你知道答案的。"
 
+        $ hide_all_chars()
         "你确实知道。在那些深夜的交谈中，在那些目光交错的瞬间，在她每一次拼命隐藏又拼命流露的温柔里——"
 
         "你早就知道了。"
 
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "我留下来不是因为你父亲的安排。不是因为暗百合。不是因为任何使命或者义务。"
 
         elena "我留下来……是因为你。"
@@ -953,6 +1001,7 @@ label interlude_ch3_ch4_confession:
 
         elena "但你有权知道真相。你有权选择——继续用我，还是让我离开。"
 
+    $ hide_all_chars()
     "炉火噼啪声像是时钟在走。你在消化这一切。"
 
     "你在消化这一切。五年。三方势力。一个在所有人之间走钢丝的女人。"
@@ -977,6 +1026,7 @@ label interlude_ch3_ch4_confession:
 
     elena "这是我最后一次从王都得到的消息。两天前到的。"
 
+    $ hide_all_chars()
     "你展开纸卷。上面只有寥寥几行字，但每一行都像一记重锤："
 
     "{i}「王后正在秘密组建一支直属军队。兵员从南方各省招募，不经过正规军事系统。预计兵力三千到五千。」{/i}"
@@ -1047,6 +1097,8 @@ label interlude_ch3_ch4_confession:
         "先确认消息——贸然行动可能正中圈套。":
             $ change_stat("intrigue", 5)
             $ change_rel("rel_elena", 2)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这也可能是假消息。故意泄给你，看我们的反应。"
             hide player_char_img
             show elena_img at left with dissolve
@@ -1067,6 +1119,8 @@ label interlude_ch3_ch4_confession:
 
     "你将纸卷放在蜡烛上点燃，看着它在指尖化为灰烬。"
 
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     elena "还有一件事。"
 
     "她站起身，走到你身前。"
@@ -1083,6 +1137,7 @@ label interlude_ch3_ch4_confession:
     else:
         "她理了理衣袖，恢复了平时那种干练的姿态。"
         elena "我会继续为艾登堡效力。直到你不再需要我的那一天。"
+        $ hide_all_chars()
         "她退出书房，轻轻带上了门。"
 
     "你独自坐在书房里，目光落在桌上摊开的地图上。"
@@ -1095,6 +1150,8 @@ label interlude_ch3_ch4_confession:
 
     "而时间，正是你最缺的东西。"
 
+    hide elena_img with dissolve
+
     return
 
 ## ── 第四章后的紧急会议 ──────────────────────────────
@@ -1102,7 +1159,7 @@ label interlude_ch3_ch4_confession:
 label interlude_ch4_ch5_council:
 
     scene bg_castle_gate with dissolve
-    play music "audio/music/fate_theme.ogg" fadeout 2.0 fadein 3.0
+    play music "audio/music/revelation.ogg" fadeout 2.0 fadein 3.0
 
     "你回到艾登堡时，城堡大门前站满了人。"
 
@@ -1112,6 +1169,7 @@ label interlude_ch4_ch5_council:
 
     "他们的表情告诉你——出事了。"
 
+    $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
     aldric "少主，您可算回来了。"
 
@@ -1149,6 +1207,7 @@ label interlude_ch4_ch5_council:
 
     "队长雷恩站在门口，全副武装——他永远是最后一个坐下的人。"
 
+    $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "领主大人，边境巡逻队也带回了消息。"
 
@@ -1156,6 +1215,7 @@ label interlude_ch4_ch5_council:
 
     captain "他们在探路。这意味着大部队不远了。"
 
+    $ hide_all_chars()
     "你的脑海中闪过那份关于王后秘密军队的情报。南边是王后的猎鹰堡，北边是蛮族的铁蹄——"
 
     "艾登堡夹在中间。"
@@ -1175,6 +1235,7 @@ label interlude_ch4_ch5_council:
 
         bishop "教会无法公开站队。但艾登堡的信徒们……可以做好他们自己的准备。"
     else:
+        $ hide_all_chars()
         "你环顾大厅。主教没有来。教会在这个时候保持沉默——这本身就是一种态度。"
         "你只能依靠自己人了。"
 
@@ -1194,7 +1255,7 @@ label interlude_ch4_ch5_council:
 
     "他没有说完。不需要说完。每个人都知道那意味着什么。"
 
-    hide aldric_img
+    $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "我们有三个问题需要解决。"
 
@@ -1236,6 +1297,7 @@ label interlude_ch4_ch5_council:
                 show player_char_img at left with dissolve
                 player "谢谢你，主教。"
 
+            $ hide_all_chars()
             "从第二天开始，艾登堡变成了一座巨大的工地。"
             "铁匠日夜不停地打造箭头和矛尖。城墙上的缺口一寸一寸地被填补。"
             "百姓们虽有怨言，但当他们看到领主亲自搬运石块时，声音渐渐小了。"
@@ -1252,6 +1314,7 @@ label interlude_ch4_ch5_council:
             show player_char_img at left with dissolve
             player "我不去，那些村子的人就会觉得我不在乎他们。一个不在乎百姓的领主，不值得百姓为他守城。"
 
+            $ hide_all_chars()
             "你花了两天时间走访了出事的村庄。"
             "你倾听了每一个抱怨。你坐在农舍的长凳上和老人们喝粗茶。你抱起了生病的孩子。"
             "你没有做出不切实际的承诺——但你让他们知道，你看见了他们。"
@@ -1278,6 +1341,7 @@ label interlude_ch4_ch5_council:
             hide aldric_img
             show player_char_img at left with dissolve
             player "现在还不够危急吗？"
+            $ hide_all_chars()
             "老管家深吸了一口气。然后他点了点头，从怀中取出一把铁钥匙。"
 
             "城堡地下室的尽头，一扇从未打开过的铁门在钥匙的转动下缓缓开启。"
@@ -1290,6 +1354,7 @@ label interlude_ch4_ch5_council:
             show player_char_img at left with dissolve
             player "……他比我想象的看得更远。"
 
+            $ hide_all_chars()
             "你用这笔财富打通了几条关键的商路，从南方紧急采购了粮食和铁矿。"
             "同时，你秘密派人收买了几个关键的消息灵通人士——你需要知道敌人的一举一动。"
 
@@ -1301,6 +1366,7 @@ label interlude_ch4_ch5_council:
                 show player_char_img at left with dissolve
                 player "主教大人，这份恩情我记在心里。"
 
+    $ hide_all_chars()
     "会议持续到了深夜。"
 
     "当最后一个人离开大厅时，你独自站在地图前。"
@@ -1343,6 +1409,7 @@ label interlude_ch4_ch5_council:
     show player_char_img at left with dissolve
     player "那就让他们来吧。"
 
+    $ hide_all_chars()
     "你最后看了一眼地图，吹灭了大厅里最后一根蜡烛。"
 
     "在黑暗中，你听到了远处城墙上巡逻兵的脚步声，听到了铁匠铺传来的叮当敲击声——即使在深夜，也有人在为即将到来的风暴做准备。"
@@ -1354,5 +1421,7 @@ label interlude_ch4_ch5_council:
     "黎明前的黑暗是最浓的。但黎明总会来。"
 
     "——只要还有人愿意守到天亮。"
+
+    hide player_char_img with dissolve
 
     return

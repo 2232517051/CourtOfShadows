@@ -230,7 +230,7 @@ init python:
 ## ================================================================
 
 screen crafting_screen():
-    tag menu
+    ## 去掉 tag menu — 避免与Ren'Py内置游戏菜单冲突，否则关闭后UI失效
     modal True
     zorder 150
 
@@ -613,7 +613,10 @@ screen crafting_result_screen(recipe_name="", result_type="success", result_qty=
                 text_color "#d4a942"
                 text_hover_color "#ffd866"
                 text_font "msyh.ttf"
-                action Hide("crafting_result_screen")
+                action Return()
+            key "K_ESCAPE" action Return()
+            key "K_RETURN" action Return()
+            key "game_menu" action Return()
 
 
 ## ================================================================
@@ -633,17 +636,11 @@ label open_crafting:
             $ _craft_result = do_craft(_craft_recipe_id)
 
             if _craft_result[0] == "critical":
-                show screen crafting_result_screen(recipe_name=_craft_recipe["name"], result_type="critical", result_qty=_craft_result[1])
-                pause
-                hide screen crafting_result_screen
+                call screen crafting_result_screen(recipe_name=_craft_recipe["name"], result_type="critical", result_qty=_craft_result[1])
             elif _craft_result[0] == "success":
-                show screen crafting_result_screen(recipe_name=_craft_recipe["name"], result_type="success", result_qty=_craft_result[1])
-                pause
-                hide screen crafting_result_screen
+                call screen crafting_result_screen(recipe_name=_craft_recipe["name"], result_type="success", result_qty=_craft_result[1])
             else:
-                show screen crafting_result_screen(recipe_name=_craft_recipe["name"], result_type="failure", lost_mats=_craft_result[1])
-                pause
-                hide screen crafting_result_screen
+                call screen crafting_result_screen(recipe_name=_craft_recipe["name"], result_type="failure", lost_mats=_craft_result[1])
 
             jump open_crafting.loop
 

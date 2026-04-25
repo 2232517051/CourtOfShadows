@@ -34,7 +34,7 @@ init python:
         ("queen", "伊莎贝拉王后"),
         ("merchant_karl", "商人卡尔"),
         ("lily_master", "暗百合首领"),
-        ("prince", "王子弗雷德里克"),
+        ("prince", "弗雷德里克王子"),
     ]
 
 transform gallery_thumb_hover:
@@ -183,6 +183,26 @@ init python:
         ("audio/music/night_mystery.ogg", "夜之谜", "神秘的夜晚", "月", "chapter3"),
         ("audio/music/victory.ogg", "凯旋", "胜利的欢呼", "*", "chapter5"),
         ("audio/music/sad.ogg", "悲歌", "悲伤的旋律", "泪", "chapter4"),
+        ("audio/music/tavern_lively.ogg", "酒馆欢歌", "热闹的民谣与欢笑", "酒", "chapter2"),
+        ("audio/music/forest_ambient.ogg", "密林低语", "自然的呼吸与鸟鸣", "林", "chapter2"),
+        ("audio/music/rain_storm.ogg", "暴雨将至", "雷鸣与骤雨", "雨", "chapter1"),
+        ("audio/music/market_bustle.ogg", "集市喧嚣", "繁忙市集的烟火气", "市", "chapter2"),
+        ("audio/music/church_choir.ogg", "圣歌回荡", "教堂唱诗班的庄严", "圣", "chapter3"),
+        ("audio/music/dungeon_drip.ogg", "幽暗地牢", "滴水与锁链的回响", "牢", "chapter4"),
+        ("audio/music/harbor_waves.ogg", "港湾波涛", "海风与潮声", "港", "chapter2"),
+        ("audio/music/campfire.ogg", "篝火夜话", "温暖的火焰与虫鸣", "火", "chapter2"),
+        ("audio/music/war_drums.ogg", "战鼓擂动", "震撼大地的战争序曲", "鼓", "chapter5"),
+        ("audio/music/coronation.ogg", "加冕礼赞", "辉煌的典礼乐章", "冕", "chapter5"),
+        ("audio/music/conspiracy.ogg", "暗流涌动", "密谋与窃语", "谋", "chapter3"),
+        ("audio/music/chase.ogg", "亡命追逐", "紧迫的追击节奏", "追", "chapter4"),
+        ("audio/music/romance.ogg", "柔情似水", "浪漫的心弦颤动", "情", "chapter2"),
+        ("audio/music/grief.ogg", "深渊悲恸", "无尽的哀伤", "哀", "chapter1"),
+        ("audio/music/revelation.ogg", "真相揭晓", "震撼的发现时刻", "真", "chapter3"),
+        ("audio/music/betrayal.ogg", "背信弃义", "刺痛人心的背叛", "叛", "chapter4"),
+        ("audio/music/hope.ogg", "曙光初现", "黎明前的希望之光", "望", "chapter5"),
+        ("audio/music/winter_wind.ogg", "朔风凛冽", "孤寂的冬日寒风", "寒", None),
+        ("audio/music/dawn.ogg", "破晓新生", "新一天的开始", "晨", "chapter5"),
+        ("audio/music/ritual.ogg", "暗夜仪式", "神秘的古老典礼", "祭", "chapter3"),
     ]
 
     def is_music_unlocked(req_chapter):

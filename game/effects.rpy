@@ -157,23 +157,22 @@ screen chapter_title(chapter_num="第一章", chapter_name="新主登基", chapt
         color "#4a4030"
         at fade_in_up(2.0)
 
-    ## 点击关闭
+    ## 点击继续 (1.5秒后允许)
     timer 1.5 action SetVariable("_chapter_card_clickable", True)
     if _chapter_card_clickable:
-        key "mouseup_1" action Hide("chapter_title")
-        key "K_RETURN" action Hide("chapter_title")
-        key "K_SPACE" action Hide("chapter_title")
+        key "mouseup_1" action Return()
+        key "K_RETURN" action Return()
+        key "K_SPACE" action Return()
+
+    ## 安全超时：15秒后自动继续，防止卡死
+    timer 15.0 action Return()
 
 default _chapter_card_clickable = False
 
 ## 便捷调用 label
 label show_chapter(ch_num="第一章", ch_name="新主登基", ch_desc=""):
     $ _chapter_card_clickable = False
-    show screen chapter_title(ch_num, ch_name, ch_desc)
-    with dissolve
-    pause
-    hide screen chapter_title
-    with dissolve
+    call screen chapter_title(ch_num, ch_name, ch_desc)
     return
 
 
@@ -189,12 +188,30 @@ init python:
         "loyalty": "忠诚", "reputation": "声望", "intrigue": "谋略",
     }
 
+    def mark_important_choice():
+        """标记下一个选项为重要抉择。用法: $ mark_important_choice()
+        效果：选项出现前播放音效，选项区域有特殊视觉提示，防误触延迟加长。"""
+        store.important_choice = True
+        renpy.sound.play("audio/sfx/ui_confirm.ogg")
+
     _rel_names = {
         "rel_aldric": "奥尔德里克", "rel_elena": "艾琳娜",
         "rel_bishop": "主教马修斯", "rel_baron": "冯·哈根男爵",
         "rel_captain": "队长雷恩", "rel_queen": "伊莎贝拉王后",
-        "rel_prince": "王子弗雷德里克", "rel_lily": "暗百合",
+        "rel_prince": "弗雷德里克王子", "rel_lily": "暗百合",
     }
+
+    def _show_stat_toast(name, delta, is_rel):
+        ## 每次调用分配唯一 tag, 让连续多次变化能并列堆叠而不是互相覆盖
+        idx = getattr(store, "_stat_toast_counter", 0) + 1
+        store._stat_toast_counter = idx
+        slot = (idx - 1) % 5
+        renpy.show_screen(
+            "stat_toast",
+            stat_name=name, delta=delta, is_rel=is_rel,
+            slot=slot, tag_id=idx,
+            _tag="stat_toast_" + str(idx),
+        )
 
     def change_stat(stat, delta):
         """改变属性并显示通知。用法: $ change_stat("power", 10)"""
@@ -204,7 +221,7 @@ init python:
         name = _stat_names.get(stat, stat)
         ## 记录属性历史（趋势箭头用）
         record_stat(stat, new)
-        renpy.show_screen("stat_toast", stat_name=name, delta=delta, is_rel=False)
+        _show_stat_toast(name, delta, False)
         check_max_stat()
         ## 属性预警检测
         warning = get_stat_warning(stat)
@@ -213,18 +230,106 @@ init python:
         ## 检查隐藏成就
         check_hidden_achievements()
 
+    ## 关系阈值 (value: (状态名, 颜色, 后果说明))
+    REL_THRESHOLDS = {
+         60: ("信任",   "#1abc9c", "对方视你为可托付之人，将在关键时刻全力相助。"),
+         30: ("友善",   "#27ae60", "对方开始将你视为盟友，愿意提供援助。"),
+          0: ("中立",   "#8a7e60", "双方关系回归中立，敌意已经消散。"),
+        -30: ("警惕",   "#e67e22", "对方开始戒备你——他们将在暗中阻挠。"),
+        -60: ("敌视",   "#c0392b", "对方将你视为威胁，会主动给你制造麻烦。"),
+    }
+
+    ## 每章被动效果：{rel_key: [(min_val, [(stat, delta), ...], 说明文字), ...]}
+    ## 条目从高到低排列，取第一个满足条件的
+    REL_CHAPTER_BONUSES = {
+        "rel_aldric": [
+            ( 60, [("intrigue", 4)],               "奥尔德里克暗中提供情报与谋略建议"),
+            ( 30, [("intrigue", 2)],               "奥尔德里克偶尔给予指点"),
+            (-30, [("intrigue", -2)],              "奥尔德里克的刁难让你疲于应对"),
+            (-60, [("intrigue", -4), ("reputation", -3)], "奥尔德里克公开与你作对"),
+        ],
+        "rel_captain": [
+            ( 60, [("power", 3), ("loyalty", 3)],  "队长雷恩率队忠心拱卫，将士用命"),
+            ( 30, [("power", 2)],                  "将士士气尚可，勉强听令"),
+            (-30, [("power", -2), ("loyalty", -2)],"队长雷恩消极怠工，军心涣散"),
+            (-60, [("power", -4), ("loyalty", -4)],"雷恩暗中煽动士兵，领地防务告急"),
+        ],
+        "rel_bishop": [
+            ( 60, [("faith", 4), ("reputation", 3)],    "主教马修斯公开为你背书，信众对你心存敬意"),
+            ( 30, [("faith", 2)],                        "教会对你保持善意，信仰事务顺遂"),
+            (-30, [("faith", -3), ("reputation", -2)],   "主教态度冷淡，信众渐渐疏远你"),
+            (-60, [("faith", -5), ("reputation", -4)],   "主教公开批评你，你在信众中形象大损"),
+        ],
+        "rel_elena": [
+            ( 60, [("intrigue", 3), ("wealth", 2)], "艾琳娜主动共享情报网络，谋略与商贸均有裨益"),
+            ( 30, [("intrigue", 2)],                "艾琳娜偶尔提供有用情报"),
+            (-30, [("intrigue", -2)],               "艾琳娜对你有所保留，情报来源受阻"),
+            (-60, [("intrigue", -3), ("reputation", -2)], "艾琳娜散布对你不利的消息"),
+        ],
+        "rel_baron": [
+            ( 60, [("wealth", 4)],                  "冯·哈根男爵主动推动贸易，财富增加"),
+            ( 30, [("wealth", 2)],                  "与男爵的贸易往来如常，略有收益"),
+            (-30, [("wealth", -3)],                 "男爵暗中阻挠贸易，财富受损"),
+            (-60, [("wealth", -5), ("loyalty", -2)],"男爵联合领主对你实施贸易封锁"),
+        ],
+        "rel_queen": [
+            ( 60, [("reputation", 4), ("power", 2)], "王后的青睐令你声名大振，权力得以巩固"),
+            ( 30, [("reputation", 2)],               "王室对你印象尚佳，声望略有提升"),
+            (-30, [("reputation", -3)],              "王后的冷眼令朝臣们对你敬而远之"),
+            (-60, [("reputation", -5), ("power", -3)],"王后公开表达不满，你的地位岌岌可危"),
+        ],
+    }
+
     def change_rel(rel, delta):
-        """改变好感度并显示通知。用法: $ change_rel("rel_elena", 15)"""
+        """改变好感度并显示通知，跨越阈值时弹出后果说明。"""
         old = getattr(store, rel, 0)
         new = max(-100, min(100, old + delta))
         setattr(store, rel, new)
         name = _rel_names.get(rel, rel)
-        renpy.show_screen("stat_toast", stat_name=name, delta=delta, is_rel=True)
+        _show_stat_toast(name, delta, True)
+
+        ## 检测是否跨越关键阈值
+        crossed = None
+        for thresh in sorted(REL_THRESHOLDS.keys(), reverse=(delta > 0)):
+            if delta > 0 and old < thresh <= new:
+                crossed = thresh
+                break
+            elif delta < 0 and new < thresh <= old:
+                crossed = thresh
+                break
+        if crossed is not None:
+            t_label, t_color, t_desc = REL_THRESHOLDS[crossed]
+            renpy.show_screen("rel_threshold_popup",
+                npc_name=name, threshold_label=t_label,
+                threshold_color=t_color, desc=t_desc)
+
         ## 检查隐藏成就
         check_hidden_achievements()
 
+    def _apply_rel_effects_python():
+        """计算本章关系被动效果，返回 list of (npc_name, [(stat_label, delta)], desc)"""
+        results = []
+        stat_labels = {
+            "power": "权力", "intrigue": "谋略", "faith": "信仰",
+            "wealth": "财富", "reputation": "声望", "loyalty": "忠诚",
+        }
+        for rel_key, tiers in REL_CHAPTER_BONUSES.items():
+            rel_val = getattr(store, rel_key, 0)
+            npc_name = _rel_names.get(rel_key, rel_key)
+            for min_val, effects, desc in tiers:
+                if rel_val >= min_val:
+                    ## 应用效果（走 attr_system 的 change_stat，带缩放和弹窗）
+                    labeled = []
+                    for stat, d in effects:
+                        change_stat(stat, d)
+                        labeled.append((stat_labels.get(stat, stat), d))
+                    if labeled:
+                        results.append((npc_name, labeled, desc))
+                    break
+        return results
+
 ## ── 属性变化弹幕 ──
-screen stat_toast(stat_name="", delta=0, is_rel=False):
+screen stat_toast(stat_name="", delta=0, is_rel=False, slot=0, tag_id=0):
     zorder 250
     $ sign = "+" if delta > 0 else ""
     $ color = "#2ecc71" if delta > 0 else "#e74c3c"
@@ -232,7 +337,7 @@ screen stat_toast(stat_name="", delta=0, is_rel=False):
 
     frame at stat_toast_anim:
         xalign 0.5
-        ypos 60
+        ypos 60 + slot * 46
         background Solid("#0f0d1aee")
         xpadding 28
         ypadding 12
@@ -243,7 +348,47 @@ screen stat_toast(stat_name="", delta=0, is_rel=False):
             text stat_name size 17 color "#e0d8c8" font "msyh.ttf" yalign 0.5
             text "[sign][delta]" size 20 color color bold True yalign 0.5
 
-    timer 2.0 action Hide("stat_toast")
+    timer 2.0 action Hide("stat_toast_" + str(tag_id))
+
+## ── 关系阈值突破弹窗 ──
+## 中间偏上出现，3秒后自动消失
+transform rel_threshold_anim:
+    on show:
+        alpha 0.0 zoom 0.94
+        ease 0.4 alpha 1.0 zoom 1.0
+    on hide:
+        ease 0.4 alpha 0.0 zoom 1.04
+
+screen rel_threshold_popup(npc_name, threshold_label, threshold_color, desc):
+    zorder 188
+    modal False
+
+    frame at rel_threshold_anim:
+        xalign 0.5
+        yalign 0.18
+        xsize 420
+        background Solid("#0f0d1af0")
+        xpadding 32
+        ypadding 22
+
+        vbox:
+            spacing 10
+            xalign 0.5
+
+            add Solid(threshold_color) xsize 180 ysize 1 xalign 0.5
+
+            hbox:
+                spacing 8
+                xalign 0.5
+                text "[npc_name]" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                text " · " size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
+                text "[threshold_label]" size 18 color threshold_color font "msyh.ttf" bold True yalign 0.5
+
+            text "[desc]" size 14 color "#a8a090" font "msyh.ttf" text_align 0.5 xalign 0.5
+
+            add Solid(threshold_color) xsize 180 ysize 1 xalign 0.5
+
+    timer 3.0 action Hide("rel_threshold_popup")
 
 transform stat_toast_anim:
     on show:
@@ -356,7 +501,7 @@ screen privacy_policy_screen():
                     text "本游戏适合12岁及以上用户。游戏包含中世纪宫廷题材的虚构剧情。" size 14 color "#c0b8a8"
 
                     null height 4
-                    text "版本：2.1 | 更新日期：2026年3月 | 开发者：FFire的工作室" size 12 color "#6a5e48"
+                    text "版本：3.1 | 更新日期：2026年3月 | 开发者：FFire的工作室" size 12 color "#6a5e48"
 
             null height 8
             add Solid("#d4a94230") xsize 500 ysize 1 xalign 0.5
@@ -379,7 +524,7 @@ screen privacy_policy_screen():
                     text_hover_color "#ffd866"
                     text_font "msyh.ttf"
                     text_outlines [(2, "#000000cc", 0, 0)]
-                    action [SetField(persistent, "privacy_agreed", True), Hide("privacy_policy_screen"), Return()]
+                    action [SetField(persistent, "privacy_agreed", True), Return()]
 
 
 ################################################################################
@@ -475,8 +620,7 @@ screen tutorial_overlay():
                 text_hover_color "#ffd866"
                 text_font "msyh.ttf"
                 text_outlines [(2, "#000000cc", 0, 0)]
-                action [SetField(persistent, "tutorial_seen", True), Hide("tutorial_overlay")]
-                activate_sound "audio/sfx/ui_confirm.ogg"
+                action [SetField(persistent, "tutorial_seen", True), Return()]
 
 
 ################################################################################
@@ -538,14 +682,12 @@ screen rating_popup():
                     text_hover_color "#ffd866"
                     text_font "msyh.ttf"
                     action [SetField(persistent, "rating_asked", True), Hide("rating_popup")]
-                    activate_sound "audio/sfx/ui_confirm.ogg"
 
                 textbutton "下次再说":
                     text_size 18
                     text_color "#6a5e48"
                     text_hover_color "#8a7e60"
                     action Hide("rating_popup")
-                    activate_sound "audio/sfx/ui_cancel.ogg"
 
 
 ################################################################################
@@ -714,20 +856,23 @@ screen story_recap(chapter_id):
 
         timer 1.0 action SetVariable("_recap_clickable", True)
         if _recap_clickable:
-            key "mouseup_1" action Hide("story_recap")
-            key "K_RETURN" action Hide("story_recap")
-            key "K_SPACE" action Hide("story_recap")
+            key "mouseup_1" action Return()
+            key "K_RETURN" action Return()
+            key "K_SPACE" action Return()
+
+    else:
+        ## recap 数据缺失时自动跳过，避免卡死
+        timer 0.5 action Return()
+
+    ## 安全超时：15秒后自动继续，防止任何情况下的卡死
+    timer 15.0 action Return()
 
 default _recap_clickable = False
 
 ## 便捷调用
 label show_recap(chapter_id="chapter1"):
     $ _recap_clickable = False
-    show screen story_recap(chapter_id)
-    with dissolve
-    pause
-    hide screen story_recap
-    with dissolve
+    call screen story_recap(chapter_id)
     return
 
 
@@ -858,8 +1003,8 @@ screen stat_warning_toast(warning_text="", is_danger=True):
     $ w_icon = "!" if is_danger else "!"
 
     frame at stat_warning_anim:
-        xalign 0.5
-        ypos 110
+        xalign 0.98
+        ypos 60
         background Solid("#1a0a0aee" if is_danger else "#1a1510ee")
         xpadding 24
         ypadding 10
@@ -869,7 +1014,7 @@ screen stat_warning_toast(warning_text="", is_danger=True):
             text w_icon size 18 color w_color yalign 0.5
             text warning_text size 15 color w_color font "msyh.ttf" yalign 0.5
 
-    timer 3.5 action Hide("stat_warning_toast")
+    timer 2.5 action Hide("stat_warning_toast")
 
 transform stat_warning_anim:
     on show:
@@ -1021,7 +1166,6 @@ screen ending_complete_hint(current_ending=""):
                     text_hover_color "#ffd866"
                     text_font "msyh.ttf"
                     action [Hide("ending_complete_hint"), ShowMenu("ending_route_map")]
-                    activate_sound "audio/sfx/ui_confirm.ogg"
 
                 textbutton "返回主菜单":
                     text_size 18
@@ -1029,7 +1173,6 @@ screen ending_complete_hint(current_ending=""):
                     text_hover_color "#c8b890"
                     text_font "msyh.ttf"
                     action [Hide("ending_complete_hint"), MainMenu()]
-                    activate_sound "audio/sfx/ui_click.ogg"
 
                 if remaining > 0:
                     textbutton "再玩一次":
@@ -1038,7 +1181,6 @@ screen ending_complete_hint(current_ending=""):
                         text_hover_color "#44e88a"
                         text_font "msyh.ttf"
                         action [Hide("ending_complete_hint"), Start()]
-                        activate_sound "audio/sfx/ui_confirm.ogg"
 
 
 ################################################################################
@@ -1059,3 +1201,71 @@ transform pulse_glow:
         ease 0.8 alpha 0.6
         ease 0.8 alpha 1.0
         repeat
+
+
+################################################################################
+## 关系被动效果 — 每章开头调用
+## 用法: call apply_rel_chapter_effects from _call_rel_chN
+################################################################################
+
+screen rel_chapter_effect_summary(effects_list):
+    ## effects_list: [(npc_name, [(stat_label, delta), ...], desc), ...]
+    zorder 192
+    modal True
+
+    add Solid("#00000099")
+
+    frame:
+        xalign 0.5
+        yalign 0.45
+        xsize 500
+        background Solid("#0f0d1af8")
+        xpadding 40
+        ypadding 32
+
+        vbox:
+            spacing 18
+            xalign 0.5
+
+            ## 标题
+            vbox:
+                spacing 6
+                xalign 0.5
+                add Solid("#d4a942") xsize 240 ysize 1 xalign 0.5
+                text "人际关系影响" size 20 color "#d4a942" font "msyh.ttf" bold True xalign 0.5
+                add Solid("#d4a942") xsize 240 ysize 1 xalign 0.5
+
+            ## 每个NPC的效果
+            for npc_name, stat_effects, desc in effects_list:
+                vbox:
+                    spacing 4
+                    ## NPC名称
+                    text "[npc_name]" size 16 color "#c8b890" font "msyh.ttf"
+                    ## 说明文字
+                    text "[desc]" size 13 color "#8a7e60" font "msyh.ttf"
+                    ## 属性变化
+                    hbox:
+                        spacing 10
+                        for stat_label, delta in stat_effects:
+                            if delta > 0:
+                                text "[stat_label] +[delta]" size 14 color "#2ecc71" font "msyh.ttf"
+                            else:
+                                text "[stat_label] [delta]" size 14 color "#e74c3c" font "msyh.ttf"
+
+            ## 确认按钮
+            textbutton "继续":
+                xalign 0.5
+                action Hide("rel_chapter_effect_summary")
+                text_style "gui_button_text"
+                text_font "msyh.ttf"
+                text_size 18
+                text_color "#d4a942"
+
+label apply_rel_chapter_effects:
+    ## 计算并应用被动效果
+    $ _rel_effects = _apply_rel_effects_python()
+    ## 只有存在有效效果时才显示汇总面板
+    if _rel_effects:
+        show screen rel_chapter_effect_summary(_rel_effects)
+        $ renpy.pause(0)   ## 等待玩家点击关闭
+    return
