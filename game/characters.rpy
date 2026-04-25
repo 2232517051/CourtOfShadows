@@ -139,6 +139,7 @@ default spy_network = False
 default first_decree = ""
 
 default dark_lily_first_contact = False
+default dark_lily_field_intel = False
 
 # 第二章剧情标记
 default alliance_baron = False
@@ -154,6 +155,8 @@ default matthias_has_testament_known = False
 default testament_original_obtained = False
 ## 区分获取路径: True = 主教亲手交皮卷筒 (chapter4); False = 钥匙开假墙自取 (npc_sidelines 选项 2)
 default testament_from_bishop_hand = False
+default ch4_rescue_partial = False
+default ch5_clash_silent = False
 default ch3_prepared_first = False
 default father_was_regent_known = False
 default queen_poisoned_king_known = False

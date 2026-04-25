@@ -3111,26 +3111,161 @@ label ending_holy_guardian:
     "两方顿时剑拔弩张。"
 
     menu:
-        "以信仰的力量平息争端":
-            $ change_stat("faith", 12)
-            hide baron_img
+        "沉默走开":
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "够了。你们是在圣母面前！"
-            player "不管你们在外面是什么身份，在这座教堂里，你们都是圣母的子民。"
-            player "任何在圣堂中拔剑的人，将被永远逐出教会。"
-            "沉默。双方的手缓缓离开了剑柄。"
+            player "……"
+            "你没有动，也没有说话。"
+
+            hide player_char_img
+            $ hide_all_chars("baron_img")
+            show baron_img angry at left with dissolve
+            baron "（斜眼）领主大人不愿表态？那也是表态。"
+
+            hide baron_img
+            $ hide_all_chars("queen_img")
+            show queen_img at right with dissolve
+            queen "（冷笑）我先收剑——这一次。"
+
+            hide queen_img with dissolve
+            $ hide_all_chars()
+
+            "男爵慢一拍，也收了剑。但他撤剑之前的目光在你身上多停了一秒。"
+
+            "双方表面平静，但你成了作壁上观的领主。"
+
+            $ ch5_clash_silent = True
+            $ log_decision("第五章", "教堂调停: 沉默走开, 双方表面撤剑")
+
+            jump ch5_negotiate_after_clash
+
+        "以信仰的力量平息争端":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "够了——"
+
+            hide player_char_img with dissolve
+            $ hide_all_chars()
+
+            $ trigger_crisis("faith", 4,
+                "你在剑拔弩张的瞬间开口, 试图用圣堂的权威压住双方。这一刻——靠的是你的话真正震慑得住人, 信仰深则有威。",
+                "ch5_clash_faith_win", "ch5_clash_faith_lose",
+                courage_cost=15)
+            call crisis_encounter from _call_crisis_ch5_faith
+
+            ## 退缩 fall-through (玩家临时改主意)
+            "你顿住了——话到嘴边又咽了回去。"
+            "主教从中调和了两句，双方表面撤剑——但你看得出，他们都没把这次平息当真。"
+            jump ch5_negotiate_after_clash
 
         "用理性分析说服双方":
-            $ change_stat("intrigue", 3)
-            $ change_stat("faith", 8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "让我们算一笔账。这场战争打了十天，双方各损失了多少？"
-            player "如果继续打下去，最后的结果只有一个——两败俱伤，让外敌趁虚而入。"
-            player "和平对所有人都有利。这不是信仰的问题，是常识。"
-            "数字是最有说服力的论据。双方的将领开始低声议论。"
+            player "让我们算一笔账——"
 
+            hide player_char_img with dissolve
+            $ hide_all_chars()
+
+            $ trigger_crisis("intrigue", 4,
+                "你试图用利害分析压住激情。这一刻——靠的是你的算术真的对得上, 而且对方真的听得进去。",
+                "ch5_clash_intrigue_win", "ch5_clash_intrigue_lose",
+                courage_cost=15)
+            call crisis_encounter from _call_crisis_ch5_intrigue
+
+            ## 退缩 fall-through
+            "你顿住了——话堵在喉咙里。"
+            "主教从中调和了两句，双方表面撤剑——但你看得出，他们都没把这次平息当真。"
+            jump ch5_negotiate_after_clash
+
+label ch5_clash_faith_win:
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "你们是在圣母面前！"
+    player "不管你们在外面是什么身份，在这座教堂里，你们都是圣母的子民。"
+    player "任何在圣堂中拔剑的人，将被永远逐出教会。"
+
+    hide player_char_img with dissolve
+    $ hide_all_chars()
+
+    "穹顶下回响着你的话。"
+    "沉默。双方的手缓缓离开了剑柄。"
+
+    $ change_stat("faith", 12)
+    $ log_decision("第五章", "信仰平息争端, 双方剑入鞘")
+
+    jump ch5_negotiate_after_clash
+
+label ch5_clash_faith_lose:
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
+    bishop "（接住你的话）领主大人说得对。圣母在上，拔剑就是辱神——"
+
+    hide bishop_img
+    $ hide_all_chars("baron_img")
+    show baron_img angry at left with dissolve
+    baron "（不为所动）领主大人，圣母的话，留给那些虔诚的人吧。"
+
+    hide baron_img
+    $ hide_all_chars("queen_img")
+    show queen_img at right with dissolve
+    queen "（撇嘴）主教大人能让我把剑收起来——但不是你。"
+
+    hide queen_img with dissolve
+    $ hide_all_chars()
+
+    "所幸主教从中调和，双方表面撤剑——"
+    "但你看得出，他们都没把你放进眼里。"
+
+    $ change_stat("rel_bishop", -3)
+    $ crisis_injuries -= 1   ## 抵消 crisis 系统自动 +1, 决策 (i) 实施
+    $ log_decision("第五章", "信仰说服未成, 主教兜底")
+
+    jump ch5_negotiate_after_clash
+
+label ch5_clash_intrigue_win:
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "这场战争打了十天，双方各损失了多少？"
+    player "如果继续打下去，最后的结果只有一个——两败俱伤，让外敌趁虚而入。"
+    player "和平对所有人都有利。这不是信仰的问题，是常识。"
+
+    hide player_char_img with dissolve
+    $ hide_all_chars()
+
+    "数字是最有说服力的论据。"
+    "双方的将领开始低声议论。"
+
+    $ change_stat("intrigue", 3)
+    $ change_stat("faith", 8)
+    $ log_decision("第五章", "理性算账, 双方将领议论")
+
+    jump ch5_negotiate_after_clash
+
+label ch5_clash_intrigue_lose:
+    $ hide_all_chars("baron_img")
+    show baron_img angry at left with dissolve
+    baron "（冷哼）领主大人在这种时候耍嘴皮子？"
+
+    hide baron_img
+    $ hide_all_chars("queen_img")
+    show queen_img at right with dissolve
+    queen "（微讽）数字解决不了血债。"
+
+    hide queen_img with dissolve
+    $ hide_all_chars()
+
+    "你被两边同时呛回去，话堵在喉咙里。"
+
+    "所幸主教从中调和，双方表面撤剑——"
+    "但男爵看你的眼神，多了一分轻慢。"
+
+    $ change_stat("rel_baron", -3)
+    $ crisis_injuries -= 1   ## 抵消 crisis 系统自动 +1, 决策 (i) 实施
+    $ log_decision("第五章", "理性辩驳未成, 男爵轻慢")
+
+    jump ch5_negotiate_after_clash
+
+label ch5_negotiate_after_clash:
     hide baron_img with dissolve
     hide queen_img with dissolve
     hide bishop_img with dissolve

@@ -190,13 +190,13 @@ label ch3_strange_signs:
             show captain_img at left with dissolve
             captain "遵命。我会安排双倍巡逻。"
             "雷恩走后，你盯着地上他靴子踩过的泥印。不安并没有消减——反而在安静下来后更加清晰了。"
+            jump ch3_after_field_choice
 
         "亲自去失踪地点调查":
-            $ change_stat("power", 5)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "准备马匹，我要亲自去看看。"
+            player "准备马匹。我亲自去看看。"
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
@@ -205,10 +205,19 @@ label ch3_strange_signs:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "正因为刚刚有人想杀我，我更不能躲在城堡里。"
-            hide player_char_img
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "……是。我安排一队人随行。"
+            hide player_char_img with dissolve
+
+            $ hide_all_chars()
+            $ trigger_crisis("intrigue", 4,
+                "你执意亲自前往森林边缘的失踪地点。雾深林密，任何蛛丝马迹都可能是陷阱——也都可能是暗百合留下的破绽。",
+                "ch3_dark_lily_field_win", "ch3_dark_lily_field_lose",
+                courage_cost=25)
+            call crisis_encounter from _call_crisis_ch3_field
+
+            ## 退缩 fall-through
+            "你顿了一下。雷恩说得对——这不是逞英雄的时候。"
+            "调查的事先交给雷恩。你回到城堡，把那块倒置百合的布片放在桌上，盯着它出神。"
+            jump ch3_after_field_choice
 
         "先不管失踪的事，调查符号的来源":
             $ change_stat("intrigue", 8)
@@ -228,7 +237,73 @@ label ch3_strange_signs:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "是，大人。"
+            jump ch3_after_field_choice
 
+label ch3_dark_lily_field_win:
+    scene bg forest_path with dissolve
+    $ unlock_gallery("bg_forest_path")
+    $ set_mood("mystery")
+    $ set_weather("fog", "normal")
+
+    "雷恩和三个士兵随你走进雾中。失踪农民的踪迹断在一道溪边——蹄印没了，没有挣扎的痕迹。"
+
+    "你蹲下，在湿泥里看见一行鞋印——尺码偏小，鞋底纹路是城里制鞋匠用的细密齿，不是村民的草编。"
+
+    "你又在树根下挑出一块半埋的麻布，边角绣着倒置的百合。绣线很新——这个标记最近还在被人佩戴。"
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "领主大人，他们撤得很急。一刻钟前还在这里。"
+
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "城里的鞋。新绣的章。"
+    player "暗百合不是传说。是有人、有装备、有组织的活人。"
+
+    hide player_char_img with dissolve
+    $ hide_all_chars()
+    "你把鞋印的轮廓和那块麻布一起放进怀里。雾在退，但你心里那块阴影才刚开始浓起来。"
+
+    $ change_stat("intrigue", 5)
+    $ dark_lily_field_intel = True
+    $ log_decision("第三章", "现场获得暗百合实证")
+
+    jump ch3_after_field_choice
+
+label ch3_dark_lily_field_lose:
+    scene bg forest_path with dissolve
+    $ unlock_gallery("bg_forest_path")
+    $ set_mood("battle")
+    $ set_weather("fog", "normal")
+
+    "你和雷恩走进雾中。"
+
+    "一支箭从侧面树丛里射出，扎在你左前方的树干上——再偏半尺就是你的喉咙。"
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "领主大人，后退！"
+
+    "雷恩一把把你按倒，拔剑挡在你身前。"
+
+    $ play_sound("audio/sfx/sword_draw.ogg")
+
+    "三个黑衣人从树上跃下。雷恩独自硬接，士兵们围上去厮杀。"
+
+    captain "走！这里我们顶住！"
+
+    hide captain_img
+    $ hide_all_chars()
+    "一个士兵把你拖回马背。回头一眼——黑衣人正撤进雾里，什么都没留下。"
+
+    "你来得太晚，什么也没看见。"
+
+    $ log_decision("第三章", "现场调查中伏，未获实证")
+
+    jump ch3_after_field_choice
+
+label ch3_after_field_choice:
     hide captain_img with dissolve
 
     ## --- 村庄调查插曲 ---

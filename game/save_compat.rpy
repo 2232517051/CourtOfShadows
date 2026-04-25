@@ -256,13 +256,17 @@ init 999 python:
             "prince_met": False,
             "dusk_dew_known": False,
             "dark_lily_first_contact": False,
+            "dark_lily_field_intel": False,
             "captain_past_done": False,
             "lily_trial_passed": False,
             "bishop_gave_key": False,
             "bishop_confession_done": False,
             "testament_original_obtained": False,
+            "testament_from_bishop_hand": False,
             "matthias_has_testament_known": False,
             "stein_origin_revealed": False,
+            "ch4_rescue_partial": False,
+            "ch5_clash_silent": False,
 
             ## 第三章剧情标记
             "dark_lily_joined": False,

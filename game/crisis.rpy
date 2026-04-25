@@ -19,6 +19,7 @@ default crisis_success_chance = 50   ## 计算出的成功率
 default crisis_description = ""      ## 危机描述文本
 default crisis_courage_cost = 20     ## 迎接挑战消耗的勇气
 default crisis_courage_gain = 15     ## 退缩回复的勇气
+default crisis_allow_skip = True     ## 是否允许玩家退缩(False = 强制面对, 用于剧情上不能逃避的关键时刻)
 default crisis_result = ""           ## "success" / "fail" / "retreat"
 default crisis_roll_value = 0        ## 骰子结果
 default crisis_injury_text = ""      ## 受伤描述
@@ -92,8 +93,8 @@ init python:
 
         return max(0, min(100, chance))
 
-    def trigger_crisis(crisis_type, difficulty, description, success_label, fail_label, courage_cost=20, courage_gain=15):
-        """触发危机事件"""
+    def trigger_crisis(crisis_type, difficulty, description, success_label, fail_label, courage_cost=20, courage_gain=15, allow_skip=True):
+        """触发危机事件。allow_skip=False 强制玩家面对(隐藏退缩按钮), 用于剧情上不能逃避的关键时刻。"""
         store.crisis_active = True
         store.crisis_type = crisis_type
         store.crisis_difficulty = difficulty
@@ -102,6 +103,7 @@ init python:
         store.crisis_fail_label = fail_label
         store.crisis_courage_cost = courage_cost
         store.crisis_courage_gain = courage_gain
+        store.crisis_allow_skip = allow_skip
         store.crisis_success_chance = calculate_crisis_chance(crisis_type, difficulty)
         store.crisis_result = ""
         store.crisis_roll_value = 0
@@ -337,17 +339,19 @@ screen crisis_event():
                             text "迎接挑战" size 18 color "#4a4a4a" font "msyh.ttf" xalign 0.5
                             text "需要 [crisis_courage_cost] 勇气" size 12 color "#8b1a1a" xalign 0.5
 
-                ## 退缩
-                textbutton "退缩":
-                    text_size 18
-                    text_color "#6a5e48"
-                    text_hover_color "#c8b890"
-                    text_font "msyh.ttf"
-                    xsize 180
-                    action [Function(resolve_crisis, brave=False), Return("retreat")]
+                ## 退缩 (allow_skip=False 时不显示)
+                if crisis_allow_skip:
+                    textbutton "退缩":
+                        text_size 18
+                        text_color "#6a5e48"
+                        text_hover_color "#c8b890"
+                        text_font "msyh.ttf"
+                        xsize 180
+                        action [Function(resolve_crisis, brave=False), Return("retreat")]
 
-            ## 退缩说明
-            text "退缩：回复 [crisis_courage_gain] 勇气，但错过奖励" size 12 color "#6a5e48" xalign 0.5
+            ## 退缩说明 (allow_skip=False 时不显示)
+            if crisis_allow_skip:
+                text "退缩：回复 [crisis_courage_gain] 勇气，但错过奖励" size 12 color "#6a5e48" xalign 0.5
 
 ################################################################################
 ## 4. 骰子结果Screen

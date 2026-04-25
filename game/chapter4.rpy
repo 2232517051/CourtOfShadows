@@ -2407,6 +2407,134 @@ label ch4_rescue:
     hide elena_img with dissolve
 
     $ hide_all_chars()
+    "你压低声音，看着面前三道铁门。"
+
+    "第一道刚刚撬开，里面是回字形的廊道。三道门，一道比一道厚。"
+
+    "王子在最深处。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "（低声）这一段——我们退不出去了。一旦警报响起，整个王宫都会扑下来。"
+
+    hide elena_img with dissolve
+    $ hide_all_chars()
+    "王子的命悬在这一晚。"
+
+    menu:
+        "让艾琳娜引开守卫":
+            $ hide_all_chars()
+            "你点头。"
+            "艾琳娜没多说一个字，转身溶进墙影里——她的脚步声在三秒后就听不见了。"
+            "你们贴在墙边等。"
+
+            $ trigger_crisis("intrigue", 5,
+                "艾琳娜在另一头制造响动。如果她的动静恰到好处, 守卫追过去, 你们这边就空了——但守卫如果太警觉, 她就回不来了。",
+                "ch4_rescue_stealth_win", "ch4_rescue_stealth_lose",
+                courage_cost=25, allow_skip=False)
+            call crisis_encounter from _call_crisis_ch4_lure
+            ## allow_skip=False 不会 fall-through, 此处 jump 兜底
+            jump ch4_rescue_stealth_lose
+
+        "直接迷香放倒":
+            $ hide_all_chars()
+            if dark_lily_joined:
+                "暗百合的人递了一只小瓷瓶过来。"
+                "「这一剂量是按守卫的体型算的。」暗百合的女人说话像数账。「呼吸十二次内见效。」"
+                "你点头。"
+            else:
+                "你只有一只玻璃瓶——艾登堡药匠配的旧方子。"
+                "剂量你拿不准。少了不睡，多了出事。"
+
+            $ _stealth_diff = 2 if dark_lily_joined else 4
+            $ trigger_crisis("intrigue", _stealth_diff,
+                "迷香的剂量必须刚好。少了, 守卫只会发懵; 多了——你们今晚就要在地牢深处给两个穿盔甲的尸体收尾。",
+                "ch4_rescue_stealth_win", "ch4_rescue_stealth_lose",
+                courage_cost=25, allow_skip=False)
+            call crisis_encounter from _call_crisis_ch4_smoke
+            jump ch4_rescue_stealth_lose
+
+        "假扮巡查官":
+            $ hide_all_chars()
+            "你脱下外袍，换上从一个值夜执事身上扒下来的灰色长服。"
+            "雷恩演副官——他半张脸藏在兜帽下，手里握着一卷假造的巡查文牒。"
+
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "（低声）这一行守卫里，只要有一个人多问一句，我们就完了。"
+
+            hide captain_img with dissolve
+            $ hide_all_chars()
+
+            $ trigger_crisis("intrigue", 6,
+                "你们走到第一道铁门前。守卫抬头看你, 火把照着你伪造的徽记。这一关——靠的是脸不发烫, 手不发抖。",
+                "ch4_rescue_stealth_win", "ch4_rescue_stealth_lose",
+                courage_cost=25, allow_skip=False)
+            call crisis_encounter from _call_crisis_ch4_disguise
+            jump ch4_rescue_stealth_lose
+
+label ch4_rescue_stealth_win:
+    $ hide_all_chars()
+    "三道铁门一道道开过去。"
+    "睡着的睡着，被骗走的被骗走，被绕开的被绕开。"
+    "王子的牢房就在最深处——你听见自己心跳的声音。"
+
+    $ log_decision("第四章", "成功潜入地牢")
+
+    jump ch4_rescue_inner
+
+label ch4_rescue_stealth_lose:
+    $ hide_all_chars()
+    "计划在最后一道门前出了岔。"
+
+    "一个守卫多看了你两眼，眨眼之间，警铃响了。"
+
+    $ play_sound("audio/sfx/sword_draw.ogg")
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "我顶上！领主大人退后！"
+
+    "雷恩第一个冲上去，用剑挡下三人围攻。"
+
+    "你看见他左肩中了一刀，血顺着甲片流下——但他还站着。"
+
+    captain "走！别管我！"
+
+    hide captain_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "（咬牙）王子的牢房——快！"
+
+    hide elena_img
+    $ hide_all_chars()
+    "你和艾琳娜拖着雷恩冲进最深的牢房——"
+
+    "牢房空了。"
+
+    "石床上的镣铐还摆着，但人不见了。"
+
+    "王后已经把王子转移到了更下层——而那个位置，你们今晚到不了。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "（低声）撤。从我来时的暗道走。再耽搁十息，王宫的卫队就堵到这里。"
+
+    hide elena_img with dissolve
+
+    $ hide_all_chars()
+    "你扶着雷恩，跟着艾琳娜钻进墙后的窄缝。"
+    "你们沿着她事先摸过的路，在守卫合围之前钻出王宫。"
+
+    "王子还在敌人手里。"
+    "但你们活着出来了。"
+
+    $ ch4_rescue_partial = True
+    $ log_decision("第四章", "潜入失败, 王子被转移, 退回艾登堡")
+
+    jump ch4_rescue_partial_recovery
+
+label ch4_rescue_inner:
     "你们穿过一道又一道铁门，越走越深。"
 
     "地牢深处的牢房更加阴暗。你看到一些锈迹斑斑的刑具挂在墙上——铁夹、拉架、烙铁……"
@@ -2494,6 +2622,7 @@ label ch4_rescue:
     hide captain_img with dissolve
     hide prince_img with dissolve
 
+label ch4_rescue_aftermath:
     scene bg forest_path with dissolve
     $ unlock_gallery("bg_forest_path")
 
@@ -3151,3 +3280,104 @@ label ch4_end:
     $ renpy.force_autosave()
 
     jump chapter5_start
+
+
+label ch4_rescue_partial_recovery:
+    ## fail 路径: 玩家撤回艾登堡, 几日后通过暗线汇合王子
+    scene black with dissolve
+    $ play_music("audio/music/dawn_after_storm.ogg", fadein=2.0)
+
+    "三天后，艾登堡。"
+
+    scene bg bedroom with dissolve
+    $ unlock_gallery("bg_bedroom")
+    $ set_mood("mystery")
+
+    "雷恩躺在城堡西厢的客房里。"
+    "肩上的伤被城里的医师缝了十二针——医师说不会断臂，但持剑得养上一两个月。"
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "（声音哑）领主大人……是我没顶住那一刻。"
+
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "你顶住了。我们都活着回来了。"
+    player "下一次找王子，不会再让你冲在前面。"
+
+    hide player_char_img with dissolve
+    $ hide_all_chars()
+
+    "你走出客房。雷恩没接你那句话——你也知道他下次还是会冲在前面。"
+
+    "第五天的傍晚，艾琳娜来了。"
+
+    scene bg study with dissolve
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "我的人在王宫底层有一条线。"
+
+    elena "王子被转下三层之后，第二天晚上，牢门是从里面打开的。"
+
+    elena "守卫的尸体被人挪走了，没留血痕。"
+
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "王宫里，有人不愿意他干干净净地死掉。"
+
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "王后想留个干净的故事——「王子病死狱中」。"
+    elena "可她底下的人，不是每一个都愿意背这个故事。"
+
+    elena "王子现在在艾登堡西边的一片山林里。一个人。我们的人在远处看着他，没靠近。"
+
+    elena "他在等你。"
+
+    hide elena_img with dissolve
+
+    ## ── 森林边缘汇合 ──
+    scene bg forest_path with dissolve
+    $ unlock_gallery("bg_forest_path")
+    $ set_weather("fog", "light")
+
+    "第六天，黎明前。"
+
+    "你和雷恩——他左臂还吊着布带——骑马到了那片山林的边缘。"
+
+    "树影里站着一个瘦了一圈的人。"
+    "华贵的衣服没了，换的是粗布外袍。脸上的肿消了，但嘴角的伤痂还在。"
+
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
+    prince "你来了……"
+    prince "我以为你不会来了。"
+
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "我答应过的事不会食言。只是来晚了。"
+
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
+    prince "牢里那一夜——铁门是从外面被人撬开的。我没看清那人的脸。"
+    prince "他没说话。只是把镣铐砸开，给了我一袋干粮和一把短剑，然后就走了。"
+
+    prince "我现在还不知道，那是谁的人。"
+
+    hide prince_img with dissolve
+    $ hide_all_chars()
+    "你心里多了一根刺。"
+    "在王宫里，不只有想杀你的人。还有想留你一条命的人——而那个人，你现在还不知道是谁。"
+
+    "你扶王子上马。雷恩的左臂用不上，但他能用右手牵两匹缰绳。"
+
+    "三个人，两匹半马，在雾里掉头，朝艾登堡走。"
+
+    $ log_decision("第四章", "潜入失败, 王子被神秘人放出, 三人森林汇合")
+
+    jump ch4_rescue_aftermath
