@@ -558,10 +558,18 @@ label ch5_exp_mobilize:
 
     "老管家愣了一下，然后缓缓坐在了你对面。"
 
-    if secret_passage_found:
-        player "如果明天……如果城堡守不住了——你带着百姓从密道撤离。"
+    if secret_passage_found and not (ch1_deep_cellar_choice == "seal" and not passage_re_opened):
+        if passage_re_opened:
+            player "如果明天……如果城堡守不住了——你带着百姓从那条重新打通的密道撤离。"
+        else:
+            player "如果明天……如果城堡守不住了——你带着百姓从密道撤离。"
     else:
-        player "如果明天……如果城堡守不住了——你带着百姓从北门撤离。趁夜色离开。"
+        if ch1_deep_cellar_choice == "seal":
+            player "如果明天……如果城堡守不住了——你带着百姓走北门。趁夜色，绕开主战场。"
+            aldric "……是。"
+            "他没有提密道。这事你们都心知肚明。"
+        else:
+            player "如果明天……如果城堡守不住了——你带着百姓从北门撤离。趁夜色离开。"
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
@@ -2107,8 +2115,11 @@ label ch5_exp_eve_of_battle:
             show player_char_img at left with dissolve
             player "表面上固守，但暗中留出一支精锐作为奇兵。"
 
-            if secret_passage_found:
-                player "雷恩，挑选五十名最精锐的士兵，从密道出城，埋伏在北面的树林里。"
+            if secret_passage_found and not (ch1_deep_cellar_choice == "seal" and not passage_re_opened):
+                if passage_re_opened:
+                    player "雷恩，挑选五十名最精锐的士兵，从那条重新打通的密道出城，埋伏在北面的树林里。"
+                else:
+                    player "雷恩，挑选五十名最精锐的士兵，从密道出城，埋伏在北面的树林里。"
                 if aldric_knows_passage:
                     player "让奥尔德里克带路——他比任何人都熟悉那条密道的每一个拐角。"
                     "有奥尔德里克的引导，这支奇兵能以最快的速度穿过密道，不留任何痕迹。"

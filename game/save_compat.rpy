@@ -272,6 +272,7 @@ init 999 python:
             "ch3_dark_lily_visited": False,
             "aldric_knows_passage": False,
             "captain_knows_passage": False,
+            "passage_re_opened": False,
             "poison_evidence": False,
             "elena_spy_known": False,
             "elena_identity_exposed_known": False,

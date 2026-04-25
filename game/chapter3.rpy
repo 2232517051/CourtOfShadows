@@ -5253,31 +5253,80 @@ label ch3_chapter_crisis:
 
         "通过密道转移证据——保命要紧" if secret_passage_found:
             $ change_stat("intrigue", 8)
-            hide aldric_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "证据比城堡重要。如果他们是冲着证据来的，就不能让他们得手。"
-            player "奥尔德里克，你和雷恩守城。我从密道离开，把证据转移到安全的地方。"
-            hide player_char_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "你要独自走密道？"
-            hide aldric_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "不是独自。艾琳娜知道密道的路线。她和我一起走。"
-            hide player_char_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "……你确定？"
-            hide aldric_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "确定。"
-            $ hide_all_chars()
-            "你回到书房，取出所有的证据——日记、遗诏副本、关系图——全部装进一个皮囊。"
-            "然后，你和艾琳娜一起走进了壁炉后的密道。"
-            "在你身后，城堡响起了战斗的号角。"
+            $ _take_alt_route = False
+
+            if ch1_deep_cellar_choice == "seal" and not passage_re_opened:
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "大人——密道虽然您下令封了，但石墙不是一夜之间砌起来的。"
+                aldric "若您下令，工匠和卫队连夜可以重新打通。代价是花费些时间和材料……且封过又开的事，难免要走漏些风声。"
+
+                hide aldric_img with dissolve
+
+                menu:
+                    "重新启用密道——花代价换回退路":
+                        $ change_stat("wealth", -10)
+                        $ change_stat("intrigue", -3)
+                        $ change_stat("loyalty", -3)
+                        $ change_rel("rel_baron", -3)
+                        $ passage_re_opened = True
+
+                        $ hide_all_chars()
+                        "你下令重启密道。两位老工匠领着十几个卫队连夜砸开砖墙——天亮前，密道再次贯通。"
+                        "但消息也悄悄传进了几个老姓氏的耳朵里。封死的东西被重启，本身就是一种信号。"
+
+                    "不重启——另寻他法":
+                        $ change_stat("intrigue", 5)
+                        $ change_stat("power", -5)
+                        $ change_stat("wealth", -3)
+                        $ _take_alt_route = True
+
+                        $ hide_all_chars("player_char_img")
+                        show player_char_img at left with dissolve
+                        player "密道已经封了。我们另想办法。"
+                        player "雷恩，让你最可靠的两名侍卫换上商队衣袍——明日清晨借采办名义出北门。"
+                        player "证据由我亲手装好，让其中一人贴身藏匿。北门哨骑认识艾登堡的采办车，应该不会查得太严。"
+
+                        hide player_char_img
+                        $ hide_all_chars("captain_img")
+                        show captain_img at left with dissolve
+                        captain "可若是查到了——"
+
+                        hide captain_img
+                        $ hide_all_chars("player_char_img")
+                        show player_char_img at left with dissolve
+                        player "查到就一同担。两位侍卫的家眷我会照顾终生，他们也明白。"
+
+                        $ hide_all_chars()
+                        "你回到书房，把日记、遗诏副本、关系图缝进一卷羊皮护贴。两名侍卫领命离开。"
+                        "押上命的不只是那两个人。这一夜你睡在书房——窗外攻城的号角断断续续，像是有人在催债。"
+
+            if not _take_alt_route:
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "证据比城堡重要。如果他们是冲着证据来的，就不能让他们得手。"
+                player "奥尔德里克，你和雷恩守城。我从密道离开，把证据转移到安全的地方。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "你要独自走密道？"
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "不是独自。艾琳娜知道密道的路线。她和我一起走。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……你确定？"
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "确定。"
+                $ hide_all_chars()
+                "你回到书房，取出所有的证据——日记、遗诏副本、关系图——全部装进一个皮囊。"
+                "然后，你和艾琳娜一起走进了壁炉后的密道。"
+                "在你身后，城堡响起了战斗的号角。"
 
     hide aldric_img with dissolve
     hide captain_img with dissolve
