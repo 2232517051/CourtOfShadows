@@ -84,6 +84,15 @@ label gov_tax_reform:
     if "tax_reform" in governance_events_seen:
         return
 
+    $ _ch1_tax = getattr(store, "ch1_exp_tax_decision", None)
+    if _ch1_tax == "restructure":
+        jump gov_tax_restructure_followup
+    elif _ch1_tax == "raise":
+        jump gov_tax_raise_followup
+    elif _ch1_tax == "lower":
+        jump gov_tax_lower_intro
+
+    ## D 分支（None / "" / 老存档）：fall through 到原流程
     scene bg great_hall with dissolve
     play music "audio/music/tension.ogg" fadeout 1.0 fadein 1.0 if_changed
 
@@ -192,6 +201,7 @@ label gov_tax_reform:
     tax_collector "将税收重心从土地转向贸易。对过境货物和商业交易征收额外关税。"
     tax_collector "农民和贵族的负担都会减轻，但商人……恐怕不会高兴。"
 
+label gov_tax_reform_choice:
     "三份方案摆在面前，每一份都意味着不同的未来。"
 
     menu:
@@ -346,6 +356,196 @@ label gov_tax_trade:
 
     $ governance_events_seen.append("tax_reform")
     jump gov_tax_reform_end
+
+
+################################################################################
+## 4b. ch1_exp_tax_decision 后续分支
+################################################################################
+
+label gov_tax_restructure_followup:
+    scene bg great_hall with dissolve
+    play music "audio/music/tension.ogg" fadeout 1.0 fadein 1.0 if_changed
+
+    "自您下令税改至今，已是一月有余。"
+    "田亩与商户的普查在您约定的时限内勉强结题——艾登堡的每一片庄园、每一个商户，都被重新登记造册。"
+    "新制按收成比例征收，刚刚在中小户里铺开。粮市的物价稳了一些，村里的逃户也比上个月少了几户。"
+
+    $ hide_all_chars("tax_collector_img")
+    show tax_collector_img at left with dissolve
+    tax_collector "领主大人，新制在小户和市集里推得很顺。"
+    tax_collector "但有几位大贵族——尤其是西境与北境的几个老姓氏——他们的庄园账目至今没交上来。"
+    tax_collector "找的理由层出不穷：'账册水浸了'、'老管家病了'、'还没来得及核对'。"
+
+    hide tax_collector_img
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
+    aldric "他们在拖。"
+    aldric "贵族圈里都在看您的态度——是把改革推到底，还是给老姓氏留点情面。"
+
+    hide aldric_img with dissolve
+
+    menu:
+        "改革已推行至此，下一步如何决断？"
+
+        "全力推行——大贵族也不能例外":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "拖延就是抗令。把那几家庄园列出来——税务官随卫队同行复核，三日内必须交账。"
+            player "如果有谁敢拒绝，就以违逆领主名义查封庄园账房。"
+
+            hide player_char_img with dissolve
+
+            $ hide_all_chars()
+            "命令一下，西境最大的两家联署抗议，并把抗议书递到了王都。"
+            "几日后传回消息：冯·哈根男爵在边境酒会上说——'艾登堡这是要把贵族的脖子按到泥里'。"
+            "贵族圈的敌意已经从暗流变成明潮。但同样的一封信里也写着——艾登堡的国库账目，整整齐齐。"
+
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "少主，您做的是对的事——但您该做好被孤立的准备。"
+            aldric "我跟随您父亲三十年，我不喜欢看您走得这么险。"
+
+            hide aldric_img with dissolve
+
+            $ change_stat("reputation", 6)
+            $ change_stat("loyalty", 12)
+            $ change_stat("wealth", -10)
+            $ change_prosperity(15)
+            $ change_rel("rel_baron", -18)
+            $ change_rel("rel_aldric", -3)
+
+            "改革落地，民心高涨。但贵族圈的反扑已在路上。"
+
+        "温和推行——给大贵族一段缓冲期":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "新制先在中小户里夯实，大贵族那一档暂缓半年。"
+            player "给他们时间整理账册，但条件是——半年内必须交齐，否则照查不误。"
+
+            hide player_char_img
+            $ hide_all_chars("tax_collector_img")
+            show tax_collector_img at left with dissolve
+            tax_collector "明智的安排。贵族要面子，给他们一个台阶，他们多半会顺势下来。"
+
+            hide tax_collector_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "这才是该有的步调。"
+            aldric "您父亲若在世，也会这样做——改革不靠一时的硬，靠的是持之以恒的稳。"
+
+            hide aldric_img with dissolve
+
+            $ hide_all_chars()
+            "改革放缓了一拍，但每一寸都踏在结实地上。"
+            "新制在大半个领地落地，民心稳定，市集兴旺。"
+            "那几家观望的大贵族最终交上了账册——虽然个别项目仍有水分，但已经不再公开抵抗。"
+
+            $ change_stat("reputation", 4)
+            $ change_stat("loyalty", 6)
+            $ change_stat("wealth", -3)
+            $ change_prosperity(8)
+            $ change_rel("rel_baron", -8)
+            $ change_rel("rel_aldric", 5)
+
+            "改革稳步推进。贵族圈不再公开对抗，但暗中不满仍在。"
+
+    $ governance_events_seen.append("tax_reform")
+    jump gov_tax_reform_end
+
+
+label gov_tax_raise_followup:
+    scene bg great_hall with dissolve
+    play music "audio/music/tension.ogg" fadeout 1.0 fadein 1.0 if_changed
+
+    "自您下令加税至今，已是一月有余——农业税二十、商业税十二。"
+    "金库确实有了起色：城墙缺口开始修补，卫队的薪饷也按时发放。"
+    "但代价正以另一种方式显现：粮价比新政之前涨了不少，最近三个村庄报来逃户名单，城外开始出现流民。"
+
+    $ hide_all_chars("tax_collector_img")
+    show tax_collector_img at left with dissolve
+    tax_collector "领主大人，这一季的赋税大致征齐了，但下一季——"
+    tax_collector "几个村子已经交不出来。是要派卫队去强征，还是另寻出路？"
+
+    hide tax_collector_img
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
+    aldric "粮价、流民、逃户——都是同一件事的不同名字。"
+    aldric "高税的代价已经显现，且还在累加。"
+
+    hide aldric_img with dissolve
+
+    menu:
+        "高税之策已行月余，是否再走下去？"
+
+        "维持高税率——艾登堡的安全比一时民怨更重要":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "维持现状。城墙未修完，卫队未补齐——现在松手，前面这一个多月的代价就白付了。"
+            player "派税务官随卫队下村，能征的征齐，征不到的——记下名单，秋后再算。"
+
+            hide player_char_img with dissolve
+
+            $ hide_all_chars()
+            "高税继续。金库一日比一日厚，但村庄一日比一日空。"
+            "民间开始流传一句话——'艾登堡的银子是用领民的骨头堆出来的'。"
+            "奥尔德里克在记录这些消息时一句话也没说，只是把卷宗合上后久久没有抬头。"
+
+            $ change_stat("reputation", -5)
+            $ change_stat("loyalty", -10)
+            $ change_stat("wealth", 5)
+            $ change_prosperity(-10)
+            $ change_rel("rel_baron", -3)
+            $ change_rel("rel_aldric", -5)
+
+            "金库丰盈。代价是民心渐失。"
+
+        "部分减免——小户先松手":
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "小户的农业税回调到十六，商业税里——年流水五十金以下的小摊贩免一年。"
+            player "大户和大商人维持原税率，他们撑得住。"
+            player "金库会少些进项，但这是必须付的代价。"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "您终于愿意松手了。"
+            aldric "这一调，逃户会回来，流民会散去——民心比银子更难赚回，也更值得赚回来。"
+
+            hide aldric_img with dissolve
+
+            $ hide_all_chars()
+            "减税令颁布之后，村庄的炊烟重新升起。"
+            "粮价应声回落，第二个月就有逃户开始返村。"
+            "金库的进项虽然少了，但城里城外的气氛松弛了下来。"
+
+            $ change_stat("reputation", 5)
+            $ change_stat("loyalty", 6)
+            $ change_stat("wealth", -5)
+            $ change_prosperity(5)
+            $ change_rel("rel_aldric", 5)
+
+            "民心略复。金库稍损，但根基稳了。"
+
+    $ governance_events_seen.append("tax_reform")
+    jump gov_tax_reform_end
+
+
+label gov_tax_lower_intro:
+    scene bg great_hall with dissolve
+    play music "audio/music/tension.ogg" fadeout 1.0 fadein 1.0 if_changed
+
+    "您节流已是月余。城墙北面与东面已修，西南两面缺口仍在；卫队新兵薪资减半，老兵勉强按时发饷。"
+    "节流能省的都省了，再砍下去就要砍到骨头里。"
+
+    $ hide_all_chars("tax_collector_img")
+    show tax_collector_img at left with dissolve
+    tax_collector "领主大人，光节流是不够的——艾登堡需要一个长期、稳定的税制。"
+
+    hide tax_collector_img with dissolve
+
+    jump gov_tax_reform_choice
+
 
 label gov_tax_reform_end:
     scene bg study with dissolve
