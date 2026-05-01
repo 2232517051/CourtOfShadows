@@ -1952,7 +1952,7 @@ label ending_iron_lord:
 
     $ mark_important_choice()
     menu:
-        "截断补给线——让他们饿三天再打|谋略+5 敌军士气大降":
+        "截断补给线——让他们饿三天再打|谋略+ 敌军士气大降":
             $ change_stat("intrigue", 5)
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -1970,7 +1970,7 @@ label ending_iron_lord:
             "三天后，前线传来消息——敌军已经开始宰杀战马充饥。"
             "战斗还没开始，胜负已经倾斜了。"
 
-        "收买雇佣兵——瓦解敌军内部|财富-10 战场上获得内应":
+        "收买雇佣兵——瓦解敌军内部|财富- 战场上获得内应":
             $ change_stat("wealth", -10)
             $ change_stat("intrigue", 3)
             hide captain_img
@@ -1986,7 +1986,7 @@ label ending_iron_lord:
             "第二天，回信来了——雇佣兵同意在战斗最激烈时'调转枪头'。"
             "一枚埋在敌军内部的棋子，已经就位了。"
 
-        "山路绕后——前后夹击|权力+3 战术优势":
+        "山路绕后——前后夹击|权力+ 战术优势":
             $ change_stat("power", 3)
             $ change_stat("intrigue", 3)
             hide elena_img
@@ -2410,7 +2410,7 @@ label ending_iron_lord:
 
     $ mark_important_choice()
     menu:
-        "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+10 声望+10 敌意消除":
+        "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+ 声望+ 敌意消除":
             $ change_stat("loyalty", 10)
             $ change_stat("reputation", 10)
             hide elena_img
@@ -2427,7 +2427,7 @@ label ending_iron_lord:
             elena "……这招比杀了他们更厉害。从此他们欠你一条命。"
             "消息传开后，周围的领主纷纷遣使示好。一个仁慈而强大的领主——是所有人都想结交的盟友。"
 
-        "杀鸡儆猴——处决首恶，释放士兵|权力+10 声望-5 威慑四方":
+        "杀鸡儆猴——处决首恶，释放士兵|权力+ 声望- 威慑四方":
             $ change_stat("power", 10)
             $ change_stat("reputation", -5)
             hide elena_img
@@ -2439,7 +2439,7 @@ label ending_iron_lord:
             "从那以后，再没有人敢轻视艾登堡的旗帜。"
             "但也有人在背后说——这个年轻的领主，比他父亲更冷酷。"
 
-        "吞并领地——将战败方纳入版图|权力+15 财富+10 管理压力大":
+        "吞并领地——将战败方纳入版图|权力+ 财富+ 管理压力大":
             $ change_stat("power", 15)
             $ change_stat("wealth", 18)
             $ hide_all_chars("player_char_img")

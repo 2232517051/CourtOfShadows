@@ -2023,7 +2023,7 @@ label first_decree:
 
     $ mark_important_choice()
     menu:
-        "加强边防，扩编卫队|权力+15 忠诚+10 财富-15":
+        "加强边防，扩编卫队|权力+ 忠诚+ 财富-":
             $ log_decision("第一章", "首项政令: 加强边防", "扩编卫队，加强军事力量")
             $ first_decree = "军事"
             $ change_stat("power", 15)
@@ -2066,7 +2066,7 @@ label first_decree:
             aldric "也是。"
             hide aldric_img with dissolve
 
-        "开仓放粮，收买民心|忠诚+20 声望+10 财富-20":
+        "开仓放粮，收买民心|忠诚+ 声望+ 财富-":
             $ log_decision("第一章", "首项政令: 开仓放粮", "赢得民心但消耗财富")
             $ first_decree = "民生"
             $ change_stat("loyalty", 20)
@@ -2103,7 +2103,7 @@ label first_decree:
             "但金库已经见底了。"
             "你知道，仁慈是有价格的。现在你用金钱买到了民心，但如果明天金库空了，民心又会变成什么？"
 
-        "清剿盗匪，恢复商路|财富+18 声望+10 权力+5":
+        "清剿盗匪，恢复商路|财富+ 声望+ 权力+":
             $ log_decision("第一章", "首项政令: 清剿盗匪", "恢复商路增加收入")
             $ first_decree = "治安"
             $ change_stat("wealth", 18)
@@ -2142,7 +2142,7 @@ label first_decree:
             "而且，有传言说这些盗匪背后有人指使……"
             "在匪首的营帐中发现了一些来路不明的武器——制式精良，不像是山贼能弄到的东西。"
 
-        "修缮城堡，巩固根基|权力+10 财富-10 可能发现秘密":
+        "修缮城堡，巩固根基|权力+ 财富- 可能发现秘密":
             $ log_decision("第一章", "首项政令: 修缮城堡", "发现密道")
             $ first_decree = "建设"
             $ change_stat("power", 10)
