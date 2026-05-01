@@ -654,7 +654,7 @@ label ch1_exp_morning_council:
 
     hide player_char_img with dissolve
 
-    "你沉思着。匪患不解决，商路就断了。商路断了，税收就会锐减。但强攻的代价太高。"
+    "你沉思着。匪首未除，商路终究不稳。商路一断，税收就会锐减。但强攻的代价太高。"
 
     menu:
         "军事打击「集中兵力，一鼓作气」":
