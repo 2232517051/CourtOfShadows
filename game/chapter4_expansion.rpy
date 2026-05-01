@@ -378,7 +378,7 @@ label ch4_exp_explore_market:
             $ change_stat("reputation", 3)
             $ ch4_exp_merchant_tip = True
 
-            "你不动声色地翻出里衣上的苍鹰徽章，让他瞥了一眼。"
+            "你不动声色地翻出里衣上的金鹰徽章，让他瞥了一眼。"
 
             narrator "胖老板的眼睛猛地瞪大了一瞬，然后迅速恢复了镇定。"
 
@@ -749,7 +749,7 @@ label ch4_exp_court_social:
 
     $ play_sound("audio/sfx/crowd_murmur.ogg")
 
-    "你穿着从艾登堡带来的最好的礼服——深蓝丝绒，银线苍鹰——走进了这片光怪陆离的世界。"
+    "你穿着从艾登堡带来的最好的礼服——深蓝丝绒，银线金鹰——走进了这片光怪陆离的世界。"
 
     "大厅里已经聚集了五六十人。男人们身着华服，女人们珠光宝气。"
 
