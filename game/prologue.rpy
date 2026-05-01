@@ -1456,6 +1456,7 @@ label prologue_adult:
     pause 1.0
 
     $ prologue_completed = True
+    $ persistent.chapters_completed.add("prologue")
 
     "你是 [player_name]。二十二岁。艾登堡的新任领主。"
 
@@ -1470,4 +1471,4 @@ label prologue_adult:
     pause 0.5
 
     ## 衔接第一章
-    jump start
+    jump chapter1_start

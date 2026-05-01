@@ -15,6 +15,10 @@ label start:
     if not prologue_completed:
         jump prologue
 
+    jump chapter1_start
+
+label chapter1_start:
+
     ## ============================================================
     ## 第一章：新主登基
     ## ============================================================

@@ -378,14 +378,15 @@ screen achievement_screen():
 
 init python:
     chapter_list = [
-        ("chapter1", "第一章", "新主登基", "start", "初临领地，面对未知的挑战"),
+        ("prologue", "序章", "金鹰之子", "prologue", "学院、王都，归乡前最后的日子"),
+        ("chapter1", "第一章", "新主登基", "chapter1_start", "初临领地，面对未知的挑战"),
         ("chapter2", "第二章", "领主会议", "chapter2_start", "贵族间的明争暗斗"),
         ("chapter3", "第三章", "暗百合", "chapter3_start", "神秘组织浮出水面"),
         ("chapter4", "第四章", "王都风云", "chapter4_start", "踏入更大的棋局"),
         ("chapter5", "第五章", "最终决战", "chapter5_start", "一切的终章"),
     ]
 
-    chapter_icons = ["I", "II", "III", "IV", "V"]
+    chapter_icons = ["序", "I", "II", "III", "IV", "V"]
 
 screen chapter_select():
     tag menu
@@ -404,7 +405,7 @@ screen chapter_select():
             null height 10
 
             for idx, (ch_id, ch_num, ch_name, ch_label, ch_desc) in enumerate(chapter_list):
-                $ is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1"
+                $ is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1" or ch_id == "prologue"
 
                 frame:
                     xfill True
