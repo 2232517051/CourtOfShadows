@@ -1177,7 +1177,7 @@ label interlude_ch4_ch5_council:
     show player_char_img at left with dissolve
     player "发生了什么？"
 
-    if first_decree == "military":
+    if first_decree == "军事":
         "奥尔德里克的声音沉重如铁。"
         hide player_char_img
         show aldric_img at left with dissolve

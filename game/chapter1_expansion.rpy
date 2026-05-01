@@ -621,7 +621,11 @@ label ch1_exp_morning_council:
 
     ## ── 议题一：匪患 ──
 
-    aldric "首先是匪患。北部山区的黑狼帮在近三个月内抢劫了七支商队。两名商人被杀，货物损失约合三百金币。"
+    if first_decree == "治安":
+        aldric "首先是匪患。少主上次政令后, 雷恩已端了三处匪窝, 折了五名兄弟, 商路勉强通了。"
+        aldric "但黑狼帮的主力还盘踞在铁匠峡谷, 骨干未除——今日要议的, 是怎么彻底解决。"
+    else:
+        aldric "首先是匪患。北部山区的黑狼帮在近三个月内抢劫了七支商队。两名商人被杀，货物损失约合三百金币。"
 
     hide aldric_img
     show captain_img at right with dissolve
