@@ -128,7 +128,7 @@ label interlude_ch2_ch3:
     scene bg_road_night with dissolve
     play music "audio/music/forest_ambient.ogg" fadeout 2.0 fadein 3.0
 
-    "从王都返回的路上，马车在泥泞的道路上颠簸前行。"
+    "从哈伦堡返回的路上，马车在泥泞的道路上颠簸前行。"
 
     "窗外起风了。初冬的寒意渗进石墙的每一道缝隙。"
 

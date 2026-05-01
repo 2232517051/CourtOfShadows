@@ -28,8 +28,8 @@ label chapter3_start:
 
     "更何况，暗处的敌人也不会给你喘息的机会。"
 
-    ## 章节间过渡：旅途（含暗林谷伏击）+ 到达城堡
-    call interlude_ch2_ch3 from _call_interlude23
+    ## (旧位置) interlude_ch2_ch3 已挪到 chapter2.rpy:ch2_end summary 之后,
+    ## 因 chapter 3 开场已在艾登堡处理事务, 不应再回到路上.
 
     ## NPC深度支线
     call npc_captain_war_story from _call_npc_cws
