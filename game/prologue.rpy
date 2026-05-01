@@ -635,7 +635,7 @@ label cinematic_prologue_2:
     hide screen cin_sub
 
     voice "audio/narration/ch0_p2_line2.mp3"
-    show screen cin_sub("圣安德烈修道院——王国最高学府。贵族子弟的摇篮，也是权力的温床。")
+    show screen cin_sub("圣·尤里安修道院——王国最高学府。贵族子弟的摇篮，也是权力的温床。")
     $ wait_voice(8.0)
     hide screen cin_sub
 
@@ -667,12 +667,12 @@ label prologue_youth:
     $ player.image_tag = "player_teen"
     $ play_music("audio/music/main_theme.ogg", fadein=2.0)
 
-    call show_chapter("序章·中", "萌芽", "1337年，王都圣安德烈修道院") from _call_show_chapter_prologue2
+    call show_chapter("序章·中", "萌芽", "1337年，王都圣·尤里安修道院") from _call_show_chapter_prologue2
 
     scene bg church_interior with dissolve
     $ unlock_gallery("bg_church_interior")
 
-    "圣安德烈修道院坐落在王都的东北角，背靠一座小山。"
+    "圣·尤里安修道院坐落在王都的东北角，背靠一座小山。"
 
     "灰色的石墙爬满了常春藤，尖顶的钟楼在晨雾中若隐若现。从远处看，它像一座城堡多过像一座教堂。"
 
@@ -1178,7 +1178,7 @@ label prologue_adult:
     scene bg royal_palace with dissolve
     $ unlock_gallery("bg_royal_palace")
 
-    "十八岁。你从圣安德烈修道院毕业了。"
+    "十八岁。你从圣·尤里安修道院毕业了。"
 
     "六年的时间。你从一个什么都不懂的领主之子，变成了……一个什么都懂一点但什么都不精的年轻人。"
 

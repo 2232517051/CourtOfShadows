@@ -646,7 +646,7 @@ label prologue_deep_youth_1:
 
     scene bg church_interior with dissolve
 
-    "圣安德烈修道院的图书馆号称拥有全王国最多的藏书。七千册手抄本和卷轴，从神学到天文，从历史到数学，整整占了三层楼。"
+    "圣·尤里安修道院的图书馆号称拥有全王国最多的藏书。七千册手抄本和卷轴，从神学到天文，从历史到数学，整整占了三层楼。"
 
     "你十三岁。已经在修道院待了一年。你习惯了早祷、课业、晚祷的规律生活，也习惯了图书馆里那股混合着霉味和墨水味的独特气息。"
 
@@ -983,7 +983,7 @@ label prologue_deep_youth_2:
 
             $ hide_all_chars("player_teen_img")
             show player_teen_img at left with dissolve
-            player "我是圣安德烈修道院的学生。我叫[player_name]。我可以作证，我亲眼看到您对一个手无缚鸡之力的孩子拳脚相加。"
+            player "我是圣·尤里安修道院的学生。我叫[player_name]。我可以作证，我亲眼看到您对一个手无缚鸡之力的孩子拳脚相加。"
 
             "你顿了一下。"
 
@@ -1045,7 +1045,7 @@ label prologue_deep_youth_2:
 
             "你想了想。你能做什么呢？你也只是一个十四岁的修道院学生。"
 
-            player "去圣安德烈修道院的后门。跟守门的修士说你要找我。[player_name]。记住了吗？"
+            player "去圣·尤里安修道院的后门。跟守门的修士说你要找我。[player_name]。记住了吗？"
 
             $ hide_all_chars()
             "男孩点了点头。你不知道他会不会来找你。但你知道你做了自己能做的。"
