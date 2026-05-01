@@ -46,6 +46,16 @@ for path in ["game/xxx.rpy"]:  # 改成实际改过的文件
 
 三者是正交问题，只跑其中一个会漏。典型 bug：ch2_council 里"男爵说完话 → 两行旁白描述其他领主反应 → 男爵立绘仍在"——这正是 `scan_narration_overlap` 捕获的盲区。
 
+## 发布 / 打包 / wx build 之前必跑（强制）
+
+**`python prepare_release.py`** — 验证 `game/msyh.ttf` 字符集与当前 .rpy 内容一致。
+
+- exit 0 = 字体已最新, 可以 build
+- exit 1 = 有新字, 已自动重生成, 必须 commit `game/msyh.ttf` 后重新 build
+- exit 2 = subset_font.py 失败, 排查后再试
+
+**Why**: pre-commit hook 只在 commit 时刷字体。如果 build 流程从 working tree 直接打包（典型: 第三方 wx 转换工具），最近一次没 commit 触发就漏了——玩家会看到方框/缺字（栀子 2026-05-01 反馈正是此因，"踞"字旧字体没有）。
+
 ## 改了 Character / 立绘资源 / CHAR_IMG_TAGS 时额外补一步
 
 - 新增/改名角色立绘：同步更新 `CHAR_IMG_TAGS`（`char_helpers.rpy`）、`images_def.rpy` 的 image 声明、`_all_portrait_chars` 列表、`characters.rpy` 的 `image=` 参数——四处必须对齐。scan 脚本的 `MANUAL_IMG_TAG` 字典如涉及也要加。
