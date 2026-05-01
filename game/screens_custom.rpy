@@ -379,8 +379,10 @@ screen stats_screen():
 
                         null height 4
 
-                        if father_death_known:
+                        if father_letters_found or true_killer_known:
                             text "• 已知晓父亲死因真相" size 13 color "#8a7e60"
+                        elif father_death_known:
+                            text "• 怀疑父亲死亡另有内情" size 13 color "#8a7e60"
                         if secret_passage_found:
                             text "• 发现了城堡密道" size 13 color "#8a7e60"
                         if spy_network:
