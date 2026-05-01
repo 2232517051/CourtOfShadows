@@ -280,8 +280,21 @@ init python:
         ],
     }
 
+    ## rel_X -> X_met 命名约定; 例外列于此
+    _REL_TO_MET = {
+        "rel_lily":   "lily_master_met",
+        "rel_people": "people_met",
+        "rel_stein":  "steinfurt_met",  # 施泰因 -> Steinfurt 德语化
+    }
+
     def change_rel(rel, delta):
         """改变好感度并显示通知，跨越阈值时弹出后果说明。"""
+        ## 首次调用自动 set met flag (UI 状态界面好感条守卫用)
+        if rel.startswith("rel_"):
+            met_var = _REL_TO_MET.get(rel) or (rel[4:] + "_met")
+            if not getattr(store, met_var, False):
+                setattr(store, met_var, True)
+
         old = getattr(store, rel, 0)
         new = max(-100, min(100, old + delta))
         setattr(store, rel, new)

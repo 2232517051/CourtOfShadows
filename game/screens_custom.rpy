@@ -14,8 +14,8 @@ init python:
     }
 
     ## 关系数据
-    ## 王子条带 prince_met 守卫, 由 screen 渲染时过滤（见 L319 附近 for 循环）
-    ## 避免第四章前剧透"王子是谁"
+    ## 后期登场角色用 _met 守卫, 由 screen 渲染时过滤（见 L319 附近 for 循环）
+    ## 避免章节前剧透"未见过的人"
     relation_data = [
         ("rel_aldric", "奥尔德里克", "管家", "#8b0000"),
         ("rel_elena", "艾琳娜", "侍女", "#9370db"),
@@ -24,7 +24,24 @@ init python:
         ("rel_captain", "队长雷恩", "军队", "#4682b4"),
         ("rel_queen", "伊莎贝拉王后", "王室", "#800080"),
         ("rel_prince", "弗雷德里克王子", "王室", "#4169e1"),
+        ("rel_hilda", "希尔达伯爵夫人", "北疆", "#5f9ea0"),
+        ("rel_grey", "格雷伯爵", "东部", "#708090"),
+        ("rel_wells", "威尔斯子爵", "南部", "#bc8f8f"),
+        ("rel_stein", "施泰因伯爵夫人", "西部", "#9b6b9b"),
+        ("rel_lily", "暗百合首领", "暗影", "#8a2be2"),
+        ("rel_people", "民心", "百姓", "#cd853f"),
     ]
+
+    ## rel_X -> met flag 守卫表 (没在表里的 rel 不需守卫永远显示)
+    REL_MET_GUARD = {
+        "rel_prince": "prince_met",
+        "rel_hilda":  "hilda_met",
+        "rel_grey":   "grey_met",
+        "rel_wells":  "wells_met",
+        "rel_stein":  "steinfurt_met",
+        "rel_lily":   "lily_master_met",
+        "rel_people": "people_met",
+    }
 
     ## 关系等级阈值
     _rel_thresholds = [("冷淡", -50), ("中立", -10), ("友好", 20), ("亲密", 60), ("满", 100)]
@@ -320,8 +337,9 @@ screen stats_screen():
 
                         ## 关系列表（含等级进度提示）
                         for var_name, char_name, title, char_color in relation_data:
-                            ## 王子条第四章登场前隐藏, 防剧透
-                            if var_name != "rel_prince" or getattr(store, "prince_met", False):
+                            ## met 守卫: 未见过的角色不显示防剧透
+                            $ _met_var = REL_MET_GUARD.get(var_name)
+                            if _met_var is None or getattr(store, _met_var, False):
                                 $ rel_val = getattr(store, var_name, 0)
                                 $ rel_pct = (rel_val + 100) / 200.0
                                 ## 等级划分: 敌对(<-50), 冷淡(<-10), 中立(<20), 友好(<60), 亲密(>=60)
