@@ -115,7 +115,7 @@ screen cg_gallery():
                 xfill True
 
                 for img_name, img_label in gallery_characters:
-                    $ img_path = "images/" + img_name + ".webp"
+                    $ img_path = "images/" + img_name + ".png"
                     $ is_unlocked = img_name in persistent.gallery_unlocked
                     if renpy.loadable(img_path) and is_unlocked:
                         vbox:
