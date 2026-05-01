@@ -1207,7 +1207,7 @@ label prologue_adult:
     call prologue_deep_adult_1 from _call_pda1
     call prologue_deep_adult_2 from _call_pda2
 
-    "三年。你从一个学生变成了一个——怎么说呢——还算懂事的年轻人。"
+    "回头看在王都的这三年，你从一个学生变成了一个——怎么说呢——还算懂事的年轻人。"
 
     ## ──────────────────────────────────────
     ## 场景1：贵族宴会
