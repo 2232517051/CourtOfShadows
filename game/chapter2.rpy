@@ -83,7 +83,7 @@ label ch2_preparation:
     show aldric_img at left with dissolve
     $ unlock_gallery("aldric")
 
-    aldric "领主大人，关于今日的会议，老臣有几点要提醒。"
+    aldric "领主大人，关于此次会议，老臣有几点要提醒。"
 
     aldric "与会者共有五位领主，但真正需要注意的只有两个人。"
 
