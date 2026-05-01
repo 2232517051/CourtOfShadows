@@ -566,6 +566,8 @@ label ch5_exp_mobilize:
     else:
         if ch1_deep_cellar_choice == "seal":
             player "如果明天……如果城堡守不住了——你带着百姓走北门。趁夜色，绕开主战场。"
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
             aldric "……是。"
             "他没有提密道。这事你们都心知肚明。"
         else:
