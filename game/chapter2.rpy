@@ -2950,6 +2950,10 @@ label ch2_ambush_prepared:
 
     hide elena_img with dissolve
 
+    ## 玩家此刻已知 elena 是王后派来的(2925"王后选中我来艾登堡"+2944"诚实的监视者"),
+    ## set flag 防 chapter 3 elena 身份揭露段(if not elena_spy_known)信息重复.
+    $ elena_spy_known = True
+
     jump ch2_end
 
 label ch2_ambush_surprised:
