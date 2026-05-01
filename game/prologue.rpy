@@ -1236,16 +1236,16 @@ label prologue_adult:
 
     "施泰因伯爵夫人——一个五十多岁的女人，灰色的头发梳得一丝不苟，脸上的皱纹像刻出来的——朝你走来。"
 
-    $ hide_all_chars("countess_hilda_img")
-    show countess_hilda_img at left with dissolve
+    $ hide_all_chars("countess_stein_img")
+    show countess_stein_img at left with dissolve
 
-    countess_hilda "艾登堡的小领主。终于见到真人了。"
+    countess_stein "艾登堡的小领主。终于见到真人了。"
 
     "她上下打量你，眼神犀利得像手术刀。"
 
-    countess_hilda "你长得像你父亲年轻的时候。希望你比他聪明。"
+    countess_stein "你长得像你父亲年轻的时候。希望你比他聪明。"
 
-    hide countess_hilda_img with dissolve
+    hide countess_stein_img with dissolve
 
     $ hide_all_chars()
     "你不知道这是夸奖还是警告。你选择当作夸奖。"
@@ -1271,12 +1271,12 @@ label prologue_adult:
 
             "大厅安静了几秒。然后施泰因伯爵夫人鼓了一下掌。就一下。但足够了。"
 
-            $ hide_all_chars("countess_hilda_img")
-            show countess_hilda_img at left with dissolve
+            $ hide_all_chars("countess_stein_img")
+            show countess_stein_img at left with dissolve
 
-            countess_hilda "年轻人，你有点意思。"
+            countess_stein "年轻人，你有点意思。"
 
-            hide countess_hilda_img with dissolve
+            hide countess_stein_img with dissolve
 
             $ hide_all_chars()
             "接下来的一个小时，不断有人走过来跟你搭话。有人夸你，有人试探你，有人只是来看看'那个说大话的年轻人'长什么样。"
