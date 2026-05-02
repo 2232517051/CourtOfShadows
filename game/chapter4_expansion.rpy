@@ -1690,7 +1690,19 @@ label ch4_exp_eve:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
 
-            if testament_forged_known:
+            if testament_forged_known and captain_truth_known:
+                player "也许是遗诏的事——大厅里我跟你和奥尔德里克交代过的那一桩。"
+
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "嗯。先王指定老领主摄政，王后改了遗诏。"
+
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "他二十年前回来后那些反常——加固城堡、训练民兵、深夜不睡——大概就是从那时候开始的。"
+            elif testament_forged_known:
                 player "也许是遗诏的事。"
 
                 hide player_char_img
