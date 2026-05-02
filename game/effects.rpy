@@ -199,6 +199,9 @@ init python:
         "rel_bishop": "主教马修斯", "rel_baron": "冯·哈根男爵",
         "rel_captain": "队长雷恩", "rel_queen": "伊莎贝拉王后",
         "rel_prince": "弗雷德里克王子", "rel_lily": "暗百合",
+        "rel_hilda": "希尔达伯爵夫人", "rel_grey": "格雷伯爵",
+        "rel_wells": "威尔斯子爵", "rel_stein": "施泰因伯爵夫人",
+        "rel_people": "民心",
     }
 
     def _show_stat_toast(name, delta, is_rel):
