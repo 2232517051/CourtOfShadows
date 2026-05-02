@@ -1441,7 +1441,7 @@ label ch1_deep_elena_lesson:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "这是慢性砒霜。加入食物后会被其他味道掩盖。每次微量，日积月累，受害者会慢慢衰弱，看起来像久病不愈。"
+    elena "这是暮色之露。加入食物后几乎无法察觉。每次微量，日积月累，受害者会慢慢衰弱，看起来像久病不愈。"
 
     "她停顿了一下。"
 
