@@ -4455,6 +4455,13 @@ label ending_truth:
 
     hide captain_img with dissolve
 
+    menu:
+        "接受任命——你的责任不止艾登堡":
+            pass
+
+        "婉拒——回艾登堡守护领地与人民":
+            jump truth_humble_epilogue
+
     if elena_romance:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
@@ -4502,6 +4509,84 @@ label ending_truth:
     "它是一个新的起点。"
 
     "一个更好的、建立在真相而非谎言之上的未来——正从你脚下展开。"
+
+    $ unlock_achievement("truth_ending")
+    $ persistent.endings_seen.add("truth")
+
+    jump game_ending
+
+label truth_humble_epilogue:
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "您想好了？"
+
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "替我回信——谢绝任命。真相大白之后，我答应过自己，要回艾登堡。"
+
+    player "王都需要的是新的政治家，不是我。"
+
+    player "父亲守了艾登堡一辈子。我也想守它一辈子。"
+
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "……明白了，领主大人。"
+
+    "雷恩没有再多劝。他知道你下了决心就改不回来了——这一点你和老领主一模一样。"
+
+    if elena_romance:
+        hide captain_img
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "你不留在王都？"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "我属于艾登堡。"
+
+        player "你呢？"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "我属于你在的地方。"
+
+        $ hide_all_chars()
+        "她笑了。这笑容里没有花园里的算计，没有王都里的伪装——只有春风。"
+    else:
+        hide captain_img
+        $ hide_all_chars()
+        "你独自站在窗前，望着远方。"
+        "王都的事让王都的人去办。艾登堡有它自己的春天要等。"
+
+    scene bg castle_exterior with dissolve
+
+    "你回到艾登堡那天，全城的人都在城门口等你。这一次，他们的笑容是真的。"
+
+    "你没有公爵的仪仗，也没有摄政官的金印。只有奥尔德里克手里那本翻烂了的领地账册，和雷恩腰间那把守了三代领主的剑。"
+
+    "夏天，村庄的麦子熟了。"
+
+    "秋天，城墙上的裂缝补好了。"
+
+    "冬天，大雪封山——你和老人们围着炉火，听他们讲老领主年轻时的故事。"
+
+    "春天，一个孩子在城门口拉住你的衣角，问你能不能讲讲那只金鹰的故事。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "好。给我一杯热茶——这故事很长。"
+
+    $ hide_all_chars()
+    "真相大白。正义实现。"
+
+    "你没有去做帝国的轴心——你只是回来了。"
+
+    "回到一个真正属于你的地方。"
 
     $ unlock_achievement("truth_ending")
     $ persistent.endings_seen.add("truth")
