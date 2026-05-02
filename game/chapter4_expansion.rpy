@@ -667,7 +667,7 @@ label ch4_exp_explore_slums:
             hide player_char_img
             show elena_img at right with dissolve
 
-            elena "……和集市上听到的对上了。有人在灭口。"
+            elena "……和这一路打听到的对上了。有人在灭口。"
 
             hide elena_img with dissolve
 
