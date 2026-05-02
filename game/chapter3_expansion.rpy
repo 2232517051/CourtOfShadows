@@ -752,7 +752,7 @@ label ch3_exp_herbalist:
     hide player_char_img
     $ hide_all_chars("herbalist_vera_img")
     show herbalist_vera_img at left with dissolve
-    herbalist_vera "那种植物。不是那个组织。"
+    herbalist_vera "我说的，是这花。"
 
     "她走到架子前，取下一个装着紫黑色花瓣的玻璃瓶。"
 
