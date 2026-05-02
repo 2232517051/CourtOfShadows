@@ -1849,7 +1849,10 @@ label ch5_exp_eve_of_battle:
 
     baron "艾登堡的小鬼——"
 
-    baron "你的先锋部队给了我的人一个教训。好得很。"
+    if ch5_exp_skirmish_tactic == "lure":
+        baron "你那点小把戏挺有意思——装可怜骗了我的先头骑兵。"
+    else:
+        baron "你的先锋部队给了我的人一个教训。好得很。"
 
     baron "但你以为这改变了什么吗？"
 
