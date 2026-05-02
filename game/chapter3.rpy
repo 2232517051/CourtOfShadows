@@ -1396,9 +1396,9 @@ label ch3_dark_lily_clues:
 
     "四面墙上挂着黑色的帷幕，中央是一张圆桌。桌上放着一盏油灯和几张地图。"
 
-    "地下室里有两个人在等着。一男一女，都戴着面具。"
+    "地下室里有两个人在等着。一名老妇人坐在桌后，旁边站着一个沉默的男子，都戴着面具。"
 
-    "男人开口了。"
+    "老妇人开口了。"
 
     $ hide_all_chars("lily_root_img")
     show lily_root_img at left with dissolve
@@ -1419,7 +1419,7 @@ label ch3_dark_lily_clues:
     show player_char_img at left with dissolve
     player "真相。"
 
-    "男人和女人交换了一个眼神。"
+    "老妇人和身旁的男子交换了一个眼神。"
 
     hide player_char_img
     $ hide_all_chars("lily_root_img")
@@ -1436,7 +1436,7 @@ label ch3_dark_lily_clues:
     show lily_root_img at left with dissolve
     lily_interviewer "信任的考验。"
 
-    "男人从桌上拿起一杯酒，递到你面前。"
+    "老妇人从桌上拿起一杯酒，递到你面前。"
 
     lily_interviewer "喝下它。"
 
@@ -1450,7 +1450,7 @@ label ch3_dark_lily_clues:
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
             lily_interviewer "……你的胆量，像你父亲。"
-            "男人摘下了面具。一张中年人的脸，有一道从额头到下巴的疤痕。"
+            "老妇人摘下了面具。一张布满皱纹却眼神锐利的脸，左眼下方有一道淡淡的旧伤疤。"
             lily_interviewer "我是暗百合的联络人。你可以叫我'根'。"
 
         "先闻一闻":
