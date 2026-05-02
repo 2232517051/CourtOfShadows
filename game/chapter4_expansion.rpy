@@ -1602,8 +1602,10 @@ label ch4_exp_inv_solo:
 
     if not testament_forged_known:
         "如果你能找到先王的真实遗诏，证明王后篡改了遗诏——那就等于撬动了她权力的根基。"
-    else:
+    elif not testament_original_obtained:
         "遗诏被篡改的事你已经知道了——现在缺的是原件，是铁证。"
+    else:
+        "遗诏的原件已经在你手里——现在要做的，是把它送到能改变局势的人面前。"
 
     if not father_poisoned_known:
         "暮色之露是王后最大的秘密。先王和你的父亲都死于同一种毒药——如果能把这个证据公之于众……"
