@@ -21,8 +21,8 @@ label chapter5_start:
     call cinematic_chapter5 from _call_cinematic_ch5
 
     ## 章节间过渡：归乡之路 + 紧急会议
-    call interlude_ch4_ch5 from _call_interlude45
     call interlude_ch4_ch5_council from _call_interlude45_council
+    call interlude_ch4_ch5 from _call_interlude45
 
     ## 章节深化：逃兵的故事
     call ch5_deep_deserter from _call_ch5_ddeserter
