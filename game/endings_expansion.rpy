@@ -351,7 +351,7 @@ label ending_truth_epilogue:
 
     aldric "老领主……会为您骄傲的。"
 
-    aldric "老朽跟了您的父亲三十年，又跟了您十年。"
+    aldric "老朽跟了您的父亲三十年，又跟了您五年。"
 
     aldric "这辈子……值了。"
 
