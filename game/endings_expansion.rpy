@@ -39,6 +39,11 @@ label ending_epilogue_router:
 
 label ending_truth_epilogue:
 
+    ## 婉拒首席摄政官任命 → 玩家走 chapter5 truth_humble_epilogue (回艾登堡守护一年四季),
+    ## 那段已是完整尾声, 跳过这里整段王都"首席摄政官"扩展, 防叙事冲突.
+    if truth_declined_regency:
+        return
+
     scene black with fade
 
     centered "{size=+10}五年后{/size}"

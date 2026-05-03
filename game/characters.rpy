@@ -168,6 +168,7 @@ default darkflame_known = False          # 知道"暗焰"这个派系的存在
 default dark_lily_exists_known = False
 default prince_imprisoned_known = False
 default captain_truth_known = False  # 雷恩是否已从主角处得知真相（遗诏/毒杀）
+default truth_declined_regency = False  # 真相结局: 婉拒首席摄政官任命, 回艾登堡 (跳过 ending_truth_epilogue 王都段)
 
 # 第三章剧情标记
 default dark_lily_joined = False

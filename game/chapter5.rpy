@@ -4517,6 +4517,8 @@ label ending_truth:
 
 label truth_humble_epilogue:
 
+    $ truth_declined_regency = True
+
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "您想好了？"
