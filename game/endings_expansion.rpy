@@ -2159,7 +2159,7 @@ label ending_peoples_epilogue:
     if built_school:
         "丰收节的节目之一——是孩子们的诗朗诵。"
 
-        "你三年前建造的学堂，如今已经培养出了一批能识字、能算数的孩子。"
+        "你五年前建造的学堂，如今已经培养出了一批能识字、能算数的孩子。"
         "这在整个王国都是罕见的。"
 
         "一个扎着两条辫子的小女孩站在台上，手里拿着一张皱巴巴的纸。"
@@ -2203,7 +2203,7 @@ label ending_peoples_epilogue:
 
         player "好吧。不过剪完彩你得帮我看看膝盖。跳舞跳伤了。"
 
-        "\"玛格丽特大夫\"" "……大人，您今年才三十出头。"
+        "\"玛格丽特大夫\"" "……大人，您今年才二十多岁。"
 
         player "所以呢？"
 
@@ -2287,9 +2287,9 @@ label ending_peoples_epilogue:
     hide aldric_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "你跟了我父亲三十年，又跟了我十年。四十年了。"
+    player "你跟了我父亲三十年，又跟了我五年。三十五年了。"
 
-    player "四十年，你没有请过一天假。没有为自己做过一件事。"
+    player "三十五年，你没有请过一天假。没有为自己做过一件事。"
 
     player "是时候了，奥尔德里克。你值得拥有自己的生活。"
 
@@ -2306,7 +2306,7 @@ label ending_peoples_epilogue:
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "是五十年。不是四十年。"
+    aldric "是五十年。不是三十五年。"
 
     aldric "我十五岁就进了卡尔大人的家门。到今年……整整五十年。"
 
@@ -2515,11 +2515,11 @@ label ending_peoples_epilogue:
 
     "她看到了你。老迈的眼睛一下子亮了起来。"
 
-    "\"大人……\""
+    "\"[player_name]……\""
 
     "她颤巍巍地站起来，从篮子里拿出一块面包——"
 
-    "\"大人，请吃一块面包。\""
+    "\"[player_name]，请吃一块面包。\""
 
     "\"当年您救了我的命。我一直想报答您，但我没有什么值钱的东西。\""
 
@@ -2534,7 +2534,7 @@ label ending_peoples_epilogue:
     $ hide_all_chars()
     "老太太笑了。满脸的皱纹挤在一起，像一朵盛开的花。"
 
-    "\"大人，您是好人。这辈子能遇到您这样的领主，是我们艾登堡的福气。\""
+    "\"[player_name]，您是好人。这辈子能遇到您这样的领主，是我们艾登堡的福气。\""
 
     "你咬了一口面包。"
 

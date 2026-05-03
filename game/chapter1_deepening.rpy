@@ -1450,7 +1450,7 @@ label ch1_deep_elena_lesson:
     $ hide_all_chars()
     "她没有说完。但那半句话的重量，像一块巨石，压在了房间里每一寸空气上。"
 
-    "你盯着那个绿色的瓶子。手指微微发抖。"
+    "你盯着那个紫色的瓶子。手指微微发抖。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
