@@ -875,7 +875,7 @@ label ending_iron_epilogue:
     show aldric_img at left with dissolve
     aldric "老领主——您的父亲——一辈子都在努力让人们忘记他父亲的暴虐。"
 
-    aldric "费雷恩大人说过：'真正的力量不是让人恐惧，而是让人信赖。'"
+    aldric "您父亲说过：'真正的力量不是让人恐惧，而是让人信赖。'"
 
     aldric "而如今……"
 
