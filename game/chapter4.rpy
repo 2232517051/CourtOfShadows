@@ -17,12 +17,14 @@ label chapter4_start:
     call show_recap("chapter3") from _call_show_recap_2
     call apply_rel_chapter_effects from _call_rel_ch4
 
-    ## 章节过场动画
-    call cinematic_chapter4 from _call_cinematic_ch4
-
-    ## 章节间过渡：出发前夜 + Elena坦白
+    ## 章节间过渡：王后传召信件 + 出发前夜 Elena 坦白
+    ## (必须在 cinematic_chapter4 之前——cinematic 画的是"城门开启+royal_palace 远景"
+    ## 即启程画面, 若放在 interlude 之前会出现"画面已到王都, 又被拉回艾登堡书房"的时序错乱)
     call interlude_ch3_ch4 from _call_interlude34
     call interlude_ch3_ch4_confession from _call_interlude34_conf
+
+    ## 章节过场动画 (启程: 城门开启 → 王都远景)
+    call cinematic_chapter4 from _call_cinematic_ch4
 
     ## NPC深度支线
     call npc_elena_homeland from _call_npc_eh

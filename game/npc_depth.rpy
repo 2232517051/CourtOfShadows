@@ -712,6 +712,9 @@ label npc_bishop_doubt:
 
 label npc_elena_homeland:
 
+    if elena_homeland_done:
+        return
+
     $ elena_homeland_done = True
 
     scene bg castle_exterior with dissolve

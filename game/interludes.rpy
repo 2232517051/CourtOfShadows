@@ -887,6 +887,9 @@ label interlude_ch2_ch3_ambush:
 
 label interlude_ch3_ch4_confession:
 
+    if elena_identity_exposed_known:
+        return
+
     scene bg_study_night with dissolve
     play music "audio/music/conspiracy.ogg" fadeout 2.0 fadein 3.0
 
