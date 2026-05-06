@@ -565,6 +565,8 @@ label ch1_exp_elena_encounter:
 
             "如果她不忠诚……那你就更应该静观其变，看看她会把信交给谁。"
 
+            "你确信，时机成熟时，那封信会按它本来的安排到你手中——你住满一个月之后。"
+
             $ change_stat("intrigue", 3)
 
     $ ch1_exp_night_explored = True

@@ -1431,7 +1431,7 @@ label ch1_deep_elena_lesson:
     show elena_img at left with dissolve
     elena "好。这是氰化物的稀释液。杏仁味是它的标志。如果你在食物或饮料里闻到了不该出现的杏仁味——立刻放下。这种毒致死极快，几乎没有救治的时间。"
 
-    "最后一个——泛绿色的。"
+    "最后一个——泛紫色的。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
