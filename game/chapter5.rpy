@@ -2515,11 +2515,11 @@ label ending_iron_lord:
     hide aldric_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "我知道。准备香烛，我去祭拜。"
+    player "我知道。备一束野花，我去墓前。"
 
     hide aldric_img with dissolve
 
-    "你来到父亲的墓前，点燃了三炷香。"
+    "你来到父亲的墓前，把那束野花放在墓碑下。"
 
     player "父亲，我做到了。"
 
