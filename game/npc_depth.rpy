@@ -810,7 +810,7 @@ label npc_elena_homeland:
     menu:
         "你不知道该说什么。"
 
-        "后来呢？父亲是怎么做的？":
+        "后来呢？父亲是怎么做的？" if not elena_identity_exposed_known:
             $ change_rel("rel_elena", 5)
             $ change_stat("loyalty", 3)
             $ elena_parents_known = True

@@ -2412,6 +2412,115 @@ label ending_peoples_epilogue:
 
     hide aldric_img with dissolve
 
+    ## —— 第二幕半：花园另一头 ——
+
+    "你转身，准备走回大厅。"
+
+    "走到拐角时，你停下了脚步。"
+
+    "花园另一头，菊花丛与一畦新翻的菜地之间——艾琳娜站在那里。"
+
+    "她穿着一件简单的亚麻长裙，袖口卷到肘上，手里拎着一只提水的木桶。"
+
+    "她没有看你，只是在端详一畦刚长出嫩芽的薄荷。秋风吹过，她侧过脸去理了理被吹乱的头发。"
+
+    "你看着她——突然意识到一件事。"
+
+    "她已经在这里待了很久了。"
+
+    "整个革命，整个旧秩序的崩塌，整个艾登堡变成今天的样子——她都在你身边。"
+    "不是作为眼线，不是作为暗百合的人，也不是作为某个组织派来的工具。"
+    "只是作为艾琳娜。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "您来了。"
+
+    $ hide_all_chars()
+    "她转过头，似乎早就察觉到你站在那里。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "奥尔德里克跟您说完了？"
+
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "嗯。让他退休种花了。"
+
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "他等这一天等了五十年。"
+
+    elena "我帮他把菜地翻了一下。今年想种点儿什么——西红柿、薄荷、还有他喜欢的迷迭香。"
+
+    "她一边说，一边把木桶轻轻放下。"
+
+    if rel_elena >= 50:
+        elena "明年开春，我想在那棵老橡树下，再种一片紫罗兰。"
+        elena "你父亲生前最喜欢紫罗兰。我一直没机会种。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "好。陪你一起种。"
+
+        $ hide_all_chars()
+        "她笑了一下。那种笑很轻，却让你想起当年月光下的老橡树。"
+        "那个晚上，她说自己'手很稳'。"
+        "现在，她的手沾着泥土。一双不再握刀的手。"
+
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "您知道吗——我已经很久没做过那个梦了。"
+
+        elena "那些任务里的人，那些站成一排看着我的脸……他们终于不来了。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "他们走了。"
+
+        player "你父亲对你说过——你安全了。"
+
+        player "现在，是真的安全了。"
+
+        $ hide_all_chars()
+        "你站在她身边，看她把湿润的泥土轻轻盖回菜畦。"
+        "夕阳把两个人的影子叠在一起，落在那片刚翻过的土上。"
+    elif rel_elena >= 20:
+        elena "您还记得那个晚上吗？我对您说我手很稳。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "记得。"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "我现在的手，沾着泥土。"
+
+        elena "比起从前——我更喜欢这双手。"
+
+        $ hide_all_chars()
+        "她说完，没等你回应，就转过身继续侍弄那畦薄荷。"
+        "你没有打断她。在艾登堡的秋日里，每个人都有自己安静的位置。"
+    else:
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "您先忙吧。我把这畦薄荷弄完，回头去厨房帮玛格丽特一把。"
+
+        $ hide_all_chars()
+        "她说得平淡，像是在交代一件再普通不过的家务。"
+        "你点点头，没有多说。她和你之间，从来就不是用很多话维系的。"
+        "但她还在这里。"
+        "在革命之后，在风暴落定之后——她选择留在艾登堡的这一畦菜地旁边。"
+        "这就够了。"
+
+    hide elena_img with dissolve
+
     ## —— 第三幕：治理之道 ——
 
     scene bg great_hall with dissolve

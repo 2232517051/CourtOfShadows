@@ -504,27 +504,38 @@ label npc_elena_past:
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    ## 完全中立叙事——不依赖 elena_spy_known flag 判定玩家认知
-    ## flag 在其它场景继续工作；本段只让艾琳娜讲、玩家听，旁白不做任何"已知/未知"预设
-    elena "有件事我该告诉你——我来艾登堡不是偶然。"
+    ## 已坦白过身份的玩家走浓缩重温版；未坦白的玩家走完整初次坦白版
+    ## flag elena_identity_exposed_known 由 chapter3 主线身份揭穿场景设
+    if not elena_identity_exposed_known:
+        elena "有件事我该告诉你——我来艾登堡不是偶然。"
 
-    elena "我真正的身份，是王后派来监视你父亲的眼线。从第一天踏进艾登堡起，我每一步都在向王都传递情报。"
+        elena "我真正的身份，是王后派来监视你父亲的眼线。从第一天踏进艾登堡起，我每一步都在向王都传递情报。"
 
-    $ hide_all_chars()
-    "她的声音很轻，但每个字都像钉入空气里。你没有打断她——今晚她显然要把一切讲清楚。"
+        $ hide_all_chars()
+        "她的声音很轻，但每个字都像钉入空气里。你没有打断她——今晚她显然要把一切讲清楚。"
 
-    $ hide_all_chars("elena_img")
-    show elena_img at left with dissolve
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
 
-    ## 以下为公共部分：无论玩家之前是否知道"父亲识破艾琳娜"，
-    ## 这段关键前提都必须在此场景显式讲出，才能让后面"为什么留下我"的问题成立
-    elena "你父亲远比王后想象的聪明。不到三个月，他就查出了我的真实身份。"
+        elena "你父亲远比王后想象的聪明。不到三个月，他就查出了我的真实身份。"
 
-    elena "我以为自己死定了。但他没有揭穿我——他找我谈话，给我看了一些东西：先王遗诏的抄本、暮色之露的证据、教会的秘密。"
+        elena "我以为自己死定了。但他没有揭穿我——他找我谈话，给我看了一些东西：先王遗诏的抄本、暮色之露的证据、教会的秘密。"
 
-    elena "然后他问了我一个……我从来没人问过的问题。'孩子，你自己想要什么？'"
+        elena "然后他问了我一个……我从来没人问过的问题。'孩子，你自己想要什么？'"
 
-    elena "所以——你知道为什么他明明识破了我，还愿意让我留在艾登堡吗？"
+        elena "所以——你知道为什么他明明识破了我，还愿意让我留在艾登堡吗？"
+    else:
+        elena "今晚我想再讲一次——不是为了告诉你新的事。"
+
+        elena "我是谁、你父亲怎么识破我、他给我的那个选择——这些你都听过了。"
+
+        $ hide_all_chars()
+        "她的声音很轻。今夜她要讲的，不是身份，而是身份背后的那个人。"
+
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+
+        elena "但你有没有真正想过——他为什么愿意让我留下？"
 
     $ elena_spy_known = True
     $ elena_identity_exposed_known = True
@@ -630,7 +641,7 @@ label npc_elena_past:
             hide elena_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你说执行了三次任务。一共三个人？"
+            player "那些任务……一共有几个人？"
 
             "你的问题直接而冷静。艾琳娜看了你一眼——她的眼中没有愤怒，反而有一丝……释然。"
 
@@ -638,6 +649,8 @@ label npc_elena_past:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "三个。"
+
+            "她回答得很轻，但很坚定。仿佛把这个数字压在心里很多年了，今夜终于愿意拿出来。"
 
             elena "第一个是商人，四十多岁。第二个是一个小贵族的管家。"
 
@@ -709,7 +722,7 @@ label npc_elena_past:
 
     "夜色渐深，你独自坐在老橡树下，思考着艾琳娜的过去。"
 
-    "一个在黑暗中长大的少女，身上背负着三条人命的重量。"
+    "一个在黑暗中长大的少女，身上背负着几条人命的重量。"
 
     "而你的父亲，曾是她在这个世界上唯一的光。"
 
