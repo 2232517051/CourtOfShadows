@@ -520,6 +520,16 @@ label ending_truth_epilogue:
 
     pause 2.0
 
+    ## ── 隐藏结局触发：父与子 ──
+    ## 条件: truth 完整路线 (知死因 + 真凶 + 密信) + 高忠诚 (rel_aldric >= 60)
+    ## 即"做满了真相该做的所有事 + 老管家深度认同"才触发, 表达"父亲终于可以告别"
+    if (not truth_declined_regency
+            and father_poisoned_known
+            and true_killer_known
+            and father_letters_found
+            and rel_aldric >= 60):
+        jump ending_father_son_epilogue
+
     return
 
 ## ============================================================
