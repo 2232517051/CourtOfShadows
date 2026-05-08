@@ -444,6 +444,13 @@ screen navigation():
                 at menu_btn_hover
                 action Start("pv_play")
 
+            textbutton _("玩家社群"):
+                at menu_btn_hover
+                # QQ 群 145409117 加群链接 (复用铁与誓项目的 universal-share)
+                action OpenURL("https://qun.qq.com/universal-share/share?ac=1&authKey=OHMV3Hb2Lo1QFclWKOLr%2B8iwQfwXeyu74Ib2wLlkElIIve%2FY7vqnxVEQJtkWq%2Fov&busi_data=eyJncm91cENvZGUiOiIxNDU0MDkxMTciLCJ0b2tlbiI6IkhFQlI3K1pKenIrUlR3OXoxaE94Wk5kZGxqOG5DNDdBMk4rYkpHZGFKUnUxOVdyVXRGVzdicWI4bHJjbWJDaEYiLCJ1aW4iOiIyMjMyNTE3MDUxIn0%3D&data=oeKNIpKew9u2T1pruU_KahpzwxzCgqoz7kYH8Haj3FdxKz5PggWGTKQoaxnmODFhG-RwIv5II5asQ-ykqQKyDA&svctype=4&tempid=h5_group_info")
+                text_size 26
+                text_font "msyh.ttf"
+
             textbutton _("游戏设置"):
                 at menu_btn_hover
                 action ShowMenu("preferences")

@@ -1841,14 +1841,16 @@ label ch5_final_choice:
             "这一刻，你不是在为自己而战——而是在为二十年前被掩盖的正义而战。"
             jump ending_truth
 
-        "加入王后阵营，换取艾登堡安全|务实选择 安全优先":
+        "加入王后阵营，换取艾登堡安全|务实选择 安全优先" if rel_queen >= -30:
             $ ending_type = "iron_lord"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "在两个选择都不好的时候，选那个能保住更多人性命的。"
             player "通知王后——艾登堡愿意效忠。"
             "你做出了一个务实的选择。不光荣，但你的人和领地保住了。"
             jump ending_iron_lord
 
-        "加入男爵联军，对抗王后暴政|反抗路线 风险较高":
+        "加入男爵联军，对抗王后暴政|反抗路线 风险较高" if rel_baron >= -30:
             $ ending_type = "iron_lord"
             player "王后的统治建立在谎言和暴力之上。是时候终结了。"
             player "告诉男爵——艾登堡与他并肩作战。"
