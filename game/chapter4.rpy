@@ -863,6 +863,21 @@ label ch4_palace:
     count_grey "伯爵府的门，将永远为您敞开。"
 
     menu:
+        "以平等姿态回应——你的名声已传到王都" if reputation >= 60:
+            $ change_stat("reputation", 3)
+            $ change_rel("rel_grey", 5)
+            hide count_grey_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "伯爵，互相帮助是好事。但您也清楚——艾登堡的名声这一年也传到了王都。"
+            player "我们之间不是一方求另一方的关系。是同盟。"
+            hide player_char_img
+            $ hide_all_chars("count_grey_img")
+            show count_grey_img at left with dissolve
+            count_grey "哈哈……果然不能拿对待新人的态度看你。"
+            count_grey "好。同盟。改日设宴，我请你喝艾登堡进贡的那种红酒——你应该比我更熟悉它的味道。"
+            "格雷伯爵这一次的笑意终于到了眼底。这是声望的价值——别人不再把你当作可施舍的对象。"
+
         "答应帮忙，换取将来的支持":
             $ change_stat("intrigue", 5)
             $ change_stat("reputation", 3)
@@ -1089,6 +1104,23 @@ label ch4_throne:
     queen "作为交换——每月一份详细的北方动态报告，直接送到我手中。"
 
     menu:
+        "以领地民望做担保——你已名声在外" if reputation >= 60:
+            $ log_decision("第四章", "以民望做担保, 王后给了额外奖励")
+            $ change_stat("reputation", 5)
+            $ change_stat("wealth", 30)
+            $ change_stat("power", 5)
+            hide queen_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "臣愿领旨。陛下可问王都的人——艾登堡这一年的民望，不输王室任何一个直辖郡。这便是臣给陛下的担保。"
+            hide player_char_img
+            $ hide_all_chars("queen_img")
+            show queen_img at left with dissolve
+            queen "……你倒是真敢说。"
+            "王后看了你许久，然后抬手招来侍从。"
+            queen "再加五百金币，五十套军械。看你能不能把这份'民望'兑现成边境的安宁。"
+            "你领旨退下。这是你第一次拿外人的评价当作筹码——而王后给了。"
+
         "接受条件":
             $ log_decision("第四章", "接受王后的条件")
             $ change_stat("wealth", 25)
@@ -1412,6 +1444,19 @@ label ch4_throne:
     noble_lady "领主大人，赏脸跳一支舞吗？"
 
     menu:
+        "以名声做姿态——主动向众人致意" if reputation >= 50:
+            $ change_stat("reputation", 5)
+            $ change_stat("intrigue", 3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            "你站起身，但没有走向那位女子。你环视四周，微微抱拳——"
+            player "诸位，在下边境出身，不擅这等贵人之舞。但若有人愿听『艾登堡』这一年的故事——欢迎过来一谈。"
+            $ hide_all_chars()
+            "片刻安静。然后角落里传来一声轻笑——是格雷伯爵。"
+            "陆续有人走过来。穿鹅黄裙的女子微微一怔，但很快也跟着围了过来。"
+            "你没跳一支舞，却让半个大厅的人都坐在了你身边。"
+            "这就是声望的另一种用法——不是附和别人的礼数，而是让别人来听你的故事。"
+
         "接受邀请":
             $ change_stat("reputation", 5)
             $ hide_all_chars()

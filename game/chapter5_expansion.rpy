@@ -427,6 +427,29 @@ label ch5_exp_mobilize:
     hide captain_img with dissolve
 
     menu:
+        "亲自巡视——你的声望本身就是力量" if reputation >= 60:
+            $ ch5_exp_mobilize_focus = "morale"
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 3)
+            $ ch5_exp_defender_bonus += 4
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "城墙、民兵、物资——这些都靠人。我亲自走一趟。"
+
+            $ hide_all_chars()
+            "你脱下领主的礼袍，换上一身简朴的旧式军装，在三天里走遍了艾登堡每一个角落。"
+
+            "城墙下你帮石匠搬过砖。民兵营里你跟新兵一起吃过粗粮。粮仓里你和搬运工一起对过账。"
+
+            "百姓认得你。守军认得你。连难民营里的孩子都拉着你的衣角问——「大人，我们会赢吗？」"
+
+            "你只回答一句——「会。」"
+
+            "三天后，整个艾登堡像是被注入了一股看不见的力量。每个人都知道：领主就在身边。"
+
+            "这不是权力能换来的，是声望自己长出来的东西。"
+
         "集中人手加固东南角":
             $ ch5_exp_mobilize_focus = "walls"
             $ change_stat("power", 3)

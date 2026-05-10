@@ -480,6 +480,26 @@ label gov_tax_raise_followup:
     menu:
         "高税之策已行月余，是否再走下去？"
 
+        "亲自下村——以民望让百姓自愿撑过这段" if reputation >= 50:
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我亲自去村里。让他们看到——这笔银子不是运到我的金库里囤着，是修城墙、买军械、护艾登堡。"
+            player "三天，七个村。每一个粮仓我亲自查账，每一个税官我当面训规矩。"
+
+            hide player_char_img with dissolve
+
+            $ hide_all_chars()
+            "你做到了。村长们没有少缴税——但抱着账本回家时，表情比上个月轻了一些。"
+            "这不是减税。这是「领主自己来扛」的姿态。声望换出来的，就是这种姿态的可信度。"
+
+            $ change_stat("reputation", 3)
+            $ change_stat("loyalty", 3)
+            $ change_stat("wealth", 3)
+            $ change_prosperity(2)
+            $ change_rel("rel_aldric", 3)
+
+            "金库未损，民心反增。声望是这次的关键筹码。"
+
         "维持高税率——艾登堡的安全比一时民怨更重要":
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
