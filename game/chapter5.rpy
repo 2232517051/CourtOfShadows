@@ -4611,6 +4611,11 @@ label game_ending:
     if not alliance_baron and not alliance_church and not dark_lily_joined:
         $ unlock_achievement("lone_wolf")
 
+    ## 和平使者: 不走军事路线 — 没结军事同盟 + power 没刷到极高 + reputation 立得住 (靠声望治理)
+    ## (栀子 batch 11 第 6 条: pacifist dead code 修复, 给一个粗判定; 严格"零军事手段"判定需追踪 military_used 标志, 留 backlog)
+    if not alliance_baron and power < 60 and reputation >= 60:
+        $ unlock_achievement("pacifist")
+
     ## 检查是否达成全结局
     if len(persistent.endings_seen) >= 5:
         $ unlock_achievement("completionist")

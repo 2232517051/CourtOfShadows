@@ -2,6 +2,10 @@
 ## 章间过渡 — 四段章间叙事
 ## ============================================================
 
+## 民生优先 council 分支已"亲自去村庄"处理 — 章间过场跳过重复村庄请愿报告
+## (栀子 batch 11 第 5 条: 资源 menu 选民生优先后, ch4_ch5 章间仍报告"村庄请愿"重复)
+default villages_handled_in_council = False
+
 ## ── 第一章 → 第二章 过渡 ──────────────────────────
 
 label interlude_ch1_ch2:
@@ -475,9 +479,12 @@ label interlude_ch4_ch5:
 
     "他的声音沉重得像铅。"
 
-    aldric "有三个村庄的村长联名写了请愿书。他们要求……领主大人亲自处理几桩积压已久的事务。"
+    if not villages_handled_in_council:
+        aldric "有三个村庄的村长联名写了请愿书。他们要求……领主大人亲自处理几桩积压已久的事务。"
+    else:
+        aldric "您前几日亲自去村子那一趟之后，村长们的请愿书停了。但还有别的事……"
 
-    aldric "还有，修道院报告说……有修士看到了奇怪的人在墓地附近徘徊。每到月圆之夜就会出现。"
+    aldric "修道院报告说……有修士看到了奇怪的人在墓地附近徘徊。每到月圆之夜就会出现。"
 
     if father_letters_found:
         $ hide_all_chars()
@@ -1309,6 +1316,7 @@ label interlude_ch4_ch5_council:
             $ change_stat("loyalty", 5)
             $ change_stat("power", -2)
             $ change_stat("reputation", 3)
+            $ villages_handled_in_council = True
             player "奥尔德里克，我要亲自去那几个闹事的村子。"
             hide player_char_img
             show aldric_img at left with dissolve
