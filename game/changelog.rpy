@@ -69,6 +69,25 @@ screen changelog_screen():
                     text "· truth 结局艾琳娜 closure：5 年后核对受害者名单，给「真相能给人的交代」" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 暮色之露下毒最后一环：chapter3 揭示酒窖管事汉斯（已灭口）" size 14 color "#c8b890" font "msyh.ttf"
 
+            null height 4
+
+            ## 千品 batch 9 (balance pass 部分)
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "声望条件 menu（5 处新增，回应「reputation 几乎纯装饰」）" size 18 color "#3498db" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第四章 格雷伯爵书摊（声望≥60）：以平等姿态回应——你的名声已传到王都" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第四章 王后觐见（声望≥60）：以领地民望做担保——王后给额外奖励" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第四章 王都宴会（声望≥50）：以名声做姿态——让大厅的人围过来听你的故事" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第五章 战前动员（声望≥60）：亲自巡视——声望本身就是力量（防御加成 +4）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 治理-高税事件（声望≥50）：亲自下村——以民望让百姓自愿撑过这段" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 完整 balance pass（属性扣减 / menu 锁 60+ / 阈值上调 / UI 飘字）下版陆续上" size 13 color "#8a7e60" font "msyh.ttf" italic True
+
             null height 16
 
             ## ── v3.10 ──
