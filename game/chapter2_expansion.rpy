@@ -420,6 +420,24 @@ label ch2_exp_grand_hall:
     menu:
         "这是你在领主会议上的第一次公开发言。"
 
+        "提出折中方案「联合基金 + 阶梯税率」——你的城府已经显出来" if intrigue >= 60:
+            $ ch2_exp_tax_stance = "compromise"
+            $ change_stat("intrigue", 5)
+            $ change_stat("reputation", 5)
+            $ change_rel("rel_wells", 5)
+            $ change_rel("rel_hilda", 5)
+            $ change_rel("rel_grey", 3)
+            $ log_decision("第二章扩展", "提出折中方案")
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "诸位, 各家领地情况不同, 一刀切的税率永远会得罪一半的人。"
+            player "我提议——核心商道按统一低税率, 边境领地保留独立税权。商业利润提取百分之二, 专项注入边境军费基金, 由格雷伯爵监督。"
+            $ hide_all_chars()
+            "大厅静了几秒。然后格雷伯爵慢慢点了点头。"
+            "希尔达和威尔斯没有表态——但都没有反对。"
+            "新人第一次发言能让两派都说不出反对的话, 这本身就是一个胜利。"
+
         "支持税制改革「降低税率，促进贸易」":
             $ ch2_exp_tax_stance = "reform"
             $ change_stat("wealth", 5)

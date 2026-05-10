@@ -4279,6 +4279,20 @@ label ch3_confront_bishop_early:
     bishop "二十年……我带着这个秘密活了二十年。每天都在祈祷上天宽恕我的怯懦。"
 
     menu:
+        "为他设一条退路——以艾登堡的名义保他余生" if loyalty >= 60:
+            $ change_stat("loyalty", 5)
+            $ change_rel("rel_bishop", 20)
+            $ change_stat("faith", 3)
+            hide bishop_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "二十年的恐惧, 够了。"
+            player "你跟我回艾登堡。我给你一座院子, 一队卫士, 一份没人能动的安宁。"
+            player "你余生只做一件事——把你知道的, 写下来。"
+            $ hide_all_chars()
+            "马修斯哭了。这次不是悔恨——是终于有人愿意接住他这二十年的重量。"
+            "你给了一个怕死的老人一条可以坦然走完的路。这比惩罚更难, 也更值得。"
+
         "严厉斥责——'你的沉默害死了我的父亲'":
             $ change_rel("rel_bishop", -15)
             $ change_stat("power", 5)

@@ -931,6 +931,19 @@ label ch5_preparation:
     "一切已经就绪。现在只剩下最后的决定。"
 
     menu:
+        "亲自走遍城堡每一处——你要的是「人都看见过你」" if loyalty >= 60:
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 3)
+            $ log_decision("第五章", "亲自走遍城堡, 让所有人都看见领主")
+
+            $ hide_all_chars()
+            "你不召见任何人。你拎着一壶酒, 从城墙顶到地下水井, 一路走下去。"
+            "厨子停下手里的活叫了一声领主。马夫从马厩出来抹了把汗。难民营里的孩子追着你跑了几步。"
+            "你不说什么大话。只是问问每个人吃饭了没, 家里有没有需要照顾的事。"
+            "回到书房时已是深夜。城堡里几乎每个人都见过你了。"
+            "明天打仗, 不会有人想着逃。因为他们今晚都跟你说过话。"
+            jump ch5_final_night
+
         "召见每一位核心幕僚，了解他们的真实想法":
             $ log_decision("第五章", "召见幕僚听取意见")
             jump ch5_counsel_all
@@ -2266,6 +2279,20 @@ label ending_iron_lord:
     captain "领主大人！左翼快撑不住了！"
 
     menu:
+        "用早就埋下的反间——让他们的右翼调头攻自己人" if intrigue >= 60:
+            $ change_stat("intrigue", 5)
+            $ change_stat("loyalty", 2)
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩, 现在。让你那个'被俘的'信使把假军令递出去。"
+            $ hide_all_chars()
+            "三个月前你就准备好了这一手——伪造的盟军调令, 骑着对方军队制服的信使。"
+            "信使在敌阵后方'被巡逻队抓住', 信件搜出, 当场宣读。"
+            "敌军右翼指挥官认不出真假, 但他认得自己将军的笔迹——你伪造的笔迹。"
+            "右翼调头朝中军开火。十分钟后, 敌阵从内部崩溃。"
+            "左翼的危机解了, 不是因为你派了人去救——是因为敌人开始救自己。"
+
         "亲自率领预备队增援左翼":
             $ change_stat("power", 3)
             hide captain_img

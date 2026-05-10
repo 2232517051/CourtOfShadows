@@ -872,6 +872,29 @@ label npc_bishop_confession:
         $ father_was_regent_known = True
 
     menu:
+        "为他赦罪——以你能给的全部虔信" if faith >= 60:
+            $ change_stat("faith", 5)
+            $ change_rel("rel_bishop", 15)
+            $ log_decision("NPC支线", "亲自为主教赦罪")
+
+            hide bishop_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "主教大人, 跪下。"
+
+            $ hide_all_chars()
+            "你站起来。语气很平静——但不容置疑。"
+            "马修斯愣了一下, 然后真的跪了下来。"
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我不是教士, 没有赦罪的权力。但我以艾登堡领主的名义, 以你二十年守护那个匣子的事实, 替上天暂时记下你的悔。"
+            player "余下的, 你跟上天去说。"
+
+            $ hide_all_chars()
+            "马修斯哭了——是真的哭了, 不是哀嚎, 是一个老人多年压抑后的释放。"
+            "他从地上爬起来时, 你看到他眼神里有种二十年没出现过的东西——一个可以重新挺直腰杆的牧者。"
+
         "上帝会宽恕你的，主教。":
             $ change_stat("faith", 8)
             $ change_rel("rel_bishop", 10)
