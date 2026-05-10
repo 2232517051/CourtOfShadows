@@ -698,6 +698,14 @@ label ch3_after_field_choice:
                 "如果男爵真的在背后搞什么名堂，那这封信就是试探——看你知道多少，看你会怎么反应。"
 
             menu:
+                "亲自带剑去——让他知道艾登堡不怕硬碰硬" if power >= 60:
+                    $ change_stat("power", 5)
+                    $ change_rel("rel_baron", -5)
+                    player "替我回信：领主三日后亲自前往。让男爵备好酒——也备好剑。"
+                    "你不打算搞那些客气的虚招。男爵想试探, 你就让他直接看到锋。"
+                    "三日后你按时到了。男爵的姿态一开始很高, 但你坐下不到半个时辰, 他的语调已经在悄悄软。"
+                    "硬碰硬不一定要打——只要让对方知道你"会"打就够。"
+
                 "写一封客气但模糊的回信":
                     $ change_stat("intrigue", 5)
                     $ change_rel("rel_baron", 5)
@@ -1091,6 +1099,17 @@ label ch3_fathers_study:
     "还是没有。"
 
     menu:
+        "回想父亲日记里的暗号系统——你已经看过五年" if intrigue >= 60:
+            $ change_stat("intrigue", 5)
+            "你不去摸石头。你坐下来, 把日记翻到第一页。"
+            "父亲所有暗号都是六位组合, 字母用花语代替。'左三右二左一' = '蔷薇蔷薇蔷薇 / 罂粟罂粟 / 蔷薇'。"
+            "你重新数了壁炉上方的浮雕——六朵花, 顺序是: 蔷薇、玫瑰、罂粟、罂粟、蔷薇、罂粟。"
+            "对应他暗号本里某一页的标题——"
+            "'藏书在花后'。"
+            "你伸手按住对应位置, 一连六个动作精准得没有一次试错。"
+            "壁炉后壁缓缓滑开。这扇门, 你从没真的去找过——你父亲早就告诉过你怎么开了。"
+            $ secret_passage_found = True
+
         "仔细观察壁炉的装饰图案":
             $ change_stat("reputation", 5)
             "你退后一步，重新审视壁炉。"
@@ -1328,6 +1347,27 @@ label ch3_dark_lily_clues:
     "你注意到她的围裙上绣着一朵百合花——不是倒置的，但你直觉告诉你这不是巧合。"
 
     menu:
+        "什么都不出示——直接报出几个内部暗号" if intrigue >= 70:
+            $ change_stat("intrigue", 5)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "「七瓣莲花将在月圆之夜绽放」。「壁炉后的人没有倒下」。"
+            $ hide_all_chars()
+            "老妇人的研磨棒停了。她看了你三秒, 然后慢慢转身, 把店门口的木牌翻成了'已打烊'。"
+            $ hide_all_chars("lily_root_img")
+            show lily_root_img at left with dissolve
+            apothecary "你哪里学来的？"
+            hide lily_root_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我父亲留给我一本日记。我读了五年。"
+            $ hide_all_chars()
+            "她盯着你, 终于叹了口气。"
+            $ hide_all_chars("lily_root_img")
+            show lily_root_img at left with dissolve
+            apothecary "跟我来。"
+            "她推开了柜台后面的一扇暗门。"
+
         "出示在密道中找到的银质徽章":
             $ change_stat("intrigue", 8)
             $ hide_all_chars()

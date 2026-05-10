@@ -1354,6 +1354,22 @@ label gov_plague_no_clinic:
     menu:
         "瘟疫在蔓延，你必须立即行动。"
 
+        "亲自带教会修士进疫区祷告 + 救治——你的虔信能稳住人心" if faith >= 60:
+            $ change_stat("faith", 5)
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 3)
+            $ change_health(-3)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我和修士一起进村。我跪在祭坛前祈祷, 让他们看到——我没有逃。"
+            $ hide_all_chars()
+            "你穿了一身朴素的灰袍, 跟修士们一起进了疫区。每天清晨在教堂祷告, 白天分发草药和食物。"
+            "村民们一开始畏缩, 但你跪着喂第一个老人喝水的那一刻——人群里有人哭出声。"
+            "瘟疫没有立刻停。但每一个濒死的人都知道——领主在身边。"
+            "三周后疫情消退。死亡人数比你预想的少了一半——不是因为药, 是因为人没乱。"
+            $ governance_events_seen.append("plague")
+            return
+
         "封锁隔离——虽然残忍，但能阻止扩散":
             jump gov_plague_quarantine
 
