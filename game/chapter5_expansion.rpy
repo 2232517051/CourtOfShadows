@@ -2219,7 +2219,7 @@ label ch5_exp_eve_of_battle:
             $ hide_all_chars()
             "这是一个用信仰作为武器的策略。它可能瓦解南方王后军的进攻意志——但对不信教的北方男爵联军无效。"
 
-        "民堡阵——全民皆兵，守护家园" if loyalty >= 50:
+        "民堡阵——全民皆兵，守护家园" if loyalty >= 60:  ## balance pass 修法 3: 50→60
             $ ch5_exp_final_formation = "peoples_bastion"
             $ change_stat("loyalty", 5)
             $ ch5_exp_defender_bonus += 4
