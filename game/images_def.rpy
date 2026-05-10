@@ -192,7 +192,24 @@ image tax_collector_img = Transform("images/tax_collector.png", zoom=0.45, yalig
 image village_elder_img = Transform("images/village_elder.png", zoom=0.45, yalign=1.0)
 
 ## 主角 (各时期)
-image player_char_img = Transform("images/player_char.png", zoom=0.45, yalign=1.0)
+## chapter3 遇刺后立绘自动切换"带疤版" (canon: chapter3.rpy:25/1299/1706)
+## 通过 ConditionSwitch + player_scarred flag 自动切换, 不需要改任何 show 调用
+image player_char_img = ConditionSwitch(
+    "player_scarred", Transform("images/player_char_scarred.png", zoom=0.45, yalign=1.0),
+    "True", Transform("images/player_char.png", zoom=0.45, yalign=1.0),
+)
+image player_char_img angry = ConditionSwitch(
+    "player_scarred", Transform("images/player_char_scarred_angry.png", zoom=0.45, yalign=1.0),
+    "True", Transform("images/player_char_angry.png", zoom=0.45, yalign=1.0),
+)
+image player_char_img happy = ConditionSwitch(
+    "player_scarred", Transform("images/player_char_scarred_happy.png", zoom=0.45, yalign=1.0),
+    "True", Transform("images/player_char_happy.png", zoom=0.45, yalign=1.0),
+)
+image player_char_img sad = ConditionSwitch(
+    "player_scarred", Transform("images/player_char_scarred_sad.png", zoom=0.45, yalign=1.0),
+    "True", Transform("images/player_char_sad.png", zoom=0.45, yalign=1.0),
+)
 image player_child_img = Transform("images/player_child.png", zoom=0.45, yalign=1.0)
 image player_teen_img = Transform("images/player_teen.png", zoom=0.45, yalign=1.0)
 image player_young_img = Transform("images/player_young.png", zoom=0.45, yalign=1.0)
