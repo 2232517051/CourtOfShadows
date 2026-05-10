@@ -736,6 +736,21 @@ label ch5_military_deploy:
     captain "唯一的弱点是北墙——去年冬天的暴风雪损坏了一段，虽然修补了，但强度不如其他地方。"
 
     menu:
+        "亲自指挥北墙改造——你要的是把它变成杀场" if power >= 70:
+            $ change_stat("power", 5)
+            $ change_stat("loyalty", 3)
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩，跟我去北墙。我亲自盯三天。"
+            player "石匠加固。陷阱布在内侧三十步。城上设三排弓手暗位，对准内侧死角——让北墙不只是难破, 是破了就死。"
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "……明白。亲自来盯, 工艺只会比我多想一倍。"
+            $ hide_all_chars()
+            "三天里你和士兵睡在城墙下。手上磨出两层老茧。但当北墙被加固到每块石都像是为攻城战量身定做时——士气也跟着起来了。"
+            "走过来挑刺的老兵都摇头笑了一声。这是 power 70+ 才能做到的事——不只是力量, 是力量本身的姿态。"
+
         "加强北墙的防御":
             $ change_stat("power", 3)
             hide captain_img
@@ -2133,6 +2148,21 @@ label ending_iron_lord:
     "战争的残酷不在于战场上的厮杀——而在于那些被波及的无辜之人。"
 
     menu:
+        "亲自跪在老人面前——以你的名义起誓重建" if loyalty >= 70:
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 5)
+            $ change_stat("power", -1)
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "老人家。"
+            "你下马, 单膝跪在他面前。"
+            player "我以艾登堡领主的名义起誓——这场仗打完, 我亲自带石匠回来。"
+            player "你的房子会有屋顶。你的田会有人翻。你儿子的坟前会有人烧纸。"
+            $ hide_all_chars()
+            "老人愣了。然后他握住你的手, 说不出话, 只是流泪。"
+            "周围的士兵默然——他们看见领主跪下了。这不是战术, 是 loyalty 70+ 的玩家才能做到的姿态: 让所有人知道你为什么打这场仗。"
+            "整支军队的士气在那一刻无声地涨了一截。"
+
         "留下一些食物和士兵保护这里":
             $ change_stat("loyalty", 3)
             $ change_stat("power", -1)

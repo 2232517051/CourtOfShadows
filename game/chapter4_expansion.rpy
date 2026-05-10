@@ -949,6 +949,27 @@ label ch4_exp_court_social:
     "她的话像一根细针，精准地扎在你的神经上。但你保持了平静。"
 
     menu:
+        "反问她——「您见过他几面，怎么这么了解我父亲？」" if intrigue >= 70:
+            $ change_stat("intrigue", 5)
+            $ change_rel("rel_queen", -3)
+            $ ch4_exp_countess_trust += 3
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "您说见过他几面。但'有城府''不够狠'——这两句不是几面之缘能下的判断。"
+            player "您跟我父亲, 走得比您今晚说的近。"
+
+            $ hide_all_chars()
+            narrator "伯爵夫人的酒杯停在嘴边, 半秒。然后她笑了——这次的笑意到了眼底。"
+
+            narrator "「……年轻人, 你这一手不该只属于二十几岁的人。」"
+
+            narrator "「你父亲跟我有些旧账, 是的。算不上朋友, 但也不是敌人。他来王都几次, 我们密谈过——你说对了。」"
+
+            "她把酒杯放下, 看你的眼神变了。这是 intrigue 70+ 才能套出来的话——不是问的人聪明, 是问的人精确到她无法回避。"
+
+            narrator "「年轻人, 如果你在王都需要一个……不那么偏向王后的朋友, 我的府邸在北区玫瑰街尽头。」"
+
         "顺着她的话聊，拉近关系":
             $ change_stat("intrigue", 5)
             $ change_rel("rel_queen", -2)
