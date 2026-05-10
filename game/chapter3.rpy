@@ -2616,6 +2616,28 @@ label ch3_dark_lily_hq:
     show lily_master_img at left with dissolve
     lily_master "我们只能确认，毒药来自教会。但教会是否受伊莎贝拉的指使，我们没有直接证据。"
 
+    hide lily_master_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "毒药从教会运到艾登堡之后……是谁递到我父亲嘴边的？"
+
+    hide player_char_img
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
+    lily_master "您父亲身边的酒窖管事——汉斯。一个跟了卡尔大人二十年的老人。"
+
+    lily_master "他在卡尔大人去世后第二天，被发现倒在自家井边，淹死了。官方说是悲伤过度自尽。"
+
+    $ hide_all_chars()
+    "你脑中翻涌起那张被时光磨得模糊的脸——汉斯。你小时候偷溜进酒窖，是他笑着把你赶出去的人。"
+    "他的死，是悲伤？还是又一次灭口？"
+
+    $ hide_all_chars("lily_master_img")
+    show lily_master_img at left with dissolve
+    lily_master "毒药从他手里递出去——这一条线索我们查到了。"
+
+    lily_master "至于他是被谁收买、又是谁让他闭嘴的——王后？费雷恩？还是某个我们尚不知晓的人？这正是我们没有直接证据的部分。"
+
     lily_master "不过……有一个人可能知道真相。"
 
     hide lily_master_img
