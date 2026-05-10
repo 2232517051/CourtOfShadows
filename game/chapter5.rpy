@@ -1841,6 +1841,20 @@ label ch5_final_choice:
             "这一刻，你不是在为自己而战——而是在为二十年前被掩盖的正义而战。"
             jump ending_truth
 
+        "用毒药清理一切——以母亲的方式收尾|毒药路线 → 毒药公爵（坏结局）" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
+            $ log_decision("第五章", "选择以毒药逐一清理敌人")
+            $ ending_type = "borgia"
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "战场上的剑只能杀一个人。但一杯酒——可以让一整个家族在三个月内消失。"
+            player "我母亲六岁就教会了我这个道理。"
+            $ hide_all_chars()
+            "你慢慢站起来，走到书房深处的那个旧木柜前。"
+            "柜子最底层的暗格里，放着一个紫色的小瓶——你这一年来悄悄收集的'暮色之露'。"
+            "够用了。"
+            jump ending_borgia
+
         "加入王后阵营，换取艾登堡安全|务实选择 安全优先" if rel_queen >= -30:
             $ ending_type = "iron_lord"
             $ hide_all_chars("player_char_img")
@@ -4598,6 +4612,207 @@ label truth_humble_epilogue:
     jump game_ending
 
     ## ============================================================
+    ## 结局：毒药公爵 (波吉亚式坏结局, batch 6 #4)
+    ## ============================================================
+    ## 触发: deep_mother_herb == "poison" + intrigue >= 70 + poison_evidence
+    ## 玩家从童年就对毒感兴趣, 累积谋略和毒药知识, 最终用母亲教过的方式
+    ## 收场——但代价是变成自己最初故事里"那个王后"
+    ## ============================================================
+
+label ending_borgia:
+
+    $ play_music("audio/music/conspiracy.ogg", fadein=2.0)
+
+    scene black with fade
+    pause 0.8
+    centered "{size=+10}毒药公爵{/size}"
+    pause 1.5
+
+    ## ── 第一幕：花园重启 ──
+    scene bg castle_garden with dissolve
+
+    "夜色降临艾登堡。你独自走进城堡西侧那片荒废多年的花园。"
+
+    "母亲死后, 这里就再没有人打理。但你记得每一株药草的位置——母亲教过你, 你从未忘。"
+
+    "深蓝色的狼毒草还在角落里。它居然活下来了, 二十多年。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "母亲——你当年没说完的那句『除非』, 我自己想明白了。"
+
+    player "除非, 是你不想再忍了的时候。"
+
+    $ hide_all_chars()
+    "你蹲下来, 用一把小刀挖出狼毒草的根。"
+
+    "你不打算再让花园荒废。它会成为艾登堡最重要的房间——不在城堡里, 而是在所有人都看不见的地方。"
+
+    ## ── 第二幕：第一杯酒 ──
+    scene bg royal_palace with dissolve
+    pause 0.4
+
+    "三个月后。王都。"
+
+    "王后召你觐见, 设了私宴。她想拉拢你——以为你跟她父辈一样, 是可以用名利驯服的小领主。"
+
+    $ hide_all_chars("queen_img")
+    show queen_img at left with dissolve
+    queen "孩子, 喝一杯。这是南方进贡的红酒, 普通人这辈子尝不到。"
+
+    hide queen_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "陛下美意, 臣岂敢推辞。"
+
+    "你举起酒杯, 跟她碰了一下。两杯酒看起来一模一样。"
+
+    "你母亲教过你——把毒下在自己的杯子里, 别人就永远不会怀疑。然后在敬酒的瞬间, 用袖口盖住交换。"
+
+    "这是六岁那年她讲给你的故事里没说出口的最后一句。"
+
+    $ hide_all_chars()
+    "三个月后, 王后开始头痛。两个月后, 她起不了床。"
+
+    "王宫上下都说陛下是悲伤过度——毕竟她最近失去了好几个心腹近臣, 都是同样的'急病'。"
+
+    "只有你知道, 这只是开始。"
+
+    ## ── 第三幕：清单上的名字 ──
+    scene bg study with dissolve
+
+    "一年里, 你列了一张清单。"
+
+    "上面有费雷恩的余党、教会的暗焰、男爵的死忠、还有那些当年知道你父亲死因却选择沉默的人。"
+
+    "你不需要打仗。你只需要在合适的宴席上递上一杯合适的酒。"
+
+    if rel_aldric >= 50:
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
+        aldric "领主大人……您手上的这种东西, 我父亲那一辈见过。下场都不太好。"
+
+        hide aldric_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "我知道。但我不会让你看到那种下场。"
+
+        player "你也不必看见今晚之后我做的任何事。"
+
+        $ hide_all_chars()
+        "奥尔德里克沉默了很久。然后他把书房的钥匙留在桌上, 转身走了。"
+
+        "第二天他递交了辞呈。理由是身体不适, 想回家种花。"
+
+        "你批了。你给他一笔够他过完后半辈子的银子。"
+
+        "你知道他不是怕你。是不愿意目睹你变成什么样子。"
+
+        $ change_rel("rel_aldric", -30)
+
+    if elena_romance:
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "你以为我没看出来？"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "……"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "我父亲死在这种东西手里。我以为, 我跟着你, 是为了让世上少一条这样的命。"
+
+        elena "可你——你成了用它的人。"
+
+        "她没有大声。她只是看着你, 像看着一个她以为认识但其实不认识的人。"
+
+        elena "我不能跟一个会下毒的人睡在同一张床上。"
+
+        "她那天夜里离开了艾登堡。没有告诉你她去哪。"
+
+        "你没有阻拦。你也没有派人去找。"
+
+        $ change_rel("rel_elena", -50)
+
+    ## ── 第四幕：登顶 ──
+    scene bg throne_room with dissolve
+    pause 0.5
+
+    "三年后。"
+
+    "王国大半的旧贵族悄悄消失了——有的'病死', 有的'意外', 有的'失踪'。每一桩看似都跟你无关。"
+
+    "新王登基那天, 国玺由你亲手递上。"
+
+    "弗雷德里克王子年轻, 信任你。议会里能反对你的老臣, 早就一个接一个进了你的清单。"
+
+    "他给了你一个新爵位——『公爵』。"
+
+    "也是这个国家除国王之外最高的爵位。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "陛下圣明。"
+
+    "你跪下接旨。声音平稳得听不出任何情绪。"
+
+    $ hide_all_chars()
+    "没有人怀疑你。因为每一个开始怀疑你的人, 都没活到下一个春天。"
+
+    ## ── 第五幕：终局 ──
+    scene bg castle_garden with dissolve
+    pause 0.5
+
+    "五年后。"
+
+    "你五十岁出头, 但看起来更老。头发大半白了。"
+
+    "你独自坐在母亲的花园里。这里现在是整个公爵府最隐秘的地方——没有侍从能进, 包括你最信任的那几个。"
+
+    "因为最信任的那几个, 已经死了。"
+
+    "不是别人下手。是你。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "母亲。"
+
+    player "我现在懂你那个故事的最后一句了。"
+
+    player "故事里那个王后, 她不是赢了。她只是——再也无法相信任何人。"
+
+    $ hide_all_chars()
+    "你抬头看夜空。狼毒草的花在月光下泛着深紫色, 跟二十多年前一模一样。"
+
+    "你坐在那里很久。然后从怀中掏出一个紫色的小瓶——'暮色之露'的最后一瓶。"
+
+    "你看着它, 像看一个老朋友。"
+
+    "夜风掠过花园, 带着药草的气味。母亲生前最后一次抱你的时候, 身上就是这种味道。"
+
+    pause 1.0
+
+    scene black with fade
+    pause 1.5
+
+    centered "{size=+8}你成了你母亲故事里的那个王后{/size}"
+
+    pause 2.0
+
+    centered "{size=+6}「能保护你的人, 只有你自己。」{/size}"
+    centered "{size=+6}——母亲, 多年以前{/size}"
+
+    pause 3.0
+
+    $ unlock_achievement("borgia_ending")
+    $ persistent.endings_seen.add("borgia")
+
+    jump game_ending
+
+    ## ============================================================
     ## 通用结局处理
     ## ============================================================
 
@@ -4616,8 +4831,8 @@ label game_ending:
     if not alliance_baron and power < 60 and reputation >= 60:
         $ unlock_achievement("pacifist")
 
-    ## 检查是否达成全结局
-    if len(persistent.endings_seen) >= 5:
+    ## 检查是否达成全结局 (5 主线 + borgia 坏结局 = 6 总数)
+    if len(persistent.endings_seen) >= 6:
         $ unlock_achievement("completionist")
 
     scene black with dissolve
@@ -4643,13 +4858,16 @@ label game_ending:
     elif ending_type == "truth":
         centered "{size=+8}结局：真相大白{/size}"
         "正义也许会迟到，但永远不会缺席。真相是最锋利的剑。"
+    elif ending_type == "borgia":
+        centered "{size=+8}结局：毒药公爵{/size}"
+        "你登顶了，代价是再也无法相信任何人。这是行差踏错的尽头——母亲故事里那个王后的真正结局。"
     else:
         centered "{size=+8}结局{/size}"
         "你的故事在这里画上了句号。"
 
-    "已解锁 [len(persistent.endings_seen)]/5 个结局"
+    "已解锁 [len(persistent.endings_seen)]/6 个结局"
 
-    if len(persistent.endings_seen) >= 5:
+    if len(persistent.endings_seen) >= 6:
         "恭喜你解锁了所有结局！你已经完整地体验了权谋之庭的每一条道路。"
         "每一个选择都没有绝对的对错——只有不同的代价和收获。"
 
