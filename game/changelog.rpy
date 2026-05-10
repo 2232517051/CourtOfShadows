@@ -17,6 +17,60 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.11 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.11" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "玩家反馈批量修复 (栀子 + 北城)" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.05.10" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            ## 栀子 batch 11
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "栀子热心玩家反馈修复（10 处）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 救王子失败分支地点修正：从山林营地汇合，不再误说「爬出王宫」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 铁箱选项：主角拿走羊皮卷+印章+便笺，而非「看过即合上」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 艾琳娜亲密关系下的旁白改写：「这五年她都在你身边」（去除突兀用词）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 奥尔德里克报告：村庄请愿改为月夜祭奠老领主，不再是无下文悬念" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 民生优先选项分支生效：选了「亲自去村庄」后，章间不再重复报告" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· pacifist 隐藏成就 dead code 修复：加触发条件可正常解锁" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 主教/院长「念珠」→「祈祷珠」：西方教会用语统一" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 艾琳娜首次坦白时序：去除对玩家「已知间谍身份」的假设" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 奥尔德里克服务年数 50 → 40 年：与时间线一致（年龄链同步调整）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修道院专长选择半年违和：加「贵族子弟破例提前」hand-wave 解释" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            ## 北城 batch 6
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "北城反馈伏笔回收（6 处）" size 18 color "#1abc9c" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 序章欺负主角的费利克斯：chapter2 格雷伯爵书摊段加子辈对比 cameo" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· Marcus 后续亮眼戏：chapter2 集市段扩展为暗中盯梢保护者" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 街头救济男孩重逢：chapter4 王都贫民区段「乌鸦」少年闭环" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 艾琳娜父亲死因：chapter5 重逢戏揭示——王宫文书撞见暮色之露被灭口" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· truth 结局艾琳娜 closure：5 年后核对受害者名单，给「真相能给人的交代」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 暮色之露下毒最后一环：chapter3 揭示酒窖管事汉斯（已灭口）" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 16
+
             ## ── v3.10 ──
             frame:
                 xfill True
