@@ -903,9 +903,10 @@ init python:
         "holy_guardian": ("圣光守护", "以信仰之光驱散黑暗", "#f39c12", "十"),
         "peoples_lord": ("人民领主", "守护最平凡的幸福", "#27ae60", "心"),
         "truth":        ("真相大白", "正义也许会迟到", "#3498db", "秤"),
+        "borgia":       ("毒药公爵", "成为母亲故事里那个王后 (坏结局)", "#5d2e8c", "毒"),
     }
 
-    _ending_keys = ["iron_lord", "shadow_king", "holy_guardian", "peoples_lord", "truth"]
+    _ending_keys = ["iron_lord", "shadow_king", "holy_guardian", "peoples_lord", "truth", "borgia"]
 
     _key_choices = [
         ("第一章", "第一个危机", ["外交", "军事", "教会", "间谍"]),
@@ -929,7 +930,7 @@ screen ending_route_map():
                 text "结局路线图" size 26 color "#d4a942" font "msyh.ttf"
 
             $ seen = persistent.endings_seen if persistent.endings_seen else set()
-            text "已解锁 [len(seen)]/5 个结局" size 14 color "#6a5e48"
+            text "已解锁 [len(seen)]/6 个结局" size 14 color "#6a5e48"
 
             null height 10
 

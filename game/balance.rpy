@@ -331,7 +331,7 @@ screen balance_debug():
                     spacing 6
                     xalign 0.5
 
-                    for _sys_label, _sys_val in [("当前难度", persistent.difficulty or "normal"), ("NG+解锁", "是" if persistent.ng_plus_unlocked else "否"), ("已完成章节", str(len(persistent.chapters_completed or set()))), ("已解锁结局", str(len(persistent.endings_seen or set())) + "/5"), ("收藏品", str(len(persistent.collectibles_found or set())) + "/" + str(len(collectible_items))), ("成就", str(len(persistent.achievements or set())) + "/" + str(len(achievement_data)))]:
+                    for _sys_label, _sys_val in [("当前难度", persistent.difficulty or "normal"), ("NG+解锁", "是" if persistent.ng_plus_unlocked else "否"), ("已完成章节", str(len(persistent.chapters_completed or set()))), ("已解锁结局", str(len(persistent.endings_seen or set())) + "/6"), ("收藏品", str(len(persistent.collectibles_found or set())) + "/" + str(len(collectible_items))), ("成就", str(len(persistent.achievements or set())) + "/" + str(len(achievement_data)))]:
                         frame:
                             xsize 330
                             xpadding 12

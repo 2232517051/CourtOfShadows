@@ -478,4 +478,4 @@ screen chapter_select():
                     spacing 12
                     text "【卷】" size 18 yalign 0.5
                     $ endings_count = len(persistent.endings_seen) if persistent.endings_seen else 0
-                    text "已解锁结局: [endings_count]/5" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
+                    text "已解锁结局: [endings_count]/6" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
