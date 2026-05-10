@@ -278,7 +278,7 @@ label ending_truth_epilogue:
     $ hide_all_chars()
     "奥尔德里克。"
 
-    "六十五岁的老管家，白发苍苍，背已微驼。"
+    "五十五岁的老管家，白发苍苍，背已微驼。"
     "但他坚持要陪你走这段路。"
 
     $ hide_all_chars("aldric_img")
@@ -2284,7 +2284,7 @@ label ending_peoples_epilogue:
     hide aldric_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "你已经七十岁了。够了。够了。"
+    player "你已经五十五岁了。够了。够了。"
 
     player "我给你准备了这间小屋。有花园，有菜地，有一棵苹果树。"
 
@@ -2311,7 +2311,7 @@ label ending_peoples_epilogue:
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "……五十年。"
+    aldric "……四十年。"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
@@ -2321,13 +2321,13 @@ label ending_peoples_epilogue:
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "是五十年。不是三十五年。"
+    aldric "是四十年。不是三十年。"
 
-    aldric "我十五岁就进了卡尔大人的家门。到今年……整整五十年。"
+    aldric "我十五岁就进了卡尔大人的家门。到今年……整整四十年。"
 
     "他看着自己枯瘦的双手，嘴角慢慢浮起一个笑容。"
 
-    aldric "五十年了。"
+    aldric "四十年了。"
 
     aldric "我终于可以种花了。"
 
@@ -2337,7 +2337,7 @@ label ending_peoples_epilogue:
     "你没有说话。你只是把手搭在他的肩上。"
 
     "老管家再也忍不住，浑浊的泪水顺着满是皱纹的脸颊流了下来。"
-    "他哭得像一个孩子——虽然他已经七十岁了。"
+    "他哭得像一个孩子——虽然他已经五十五岁了。"
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
@@ -2418,7 +2418,7 @@ label ending_peoples_epilogue:
     "他弯下腰，开始翻土。"
 
     "阳光洒在他弯曲的背上。"
-    "五十年的忠诚，终于迎来了一个温柔的句号。"
+    "四十年的忠诚，终于迎来了一个温柔的句号。"
 
     hide aldric_img with dissolve
 
@@ -2434,11 +2434,11 @@ label ending_peoples_epilogue:
 
     "她没有看你，只是在端详一畦刚长出嫩芽的薄荷。秋风吹过，她侧过脸去理了理被吹乱的头发。"
 
-    "你看着她——突然意识到一件事。"
+    "你看着她。"
 
-    "她已经在这里待了很久了。"
+    "这五年，她都在你身边。"
 
-    "整个革命，整个旧秩序的崩塌，整个艾登堡变成今天的样子——她都在你身边。"
+    "无论是那场风波，还是艾登堡这几年的变化——她从未离开。"
     "不是作为眼线，不是作为暗百合的人，也不是作为某个组织派来的工具。"
     "只是作为艾琳娜。"
 
@@ -2461,7 +2461,7 @@ label ending_peoples_epilogue:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "他等这一天等了五十年。"
+    elena "他等这一天等了四十年。"
 
     elena "我帮他把菜地翻了一下。今年想种点儿什么——西红柿、薄荷、还有他喜欢的迷迭香。"
 
