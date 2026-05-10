@@ -1198,6 +1198,19 @@ label ch2_preparation:
             $ hide_all_chars("count_grey_img")
             show count_grey_img at left with dissolve
             count_grey "嗯……令尊是个博学的人。可惜天不假年。"
+
+            count_grey "说起来——你大概不记得了。十几年前你还很小，老夫曾带犬子费利克斯去艾登堡拜访令尊。那孩子……让你受了委屈。"
+
+            count_grey "那次回来后，老夫狠狠教训过他。但教育这种事——有些孩子吃这一套，有些孩子不吃。"
+
+            "格雷伯爵叹了口气，目光转向远处。"
+
+            count_grey "如今他四十了，还是个不成器的废物。我让他在封地里管马场——也只配管马场。"
+
+            count_grey "你倒是站到这里来了。"
+
+            "老人的语气里有一种复杂的情绪——既是替自己儿子惋惜，也是一种长辈对你的认可。"
+
             count_grey "年轻人，明天的会议上，老夫有一个忠告给你——"
             count_grey "少说话，多听。第一次参加会议的领主，最容易犯的错就是急于表态。"
             hide count_grey_img
@@ -2060,10 +2073,26 @@ label ch2_after_council:
 
         friend_marcus "抓稳。"
 
+        $ hide_all_chars()
         "马库斯站在你身边，穿着旅人的深色斗篷。他没有看你，只是看着被他扶住的生意人点了点头。"
+
+        "——然后他借着扶人那一瞬，低声说了一句只有你才听得到的话——"
+
+        $ hide_all_chars("friend_marcus_img")
+        show friend_marcus_img at left with dissolve
+        friend_marcus "你右后方那个戴皮帽的，跟了你两个街口。北方口音，不是商人。"
+
+        friend_marcus "今天我先解决他。下次见面之前——保重。"
 
         $ hide_all_chars()
         "下一秒，他消失在人群里。"
+
+        "半个时辰后，你听到酒馆方向有短暂的骚动。事后没人提起，集市又恢复了平常的喧嚣。"
+
+        "你只知道——那个戴皮帽的，你再没见过。"
+
+        if deep_marcus_truly_loyal:
+            "原来他从昨夜起就一直跟在暗处。你给过他一次原谅，他还你一辈子的看护。"
 
     "然后，一个穿着旅行斗篷的中年人拦住了你。"
 
