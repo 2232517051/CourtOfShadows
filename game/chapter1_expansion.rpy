@@ -383,6 +383,26 @@ label ch1_exp_ramparts_night:
     captain "我应该保护好他的。这是我唯一的职责。但我失败了。"
 
     menu:
+        "下令调出父亲遇袭那夜的卷宗——你要从头查这件事" if intrigue >= 30:
+            $ change_stat("intrigue", 5)
+            $ change_rel("rel_captain", 5)
+            $ ch1_exp_captain_respect = True
+            $ log_decision("第一章扩展", "调阅父亲遇袭卷宗")
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩, 把那一夜每个值班士兵的名字、岗位、当晚行动列出来。我要看。"
+
+            $ hide_all_chars()
+            "雷恩愣了一下。然后他点了点头, 表情第一次有了别的颜色——不只是悔。"
+            "你不是来安慰他的。你是来当领主的。"
+            "他比你还清楚——这才是你父亲会让你做的事。"
+
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "我天亮前送到您书房。"
+
         "「不是你的错。我也没能保护他。」":
             $ change_rel("rel_captain", 10)
             $ change_stat("loyalty", 3)
@@ -659,6 +679,23 @@ label ch1_exp_morning_council:
     "你沉思着。匪首未除，商路终究不稳。商路一断，税收就会锐减。但强攻的代价太高。"
 
     menu:
+        "雇一支佣兵团代打——你出钱, 他们出血" if wealth >= 30:
+            $ change_stat("wealth", -15)
+            $ change_stat("intrigue", 5)
+            $ ch1_exp_bandit_plan = "mercenary"
+            $ log_decision("第一章扩展", "雇佣兵剿匪")
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "奥尔德里克, 走一趟卡尔达——找'灰鸦'雇一支三十人的剿匪队。"
+            player "我们出钱, 让他们去铁匠峡谷。三天内拿匪首人头, 双倍报酬。"
+
+            $ hide_all_chars()
+            "灰鸦的人来得快, 走得也快。三天后他们带着十二颗人头回来——其中一颗是匪首。"
+            "你的卫队没有任何伤亡。代价是金库轻了一截。"
+            "但商路通了, 税收回来了。从经济账上看, 这笔买卖比你想象的划算。"
+
         "军事打击「集中兵力，一鼓作气」":
             $ change_stat("power", 8)
             $ change_courage(5)

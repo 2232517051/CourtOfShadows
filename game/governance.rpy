@@ -686,6 +686,23 @@ label gov_famine_crisis:
     menu:
         "饥荒逼近，你必须做出抉择。"
 
+        "亲自下村组织自救——你的话能让百姓愿意撑" if loyalty >= 60:
+            $ change_stat("loyalty", 8)
+            $ change_stat("reputation", 5)
+            $ change_stat("wealth", -3)
+            $ change_prosperity(3)
+            $ governance_events_seen.append("famine")
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我去村里。每一个粮仓我亲自看过, 每一户人家我亲自走过。"
+            $ hide_all_chars()
+            "你不发新政, 不强制配给。你只是站在人群中间。"
+            "你跟村长一起喝过苦水。在丧子的母亲面前坐过半天。把自己的口粮分给最瘦的孩子。"
+            "村民们没有抢仓, 也没有逃。因为他们知道——领主在挨饿。"
+            "三周后春雨来了, 田里冒了第一茬绿。最严酷的两个月被熬过去了——靠的不是粮食, 是人没散。"
+            return
+
         "购买粮食——花钱买平安，用金币换性命":
             jump gov_famine_buy
 

@@ -484,6 +484,22 @@ label ch2_preparation:
     caravan_hand "这一带入夜后不安全，求贵人行个方便！"
 
     menu:
+        "买下他们这趟运的全部货——一次解决他们整个商队的难题" if wealth >= 40:
+            $ change_stat("wealth", -8)
+            $ change_stat("reputation", 8)
+            $ change_stat("loyalty", 3)
+            hide servant_generic_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你们这一车货, 我全要了。运到艾登堡再算账。"
+            $ hide_all_chars()
+            "商人愣了几秒, 然后跪了下来——这不是答谢, 是发自内心的感激。"
+            "他们今天不只是修了车——是不用担心明年开春能不能再启程。"
+            "艾登堡在卡尔达商道上的口碑, 从这一刻起多了一个版本。"
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "领主大人……您这一手不是好心, 是经营。"
+
         "让士兵帮忙修车":
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 3)
