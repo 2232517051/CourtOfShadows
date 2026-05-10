@@ -413,6 +413,7 @@ label ch3_exp_investigate_cunning:
 
         "暗中跟踪「看他去哪里」":
             $ change_stat("intrigue", 5)
+            $ change_stat("faith", -2)  ## 暗中跟踪的代价: 信仰侵蚀 (balance pass 修法 1)
 
             "你没有打草惊蛇，而是在蒙面人离开酒馆后悄悄跟上。"
 

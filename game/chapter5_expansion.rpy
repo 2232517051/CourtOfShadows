@@ -1972,6 +1972,7 @@ label ch5_exp_eve_of_battle:
         "用他的把柄反威胁" if baron_blackmail_option:
             $ ch5_exp_baron_response = "blackmail"
             $ change_stat("intrigue", 5)
+            $ change_stat("reputation", -3)  ## 威胁手段的代价: 名声受损 (balance pass 修法 1)
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve

@@ -712,6 +712,7 @@ label ch3_after_field_choice:
 
                 "接受邀请——借机探查男爵的意图":
                     $ change_stat("intrigue", 8)
+                    $ change_stat("faith", -3)  ## 表面接受 / 实为算计的代价 (balance pass 修法 1)
                     $ change_rel("rel_baron", 5)
                     player "回信：本领主将于三日后遣使者前往。望男爵以礼相待。"
                     "你不会亲自去——但派一个可靠的人去打探虚实，是个好主意。"
@@ -766,6 +767,7 @@ label ch3_after_field_choice:
 
         "假装没看见，但暗中让人跟踪他":
             $ change_stat("intrigue", 8)
+            $ change_stat("loyalty", -3)  ## 阴谋监视盟友的代价 (balance pass 修法 1)
             "你若无其事地走出大厅，但在走廊上低声吩咐一个卫兵。"
             hide servant_generic_img
             $ hide_all_chars("player_char_img")
@@ -3051,6 +3053,7 @@ label ch3_elena_secret:
             "交出你掌握的所有情报——这是你唯一的出路":
                 $ change_rel("rel_elena", -5)
                 $ change_stat("intrigue", 8)
+                $ change_stat("loyalty", -3)  ## 强压 Elena 交情报的代价: 团队信任受损 (balance pass 修法 1)
                 hide elena_img
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
