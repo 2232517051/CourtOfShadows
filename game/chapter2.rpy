@@ -1308,6 +1308,39 @@ label ch2_preparation:
     hide elena_img with dissolve
 
     menu:
+        "主动谈酒生意——你听说艾登堡北边山泉的水能配出好酒" if wealth >= 30:
+            $ change_stat("wealth", 5)
+            $ change_stat("reputation", 3)
+            $ ch2_wells_business_talk = True
+
+            "你走上二楼，直接坐到子爵对面。"
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "子爵大人。听说您葡萄酒生意做得很大。"
+
+            hide player_char_img
+            $ hide_all_chars("viscount_wells_img")
+            show viscount_wells_img at left with dissolve
+            viscount_wells "哦? 年轻领主也对酒有兴趣?"
+
+            hide viscount_wells_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "艾登堡北边山林有几处山泉，含一种您南方酒里没有的矿味。我父亲在世时托人提过。"
+
+            player "下次酿冬季新酒，我让人送两桶山泉到您领地试酿。"
+
+            hide player_char_img
+            $ hide_all_chars("viscount_wells_img")
+            show viscount_wells_img at left with dissolve
+            viscount_wells "大多数年轻领主上来跟我谈军务、谈政局。你倒是跟我谈酒。"
+
+            viscount_wells "送两桶我试。味道真有，冬末我亲自去艾登堡看那几处山泉。"
+
+            $ hide_all_chars()
+            "你跟他握了手。他给店家招手让重新斟酒。"
+
         "上去打个招呼":
             $ change_stat("reputation", 3)
             "你走上酒馆二楼，向子爵致意。"
