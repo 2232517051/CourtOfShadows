@@ -17,6 +17,93 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.13 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.13" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "玩家反馈批量修复 + 平衡推进 + 系统优化" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.05.11" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "阿威克反馈（4 处全闭环）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第一章加主角内心清点资源段（卫队 / 老管家 / 城堡 / 金鹰印戒），缓解「天崩开局」感" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第二章渡鸦旅店加武力路线钩子：高 power 玩家可雇佣兵长期签约" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第三章失踪事件加武力路线钩子：高 power 玩家可联合三家领主家臣 300 人搜山" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第二章艾琳娜首谈加 5 行内心独白：「她至少站在你这边」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "阿巴阿巴反馈（主角带疤立绘）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 主角脸上的疤痕现已落实到立绘：第三章遇刺后自动切换「带疤版」（4 张表情变体）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· canon 终于在视觉层呈现（剧本明示已久但立绘未跟上）" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "终章节奏 + 戏剧深化" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 北城反馈「终章稍微有点赶了」：第五章最终选择后加共用「决定后的夜」呼吸段" size 14 color "#c8b890" font "msyh.ttf"
+                    text "   大厅众人散去 → 主角独上城墙 → 陪伴分支 → 天明回大厅 → 进入结局" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第三章主教对峙加「起誓」第 4 选项（faith ≥ 30）：以艾登家纹章起誓换主教信任" size 14 color "#c8b890" font "msyh.ttf"
+                    text "   成功拿到先王遗诏 + 主教好感大增；失败空手而归，证据链残缺" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "属性反馈感大幅提升（千品反馈持续推进）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 全章节新加 8 处属性专属 menu 选项（覆盖 6 stat × 阈值梯度 25-70）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 阴谋路线加 8 处属性扣减（伪装 / 暗中 / 反间 / 收买 / 监视盟友 等场景）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "   让阴谋手段有持续成本压力，不再「选什么都没代价」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "其他打磨" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· AI 味金句清洗：清除多处对仗 / 升华式收尾旁白（保持沉浸感）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 跨作品 canon 一致性审核：管家年龄链 76 岁验证 + epilogue 年份 1352 确认" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 8
+
             ## ── v3.12 ──
             frame:
                 xfill True
