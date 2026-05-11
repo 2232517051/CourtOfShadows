@@ -534,7 +534,19 @@ label ch1_exp_elena_encounter:
             $ hide_all_chars()
             "她坐下来。信她带来了，摊在桌上。你没急着拿。"
 
-            "你想先听她说。"
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "这封信是老领主交给我保管的。他说他出了事，就交给您。"
+
+            elena "他又嘱咐我等您住满一个月再交。他说您需要时间先站稳脚跟。"
+
+            $ hide_all_chars()
+            "她说完，没再补一句。"
+
+            "你伸手把信拿过来。封口的火漆上是一个模糊的百合花印记。"
+
+            $ ch1_exp_secret_letter_found = True
+            $ change_stat("intrigue", 5)
 
         "现身质问「你在做什么？」":
             $ change_stat("power", 3)
