@@ -1547,6 +1547,41 @@ label ch5_final_night:
     "这些人，都把自己的命运交到了你手上。"
 
     menu:
+        "把财库所有应急金分给士兵——明天活下来，这是退伍金" if wealth >= 50:
+            $ change_stat("wealth", -10)
+            $ change_stat("loyalty", 8)
+            $ change_stat("reputation", 5)
+            $ ch5_eve_split_treasury = True
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩，把财库剩下的金币全部分了。"
+
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "全部?"
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "每人五枚银币。活下来的算退伍金。"
+
+            player "死了的——送回家，给妻子，给父母。"
+
+            player "财库里留不下钱了。让它在活人手里发挥它该有的作用。"
+
+            $ hide_all_chars()
+            "士兵们一开始没反应过来。等明白是怎么回事，队伍里有人哭了。"
+
+            "一个老兵走过来，抓住你的手攥得发白: '领主大人……这钱我们家三代人都没见过。'"
+
+            "你点头，没多说。"
+
+            "但今夜你确信——明天这八百兵会比任何时候都拼命。"
+
+            "金币比剑稳。但人心比金币贵。"
+
         "举杯共饮，鼓舞士气":
             $ change_stat("loyalty", 3)
             $ change_stat("reputation", 2)
