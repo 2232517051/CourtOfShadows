@@ -2306,6 +2306,64 @@ label ch4_elena:
 
     "王都的漩涡已经将你卷入其中。"
 
+    if elena_romance and rel_elena >= 80:
+        ## batch 5 反馈"云" (2026-05-05): 花园握手后独处, 恋爱推进
+        "你以为今晚就这样过去了——"
+
+        "脚步声从花径那头传来。不急。"
+
+        $ hide_all_chars("elena_img")
+        show elena_img at right with dissolve
+        elena "您还坐在这里。我以为您回了。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "看星。"
+
+        $ hide_all_chars()
+        "她在你旁边坐下。隔着一掌的距离。"
+
+        "她随手拿过一截枯枝，在地上画了一个不规则的圆。"
+
+        $ hide_all_chars("elena_img")
+        show elena_img at right with dissolve
+        elena "王都的星少。"
+
+        elena "我十六岁那年，在北方某地住过半年。那里的星多——一抬头能看见一整条银带。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "艾登堡的星也比这里多。"
+
+        player "等这事完了，一起回去看一次。"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at right with dissolve
+        elena "……我记着。别食言。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "这次真去。我们俩去，不带兵，不带随从。"
+
+        player "走山路，五天。"
+
+        $ hide_all_chars()
+        "她没接话。也没移开。"
+
+        "过了好一会儿，她把头轻轻靠在了你的肩上。"
+
+        "你伸手扶了一下她垂落到锁骨边的一缕发丝，没拨开，只是让它落得稳一点。"
+
+        "没再说话。谁也没说。"
+
+        "夜风吹过花径，把刚才她在地上画的那个不规则的圆吹得淡了，但还在。"
+
+        $ change_rel("rel_elena", 10)
+
     ## ============================================================
     ## 新增场景：觐见之后的清晨——王子的信
     ## ============================================================
