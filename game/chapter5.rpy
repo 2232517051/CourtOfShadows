@@ -4161,11 +4161,8 @@ label ending_peoples_lord:
         show elena_img at left with dissolve
         elena "人心。"
         "你看着窗外繁忙的集市，听着孩子们的笑声。"
+        "你笑了一下。"
         hide elena_img
-        $ hide_all_chars("player_char_img")
-        show player_char_img at left with dissolve
-        player "你说得对。这比任何王冠都珍贵。"
-        hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
         elena "后悔吗？"

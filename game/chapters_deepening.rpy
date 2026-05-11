@@ -597,7 +597,7 @@ label ch2_deep_church_doubt:
     "他深深地吸了一口气，仿佛卸下了一个沉重的包袱。"
 
     bishop "谢谢你，孩子。谢谢你的诚实。"
-    bishop "在这个人人都在戴面具的世界里，一句真话比一千篇祷文都珍贵。"
+    bishop "我已经很久没听人这样跟我说话了。"
 
     $ change_stat("faith", 5)
     $ change_rel("rel_bishop", 10)
@@ -1264,7 +1264,7 @@ label ch3_deep_scar_promise:
     $ change_stat("loyalty", 5)
     $ change_rel("rel_elena", 3)
 
-    "（你用真挚的关怀触动了老兵的心。在这个冷酷的世界里，一句温暖的承诺比什么都珍贵。）"
+    "老兵的眼角湿了一下。他赶紧低下头，用粗糙的指节擦了一把。"
 
     jump ch3_deep_scar_end
 
