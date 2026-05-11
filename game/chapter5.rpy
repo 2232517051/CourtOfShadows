@@ -1580,8 +1580,6 @@ label ch5_final_night:
 
             "但今夜你确信——明天这八百兵会比任何时候都拼命。"
 
-            "金币比剑稳。但人心比金币贵。"
-
         "举杯共饮，鼓舞士气":
             $ change_stat("loyalty", 3)
             $ change_stat("reputation", 2)

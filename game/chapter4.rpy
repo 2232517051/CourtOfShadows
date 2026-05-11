@@ -571,9 +571,9 @@ label chapter4_start:
             hide elena_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "在王都，最不值钱的是消息。最值钱的也是消息。"
+            player "塞了几个银币。让他报上去的时候漏掉我们这一队。"
 
-            player "五个银币换一份'我们没来过'的报告——这买卖划算。"
+            player "五个银币换一晚的安静——这买卖划算。"
 
             hide player_char_img with dissolve
 

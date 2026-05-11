@@ -460,7 +460,7 @@ label ch1_deep_patrol:
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "不追，也不躲。派老兵杨去克雷恩男爵家——穿家徽正装，明面上提一句。"
+            player "派老兵杨去一趟克雷恩男爵家——穿家徽正装，明面上提一句。"
 
             hide player_char_img
             $ hide_all_chars("captain_img")

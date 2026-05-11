@@ -198,9 +198,7 @@ label ch3_strange_signs:
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "联合搜山。三百人马，五座森林同时排查。"
-
-            player "暗百合习惯在阴影里办事。那我就把阴影全部点亮。"
+            player "联合搜山。三百人马，五座森林同时排查。我倒要看看他们躲哪儿去。"
 
             $ hide_all_chars()
             "三天后，三百名武装家臣分作五队进入了艾登堡周边森林。"
