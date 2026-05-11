@@ -1054,6 +1054,7 @@ label ch3_exp_cult_infiltration:
 
         "趁乱留下记号「标记几个关键人物」":
             $ change_stat("intrigue", 8)
+            $ change_stat("faith", -2)  ## balance pass 修法 1: 用药物在他人身上做暗号, 欺骗换情报
 
             $ hide_all_chars()
             "你悄悄从口袋里取出事先准备的荧光粉末——一种薇拉给你的特殊草药粉，在月光下会发出微弱的绿光。"
