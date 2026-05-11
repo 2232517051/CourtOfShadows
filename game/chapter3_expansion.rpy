@@ -353,6 +353,7 @@ label ch3_exp_investigate_cunning:
     menu:
         "主动接近「套取情报」":
             $ change_stat("intrigue", 8)
+            $ change_stat("faith", -2)  ## balance pass 修法 1: 伪装身份+套话换情报, 信仰受损
 
             "你端着酒杯走过去，在他对面坐下。"
 

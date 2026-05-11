@@ -1417,6 +1417,7 @@ label ch4_throne:
 
         "直接问他关于父亲的事":
             $ change_stat("intrigue", 8)
+            $ change_stat("loyalty", -2)  ## balance pass 修法 1: 把父辈情谊工具化套王子情报
             $ change_rel("rel_prince", 3)
             hide prince_img
             $ hide_all_chars("player_char_img")
