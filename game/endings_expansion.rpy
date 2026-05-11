@@ -2111,7 +2111,7 @@ label ending_faith_epilogue:
 
             player "你慢慢长大，会读很多书，见很多人，经历很多事。"
 
-            player "总有一天，你会找到属于你自己的答案。"
+            player "总有一天你会想清楚——可能在某个失眠的夜里，也可能在你像我现在这么大的时候。"
 
             player "到时候——不管答案是什么——记得要对自己诚实。"
 
@@ -2166,10 +2166,7 @@ label ending_faith_epilogue:
     "在那双眼睛里，没有恐惧，没有仇恨，没有阴谋。"
     "只有——一个简单的问题。"
 
-    "也许这就是答案。"
-
-    "不是某本经书里写的答案。"
-    "而是一个孩子敢于提问的勇气本身——就是答案。"
+    "你想了一会儿。然后把他刚才翻过的那本旧书又拿过来，在他可能看不懂但有图的章节，折了个角。"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
