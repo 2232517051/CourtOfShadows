@@ -21,10 +21,34 @@
 候选 A/C/D 全部已经接入. 救王子段实际 3 个并行 crisis (引开/迷香/假扮), 比 design doc 候选 C 设计的还细.
 
 **剩待评审**:
-- 候选 B (chapter3.rpy:3864 主教对峙逼问遗诏) — 行号已偏 (现在是叙事段不是 menu). 实际主教对峙的 menu 在 chapter3.rpy:4079 "威逼/利诱/起誓", 已经有大幅 stat 分化但**没用 trigger_crisis**. 接入风险中等 (改 menu 结构).
-- 候选 E (chapter5.rpy:4129 王后大殿辩论) — 未查证. 终章大殿辩论是关键剧情节点, crisis 改动会影响真相结局走向.
+- 候选 B (chapter3.rpy:3864 主教对峙逼问遗诏) — ✅ **已接入** (commit 7b3a92b
+  + 00895df 修台词逻辑, 2026-05-11). 加第 4 选项 "起誓——以艾登家纹章
+  起誓教会一切受我保护" (faith >= 30) + trigger_crisis(faith, 5).
+  win → 进密室拿原件 + rel_bishop +20 / faith +8; lose → 主教不给盒子
+  + faith -3 + jump ch3_prepare_evidence (testament 留 default False,
+  真相结局难度增加).
+  新建 label ch3_bishop_take_to_vault (4 选项共用收尾) + ch3_bishop_oath_win
+  + ch3_bishop_oath_lose. 实际位置 chapter3.rpy:4079 (design doc 写 3864
+  位置已偏).
 
-剩 B/E 接入需要独立 session 评审 + 设计. 不在 quick fix 范围.
+- 候选 E (chapter5.rpy:4243 王后大殿辩论) — ❌ **实测不推荐接入**
+  (2026-05-11 审核结论).
+  位置: chapter5.rpy:4243 truth ending 段, 王后大殿当众揭穿王后 menu
+  (2 选项: 用证据击溃 / 用道义压力, 都自动成功).
+  原因:
+    1. truth ending 是 5 结局中**唯一最佳结局**, 玩家走到这里已经做了
+       chapter1-5 全套铺垫 (testament_original_obtained / poison_evidence /
+       Elena/Bishop 线索), 这处是"真相不可阻挡" 戏剧高潮.
+    2. design doc 设计"失败 = 王后赢翻盘", 会改写整个 truth ending 走向,
+       破坏 5 结局中最佳结局的剧情骨干.
+    3. 玩家走到 truth ending 是"奖励感" 而不是"再来一关失败的可能" — 加
+       crisis 反而破坏成就感.
+    4. truth ending 的张力来自前面所有 setup 是否充分 (testament 有没有
+       拿到 / poison_evidence 有没有 / dark_lily 有没有加入), 这些已经是
+       "前置 crisis 总和". 大殿辩论再加 crisis 是 over-engineering.
+  关闭这一项, **不接入**.
+
+candidate B/E 都已闭环 (B 接入 / E 不接入), crisis backlog 完全清完.
 
 ---
 
