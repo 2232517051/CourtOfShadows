@@ -33,6 +33,121 @@ label ending_epilogue_router:
         return
 
 ## ============================================================
+## "决定后的夜" 共用呼吸段 — 北城反馈"终章稍微有点赶了"修复
+## (2026-05-11)
+##
+## 玩家原话: "氛围没得说, 绝大部分时间都很到位, 除了终章稍微有点赶了"
+## 诊断: chapter5.rpy:1773 "我已经做出了决定" → menu → 一句台词 → 直接
+##       jump 到 ending label, 选择到结局展开之间没有情绪沉淀.
+## 修法: 5 个主结局 + borgia menu 分支 jump 前 call 这个共用 label,
+##       插一段"大厅散去→城墙独处→一夜→天明回到大厅"的呼吸段.
+## ============================================================
+
+label ending_decision_pause:
+
+    $ hide_all_chars()
+    $ play_music("audio/music/sad.ogg", fadein=2.0)
+    scene black with dissolve
+
+    pause 1.2
+
+    "话音落下之后, 大厅里有那么一刻什么声音都没有."
+
+    "然后是椅子摩擦地面的声音, 铠甲的低响, 一两声压低的咳嗽."
+
+    "他们一个接一个地出去了——奥尔德里克留到最后, 替你把烛台拨了拨, 然后也走了."
+
+    "门关上的瞬间, 大厅的空气重新变冷."
+
+    scene bg castle_exterior with dissolve
+
+    "你独自走上了城堡最高的那段城墙."
+
+    "夜风从北方来. 比白天里的风冷得多, 也安静得多."
+
+    "脚下是艾登堡——每一扇还亮着的窗里, 都坐着一个等你做完决定的人."
+
+    "远处是黑暗——北方某个地方, 男爵和王后的军队也在他们各自的火堆边等着天亮."
+
+    pause 1.0
+
+    if elena_romance:
+        $ hide_all_chars("elena_img")
+        show elena_img at right with dissolve
+        elena "我猜你会一个人上来."
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你怎么知道？"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at right with dissolve
+        elena "因为我也想一个人上来——但既然你先上来了, 那就两个人吧."
+
+        $ hide_all_chars()
+        "她在你身边站定. 没有再说什么."
+
+        "你也没有."
+
+        "两个人就这样并排看着北方, 看了很久."
+
+    elif rel_aldric >= 50:
+        $ hide_all_chars("aldric_img")
+        show aldric_img at right with dissolve
+        aldric "老朽找了您半个时辰."
+
+        hide aldric_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "为何还不睡？"
+
+        hide player_char_img
+        $ hide_all_chars("aldric_img")
+        show aldric_img at right with dissolve
+        aldric "您的父亲, 在做出每一个艰难决定之前, 也喜欢上这段城墙."
+
+        aldric "我那时陪过他几次."
+
+        aldric "今晚, 我陪您一次."
+
+        $ hide_all_chars()
+        "他没有再多说一个字, 也没有走开."
+
+        "你没有让他走."
+
+    else:
+        "你没有叫任何人陪你. 这种夜, 应该一个人过."
+
+        "你想了很多事. 也想了很多人."
+
+        "你想起父亲. 想起母亲. 想起那个让你站到这里来的全部理由."
+
+        "想得太久, 远处天边已经有一线白."
+
+    pause 1.0
+
+    scene bg great_hall with dissolve
+
+    "天快亮的时候, 你回到大厅."
+
+    "桌上的烛火已经燃了一半. 地图上的标记你看了又看."
+
+    "不论明天之后这片土地会变成什么样——"
+
+    "至少, 你已经做完了你能做的所有准备."
+
+    pause 0.8
+
+    scene black with dissolve
+
+    pause 0.6
+
+    return
+
+
+## ============================================================
 ## 结局一：真相之路 - 扩展尾声
 ## The Truth Seeker Epilogue
 ## ============================================================

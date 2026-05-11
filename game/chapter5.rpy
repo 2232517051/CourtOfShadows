@@ -1806,6 +1806,7 @@ label ch5_final_choice:
             captain "是！全军听令！"
             $ hide_all_chars()
             "大厅中响起了铠甲的碰撞声和脚步声。战争的机器开始运转。"
+            call ending_decision_pause from _call_decision_pause_iron
             jump ending_iron_lord
 
         "让双方互相消耗，坐收渔利——暗中操控全局|谋略路线 → 影中之王" if "shadow_king" in _top_endings:
@@ -1822,6 +1823,7 @@ label ch5_final_choice:
             elena "明白。"
             $ hide_all_chars()
             "一个精密的阴谋开始在暗处展开——像一张无形的大网，笼罩了整个战场。"
+            call ending_decision_pause from _call_decision_pause_shadow
             jump ending_shadow_king
 
         "借教会之力，以信仰终止战争|信仰路线 → 圣光守护" if "holy_guardian" in _top_endings:
@@ -1838,6 +1840,7 @@ label ch5_final_choice:
             bishop "教会……愿意承担这个使命。"
             $ hide_all_chars()
             "你与教会联手，开始了一场用信仰对抗武力的战争。"
+            call ending_decision_pause from _call_decision_pause_holy
             jump ending_holy_guardian
 
         "保护子民——固守艾登堡，拒绝战争|忠诚路线 → 人民领主" if "peoples_lord" in _top_endings:
@@ -1854,6 +1857,7 @@ label ch5_final_choice:
             aldric "领主大人……"
             $ hide_all_chars()
             "你做出了一个出乎所有人意料的决定——放弃争霸，全力守护。"
+            call ending_decision_pause from _call_decision_pause_peoples
             jump ending_peoples_lord
 
         "公布先王遗诏真相——让正义重见天日|真相路线 → 真相大白（最佳）" if true_killer_known and testament_original_obtained:
@@ -1867,6 +1871,7 @@ label ch5_final_choice:
             $ hide_all_chars()
             "你从怀中取出那份尘封多年的遗诏复本，在阳光下展开。"
             "这一刻，你不是在为自己而战——而是在为二十年前被掩盖的正义而战。"
+            call ending_decision_pause from _call_decision_pause_truth
             jump ending_truth
 
         "用毒药清理一切——以母亲的方式收尾|毒药路线 → 毒药公爵（坏结局）" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
@@ -1881,6 +1886,7 @@ label ch5_final_choice:
             "你慢慢站起来，走到书房深处的那个旧木柜前。"
             "柜子最底层的暗格里，放着一个紫色的小瓶——你这一年来悄悄收集的'暮色之露'。"
             "够用了。"
+            call ending_decision_pause from _call_decision_pause_borgia
             jump ending_borgia
 
         "加入王后阵营，换取艾登堡安全|务实选择 安全优先" if rel_queen >= -30:
@@ -1890,6 +1896,7 @@ label ch5_final_choice:
             player "在两个选择都不好的时候，选那个能保住更多人性命的。"
             player "通知王后——艾登堡愿意效忠。"
             "你做出了一个务实的选择。不光荣，但你的人和领地保住了。"
+            call ending_decision_pause from _call_decision_pause_pragmatic
             jump ending_iron_lord
 
         "加入男爵联军，对抗王后暴政|反抗路线 风险较高" if rel_baron >= -30:
@@ -1897,6 +1904,7 @@ label ch5_final_choice:
             player "王后的统治建立在谎言和暴力之上。是时候终结了。"
             player "告诉男爵——艾登堡与他并肩作战。"
             "你选择了反抗。前路艰险，而你站在了你认为正确的一边。"
+            call ending_decision_pause from _call_decision_pause_resist
             jump ending_iron_lord
 
     ## ============================================================
