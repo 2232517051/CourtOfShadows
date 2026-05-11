@@ -4484,7 +4484,7 @@ label ch3_bishop_oath_win:
 
     bishop "费雷恩当年也起过誓。他发誓时眼神不对——我看了一辈子人，看得出来。"
 
-    bishop "您，我不再赌一次。"
+    bishop "您，我赌您一次。"
 
     bishop "盒子，我给您。"
 
