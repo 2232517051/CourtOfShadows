@@ -4143,6 +4143,36 @@ label ch3_confront_bishop_early:
             show bishop_img at left with dissolve
             bishop "跟我来。"
 
+        "起誓——以艾登家纹章起誓教会一切受我保护" if faith >= 30:
+            $ change_stat("faith", 3)
+            $ log_decision("第三章", "以誓言换取主教信任")
+
+            hide player_char_img
+            $ hide_all_chars("bishop_img")
+            show bishop_img at left with dissolve
+            bishop "……起誓? 这种时候, 谁还信誓言?"
+
+            hide bishop_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "马修斯，我以艾登的金鹰起誓——"
+
+            player "今天从您口里出来的话，出此门即烂在我肚里。您给我的物件，我用即焚，不留指向教会的痕迹。"
+
+            player "信不信我，看您。"
+
+            player "但我父亲就是相信誓言的人。他到死都没违背过任何一句。"
+
+            $ hide_all_chars()
+            "主教看着你的眼睛，看了很久。他在判断: 这个年轻领主的'誓言'，是真的，还是只是政治姿态。"
+
+            $ trigger_crisis("faith", 5,
+                "马修斯需要在你脸上读出来——你是来骗他的，还是真能扛起这句誓言。",
+                "ch3_bishop_oath_win", "ch3_bishop_oath_lose",
+                courage_cost=20, allow_skip=False)
+            call crisis_encounter from _call_crisis_ch3_oath
+            jump ch3_bishop_oath_lose
+
         "感情牌——'我只想知道父亲为什么死'":
             $ change_rel("rel_bishop", 5)
             $ change_stat("faith", 5)
@@ -4162,6 +4192,7 @@ label ch3_confront_bishop_early:
 
     hide bishop_img with dissolve
 
+label ch3_bishop_take_to_vault:
     $ hide_all_chars()
     "主教带你穿过教堂的长廊。长廊两侧的彩色玻璃窗投下斑驳的光影。"
 
@@ -4438,6 +4469,58 @@ label ch3_confront_bishop_early:
         jump ch3_post_evidence
     else:
         jump ch3_prepare_evidence
+
+## ============================================================
+## crisis 候选 B (2026-05-11): 主教对峙起誓型 menu 选项的 win/lose 分支
+## menu 入口在 chapter3.rpy:4079 第 4 选项 (faith >= 30)
+## win → jump ch3_bishop_take_to_vault (同 3 原选项收尾, 拿到原件)
+## lose → 没拿到原件 + jump ch3_prepare_evidence (testament 留 default False)
+## ============================================================
+
+label ch3_bishop_oath_win:
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
+    bishop "……我信你。"
+
+    bishop "费雷恩当年也起过誓。他发誓时眼神不对——我看了一辈子人，看得出来。"
+
+    bishop "您，我不再赌一次。"
+
+    bishop "盒子，我给您。"
+
+    $ change_rel("rel_bishop", 20)
+    $ change_stat("faith", 8)
+
+    hide bishop_img with dissolve
+
+    jump ch3_bishop_take_to_vault
+
+label ch3_bishop_oath_lose:
+    $ hide_all_chars("bishop_img")
+    show bishop_img at left with dissolve
+    bishop "……您父亲也起过誓。我看着他守了一辈子。"
+
+    bishop "您还年轻。这种誓——您还扛不住。"
+
+    bishop "盒子的事，我不能给您。"
+
+    bishop "您去别处找证据吧。这里没有。"
+
+    hide bishop_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "……"
+
+    $ hide_all_chars()
+    "你站了一会儿，没说话。"
+
+    "马修斯转身回了内殿。教堂门外，风把落叶卷上石阶。"
+
+    "你空手回了住处。接下来要找的证据，得换条路。"
+
+    $ change_stat("faith", -3)
+
+    jump ch3_prepare_evidence
 
     ## --- 准备证据 ---
 label ch3_prepare_evidence:
