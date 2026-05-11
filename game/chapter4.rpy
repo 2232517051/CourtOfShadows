@@ -2319,7 +2319,7 @@ label ch4_elena:
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "看星。"
+        player "看星空。"
 
         $ hide_all_chars()
         "她在你旁边坐下。隔着一掌的距离。"
@@ -2328,14 +2328,14 @@ label ch4_elena:
 
         $ hide_all_chars("elena_img")
         show elena_img at right with dissolve
-        elena "王都的星少。"
+        elena "王都的夜空看不到几颗星星。"
 
-        elena "我十六岁那年，在北方某地住过半年。那里的星多——一抬头能看见一整条银带。"
+        elena "我十六岁那年，在北方某地住过半年。那里一抬头就是整条银带。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "艾登堡的星也比这里多。"
+        player "艾登堡的星空也比这里亮。"
 
         player "等这事完了，一起回去看一次。"
 
@@ -2356,7 +2356,7 @@ label ch4_elena:
 
         "过了好一会儿，她把头轻轻靠在了你的肩上。"
 
-        "你伸手扶了一下她垂落到锁骨边的一缕发丝，没拨开，只是让它落得稳一点。"
+        "你伸手扶了一下她垂落到锁骨边的一缕发丝，没拨开，只是让它顺着她的颈线垂下来。"
 
         "没再说话。谁也没说。"
 
