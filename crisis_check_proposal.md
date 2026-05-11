@@ -1,9 +1,30 @@
 # 后期检定接入候选清单
 
 > **来源**: TapTap 玩家"栀子万花丛中过"反馈 — 后期剧情张力松, 选项随便选都能过通关
-> **现状**: Ch1 (script.rpy) 有 6 处 1d10 检定 (密信危机/男爵夜袭等); Ch2-Ch5 (130 个 menu) 0 处检定
 > **目标**: 在后期 4 章各加 1-2 处关键检定, 让"主动行动"有失败可能 + 显性代价
 > **接入方式**: `trigger_crisis(type, difficulty, 描述, win_label, lose_label, courage_cost=N)`
+
+## 状态审核 (2026-05-11)
+
+**实际 crisis 全项目接入分布** (`grep trigger_crisis`):
+- script.rpy:1221 — Ch1 密信危机 (intrigue 4)
+- script.rpy:1686 — Ch1 男爵夜袭 (combat 5)
+- chapter3.rpy:244 — Ch3 暗百合现场调查 (intrigue 4) ✅ 候选 A
+- chapter4.rpy:2557 — Ch4 救王子 引开守卫 (intrigue 5) ✅ 候选 C
+- chapter4.rpy:2576 — Ch4 救王子 迷香 (intrigue 2 有暗百合 / 4 无)
+- chapter4.rpy:2595 — Ch4 救王子 假扮巡查官 (intrigue 6)
+- chapter5.rpy:3291 — Ch5 教堂 (faith 4) ✅ 候选 D
+- chapter5.rpy:3310 — Ch5 教堂 (intrigue 4) ✅ 候选 D 双轨
+
+**实际接入 6 处** (本文档创建时 memory 写"Ch2-Ch5 0 处" 已严重过期).
+
+候选 A/C/D 全部已经接入. 救王子段实际 3 个并行 crisis (引开/迷香/假扮), 比 design doc 候选 C 设计的还细.
+
+**剩待评审**:
+- 候选 B (chapter3.rpy:3864 主教对峙逼问遗诏) — 行号已偏 (现在是叙事段不是 menu). 实际主教对峙的 menu 在 chapter3.rpy:4079 "威逼/利诱/起誓", 已经有大幅 stat 分化但**没用 trigger_crisis**. 接入风险中等 (改 menu 结构).
+- 候选 E (chapter5.rpy:4129 王后大殿辩论) — 未查证. 终章大殿辩论是关键剧情节点, crisis 改动会影响真相结局走向.
+
+剩 B/E 接入需要独立 session 评审 + 设计. 不在 quick fix 范围.
 
 ---
 
