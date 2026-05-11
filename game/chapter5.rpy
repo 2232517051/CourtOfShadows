@@ -867,6 +867,73 @@ label ch5_military_deploy:
 
     "这是一座即将面对风暴的城堡。但这座城堡里的每一个人，都在为生存而战。"
 
+    ## balance pass 修法 2 续 12 (2026-05-11): 战前城楼俯视新加 menu
+    ## 之前是纯叙事过场, 现在加 4 选项 (3 stat condition + 1 fallback)
+    ## 覆盖 reputation/loyalty/intrigue 40 阈值 + power 路线 fallback
+    menu:
+        "你看着，知道自己还能做点什么。"
+
+        "下城楼，亲自帮老人搬一块石头" if reputation >= 40:
+            $ change_stat("reputation", 5)
+            $ change_stat("loyalty", 3)
+
+            "你解了披风，沿城墙的窄梯下到城下。"
+
+            "老人姓魏，八十一了，牙没剩几颗。他认得你。你没问他多大，直接把石头从他手里接过来。"
+
+            "你帮他垒了五块石头。走的时候，他抓住你的胳膊，又松开了。"
+
+            "他没说一个字。你也没问。"
+
+            "老魏转头跟身边的邻居说了几句。他们看你的眼神变了。"
+
+        "去铁匠铺，给打了一夜的老铁匠送一壶水" if loyalty >= 40:
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 3)
+
+            "铁匠铺烧了一整夜。老铁匠汉斯眼眶通红，手腕的肌腱凸起。"
+
+            "你递过一壶凉水。他接过去，没说谢，一口气喝完。"
+
+            "「领主大人，我这把年纪本来要干不动了。」"
+
+            "「可您父亲十年前救过我儿子。我这把锤子，这几天都是给您家打的。」"
+
+            "你点了点头。没说话。"
+
+            "汉斯转身又开始打铁。火光把他的脸染成深红色。"
+
+        "回书房，把昨晚没看完的舆图研究完" if intrigue >= 40:
+            $ change_stat("intrigue", 5)
+            $ change_stat("power", 3)
+
+            "你转身走回主楼。"
+
+            "书房里的舆图昨晚被你按方位铺开了——男爵军的可能行军路线，王后军的预备阵地，你领地的几条隘口。"
+
+            "你重新看了一遍。上次没注意到——男爵军过来必经鹰隼峡，而鹰隼峡两侧的山林正好可以伏弩。"
+
+            "你拿铅笔在地图上画了一个圈。"
+
+            "晚饭前，你叫雷恩进来。把圈给他看。"
+
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "我连夜带二十人过去勘察地形。"
+
+            hide captain_img with dissolve
+
+        "不下城楼，继续看":
+            $ change_stat("power", 2)
+
+            "你没动。城楼上风大，把你的披风吹得鼓起。"
+
+            "你看着下面，一动不动，看了很久。"
+
+            "风把搬石头的老人的咳嗽声、铁匠铺的打铁声、孩子们的哭声，都卷到你站的地方。"
+
+            "等天暗了，你才下城楼。"
+
     ## 扩展剧情：军议 / 动员 / 战前夜 / 前哨战 / 风暴前夜
     call ch5_exp_war_council from _call_ch5_exp_war_council
     call ch5_exp_mobilize from _call_ch5_exp_mobilize
