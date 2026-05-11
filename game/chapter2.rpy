@@ -2624,6 +2624,44 @@ label ch2_after_council:
     captain "我不确定这意味着什么，但……总觉得不太对劲。"
 
     menu:
+        "派艾琳娜带两个民兵截在南门外——男爵的人怕暴露身份不敢拦" if loyalty >= 30:
+            $ change_stat("loyalty", 5)
+            $ change_stat("intrigue", 3)
+            $ ch2_baron_emissary_intercepted = True
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩，别派你的人。男爵巡逻队认识你的人。"
+
+            hide player_char_img
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "您要我去?"
+
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你带两个艾登堡过来的民兵。穿农户衣裳，牵驴，装路过。"
+
+            player "南门外三里地有个三岔口。在那里截人。抓不到不强抓——记住面孔，听见两句话就够。"
+
+            $ hide_all_chars()
+            "一个时辰后，艾琳娜回来。雨水把她的头发贴在脸上。"
+
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "那人不是哈伦堡本地的口音。走的是去王后旧领地的方向。"
+
+            elena "他跟一个等在路口的骑手交接了一卷东西就分开了。"
+
+            elena "我们的两个民兵跟在骑手后面又走了一里，看清了卷封——男爵家的印戳。"
+
+            $ hide_all_chars()
+            "你在记录纸上又添了一行——"
+
+            "'男爵和王后旧人的联系，比我们以为的早。'"
+
         "派人跟踪那个陌生人":
             $ change_stat("intrigue", 5)
             hide captain_img
