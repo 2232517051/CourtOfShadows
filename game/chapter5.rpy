@@ -2004,6 +2004,32 @@ label ending_iron_lord:
 
     $ mark_important_choice()
     menu:
+        "祈祷夜——以信仰为全军点一夜的火" if faith >= 60:
+            $ change_stat("faith", 5)
+            $ change_stat("loyalty", 3)
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "马修斯主教，今夜城堡广场——给全军一场祈祷。"
+
+            player "不是求胜，是让每一个明早要走上战场的人，知道他不是一个人。"
+
+            hide player_char_img
+            $ hide_all_chars("bishop_img")
+            show bishop_img at left with dissolve
+            bishop "……老朽明白。我会让每一位修士今夜都不睡，跟士兵们站在一起。"
+
+            $ hide_all_chars()
+            "那一夜，城堡广场上烛火彻夜不熄。"
+
+            "老兵们围着主教坐着，听他低声念诵祷词。"
+
+            "没有人说话，也没有人离开。"
+
+            "第二天清晨，当大军开拔时，你看见许多士兵的盔甲下都塞着主教发的祈祷珠。"
+
+            "他们走得很慢——但每一步都比昨天稳。"
+
         "截断补给线——让他们饿三天再打|谋略+ 敌军士气大降":
             $ change_stat("intrigue", 5)
             hide elena_img
