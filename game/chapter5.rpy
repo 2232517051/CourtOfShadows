@@ -598,6 +598,28 @@ label ch5_factions_move:
     baron_envoy "您将成为男爵之下、万人之上的人物。"
 
     menu:
+        "当面拒绝并让卫兵把他赶出去" if power >= 50:
+            $ change_stat("power", 5)
+            $ change_stat("reputation", 3)
+            $ change_rel("rel_baron", -10)
+            $ ch5_baron_envoy_ejected = True
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩，把他送出去。礼数留半。走快一点。"
+
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "明白。"
+
+            $ hide_all_chars()
+            "雷恩没让密使走完三步，直接把他往门口架。密使想回头说话，但已经过了大殿门。"
+
+            "你回到桌前。这事会传回男爵那里，三天之内。"
+
+            "密使的马刚出城门，你已经在传令雷恩加固北墙。"
+
         "表示会认真考虑":
             $ change_stat("intrigue", 2)
             $ hide_all_chars("player_char_img")
@@ -814,6 +836,34 @@ label ch5_military_deploy:
         aldric "金库……有些紧张。一个月的军饷还是能付得起的。"
 
     menu:
+        "拿一半金库银币给战死者家属预付抚恤金" if wealth >= 60:
+            $ change_stat("wealth", -15)
+            $ change_stat("loyalty", 10)
+            $ change_stat("reputation", 5)
+            $ ch5_pay_advance_pension = True
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "奥尔德里克，拿一半金库银币出来。按当前士兵名册，每家先发 20 银。"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "……领主大人，这是预付抚恤金?"
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "对。战死的，这钱当兵家拿；活下来的，算退伍补贴。"
+
+            player "我不想让任何一个士兵带着'家里没钱'这一句话上战场。"
+
+            $ hide_all_chars()
+            "奥德当晚就让账房按名册分发。第二天清晨，操练场上的士兵安静了一会儿——然后开始一遍一遍地齐声唱艾登堡军歌。"
+
+            "你站在城楼上听了半个时辰。"
+
         "拨出专款犒赏三军":
             $ change_stat("wealth", -5)
             $ change_stat("loyalty", 3)
