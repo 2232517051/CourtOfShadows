@@ -74,7 +74,7 @@ screen changelog_screen():
                     text "· pacifist 隐藏成就 dead code 修复：加触发条件可正常解锁" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 主教/院长「念珠」→「祈祷珠」：西方教会用语统一" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 艾琳娜首次坦白时序：去除对玩家「已知间谍身份」的假设" size 14 color "#c8b890" font "msyh.ttf"
-                    text "· 奥尔德里克服务年数 50 → 40 年：与时间线一致（年龄链同步调整）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 奥尔德里克服务年数 50→近 40 年，年龄回到「七十多岁」：跨作品 canon (前传 1316 年 40 岁入门→ 1352 年 76 岁)" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 修道院专长选择半年违和：加「贵族子弟破例提前」hand-wave 解释" size 14 color "#c8b890" font "msyh.ttf"
 
             null height 4
