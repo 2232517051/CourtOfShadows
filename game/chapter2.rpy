@@ -645,6 +645,43 @@ label ch2_preparation:
     "还有一对老夫妇，看起来像是农民，紧张兮兮地抱着一个包袱。"
 
     menu:
+        "私下找佣兵头领谈雇佣——你要建自己的硬刀" if power >= 25:
+            $ change_stat("power", 8)
+            $ change_stat("wealth", -3)
+            $ ch2_inn_mercenary_deal = True
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "头领，借一步说话。"
+
+            "你把头领请到二楼空房间。关上门。"
+
+            player "你们要北方的活? 我有。不是临时的，是长期签约——半年，三十枚金币起。"
+
+            hide player_char_img
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            soldier "贵族都这么直接? 那你要我们杀谁?"
+
+            hide soldier_generic_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "现在还不知道。但艾登堡的形势，半年内一定有用上你们的时候。"
+
+            player "你来不来?"
+
+            hide player_char_img
+            $ hide_all_chars("soldier_generic_img")
+            show soldier_generic_img at left with dissolve
+            soldier "……成。我手下二十人，都是从南方战场退下来的老手。给你半年。"
+
+            $ hide_all_chars()
+            "你跟头领握了手。没有合同，没有见证人——但这种人重信。"
+
+            "二十把刀在你手里了。哪怕将来王后整顿军务也查不到你头上。"
+
+            "回房间的路上，艾琳娜在楼梯口看了你一眼。她什么都没说。但你知道她注意到了。"
+
         "去和佣兵搭话，打探消息":
             $ change_stat("intrigue", 5)
             "你端着酒杯走到佣兵们的桌前。"

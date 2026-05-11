@@ -180,6 +180,39 @@ label ch3_strange_signs:
         $ dark_lily_exists_known = True
 
     menu:
+        "召集附近领主家臣联合搜山——以武力威慑暗百合" if power >= 30:
+            $ change_stat("power", 8)
+            $ change_stat("reputation", 3)
+            $ ch3_dark_lily_response = "force"
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩，给附近三家友好领主发信——艾登堡领主请求，三日内派家臣武装支援。"
+
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "您要他们出兵搜山?"
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "联合搜山。三百人马，五座森林同时排查。"
+
+            player "暗百合习惯在阴影里办事。那我就把阴影全部点亮。"
+
+            $ hide_all_chars()
+            "三天后，三百名武装家臣分作五队进入了艾登堡周边森林。"
+
+            "没找到暗百合的人——但暗百合那个月之后再没有失踪案。"
+
+            "你向友好领主回了重礼+答应未来三年内对方有需要可以反过来求援。"
+
+            "这是一笔账。但你立了威——'艾登堡可以叫得动三百兵'。这个消息会传得很远。"
+
+            jump ch3_after_field_choice
+
         "让雷恩加派巡逻":
             $ change_stat("loyalty", 5)
             $ change_stat("power", 5)
