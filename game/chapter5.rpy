@@ -2863,6 +2863,7 @@ label ending_shadow_king:
     menu:
         "让间谍散布男爵即将投降的假消息":
             $ change_stat("intrigue", 5)
+            $ change_stat("faith", -2)  ## balance pass 修法 1: 反间计 = 谎言战术, 信仰受损
             player "让我们的人在男爵军中散布消息——说男爵已经秘密向王后求和。"
             hide player_char_img
             $ hide_all_chars("elena_img")
