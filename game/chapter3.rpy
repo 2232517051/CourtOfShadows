@@ -376,6 +376,40 @@ label ch3_after_field_choice:
     hide blacksmith_wife_img with dissolve
 
     menu:
+        "召集所有铁匠樵夫家属当众发誓——艾登堡不放弃任何一个人" if reputation >= 40:
+            $ change_stat("reputation", 5)
+            $ change_stat("loyalty", 5)
+            $ ch3_public_oath = True
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "奥尔德里克，把所有铁匠樵夫的家属都叫到城堡前的广场。"
+
+            player "今天下午，我要在他们面前说话。"
+
+            $ hide_all_chars()
+            "下午三时，广场上来了七十几个人。大半是女人和孩子。"
+
+            "你站在台阶上，没读稿。"
+
+            "'你们中间已经有四个人失踪。有人告诉你们: 沉默会得到庇护。我告诉你们: 那是骗人的。'"
+
+            "'今天起，城堡里养二十个壮丁，谁家出事报到城堡，当天就有人上山找。'"
+
+            "'找得回我送他回家。找不回的，家里口粮我管。'"
+
+            "广场上一开始没人说话。然后是铁匠的妻子先跪下来，把头磕在石板上。"
+
+            "其他人一个跟一个也跪下了。"
+
+            "你没有让他们起来。"
+
+            "你转身走回城堡的时候，雷恩在身后说了一句:"
+
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "今天这事，北方很快就会听说。森林里的人也会听到。"
+
         "安慰她并承诺会找回她丈夫":
             $ change_stat("loyalty", 5)
             $ change_stat("reputation", 5)
