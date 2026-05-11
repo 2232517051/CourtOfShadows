@@ -1647,12 +1647,17 @@ label ch5_final_night:
 
         elena "当我还是个孤儿的时候，我告诉自己——不要相信任何人，不要依赖任何人。"
 
-        elena "但你打破了我所有的规则。"
+        elena "但你问我累不累。你受伤的时候，第一件事是问我有没有事。"
+
+        elena "我从来没遇到过把我当人看的人。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "我很荣幸被你破例。"
+        player "我知道。"
+
+        $ hide_all_chars()
+        "你伸手碰了一下她的手背。她的手凉，但没有缩开。"
 
         $ hide_all_chars("elena_img")
         show elena_img sad at left with dissolve
