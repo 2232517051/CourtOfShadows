@@ -4418,6 +4418,135 @@ label ending_truth:
 
     hide queen_img with dissolve
 
+    ## ============================================================
+    ## 月光疾风反馈 v3.12: 王后自请退位分支
+    ## 条件 rel_queen >= 50 + prince_ally 且 not prince_betrayed
+    ## "王后也不是十恶不赦之人，结局应该让她自己放下"
+    ## ============================================================
+    if rel_queen >= 50 and prince_ally and not prince_betrayed:
+        $ play_music("audio/music/sad.ogg", fadein=2.0)
+        scene bg study with dissolve
+
+        "那天夜里，宫廷大殿熄了灯。"
+
+        "你独自坐在书房里——等一个没人通报、却注定会来的人。"
+
+        "门外脚步声轻而稳。"
+
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "我可以坐下吗？"
+
+        hide queen_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "请。"
+
+        hide player_char_img
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "白天我说'裁决吧'——那是说给所有人听的。"
+
+        queen "现在没有别人。我想和你单独谈一次。"
+
+        $ hide_all_chars()
+        "她在你对面坐下。蜡烛在你们之间的桌面上烧得很低。"
+
+        "你没有让仆人添。这种话不需要更多的光。"
+
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "你父亲本该是摄政王。这件事我知道了二十年。"
+
+        queen "格雷芬七世走得不安稳——这件事，也是我让的。"
+
+        queen "下毒的命令不是我下的，但我知道是谁。我没有制止。"
+
+        $ hide_all_chars()
+        "她没有为自己辩解。也没有要求宽恕。"
+
+        "你听着，没有打断。"
+
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "我以为我做的一切，都是为了弗雷德里克。"
+
+        queen "今天下午，他来找过我。"
+
+        queen "他说——'母亲，我已经长大了。你不需要再为我流血了。'"
+
+        queen "他说这句话的时候，看着我的眼睛。"
+
+        queen "我突然明白——这二十年我以为是在替他护住王位。"
+
+        queen "其实只是为了不让自己承认错了。"
+
+        $ hide_all_chars()
+        "你没有说话。沉默就是最沉重的回答。"
+
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "明早的朝会上，我会自请退位。"
+
+        queen "南方有一座修道院。我母亲临终前在那里住过几年。"
+
+        queen "我想去那里——不是流放，是去把这条命过完。"
+
+        hide queen_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "您不必先来跟我说一声。新王不会拒绝，您也清楚。"
+
+        hide player_char_img
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "你知道为什么我要先来跟你说？"
+
+        queen "因为这一座修道院，二十年前，我也对你父亲提过。"
+
+        queen "我说——'如果你执意要公布那份遗诏，就让我去那里，从此不问朝政。'"
+
+        queen "他笑了。他说，'好。'"
+
+        queen "可第二天他就死了。"
+
+        $ hide_all_chars()
+        "你身体一震。"
+
+        "你以为你已经听过这个故事的所有版本——但你没有。"
+
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "二十年了。每一年，我都对自己说: 明年我就放下。"
+
+        queen "明年。明年。"
+
+        queen "现在不能再骗自己了。"
+
+        queen "对不起。"
+
+        hide queen_img with dissolve
+
+        $ hide_all_chars()
+        "她起身的时候没有回头。"
+
+        "门关上的那一刻，你听见走廊那一头有人在轻声啜泣——"
+
+        "是弗雷德里克。"
+
+        "他一直站在门外。"
+
+        pause 1.5
+
+        $ change_stat("faith", 5)
+        $ change_stat("intrigue", 5)
+        $ change_rel("rel_queen", 10)
+        $ queen_reconciled = True
+
+    ## ============================================================
+    ## /月光疾风分支结束
+    ## ============================================================
+
     $ play_music("audio/music/coronation.ogg", fadein=3.0)
     scene black with dissolve
 
@@ -4427,7 +4556,18 @@ label ending_truth:
 
     "人们在街头巷尾议论着——二十年的谎言，终于被揭穿了。"
 
-    "伊莎贝拉王后退位。参与篡改遗诏和谋杀的人被一一审判。"
+    if queen_reconciled:
+        "伊莎贝拉王后并未被公审。"
+
+        "她在退位诏书上签下自己的名字，然后离开王都，去南方修道院静修。"
+
+        "人们说，她临走前没有带走任何东西，只在桌上留下一封信——"
+
+        "信里只有一句话: '若有人问起王后，就说她终于学会了，一个母亲该如何停下来。'"
+
+        "参与篡改遗诏和毒杀老领主的同谋仍被一一审判——这场清算，谁都不能替谁承担。"
+    else:
+        "伊莎贝拉王后退位。参与篡改遗诏和谋杀的人被一一审判。"
 
     if prince_ally and not prince_betrayed:
         "弗雷德里克王子登基为新王。"

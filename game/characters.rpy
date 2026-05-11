@@ -185,6 +185,9 @@ default poison_evidence = False
 
 # 第四章剧情标记
 default queen_trust = False
+## 月光疾风反馈 v3.12 (2026-05-11): truth ending 王后自请退位分支
+## 条件 rel_queen>=50 + prince_ally + not prince_betrayed → 私下夜谈 → 修道院静修 (非审判)
+default queen_reconciled = False
 default prince_ally = False
 default prince_betrayed = False
 default prince_returned_willingly = False

@@ -17,6 +17,33 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.12 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.12" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "玩家反馈修复 (月光疾风)" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.05.11" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "月光疾风反馈（1 处）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 真相结局加王后自请退位分支：rel_queen ≥ 50 + 王子同盟未叛时，王后" size 14 color "#c8b890" font "msyh.ttf"
+                    text "   不再被公审，而是深夜与主角私下谈心后自请去修道院静修。" size 14 color "#c8b890" font "msyh.ttf"
+                    text "   原反馈：「王后也不是十恶不赦之人，应该让她自己放下」" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 8
+
             ## ── v3.11 ──
             frame:
                 xfill True
