@@ -2834,6 +2834,62 @@ label ch3_dark_lily_hq:
     lily_master "如果你不在我们的保护下，你就是一个活靶子。"
 
     menu:
+        "提议合作而非加入——影卫给情报，我给艾登堡资源，双方互不臣属" if intrigue >= 60:
+            $ change_rel("rel_lily", 15)
+            $ change_stat("intrigue", 8)
+            $ ch3_lily_alliance_independent = True
+
+            hide lily_master_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "影主，加入和不加入都不是我想要的答案。"
+
+            player "我有第三个提议。"
+
+            hide player_char_img
+            $ hide_all_chars("lily_master_img")
+            show lily_master_img at left with dissolve
+            lily_master "说。"
+
+            hide lily_master_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "影卫给我情报，我给艾登堡的资源——粮道，人脉，中立城镇关系。"
+
+            player "我不进你的系统，你也不进我的。但我们共享暗焰的信息，共享暮色之露的查证。"
+
+            player "你那边有损失，艾登堡的财库出三分之一。我这边出事，你那边接应。"
+
+            player "对等。不臣属。"
+
+            $ hide_all_chars()
+            "影主看着你，看了很久。比刚才任何一次都久。"
+
+            $ hide_all_chars("lily_master_img")
+            show lily_master_img at left with dissolve
+            lily_master "你父亲也提过类似的话。二十年前。"
+
+            lily_master "那时候我没答应——我当时还以为加入是唯一的选项。"
+
+            lily_master "你比他往前走了一步。"
+
+            hide lily_master_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "那今天答应吗？"
+
+            hide player_char_img
+            $ hide_all_chars("lily_master_img")
+            show lily_master_img at left with dissolve
+            lily_master "……答应。"
+
+            lily_master "影卫从今天起跟艾登堡平起平坐。你的需求，我的人会知道。我的需求，你的人也得知道。"
+
+            $ hide_all_chars()
+            "她转身走回内殿。你也转身走出门。"
+
+            "出门的时候，守在外面的影卫向你低头致意——一个礼节，跟你进来时不一样。"
+
         "加入影卫":
             $ dark_lily_joined = True
             $ change_rel("rel_lily", 30)
