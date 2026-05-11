@@ -138,7 +138,12 @@ image bg palace_garden_dusk = ConditionSwitch(
 
 ## 核心角色
 image aldric_img = Transform("images/aldric.png", zoom=0.45, yalign=1.0)
-image elena_img = Transform("images/elena.png", zoom=0.45, yalign=1.0)
+## 艾琳娜立绘演化 (batch 5 "云"反馈, 2026-05-11):
+## rel_elena >= 80 或 elena_romance 时切换"亲密版" (表情柔和 + 脸颊微红 + 嘴角轻笑)
+## 服装/发型/姿势/背景完全一致, 变化 subtle 但表达"她把面具卸下来了"
+image elena_img = ConditionSwitch(
+    "rel_elena >= 80 or elena_romance", Transform("images/elena_intimate.png", zoom=0.45, yalign=1.0),
+    "True", Transform("images/elena.png", zoom=0.45, yalign=1.0))
 image bishop_img = Transform("images/bishop.png", zoom=0.45, yalign=1.0)
 image baron_img = Transform("images/baron.png", zoom=0.45, yalign=1.0)
 image captain_img = Transform("images/captain.png", zoom=0.45, yalign=1.0)
