@@ -606,7 +606,7 @@ label ch5_factions_move:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "雷恩，把他送出去。礼数留半。走快一点。"
+            player "雷恩，把他送出去。不必客套，走快一点。"
 
             hide player_char_img
             $ hide_all_chars("captain_img")
