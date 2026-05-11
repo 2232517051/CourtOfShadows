@@ -97,6 +97,21 @@ screen changelog_screen():
                 background Solid("#1a152820")
                 vbox:
                     spacing 6
+                    text "艾琳娜路线深化（云反馈"满好感无视觉/感情线打磨"）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 高好感（rel_elena ≥ 80）或确认恋爱后，艾琳娜立绘自动切换「亲密版」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "   表情更柔和 + 眼神温和 + 脸颊微红，给玩家"她对你不一样了"的视觉反馈" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第四章花园握手后那夜加独处段：北方银带 / 走山路五天 / 一起回去看星空" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
                     text "其他打磨" size 18 color "#9b59b6" font "msyh.ttf" bold True
                     null height 4
                     text "· AI 味金句清洗：清除多处对仗 / 升华式收尾旁白（保持沉浸感）" size 14 color "#c8b890" font "msyh.ttf"
