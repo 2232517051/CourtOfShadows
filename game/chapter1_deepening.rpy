@@ -451,6 +451,34 @@ label ch1_deep_patrol:
     captain "有人在侦察我们的领地。"
 
     menu:
+        "派使者去克雷恩家明面交涉——亮家名压人" if reputation >= 30:
+            $ log_decision("第一章深化", "派使者明面交涉克雷恩")
+            $ change_stat("reputation", 5)
+            $ change_stat("intrigue", 3)
+            $ ch1_deep_scouts_choice = "envoy"
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "不追，也不躲。派老兵杨去克雷恩男爵家——穿家徽正装，明面上提一句。"
+
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "明面交涉？这不就把咱们发现他们的事告诉对方了吗？"
+
+            hide captain_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "正是。让他们知道——艾登堡的新主，不需要靠暗箭。"
+
+            player "让杨当着对方家臣的面问一句: '听说贵府最近往艾登堡边境派了几个 \"打猎的\"? 艾登可不是无主之地。'"
+
+            $ hide_all_chars()
+            "三天后，老兵回来了。男爵家给的回信: '想必是误会，已严令家臣不再越界。'"
+
+            "你不知道这是真退还是装样。但至少这一回合，你没用一兵一卒，让对方先在台面上服了软。"
+
         "追踪他们「我要知道他们来这里干什么」":
             $ log_decision("第一章深化", "追踪斥候")
             $ change_stat("power", 5)
@@ -677,6 +705,40 @@ label ch1_deep_court:
     "两个人的脸色都不太好看。"
 
     menu:
+        "叫村里其他养羊户作证——这种事不止你们两家" if loyalty >= 30:
+            $ log_decision("第一章深化", "领主法庭: 召邻里作证")
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 3)
+            $ ch1_deep_sheep_verdict = "neighbors"
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "奥尔德里克，把附近三个村的村长都叫来。还有边上养羊的几户人家。"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "为这十二只羊?"
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "为以后还有多少十二只羊的事。"
+
+            $ hide_all_chars()
+            "下午，八九个村人挤进了大厅。你让他们自己说——"
+
+            "'我家围栏也有裂痕，上个月跑了三只猪。' '我家羊也跑过，邻居把羊还回来了。'"
+
+            "你听了半个时辰，没说话。最后下令——"
+
+            "'十二只各得六只，按邻里旧例办。围栏破洞由领主出工匠，各家不必自掏钱修。'"
+
+            "村人们一时没反应过来。一个老头先开口: '领主大人……真出工匠?'"
+
+            "你点头。老人当场抹起了眼睛。"
+
         "平分羊群「各六只。各自回去修好围栏。」":
             $ log_decision("第一章深化", "领主法庭: 平分羊群")
             $ change_stat("reputation", 3)
@@ -770,6 +832,33 @@ label ch1_deep_court:
     "「我同情他们的遭遇。但偷就是偷。如果今天不惩罚，明天人人都来偷，我这面包铺还开不开了？」"
 
     menu:
+        "自掏腰包付面包钱+给少年安排工作" if wealth >= 30:
+            $ log_decision("第一章深化", "领主法庭: 自掏腰包解决偷面包")
+            $ change_stat("wealth", -3)
+            $ change_stat("loyalty", 5)
+            $ change_stat("reputation", 5)
+            $ ch1_deep_widow_verdict = "buy"
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "弗里茨——这三个铜币我替少年付了。"
+
+            "你从腰间钱袋里取出三枚铜币，放在面包师面前的桌上。"
+
+            player "另外，你的面包铺要不要再请一个学徒? 每天给他一顿饭+月底两枚银币。少年我替你考察过——能扛能跑能算数。"
+
+            $ hide_all_chars()
+            "面包师愣了一下。他看了少年一眼，又看了你一眼。"
+
+            "「……领主大人都开口了，老朽哪能不答应。汉斯，明天来铺子里报到。」"
+
+            "少年抬起头，眼睛里第一次有了光。他不知道说什么，只能反复鞠躬。"
+
+            "这事在城里传开了。三天后，有两户穷人家的孩子主动来城堡问能不能给他们也找份活。"
+
+            "你给奥尔德里克写了张条子: '能干粗活的安排到马厩和铁匠铺，能算数的来记事房。工钱从我私库出。'"
+
         "赦免少年「他偷的是面包，不是金子。饥饿不是罪。」":
             $ log_decision("第一章深化", "领主法庭: 赦免偷面包少年")
             $ change_stat("loyalty", 8)
