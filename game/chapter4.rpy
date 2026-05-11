@@ -538,6 +538,45 @@ label chapter4_start:
     show player_char_img at left with dissolve
 
     menu:
+        "塞几枚银币让驿站管事「忘记」我们路过" if wealth >= 40:
+            $ change_stat("wealth", -3)
+            $ change_stat("intrigue", 5)
+            $ ch4_post_station_bribed = True
+
+            player "雷恩，停一下。我去后院。"
+
+            hide player_char_img with dissolve
+            $ hide_all_chars()
+            "你下马，走到驿站后院。管事正在给一匹瘦马刷毛——见你来，手立刻顿住。"
+
+            "你没说话，从腰间钱袋里取出五枚银币，慢慢摆在草料桶边沿上。"
+
+            "管事的目光落在银币上。"
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我们没在这里停过。马也没饮过你这里的水。"
+
+            $ hide_all_chars()
+            "管事低头沉默了三秒，伸手把银币扫进了围裙口袋。"
+
+            "'……驿站今天没接客。明早换班的人也不会知道有谁路过。'"
+
+            "你回到队伍前，没多说一个字。"
+
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "你刚才——?"
+
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "在王都，最不值钱的是消息。最值钱的也是消息。"
+
+            player "五个银币换一份'我们没来过'的报告——这买卖划算。"
+
+            hide player_char_img with dissolve
+
         "停下补给，顺便打探消息":
             $ change_stat("intrigue", 2)
 
@@ -1870,6 +1909,45 @@ label ch4_garden:
         "父亲的信中曾暗示先王临终前留下了重要文件。也许在这些旧档案中能找到蛛丝马迹。"
 
     menu:
+        "找教会档案员私下打听先王临终圣礼" if faith >= 50:
+            $ change_stat("faith", 5)
+            $ change_stat("intrigue", 5)
+            $ ch4_archive_priest_route = True
+
+            $ hide_all_chars()
+            "你绕过中央阅档大厅，直接去了教会档案侧室。"
+
+            "档案员是个年过六旬的老修士，正在抄一本破旧的圣经。"
+
+            "你没拿身份。你只是合十行了一礼，用修道院里学的祷词起头。"
+
+            "老修士抬头看了你一眼。两秒后，他放下了笔。"
+
+            "'……您是哪个堂区出来的子弟? 这段祷词只有南方修道院讲。'"
+
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "圣·尤里安。我父亲也是。"
+
+            $ hide_all_chars()
+            "老修士的眼睛里有了不一样的东西。"
+
+            "'……请坐. 我倒杯热水. 您是来问什么的?'"
+
+            "你压低声音: '先王临终前最后一次圣礼, 哪位主教主持? 当时是否有第二位见证?'"
+
+            "老修士沉默了很久. 然后他站起身, 走到角落的木箱前, 取出一本用红绳系的薄册."
+
+            "'这本临终圣礼日志没归在公档. 当时主持的是费雷恩大主教. 见证人位空着——'"
+
+            "'——按规矩, 临终圣礼必须有两位神职在场. 没有第二位, 这场圣礼**在教会眼里其实不算成立**.'"
+
+            "你的手指略微一紧. 这是教会内部都不公开的秘密. 而你, 因为虔信, 因为说出"圣·尤里安"四个字, 一个老修士愿意告诉你."
+
+            "你向他鞠了一礼. 没说谢. 他也没说不客气. 但你走出门时, 他在你背后轻声说了一句:"
+
+            "'……走吧. 圣母保佑您查到您想查的.'"
+
         "仔细搜查先王最后三年的宫廷日志":
             $ change_stat("intrigue", 5)
             "你在浩如烟海的档案中翻找了整整两个时辰。"
