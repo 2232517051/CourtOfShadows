@@ -35,3 +35,6 @@ Thumbs.db
 
 # Ren'Py 临时文件
 tmp/
+
+# 工具脚本扫描输出 (每次跑会变, 不入库)
+crisis_candidates.txt
