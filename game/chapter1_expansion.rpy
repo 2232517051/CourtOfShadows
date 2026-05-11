@@ -1551,6 +1551,9 @@ label ch1_exp_village_visit:
 
     "不是什么惊天动地的事。但对这个村庄来说，这些比什么都重要。"
 
+    ## batch 15 反馈"沈虞舟" (2026-05-11): chapter1 巡视村庄段缺成就解锁
+    $ unlock_achievement("village_patrol")
+
     jump ch1_exp_evening_feast
 
 ## ============================================================
