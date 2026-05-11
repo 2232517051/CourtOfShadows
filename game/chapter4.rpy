@@ -1450,7 +1450,7 @@ label ch4_throne:
             "他笑了，笑容中有一种与年龄不符的苍凉。"
             prince "我觉得它们很无聊。但也很危险。"
             prince "就像这杯酒——好喝，但喝多了会死人。"
-            $ change_rel("rel_prince", 5)
+            $ change_rel("rel_prince", 3)  ## batch 14 #7 王子好感: 5→3 减弱小加成累加
 
         "保持礼貌的距离":
             hide prince_img
@@ -1465,7 +1465,7 @@ label ch4_throne:
         "直接问他关于父亲的事":
             $ change_stat("intrigue", 8)
             $ change_stat("loyalty", -2)  ## balance pass 修法 1: 把父辈情谊工具化套王子情报
-            $ change_rel("rel_prince", 3)
+            $ change_rel("rel_prince", 1)  ## batch 14 #7 王子好感: 3→1 减弱小加成累加
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1848,7 +1848,7 @@ label ch4_garden:
 
     menu:
         "你在那之后就开始计划了？":
-            $ change_rel("rel_prince", 5)
+            $ change_rel("rel_prince", 3)  ## batch 14 #7 王子好感: 5→3 减弱小加成累加
             $ prince_mentor_known = True
             hide prince_img
             $ hide_all_chars("player_char_img")
@@ -1863,7 +1863,7 @@ label ch4_garden:
             prince "而你——也许就是那个机会。"
 
         "那你为什么不恨她？":
-            $ change_rel("rel_prince", 3)
+            $ change_rel("rel_prince", 1)  ## batch 14 #7 王子好感: 3→1 减弱小加成累加
             $ prince_mentor_known = True
             hide prince_img
             $ hide_all_chars("player_char_img")

@@ -1603,8 +1603,9 @@ init python:
             store.random_event_cooldown -= 1
             return False
 
-        ## 30% 概率不触发事件（给玩家喘息空间）
-        if renpy.random.randint(1, 100) <= 30:
+        ## 15% 概率不触发事件（batch 14 编辑部替补反馈"随机事件少"
+        ## 从 30% 调到 15%, 池子 40 事件玩家可见性 ~50% → ~70%, +40%）
+        if renpy.random.randint(1, 100) <= 15:
             return False
 
         available = get_available_events(context)

@@ -316,7 +316,7 @@ label ch5_prince_letter:
 
     menu:
         "回信：请他在最关键的时刻公开表态":
-            $ change_rel("rel_prince", 5)
+            $ change_rel("rel_prince", 3)  ## batch 14 #7 王子好感: 5→3 减弱小加成累加
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -326,7 +326,7 @@ label ch5_prince_letter:
             "少年信使把信藏在鞋底，还没等你说完就走了。"
 
         "回信：让他千万保重，不要冒险":
-            $ change_rel("rel_prince", 3)
+            $ change_rel("rel_prince", 1)  ## batch 14 #7 王子好感: 3→1 减弱小加成累加
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你已经做得够多了。保护好自己。等一切尘埃落定，我们再见面。"
