@@ -1857,6 +1857,7 @@ label ch5_exp_eve_of_battle:
         "假意接受，暗中设计":
             $ ch5_exp_queen_ultimatum = "accept"
             $ change_stat("intrigue", 5)
+            $ change_stat("faith", -2)  ## balance pass 修法 1: 假意答应换取布局空间, 欺骗换胜利
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve

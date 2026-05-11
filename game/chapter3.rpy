@@ -3942,6 +3942,7 @@ label ch3_truth_emerges:
         "派人暗中调查马修斯的行踪":
             $ change_stat("intrigue", 5)
             $ change_stat("power", 5)
+            $ change_stat("loyalty", -2)  ## balance pass 修法 1: 暗中监视盟友 (马修斯是叔父辈), 内部诚信受损
             $ ch3_prepared_first = True
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve

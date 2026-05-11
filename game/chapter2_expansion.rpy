@@ -1924,6 +1924,7 @@ label ch2_exp_night_intrigue:
         "悄悄跟踪「暗中观察」":
             $ ch2_exp_night_choice = "follow"
             $ change_stat("intrigue", 10)
+            $ change_stat("faith", -2)  ## balance pass 修法 1: 夜间窃探, 信仰受损
             $ log_decision("第二章扩展", "暗中跟踪夜间潜入者")
 
             $ hide_all_chars()

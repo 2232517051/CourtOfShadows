@@ -1284,6 +1284,7 @@ label ch3_exp_confrontation:
 
         "暗中接管「取代首领的位置」":
             $ change_stat("intrigue", 15)
+            $ change_stat("reputation", -3)  ## balance pass 修法 1: 冒名顶替阴谋, 一旦走漏名声崩
             $ change_courage(10)
             $ log_decision("第三章扩展", "试图暗中接管暗百合")
 
