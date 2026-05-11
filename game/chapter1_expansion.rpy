@@ -505,6 +505,37 @@ label ch1_exp_elena_encounter:
     "你有两个选择——"
 
     menu:
+        "等她离开后，在她房门口留一张纸条" if reputation >= 25:
+            $ change_stat("reputation", 5)
+            $ change_stat("intrigue", 3)
+            $ change_rel("rel_elena", -3)
+            $ ch1_exp_elena_note = True
+
+            $ hide_all_chars()
+            "你没有现身。等她走远了，你从柱子后面出来，沿原路回到书房。"
+
+            "你撕了张羊皮纸，用最简短的字写了八个字，用蜡封了。"
+
+            "'你藏的那封信我知道。'"
+
+            "天还没亮你就让侍女送到艾琳娜门口。"
+
+            "天亮后，艾琳娜主动来你书房求见。她的眼眶下面有黑圈，没睡好。"
+
+            $ hide_all_chars("elena_img")
+            show elena_img at left with dissolve
+            elena "您是想让我自己来跟您说。"
+
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "对。"
+
+            $ hide_all_chars()
+            "她坐下来。信她带来了，摊在桌上。你没急着拿。"
+
+            "你想先听她说。"
+
         "现身质问「你在做什么？」":
             $ change_stat("power", 3)
             $ change_rel("rel_elena", -5)
