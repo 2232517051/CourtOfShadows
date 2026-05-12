@@ -2477,10 +2477,11 @@ label ending_iron_lord:
             player "雷恩, 现在。让你那个'被俘的'信使把假军令递出去。"
             $ hide_all_chars()
             "三个月前你就准备好了这一手——伪造的盟军调令, 骑着对方军队制服的信使。"
-            "信使在敌阵后方'被巡逻队抓住', 信件搜出, 当场宣读。"
-            "敌军右翼指挥官认不出真假, 但他认得自己将军的笔迹——你伪造的笔迹。"
-            "右翼调头朝中军开火。十分钟后, 敌阵从内部崩溃。"
-            "左翼的危机解了, 不是因为你派了人去救——是因为敌人开始救自己。"
+            $ trigger_crisis("intrigue", 6,
+                "信使要让敌军右翼指挥官相信那是自己将军的笔迹。这一刻——靠的是你伪造的细节真的骗得过老兵的眼睛。",
+                "ironlord_ruse_win", "ironlord_ruse_lose",
+                courage_cost=15)
+            call crisis_encounter from _call_crisis_ironlord_ruse
 
         "亲自率领预备队增援左翼":
             $ change_stat("power", 3)
@@ -2489,9 +2490,11 @@ label ending_iron_lord:
             show player_char_img at left with dissolve
             player "跟我来！"
             $ hide_all_chars()
-            "你带着最后的预备队冲向了左翼。你的出现重新点燃了士兵们的斗志。"
-            "在你的带领下，摇摇欲坠的防线重新稳固了下来。"
-            "敌军看到你的旗帜出现在左翼，犹豫了一瞬——就是这一瞬间的犹豫，改变了战局。"
+            $ trigger_crisis("combat", 7,
+                "你冲进了左翼的混战。这一刻——你的剑得真能砍开围你的人, 你的旗帜得让士兵们抬起头。",
+                "ironlord_charge_win", "ironlord_charge_lose",
+                courage_cost=20)
+            call crisis_encounter from _call_crisis_ironlord_charge
 
         "命令右翼迂回，从侧面攻击敌军":
             $ change_stat("intrigue", 3)
@@ -2499,9 +2502,13 @@ label ending_iron_lord:
             show player_char_img at left with dissolve
             player "左翼继续坚守！右翼绕到敌军后方——给我咬住他们！"
             $ hide_all_chars()
-            "你的命令被迅速执行。右翼的部队以一个大胆的弧线绕到了敌军身后。"
-            "当敌人发现自己被两面夹击时，已经来不及了。"
+            $ trigger_crisis("intrigue", 5,
+                "右翼要走一个大弧线绕到敌军后方。这一刻——靠的是你定的时间表真的对得上, 不晚不早。",
+                "ironlord_flank_win", "ironlord_flank_lose",
+                courage_cost=10)
+            call crisis_encounter from _call_crisis_ironlord_flank
 
+    label ironlord_post_left_flank:
     hide captain_img with dissolve
 
     "下午三点，战场上出现了一个决定性的时刻——"
@@ -2557,14 +2564,23 @@ label ending_iron_lord:
     hide player_char_img
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
-    captain "我们阵亡了七十多人，伤了一百多。敌军……至少是我们的三倍。"
+    if iron_battle_outcome == "pyrrhic":
+        captain "我们阵亡了两百多人, 伤了三百多。敌军——是我们的两倍, 不是三倍。"
+    else:
+        captain "我们阵亡了七十多人，伤了一百多。敌军……至少是我们的三倍。"
 
     hide captain_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "七十多人……"
-
-    "你闭上了眼睛。七十多条生命。每一个都是一个家庭的支柱。"
+    if iron_battle_outcome == "pyrrhic":
+        player "两百多人……"
+        $ hide_all_chars()
+        "你闭上了眼睛。两百多条生命。每一个都是一个家庭塌下来。"
+        "这场仗你赢了, 但代价大得让你不敢去看名册。"
+    else:
+        player "七十多人……"
+        $ hide_all_chars()
+        "你闭上了眼睛。七十多条生命。每一个都是一个家庭的支柱。"
 
     hide player_char_img
     $ hide_all_chars("captain_img")
@@ -2847,6 +2863,46 @@ label ending_iron_lord:
     $ persistent.endings_seen.add("iron_lord")
 
     jump game_ending
+
+## ── 铁腕线左翼危机 crisis labels (栀子 2026-05-02 反馈: 缺判定) ──
+label ironlord_ruse_win:
+    "信使在敌阵后方'被巡逻队抓住', 信件搜出, 当场宣读。"
+    "敌军右翼指挥官认不出真假, 但他认得自己将军的笔迹——你伪造的笔迹。"
+    "右翼调头朝中军开火。十分钟后, 敌阵从内部崩溃。"
+    "左翼的危机解了, 不是因为你派了人去救——是因为敌人开始救自己。"
+    jump ironlord_post_left_flank
+
+label ironlord_ruse_lose:
+    $ iron_battle_outcome = "pyrrhic"
+    "信使经验不够。当敌方一个老校官皱眉问'这印章不太对吧'时, 他的眼神慌了一瞬。"
+    "信件被识破。信使被当场绞杀, 反间彻底失效。"
+    "左翼的防线在援兵调到之前就真的崩了——你赢的代价大了。"
+    jump ironlord_post_left_flank
+
+label ironlord_charge_win:
+    "你带着最后的预备队冲向了左翼。你的出现重新点燃了士兵们的斗志。"
+    "在你的带领下，摇摇欲坠的防线重新稳固了下来。"
+    "敌军看到你的旗帜出现在左翼，犹豫了一瞬——就是这一瞬间的犹豫，改变了战局。"
+    jump ironlord_post_left_flank
+
+label ironlord_charge_lose:
+    $ iron_battle_outcome = "pyrrhic"
+    "你冲进了混战, 但敌人的预备队比你想象的多。"
+    "一支长矛擦着你的腰侧划过, 你的战马倒下了。"
+    "雷恩拼死把你从战阵里拽出来——左翼是稳了, 可大半的预备队没回来。"
+    jump ironlord_post_left_flank
+
+label ironlord_flank_win:
+    "你的命令被迅速执行。右翼的部队以一个大胆的弧线绕到了敌军身后。"
+    "当敌人发现自己被两面夹击时，已经来不及了。"
+    jump ironlord_post_left_flank
+
+label ironlord_flank_lose:
+    $ iron_battle_outcome = "pyrrhic"
+    "右翼出发得晚了一刻——这一刻足够让对方哨兵发出警报。"
+    "你的右翼撞上了敌军临时调头的步兵方阵, 两线都陷入了苦战。"
+    "左翼最后是靠人头硬填回来的——胜利留下的不是欢呼, 是阵亡名单。"
+    jump ironlord_post_left_flank
 
     ## ============================================================
     ## 结局2：影中之王

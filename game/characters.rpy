@@ -198,6 +198,7 @@ default court_faction = ""
 
 # 第五章/结局标记
 default ending_type = ""
+default iron_battle_outcome = "decisive"  # 铁腕线战役结果 (decisive 决定性胜利 / pyrrhic 惨胜) — 由左翼危机 crisis 决定
 
 ## ============================================================
 ## 持久化数据（跨存档）
