@@ -17,6 +17,64 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.14 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.14" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "AI 味第三轮清洗 + balance pass" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.05.18" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "AI 味清洗第三轮（打遍天下无敌手 4 星反馈）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 禁用清单扩 13 → 17 类，新加角色出戏 / 旁白说教 / 反派话太正确 / 抽象大词 / 选项均匀化 5 子类" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 全项目清洗 18 处（chapter1-5 主线 + interludes 章间 + ending 收尾）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 玩家审查直接抓的两条新规则：「躲」改「逃避」/「X 很 A，很 B」双形容词对仗删整句" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "属性 balance pass（洋溢 + 千品反馈持续推进）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· menu 属性锁批量加：17 → 131 处，6 大属性真的影响选项可见性" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· reputation 检定 1 → 14 处，不再是纯展示数值" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 检定阈值批量上调：低门槛 30/35/40 → 40/45/50（>=50 以上保留）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· chapter5 关键 menu 加配对扣减：谈判让步扣 power / 阴谋反间扣 reputation" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "bug 修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修 3 处全锁 menu 保底（chapter4 王后税法 / chapter5 战后处置 / chapter3_expansion 暗百合）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 每个 menu 至少留 1 个无属性 condition 选项，防玩家属性不达标卡死" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· Måneskin 反馈：Elena 主线坦白事件闭合加 flag set，修森林夜话重复说秘密" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 8
+
             ## ── v3.13 ──
             frame:
                 xfill True

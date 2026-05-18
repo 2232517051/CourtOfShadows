@@ -2,6 +2,76 @@
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+【v3.5】AI 味第三轮清洗 + balance pass (2026-05-18)
+
+[起因]
+TapTap 玩家"打遍天下无敌手" 玩 3.8 小时 4 星推荐评价:
+"重复非常空洞, 有 AI 的那种说教味和'ai 道德感',
+踩到了你可能会说什么, 因为我在和 ai 推演相似剧情的时候早看过了."
+
+诊断:
+  - 之前两轮 AI 味清洗集中在"金句对仗", 没覆盖
+    "出戏议论 / 旁白说教 / 反派话太正确" 等 LLM 副作用
+  - balance 数据: intrigue 293 加只 14 扣, 5/6 属性溢出
+  - menu 属性 condition 仅 17 处, 玩家"看见但选不了" 反馈太少
+  - reputation 检定仅 1 处, 几乎纯展示
+
+[禁用清单扩 13 → 17 类]
++ 17a 角色出戏发议论 (5 子类: 角色出戏 / 旁白勇敢的选择 / 反派话太正确
+       / 抽象大词替具体动作 / 道德选项均匀化)
++ 17a.1 抽象"躲" 改"逃避" 或具体动作 (玩家审查直接抓的)
++ 17a.2 "X 很 A, 很 B" 双形容词对仗删整句 (玩家审查直接抓的)
+
+[AI 味清洗 18 处]
+* 17a (8 处): chapter1_expansion / chapter4 / interludes / script
+  删 "无论如何...说教" 收尾; 修 "躲→逃避"; 删 "她的笑很慢, 很深"
+* 17b (2 处): chapter2_expansion "勇敢的决定+不一定聪明" /
+  chapter3 elena "你做了正确的决定"
+* 17c (2 处): chapter5 queen 反转金句 "我以为...其实只是..." /
+  chapter4 prince "可惜但我理解"
+* 17d (6 处): chapter4 "极短时间做出选择" / governance "饥荒做出抉择" /
+  npc_sidelines meta 预告 "将影响最终结局" /
+  endings player "面对真相不可战胜" /
+  chapter2_expansion 祝酒 "不论年龄不论出身"
+
+[balance pass]
++ B1 加扣减 sample (2 处, chapter5):
+    · 谈判退路 intrigue+8 加 power-3 (谈判让步)
+    · 反间 intrigue+5 加 reputation-3 (阴谋损名)
++ B3 检定阈值批量上调 (24 处, 9 文件):
+    · if X >= 30 → >= 40
+    · if X >= 35 → >= 45
+    · if X >= 40 → >= 50
+    · >= 50/60/70 不动 (需通过率测试)
++ B2 menu 属性锁批量加 (60 处, 5 文件):
+    · 选项有 change_stat +N → 加 if STAT >= 阈值
+      (N→阈值: 8→45, 10→55, 12→58, 15→60, 20+→65; wealth +15+ 跳过)
+    · 全项目 menu condition 17 → 131 处
++ B4 reputation 检定加 (B2 顺带): 1 → 14 处
++ 分布: intrigue 45 / power 26 / faith 18 / wealth 14 / loyalty 14 / reputation 14
+
+[bug 修复 — B2 引入的 3 处全锁 menu]
+* chapter4.rpy:1263  王后逼问税法 menu "解释并示好" 去 reputation>=55
+* chapter5.rpy:2692  战后处置 menu "宽大为怀" 去 loyalty>=55
+* chapter3_expansion.rpy:1129  暗百合应对 menu "军事打击" 去 power>=55
+每 menu 至少 1 个无属性 condition 选项作保底, 防玩家卡死
+
+[改动文件]
+- game/chapter1_expansion.rpy / chapter2.rpy / chapter2_expansion.rpy /
+  chapter3.rpy / chapter3_expansion.rpy / chapter4.rpy / chapter4_expansion.rpy /
+  chapter5.rpy / chapter5_expansion.rpy / endings_expansion.rpy /
+  governance.rpy / interludes.rpy / npc_sidelines.rpy / prologue_deepening.rpy /
+  random_events_new.rpy / script.rpy
+
+[已知风险 (留专门 balance test session)]
+- B2 自动加 condition 没读 menu 上下文, "拒绝"型选项可能锁错
+- 阈值梯度根据 change_stat 大小定, 没考虑路线 mismatch
+  (走 intrigue 路撞 power 锁 menu 可能选项少)
+- 玩家通过率需测试调整, 太严的阈值调低, 太松的调高
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
 【v2.2】当前版本 — 全平台版 (2026-03-18)
 
 [新增平台]
