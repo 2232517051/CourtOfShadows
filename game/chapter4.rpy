@@ -1260,7 +1260,7 @@ label ch4_throne:
                 $ hide_all_chars("queen_img")
                 show queen_img at left with dissolve
 
-            "解释并示好——为了百姓，非为不敬" if reputation >= 55:
+            "解释并示好——为了百姓，非为不敬":
                 $ change_stat("reputation", 10)
                 $ change_rel("rel_queen", 5)
                 hide queen_img

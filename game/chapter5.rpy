@@ -2689,7 +2689,7 @@ label ending_iron_lord:
 
     $ mark_important_choice()
     menu:
-        "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+ 声望+ 敌意消除" if loyalty >= 55:
+        "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+ 声望+ 敌意消除":
             $ change_stat("loyalty", 10)
             $ change_stat("reputation", 10)
             hide elena_img

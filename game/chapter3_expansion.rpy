@@ -1126,7 +1126,7 @@ label ch3_exp_confrontation:
     "你看着桌上的情报，陷入了沉思。"
 
     menu:
-        "军事打击「正面摧毁暗百合」" if power >= 55:
+        "军事打击「正面摧毁暗百合」":
             $ change_stat("power", 10)
             $ change_courage(8)
             $ log_decision("第三章扩展", "以军事手段正面摧毁暗百合")
