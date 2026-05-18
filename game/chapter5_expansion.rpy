@@ -1265,7 +1265,7 @@ label ch5_exp_last_night:
 
     ## --- 主教的祈祷 ---
 
-    if faith >= 30:
+    if faith >= 50:
         scene bg great_hall with dissolve
 
         "经过教堂时，你听到了低沉的祈祷声。"

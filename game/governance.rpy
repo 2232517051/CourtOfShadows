@@ -684,7 +684,7 @@ label gov_famine_crisis:
     hide aldric_img with dissolve
 
     menu:
-        "饥荒逼近，你必须做出抉择。"
+        "粮仓只剩两周的存量。"
 
         "亲自下村组织自救——你的话能让百姓愿意撑" if loyalty >= 60:
             $ change_stat("loyalty", 8)

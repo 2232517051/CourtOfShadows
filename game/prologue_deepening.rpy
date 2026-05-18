@@ -1531,7 +1531,7 @@ label prologue_deep_adult_1:
 
             "你的手心在出汗。整个赌馆的注意力都集中到了这张桌子上。"
 
-            if intrigue >= 35:
+            if intrigue >= 45:
                 $ change_stat("intrigue", 5)
                 $ deep_tavern_intel = True
 

@@ -1465,9 +1465,7 @@ label npc_baron_honor:
 
     "你离开地牢，回到了地面上。阳光刺得你眯了眯眼睛。"
 
-    "在这场权力游戏中，每个人都有自己的故事。但故事再感人，也不能遮蔽现实的残酷。"
-
-    "你需要做出选择——而这个选择，将影响你与男爵之间的最终结局。"
+    "她的故事你听完了。男爵那边怎么处理，你心里得有个数。"
 
     hide player_char_img with dissolve
 
@@ -1676,7 +1674,7 @@ label npc_lily_test:
             show lily_master_img at left with dissolve
             lily_master "是的。权力的本质就是做让自己不舒服的决定。"
 
-            lily_master "你通过了考验。不是因为你做了正确的决定——而是因为你做了艰难的决定，并且承担了它的重量。"
+            lily_master "你通过了。你没逃避，也没装作没听见——这就够了。"
 
             $ hide_all_chars()
             "你走出密室。走廊里回荡着远处隐约传来的哭声，像一根细针，扎在你心口。"

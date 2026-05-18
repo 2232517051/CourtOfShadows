@@ -499,7 +499,7 @@ label ch2_preparation:
     caravan_hand "这一带入夜后不安全，求贵人行个方便！"
 
     menu:
-        "买下他们这趟运的全部货——一次解决他们整个商队的难题" if wealth >= 40:
+        "买下他们这趟运的全部货——一次解决他们整个商队的难题" if wealth >= 50:
             $ change_stat("wealth", -8)
             $ change_stat("reputation", 8)
             $ change_stat("loyalty", 3)
@@ -1308,7 +1308,7 @@ label ch2_preparation:
     hide elena_img with dissolve
 
     menu:
-        "主动谈酒生意——你听说艾登堡北边山泉的水能配出好酒" if wealth >= 30:
+        "主动谈酒生意——你听说艾登堡北边山泉的水能配出好酒" if wealth >= 50:
             $ change_stat("wealth", 5)
             $ change_stat("reputation", 3)
             $ ch2_wells_business_talk = True
@@ -2406,7 +2406,7 @@ label ch2_after_council:
             "五百金币。相当于艾登堡半个月的全部税收。"
 
             menu:
-                "付钱" if wealth >= 30:
+                "付钱" if wealth >= 50:
                     $ change_stat("wealth", -15)
                     merchant "领主大人爽快。买家是……教会的人。一个穿灰色修士袍的人。"
 
@@ -2624,7 +2624,7 @@ label ch2_after_council:
     captain "我不确定这意味着什么，但……总觉得不太对劲。"
 
     menu:
-        "派艾琳娜带两个民兵截在南门外——男爵的人怕暴露身份不敢拦" if loyalty >= 30:
+        "派艾琳娜带两个民兵截在南门外——男爵的人怕暴露身份不敢拦" if loyalty >= 50:
             $ change_stat("loyalty", 5)
             $ change_stat("intrigue", 3)
             $ ch2_baron_emissary_intercepted = True
@@ -2791,7 +2791,7 @@ label ch2_assassination:
 
     "夜风从林间穿过，带着一股潮湿的腐败气息。"
 
-    if intrigue >= 35 or (rel_elena >= 15 and spy_network):
+    if intrigue >= 45 or (rel_elena >= 15 and spy_network):
         "你的直觉告诉你有什么不对。"
 
         "树林太安静了——没有虫鸣，没有夜鸟。甚至连风声都突然消失了，像是整片森林屏住了呼吸。"

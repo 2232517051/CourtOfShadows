@@ -1621,7 +1621,7 @@ label ch2_exp_banquet:
             hide noble_werner_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "我的祝词——敬真正有勇气站出来承担责任的人。不论年龄，不论出身。"
+            player "我的祝词——敬这桌上还记得我父亲是怎么走的人。"
 
             "维尔纳公子气得面色通红，但在这个场合不好发作。"
 
@@ -1723,7 +1723,7 @@ label ch2_exp_night_intrigue:
     "你快速评估了一下形势。你身上没有武器，护卫们都在营房里。现在叫人可能会惊走那个黑影。"
 
     menu:
-        "走廊尽头传来轻微的声响。你必须立刻做出决定。"
+        "走廊尽头传来轻微的声响。"
 
         "直接追上去质问「正面交锋」":
             $ ch2_exp_night_choice = "confront"
@@ -1913,7 +1913,7 @@ label ch2_exp_night_intrigue:
                     $ hide_all_chars("count_grey_img")
                     show count_grey_img at left with dissolve
 
-                    count_grey "年轻人，你做了一个勇敢的决定。但不一定是一个聪明的决定。"
+                    count_grey "年轻人，胆子可以。脑子也得跟上。"
 
                     hide count_grey_img with dissolve
 

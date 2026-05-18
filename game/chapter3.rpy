@@ -180,7 +180,7 @@ label ch3_strange_signs:
         $ dark_lily_exists_known = True
 
     menu:
-        "召集附近领主家臣联合搜山——以武力威慑暗百合" if power >= 30:
+        "召集附近领主家臣联合搜山——以武力威慑暗百合" if power >= 50:
             $ change_stat("power", 8)
             $ change_stat("reputation", 3)
             $ ch3_dark_lily_response = "force"
@@ -376,7 +376,7 @@ label ch3_after_field_choice:
     hide blacksmith_wife_img with dissolve
 
     menu:
-        "召集所有铁匠樵夫家属当众发誓——艾登堡不放弃任何一个人" if reputation >= 40:
+        "召集所有铁匠樵夫家属当众发誓——艾登堡不放弃任何一个人" if reputation >= 50:
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 5)
             $ ch3_public_oath = True
@@ -3169,13 +3169,13 @@ label ch3_elena_secret:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "因为你做了正确的决定。"
+        elena "因为我也想看着它倒下。"
 
         "你没有料到她会这么说。"
 
         elena "暗百合已经不是你父亲当年加入的那个组织了。暗焰的渗透、内部的腐化——"
 
-        elena "你摧毁的是一个已经变质的组织。我无法阻止你，也不应该阻止你。"
+        elena "里面早就空了。我不会拦你。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -4208,7 +4208,7 @@ label ch3_confront_bishop_early:
             show bishop_img at left with dissolve
             bishop "跟我来。"
 
-        "起誓——以艾登家纹章起誓教会一切受我保护" if faith >= 30:
+        "起誓——以艾登家纹章起誓教会一切受我保护" if faith >= 50:
             $ change_stat("faith", 3)
             $ log_decision("第三章", "以誓言换取主教信任")
 

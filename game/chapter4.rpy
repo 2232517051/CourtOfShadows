@@ -546,7 +546,7 @@ label chapter4_start:
     show player_char_img at left with dissolve
 
     menu:
-        "塞几枚银币让驿站管事「忘记」我们路过" if wealth >= 40:
+        "塞几枚银币让驿站管事「忘记」我们路过" if wealth >= 50:
             $ change_stat("wealth", -3)
             $ change_stat("intrigue", 5)
             $ ch4_post_station_bribed = True
@@ -1029,7 +1029,7 @@ label ch4_palace:
 
     "那里本应挂着什么？被摘下了？还是从未被挂上？"
 
-    if intrigue >= 30:
+    if intrigue >= 50:
         "你的直觉告诉你——那块空白处，也许曾经挂着一幅被故意移除的画像。也许是某个不该被记住的人。"
 
     "侍从催促你继续前行。"
@@ -1318,7 +1318,7 @@ label ch4_throne:
             "王后的目光停留在你脸上多了一秒。你不确定她是否相信了。"
             "但你的表情没有任何破绽。在艾琳娜的训练下，你已经学会了如何在权力者面前戴上面具。"
 
-        "反问——『也许陛下比我更清楚？』" if intrigue >= 40:
+        "反问——『也许陛下比我更清楚？』" if intrigue >= 50:
             $ change_stat("intrigue", 8)
             $ change_rel("rel_queen", -10)
             hide queen_img
@@ -1740,8 +1740,7 @@ label ch4_garden:
             prince "公平。明天，我会派人送一封信到你的住处。那里面有你想要的答案。"
             $ hide_all_chars()
             "你们握了手。喷泉的水声盖过了一切，王子的手掌温暖而有力。"
-            "也许他是真诚的。也许不是。"
-            "但无论如何，你已经踏上了这条路。"
+            "他笑了一下，转身走开。你看着他的背影消失在喷泉那一侧的回廊。"
 
         "拒绝——你不想卷入王位之争":
             $ log_decision("第四章", "拒绝与王子结盟")
@@ -1754,7 +1753,7 @@ label ch4_garden:
             hide player_char_img
             $ hide_all_chars("prince_img")
             show prince_img at left with dissolve
-            prince "可惜。但我理解。"
+            prince "可惜。回头有事派人来找我。"
             prince "不过，你迟早会发现——在这个国家，没有人能置身事外。"
             prince "你父亲试过。他的下场你也看到了。"
             $ hide_all_chars()
@@ -2510,9 +2509,7 @@ label ch4_betrayal:
 
     if prince_ally and not prince_betrayed:
         $ hide_all_chars()
-        "你的心在急速跳动。你必须在极短的时间内做出选择。"
-
-        "这个选择——可能决定你余生的走向。"
+        "你的心跳得撞到嗓子。你只有几秒钟。"
 
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
@@ -3040,9 +3037,7 @@ label ch4_escape:
 
     "你知道，下次再来这里，要么是凯旋，要么是以囚犯的身份。"
 
-    "但无论如何——你活着离开了。"
-
-    "这就够了。"
+    "你活着离开了。"
 
     jump ch4_end
 

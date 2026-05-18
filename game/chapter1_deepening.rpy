@@ -451,7 +451,7 @@ label ch1_deep_patrol:
     captain "有人在侦察我们的领地。"
 
     menu:
-        "派使者去克雷恩家明面交涉——亮家名压人" if reputation >= 30:
+        "派使者去克雷恩家明面交涉——亮家名压人" if reputation >= 50:
             $ log_decision("第一章深化", "派使者明面交涉克雷恩")
             $ change_stat("reputation", 5)
             $ change_stat("intrigue", 3)
@@ -705,7 +705,7 @@ label ch1_deep_court:
     "两个人的脸色都不太好看。"
 
     menu:
-        "叫村里其他养羊户作证——这种事不止你们两家" if loyalty >= 30:
+        "叫村里其他养羊户作证——这种事不止你们两家" if loyalty >= 50:
             $ log_decision("第一章深化", "领主法庭: 召邻里作证")
             $ change_stat("loyalty", 5)
             $ change_stat("reputation", 3)
@@ -832,7 +832,7 @@ label ch1_deep_court:
     "「我同情他们的遭遇。但偷就是偷。如果今天不惩罚，明天人人都来偷，我这面包铺还开不开了？」"
 
     menu:
-        "自掏腰包付面包钱+给少年安排工作" if wealth >= 30:
+        "自掏腰包付面包钱+给少年安排工作" if wealth >= 50:
             $ log_decision("第一章深化", "领主法庭: 自掏腰包解决偷面包")
             $ change_stat("wealth", -3)
             $ change_stat("loyalty", 5)

@@ -1051,7 +1051,7 @@ label re_duel_accept:
 
     "观众中有人发出了惊叫。"
 
-    if power >= 40:
+    if power >= 50:
         jump re_duel_win
     else:
         jump re_duel_lose

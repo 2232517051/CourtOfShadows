@@ -383,7 +383,7 @@ label ch1_exp_ramparts_night:
     captain "我应该保护好他的。这是我唯一的职责。但我失败了。"
 
     menu:
-        "下令调出父亲遇袭那夜的卷宗——你要从头查这件事" if intrigue >= 30:
+        "下令调出父亲遇袭那夜的卷宗——你要从头查这件事" if intrigue >= 50:
             $ change_stat("intrigue", 5)
             $ change_rel("rel_captain", 5)
             $ ch1_exp_captain_respect = True
@@ -628,8 +628,6 @@ label ch1_exp_elena_encounter:
 
             "如果她不忠诚……那你就更应该静观其变，看看她会把信交给谁。"
 
-            "无论如何，你都不该在这一刻现身——这不是你能介入的时机。"
-
             $ change_stat("intrigue", 3)
 
     $ ch1_exp_night_explored = True
@@ -722,7 +720,7 @@ label ch1_exp_morning_council:
     "你沉思着。匪首未除，商路终究不稳。商路一断，税收就会锐减。但强攻的代价太高。"
 
     menu:
-        "雇一支佣兵团代打——你出钱, 他们出血" if wealth >= 30:
+        "雇一支佣兵团代打——你出钱, 他们出血" if wealth >= 50:
             $ change_stat("wealth", -15)
             $ change_stat("intrigue", 5)
             $ ch1_exp_bandit_plan = "mercenary"
