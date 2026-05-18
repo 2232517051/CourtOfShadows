@@ -99,7 +99,7 @@ label ch3_exp_investigation:
             $ log_decision("第三章扩展", "选择武力调查路线")
             jump ch3_exp_investigate_forceful
 
-        "渗透路线「化暗为明」":
+        "渗透路线「化暗为明」" if intrigue >= 45:
             $ ch3_investigation_path = "cunning"
             $ change_stat("intrigue", 8)
             $ log_decision("第三章扩展", "选择渗透调查路线")
@@ -188,7 +188,7 @@ label ch3_exp_investigate_diplomatic:
             $ change_stat("faith", 10)
             $ ch3_witness_count += 1
 
-        "联合三位领主共同调查":
+        "联合三位领主共同调查" if reputation >= 45:
             $ change_stat("reputation", 8)
             $ change_stat("loyalty", 3)
 
@@ -266,7 +266,7 @@ label ch3_exp_investigate_forceful:
     captain "大人，前方发现了一个……地下入口。"
 
     menu:
-        "直接冲入「速战速决」":
+        "直接冲入「速战速决」" if power >= 45:
             $ change_stat("power", 8)
             $ change_courage(5)
 
@@ -351,7 +351,7 @@ label ch3_exp_investigate_cunning:
     "铜币上面刻着一朵百合花。"
 
     menu:
-        "主动接近「套取情报」":
+        "主动接近「套取情报」" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("faith", -2)  ## balance pass 修法 1: 伪装身份+套话换情报, 信仰受损
 
@@ -566,7 +566,7 @@ label ch3_exp_forest_expedition:
 
             hide elena_img with dissolve
 
-        "独自前往「只有一个人才能看到真相」":
+        "独自前往「只有一个人才能看到真相」" if power >= 45:
             $ change_stat("power", 8)
             $ change_courage(10)
 
@@ -626,7 +626,7 @@ label ch3_exp_forest_expedition:
     "那么，是什么让它走到了今天这一步？"
 
     menu:
-        "仔细搜查遗迹「寻找更多线索」":
+        "仔细搜查遗迹「寻找更多线索」" if reputation >= 45:
             $ change_stat("reputation", 8)
 
             "你在遗迹中搜查了两个时辰。在一座半倒塌的建筑中，你发现了一间保存得还算完好的密室。"
@@ -643,7 +643,7 @@ label ch3_exp_forest_expedition:
 
             $ change_stat("intrigue", 5)
 
-        "在祭坛前冥想「感受这个地方的力量」":
+        "在祭坛前冥想「感受这个地方的力量」" if faith >= 45:
             $ change_stat("faith", 8)
             $ change_courage(5)
 
@@ -807,7 +807,7 @@ label ch3_exp_herbalist:
 
             "三天后，薇拉如约交付了一小瓶碧绿色的解药。她还教了你一个简单的急救方法——如果有人被暗百合精华迷晕，用冷水浇头加上薰衣草精油可以暂时恢复神志。"
 
-        "请教更多关于毒药的知识":
+        "请教更多关于毒药的知识" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("faith", -3)
 
@@ -1021,7 +1021,7 @@ label ch3_exp_cult_infiltration:
     hide lily_master_img with dissolve
 
     menu:
-        "继续潜伏「获取更多情报」":
+        "继续潜伏「获取更多情报」" if intrigue >= 55:
             $ change_stat("intrigue", 10)
             $ change_courage(8)
             $ log_decision("第三章扩展", "在暗百合集会中继续潜伏")
@@ -1052,7 +1052,7 @@ label ch3_exp_cult_infiltration:
 
             $ ch3_cult_infiltrated = True
 
-        "趁乱留下记号「标记几个关键人物」":
+        "趁乱留下记号「标记几个关键人物」" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("faith", -2)  ## balance pass 修法 1: 用药物在他人身上做暗号, 欺骗换情报
 
@@ -1126,7 +1126,7 @@ label ch3_exp_confrontation:
     "你看着桌上的情报，陷入了沉思。"
 
     menu:
-        "军事打击「正面摧毁暗百合」":
+        "军事打击「正面摧毁暗百合」" if power >= 55:
             $ change_stat("power", 10)
             $ change_courage(8)
             $ log_decision("第三章扩展", "以军事手段正面摧毁暗百合")
@@ -1188,7 +1188,7 @@ label ch3_exp_confrontation:
             $ change_stat("reputation", 8)
             $ ch3_cult_leader_fate = "captured"
 
-        "政治手段「向王廷举报」":
+        "政治手段「向王廷举报」" if reputation >= 55:
             $ change_stat("reputation", 10)
             $ change_stat("loyalty", 5)
             $ log_decision("第三章扩展", "通过政治手段揭发暗百合")
@@ -1230,7 +1230,7 @@ label ch3_exp_confrontation:
             $ change_stat("loyalty", 8)
             $ ch3_cult_leader_fate = "arrested"
 
-        "谈判策略「分化瓦解暗百合」":
+        "谈判策略「分化瓦解暗百合」" if intrigue >= 58:
             $ change_stat("intrigue", 12)
             $ change_stat("reputation", 5)
             $ log_decision("第三章扩展", "尝试分化瓦解暗百合")
@@ -1282,7 +1282,7 @@ label ch3_exp_confrontation:
             $ change_stat("intrigue", 8)
             $ ch3_cult_leader_fate = "negotiated"
 
-        "暗中接管「取代首领的位置」":
+        "暗中接管「取代首领的位置」" if intrigue >= 60:
             $ change_stat("intrigue", 15)
             $ change_stat("reputation", -3)  ## balance pass 修法 1: 冒名顶替阴谋, 一旦走漏名声崩
             $ change_courage(10)

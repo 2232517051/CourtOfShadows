@@ -878,7 +878,7 @@ label ch5_military_deploy:
             show aldric_img at left with dissolve
             aldric "是。这会极大地提振士气。"
 
-        "节省开支，准备长期消耗":
+        "节省开支，准备长期消耗" if wealth >= 45:
             $ change_stat("wealth", 8)
             hide aldric_img
             $ hide_all_chars("player_char_img")
@@ -2689,7 +2689,7 @@ label ending_iron_lord:
 
     $ mark_important_choice()
     menu:
-        "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+ 声望+ 敌意消除":
+        "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+ 声望+ 敌意消除" if loyalty >= 55:
             $ change_stat("loyalty", 10)
             $ change_stat("reputation", 10)
             hide elena_img
@@ -2706,7 +2706,7 @@ label ending_iron_lord:
             elena "……这招比杀了他们更厉害。从此他们欠你一条命。"
             "消息传开后，周围的领主纷纷遣使示好。一个仁慈而强大的领主——是所有人都想结交的盟友。"
 
-        "杀鸡儆猴——处决首恶，释放士兵|权力+ 声望- 威慑四方":
+        "杀鸡儆猴——处决首恶，释放士兵|权力+ 声望- 威慑四方" if power >= 55:
             $ change_stat("power", 10)
             $ change_stat("reputation", -5)
             hide elena_img
@@ -2718,7 +2718,7 @@ label ending_iron_lord:
             "从那以后，再没有人敢轻视艾登堡的旗帜。"
             "但也有人在背后说——这个年轻的领主，比他父亲更冷酷。"
 
-        "吞并领地——将战败方纳入版图|权力+ 财富+ 管理压力大":
+        "吞并领地——将战败方纳入版图|权力+ 财富+ 管理压力大" if power >= 60:
             $ change_stat("power", 15)
             $ change_stat("wealth", 18)
             $ hide_all_chars("player_char_img")
@@ -3609,7 +3609,7 @@ label ch5_negotiate_after_clash:
     "眼看谈判就要破裂——"
 
     menu:
-        "用教会的权威压住双方":
+        "用教会的权威压住双方" if faith >= 55:
             $ change_stat("faith", 10)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -3667,7 +3667,7 @@ label ch5_negotiate_after_clash:
             player "所以它也许能打破僵局。"
             "这个提议让双方都沉思了很久。不完美——可它给了双方一个保全颜面的台阶。"
 
-        "以信仰为突破口":
+        "以信仰为突破口" if faith >= 58:
             $ change_stat("faith", 12)
             player "主教大人，请宣读教廷关于战争的最新敕令。"
             hide player_char_img
@@ -4444,7 +4444,7 @@ label ending_truth:
                 "你拿出了毒药的鉴定报告、购买记录，以及一个证人的书面证词。"
                 "每一份都是铁证。"
 
-        "用道义压力迫使真相浮出水面":
+        "用道义压力迫使真相浮出水面" if faith >= 55:
             $ change_stat("faith", 10)
             $ change_stat("reputation", 5)
             $ hide_all_chars("player_char_img")
@@ -4603,7 +4603,7 @@ label ending_truth:
             player "我不是来复仇的。我是来让真相回到它该在的地方。"
             player "至于功过——让法律和历史来评判。不是你，也不是我。"
 
-        "提出谈判——给她一条体面的退路":
+        "提出谈判——给她一条体面的退路" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("power", -3)  # 谈判让步, 权力没拿满
             $ hide_all_chars("player_char_img")

@@ -561,7 +561,7 @@ label ch4_exp_explore_cathedral:
                 "你想起了父亲信中的话——'不要信任教会的高层，他们的虔诚只是一张面具。'"
                 "大主教费雷恩……他在先王遗诏的篡改中扮演了什么角色？"
 
-        "在教堂中祈祷，感受氛围":
+        "在教堂中祈祷，感受氛围" if faith >= 45:
             $ change_stat("faith", 8)
             $ ch4_exp_cathedral_prayer = True
 

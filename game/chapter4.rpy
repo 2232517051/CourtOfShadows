@@ -264,7 +264,7 @@ label chapter4_start:
             show elena_img at left with dissolve
             elena "不客气。保护您也是在保护我自己。"
 
-        "问她王都有哪些值得注意的人物":
+        "问她王都有哪些值得注意的人物" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -950,7 +950,7 @@ label ch4_palace:
             count_grey "哈哈……年轻人就是谨慎。好，好。那我们改日再谈。"
             "格雷伯爵笑着离开了，但你注意到他眼中的笑意并没有到达眼底。"
 
-        "直接问他觐见时需要注意什么":
+        "直接问他觐见时需要注意什么" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             hide count_grey_img
             $ hide_all_chars("player_char_img")
@@ -1237,7 +1237,7 @@ label ch4_throne:
         "所有人都在看着你。你感觉到身后无数双眼睛灼烧着你的后背。"
 
         menu:
-            "坚持立场——税法确实不合理":
+            "坚持立场——税法确实不合理" if power >= 55:
                 $ change_stat("power", 10)
                 $ change_rel("rel_queen", -15)
                 hide queen_img
@@ -1260,7 +1260,7 @@ label ch4_throne:
                 $ hide_all_chars("queen_img")
                 show queen_img at left with dissolve
 
-            "解释并示好——为了百姓，非为不敬":
+            "解释并示好——为了百姓，非为不敬" if reputation >= 55:
                 $ change_stat("reputation", 10)
                 $ change_rel("rel_queen", 5)
                 hide queen_img
@@ -1462,7 +1462,7 @@ label ch4_throne:
             show prince_img at left with dissolve
             prince "规矩？王都最大的规矩就是——没有规矩。只有利益。"
 
-        "直接问他关于父亲的事":
+        "直接问他关于父亲的事" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("loyalty", -2)  ## balance pass 修法 1: 把父辈情谊工具化套王子情报
             $ change_rel("rel_prince", 1)  ## batch 14 #7 王子好感: 3→1 减弱小加成累加
@@ -1976,7 +1976,7 @@ label ch4_garden:
             else:
                 "暮色之露……这个名字你记住了。也许它很重要。"
 
-        "查找父亲在王都的活动记录":
+        "查找父亲在王都的活动记录" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             "你找到了宫廷来访记录。你父亲的名字出现了很多次——几乎每年都来觐见两到三次。"
             "但在先王驾崩前一年，他的来访次数突然增加到了每月一次。"
@@ -1984,7 +1984,7 @@ label ch4_garden:
             "更奇怪的是，在先王驾崩之后，你父亲再也没有来过王都。"
             "直到他自己去世。"
 
-        "寻找先王遗诏的相关文件":
+        "寻找先王遗诏的相关文件" if intrigue >= 58:
             $ change_stat("intrigue", 12)
             "你在档案中搜索'遗诏'相关的记录。"
             "你找到了先王驾崩后的继位公告——上面写着'先王遗诏，命王后伊莎贝拉摄政，直至王子成年。'"
@@ -2406,7 +2406,7 @@ label ch4_elena:
                 "你把信件折好，缝进了外套的衬里。"
                 "这封信的价值不可估量——它不仅是真相的线索，也是一把悬在某些人头上的剑。"
 
-            "记住内容后烧掉信件——太危险了":
+            "记住内容后烧掉信件——太危险了" if intrigue >= 45:
                 $ change_stat("intrigue", 8)
                 "你把信上的每一个字都深深刻进脑海，然后将信纸投入壁炉的火焰中。"
                 "纸张在火中卷曲、发黑、化为灰烬。"
@@ -2523,7 +2523,7 @@ label ch4_betrayal:
         hide elena_img with dissolve
 
         menu:
-            "冒险营救王子":
+            "冒险营救王子" if power >= 55:
                 $ change_stat("power", 10)
                 $ change_rel("rel_prince", 30)
                 $ change_rel("rel_queen", -30)
@@ -2796,7 +2796,7 @@ label ch4_rescue_inner:
             show player_char_img at left with dissolve
             player "他们也是在执行命令。走。"
 
-        "让艾琳娜想办法悄悄绕过":
+        "让艾琳娜想办法悄悄绕过" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ hide_all_chars()
             "艾琳娜的脚步声一瞬间就没了。几秒后，你听到走廊另一端传来一声响动——像是什么东西倒了。"

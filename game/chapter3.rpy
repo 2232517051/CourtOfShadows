@@ -252,7 +252,7 @@ label ch3_strange_signs:
             "调查的事先交给雷恩。你回到城堡，把那块倒置百合的布片放在桌上，盯着它出神。"
             jump ch3_after_field_choice
 
-        "先不管失踪的事，调查符号的来源":
+        "先不管失踪的事，调查符号的来源" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             hide captain_img
             $ hide_all_chars("player_char_img")
@@ -454,7 +454,7 @@ label ch3_after_field_choice:
             blacksmith_wife "一朵……花。"
             "你和雷恩交换了一个眼神。"
 
-        "命令雷恩立刻搜索森林":
+        "命令雷恩立刻搜索森林" if power >= 55:
             $ change_stat("power", 10)
             hide blacksmith_wife_img
             $ hide_all_chars("player_char_img")
@@ -630,7 +630,7 @@ label ch3_after_field_choice:
             show aldric_img at left with dissolve
             aldric "恐怕是的。"
 
-        "保持沉默，让奥尔德里克继续说":
+        "保持沉默，让奥尔德里克继续说" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ hide_all_chars()
             "你没有说话，只是安静地看着老骑士。"
@@ -779,13 +779,13 @@ label ch3_after_field_choice:
                     player "替我回信：领主对男爵的提议深表感谢，愿择日商议。"
                     "你没有答应，也没有拒绝。给自己留了回旋的余地。"
 
-                "拒绝，并警告男爵管好自己的事":
+                "拒绝，并警告男爵管好自己的事" if power >= 55:
                     $ change_stat("power", 10)
                     $ change_rel("rel_baron", -10)
                     player "回信：艾登堡的事务由本领主处理，不劳男爵费心。如果男爵的领地上也有问题，建议男爵先管好自己的领民。"
                     "信使的脸色有些难看，但他恭敬地接过回信离开了。"
 
-                "接受邀请——借机探查男爵的意图":
+                "接受邀请——借机探查男爵的意图" if intrigue >= 45:
                     $ change_stat("intrigue", 8)
                     $ change_stat("faith", -3)  ## 表面接受 / 实为算计的代价 (balance pass 修法 1)
                     $ change_rel("rel_baron", 5)
@@ -840,7 +840,7 @@ label ch3_after_field_choice:
             "你记住了这个人的脸。他的眼神太躲闪了，不像一个普通的侍从。"
             "你决定暗中留意他。"
 
-        "假装没看见，但暗中让人跟踪他":
+        "假装没看见，但暗中让人跟踪他" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("loyalty", -3)  ## 阴谋监视盟友的代价 (balance pass 修法 1)
             "你若无其事地走出大厅，但在走廊上低声吩咐一个卫兵。"
@@ -1339,7 +1339,7 @@ label ch3_dark_lily_clues:
             "你在心里算了算。今天正好是望日。"
             "这是命运的安排，还是某种巧合？"
 
-        "走右边——那边有微弱的光线":
+        "走右边——那边有微弱的光线" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             "你选择了右边的通道。"
             "越往前走，空气越清新，你甚至能感觉到微弱的风。"
@@ -1439,7 +1439,7 @@ label ch3_dark_lily_clues:
             apothecary "跟我来。"
             "她推开了柜台后面的一扇暗门。"
 
-        "出示在密道中找到的银质徽章":
+        "出示在密道中找到的银质徽章" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ hide_all_chars()
             "你从怀中取出那枚银质徽章，放在柜台上。"
@@ -1554,7 +1554,7 @@ label ch3_dark_lily_clues:
     lily_interviewer "喝下它。"
 
     menu:
-        "毫不犹豫地喝下":
+        "毫不犹豫地喝下" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_rel("rel_lily", 10)
             $ hide_all_chars()
@@ -1590,7 +1590,7 @@ label ch3_dark_lily_clues:
             "你犹豫了一下，然后喝了下去。"
             $ change_rel("rel_lily", 5)
 
-        "拒绝喝":
+        "拒绝喝" if power >= 55:
             $ change_stat("power", 10)
             $ change_rel("rel_lily", -5)
             hide lily_root_img
@@ -2193,7 +2193,7 @@ label ch3_tunnel_exploration:
             "这条水路可以在紧急情况下用来撤离——这是一个重要的发现。"
             $ change_stat("wealth", 5)
 
-        "走右边——追踪脚印":
+        "走右边——追踪脚印" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             "你蹲下来仔细观察脚印。"
             "脚印很小——是女人的脚印。而且很新，可能就在几个小时前留下的。"
@@ -2924,7 +2924,7 @@ label ch3_dark_lily_hq:
             lily_master "我不确定。但要小心。不要对任何人透露你加入了影卫。"
             "你郑重地点了点头。"
 
-        "加入铁刺":
+        "加入铁刺" if power >= 65:
             $ dark_lily_joined = True
             $ change_rel("rel_lily", -10)
             $ change_stat("power", 20)
@@ -2973,7 +2973,7 @@ label ch3_dark_lily_hq:
             lily_master "好吧。即使你不加入我们，我也不会伤害你。"
             lily_master "但如果你需要帮助——老磨坊，随时。"
 
-        "摧毁暗百合——你们的存在本身就是不稳定因素":
+        "摧毁暗百合——你们的存在本身就是不稳定因素" if power >= 60:
             $ dark_lily_destroyed = True
             $ change_stat("power", 15)
             $ change_rel("rel_lily", -30)
@@ -3217,7 +3217,7 @@ label ch3_elena_secret:
                 elena "但接下来的情报关系到你的生死。你可以不信任我，但请听完。"
                 "她的眼神黯淡了下去，但依然保持着最后的镇定。"
 
-            "交出你掌握的所有情报——这是你唯一的出路":
+            "交出你掌握的所有情报——这是你唯一的出路" if intrigue >= 45:
                 $ change_rel("rel_elena", -5)
                 $ change_stat("intrigue", 8)
                 $ change_stat("loyalty", -3)  ## 强压 Elena 交情报的代价: 团队信任受损 (balance pass 修法 1)
@@ -3233,7 +3233,7 @@ label ch3_elena_secret:
                 elena "关于王后的布局、残余势力的动向——所有情报，我会全部告诉你。"
                 $ change_stat("loyalty", 5)
 
-            "看在父亲的份上——我给你一次机会":
+            "看在父亲的份上——我给你一次机会" if loyalty >= 55:
                 $ change_rel("rel_elena", 10)
                 $ change_stat("loyalty", 10)
                 hide elena_img
@@ -3461,7 +3461,7 @@ label ch3_elena_secret:
                 "她转身，慢慢走回城堡。"
                 "你没有追上去。只是把门边她刚才靠过的那把椅子慢慢推回了原位。"
 
-            "证明你的忠诚——告诉我王后在策划什么":
+            "证明你的忠诚——告诉我王后在策划什么" if intrigue >= 45:
                 $ change_rel("rel_elena", 5)
                 $ change_stat("intrigue", 8)
                 hide elena_img
@@ -3493,7 +3493,7 @@ label ch3_elena_secret:
                 elena "我可以帮你应付他。但你需要更加小心。"
                 $ change_stat("loyalty", 5)
 
-            "我相信你——父亲信任你，我也选择信任":
+            "我相信你——父亲信任你，我也选择信任" if loyalty >= 55:
                 $ change_rel("rel_elena", 25)
                 $ change_stat("loyalty", 10)
                 hide elena_img
@@ -3666,7 +3666,7 @@ label ch3_elena_secret:
                 elena "王后那边只是掩护。暗百合是手段。但我真正效忠的，是你父亲的遗志。"
                 "你注视着她的表情，试图判断她的话有几分可信。"
 
-            "这些情报有多可靠？证明你的价值":
+            "这些情报有多可靠？证明你的价值" if intrigue >= 45:
                 $ change_rel("rel_elena", 5)
                 $ change_stat("intrigue", 8)
                 hide elena_img
@@ -3681,7 +3681,7 @@ label ch3_elena_secret:
                 elena "还有——那个新来的侍从，就是王后新派来的眼线。我可以帮你应付他。"
                 $ change_stat("loyalty", 5)
 
-            "父亲信任你的判断——我尊重他的选择":
+            "父亲信任你的判断——我尊重他的选择" if loyalty >= 55:
                 $ change_rel("rel_elena", 20)
                 $ change_stat("loyalty", 10)
                 hide elena_img
@@ -4060,7 +4060,7 @@ label ch3_truth_emerges:
             "你起身，大步走出书房。"
             jump ch3_confront_bishop_early
 
-        "先做好充分准备再去找他":
+        "先做好充分准备再去找他" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ ch3_prepared_first = True
             $ hide_all_chars("player_char_img")
@@ -4142,7 +4142,7 @@ label ch3_confront_bishop_early:
     player "你知道。你的眼神出卖了你。"
 
     menu:
-        "威逼——'如果你不合作，我会公开教会的丑闻'":
+        "威逼——'如果你不合作，我会公开教会的丑闻'" if power >= 55:
             $ change_stat("power", 10)
             $ change_rel("rel_bishop", -20)
             $ change_stat("faith", -10)
@@ -4477,7 +4477,7 @@ label ch3_bishop_take_to_vault:
             show bishop_img at left with dissolve
             bishop "……是。我会的。这是我唯一能赎罪的方式。"
 
-        "表示理解——'你也是受害者'":
+        "表示理解——'你也是受害者'" if faith >= 58:
             $ change_rel("rel_bishop", 15)
             $ change_stat("faith", 12)
             hide bishop_img
@@ -4806,7 +4806,7 @@ label ch3_critical_choice:
     "这个大厅——你父亲曾在这里做出无数决定。现在轮到你了。"
 
     menu:
-        "主动出击——收集更多证据，联合盟友，在适当的时候公开真相":
+        "主动出击——收集更多证据，联合盟友，在适当的时候公开真相" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("power", 5)
             hide captain_img
@@ -4839,7 +4839,7 @@ label ch3_critical_choice:
             player "至少试试。"
             $ change_stat("loyalty", 5)
 
-        "防守为主——加强领地防御，等待对方露出破绽":
+        "防守为主——加强领地防御，等待对方露出破绽" if power >= 55:
             $ change_stat("power", 10)
             $ change_stat("loyalty", 10)
             $ hide_all_chars("player_char_img")
@@ -5128,7 +5128,7 @@ label ch3_church_intervention:
     "你绝不能让这种事发生。"
 
     menu:
-        "今晚就把盒子转移走":
+        "今晚就把盒子转移走" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             hide bishop_img
             $ hide_all_chars("player_char_img")
@@ -5529,7 +5529,7 @@ label ch3_chapter_crisis:
     "你咬紧牙关。"
 
     menu:
-        "全力防守——死守城堡":
+        "全力防守——死守城堡" if power >= 60:
             $ change_stat("power", 15)
             $ change_stat("loyalty", 10)
             hide aldric_img
@@ -5606,7 +5606,7 @@ label ch3_chapter_crisis:
             "奥尔德里克带着两个信使消失在城堡地下。"
             "你则留在城墙上，指挥防御。"
 
-        "主动出击——在他们完成包围之前冲出去":
+        "主动出击——在他们完成包围之前冲出去" if power >= 65:
             $ change_stat("power", 20)
             $ change_stat("loyalty", 5)
             $ hide_all_chars("player_char_img")
