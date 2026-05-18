@@ -210,16 +210,30 @@ init python:
         """
         修改属性值的统一入口：
         1. 应用 STAT_CHANGE_SCALE 缩放（保留正负，最小绝对值为1）
-        2. 记录旧阶位
-        3. 修改并 clamp 到 0-100
-        4. 记录历史（趋势箭头）
-        5. 显示浮动通知
-        6. 检查阶位跨越，显示叙事文字
-        7. 检查成就
+        2. 高位加点衰减：old 越高加点效果越弱，自然形成软上限
+           （扣减不衰减，失分痛感保留 — 让玩家敬畏 - 选项）
+        3. 记录旧阶位
+        4. 修改并 clamp 到 0-100
+        5. 记录历史（趋势箭头）
+        6. 显示浮动通知（按 clamp 后的 actual_delta，触顶时显示"已至顶峰"）
+        7. 检查阶位跨越，显示叙事文字
+        8. 检查成就
+
+        注：洋溢 / 千品 / 栀子 反馈"中间事件数值溢出"。全项目 1158 个 change_stat
+        理论净增 intrigue +585、power +402、reputation +386，全是 cap 100 的 3-6 倍。
+        高位衰减让玩家在 80+ 区间加点效果只剩 1/3, 自然抑制触顶。
         """
+        orig_delta = delta
         if delta != 0:
             sign = 1 if delta > 0 else -1
-            delta = sign * max(1, int(round(abs(delta) * STAT_CHANGE_SCALE)))
+            old_val_pre = getattr(store, stat_name, 0)
+            if delta > 0:
+                ## 高位衰减曲线: old=0 → 1.0x, 50 → 0.65x, 80 → 0.28x, 95+ → 0.25x (clamp)
+                decay = max(0.25, 1.0 - (old_val_pre / 100.0) ** 1.5)
+                scaled = abs(delta) * STAT_CHANGE_SCALE * decay
+            else:
+                scaled = abs(delta) * STAT_CHANGE_SCALE
+            delta = sign * max(1, int(round(scaled)))
 
         old_val = getattr(store, stat_name, 0)
         old_tier = get_tier(stat_name)
@@ -227,17 +241,20 @@ init python:
         new_val = max(0, min(100, old_val + delta))
         setattr(store, stat_name, new_val)
 
+        ## clamp 后的实际变化 — 触顶/触底时为 0, popup 据此显示触顶提示而非假"+1"
+        actual_delta = new_val - old_val
+
         ## 记录历史
         record_stat(stat_name, new_val)
 
-        if show_notification and delta != 0:
+        if show_notification and orig_delta != 0:
             label_cn = STAT_LABELS_CN.get(stat_name, stat_name)
             tier_label = get_tier_label(stat_name)
             tier_color = get_tier_color(stat_name)
             renpy.show_screen(
                 "stat_change_popup",
                 stat_label=label_cn,
-                delta=delta,
+                delta=actual_delta,
                 new_val=new_val,
                 tier_label=tier_label,
                 tier_color=tier_color,
@@ -442,11 +459,19 @@ screen stat_change_popup(stat_label, delta, new_val, tier_label, tier_color):
                 spacing 6
                 xalign 1.0
 
-                ## 增减符号与数值
+                ## 增减符号与数值 — delta 是 clamp 后的 actual_delta, 触顶时为 0
                 if delta > 0:
                     text "+[delta]" size 20 color "#2ecc71" bold True font "msyh.ttf"
-                else:
+                elif delta < 0:
                     text "[delta]" size 20 color "#e74c3c" bold True font "msyh.ttf"
+                else:
+                    ## 触顶/触底/无变化 — 不再假飘 "+0", 给明确语义
+                    if new_val >= 100:
+                        text "已至顶峰" size 16 color "#f0c050" bold True font "msyh.ttf"
+                    elif new_val <= 0:
+                        text "已至谷底" size 16 color "#7d6a8f" bold True font "msyh.ttf"
+                    else:
+                        text "无变化" size 16 color "#888888" font "msyh.ttf"
 
                 text "[stat_label]" size 20 color "#c8b890" font "msyh.ttf"
 
