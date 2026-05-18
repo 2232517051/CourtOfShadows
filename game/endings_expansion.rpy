@@ -597,7 +597,7 @@ label ending_truth_epilogue:
 
     player "但我已经不害怕了。"
 
-    player "因为我知道——只要我们敢于面对真相，就没有什么是不可战胜的。"
+    player "明天我还有事要做。"
 
     if prince_ally and not prince_betrayed:
         $ hide_all_chars()

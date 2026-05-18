@@ -2471,6 +2471,7 @@ label ending_iron_lord:
         "用早就埋下的反间——让他们的右翼调头攻自己人" if intrigue >= 60:
             $ change_stat("intrigue", 5)
             $ change_stat("loyalty", 2)
+            $ change_stat("reputation", -3)  # 阴谋手段, 战后名声受损
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -4604,6 +4605,7 @@ label ending_truth:
 
         "提出谈判——给她一条体面的退路":
             $ change_stat("intrigue", 8)
+            $ change_stat("power", -3)  # 谈判让步, 权力没拿满
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "王后陛下，你说得对。你确实为这个国家付出了很多。"
@@ -4720,9 +4722,9 @@ label ending_truth:
 
         queen "他说这句话的时候，看着我的眼睛。"
 
-        queen "我突然明白——这二十年我以为是在替他护住王位。"
+        queen "我以为这二十年是在替他扫干净路。"
 
-        queen "其实只是为了不让自己承认错了。"
+        queen "他不需要了。"
 
         $ hide_all_chars()
         "你没有说话。沉默就是最沉重的回答。"
