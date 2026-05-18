@@ -3722,6 +3722,11 @@ label ch3_elena_secret:
 
     "艾琳娜的坦白，让你对整个局势有了更清晰的认识。"
 
+    ## 坦白事件闭合: 设 flag 防 npc_sidelines.rpy 森林夜话 / interludes.rpy 后续场景再走"初次坦白"分支
+    ## (Måneskin 2026-05-18 反馈: 高好感互通秘密后又被要求把秘密说一遍)
+    $ elena_spy_known = True
+    $ elena_identity_exposed_known = True
+
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "还有一件事我必须告诉你。这可能是最重要的。"
