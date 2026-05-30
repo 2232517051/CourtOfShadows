@@ -1470,7 +1470,7 @@ label ch3_deep_cure_share:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "……你和你父亲真像。"
+    elena "……换了别人，没人会舍得放掉这种筹码。"
     elena "好吧。我会亲自教治疗师制备的方法。但他必须发誓保密。"
 
     $ ch3_deep_cure_found = True

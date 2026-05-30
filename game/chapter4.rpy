@@ -1172,6 +1172,7 @@ label ch4_throne:
             $ log_decision("第四章", "接受王后的条件")
             $ change_stat("wealth", 25)
             $ change_stat("power", 5)
+            $ change_stat("reputation", -3)
             $ change_rel("rel_queen", 5)
             hide queen_img
             $ hide_all_chars("player_char_img")
@@ -2408,6 +2409,7 @@ label ch4_elena:
 
             "记住内容后烧掉信件——太危险了" if intrigue >= 45:
                 $ change_stat("intrigue", 8)
+                $ change_stat("reputation", -2)
                 "你把信上的每一个字都深深刻进脑海，然后将信纸投入壁炉的火焰中。"
                 "纸张在火中卷曲、发黑、化为灰烬。"
                 "有些东西，只能存在于记忆中。"
@@ -2798,6 +2800,7 @@ label ch4_rescue_inner:
 
         "让艾琳娜想办法悄悄绕过" if intrigue >= 45:
             $ change_stat("intrigue", 8)
+            $ change_stat("reputation", -2)
             $ hide_all_chars()
             "艾琳娜的脚步声一瞬间就没了。几秒后，你听到走廊另一端传来一声响动——像是什么东西倒了。"
             "守卫们立刻警觉起来，向声音的方向跑去。"

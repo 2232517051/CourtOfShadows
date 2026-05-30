@@ -163,7 +163,7 @@ label ch4_prince_farewell:
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "弗雷德里克。我们刚从地牢里死里逃生。你不会仅仅因为'战略考量'就要回去。"
+            player "弗雷德里克。我们刚从地牢里死里逃生。你不会仅仅因为「战略考量」就要回去。"
             player "告诉我真正的原因。"
             $ hide_all_chars()
             "王子沉默了很久。长到你以为他不会回答了。"
@@ -272,11 +272,11 @@ label ch5_prince_letter:
 
         prince "因为承认王子越狱，比假装什么都没发生更丢人。"
 
-        prince "所以在外界看来，王子殿下只是'偶感风寒，闭门养病'。"
+        prince "所以在外界看来，王子殿下只是「偶感风寒，闭门养病」。"
 
         $ prince_imprisoned_known = True
     else:
-        prince "我果然被软禁了，和我们预料的一样。母后对外只说我'偶感风寒'。"
+        prince "我果然被软禁了，和我们预料的一样。母后对外只说我「偶感风寒」。"
 
     if prince_trust_deep:
         prince "我们那晚谈的事——我没有忘记。她很安全。我已经把她转移到了更隐蔽的地方。"
@@ -287,7 +287,7 @@ label ch5_prince_letter:
 
     prince "她的心腹蒙塔古伯爵正在集结军队。三千人，也许更多。"
 
-    prince "但军中不是铁板一块。我的人传来消息——至少有三个营的士兵对这场'平叛'战争心存疑虑。"
+    prince "但军中不是铁板一块。我的人传来消息——至少有三个营的士兵对这场「平叛」战争心存疑虑。"
 
     prince "他们中很多人的家就在北方。他们不想对自己的乡亲动刀。"
 
@@ -301,7 +301,7 @@ label ch5_prince_letter:
 
     prince "还有一件事——我在母后的书房里找到了一份文件。"
 
-    prince "是二十年前那场'意外'的详细记录。你父亲的名字在上面。"
+    prince "是二十年前那场「意外」的详细记录。你父亲的名字在上面。"
 
     prince "我没法把原件带出来，但我把关键内容抄录在了这封信的背面。"
 
@@ -331,7 +331,7 @@ label ch5_prince_letter:
             show player_char_img at left with dissolve
             player "你已经做得够多了。保护好自己。等一切尘埃落定，我们再见面。"
             $ hide_all_chars()
-            "你犹豫了一下，又加了一句：'活着。这是命令。'"
+            "你犹豫了一下，又加了一句：「活着。这是命令。」"
 
         "不回信——信使可能被跟踪" if intrigue >= 60:
             $ change_stat("intrigue", 5)
@@ -343,7 +343,7 @@ label ch5_prince_letter:
             young_man "我……我不确定。出城的时候有人盯了我一会儿……"
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "那就不回信了。回去告诉殿下三个字：'知道了。'"
+            player "那就不回信了。回去告诉殿下三个字：「知道了。」"
             player "越短越安全。如果他们截获了这封空口信，也什么都查不到。"
             $ hide_all_chars()
             "少年点点头，迅速离开了。"
@@ -469,7 +469,7 @@ label ch5_prince_betrayal:
             $ change_stat("intrigue", 5)
             $ hide_all_chars()
             "你一言不发。只是看着王子，看了很久。"
-            "你在他的眼睛里寻找那个在月光下跟你说'你是我的兄弟'的人。"
+            "你在他的眼睛里寻找那个在月光下跟你说「你是我的兄弟」的人。"
             "也许还在。也许已经不在了。"
             "但现在不是追究这件事的时候。"
 
@@ -557,7 +557,7 @@ label ch5_prince_confronts_queen:
 
     prince "我来的时候经过了你的花园。那里的花开了。"
 
-    prince "你还记得吗？小时候你带我在那里种过一棵玫瑰。你说，'照顾好它，就像照顾一个王国。'"
+    prince "你还记得吗？小时候你带我在那里种过一棵玫瑰。你说，「照顾好它，就像照顾一个王国。」"
 
     prince "那棵玫瑰还在。但花园的主人，已经忘了当初的心意。"
 

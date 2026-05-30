@@ -357,7 +357,7 @@ init python:
             store.extra_gold = -(store.wealth * 5)
 
     def get_max_inventory_slots():
-        """背包最大容量: 20 + power // 15"""
+        """背包最大容量： 20 + power // 15"""
         return 20 + store.power // 15
 
     def get_inventory_count():
@@ -592,7 +592,7 @@ init python:
         """获取物品显示图标字符"""
         info = items_database.get(item_id)
         if not info:
-            return "?"
+            return "？"
         if info["type"] == "weapon":
             return WEAPON_SUBTYPE_ICONS.get(info.get("subtype", ""), "剑")
         return ITEM_TYPE_ICONS.get(info["type"], "?")
@@ -1050,7 +1050,7 @@ screen inventory_screen():
                             ## 属性
                             if _sel_info["stats"]:
                                 null height 2
-                                text "属性:" size 13 color "#d4a942" font "msyh.ttf"
+                                text "属性：" size 13 color "#d4a942" font "msyh.ttf"
                                 for _sk, _sv in _sel_info["stats"].items():
                                     $ _sname = STAT_DISPLAY_NAMES.get(_sk, _sk)
                                     if isinstance(_sv, bool):
@@ -1065,16 +1065,16 @@ screen inventory_screen():
                             null height 4
                             hbox:
                                 spacing 8
-                                text "买入:" size 12 color "#6a5e48" font "msyh.ttf"
+                                text "买入：" size 12 color "#6a5e48" font "msyh.ttf"
                                 text "[_sel_info[\"price\"]]金" size 12 color "#ffd866" font "msyh.ttf"
-                                text "卖出:" size 12 color "#6a5e48" font "msyh.ttf"
+                                text "卖出：" size 12 color "#6a5e48" font "msyh.ttf"
                                 $ _sell_p = get_sell_price(_inv_selected)
                                 text "[_sell_p]金" size 12 color "#ffd866" font "msyh.ttf"
 
                             ## 持有数量
                             $ _sel_qty = get_item_qty(_inv_selected)
                             if _sel_qty > 0:
-                                text "持有: [_sel_qty]" size 12 color "#8a7e60" font "msyh.ttf"
+                                text "持有： [_sel_qty]" size 12 color "#8a7e60" font "msyh.ttf"
 
                             null height 8
                             add Solid("#d4a94220") xsize 1.0 ysize 1
@@ -1351,7 +1351,7 @@ screen shop_screen():
                                                         ## 持有数量
                                                         $ _s_have = get_item_qty(_s_item_id)
                                                         if _s_have > 0:
-                                                            text "持有:[_s_have]" size 10 color "#6a5e48" font "msyh.ttf"
+                                                            text "持有：[_s_have]" size 10 color "#6a5e48" font "msyh.ttf"
 
                                                 ## 价格和购买按钮
                                                 hbox:
@@ -1470,7 +1470,7 @@ screen shop_screen():
                             ## 属性
                             if _sel_info["stats"]:
                                 null height 2
-                                text "属性:" size 13 color "#d4a942" font "msyh.ttf"
+                                text "属性：" size 13 color "#d4a942" font "msyh.ttf"
                                 for _sk, _sv in _sel_info["stats"].items():
                                     $ _sname = STAT_DISPLAY_NAMES.get(_sk, _sk)
                                     if isinstance(_sv, bool):

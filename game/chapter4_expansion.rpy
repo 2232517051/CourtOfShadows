@@ -92,7 +92,7 @@ label ch4_exp_arrival:
 
     narrator "「首先，关于称谓——」"
 
-    narrator "「觐见的是摄政王后伊莎贝拉陛下。注意，是'陛下'，不是'殿下'。」"
+    narrator "「觐见的是摄政王后伊莎贝拉陛下。注意，是「陛下」，不是「殿下」。」"
 
     narrator "「虽然她并非国王，但摄政期间享有与国王同等的礼遇。」"
 
@@ -265,15 +265,15 @@ label ch4_exp_explore:
 
     "王都的主干道宽阔得可以并排通过六辆马车，两旁种着修剪整齐的菩提树。"
 
-    "每隔百步就有一座喷泉或雕像，大多是历代国王的塑像——你注意到格里菲斯七世的雕像格外崭新，底座上刻着'英明仁圣'四个金字。"
+    "每隔百步就有一座喷泉或雕像，大多是历代国王的塑像——你注意到格里菲斯七世的雕像格外崭新，底座上刻着「英明仁圣」四个金字。"
 
-    "讽刺的是，这位'英明仁圣'的国王被自己的妻子毒死了。"
+    "讽刺的是，这位「英明仁圣」的国王被自己的妻子毒死了。"
 
     show elena_img at right with dissolve
 
     elena "王都分成四个区：北区是王宫和贵族宅邸，东区是大教堂和学院，南区是集市和商会，西区……"
 
-    elena "西区是贫民区。也叫'灰区'——因为那里的天空永远是灰色的，工坊的烟囱日夜不停。"
+    elena "西区是贫民区。也叫「灰区」——因为那里的天空永远是灰色的，工坊的烟囱日夜不停。"
 
     elena "我们的时间不多。您想先去哪里？"
 
@@ -378,24 +378,24 @@ label ch4_exp_explore_market:
             $ change_stat("intrigue", 5)
             $ ch4_exp_merchant_tip = True
 
-            "你不动声色地把一袋金币放在柜台下面, 推了过去。"
+            "你不动声色地把一袋金币放在柜台下面， 推了过去。"
 
-            narrator "胖老板的手指捏了捏袋子的厚度, 立刻明白了你的意思。他把袋子收进围裙, 表情松了下来。"
+            narrator "胖老板的手指捏了捏袋子的厚度， 立刻明白了你的意思。他把袋子收进围裙， 表情松了下来。"
 
             narrator "「贵客真是爽快人。」"
 
-            narrator "「您是来觐见王后的吧？我说几句, 您听了就忘——上个月西区死了十几个人, 官面上是瘟疫, 实际是被灭了口。」"
+            narrator "「您是来觐见王后的吧？我说几句， 您听了就忘——上个月西区死了十几个人， 官面上是瘟疫， 实际是被灭了口。」"
 
             narrator "「都是打听先王遗诏的人。」"
 
             if true_killer_known:
-                "先王遗诏——你心中一动。如果王后篡改了遗诏, 那被灭口就完全说得通了。"
+                "先王遗诏——你心中一动。如果王后篡改了遗诏， 那被灭口就完全说得通了。"
 
-            narrator "「还有——大主教马修斯最近来王都了。那老头一般不轻易出主教座堂。他来了, 肯定有大事。」"
+            narrator "「还有——大主教马修斯最近来王都了。那老头一般不轻易出主教座堂。他来了， 肯定有大事。」"
 
-            narrator "「再多您给再多金币, 我也不知道。这个城市深的地方, 我够不着。」"
+            narrator "「再多您给再多金币， 我也不知道。这个城市深的地方， 我够不着。」"
 
-            "你点点头, 又留下半袋——这次不为打听, 只为他将来还愿意见你。"
+            "你点点头， 又留下半袋——这次不为打听， 只为他将来还愿意见你。"
 
             $ change_stat("wealth", -5)
 
@@ -464,7 +464,7 @@ label ch4_exp_explore_market:
 
     "你注意到一个有趣的现象——集市的核心区域繁华热闹，但越往边缘走，空铺子就越多。"
 
-    "有些店铺的招牌还在，门却被钉死了，窗户上贴着'充公'的封条。"
+    "有些店铺的招牌还在，门却被钉死了，窗户上贴着「充公」的封条。"
 
     hide player_char_img
     show elena_img at right with dissolve
@@ -558,7 +558,7 @@ label ch4_exp_explore_cathedral:
             "你点了灯，在圣像前站了片刻。光芒柔和而温暖，像一只无形的手轻轻抚过你的脸。"
 
             if father_letters_found:
-                "你想起了父亲信中的话——'不要信任教会的高层，他们的虔诚只是一张面具。'"
+                "你想起了父亲信中的话——「不要信任教会的高层，他们的虔诚只是一张面具。」"
                 "大主教费雷恩……他在先王遗诏的篡改中扮演了什么角色？"
 
         "在教堂中祈祷，感受氛围" if faith >= 45:
@@ -610,7 +610,7 @@ label ch4_exp_explore_cathedral:
             hide player_char_img
             show elena_img at right with dissolve
 
-            elena "那是教会的'灰袍卫'——原先是已故费雷恩大主教创建的私人武装，现在归教会直辖。"
+            elena "那是教会的「灰袍卫」——原先是已故费雷恩大主教创建的私人武装，现在归教会直辖。"
 
             elena "别看只有几十人，每一个都是从教会孤儿院中精挑细选、从小训练的精锐。"
 
@@ -725,7 +725,7 @@ label ch4_exp_explore_slums:
 
                 "他从怀里掏出一枚很小的旧铜币，摊开手心让你看一眼——你认得出，那是你当年给他的钱里最不起眼的一枚。"
 
-                narrator "「这枚我留着。您以后若有用得着我的地方——来贫民区找'乌鸦'。」"
+                narrator "「这枚我留着。您以后若有用得着我的地方——来贫民区找「乌鸦」。」"
 
                 "他转身没入巷子深处，没有再回头。"
 
@@ -872,7 +872,7 @@ label ch4_exp_court_social:
                     player "大臣过奖了。初来乍到，还请多多指教。"
 
                     $ hide_all_chars()
-                    narrator "「客气了。在王都，'指教'是不值钱的。但如果您需要'建议'——我的门总是开着的。」"
+                    narrator "「客气了。在王都，「指教」是不值钱的。但如果您需要「建议」——我的门总是开着的。」"
 
                     narrator "他递过一张烫金的名帖。「有空来喝茶。」"
 
@@ -982,19 +982,19 @@ label ch4_exp_court_social:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "您说见过他几面。但'有城府''不够狠'——这两句不是几面之缘能下的判断。"
-            player "您跟我父亲, 走得比您今晚说的近。"
+            player "您说见过他几面。但「有城府」「不够狠」——这两句不是几面之缘能下的判断。"
+            player "您跟我父亲， 走得比您今晚说的近。"
 
             $ hide_all_chars()
-            narrator "伯爵夫人的酒杯停在嘴边, 半秒。然后她笑了——这次的笑意到了眼底。"
+            narrator "伯爵夫人的酒杯停在嘴边， 半秒。然后她笑了——这次的笑意到了眼底。"
 
-            narrator "「……年轻人, 你这一手不该只属于二十几岁的人。」"
+            narrator "「……年轻人， 你这一手不该只属于二十几岁的人。」"
 
-            narrator "「你父亲跟我有些旧账, 是的。算不上朋友, 但也不是敌人。他来王都几次, 我们密谈过——你说对了。」"
+            narrator "「你父亲跟我有些旧账， 是的。算不上朋友， 但也不是敌人。他来王都几次， 我们密谈过——你说对了。」"
 
-            "她把酒杯放下, 看你的眼神变了。不是因为问的人聪明——是问的人精确到她无法回避。"
+            "她把酒杯放下， 看你的眼神变了。不是因为问的人聪明——是问的人精确到她无法回避。"
 
-            narrator "「年轻人, 如果你在王都需要一个……不那么偏向王后的朋友, 我的府邸在北区玫瑰街尽头。」"
+            narrator "「年轻人， 如果你在王都需要一个……不那么偏向王后的朋友， 我的府邸在北区玫瑰街尽头。」"
 
         "顺着她的话聊，拉近关系":
             $ change_stat("intrigue", 5)
@@ -1066,7 +1066,7 @@ label ch4_exp_court_social:
 
     narrator "「……你们听说了吗？王子已经两个月没在公开场合露面了。」"
 
-    narrator "「说是在秋水宫'静养'。但谁信呢？」"
+    narrator "「说是在秋水宫「静养」。但谁信呢？」"
 
     narrator "「听说是和王后吵了一架。王子想要亲政，王后不肯交权。」"
 
@@ -1158,7 +1158,7 @@ label ch4_exp_investigation:
 
     elena "看来我们的到来，早就在对方的预料之中。"
 
-    elena "这个'伏笔'应该是暗焰在贵宾馆安插的暗哨。"
+    elena "这个「伏笔」应该是暗焰在贵宾馆安插的暗哨。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -1338,11 +1338,11 @@ label ch4_exp_inv_library:
 
             "你对暗百合的历史一直只有口口相传的了解。也许官方文献里有更详细的记录。"
 
-            "你在「秘密组织卷」中找到了一份被标记为'已封存'的文档——但封印已经被拆开过了。"
+            "你在「秘密组织卷」中找到了一份被标记为「已封存」的文档——但封印已经被拆开过了。"
 
             narrator "「暗百合始末录（节选）：」"
 
-            narrator "「暗百合创建于格里菲斯一世时期，由国王贴身近卫'莲卫'发展而来。」"
+            narrator "「暗百合创建于格里菲斯一世时期，由国王贴身近卫「莲卫」发展而来。」"
 
             narrator "「初期为国王的私人情报机构，后逐渐独立运作。」"
 
@@ -1428,7 +1428,7 @@ label ch4_exp_inv_eavesdrop:
 
     "最后一句话让你的血液几乎凝固。"
 
-    "'和他父亲一样'——这是在威胁你的生命。而且——他们提到了你的父亲。"
+    "「和他父亲一样」——这是在威胁你的生命。而且——他们提到了你的父亲。"
 
     "这些人知道你父亲死亡的内情吗？"
 
@@ -1448,7 +1448,7 @@ label ch4_exp_inv_eavesdrop:
 
     elena "这是一个重要的情报。觐见不是普通的觐见——王后有特殊的安排。"
 
-    elena "而且……他们说'让他和父亲一样'。这已经不是威胁了，这是预谋。"
+    elena "而且……他们说「让他和父亲一样」。这已经不是威胁了，这是预谋。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -1472,9 +1472,9 @@ label ch4_exp_inv_lily_contact:
 
     show elena_img at right with dissolve
 
-    elena "影卫在王都有一个秘密联络点。在东区药材街的'老陈药铺'后面。"
+    elena "影卫在王都有一个秘密联络点。在东区药材街的「老陈药铺」后面。"
 
-    elena "暗号是——'有没有去年的暮色兰花'。"
+    elena "暗号是——「有没有去年的暮色兰花」。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -1924,7 +1924,7 @@ label ch4_exp_eve:
     hide elena_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "这对你来说也是一次'任务'？"
+    player "这对你来说也是一次「任务」？"
 
     hide player_char_img
     $ hide_all_chars("elena_img")
@@ -1958,7 +1958,7 @@ label ch4_exp_eve:
             show elena_img at left with dissolve
             elena "……也许你说得对。"
 
-            elena "我在王后身边看到了太多黑暗。毒杀、阴谋、灭口……她把这些叫做'必要的牺牲'。"
+            elena "我在王后身边看到了太多黑暗。毒杀、阴谋、灭口……她把这些叫做「必要的牺牲」。"
 
             elena "我曾经也这么以为。直到——"
 
@@ -1989,7 +1989,7 @@ label ch4_exp_eve:
             hide elena_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "这叫做'缓解压力的高级技巧'。"
+            player "这叫做「缓解压力的高级技巧」。"
 
             hide player_char_img
             $ hide_all_chars("elena_img")
@@ -2006,7 +2006,7 @@ label ch4_exp_eve:
             hide player_char_img
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
-            elena "好吧。为了你这个'天赋'——"
+            elena "好吧。为了你这个「天赋」——"
 
             elena "明天，我会全力保护你。"
 

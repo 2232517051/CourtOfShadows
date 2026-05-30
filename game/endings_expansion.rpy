@@ -30,6 +30,7 @@ label ending_epilogue_router:
     elif ending_type == "peoples_lord":
         jump ending_peoples_epilogue
     else:
+        ## vassal / fall / borgia 不接额外 epilogue, 结局 label 内已自洽 (2026-05-27)
         return
 
 ## ============================================================
@@ -51,30 +52,30 @@ label ending_decision_pause:
 
     pause 1.2
 
-    "话音落下之后, 大厅里有那么一刻什么声音都没有."
+    "话音落下之后， 大厅里有那么一刻什么声音都没有。"
 
-    "然后是椅子摩擦地面的声音, 铠甲的低响, 一两声压低的咳嗽."
+    "然后是椅子摩擦地面的声音， 铠甲的低响， 一两声压低的咳嗽。"
 
-    "他们一个接一个地出去了——奥尔德里克留到最后, 替你把烛台拨了拨, 然后也走了."
+    "他们一个接一个地出去了——奥尔德里克留到最后， 替你把烛台拨了拨， 然后也走了。"
 
-    "门关上的瞬间, 大厅的空气重新变冷."
+    "门关上的瞬间， 大厅的空气重新变冷。"
 
     scene bg castle_exterior with dissolve
 
-    "你独自走上了城堡最高的那段城墙."
+    "你独自走上了城堡最高的那段城墙。"
 
-    "夜风从北方来. 比白天里的风冷得多, 也安静得多."
+    "夜风从北方来。 比白天里的风冷得多， 也安静得多。"
 
-    "脚下是艾登堡——每一扇还亮着的窗里, 都坐着一个等你做完决定的人."
+    "脚下是艾登堡——每一扇还亮着的窗里， 都坐着一个等你做完决定的人。"
 
-    "远处是黑暗——北方某个地方, 男爵和王后的军队也在他们各自的火堆边等着天亮."
+    "远处是黑暗——北方某个地方， 男爵和王后的军队也在他们各自的火堆边等着天亮。"
 
     pause 1.0
 
     if elena_romance:
         $ hide_all_chars("elena_img")
         show elena_img at right with dissolve
-        elena "我猜你会一个人上来."
+        elena "我猜你会一个人上来。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -84,19 +85,19 @@ label ending_decision_pause:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at right with dissolve
-        elena "因为我也想一个人上来——但既然你先上来了, 那就两个人吧."
+        elena "因为我也想一个人上来——但既然你先上来了， 那就两个人吧。"
 
         $ hide_all_chars()
-        "她在你身边站定. 没有再说什么."
+        "她在你身边站定。 没有再说什么。"
 
-        "你也没有."
+        "你也没有。"
 
-        "两个人就这样并排看着北方, 看了很久."
+        "两个人就这样并排看着北方， 看了很久。"
 
     elif rel_aldric >= 50:
         $ hide_all_chars("aldric_img")
         show aldric_img at right with dissolve
-        aldric "老朽找了您半个时辰."
+        aldric "老朽找了您半个时辰。"
 
         hide aldric_img
         $ hide_all_chars("player_char_img")
@@ -106,37 +107,37 @@ label ending_decision_pause:
         hide player_char_img
         $ hide_all_chars("aldric_img")
         show aldric_img at right with dissolve
-        aldric "您的父亲, 在做出每一个艰难决定之前, 也喜欢上这段城墙."
+        aldric "您的父亲， 在做出每一个艰难决定之前， 也喜欢上这段城墙。"
 
-        aldric "我那时陪过他几次."
+        aldric "我那时陪过他几次。"
 
-        aldric "今晚, 我陪您一次."
+        aldric "今晚， 我陪您一次。"
 
         $ hide_all_chars()
-        "他没有再多说一个字, 也没有走开."
+        "他没有再多说一个字， 也没有走开。"
 
-        "你没有让他走."
+        "你没有让他走。"
 
     else:
-        "你没有叫任何人陪你. 这种夜, 应该一个人过."
+        "你没有叫任何人陪你。 这种夜， 应该一个人过。"
 
-        "你想了很多事. 也想了很多人."
+        "你想了很多事。 也想了很多人。"
 
-        "你想起父亲. 想起母亲. 想起那个让你站到这里来的全部理由."
+        "你想起父亲。 想起母亲。 想起那个让你站到这里来的全部理由。"
 
-        "想得太久, 远处天边已经有一线白."
+        "想得太久， 远处天边已经有一线白。"
 
     pause 1.0
 
     scene bg great_hall with dissolve
 
-    "天快亮的时候, 你回到大厅."
+    "天快亮的时候， 你回到大厅。"
 
-    "桌上的烛火已经燃了一半. 地图上的标记你看了又看."
+    "桌上的烛火已经燃了一半。 地图上的标记你看了又看。"
 
     "不论明天之后这片土地会变成什么样——"
 
-    "至少, 你已经做完了你能做的所有准备."
+    "至少， 你已经做完了你能做的所有准备。"
 
     pause 0.8
 
@@ -230,7 +231,7 @@ label ending_truth_epilogue:
 
             prince "对了，[player_name]。关于新学院的事——"
 
-            prince "朕决定以西里尔老师的名字来命名。'西里尔学院'。"
+            prince "朕决定以西里尔老师的名字来命名。「西里尔学院」。"
 
             prince "他教会了朕什么是真正的学问。虽然他选择了错误的道路，但他的教诲是真诚的。"
 
@@ -265,7 +266,7 @@ label ending_truth_epilogue:
         player "只有在阳光下，才不会有暗箱操作的空间。"
 
         $ hide_all_chars()
-        "委员们纷纷点头。五年来，你用'透明'二字治理这个国家，成效有目共睹。"
+        "委员们纷纷点头。五年来，你用「透明」二字治理这个国家，成效有目共睹。"
         "腐败减少了，税收增加了，百姓的信任也在一点一点建立起来。"
 
         "散会后，一位年长的委员走到你身边。"
@@ -296,7 +297,7 @@ label ending_truth_epilogue:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "嗯。'想事情'是你的老毛病了。会议开完了？"
+        elena "嗯。「想事情」是你的老毛病了。会议开完了？"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -307,7 +308,7 @@ label ending_truth_epilogue:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
         elena "我知道。我的人已经把南方商会的底牌查清楚了。"
-        elena "他们声称的'运输成本暴涨'是假的。实际上是商会会长私吞了差价。"
+        elena "他们声称的「运输成本暴涨」是假的。实际上是商会会长私吞了差价。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -345,7 +346,7 @@ label ending_truth_epilogue:
 
         elena "汉斯，那个酒窖管事——和我父亲死在同一年，用的是同一种毒药。"
 
-        elena "我们家不算什么显赫的贵族，父亲也不是什么大人物。但那些被'暮色之露'夺去性命的人——都在同一份名单上。"
+        elena "我们家不算什么显赫的贵族，父亲也不是什么大人物。但那些被「暮色之露」夺去性命的人——都在同一份名单上。"
 
         elena "这五年里，我把那份名单上的每一个名字都核对完了。"
 
@@ -476,7 +477,7 @@ label ending_truth_epilogue:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "你在信里说，'最重要的不是你拥有什么，而是你守护什么。'"
+    player "你在信里说，「最重要的不是你拥有什么，而是你守护什么。」"
 
     player "我一直记得。"
 
@@ -796,7 +797,7 @@ label ending_iron_epilogue:
 
     envoy "您在五年内建立了一支五千人的精锐铁骑。这在军事史上堪称奇迹。"
 
-    envoy "皇帝陛下说——'能让铁骑之主成为朋友，远比让他成为敌人更明智。'"
+    envoy "皇帝陛下说——「能让铁骑之主成为朋友，远比让他成为敌人更明智。」"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
@@ -804,7 +805,7 @@ label ending_iron_epilogue:
 
     player "但如果他的军队敢踏入我的国土一步——"
 
-    player "他将会明白'铁骑之主'这个称号不是浪得虚名。"
+    player "他将会明白「铁骑之主」这个称号不是浪得虚名。"
 
     $ hide_all_chars()
     "特使的笑容僵了一瞬，随即更深地鞠了一躬。"
@@ -1025,7 +1026,7 @@ label ending_iron_epilogue:
     show aldric_img at left with dissolve
     aldric "老领主——您的父亲——一辈子都在努力让人们忘记他父亲的暴虐。"
 
-    aldric "您父亲说过：'真正的力量不是让人恐惧，而是让人信赖。'"
+    aldric "您父亲说过：「真正的力量不是让人恐惧，而是让人信赖。」"
 
     aldric "而如今……"
 
@@ -1230,7 +1231,7 @@ label ending_shadow_epilogue:
 
     if dark_lily_joined:
         $ hide_all_chars()
-        "你转身走向暗门。一条只有你知道的密道通向你真正的'办公室'——"
+        "你转身走向暗门。一条只有你知道的密道通向你真正的「办公室」——"
         "城堡地下深处的暗百合总部。"
 
         scene bg study with dissolve
@@ -1268,7 +1269,7 @@ label ending_shadow_epilogue:
             "没有人知道她的真实效忠对象。包括她自己——也许连她也不确定了。"
 
     else:
-        "你转身走向暗门。一条只有你知道的密道通向你真正的'办公室'——"
+        "你转身走向暗门。一条只有你知道的密道通向你真正的「办公室」——"
         "城堡最深处的秘密情报室。"
 
         scene bg study with dissolve
@@ -1395,7 +1396,7 @@ label ending_shadow_epilogue:
 
         elena "不是因为你做了什么对不起我的事。"
 
-        elena "是因为——我不知道你对我说的哪些话是真的，哪些是……'策略'。"
+        elena "是因为——我不知道你对我说的哪些话是真的，哪些是……「策略」。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -1519,7 +1520,7 @@ label ending_shadow_epilogue:
         "老影主笑了。那笑容苍老而苦涩。"
         lily_master "你知道吗？我年轻的时候也这么说。"
 
-        lily_master "'该做的事。'这四个字害了多少人，你知道吗？"
+        lily_master "「该做的事。」这四个字害了多少人，你知道吗？"
 
         lily_master "包括我自己。"
 
@@ -1632,7 +1633,7 @@ label ending_shadow_epilogue:
         "老人笑了。那笑容苍老而苦涩。"
         aldric "你知道吗？我年轻的时候也这么说。"
 
-        aldric "'该做的事。'这四个字害了多少人，你知道吗？"
+        aldric "「该做的事。」这四个字害了多少人，你知道吗？"
 
         aldric "包括我自己。"
 
@@ -1729,7 +1730,7 @@ label ending_shadow_epilogue:
 
     if queen_trust:
         "她曾信任你，如今她隐约感到有些事情不对。政令总是恰好符合你的利益，反对她的声音总是在关键时刻消失。"
-        "她偶尔会在深夜惊醒，觉得自己像一只被丝线牵着的木偶。但她永远找不到那根线——因为那根线，就是她以为的'信任'。"
+        "她偶尔会在深夜惊醒，觉得自己像一只被丝线牵着的木偶。但她永远找不到那根线——因为那根线，就是她以为的「信任」。"
     else:
         "她从未信任过你，这反而让你的工作更简单。她把所有注意力放在防备明面上的敌人，完全没有意识到真正的操控来自暗处。"
         "她以为自己赢了。这是最讽刺的部分。"
@@ -1750,9 +1751,9 @@ label ending_shadow_epilogue:
         "但即便是背叛，也是精心计算的一步棋。他的倒下为你换来了王后的信任——那才是真正的筹码。"
     elif prince_ally:
         "他以为你是朋友。你确实对他不错——在他需要帮助时伸出手，在他迷茫时给出建议。"
-        "他不知道的是，每一次'帮助'都经过精心计算，每一条'建议'都通向你需要的方向。最残酷的操控，是让对方心怀感激。"
+        "他不知道的是，每一次「帮助」都经过精心计算，每一条「建议」都通向你需要的方向。最残酷的操控，是让对方心怀感激。"
     else:
-        "你让精心操纵的信息流一步步将他逼入死角。退路被堵死，盟友被策反——最后他'自愿'退出了权力角逐。"
+        "你让精心操纵的信息流一步步将他逼入死角。退路被堵死，盟友被策反——最后他「自愿」退出了权力角逐。"
         "他以为是命运弄人。他不知道命运有一个名字。"
 
     scene black with fade
@@ -1915,7 +1916,7 @@ label ending_faith_epilogue:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "我父亲说过——'如果你不亲手触摸泥土，你就不会理解脚下的大地。'"
+    player "我父亲说过——「如果你不亲手触摸泥土，你就不会理解脚下的大地。」"
 
     if elena_romance:
         hide player_char_img
@@ -2041,7 +2042,7 @@ label ending_faith_epilogue:
 
             player "你看不见他，摸不到他。但你能感受到他。"
 
-            player "当你在黑暗中害怕时，心里那个告诉你'不要怕'的声音——那就是他。"
+            player "当你在黑暗中害怕时，心里那个告诉你「不要怕」的声音——那就是他。"
 
             player "当你看到别人受苦，心里那份不忍——那也是他。"
 
@@ -2096,7 +2097,7 @@ label ending_faith_epilogue:
             player "只要你记得她，善良就会一直存在。"
 
             $ hide_all_chars()
-            "男孩低下头，小声说了一句：'我会记得的。'"
+            "男孩低下头，小声说了一句：「我会记得的。」"
 
         "\"答案在你自己心里。\"":
             $ epilogue_faith_answer = "heart"
@@ -2215,7 +2216,7 @@ label ending_faith_epilogue:
         "和平给了他另一种活法。他是否感激，你不知道。你只知道他不再是敌人了。"
     else:
         "他在改革条约上签了字，但所有人都看得出他心不甘情不愿。"
-        "他在私下仍有怨言，偶尔在酒后念叨'旧日的好时光'。但怨言终究只是怨言。他没有力量翻盘，也没有勇气再赌一次。"
+        "他在私下仍有怨言，偶尔在酒后念叨「旧日的好时光」。但怨言终究只是怨言。他没有力量翻盘，也没有勇气再赌一次。"
 
     "王子获得了他很久以来最稀缺的东西——第二次机会。"
 
@@ -2516,7 +2517,7 @@ label ending_peoples_epilogue:
     show aldric_img at left with dissolve
     aldric "您的父亲……去世前的最后一句话是说给我听的。"
 
-    aldric "他说——'照顾好我的孩子。他比我想象的更坚强。'"
+    aldric "他说——「照顾好我的孩子。他比我想象的更坚强。」"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
@@ -2611,7 +2612,7 @@ label ending_peoples_epilogue:
 
         $ hide_all_chars()
         "她笑了一下。那种笑很轻，却让你想起当年月光下的老橡树。"
-        "那个晚上，她说自己'手很稳'。"
+        "那个晚上，她说自己「手很稳」。"
         "现在，她的手沾着泥土。一双不再握刀的手。"
 
         $ hide_all_chars("elena_img")
@@ -3057,9 +3058,9 @@ label ending_father_son_epilogue:
 
     "\"没有看到你第一次骑马。没有看到你第一次举起剑。\""
 
-    "\"没有在你害怕的时候——告诉你'不用怕，父亲在'。\""
+    "\"没有在你害怕的时候——告诉你「不用怕，父亲在」。\""
 
-    "\"没有在你成功的时候——拍着你的肩膀说'好样的'。\""
+    "\"没有在你成功的时候——拍着你的肩膀说「好样的」。\""
 
     "\"这些……都是我亏欠你的。\""
 

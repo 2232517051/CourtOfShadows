@@ -394,7 +394,7 @@ label ch2_exp_grand_hall:
     $ hide_all_chars("countess_hilda_img")
     show countess_hilda_img at left with dissolve
 
-    countess_hilda "维尔纳公子，你若再说一遍'弱者'这个词，我保证你会后悔。"
+    countess_hilda "维尔纳公子，你若再说一遍「弱者」这个词，我保证你会后悔。"
 
     hide countess_hilda_img
     $ hide_all_chars("noble_werner_img")
@@ -431,12 +431,12 @@ label ch2_exp_grand_hall:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "诸位, 各家领地情况不同, 一刀切的税率永远会得罪一半的人。"
-            player "我提议——核心商道按统一低税率, 边境领地保留独立税权。商业利润提取百分之二, 专项注入边境军费基金, 由格雷伯爵监督。"
+            player "诸位， 各家领地情况不同， 一刀切的税率永远会得罪一半的人。"
+            player "我提议——核心商道按统一低税率， 边境领地保留独立税权。商业利润提取百分之二， 专项注入边境军费基金， 由格雷伯爵监督。"
             $ hide_all_chars()
             "大厅静了几秒。然后格雷伯爵慢慢点了点头。"
             "希尔达和威尔斯没有表态——但都没有反对。"
-            "新人第一次发言能让两派都说不出反对的话, 这本身就是一个胜利。"
+            "新人第一次发言能让两派都说不出反对的话， 这本身就是一个胜利。"
 
         "支持税制改革「降低税率，促进贸易」":
             $ ch2_exp_tax_stance = "reform"
@@ -774,7 +774,7 @@ label ch2_exp_grand_hall:
 
     viscount_wells "如今从东方到西方的商路要经过五个领地的关卡。每过一个关卡就要缴纳一次过路费。商人们不堪重负，很多已经转走海路了。"
 
-    viscount_wells "我的提案是——开辟一条'黄金走廊'。沿这条路线取消所有关卡，建立统一的通行证制度。商人只需缴纳一次费用，沿途所有领地按比例分配。"
+    viscount_wells "我的提案是——开辟一条「黄金走廊」。沿这条路线取消所有关卡，建立统一的通行证制度。商人只需缴纳一次费用，沿途所有领地按比例分配。"
 
     hide viscount_wells_img
     $ hide_all_chars("countess_stein_img")
@@ -791,7 +791,7 @@ label ch2_exp_grand_hall:
     show noble_werner_img at right with dissolve
     hide countess_stein_img with dissolve
 
-    noble_werner "这条'黄金走廊'恰好经过你的地盘最长，你当然觉得公平。"
+    noble_werner "这条「黄金走廊」恰好经过你的地盘最长，你当然觉得公平。"
 
     hide noble_werner_img
     $ hide_all_chars("viscount_wells_img")
@@ -1652,7 +1652,7 @@ label ch2_exp_banquet:
             show player_char_img at left with dissolve
             player "维尔纳公子的祝词很有深度。让我也来一个。"
 
-            player "我听说有个故事——一只老狐狸对一只年轻的狼说：'你只是靠了一副好牙齿。'年轻的狼回答说：'是啊，但至少我的牙齿还在。'"
+            player "我听说有个故事——一只老狐狸对一只年轻的狼说：「你只是靠了一副好牙齿。」年轻的狼回答说：「是啊，但至少我的牙齿还在。」"
 
             "全场先是一愣，然后爆发出哄堂大笑。"
 

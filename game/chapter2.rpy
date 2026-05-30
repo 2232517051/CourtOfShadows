@@ -210,7 +210,7 @@ label ch2_preparation:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "我只是偶然听到一些只言片语。有人在讨论'艾登堡的新领主走不出哈伦堡'。"
+        elena "我只是偶然听到一些只言片语。有人在讨论「艾登堡的新领主走不出哈伦堡」。"
 
         elena "我不确定是谁说的，但……请您路上多加提防。"
 
@@ -506,14 +506,14 @@ label ch2_preparation:
             hide servant_generic_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你们这一车货, 我全要了。运到艾登堡再算账。"
+            player "你们这一车货， 我全要了。运到艾登堡再算账。"
             $ hide_all_chars()
-            "商人愣了几秒, 然后跪了下来——这不是答谢, 是发自内心的感激。"
+            "商人愣了几秒， 然后跪了下来——这不是答谢， 是发自内心的感激。"
             "他们今天不只是修了车——是不用担心明年开春能不能再启程。"
-            "艾登堡在卡尔达商道上的口碑, 从这一刻起多了一个版本。"
+            "艾登堡在卡尔达商道上的口碑， 从这一刻起多了一个版本。"
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "领主大人……您这一手不是好心, 是经营。"
+            captain "领主大人……您这一手不是好心， 是经营。"
 
         "让士兵帮忙修车":
             $ change_stat("reputation", 5)
@@ -585,9 +585,9 @@ label ch2_preparation:
     $ hide_all_chars()
     "艾琳娜指向路边。在一棵枯死的橡树下，竖着一块粗糙的石碑。"
 
-    "你走近一看——石碑上刻着几行字，已经被风雨侵蚀得模糊不清。但你还是勉强辨认出来：'此路通哈伦堡，旅人谨行。'"
+    "你走近一看——石碑上刻着几行字，已经被风雨侵蚀得模糊不清。但你还是勉强辨认出来：「此路通哈伦堡，旅人谨行。」"
 
-    "石碑下面还有一行更小的字：'乱世之中，唯谨慎者活。'"
+    "石碑下面还有一行更小的字：「乱世之中，唯谨慎者活。」"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -656,19 +656,19 @@ label ch2_preparation:
 
             "你把头领请到二楼空房间。关上门。"
 
-            player "你们要北方的活? 我有。不是临时的，是长期签约——半年，三十枚金币起。"
+            player "你们要北方的活？ 我有。不是临时的，是长期签约——半年，三十枚金币起。"
 
             hide player_char_img
             $ hide_all_chars("soldier_generic_img")
             show soldier_generic_img at left with dissolve
-            soldier "贵族都这么直接? 那你要我们杀谁?"
+            soldier "贵族都这么直接？ 那你要我们杀谁？"
 
             hide soldier_generic_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "现在还不知道。但艾登堡的形势，半年内一定有用上你们的时候。"
 
-            player "你来不来?"
+            player "你来不来？"
 
             hide player_char_img
             $ hide_all_chars("soldier_generic_img")
@@ -1197,12 +1197,12 @@ label ch2_preparation:
 
     elena "领主大人，各领主的住处安排在城中心的贵宾院。我们先去安顿，然后……"
 
-    elena "会议是明天上午。今天下午，各领主通常会在城里走动，互相'偶遇'。"
+    elena "会议是明天上午。今天下午，各领主通常会在城里走动，互相「偶遇」。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "'偶遇'？"
+    player "「偶遇」？"
 
     hide player_char_img
     $ hide_all_chars("elena_img")
@@ -1216,7 +1216,7 @@ label ch2_preparation:
     $ hide_all_chars()
     "你安顿好行李后，决定趁下午的时间在城里转转。"
 
-    "这既是为了了解哈伦堡的环境，也是为了——如艾琳娜所说——制造一些有价值的'偶遇'。"
+    "这既是为了了解哈伦堡的环境，也是为了——如艾琳娜所说——制造一些有价值的「偶遇」。"
 
     ## ============================================================
     ## 场景1.8：会前交际
@@ -1273,7 +1273,7 @@ label ch2_preparation:
 
             "格雷伯爵叹了口气，目光转向远处。"
 
-            count_grey "如今他四十了，还是个不成器的废物。我让他在封地里管马场——也只配管马场。"
+            count_grey "如今三十出头了，还是个不成器的废物。我让他在封地里管马场——也只配管马场。"
 
             count_grey "你倒是站到这里来了。"
 
@@ -1295,7 +1295,7 @@ label ch2_preparation:
             $ hide_all_chars()
             "你决定先观察一下其他领主的动向，等更好的时机再与格雷伯爵接触。"
 
-    "继续往前走，你来到了一家高级酒馆——'银杯酒馆'。门口停着几辆华丽的马车。"
+    "继续往前走，你来到了一家高级酒馆——「银杯酒馆」。门口停着几辆华丽的马车。"
 
     "酒馆二楼的露台上，一个身材魁梧的中年人正大声说笑，身边围着几个随从。"
 
@@ -1322,7 +1322,7 @@ label ch2_preparation:
             hide player_char_img
             $ hide_all_chars("viscount_wells_img")
             show viscount_wells_img at left with dissolve
-            viscount_wells "哦? 年轻领主也对酒有兴趣?"
+            viscount_wells "哦？ 年轻领主也对酒有兴趣？"
 
             hide viscount_wells_img
             $ hide_all_chars("player_char_img")
@@ -1445,7 +1445,7 @@ label ch2_preparation:
 
     storyteller "于是国王想摘下它，戴在王冠上。"
 
-    storyteller "但百合花说：'我只在泥土里才能活。你把我摘下来，我就会枯萎。'"
+    storyteller "但百合花说：「我只在泥土里才能活。你把我摘下来，我就会枯萎。」"
 
     storyteller "国王不听。他摘下了百合花，戴在了头上。"
 
@@ -1527,7 +1527,7 @@ label ch2_preparation:
             $ change_stat("intrigue", 5)
             $ hide_all_chars()
             "你没有上前。在一个各路势力汇聚的城镇里，一个讲百合花故事的说书人——"
-            "也许只是巧合，也许是试探。无论如何，主动接触都可能暴露你对'百合花'这个符号的在意。"
+            "也许只是巧合，也许是试探。无论如何，主动接触都可能暴露你对「百合花」这个符号的在意。"
             "你假装不经意地从老人身边走过，余光却把他的面容牢牢记住——花白的头发，左颊一道陈年刀疤，右手小指缺了半截。"
             "如果将来需要找到这个人，你认得出他。"
 
@@ -1535,7 +1535,7 @@ label ch2_preparation:
             $ change_stat("reputation", 5)
             "你不动声色地扫了一眼四周。说书人身边围着几十号人，而你的侍卫就站在三步之外。"
             "这些侍卫里有多少是真正忠于你的？有多少是别人安插的眼线？你无法确定。"
-            "在这种环境下和一个讲'百合花'寓言的老头攀谈——等于向所有人宣告你对暗百合感兴趣。"
+            "在这种环境下和一个讲「百合花」寓言的老头攀谈——等于向所有人宣告你对暗百合感兴趣。"
             "你把老人的面容牢牢记住——花白的头发，左颊一道陈年刀疤，右手小指缺了半截。"
             "然后，你若无其事地转身离开了。"
 
@@ -1605,7 +1605,7 @@ label ch2_preparation:
 
     elena "男爵今天下午和威尔斯子爵在酒馆密谈了很久。看来他在会前就开始拉票了。"
 
-    elena "另外，施泰因伯爵夫人去过的那个商会……据说和一个叫'北方商盟'的组织有关。"
+    elena "另外，施泰因伯爵夫人去过的那个商会……据说和一个叫「北方商盟」的组织有关。"
 
     elena "这个商盟近年来势力扩张很快，甚至开始插手领主之间的事务。"
 
@@ -1788,7 +1788,7 @@ label ch2_council:
 
     "施泰因伯爵夫人言简意赅地报告了旱灾后的恢复情况，措辞严谨，没有夸大也没有隐瞒。"
 
-    "格雷伯爵用平淡的语气说了几句，大意是一切如常。但你注意到他说到'教会事务'时，眉头微微皱了一下。"
+    "格雷伯爵用平淡的语气说了几句，大意是一切如常。但你注意到他说到「教会事务」时，眉头微微皱了一下。"
 
     "轮到你了。"
 
@@ -1928,7 +1928,7 @@ label ch2_oppose_tax:
     show player_char_img at left with dissolve
     player "男爵说得对。新税法加重了百姓负担，我支持联名上书。"
 
-    player "我父亲生前就反对过类似的提案。他说过一句话——'税赋不是鞭子，不能用来驯服领民。'"
+    player "我父亲生前就反对过类似的提案。他说过一句话——「税赋不是鞭子，不能用来驯服领民。」"
 
     "你的声音在议事厅里回荡。你看到格雷伯爵的眼中闪过一丝光——那句话，也许正是你父亲在这张桌上说过的。"
 
@@ -2280,7 +2280,7 @@ label ch2_after_council:
             hide merchant_karl_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你的'特殊物品'——具体指什么？"
+            player "你的「特殊物品」——具体指什么？"
             hide player_char_img
             $ hide_all_chars("merchant_karl_img")
             show merchant_karl_img at left with dissolve
@@ -2336,7 +2336,7 @@ label ch2_after_council:
             show merchant_karl_img at left with dissolve
             merchant "不要惊讶，领主大人。您的父亲是个深谋远虑的人。他买那本书的时候说——"
 
-            merchant "'如果有人想用毒药对付我，我至少要知道他们用的是什么。'"
+            merchant "「如果有人想用毒药对付我，我至少要知道他们用的是什么。」"
 
             merchant "当时我以为他是多虑了。但后来……"
 
@@ -2351,7 +2351,7 @@ label ch2_after_council:
             merchant "是的。而我知道另一件事——"
 
             if dusk_dew_known:
-                merchant "就在老领主去世的那一天，有人从我的另一个客户那里买走了一瓶'暮色之露'。"
+                merchant "就在老领主去世的那一天，有人从我的另一个客户那里买走了一瓶「暮色之露」。"
 
                 "这个名字你听过——你已经知道那是什么。从卡尔的语气里，他显然也不意外你认得这个词。"
 
@@ -2365,7 +2365,7 @@ label ch2_after_council:
                 show merchant_karl_img at left with dissolve
                 merchant "聪明。既然您已经知道它是什么，我就省去解释——直接说关键。"
             else:
-                merchant "就在老领主去世的那一天，有人从我的另一个客户那里买走了一瓶'暮色之露'。"
+                merchant "就在老领主去世的那一天，有人从我的另一个客户那里买走了一瓶「暮色之露」。"
 
                 "你从未听过这个名字，但从卡尔的语气中，你知道它不是什么好东西。"
 
@@ -2584,17 +2584,17 @@ label ch2_after_council:
 
     "你把每位领主的态度和言行都记在一张羊皮纸上——这是父亲教你的习惯。"
 
-    "'观人于微'，他曾经说过，'一个人的立场藏在他的眼神里，他的野心写在他的手势中。'"
+    "「观人于微」，他曾经说过，「一个人的立场藏在他的眼神里，他的野心写在他的手势中。」"
 
     "你写下了几条关键记录："
 
-    "'格雷伯爵——提到教会时皱眉。与教会有矛盾？可利用。'"
+    "「格雷伯爵——提到教会时皱眉。与教会有矛盾？可利用。」"
 
-    "'威尔斯子爵——风向标，无立场。以利诱之，不难争取。'"
+    "「威尔斯子爵——风向标，无立场。以利诱之，不难争取。」"
 
-    "'施泰因伯爵夫人——独立且强硬。可能的盟友，但需要找到共同利益。'"
+    "「施泰因伯爵夫人——独立且强硬。可能的盟友，但需要找到共同利益。」"
 
-    "'男爵——虚荣、暴躁、有野心。危险，但也正因如此，可预测。'"
+    "「男爵——虚荣、暴躁、有野心。危险，但也正因如此，可预测。」"
 
     "你停下笔，看着这张纸。突然觉得自己和父亲之间的距离，在这一刻变得很近。"
 
@@ -2637,7 +2637,7 @@ label ch2_after_council:
             hide player_char_img
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
-            elena "您要我去?"
+            elena "您要我去？"
 
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -2660,7 +2660,7 @@ label ch2_after_council:
             $ hide_all_chars()
             "你在记录纸上又添了一行——"
 
-            "'男爵和王后旧人的联系，比我们以为的早。'"
+            "「男爵和王后旧人的联系，比我们以为的早。」"
 
         "派人跟踪那个陌生人":
             $ change_stat("intrigue", 5)
@@ -2798,7 +2798,7 @@ label ch2_assassination:
 
         "你的后颈汗毛倒竖。这种感觉，你在王都的兵法课上学到过一个词来形容——"
 
-        "'杀气'。"
+        "「杀气」。"
 
         show elena_img at right with dissolve
 
@@ -2953,7 +2953,7 @@ label ch2_ambush_prepared:
             "半个时辰后，雷恩回来了。"
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "大人。他只说了一件事——'七瓣莲花将在月圆之夜绽放'。然后就……咬舌了。"
+            captain "大人。他只说了一件事——「七瓣莲花将在月圆之夜绽放」。然后就……咬舌了。"
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -3387,6 +3387,69 @@ label ch2_end:
 
     "老骑士的语气异常沉重。你从他脸上读到了深深的忧虑——不只是为今晚的伏击，更像是某种古老的恐惧被重新唤醒。"
 
+    menu:
+        "追问——「关于一切，是什么意思？」" if (intrigue >= 45 or rel_aldric >= 50) and not father_was_regent_known:
+            $ change_stat("intrigue", 5)
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "雷恩，让人都退下。"
+            player "奥尔德里克——「关于一切」，是什么意思？刚才那刀差点穿过我的喉咙。我想我有资格现在就听。"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "……领主大人。"
+            aldric "好吧。也许该让你知道一些了——尤其是在你刚刚活下来之后。"
+
+            aldric "你父亲不是寻常的边境领主。先王临终前，留下过一道遗诏——指定一位摄政者，辅佐年幼的王子，直至他成年。"
+
+            aldric "那个名字……是你父亲。"
+
+            $ father_was_regent_known = True
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "……父亲？摄政？"
+
+            "你听见自己的声音从很远的地方传来。"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "但那道遗诏从未公开生效。其中的曲折，老领主从未对老臣细说——他守得太严了。"
+
+            aldric "老臣只知道，从那一天起，王都对艾登堡的态度就变了。变冷，变重，变得像在防一个不肯认输的对手。"
+
+            aldric "您身上背负的，不只是这一片封地。还有别的东西——具体是什么，等您准备好，得自己去查。"
+
+            aldric "今晚的暗百合、那位伯爵夫人、王都那位陛下——他们手里的线，最终都通向那道没能公开的遗诏。"
+
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你为什么现在才说？"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "因为老领主让老臣发誓——除非您自己问起来，否则别开口。"
+            aldric "他说，如果您没注意到那些迹象，说明时机还没到。"
+            aldric "今夜……您问了。"
+
+        "尊重他——明日再说":
+            $ change_stat("loyalty", 3)
+            hide aldric_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "明日再说吧。今晚你也累了。"
+
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "……是。老臣告退。"
+
     hide aldric_img with dissolve
 
     $ hide_all_chars()
@@ -3581,7 +3644,7 @@ label ch2_end:
             elena "暗百合……是一个古老的组织。至少有两百年的历史。"
             elena "在王宫里，它像是一个传说——所有人都听过，但没有人真正见过。"
             elena "据说他们不效忠任何领主、任何王室。他们有自己的信条——"
-            elena "'在黑暗中守护平衡。'"
+            elena "「在黑暗中守护平衡。」"
             hide elena_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -3750,7 +3813,7 @@ label ch2_end:
     if father_death_known:
         "磨坊……那封信约你满月之夜去磨坊。"
         "今夜就是满月。"
-        "你看着那轮悬在天边的满月，脑海中浮现出信上的字迹——'若想知道真相，满月之夜，独自来磨坊。'"
+        "你看着那轮悬在天边的满月，脑海中浮现出信上的字迹——「若想知道真相，满月之夜，独自来磨坊。」"
         "你把那封信揉成一团又展开来，折痕已经模糊了字迹。不管那里等待你的是陷阱还是答案——你都必须去。"
 
         "远处，城堡的钟楼响起了午夜的钟声。十二下沉闷的回响，在寂静的夜空中久久不散。"
@@ -3786,7 +3849,7 @@ label ch2_end:
         $ dark_lily_first_contact = True
         $ dusk_dew_known = True
 
-        "你把纸条收入怀中。木盒里只有一小瓶深紫色的液体和一张标签——'暮色之露·样本'。"
+        "你把纸条收入怀中。木盒里只有一小瓶深紫色的液体和一张标签——「暮色之露·样本」。"
 
         "你迅速环顾四周。月光下，远处似乎有个影子一闪而过，但当你追出门时，只剩空荡荡的林间小路。"
 
@@ -3794,7 +3857,7 @@ label ch2_end:
 
         "你沿原路返回城堡，心跳一路没有平复。"
 
-        "纸条上的话在你脑中翻来覆去——'你父亲的死不是孤例'。这些人知道的比你多得多。"
+        "纸条上的话在你脑中翻来覆去——「你父亲的死不是孤例」。这些人知道的比你多得多。"
 
         "但他们为什么要帮你？"
 

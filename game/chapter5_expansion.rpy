@@ -84,7 +84,7 @@ label ch5_exp_war_council:
 
     elena "但两军未必会联手。"
 
-    elena "蒙塔古伯爵的目标是'平叛'——也就是消灭男爵。而男爵的目标是'推翻暴政'——也就是对抗王后。"
+    elena "蒙塔古伯爵的目标是「平叛」——也就是消灭男爵。而男爵的目标是「推翻暴政」——也就是对抗王后。"
 
     elena "我们对他们而言，都只是附带目标。真正的敌人是彼此。"
 
@@ -169,7 +169,7 @@ label ch5_exp_war_council:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
         elena "暗百合方面也传来了消息。首领说——"
-        elena "'两军之中皆有我们的人。只需一个信号，就能在关键时刻制造混乱。'"
+        elena "「两军之中皆有我们的人。只需一个信号，就能在关键时刻制造混乱。」"
         elena "但首领的条件是——无论最终谁赢了，暗百合的利益必须得到保障。"
         hide elena_img with dissolve
         $ ch5_exp_council_unity += 1
@@ -193,7 +193,7 @@ label ch5_exp_war_council:
     if elena_skills_used:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "还有一条——我之前部署的那些'眼线'已经开始回报了。"
+        elena "还有一条——我之前部署的那些「眼线」已经开始回报了。"
         elena "敌军后勤线上有一个关键的补给站，守卫薄弱。如果提前破坏，他们的攻势至少推迟三天。"
         hide elena_img with dissolve
         $ ch5_exp_council_unity += 1
@@ -612,7 +612,7 @@ label ch5_exp_mobilize:
         hide player_char_img
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
-        aldric "我侍奉您的父亲三十年。他临终时拉着我的手说——'照顾好我的孩子。'"
+        aldric "我侍奉您的父亲三十年。他临终时拉着我的手说——「照顾好我的孩子。」"
 
         aldric "我答应了他。这是我一生中最重的承诺。"
 
@@ -679,7 +679,7 @@ label ch5_exp_mobilize:
 
         captain "我这辈子遇到过很多领主。有的贪婪，有的懦弱，有的自大。"
 
-        captain "但您不一样。您是第一个会问士兵'你怕不怕'的领主。"
+        captain "但您不一样。您是第一个会问士兵「你怕不怕」的领主。"
 
         captain "所以——哪怕前面是刀山火海，我也会跟着您。"
 
@@ -935,9 +935,9 @@ label ch5_exp_last_night:
     show soldier_generic_img at left with dissolve
     young_soldier "我想给我娘写封信……但不知道该说什么。"
 
-    young_soldier "说'我很好'？她肯定不信。说'我害怕'？她会更担心。"
+    young_soldier "说「我很好」？她肯定不信。说「我害怕」？她会更担心。"
 
-    young_soldier "说'如果我回不来'……我连想都不敢想。"
+    young_soldier "说「如果我回不来」……我连想都不敢想。"
 
     menu:
         "告诉他写真心话就好":
@@ -946,7 +946,7 @@ label ch5_exp_last_night:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你就写——'娘，我想你了。等打完仗，我就回去看你。'"
+            player "你就写——「娘，我想你了。等打完仗，我就回去看你。」"
 
             $ hide_all_chars("soldier_generic_img")
             show soldier_generic_img at left with dissolve
@@ -978,7 +978,7 @@ label ch5_exp_last_night:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "'您的儿子在艾登堡一切安好。他是一个勇敢的战士，领主大人为他骄傲。等春花开了，他就回家。'"
+            player "「您的儿子在艾登堡一切安好。他是一个勇敢的战士，领主大人为他骄傲。等春花开了，他就回家。」"
 
             $ hide_all_chars()
             "年轻人接过信纸，读了一遍又一遍。眼眶红了。"
@@ -1025,11 +1025,11 @@ label ch5_exp_last_night:
 
     aldric "这是老领主记的家族账本。每一笔收支都清清楚楚。"
 
-    aldric "你看这里——十五年前，他花了三十个金币修缮了村子里的水井。旁边备注写着——'饮水之恩，不可忘也。'"
+    aldric "你看这里——十五年前，他花了三十个金币修缮了村子里的水井。旁边备注写着——「饮水之恩，不可忘也。」"
 
     aldric "还有这里——十二年前，瘟疫横行，他自费购买了一百份草药分发给领民。"
 
-    aldric "账本上写着——'一人之财，万人之命。孰轻孰重，不言自明。'"
+    aldric "账本上写着——「一人之财，万人之命。孰轻孰重，不言自明。」"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
@@ -1043,7 +1043,7 @@ label ch5_exp_last_night:
 
     aldric "所以当他发现了王后的秘密时——他没有选择沉默。"
 
-    aldric "他说——'如果我不站出来，谁来站出来？'"
+    aldric "他说——「如果我不站出来，谁来站出来？」"
 
     "你轻轻合上了账本，把它放回书架上。"
 
@@ -1143,7 +1143,7 @@ label ch5_exp_last_night:
 
     elena "父亲在去世前一年，曾在王宫某位大人物的私邸做过几个月文书。回来后整个人变得沉默，常常半夜醒来盯着窗外。"
 
-    elena "他临终前断断续续提过一句话：'那个酒杯不该是那个颜色'。"
+    elena "他临终前断断续续提过一句话：「那个酒杯不该是那个颜色」。"
 
     elena "当时家里没人懂他在说什么。直到我在侍女学院学了毒药学——"
 
@@ -1222,7 +1222,7 @@ label ch5_exp_last_night:
 
     captain "第一个冲上来的马匪，我连躲都忘了躲。是旁边的老兵拉了我一把。"
 
-    captain "老兵对我说——'别看他们的脸。看他们的武器。脸会让你犹豫，武器不会。'"
+    captain "老兵对我说——「别看他们的脸。看他们的武器。脸会让你犹豫，武器不会。」"
 
     captain "后来我学会了。战场上不能犹豫。犹豫一秒，就是一条命。"
 
@@ -1236,7 +1236,7 @@ label ch5_exp_last_night:
     show captain_img at left with dissolve
     captain "不会了。但我会害怕。每一次战斗前都会害怕。"
 
-    captain "那个老兵后来告诉我——'不害怕的人活不过第二场仗。害怕才是活下去的本能。'"
+    captain "那个老兵后来告诉我——「不害怕的人活不过第二场仗。害怕才是活下去的本能。」"
 
     captain "他说对了。他打了二十年仗，每次都害怕，但每次都活了下来。"
 
@@ -1346,7 +1346,7 @@ label ch5_exp_last_night:
 
     "父亲的面容浮现在脑海中。不是梦里那个苍老憔悴的影子，而是记忆中那个高大温暖的男人。"
 
-    "他牵着你的手走在麦田里，告诉你——'这片土地上的每一个人都是我们的家人。领主的意义不是统治，而是守护。'"
+    "他牵着你的手走在麦田里，告诉你——「这片土地上的每一个人都是我们的家人。领主的意义不是统治，而是守护。」"
 
     "你睁开眼，目光变得坚定。"
 
@@ -1654,7 +1654,7 @@ label ch5_exp_skirmish:
 
             "让他们笑吧。笑得最大声的人，往往死得最快。"
 
-            "敌军在城下耀武扬威了一阵，然后心满意足地撤退了。他们认为已经摸清了你的'底细'。"
+            "敌军在城下耀武扬威了一阵，然后心满意足地撤退了。他们认为已经摸清了你的「底细」。"
 
             $ ch5_exp_skirmish_result = "retreat"
             $ ch5_exp_enemy_morale_hit = False
@@ -1758,7 +1758,7 @@ label ch5_exp_skirmish:
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "兵法有云——'能而示之不能。'"
+        player "兵法有云——「能而示之不能。」"
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
@@ -1827,7 +1827,7 @@ label ch5_exp_eve_of_battle:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "回信就这么写——'陛下恩典，臣感激涕零。然北方局势复杂，容臣三日内安排妥当，即刻率部南下效忠。'"
+            player "回信就这么写——「陛下恩典，臣感激涕零。然北方局势复杂，容臣三日内安排妥当，即刻率部南下效忠。」"
 
             hide player_char_img
             $ hide_all_chars("elena_img")
@@ -1932,7 +1932,7 @@ label ch5_exp_eve_of_battle:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
 
-            elena "他说'两千铁骑'——但之前的情报是两千五百人。"
+            elena "他说「两千铁骑」——但之前的情报是两千五百人。"
 
             elena "要么他在虚张声势，要么——有五百人脱离了联军。"
 
@@ -2074,7 +2074,7 @@ label ch5_exp_eve_of_battle:
         $ hide_all_chars()
         "第三封信——来自一个没有署名的人。字迹歪歪扭扭，写在一块破布上。"
 
-        "'城中有人记得你父亲的恩情。如果你需要帮助，在城墙上挂一面黑旗。'"
+        "「城中有人记得你父亲的恩情。如果你需要帮助，在城墙上挂一面黑旗。」"
 
         "你盯着这块破布看了很久。暗百合虽已被你铲除，可你父亲这些年在城中留下的善意，仍在悄无声息地流转。"
 
@@ -2090,7 +2090,7 @@ label ch5_exp_eve_of_battle:
         $ hide_all_chars()
         "第三封信——来自一个没有署名的人。字迹歪歪扭扭，写在一块破布上。"
 
-        "'城中有暗百合的旧人。如果你需要帮助，在城墙上挂一面黑旗。'"
+        "「城中有暗百合的旧人。如果你需要帮助，在城墙上挂一面黑旗。」"
 
         "你盯着这块破布看了很久。暗百合——即使你没有加入他们，他们的影子似乎也无处不在。"
 

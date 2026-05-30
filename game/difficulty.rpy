@@ -17,6 +17,24 @@ init 1 python:
         "hard":   {"positive": 0.7, "negative": 1.5, "label": "困难", "desc": "属性增益-30%，减益+50%，每个选择都至关重要"},
     }
 
+    ## 结局门槛配置（2026-05-17 反馈修复）
+    ## TapTap 玩家反馈"困难模式故意作死也能拿主结局"。根因：原本只用 60/fallback 50
+    ## 的属性门槛，且兜底总是 iron_lord。这里按难度区分主结局所需的属性高度和兜底逻辑。
+    ## - primary_threshold: 进入主结局路线（铁腕/影/圣/民）的最低属性
+    ## - fallback_threshold: 若没有任何属性达 primary，是否还有一条保底主线
+    ##   设为 None 表示没有保底——直接进入 vassal/fall 新结局
+    _ending_threshold_config = {
+        "easy":   {"primary": 55, "fallback": 45},
+        "normal": {"primary": 65, "fallback": 55},
+        "hard":   {"primary": 72, "fallback": None},
+    }
+
+    def get_ending_threshold(kind="primary"):
+        """读取当前难度对应的结局门槛。kind=primary|fallback"""
+        diff = persistent.difficulty or "normal"
+        cfg = _ending_threshold_config.get(diff, _ending_threshold_config["normal"])
+        return cfg.get(kind)
+
     def get_difficulty_multiplier(delta):
         """根据难度调整属性变化量"""
         diff = persistent.difficulty or "normal"
@@ -190,7 +208,7 @@ screen rel_event_toast(event_desc="", is_positive=True):
         hbox:
             spacing 10
             text _re_icon size 18 color _re_color yalign 0.5
-            text "关系变化:" size 14 color "#8a7e60" font "msyh.ttf" yalign 0.5
+            text "关系变化：" size 14 color "#8a7e60" font "msyh.ttf" yalign 0.5
             text event_desc size 16 color _re_color font "msyh.ttf" yalign 0.5
 
     timer 4.0 action Hide("rel_event_toast")

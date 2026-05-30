@@ -470,7 +470,7 @@ screen companions_screen():
 
                         ## 激活同伴数
                         $ _active_n = len(get_active_companions())
-                        text "出战: [_active_n]/2" size 14 color "#8a7e60" yalign 0.5
+                        text "出战： [_active_n]/2" size 14 color "#8a7e60" yalign 0.5
 
                         textbutton "X":
                             text_size 20
@@ -591,9 +591,9 @@ screen companions_screen():
                                                     if not _uc_avail:
                                                         $ _uc_ch_ok = _get_current_chapter_num() >= _ucdata["recruit_chapter"]
                                                         if not _uc_ch_ok:
-                                                            text "需要: 第[_ucdata['recruit_chapter']]章" size 10 color "#4a4030"
+                                                            text "需要： 第[_ucdata[「recruit_chapter」]]章" size 10 color "#4a4030"
                                                         else:
-                                                            text "好感度: [_uc_rel]/[_ucdata['loyalty_req']]" size 10 color "#4a4030"
+                                                            text "好感度： [_uc_rel]/[_ucdata[「loyalty_req」]]" size 10 color "#4a4030"
                                                     else:
                                                         textbutton "招募":
                                                             text_size 12
@@ -663,7 +663,7 @@ screen companions_screen():
                                             hbox:
                                                 spacing 8
                                                 text _sc["title"] size 13 color "#8a7e60"
-                                                text "([_sc_role_names.get(_sc['role'], '未知')])" size 12 color "#6a5e48"
+                                                text "([_sc_role_names.get(_sc[「role」], 「未知」)])" size 12 color "#6a5e48"
 
                                     ## 描述
                                     text _sc["desc"] size 13 color "#c8b890" font "msyh.ttf" line_spacing 4
@@ -751,7 +751,7 @@ screen companions_screen():
                                             yalign 0.5
                                             xfill True
 
-                                            text "武器:" size 13 color "#8a7e60" yalign 0.5 xsize 50
+                                            text "武器：" size 13 color "#8a7e60" yalign 0.5 xsize 50
 
                                             if _sc_equip.get("weapon"):
                                                 $ _w_name = _equipment_bonuses.get(_sc_equip["weapon"], {}).get("name", "未知")
@@ -791,7 +791,7 @@ screen companions_screen():
                                             yalign 0.5
                                             xfill True
 
-                                            text "护甲:" size 13 color "#8a7e60" yalign 0.5 xsize 50
+                                            text "护甲：" size 13 color "#8a7e60" yalign 0.5 xsize 50
 
                                             if _sc_equip.get("armor"):
                                                 $ _a_name = _equipment_bonuses.get(_sc_equip["armor"], {}).get("name", "未知")
@@ -940,16 +940,16 @@ label try_recruit_companion(comp_id=""):
         return
 
     if comp_id in recruited_companions:
-        "[_tr_data['name']]已经是你的同伴了。"
+        "[_tr_data[「name」]]已经是你的同伴了。"
         return
 
     if not is_companion_available(comp_id):
         $ _tr_rel = getattr(store, _tr_data["rel_var"], 0)
-        "你还没有赢得[_tr_data['name']]足够的信任（好感度 [_tr_rel]/[_tr_data['loyalty_req']]）。"
+        "你还没有赢得[_tr_data[「name」]]足够的信任（好感度 [_tr_rel]/[_tr_data[「loyalty_req」]]）。"
         return
 
     $ recruit_companion(comp_id)
-    "[_tr_data['name']]加入了你的队伍！"
-    "[_tr_data['name']] —— [_tr_data['title']]"
-    "特殊技能：「[_tr_data['skill'][0]]」—— [_tr_data['skill'][2]]"
+    "[_tr_data[「name」]]加入了你的队伍！"
+    "[_tr_data[「name」]] —— [_tr_data[「title」]]"
+    "特殊技能：「[_tr_data[「skill」][0]]」—— [_tr_data[「skill」][2]]"
     return

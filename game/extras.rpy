@@ -123,11 +123,11 @@ screen character_codex():
                                 xsize 56
                                 ysize 56
                                 background Solid("#0f0d1a")
-                                text "?" xalign 0.5 yalign 0.5 size 26 color "#2a2040"
+                                text "？" xalign 0.5 yalign 0.5 size 26 color "#2a2040"
 
                             vbox:
                                 spacing 3
-                                text "???" size 20 color "#3a3040" font "msyh.ttf"
+                                text "？??" size 20 color "#3a3040" font "msyh.ttf"
                                 text "在游戏中遇到此角色后解锁" size 13 color "#2a2030"
 
 
@@ -199,7 +199,7 @@ init python:
     ## 使用 default 变量，确保决策日志随存档保存/加载
 
     def log_decision(chapter, choice, result=""):
-        """记录一个决策。用法: $ log_decision("第一章", "选择外交手段", "与男爵达成停战")"""
+        """记录一个决策。用法： $ log_decision("第一章", "选择外交手段", "与男爵达成停战")"""
         store._decisions.append((chapter, choice, result))
 
     def get_decisions():
@@ -369,7 +369,7 @@ screen world_map():
                         xsize 24
                         ysize 24
                         background Solid("#1a1528")
-                        text "?" xalign 0.5 yalign 0.5 size 12 color "#2a2040"
+                        text "？" xalign 0.5 yalign 0.5 size 12 color "#2a2040"
 
 
 ## 地点详情弹窗
@@ -464,7 +464,7 @@ init python:
         persistent.collectibles_found = set()
 
     def collect_item(item_id):
-        """收集一个物品。用法: $ collect_item("letter_father_1")"""
+        """收集一个物品。用法： $ collect_item("letter_father_1")"""
         already_had = item_id in persistent.collectibles_found
         persistent.collectibles_found.add(item_id)
         if item_id in collectible_items:
@@ -488,7 +488,7 @@ screen collectible_found_toast(item_name=""):
         hbox:
             spacing 10
             text "【物】" size 18 yalign 0.5
-            text "获得收藏品:" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
+            text "获得收藏品：" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
             text item_name size 18 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
 
     timer 3.0 action Hide("collectible_found_toast")
@@ -575,9 +575,9 @@ screen collectibles_screen():
                                         xsize 40
                                         ysize 40
                                         background Solid("#0f0d1a")
-                                        text "?" xalign 0.5 yalign 0.5 size 18 color "#2a2040"
+                                        text "？" xalign 0.5 yalign 0.5 size 18 color "#2a2040"
                                     vbox:
-                                        text "???" size 16 color "#3a3040" font "msyh.ttf"
+                                        text "？??" size 16 color "#3a3040" font "msyh.ttf"
                                         text collectible_hints.get(_cid, "在游戏中探索发现") size 12 color "#2a2030"
 
 
@@ -1022,7 +1022,7 @@ screen accessibility_settings():
                     text "调整游戏文字的显示大小" size 13 color "#6a5e48"
 
                     $ _ts_label = "标准" if persistent.text_size_offset == 0 else ("大" if persistent.text_size_offset == 4 else ("特大" if persistent.text_size_offset == 8 else "小"))
-                    text "当前: [_ts_label]" size 14 color "#d4a942"
+                    text "当前： [_ts_label]" size 14 color "#d4a942"
 
                     hbox:
                         spacing 12

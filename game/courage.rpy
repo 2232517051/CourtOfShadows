@@ -103,7 +103,7 @@ screen courage_panel_section():
                 left_bar Solid(_c_color)
                 right_bar Solid("#1a1528")
             if courage <= 20:
-                text "! 勇气不足" size 10 color "#8b1a1a"
+                text "！ 勇气不足" size 10 color "#8b1a1a"
 
 ################################################################################
 ## 5. 勇气不足提示弹窗

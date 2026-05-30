@@ -456,7 +456,7 @@ screen injury_screen():
             ## 死亡警告
             if crisis_injuries >= 2:
                 null height 4
-                text "! 再受一次伤就会死亡！" size 16 color "#ff0000" bold True xalign 0.5
+                text "！ 再受一次伤就会死亡！" size 16 color "#ff0000" bold True xalign 0.5
 
             null height 8
 

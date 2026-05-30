@@ -163,7 +163,7 @@ init python:
         return True
 
     def get_missing_materials(recipe_id):
-        """返回缺少的材料列表 [(物品id, 需要量, 拥有量)]"""
+        """返回缺少的材料列表 [(物品id, 需要量， 拥有量)]"""
         recipe = crafting_recipes.get(recipe_id)
         if not recipe:
             return []
@@ -280,7 +280,7 @@ screen crafting_screen():
 
                         ## 制作技能显示
                         $ _cs = get_crafting_skill()
-                        text "技能: [_cs]" size 14 color "#8a7e60" yalign 0.5
+                        text "技能： [_cs]" size 14 color "#8a7e60" yalign 0.5
 
                         textbutton "X":
                             text_size 20
@@ -452,7 +452,7 @@ screen crafting_screen():
                                     add Solid("#d4a94220") xsize 1.0 ysize 1
 
                                     ## 所需材料
-                                    text "所需材料:" size 15 color "#d4a942" font "msyh.ttf"
+                                    text "所需材料：" size 15 color "#d4a942" font "msyh.ttf"
 
                                     for _mat_id, _mat_qty in _sel["materials"].items():
                                         $ _mat_have = get_item_count(_mat_id)
@@ -487,9 +487,9 @@ screen crafting_screen():
                                             spacing 2
                                             text "技能需求" size 12 color "#8a7e60"
                                             if _sel_skill_ok:
-                                                text "[_sel['skill_req']] (当前 [_sel_skill])" size 14 color "#2ecc71"
+                                                text "[_sel[「skill_req」]] (当前 [_sel_skill])" size 14 color "#2ecc71"
                                             else:
-                                                text "[_sel['skill_req']] (当前 [_sel_skill])" size 14 color "#e67e22"
+                                                text "[_sel[「skill_req」]] (当前 [_sel_skill])" size 14 color "#e67e22"
 
                                         vbox:
                                             spacing 2
@@ -505,7 +505,7 @@ screen crafting_screen():
                                         vbox:
                                             spacing 2
                                             text "产出" size 12 color "#8a7e60"
-                                            text "x[_sel['result_qty']]" size 14 color "#d4a942" bold True
+                                            text "x[_sel[「result_qty」]]" size 14 color "#d4a942" bold True
 
                                     ## 成功率进度条
                                     bar:
@@ -526,9 +526,9 @@ screen crafting_screen():
                                     if _sel_skill > 30:
                                         text "技能 > 30 时有 10%% 概率暴击（双倍产出）" size 11 color "#6a5e48"
                                     if not _sel_can:
-                                        text "! 材料不足，无法制作" size 12 color "#e74c3c"
+                                        text "！ 材料不足，无法制作" size 12 color "#e74c3c"
                                     elif not _sel_skill_ok:
-                                        text "! 技能不足，成功率降低" size 12 color "#e67e22"
+                                        text "！ 技能不足，成功率降低" size 12 color "#e67e22"
                                     if not _sel_can:
                                         ## 显示缺少的材料
                                         $ _missing = get_missing_materials(selected_recipe)
@@ -598,7 +598,7 @@ screen crafting_result_screen(recipe_name="", result_type="success", result_qty=
                 text "制作失败" size 26 color "#e74c3c" font "msyh.ttf" bold True xalign 0.5
                 text "手艺不精，制作失败了……" size 14 color "#8a7e60" xalign 0.5
                 null height 4
-                text "损失了部分材料:" size 14 color "#e67e22" font "msyh.ttf" xalign 0.5
+                text "损失了部分材料：" size 14 color "#e67e22" font "msyh.ttf" xalign 0.5
                 if lost_mats:
                     for _lm_name, _lm_qty in lost_mats:
                         text "  [_lm_name] x[_lm_qty]" size 14 color "#e74c3c"

@@ -596,7 +596,7 @@ init python:
             add_combat_log("%s 正在流血！失去 %d HP" % (store.combat_enemy_name, store.combat_enemy_bleed_dmg))
 
     def inflict_bleed(target, dmg, turns):
-        """给目标施加流血 target='player'/'enemy'"""
+        """给目标施加流血 target=「player」/「enemy」"""
         if target == "player":
             store.combat_player_bleed_dmg = dmg
             store.combat_player_bleed_turns = turns
@@ -1098,7 +1098,7 @@ init python:
     ## ──────────────── 便捷入口 ────────────────
 
     def start_combat(enemy_id):
-        """从剧情中启动战斗。用法: $ start_combat("bandit")"""
+        """从剧情中启动战斗。用法： $ start_combat("bandit")"""
         if init_combat(enemy_id):
             renpy.call("combat_start_internal")
 
@@ -1410,7 +1410,7 @@ screen combat_screen():
             $ _p_fatigue_n = get_fatigue_name(_p_fatigue)
             hbox:
                 spacing 8
-                text "疲劳:" size 12 color "#6a5e48" font "msyh.ttf" yalign 0.5
+                text "疲劳：" size 12 color "#6a5e48" font "msyh.ttf" yalign 0.5
                 text _p_fatigue_n size 13 color _p_fatigue_c font "msyh.ttf" bold True yalign 0.5
                 text "|" size 12 color "#4a403060" yalign 0.5
                 $ _stance_n = get_stance_name()
@@ -1826,7 +1826,7 @@ screen combat_victory():
             hbox:
                 xalign 0.5
                 spacing 8
-                text "击败:" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
+                text "击败：" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
                 text combat_enemy_name size 20 color "#e0d8c8" font "msyh.ttf" bold True yalign 0.5
 
             null height 8
@@ -2060,7 +2060,7 @@ init python:
         renpy.restart_interaction()
 
     def toggle_stance():
-        """切换姿态: balanced -> offensive -> defensive -> balanced"""
+        """切换姿态： balanced -> offensive -> defensive -> balanced"""
         if store.combat_stance == "balanced":
             store.combat_stance = "offensive"
             add_combat_log("切换至【攻势】: +20%%伤害, -10闪避")
@@ -2271,7 +2271,7 @@ screen combat_preview(enemy_id="bandit"):
                     spacing 6
                     hbox:
                         spacing 10
-                        text "对手:" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
+                        text "对手：" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
                         text _prev_enemy.get("name", "???") size 20 color "#e0d8c8" font "msyh.ttf" bold True yalign 0.5
                         $ _pd_c = DIFFICULTY_COLORS.get(_prev_enemy.get("difficulty", ""), "#6a5e48")
                         frame:
@@ -2287,9 +2287,9 @@ screen combat_preview(enemy_id="bandit"):
                     hbox:
                         spacing 16
                         text "HP: %d" % _prev_enemy.get("hp", 0) size 13 color "#e74c3c"
-                        text "攻: %d" % _prev_enemy.get("attack", 0) size 13 color "#e67e22"
-                        text "防: %d" % _prev_enemy.get("defense", 0) size 13 color "#3498db"
-                        text "闪: %d%%" % _prev_enemy.get("dodge", 0) size 13 color "#2ecc71"
+                        text "攻： %d" % _prev_enemy.get("attack", 0) size 13 color "#e67e22"
+                        text "防： %d" % _prev_enemy.get("defense", 0) size 13 color "#3498db"
+                        text "闪： %d%%" % _prev_enemy.get("dodge", 0) size 13 color "#2ecc71"
 
             ## 你的战力
             frame:
@@ -2304,16 +2304,16 @@ screen combat_preview(enemy_id="bandit"):
                     hbox:
                         spacing 16
                         text "HP: %d" % _prev_stats["max_hp"] size 13 color "#e74c3c"
-                        text "攻: %d" % _prev_stats["attack"] size 13 color "#e67e22"
-                        text "防: %d" % _prev_stats["defense"] size 13 color "#3498db"
-                        text "闪: %d%%" % _prev_stats["dodge"] size 13 color "#2ecc71"
-                        text "暴: %d%%" % _prev_stats["crit"] size 13 color "#f39c12"
+                        text "攻： %d" % _prev_stats["attack"] size 13 color "#e67e22"
+                        text "防： %d" % _prev_stats["defense"] size 13 color "#3498db"
+                        text "闪： %d%%" % _prev_stats["dodge"] size 13 color "#2ecc71"
+                        text "暴： %d%%" % _prev_stats["crit"] size 13 color "#f39c12"
 
                     ## 受伤警告
                     if injury_head > 0 or injury_body > 0 or injury_limb > 0:
                         hbox:
                             spacing 6
-                            text "!" size 14 color "#e74c3c" yalign 0.5
+                            text "！" size 14 color "#e74c3c" yalign 0.5
                             text "你身上有未痊愈的伤势，战斗力会受影响！" size 13 color "#e74c3c" font "msyh.ttf" yalign 0.5
 
             null height 6

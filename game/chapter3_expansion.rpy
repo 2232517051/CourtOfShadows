@@ -24,12 +24,18 @@ label ch3_exp_investigation:
 
     scene bg castle_library with dissolve
 
-    if dark_lily_joined:
+    if lily_full_member:
         "你加入暗百合之后，更清楚这个组织的水远比表面深。影能告诉你的只是一部分——暗焰的渗透、外围的招募、那些还游离在组织边缘的盟友和敌人，都需要你自己去梳理。"
 
         "你在书房中铺开一张大羊皮纸，把接触过的所有信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
 
         "每一条线索都还是碎片。身在局中，反而更需要一张看全局的图。"
+    elif dark_lily_joined:
+        "你与影卫订下对等之盟以后，能从他们那里拿到的情报比想象中多——但也只到他们愿意给的那一层。剩下的，得自己去摸。"
+
+        "你在书房中铺开一张大羊皮纸，把接触过的所有信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
+
+        "影卫给你的是一面，你自己看到的是另一面。两面拼上，棋盘才算完整。"
     elif dark_lily_destroyed:
         "暗百合虽然已被你铲除，但缴获的档案和残余的网络里还有太多未解之谜。是时候把线索串起来了。"
 
@@ -102,6 +108,7 @@ label ch3_exp_investigation:
         "渗透路线「化暗为明」" if intrigue >= 45:
             $ ch3_investigation_path = "cunning"
             $ change_stat("intrigue", 8)
+            $ change_stat("reputation", -2)
             $ log_decision("第三章扩展", "选择渗透调查路线")
             jump ch3_exp_investigate_cunning
 
@@ -210,9 +217,9 @@ label ch3_exp_investigate_diplomatic:
 
             "你选择保持谨慎的通信联络，不急于采取行动。"
 
-            "在接下来的几周里，你们四位领主交换了大量情报。虽然进展缓慢，但你对暗百合的了解在稳步加深。"
+            "接下来几周，你们四位领主互通了大量情报。进展慢，但你对暗百合摸得越来越清楚。"
 
-            "一个清晰的画面正在浮现——暗百合不是一个地方性的小组织，而是一个覆盖多个领地的庞大网络。"
+            "暗百合的根扎在好几片领地，不止一处地方。"
 
             $ ch3_witness_count += 1
 
@@ -251,15 +258,15 @@ label ch3_exp_investigate_forceful:
     hide captain_img with dissolve
 
     $ hide_all_chars()
-    "第二天拂晓，你率领一百名全副武装的士兵进入了北部森林。"
+    "第二天拂晓，你带一百名全副武装的士兵进了北部森林。"
 
-    "搜查行动持续了整整三天。你们翻遍了每一条小路、每一处洞穴、每一个废弃的木屋。"
+    "搜了整整三天。森林里的小路和洞穴你们都翻过，废弃木屋也没漏。"
 
-    "第一天，你们发现了三处被匆忙废弃的营地。帐篷被烧毁，地面被仔细打扫过，但还是留下了一些痕迹——脚印、灰烬中未烧尽的布片，以及一个被遗落的铜环。"
+    "第一天，你们摸到三处刚撤掉的营地。帐篷烧了，地也扫过，但还有痕迹——脚印、灰里没烧尽的布片、一只落下的铜环。"
 
     "铜环上刻着倒置的百合花。"
 
-    "第二天，你们在森林深处发现了一座被灌木丛完全遮掩的石建筑。"
+    "第二天，你们在森林深处摸到一座石建筑，灌木丛严严实实盖在上面。"
 
     show captain_img at right with dissolve
 
@@ -268,6 +275,7 @@ label ch3_exp_investigate_forceful:
     menu:
         "直接冲入「速战速决」" if power >= 45:
             $ change_stat("power", 8)
+            $ change_stat("loyalty", -2)
             $ change_courage(5)
 
             $ hide_all_chars()
@@ -277,11 +285,11 @@ label ch3_exp_investigate_forceful:
 
             "通道尽头是一个巨大的地下厅堂。墙壁上刻满了百合花的图案，中央有一座石制祭坛。"
 
-            "但厅堂是空的。暗百合的人已经提前撤离了——你们的大规模搜查不可能不惊动他们。"
+            "但厅堂是空的。暗百合的人提前撤了——这么大动静的搜查，早惊动他们了。"
 
-            "不过，他们留下了一些来不及带走的东西：仪式用的蜡烛、一些账本，以及一面旗帜——上面的百合花是金色的，而不是黑色的。"
+            "不过有些东西他们没带走：仪式用的蜡烛、几本账本，还有一面旗帜——上面的百合花是金色，不是平时那种黑色。"
 
-            "这是暗百合中某个更高等级的象征。"
+            "这颜色比黑色更高一级。"
 
             $ change_stat("reputation", 5)
             $ ch3_witness_count += 1
@@ -1023,6 +1031,7 @@ label ch3_exp_cult_infiltration:
     menu:
         "继续潜伏「获取更多情报」" if intrigue >= 55:
             $ change_stat("intrigue", 10)
+            $ change_stat("reputation", -3)
             $ change_courage(8)
             $ log_decision("第三章扩展", "在暗百合集会中继续潜伏")
 
@@ -1128,6 +1137,7 @@ label ch3_exp_confrontation:
     menu:
         "军事打击「正面摧毁暗百合」":
             $ change_stat("power", 10)
+            $ change_stat("loyalty", -3)
             $ change_courage(8)
             $ log_decision("第三章扩展", "以军事手段正面摧毁暗百合")
 

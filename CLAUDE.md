@@ -1,5 +1,21 @@
 # CourtOfShadows — 开发规范
 
+## 写新剧情前必读（强制）
+
+任何写新章节 / 改对话 / 加旁白 / 设计选项前，先读这两份：
+
+1. **`CANON.md`** — 人物 / 时空 / 物品 / 跨作品事实表。重名角色、家族徽章、毒药名、卫队兵力、跨作品时间轴。
+2. **`FORBIDDEN_PHRASES.md`** — A/B/C/D/E 五大类禁用句式 + 写前/写后自检清单。
+
+**新剧情写完后必须跑两个扫描**（跟改完剧本必跑那三步并列）：
+
+```bash
+python Tools/scan_ai_smell.py   # 扫 AI 味 (粗筛, 误报多, 对照 FORBIDDEN_PHRASES.md 人工确认)
+python Tools/scan_canon.py      # 扫反逻辑 + canon 偏差 + 触发词频次
+```
+
+玩家每抓一个新模式 / canon 错误，按 `CANON.md` 和 `FORBIDDEN_PHRASES.md` 末尾"加新条目"格式追加。**清单只增不减**。
+
 ## 立绘 show 指令规范（强制）
 
 每新增一处 `show XXX_img at left` 都必须**同时完成**：

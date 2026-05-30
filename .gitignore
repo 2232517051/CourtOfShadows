@@ -20,6 +20,7 @@ game/saves/
 
 # 备份文件
 *.bak
+*.bak.*
 
 # 日志/错误
 log.txt
@@ -38,3 +39,5 @@ tmp/
 
 # 工具脚本扫描输出 (每次跑会变, 不入库)
 crisis_candidates.txt
+ai_smell_scan_*.txt
+first_meet_report_*.txt
