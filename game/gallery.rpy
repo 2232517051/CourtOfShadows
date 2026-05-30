@@ -23,6 +23,13 @@ init python:
         ("bg_palace_garden", "宫廷花园"),
         ("bg_dungeon", "地牢"),
         ("bg_battlefield", "战场"),
+        ## 南境游记 DLC
+        ("bg_tideport_harbor", "潮汐港"),
+        ("bg_tideport_tavern", "断锚酒馆"),
+        ("bg_tideport_beach", "潮汐港海堤"),
+        ("bg_tideport_ship", "海雀号"),
+        ("bg_tideport_office", "港务厅"),
+        ("bg_tideport_fleet", "王军压境"),
     ]
 
     gallery_characters = [
@@ -35,6 +42,7 @@ init python:
         ("merchant_karl", "商人卡尔"),
         ("lily_master", "暗百合首领"),
         ("prince", "弗雷德里克王子"),
+        ("corsair", "渡鸦船长赛琳"),
     ]
 
 transform gallery_thumb_hover:
@@ -61,7 +69,7 @@ screen cg_gallery():
 
             null height 4
 
-            grid 4 4:
+            grid 4 5:
                 spacing 12
                 xfill True
 
@@ -91,9 +99,9 @@ screen cg_gallery():
                                 ysize 107
                                 background Solid("#0f0d1a")
                                 text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
-                            text "???" size 12 xalign 0.5 color "#3a3040"
+                            text "？??" size 12 xalign 0.5 color "#3a3040"
 
-                for i in range(4 * 4 - len(gallery_images)):
+                for i in range(4 * 5 - len(gallery_images)):
                     null
 
             null height 20
@@ -140,7 +148,7 @@ screen cg_gallery():
                                 ysize 150
                                 background Solid("#0f0d1a")
                                 text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
-                            text "???" size 12 xalign 0.5 color "#3a3040"
+                            text "？??" size 12 xalign 0.5 color "#3a3040"
 
                 for i in range(5 * 2 - len(gallery_characters)):
                     null
@@ -203,6 +211,13 @@ init python:
         ("audio/music/winter_wind.ogg", "朔风凛冽", "孤寂的冬日寒风", "寒", None),
         ("audio/music/dawn.ogg", "破晓新生", "新一天的开始", "晨", "chapter5"),
         ("audio/music/ritual.ogg", "暗夜仪式", "神秘的古老典礼", "祭", "chapter3"),
+        ## 南境游记 DLC
+        ("audio/music/southern_port.ogg", "潮汐港", "南方自由港的喧嚣与海风", "港", None),
+        ("audio/music/southern_tavern.ogg", "断锚酒馆", "水手与走私客的粗粝欢闹", "酒", None),
+        ("audio/music/southern_corsair.ogg", "渡鸦船长", "豪迈中藏着柔情的海上之心", "渡", None),
+        ("audio/music/southern_scheme.ogg", "火并疑云", "码头暗处有人在拨弄棋局", "谋", None),
+        ("audio/music/southern_fleet.ogg", "王军压境", "黑水之上压来的桅灯之墙", "舰", None),
+        ("audio/music/southern_freeport.ogg", "自由港", "守住了自由，代价也已付清", "由", None),
     ]
 
     def is_music_unlocked(req_chapter):
@@ -355,7 +370,7 @@ screen achievement_screen():
                             if unlocked:
                                 text "*" xalign 0.5 yalign 0.5 size 22 color "#ffd700"
                             elif a_hidden:
-                                text "?" xalign 0.5 yalign 0.5 size 22 color "#6a3080"
+                                text "？" xalign 0.5 yalign 0.5 size 22 color "#6a3080"
                             else:
                                 text "*" xalign 0.5 yalign 0.5 size 22 color "#2a2040"
 
@@ -478,4 +493,4 @@ screen chapter_select():
                     spacing 12
                     text "【卷】" size 18 yalign 0.5
                     $ endings_count = len(persistent.endings_seen) if persistent.endings_seen else 0
-                    text "已解锁结局: [endings_count]/6" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
+                    text "已解锁结局： [endings_count]/8" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5

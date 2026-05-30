@@ -68,6 +68,14 @@ image bg castle_hall = Transform("images/bg_great_hall.webp", size=(1280, 720), 
 image bg castle_chapel = Transform("images/bg_castle_chapel.webp", size=(1280, 720), fit="cover")
 image bg castle_armory = Transform("images/bg_castle_armory.webp", size=(1280, 720), fit="cover")
 
+## ── 南境游记 DLC 场景（优先用专属图 bg_tideport_*，缺失回退通用海港素材）──
+image bg tideport_harbor = Transform(safe_image("images/bg_tideport_harbor.webp", "images/bg_harbor.webp"), size=(1280, 720), fit="cover")
+image bg tideport_beach  = Transform(safe_image("images/bg_tideport_beach.webp", "images/bg_beach.webp"), size=(1280, 720), fit="cover")
+image bg tideport_tavern = Transform(safe_image("images/bg_tideport_tavern.webp", "images/bg_tavern.webp"), size=(1280, 720), fit="cover")
+image bg tideport_ship   = Transform(safe_image("images/bg_tideport_ship.webp", "images/bg_beach.webp"), size=(1280, 720), fit="cover")
+image bg tideport_office = Transform(safe_image("images/bg_tideport_office.webp", "images/bg_study.webp"), size=(1280, 720), fit="cover")
+image bg tideport_fleet  = Transform(safe_image("images/bg_tideport_fleet.webp", "images/bg_harbor.webp"), size=(1280, 720), fit="cover")
+
 ## ════════════════════════════════════════════════════════════
 ## 背景图 - 夜间变体（如果图片存在则使用专用夜景，否则用色调叠加模拟）
 ## ════════════════════════════════════════════════════════════
@@ -151,6 +159,14 @@ image queen_img = Transform("images/queen.png", zoom=0.45, yalign=1.0)
 image merchant_karl_img = Transform("images/merchant_karl.png", zoom=0.45, yalign=1.0)
 image lily_master_img = Transform("images/lily_master.png", zoom=0.45, yalign=1.0)
 image prince_img = Transform("images/prince.png", zoom=0.45, yalign=1.0)
+
+## 南境游记 DLC — 渡鸦船长赛琳
+## 仿 Elena：rel_corsair>=80 或 corsair_romance 时切"亲密版"；亲密图未生成时回退基础立绘。
+image corsair_img = ConditionSwitch(
+    "(rel_corsair >= 80 or corsair_romance) and renpy.loadable('images/corsair_intimate.png')",
+        Transform("images/corsair_intimate.png", zoom=0.45, yalign=1.0),
+    "True",
+        Transform(safe_image("images/corsair.png", "images/noble_lady.png"), zoom=0.45, yalign=1.0))
 
 ## 序章角色
 image mother_img = Transform("images/mother.png", zoom=0.45, yalign=1.0)
@@ -242,6 +258,8 @@ init python:
         "farmer_rep", "healer", "merchant_guild", "tax_collector", "village_elder",
         # 主角 (成年/童年/少年/青年)
         "player_char", "player_child", "player_teen", "player_young",
+        # 南境游记 DLC
+        "corsair",
     ]
 
     # 为每个角色注册 side image (默认 + 表情差分)

@@ -171,8 +171,10 @@ default captain_truth_known = False  # 雷恩是否已从主角处得知真相�
 default truth_declined_regency = False  # 真相结局: 婉拒首席摄政官任命, 回艾登堡 (跳过 ending_truth_epilogue 王都段)
 
 # 第三章剧情标记
-default dark_lily_joined = False
+default dark_lily_joined = False  ## 任意路径"接触"影卫: 加入/铁刺/合作 都 True (剧情解锁用)
+default lily_full_member = False  ## 仅"加入影卫/铁刺"为 True; "合作"分支为 False. 用于 gate 入会仪式/身份台词 (批 20 bug 修复 2026-05-26)
 default dark_lily_destroyed = False
+default shadow_guard_asset_revealed = False  # ch5 影卫王后女官眼线伏笔回收 (ch4_exp:1551 → ch5:1474)
 default true_killer_known = False
 default father_letters_found = False
 default ch3_dark_lily_visited = False
@@ -199,6 +201,7 @@ default court_faction = ""
 # 第五章/结局标记
 default ending_type = ""
 default iron_battle_outcome = "decisive"  # 铁腕线战役结果 (decisive 决定性胜利 / pyrrhic 惨胜) — 由左翼危机 crisis 决定
+default iron_war_score = 0  # 铁腕线战力分 (花露水反馈): power/intrigue/loyalty + 领主好感 + 战前准备 累加, 决定会战成败
 
 ## ============================================================
 ## 持久化数据（跨存档）
@@ -231,8 +234,16 @@ init python:
         "peoples_lord":     ("人民领主", "达成人民领主结局", False, "守护最平凡的幸福"),
         "truth_ending":     ("真相大白", "达成真相大白结局", False, "追寻真相直到终点"),
         "borgia_ending":    ("毒药公爵", "达成毒药公爵坏结局", False, "童年记得母亲的狼毒草, 长大后用了它"),
-        "completionist":    ("全能领主", "解锁所有六个结局", False, "达成全部六个结局"),
+        "vassal_ending":    ("附庸领主", "达成附庸领主妥协结局", False, "保住了城堡, 失去了自主"),
+        "fall_ending":      ("艾登堡陷落", "达成艾登堡陷落失败结局", False, "什么都没做的代价"),
+        "completionist":    ("全能领主", "解锁所有八个结局", False, "达成全部八个结局"),
         "max_stat":         ("登峰造极", "任一属性达到100", False, "将任一属性提升至最高"),
+        ## 南境游记 DLC
+        "southern_act1":    ("初探潮汐港", "在南境游记第一弹中作出你的抉择", False, "进入南境游记并走完第一幕"),
+        "southern_free":    ("自由港", "让潮汐港作为自由港存续", False, "促成两派联合，逼退王军"),
+        "southern_ruler":   ("港口新主", "掌控潮汐港，却让它失去自由", False, "倒向一方，武力守住港口"),
+        "southern_fall":    ("潮汐港陷落", "潮汐港落入王廷之手", False, "与王军私下交易，出卖港口"),
+        "southern_lover":   ("渡鸦与你", "与渡鸦船长赛琳缔结情谊", True, "渡 隐藏成就"),
         ## 隐藏成就 — 未解锁前不显示名称和描述
         "romeo":            ("权谋情圣", "与艾琳娜达成浪漫关系", True, "心 隐藏成就"),
         "betrayer":         ("背信弃义", "背叛弗雷德里克王子", True, "! 隐藏成就"),
@@ -291,7 +302,7 @@ init python:
             unlock_achievement("all_friends")
 
     def get_stat_trend(stat_name):
-        """获取属性趋势: 'up', 'down', 'stable'"""
+        """获取属性趋势： 「up」， 「down」， 「stable」"""
         history = _stat_history.get(stat_name, [])
         if len(history) < 2:
             return "stable"

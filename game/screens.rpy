@@ -440,6 +440,14 @@ screen navigation():
                 at menu_btn_hover
                 action ShowMenu("gallery_hub")
 
+            textbutton _("南境游记 ◆"):
+                at menu_btn_hover
+                action Start("southern_dlc_start")
+                text_size 26
+                text_font "msyh.ttf"
+                text_color "#2e8b8b"
+                text_hover_color "#5fd0d0"
+
             textbutton _("宣传PV"):
                 at menu_btn_hover
                 action Start("pv_play")

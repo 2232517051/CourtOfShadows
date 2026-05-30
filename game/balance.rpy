@@ -281,7 +281,7 @@ screen balance_debug():
                     text "【目标】" size 18 yalign 0.5
                     text "结局可达性分析" size 18 color "#d4a942" font "msyh.ttf"
                     $ _reachable_n = get_reachable_count()
-                    text "（[_reachable_n]/5 可达）" size 14 color "#8a7e60" yalign 0.5
+                    text "（[_reachable_n]/[len(_ending_requirements)] 可达）" size 14 color "#8a7e60" yalign 0.5
 
                 for _end_id, _end_name, _end_reachable, _end_gap in check_ending_reachability():
                     $ _e_info = _ending_requirements[_end_id]
@@ -331,7 +331,7 @@ screen balance_debug():
                     spacing 6
                     xalign 0.5
 
-                    for _sys_label, _sys_val in [("当前难度", persistent.difficulty or "normal"), ("NG+解锁", "是" if persistent.ng_plus_unlocked else "否"), ("已完成章节", str(len(persistent.chapters_completed or set()))), ("已解锁结局", str(len(persistent.endings_seen or set())) + "/6"), ("收藏品", str(len(persistent.collectibles_found or set())) + "/" + str(len(collectible_items))), ("成就", str(len(persistent.achievements or set())) + "/" + str(len(achievement_data)))]:
+                    for _sys_label, _sys_val in [("当前难度", persistent.difficulty or "normal"), ("NG+解锁", "是" if persistent.ng_plus_unlocked else "否"), ("已完成章节", str(len(persistent.chapters_completed or set()))), ("已解锁结局", str(len(persistent.endings_seen or set())) + "/8"), ("收藏品", str(len(persistent.collectibles_found or set())) + "/" + str(len(collectible_items))), ("成就", str(len(persistent.achievements or set())) + "/" + str(len(achievement_data)))]:
                         frame:
                             xsize 330
                             xpadding 12

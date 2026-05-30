@@ -217,7 +217,7 @@ init python:
         )
 
     def change_stat(stat, delta):
-        """改变属性并显示通知。用法: $ change_stat("power", 10)"""
+        """改变属性并显示通知。用法： $ change_stat("power", 10)"""
         old = getattr(store, stat, 0)
         new = max(0, min(100, old + delta))
         setattr(store, stat, new)
@@ -754,7 +754,7 @@ transform achievement_pop_anim:
 
 init python:
     def unlock_gallery(img_name):
-        """在剧情中展示CG时调用，解锁画廊。用法: $ unlock_gallery("bg_castle_exterior")"""
+        """在剧情中展示CG时调用，解锁画廊。用法： $ unlock_gallery("bg_castle_exterior")"""
         if img_name not in persistent.gallery_unlocked:
             persistent.gallery_unlocked.add(img_name)
 
@@ -765,11 +765,11 @@ init python:
 
 init python:
     def play_bgm(track, fadein=2.0, fadeout=1.5):
-        """播放BGM并自动crossfade。用法: $ play_bgm("audio/music/tension.ogg")"""
+        """播放BGM并自动crossfade。用法： $ play_bgm("audio/music/tension.ogg")"""
         renpy.music.play(track, channel="music", fadein=fadein, fadeout=fadeout)
 
     def stop_bgm(fadeout=2.0):
-        """停止BGM。用法: $ stop_bgm()"""
+        """停止BGM。用法： $ stop_bgm()"""
         renpy.music.stop(channel="music", fadeout=fadeout)
 
 
@@ -904,9 +904,11 @@ init python:
         "peoples_lord": ("人民领主", "守护最平凡的幸福", "#27ae60", "心"),
         "truth":        ("真相大白", "正义也许会迟到", "#3498db", "秤"),
         "borgia":       ("毒药公爵", "成为母亲故事里那个王后 (坏结局)", "#5d2e8c", "毒"),
+        "vassal":       ("附庸领主", "保住城堡，失去自主 (妥协结局)", "#8a7e60", "盾"),
+        "fall":         ("艾登堡陷落", "什么都没做的代价 (失败结局)", "#3d3a36", "灰"),
     }
 
-    _ending_keys = ["iron_lord", "shadow_king", "holy_guardian", "peoples_lord", "truth", "borgia"]
+    _ending_keys = ["iron_lord", "shadow_king", "holy_guardian", "peoples_lord", "truth", "borgia", "vassal", "fall"]
 
     _key_choices = [
         ("第一章", "第一个危机", ["外交", "军事", "教会", "间谍"]),
@@ -930,7 +932,7 @@ screen ending_route_map():
                 text "结局路线图" size 26 color "#d4a942" font "msyh.ttf"
 
             $ seen = persistent.endings_seen if persistent.endings_seen else set()
-            text "已解锁 [len(seen)]/6 个结局" size 14 color "#6a5e48"
+            text "已解锁 [len(seen)]/8 个结局" size 14 color "#6a5e48"
 
             null height 10
 
@@ -958,7 +960,7 @@ screen ending_route_map():
                             if is_seen:
                                 text e_icon xalign 0.5 yalign 0.5 size 24
                             else:
-                                text "?" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
+                                text "？" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
 
                         vbox:
                             spacing 3
@@ -966,11 +968,54 @@ screen ending_route_map():
                                 text e_name size 20 color "#e0d8c8" font "msyh.ttf" bold True
                                 text e_desc size 14 color "#8a7e60"
                             else:
-                                text "??? — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
+                                text "？?? — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
                                 text "完成游戏解锁此结局" size 14 color "#2a2030"
 
                         if is_seen:
                             text ">" xalign 1.0 yalign 0.5 size 20 color e_color
+
+            ## ── 南境游记 DLC 结局（独立 set，不并入上面 8 结局计数）──
+            null height 14
+            $ s_seen = persistent.southern_endings_seen if persistent.southern_endings_seen else set()
+            hbox:
+                spacing 8
+                text "◆" size 20 color "#2e8b8b" yalign 0.5
+                text "南境游记 · 潮汐港结局" size 22 color "#2e8b8b" font "msyh.ttf"
+            text "已解锁 [len(s_seen)]/3 个" size 14 color "#6a5e48"
+            null height 6
+
+            for sid, sname, sdesc, scolor, sicon in _southern_ending_info:
+                $ s_is = sid in s_seen
+                frame:
+                    xfill True
+                    xpadding 20
+                    ypadding 14
+                    background Solid("#1a152840" if s_is else "#0f0d1a40")
+
+                    hbox:
+                        spacing 16
+                        yalign 0.5
+
+                        frame:
+                            xsize 52
+                            ysize 52
+                            background Solid(scolor + "30" if s_is else "#1a1528")
+                            if s_is:
+                                text sicon xalign 0.5 yalign 0.5 size 22
+                            else:
+                                text "？" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
+
+                        vbox:
+                            spacing 3
+                            if s_is:
+                                text sname size 20 color "#e0d8c8" font "msyh.ttf" bold True
+                                text sdesc size 14 color "#8a7e60"
+                            else:
+                                text "？?? — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
+                                text "在南境游记中达成此结局" size 14 color "#2a2030"
+
+                        if s_is:
+                            text ">" xalign 1.0 yalign 0.5 size 20 color scolor
 
             null height 16
             add Solid("#d4a94220") xsize 1.0 ysize 1
@@ -1060,7 +1105,7 @@ init python:
     _current_mood = "normal"
 
     def set_mood(mood, fadein=2.0, fadeout=1.5):
-        """根据紧张度自动切换BGM。用法: $ set_mood("tense")"""
+        """根据紧张度自动切换BGM。用法： $ set_mood("tense")"""
         global _current_mood
         if mood == _current_mood:
             return
@@ -1098,7 +1143,7 @@ screen ending_complete_hint(current_ending=""):
     add Solid("#000000dd")
 
     $ seen = persistent.endings_seen if persistent.endings_seen else set()
-    $ total = 5
+    $ total = len(_ending_keys)
     $ remaining = total - len(seen)
 
     frame:
@@ -1134,7 +1179,7 @@ screen ending_complete_hint(current_ending=""):
             hbox:
                 xalign 0.5
                 spacing 6
-                text "结局收集:" size 16 color "#c8b890" font "msyh.ttf"
+                text "结局收集：" size 16 color "#c8b890" font "msyh.ttf"
                 text "[len(seen)]/[total]" size 18 color "#d4a942" bold True
 
             ## 进度条
@@ -1166,7 +1211,7 @@ screen ending_complete_hint(current_ending=""):
                                 hbox:
                                     spacing 8
                                     text "•" size 14 color "#6a5e48"
-                                    text "???" size 14 color "#4a4040"
+                                    text "？??" size 14 color "#4a4040"
                                     text "— 尝试不同的选择路线" size 13 color "#3a3030"
             else:
                 text "* 恭喜！你已解锁全部结局！" size 18 color "#ffd700" font "msyh.ttf" xalign 0.5
