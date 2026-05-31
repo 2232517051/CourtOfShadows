@@ -16,10 +16,12 @@ import fix_missing_portraits as F
 TARGET = os.path.join(os.path.dirname(__file__), "game", "southern_expansion.rpy")
 
 LEFT_TAGS = ["player_char_img", "player_young_img", "player_teen_img",
-             "player_child_img", "aldric_img", "guild_master_img"]
+             "player_child_img", "aldric_img", "guild_master_img",
+             "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img"]
 # 只保留真正固定在右侧的主要对话角色；通用立绘(soldier_generic 等)不保留，
 # 因为它们在不同场景可能 show 在左侧，保留会和左侧主角叠加。
-RIGHT_TAGS = ["corsair_img", "ship_boy_img", "dockhand_img"]
+RIGHT_TAGS = ["corsair_img", "ship_boy_img", "dockhand_img",
+              "harbor_master_img", "tavern_keeper_img", "royal_admiral_img"]
 
 def side_of(tag):
     return "left" if tag in LEFT_TAGS else "right"

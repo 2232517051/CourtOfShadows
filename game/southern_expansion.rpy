@@ -58,24 +58,24 @@ define broker = Character("掮客费舍尔", color="#8a8a8a", image="noble_werne
 ## 海雀号船上的少年水手
 define ship_boy = Character("少年水手", color="#a89878", image="ship_boy")
 ## 第一幕港口初探配角(复用现有立绘，语义贴合)
-define old_salt = Character("老船工", color="#7a6a5a", image="farmer_rep")
+define old_salt = Character("老船工", color="#7a6a5a", image="old_salt")
 define tax_man = Character("公会税吏", color="#8a7a4a", image="soldier_generic")
 define fishmonger = Character("鱼贩阿姆", color="#8a8a6a", image="old_woman")
 define fisher_wife = Character("船员之妻", color="#c4a882", image="blacksmith_wife")
-define harbor_master = Character("港务官", color="#9a8a6a", image="noble_werner")
+define harbor_master = Character("港务官", color="#9a8a6a", image="harbor_master")
 define sailor_old = Character("老水手", color="#6a7a7a", image="storyteller")
 ## 断锚酒馆群像
-define tavern_keeper = Character("断锚老板", color="#8a7a5a", image="merchant_karl")
-define sea_dog = Character("老汉斯", color="#5a6a7a", image="soldier_generic")
+define tavern_keeper = Character("断锚老板", color="#8a7a5a", image="tavern_keeper")
+define sea_dog = Character("老汉斯", color="#5a6a7a", image="sea_dog")
 ## 第二幕调查配角
-define chen_captain = Character("陈船老大", color="#6a5a4a", image="soldier_generic")
+define chen_captain = Character("陈船老大", color="#6a5a4a", image="chen_captain")
 define xiao_liu = Character("学徒小六", color="#a89878", image="stable_boy")
 define inn_keeper = Character("客栈老板", color="#8a8a7a", image="servant_generic")
 define guild_clerk = Character("公会账房", color="#9a8a6a", image="merchant_karl")
 define dissenter = Character("动摇的船主", color="#6a6a5a", image="soldier_generic")
 ## 第三幕王军特使 / 主帅
 define envoy_royal = Character("王军特使", color="#7a5a5a", image="soldier_generic")
-define royal_admiral = Character("王军主帅", color="#5a4a4a", image="soldier_generic")
+define royal_admiral = Character("王军主帅", color="#5a4a4a", image="royal_admiral")
 
 
 ## ============================================================
@@ -131,18 +131,26 @@ label southern_dlc_start:
 
     "落款是港务厅，但盖的是公会的章。"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "这跟艾登堡有什么关系？"
 
+    $ hide_all_chars("aldric_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show aldric_img at left with dissolve
     aldric "大人，艾登堡的盐，三成走南境海路。铁器的好钢，也是。"
 
     aldric "潮汐港停一个月，您冬天就得拿木柴腌肉。"
 
     "你心里算了下府库的存盐。撑不到开春。盐这东西，平日没人想得起它，可一旦断了，腌不了肉、留不住鱼，一整个冬天的口粮都得跟着遭殃。一个内陆领主的命脉，竟系在千里之外一个不归他管的港口上——这道理，今天才嚼出味来。"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "备马。不，备船。"
 
     "盐路断不得，这是其一。其二，你隐隐觉得，一个连王廷都管不着的自由港闹出的乱子，背后未必只是两伙生意人抢地盘那么简单。"
 
+    $ hide_all_chars("aldric_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show aldric_img at left with dissolve
     aldric "……我这把老骨头，怕是要在甲板上吐三天。"
 
     player "那就留下看家。我自己去。"
@@ -273,7 +281,7 @@ label southern_explore_dock:
     tax_man "两成。渔获抽两成，按公会的规矩。船和人，都登记。"
 
     $ hide_all_chars("farmer_rep_img", "soldier_generic_img")
-    show farmer_rep_img at left with dissolve
+    show old_salt_img at left with dissolve
     old_salt "两成？我一船鱼刨去本钱剩不下几个铜板。我打了四十年鱼，从没人管我登不登记！"
 
     tax_man "从前没有，现在有了。不服，这泊位你别使。"
@@ -300,6 +308,8 @@ label southern_explore_dock:
 
             "公会的人散了。老船工要给你磕头，被你扶住。"
 
+            $ hide_all_chars("old_salt_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show old_salt_img at left with dissolve
             old_salt "外乡人，记着断锚酒馆。往后你在潮汐港有难处，报老周的名字，使得。"
 
         "塞税吏几个钱，替老船工把这关过了（财富）":
@@ -342,6 +352,8 @@ label southern_explore_market:
     show player_char_img at left with dissolve
     player "不买鱼。打听点事。这港口，怎么就闹成这样了？"
 
+    $ hide_all_chars("old_woman_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show old_woman_img at right with dissolve
     fishmonger "嗨，还能因为啥。金锚那帮人想当爹呗。"
 
     fishmonger "我跟你说句良心话——公会也不全是坏。早些年这港没人管，今天你的船被劫，明天他的货被抢，乱得很。公会立起来，好歹有个说理的地方。"
@@ -393,6 +405,8 @@ label southern_explore_pier:
     show player_char_img at left with dissolve
     player "路过。这船上的人呢？"
 
+    $ hide_all_chars("blacksmith_wife_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show blacksmith_wife_img at left with dissolve
     fisher_wife "被公会带走了。我男人是海雀号的水手。带走那天起，二十多天，活不见人。"
 
     fisher_wife "公会说他们走私军火。军火？您看那船——空的。我男人这辈子运过最危险的货，是一船腌咸鱼。"
@@ -404,10 +418,16 @@ label southern_explore_pier:
             $ fisher_wife_promise = True
             $ change_stat("reputation", 3)
             $ change_rel("rel_corsair", 4)
+            $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show player_char_img at left with dissolve
             player "我在这港口有几个能说上话的人。你男人的下落，我替你问。"
 
+            $ hide_all_chars("blacksmith_wife_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show blacksmith_wife_img at left with dissolve
             fisher_wife "外乡人，您别空许愿。这港里许愿的人多，应的人少。"
 
+            $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show player_char_img at left with dissolve
             player "我应了，就不是空的。"
 
             "你不知道自己为什么对一个素不相识的妇人许这个诺。也许是她那双干得发红的眼睛，也许是她身上那股你在艾登堡的难民身上见过太多次的东西——走投无路的人，最后只剩一点不敢相信的指望。这种指望，你见不得它落空。"
@@ -420,8 +440,12 @@ label southern_explore_pier:
 
         "只问清楚情况，不轻易许诺":
             $ change_stat("intrigue", 2)
+            $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show player_char_img at left with dissolve
             player "我不能答应你什么。但你说的，我记下了。"
 
+            $ hide_all_chars("blacksmith_wife_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show blacksmith_wife_img at left with dissolve
             fisher_wife "……也对。会说话的人，都不轻易应承。"
 
             "她转回头，继续望着那条空船。你转身离开时，听见她很轻地哼起一支调子——大概是哄孩子的，也大概是哄她自己的。那调子你不认得，是南海一带船家的小曲，缠绵又苍凉，像浪一遍遍拍着礁石，不急不缓，却把石头都磨圆了。"
@@ -438,13 +462,15 @@ label southern_explore_office:
     "你没进去。一个穿官服的人正从里头出来，是港务官。"
 
     $ hide_all_chars("noble_werner_img")
-    show noble_werner_img at right with dissolve
+    show harbor_master_img at right with dissolve
     harbor_master "这位面生。港务厅今日不办公——封港期间，一切照公会的章程来。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
     player "我不是来办事的。只想问问，这港口的乱子，官面上打算怎么收场？"
 
+    $ hide_all_chars("harbor_master_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show harbor_master_img at right with dissolve
     harbor_master "收场？外乡人，这港三百年没有'官面'。我这港务官的印，盖谁的章，看谁的拳头硬。"
 
     harbor_master "如今公会拳头硬，我就盖公会的章。哪天换了人，我盖别人的。我这把位子，得活到下个月才行。"
@@ -498,6 +524,8 @@ label southern_explore_guild:
     show player_char_img at left with dissolve
     player "随便看看。你们公会，倒是好大的家业。"
 
+    $ hide_all_chars("servant_generic_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show servant_generic_img at right with dissolve
     servant "那是。这港口三百年没个管事的，是公会把它从烂泥塘里拽出来的。如今有规矩、有秩序——这秩序可不是天上掉的，是真金白银砸出来的。"
 
     "你没接话。砸出来的秩序，砸的是谁的钱、谁的活路，他没说。可你心里有数了。"
@@ -524,6 +552,8 @@ label southern_explore_tale:
 
     "老水手往北边王国的方向努了努嘴，压低了声。"
 
+    $ hide_all_chars("storyteller_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show storyteller_img at right with dissolve
     sailor_old "现在那位北边的，胃口养肥了。听说在憋什么大招——想找个由头，名正言顺地把这港咽下去。"
 
     sailor_old "外乡人，我看你也是内陆来的。劝你一句：这港口的水，比海还深。沾上了，未必抽得出脚。"
@@ -547,6 +577,8 @@ label southern_to_tavern:
     show player_char_img at left with dissolve
     player "你我之间，几时还要这套。说。"
 
+    $ hide_all_chars("aldric_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show aldric_img at left with dissolve
     aldric "这潮汐港水太浑。公会、船主、港务厅，背后还藏着您没看清的东西。"
 
     aldric "您是艾登堡的领主。盐路要紧，可您的命，比那条盐路要紧一万倍。"
@@ -560,13 +592,21 @@ label southern_to_tavern:
     menu:
         "我有分寸。但有些事，看见了就不能装没看见":
             $ change_stat("reputation", 1)
+            $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show player_char_img at left with dissolve
             player "放心，我有分寸。可这港口里那些被欺负的人，我既然看见了，就不能装没看见。这是你教我父亲、我父亲教我的。"
             "奥尔德里克怔了怔，浑浊的老眼里有什么动了一下。"
+            $ hide_all_chars("aldric_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show aldric_img at left with dissolve
             aldric "……是老臣多嘴了。您比老臣想的，更像您父亲。"
 
         "你说得对，我会先顾着自己":
             $ change_stat("intrigue", 1)
+            $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show player_char_img at left with dissolve
             player "你说得对。这趟我先把自己摘干净，不该蹚的浑水，不蹚。"
+            $ hide_all_chars("aldric_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show aldric_img at left with dissolve
             aldric "这就对了。留得青山在，往后有的是机会。"
 
     "你们一前一后往断锚走去。夜里的港口，灯火稀稀落落，像撒在黑布上的几粒火星。"
@@ -590,13 +630,15 @@ label southern_to_tavern:
     "你刚找了张桌子坐下，老板就凑了过来。生面孔在这种地方，要么是肥羊，要么是麻烦——他得先掂量你是哪种。"
 
     $ hide_all_chars("merchant_karl_img")
-    show merchant_karl_img at right with dissolve
+    show tavern_keeper_img at right with dissolve
     tavern_keeper "喝点什么？丑话说前头：断锚不赊账，不管闲事，进了门各人管各人的嘴。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
     player "一壶你们这儿最不上头的。再问件事——这港口闹成这样，你怎么看？"
 
+    $ hide_all_chars("tavern_keeper_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show tavern_keeper_img at right with dissolve
     tavern_keeper "我一个开酒馆的，两边的钱都收，两边的话都不接。"
 
     "他给你斟上酒，声音压低了些。"
@@ -620,7 +662,7 @@ label southern_to_tavern:
     "你正要再问，靠窗一桌有人扬声招呼你。"
 
     $ hide_all_chars("soldier_generic_img", "merchant_karl_img")
-    show soldier_generic_img at left with dissolve
+    show sea_dog_img at left with dissolve
 
     if dock_stand == "people":
         sea_dog "嘿，内陆来的。过来喝一杯。"
@@ -637,6 +679,8 @@ label southern_to_tavern:
     show player_char_img at left with dissolve
     player "汉斯船长。这港口的事，你怎么说？"
 
+    $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show sea_dog_img at left with dissolve
     sea_dog "怎么说？公会要掐死我们。"
 
     sea_dog "从前交一笔泊费，进出自由，海上的事海上人自己了。如今他们要抽两成、要登记、要每条船报备货色航线——"
@@ -648,7 +692,11 @@ label southern_to_tavern:
     sea_dog "上个月海雀号被扣，就是因为不肯登记。一船腌咸鱼，他们咬定是军火。人抓走二十多天，活不见人。"
 
     if fisher_wife_promise:
+        $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show player_char_img at left with dissolve
         player "海雀号……陈船老大，还有个叫小六的学徒。我答应了陈嫂，替她打听下落。"
+        $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show sea_dog_img at left with dissolve
         sea_dog "你连这都问到了？"
         $ change_rel("rel_corsair", 4)
         "他重重一巴掌拍在你肩上，差点把你从凳子上拍下去。"
@@ -958,6 +1006,8 @@ label southern_to_tavern:
             show guild_master_img at left with dissolve
             guild_master "那您来这一趟，图什么？"
 
+            $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show player_char_img at left with dissolve
             player "图你们俩今晚坐下来，把扣的船和锁的链子,一样换一样。"
 
             $ hide_all_chars("corsair_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img")
@@ -970,6 +1020,8 @@ label southern_to_tavern:
 
             corsair "……内陆来的，倒会算。"
 
+            $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show guild_master_img at left with dissolve
             guild_master "暂且听听。但只是暂且。"
 
             "没人赢，也没人掀桌子。维斯帕留了两个随从盯着，赛琳的刀还搁在桌上没收。明天的事，明天再说。"
@@ -1142,13 +1194,15 @@ label southern_act3:
 
     ## ── 破局前的推演（块13）：几条法子都被否 ──
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show sea_dog_img at left with dissolve
     sea_dog "没赢面也得打！我老汉斯这把骨头，宁可喂鱼，不给王军当顺民！"
 
     $ hide_all_chars("corsair_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img")
     show corsair_img at right with dissolve
     corsair "喂鱼容易。喂完了，港口照样被占，我们白死。"
 
+    $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show sea_dog_img at left with dissolve
     sea_dog "那你说怎么办！"
 
     $ hide_all_chars("guild_master_img")
@@ -1159,6 +1213,8 @@ label southern_act3:
     show player_char_img at left with dissolve
     player "来不及。一支分舰队几十个军官，今晚买得通几个？"
 
+    $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show guild_master_img at left with dissolve
     guild_master "……那就谈。我亲自上旗舰，献些岁币，求主帅退兵。"
 
     $ hide_all_chars("corsair_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img")
@@ -1184,8 +1240,12 @@ label southern_act3:
         show guild_master_img at left with dissolve
         guild_master "……让他们师出无名。"
     else:
+        $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show player_char_img at left with dissolve
         player "总有破法。他们千里压过来，图的是什么？"
 
+        $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show guild_master_img at left with dissolve
         guild_master "图一个名义。'平乱'。"
 
         guild_master "潮汐港乱，他们才进得来。这道理我做了半辈子生意，反倒是今早才想透——他们要的从来不是赢，是我们先乱给他们看。"
@@ -1258,6 +1318,8 @@ label ending_southern_vassal:
 
     player "我替潮汐港给王廷递个台阶：港口归顺，挂王旗，认王廷为宗主。但王廷要给一纸诏书，保港口自治——不驻军、不收编公会船主、商事照旧自理。"
 
+    $ hide_all_chars("royal_admiral_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show royal_admiral_img at right with dissolve
     royal_admiral "归顺，又要自治？天下哪有这样的好事。"
 
     player "有。这样王廷不费一兵一卒得了潮汐港的名分，各国商会挑不出错，你也不必背屠港的恶名。三方都有台阶下。"
@@ -1466,7 +1528,7 @@ label ending_southern_free:
     "重立港约那天，断锚酒馆挤满了人。维斯帕和老汉斯隔着一张桌子，谁也不看谁，到底在同一张约书上按了手印。"
 
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show sea_dog_img at left with dissolve
     sea_dog "跟金锚同桌喝酒，我老汉斯活了六十年头一回。这口酒，是你这内陆来的逼我咽下的。今天，我认。"
 
     if fisher_husband_found or fisher_wife_promise:
@@ -1630,7 +1692,7 @@ label ending_southern_fall:
     "午后，你乘小艇出港，登上了王军旗舰。"
 
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at right with dissolve
+    show royal_admiral_img at right with dissolve
     "主帅是个花白胡子的老将，眼睛像两口枯井。他没起身，只让你说。"
 
     royal_admiral "艾登堡的领主，亲自上我的船。说吧，想要什么，拿什么换。"
@@ -1639,6 +1701,8 @@ label ending_southern_fall:
     show player_char_img at left with dissolve
     player "艾登堡无意搅进港口的乱局。我只求一纸盐铁特许，往后南境海路，给艾登堡留条道。"
 
+    $ hide_all_chars("royal_admiral_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show royal_admiral_img at right with dissolve
     royal_admiral "就这？空口白话谁都会说。你拿什么让我信，你不是来替那帮海寇拖时间的？"
 
     menu:
@@ -1755,6 +1819,8 @@ label southern_deep_dive:
     show player_char_img at left with dissolve
     player "查得到、追得回——也管得住。哪条船能出海，你这账房一句话。"
 
+    $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show guild_master_img at left with dissolve
     guild_master "大人通透。秩序就是这样：方便人，也约束人。"
 
     "护航队在后院操练。几十条精壮汉子，刀枪齐整，比港里散兵游勇的船主像支队伍。"
@@ -1804,7 +1870,7 @@ label southern_deep_dive:
 
     $ hide_all_chars("corsair_img", "soldier_generic_img")
     show corsair_img at right with dissolve
-    show soldier_generic_img at left with dissolve
+    show sea_dog_img at left with dissolve
     "搁浅的旧船上，十几个船主正在争吵。老汉斯也在。"
 
     sea_dog "等下去，海雀号的人就没了！我说今晚就动手，砸了公会的码头，把人抢回来！"
@@ -1821,6 +1887,8 @@ label southern_deep_dive:
             show player_char_img at left with dissolve
             player "她说得对。你们现在动手，正中某些人下怀——他们就等你们'先动手'。"
             "老汉斯瞪着独眼看了你半晌，到底坐下了。"
+            $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show sea_dog_img at left with dissolve
             sea_dog "……内陆来的都这么沉得住气？罢了，听渡鸦的。"
 
         "理解老汉斯：可人命等不起（勇气/忠诚）":
@@ -1830,6 +1898,8 @@ label southern_deep_dive:
             show player_char_img at left with dissolve
             player "汉斯船长的火，我懂。船上七条命，每多扣一天都是煎熬。"
             player "但赛琳是对的。救人要救得活，别拿更多人的命去填。给我点时间。"
+            $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show sea_dog_img at left with dissolve
             sea_dog "……好。看你们的。可别让老汉斯等太久。"
 
     $ hide_all_chars("corsair_img")
@@ -1937,23 +2007,31 @@ label si_jail:
         "你费了些口舌和银钱，才说动看牢的睁一只眼。"
     scene bg dungeon with fade
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show chen_captain_img at left with dissolve
     chen_captain "又是谁？来套话的省省。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
     player "我替陈嫂查海雀号的事。你是陈船老大？"
 
+    $ hide_all_chars("chen_captain_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show chen_captain_img at left with dissolve
     chen_captain "……我婆娘？她和孩子，还好吗？"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "我见过她。她在等你回去。"
 
     "这条硬汉的眼眶红了一下，又硬生生忍住。"
 
+    $ hide_all_chars("chen_captain_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show chen_captain_img at left with dissolve
     chen_captain "我们没走私。一船腌咸鱼，公会咬定是军火，欲加之罪。"
 
     chen_captain "怪就怪在——抓进来第二天，来了个内陆口音的人'探望'。话软乎乎，左手缺半根指头。"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "费舍尔。"
 
     chen_captain "他没报名。可他问的全是船主联盟的事：谁是头、多少条船、敢不敢跟公会拼。"
@@ -1961,7 +2039,7 @@ label si_jail:
     chen_captain "公会要我们认罪，他要我们跟公会拼命。两拨人，两个心思。"
 
     $ hide_all_chars("stable_boy_img", "soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show chen_captain_img at left with dissolve
     show stable_boy_img at right with dissolve
     xiao_liu "大人，我记得那人！他走的时候跟狱卒说，'再关几天，火候就到了'。火候……什么火候？"
 
@@ -1971,6 +2049,8 @@ label si_jail:
 
     $ evidence_count += 1
     $ fisher_husband_found = True
+    $ hide_all_chars("chen_captain_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show chen_captain_img at left with dissolve
     chen_captain "贵人，您要真能查清……求您给我婆娘带句话：我没给陈家丢人，我们是清白的。"
 
     "你应下了。陈船老大、小六、海雀号的清白，还有费舍尔在牢里'等火候'那句话——都记下了。"
@@ -1991,7 +2071,7 @@ label si_ledger:
     "可你比对了日子：密报投进来那天，正是费舍尔在港里出现的第三天。"
 
     $ hide_all_chars("merchant_karl_img")
-    show merchant_karl_img at right with dissolve
+    show tavern_keeper_img at right with dissolve
     tavern_keeper "那阵子……有个内陆人常来翻我们的进出港册子，说是受公会委托核账。可公会从没派过这么个人。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
@@ -2029,13 +2109,15 @@ label si_office:
     $ investigate_office_q = True
     scene bg tideport_harbor with fade
     $ hide_all_chars("noble_werner_img")
-    show noble_werner_img at right with dissolve
+    show harbor_master_img at right with dissolve
     "港务官见你又来，脸色不好看。可你把手里的东西往桌上一摊，他的脸白了。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
     player "费舍尔。内陆官银，内陆公文。港务厅介绍的'中间人'——介绍他的，到底是谁？"
 
+    $ hide_all_chars("harbor_master_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show harbor_master_img at right with dissolve
     harbor_master "……我就知道迟早有人查到这。他不是我介绍的。他拿着内陆来的文书，直接上门。那文书的印……我这把位子，不敢不接待。"
 
     player "什么印？"
@@ -2075,6 +2157,8 @@ label si_insider:
     show player_char_img at left with dissolve
     player "维斯帕上头？公会还有人压得过大执事？"
 
+    $ hide_all_chars("merchant_karl_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show merchant_karl_img at right with dissolve
     guild_clerk "明面上没有。可那回费舍尔一来，几位老爷关起门嘀咕了半宿，第二天就定了拿海雀号开刀。维斯帕自个儿，未必清楚上头收了谁的话。"
 
     "你心里一凉。费舍尔背后那只手，能越过维斯帕，直接拨动公会高层。这局，比你想的还深。"
@@ -2179,20 +2263,26 @@ label southern_prepare:
     menu:
         "跟他算账：王军进来，你公会几十年的家业归谁？（谋略）":
             $ change_stat("intrigue", 3)
+            $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show guild_master_img at left with dissolve
             guild_master "……归王廷。账本、护航、放贷，全成了王军的。"
             guild_master "我维斯帕算了一辈子账，倒没算到这一笔。"
 
         "摊牌：你不联手，我现在就把证据给船主，让他们只冲你来（威逼）":
             $ change_stat("power", 2)
+            $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show guild_master_img at left with dissolve
             guild_master "……领主好手段。罢了，刀架到脖子上，谁还分公会船主。"
 
     guild_master "公会的钱、护航队，我出。但有一条：保住港，公会的账本不能废。"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "保住港再说。账本的事，活下来的人慢慢谈。"
 
     ## ── 环节二：说服老汉斯别趁乱报复 ──
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show sea_dog_img at left with dissolve
     sea_dog "跟金锚那帮吸血鬼联手？渡鸦点头了，我老汉斯不点。这些年他们怎么逼我们的，你忘了我没忘！"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
@@ -2204,10 +2294,14 @@ label southern_prepare:
     menu:
         "搬出海雀号：你现在跟公会拼，那七条命就真没了（忠诚）":
             $ change_stat("loyalty", 2)
+            $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show sea_dog_img at left with dissolve
             sea_dog "……海雀号。好。看在那七条命的份上，我这口气先咽下。先打王军。"
 
         "实话：你们各自都打不过王军，合起来才有一线（声望）":
             $ change_stat("reputation", 2)
+            $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show sea_dog_img at left with dissolve
             sea_dog "一线……行。就这一回听你的。可这梁子，我跟公会没完。"
 
     ## ── 环节三：布防 ──
@@ -2252,11 +2346,13 @@ label southern_prepare:
         "趁备战的乱，赛琳带人摸进了港务厅地牢。等你赶到，陈船老大他们已经出来了。"
         $ hide_all_chars("corsair_img", "soldier_generic_img")
         show corsair_img at right with dissolve
-        show soldier_generic_img at left with dissolve
+        show chen_captain_img at left with dissolve
         chen_captain "贵人……你真把我们捞出来了。"
         $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
         show player_char_img at left with dissolve
         player "回去见陈嫂吧。仗，有我们打。"
+        $ hide_all_chars("chen_captain_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show chen_captain_img at left with dissolve
         chen_captain "不。我海雀号的人，也是潮汐港的人。这一仗，算我们一份。"
         $ change_rel("rel_corsair", 5)
         "七个被关了二十多天的汉子，抄起家伙站进了队伍。这一仗，又多了七条不要命的硬骨头。"
@@ -2538,11 +2634,17 @@ label southern_act2:
 
     "桌上静了。窗外有海鸥在叫。"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "递假密报给公会的是他。劝船主动手的也是他。海雀号是空的——这场火，第一刀不是你们谁捅的，是他点的。"
 
     if evidence_count >= 2:
         "你把这两天查到的，一样样摊在桌上：海雀号空船的实情，登记册里对不上的密报日期，客栈烧剩的内陆公文，港务官那句'背后那只手大得多'。"
+        $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show guild_master_img at left with dissolve
         guild_master "……这些，你两天就查全了？"
+        $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+        show player_char_img at left with dissolve
         player "我查的时候，你们俩还忙着算计怎么弄死对方。"
     else:
         "你把少年水手的话原原本本说了一遍。一个吓坏的孩子，编不出这么严丝合缝的局。"
@@ -2562,6 +2664,8 @@ label southern_act2:
             $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
             show player_char_img at left with dissolve
             player "你们每多砍一刀，那只手就多一分'平乱'的借口。斗到两败俱伤，渔翁是谁，不用我说。"
+            $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+            show guild_master_img at left with dissolve
             guild_master "……渔翁。好一个渔翁。"
         "先压旧账：现在不是算账的时候（声望）":
             $ change_stat("reputation", 2)
@@ -2570,8 +2674,12 @@ label southern_act2:
             player "公会怎么逼船主，船主怎么恨公会，今天先搁着。今天还咬死对方，明天就一起被人收尸。"
             corsair "……内陆来的，你这张嘴，比我的刀还狠。"
 
+    $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show guild_master_img at left with dissolve
     guild_master "那依领主之见，眼下怎么办？"
 
+    $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
+    show player_char_img at left with dissolve
     player "先弄清那只手是谁、要做什么。在那之前，公会和船主，谁都不许再动刀。"
 
     "维斯帕和赛琳对视一眼。三十年的仇没那么容易放下，可这一刻，他们都没反对。"

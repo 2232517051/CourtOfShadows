@@ -32,6 +32,8 @@ init python:
         "viscount_wells_img",
         ## 南境游记 DLC
         "corsair_img", "guild_master_img", "ship_boy_img", "dockhand_img",
+        "old_salt_img", "sea_dog_img", "chen_captain_img",
+        "harbor_master_img", "tavern_keeper_img", "royal_admiral_img",
     ]
 
     def hide_all_chars(*except_tags):

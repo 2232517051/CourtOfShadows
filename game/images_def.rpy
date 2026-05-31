@@ -172,6 +172,13 @@ image corsair_img = ConditionSwitch(
 image guild_master_img = Transform(safe_image("images/guild_master.png", "images/merchant_guild.png"), zoom=0.45, yalign=1.0)
 image ship_boy_img = Transform(safe_image("images/ship_boy.png", "images/servant_generic.png"), zoom=0.45, yalign=1.0)
 image dockhand_img = Transform(safe_image("images/dockhand.png", "images/servant_generic.png"), zoom=0.45, yalign=1.0)
+## 核心配角专属立绘(固定站位, 解决通用立绘复用重合; 专属图待生成时回退通用)
+image old_salt_img = Transform(safe_image("images/old_salt.png", "images/farmer_rep.png"), zoom=0.45, yalign=1.0)
+image sea_dog_img = Transform(safe_image("images/sea_dog.png", "images/soldier_generic.png"), zoom=0.45, yalign=1.0)
+image chen_captain_img = Transform(safe_image("images/chen_captain.png", "images/soldier_generic.png"), zoom=0.45, yalign=1.0)
+image harbor_master_img = Transform(safe_image("images/harbor_master.png", "images/noble_werner.png"), zoom=0.45, yalign=1.0)
+image tavern_keeper_img = Transform(safe_image("images/tavern_keeper.png", "images/merchant_karl.png"), zoom=0.45, yalign=1.0)
+image royal_admiral_img = Transform(safe_image("images/royal_admiral.png", "images/soldier_generic.png"), zoom=0.45, yalign=1.0)
 
 ## 序章角色
 image mother_img = Transform("images/mother.png", zoom=0.45, yalign=1.0)
@@ -265,6 +272,7 @@ init python:
         "player_char", "player_child", "player_teen", "player_young",
         # 南境游记 DLC
         "corsair", "guild_master", "ship_boy", "dockhand",
+        "old_salt", "sea_dog", "chen_captain", "harbor_master", "tavern_keeper", "royal_admiral",
     ]
 
     # 为每个角色注册 side image (默认 + 表情差分)
