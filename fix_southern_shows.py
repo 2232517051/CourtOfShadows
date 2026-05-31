@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-安全补全南境 DLC 缺失的说话人 show 立绘。
-复用 fix_missing_portraits.py 的缺失定位(active 追踪 + menu 分支 indent-aware),
-插入 `$ hide_all_chars(自己[, 对峙搭档]) + show 自己 at 站位`:
-  - 普通角色独占(hide 其他, 避免同 side 叠加)
-  - guild_master(维斯帕) 与 corsair(赛琳) 互为对峙搭档, 互相保留 → 双人同屏不被拆
-
-  python fix_southern_shows.py           # dry-run
+安全补全南境 DLC 缺失的说话人 show 立绘（side-aware 版）。
+复用 fix_missing_portraits.py 的缺失定位（active 追踪 + menu 分支 indent-aware），
+插入时按角色固定站位 show，并 hide 同侧其他立绘、保留对侧全部 —— 不破坏双人同屏，
+也不会出现 player 说话清掉同屏 NPC 的问题。
+  LEFT  = 主角/管家/维斯帕（左侧轮流位）
+  RIGHT = 其余配角（右侧对话方，默认）
+用法:
+  python fix_southern_shows.py          # dry-run
   python fix_southern_shows.py --apply
 """
 import os, sys
@@ -14,42 +15,37 @@ import fix_missing_portraits as F
 
 TARGET = os.path.join(os.path.dirname(__file__), "game", "southern_expansion.rpy")
 
-SIDE = {
-    "player_char_img": "left", "player_young_img": "left",
-    "player_teen_img": "left", "player_child_img": "left",
-    "aldric_img": "left", "guild_master_img": "left",
-    "corsair_img": "right", "ship_boy_img": "right", "dockhand_img": "right",
-}
-## 对峙搭档: show 时一并保留, 不 hide
-KEEP = {
-    "guild_master_img": ["corsair_img"],
-    "corsair_img": ["guild_master_img"],
-}
+LEFT_TAGS = ["player_char_img", "player_young_img", "player_teen_img",
+             "player_child_img", "aldric_img", "guild_master_img"]
+RIGHT_TAGS = ["corsair_img", "ship_boy_img", "dockhand_img",
+              "servant_generic_img", "soldier_generic_img", "merchant_karl_img",
+              "blacksmith_wife_img", "farmer_rep_img", "old_woman_img",
+              "noble_werner_img", "stable_boy_img", "storyteller_img"]
+
+def side_of(tag):
+    return "left" if tag in LEFT_TAGS else "right"
+
+def keep_for(tag):
+    # 保留自己 + 对侧全部（hide 同侧其他，避免叠加；护双人同屏）
+    if side_of(tag) == "left":
+        return [tag] + RIGHT_TAGS
+    return [tag] + LEFT_TAGS
 
 def main(apply):
     char_map = F.collect_character_defs()
     insertions, lines = F.plan_insertions(TARGET, char_map)
     insertions.sort(key=lambda x: x[0])
-
     print(f"将插入 {len(insertions)} 处:")
     for line_idx, indent, tag in insertions:
-        side = SIDE.get(tag, "right")
-        keeps = [tag] + KEEP.get(tag, [])
-        ctx = lines[line_idx].strip()[:34] if line_idx < len(lines) else ""
-        print(f"  L{line_idx+1:<5} keep[{'+'.join(keeps)}] show {tag} at {side}")
-
+        print(f"  L{line_idx+1:<5} show {tag} at {side_of(tag)}")
     if not apply:
-        print("\n(dry-run; 加 --apply 写入)")
+        print("\n(dry-run; --apply 写入)")
         return
-
     for line_idx, indent, tag in sorted(insertions, reverse=True):
-        side = SIDE.get(tag, "right")
-        keeps = [tag] + KEEP.get(tag, [])
-        args = ", ".join('"%s"' % k for k in keeps)
-        block = [
-            f'{indent}$ hide_all_chars({args})\n',
-            f'{indent}show {tag} at {side} with dissolve\n',
-        ]
+        side = side_of(tag)
+        args = ", ".join('"%s"' % k for k in keep_for(tag))
+        block = [f'{indent}$ hide_all_chars({args})\n',
+                 f'{indent}show {tag} at {side} with dissolve\n']
         lines[line_idx:line_idx] = block
     with open(TARGET, "w", encoding="utf-8", newline="\n") as f:
         f.writelines(lines)
