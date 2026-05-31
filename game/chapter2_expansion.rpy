@@ -348,6 +348,9 @@ label ch2_exp_grand_hall:
 
     viscount_wells "我的提案很简单——统一税率，设立自由贸易区。商路畅通了，大家的钱袋子都会鼓起来。"
 
+    if persistent.southern_endings_seen:
+        viscount_wells "诸位若不信商路的油水，看看南边那个潮汐港。不归王廷管，一年的盐货流水比一座城还肥。乱是乱了点，可乱里头照样有人闷声发财。"
+
     hide viscount_wells_img
     $ hide_all_chars("countess_hilda_img")
     show countess_hilda_img at left with dissolve

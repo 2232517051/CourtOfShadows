@@ -877,6 +877,8 @@ label ch1_exp_morning_council:
         show player_char_img at left with dissolve
         player "等等——关税二百？按照艾登堡的地理位置和过境商队数量，这个数字应该至少是三百五。"
         player "还有，「其他一百」是什么？这个分类太模糊了。我要看明细。"
+        if persistent.southern_endings_seen:
+            player "（关税收不上来，无非是商路被人卡了。南边那个潮汐港，不归王廷管，光一个港的盐税就抵得过我半年农税。可惜艾登堡不靠海。）"
         hide player_char_img
         $ hide_all_chars("servant_generic_img")
         show servant_generic_img at left with dissolve
