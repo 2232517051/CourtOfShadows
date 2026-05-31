@@ -153,8 +153,12 @@ label southern_dlc_start:
     show aldric_img at left with dissolve
     aldric "……我这把老骨头，怕是要在甲板上吐三天。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "那就留下看家。我自己去。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "那不行。您一个人去那种地方，我夜里睡不着。"
 
     aldric "老臣这把年纪，吐三天还能爬起来。可您要是在那港口出了岔子，老臣就算把这把骨头吐散了，也没脸回去见艾登堡的列祖列宗。"
@@ -434,6 +438,8 @@ label southern_explore_pier:
 
             "她看了你很久，到底把那点不敢信的希望，小心收了起来。"
 
+            $ hide_all_chars("blacksmith_wife_img")
+            show blacksmith_wife_img at left with dissolve
             fisher_wife "海雀号的船老大姓陈。还有个半大孩子，叫小六，是船上学徒——要是您见着他，告诉他婶儿还等着他。"
 
             "你记下了。陈船老大，学徒小六。这两个名字，往后会有用。"
@@ -2034,6 +2040,8 @@ label si_jail:
     show player_char_img at left with dissolve
     player "费舍尔。"
 
+    $ hide_all_chars("chen_captain_img")
+    show chen_captain_img at left with dissolve
     chen_captain "他没报名。可他问的全是船主联盟的事：谁是头、多少条船、敢不敢跟公会拼。"
 
     chen_captain "公会要我们认罪，他要我们跟公会拼命。两拨人，两个心思。"
