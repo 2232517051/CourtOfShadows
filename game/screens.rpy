@@ -456,21 +456,15 @@ screen navigation():
                     text_font "msyh.ttf"
                     text_color "#4a4a4a"
 
-            ## 北境游记 DLC（第二弹）：玩过南境任意结局后解锁；开发模式直接可进
-            if persistent.southern_endings_seen or config.developer:
-                textbutton _("北境游记 ◆"):
+            ## 北境游记 DLC（第二弹·开发中）：暂仅开发模式可见，玩家正式版完全不显示
+            if config.developer:
+                textbutton _("北境游记 ◆（开发中）"):
                     at menu_btn_hover
                     action Start("northern_dlc_start")
                     text_size 26
                     text_font "msyh.ttf"
                     text_color "#6a8aa8"
                     text_hover_color "#a8c8e8"
-            else:
-                textbutton _("北境游记（通关南境后解锁）"):
-                    action None
-                    text_size 22
-                    text_font "msyh.ttf"
-                    text_color "#4a4a4a"
 
             textbutton _("宣传PV"):
                 at menu_btn_hover
