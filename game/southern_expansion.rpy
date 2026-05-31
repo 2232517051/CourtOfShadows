@@ -1256,6 +1256,7 @@ label southern_act3:
 
         guild_master "潮汐港乱，他们才进得来。这道理我做了半辈子生意，反倒是今早才想透——他们要的从来不是赢，是我们先乱给他们看。"
 
+        show corsair_img at right with dissolve
         corsair "所以要是港口不乱呢？要是傍晚他们到的时候，整个港好端端的，人都齐齐站在码头上？"
 
         guild_master "那一炮打下来，就不是平乱，是屠港。王廷丢不起这个脸。"
@@ -1735,6 +1736,7 @@ label ending_southern_fall:
 
     "船主联盟被定为'海寇'。抓的抓，散的散。"
 
+    $ hide_all_chars()
     show corsair_img sad at right with dissolve
 
     if corsair_romance:
