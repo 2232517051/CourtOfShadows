@@ -2,6 +2,52 @@
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+【v3.6】南境游记 DLC 第一弹上线 + 立绘机检 (2026-05-31)
+
+[新增 — 南境游记 DLC《潮汐港的火并》]
+首个 DLC。主菜单入口(通关任意本体结局后解锁), 自包含独立小档,
+开局给"已立足"属性基线而非主线新丁数值:
++ 约 2.5 万字, 完整三幕 + 5 结局(自由 / 掌港 / 覆灭 / 智取 / 附庸 五种走向)
++ 渡鸦船长赛琳恋爱线; 七线索调查博弈; 港口多点探索(码头/集市/栈桥/酒馆)
++ 6 张核心配角专属立绘 + 6 张专属场景图 + 6 首专属 BGM
++ 三幕开场英文配音(CosyVoice); 成就 7 项 + 结局图鉴 + 场景画廊 + 音乐室
++ DLC 结局单独成 set(persistent.southern_endings_seen),
+  不污染本体 8 结局图鉴计数
+
+[bug 修复 — 本体]
+* 结局数量上限显示错误: 硬编码 5 → len(_ending_keys)=8 (图鉴 + balance 两处)
+* ending_fall 季节错误: "那个夏天" → "那个春天"(全剧无夏季剧情, 秋继位次年春结算)
+
+[立绘机检 — 南境]
++ 新增 audit_southern_portraits.py 状态机审计工具:
+  解析 scene / hide_all_chars(参数) / hide / show...at side, 追踪每个立绘站位,
+  对每句对话同时查"缺show(张冠李戴)" + "同侧重合(叠加)"——
+  补 scan_missing_portraits 查不出重合的盲点
+* side-aware 补全 49 处缺失 show + 修 4 处张冠李戴(信件段 / 地牢 / 栈桥)
+* 6 核心配角专属立绘固定站位, 根除重合; 审计末轮重跑 0 处
+
+[正篇 → DLC 联系 — 二周目彩蛋]
++ 3 处南境叙事彩蛋(if persistent.southern_endings_seen 包裹, 纯叙事不动数值,
+  仅通关过南境的二周目玩家可见, 新手首玩 persistent 为空不触发):
+  · ch4 集市: 一摊印着缠绳铁锚纹章的潮汐港私盐(回指南境开场信火漆)
+  · ch1 关税审账(商业开局): 主角联想南方港口盐税抵农税
+  · ch2 领主会议: 威尔斯子爵拿潮汐港当商路油水的例子(贴合其性格)
+
+[内部 — 暂未对玩家开放]
++ 北境游记 DLC 第二弹《盐路与雪原》骨架: 入口仅 config.developer 可见, 玩家不可见
+  · ①回指: 希尔达伯爵夫人复用本体 define 登场, 接南境"北上盐路"钩子
+  · ②读档分支: 读 persistent 历史通关结局定北疆议会态度 + 南境靠山(已可跑)
+  · 二三幕 + 5 结局占位待扩; ③资源回流(动本体平衡)待南境反馈后统一做
+
+[改动文件]
+- game/southern_expansion.rpy (DLC 正文) / northern_expansion.rpy (第二弹骨架)
+- game/effects.rpy / balance.rpy (结局数) / characters.rpy (成就)
+- game/images_def.rpy / char_helpers.rpy / screens.rpy / gallery.rpy
+- game/chapter1_expansion.rpy / chapter2_expansion.rpy / chapter4_expansion.rpy (彩蛋)
+- audit_southern_portraits.py / fix_southern_shows.py (立绘工具)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 【v3.5】AI 味第三轮清洗 + balance pass (2026-05-18)
 
 [起因]
