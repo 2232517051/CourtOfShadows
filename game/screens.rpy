@@ -440,13 +440,21 @@ screen navigation():
                 at menu_btn_hover
                 action ShowMenu("gallery_hub")
 
-            textbutton _("南境游记 ◆"):
-                at menu_btn_hover
-                action Start("southern_dlc_start")
-                text_size 26
-                text_font "msyh.ttf"
-                text_color "#2e8b8b"
-                text_hover_color "#5fd0d0"
+            ## 南境游记 DLC：通关任意结局后解锁；开发/测试模式(config.developer)下直接可进
+            if persistent.endings_seen or config.developer:
+                textbutton _("南境游记 ◆"):
+                    at menu_btn_hover
+                    action Start("southern_dlc_start")
+                    text_size 26
+                    text_font "msyh.ttf"
+                    text_color "#2e8b8b"
+                    text_hover_color "#5fd0d0"
+            else:
+                textbutton _("南境游记（通关任意结局后解锁）"):
+                    action None
+                    text_size 22
+                    text_font "msyh.ttf"
+                    text_color "#4a4a4a"
 
             textbutton _("宣传PV"):
                 at menu_btn_hover

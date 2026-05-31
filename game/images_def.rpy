@@ -168,6 +168,11 @@ image corsair_img = ConditionSwitch(
     "True",
         Transform(safe_image("images/corsair.png", "images/noble_lady.png"), zoom=0.45, yalign=1.0))
 
+## 南境游记 DLC 配角(专属图待生成时回退原占位)
+image guild_master_img = Transform(safe_image("images/guild_master.png", "images/merchant_guild.png"), zoom=0.45, yalign=1.0)
+image ship_boy_img = Transform(safe_image("images/ship_boy.png", "images/servant_generic.png"), zoom=0.45, yalign=1.0)
+image dockhand_img = Transform(safe_image("images/dockhand.png", "images/servant_generic.png"), zoom=0.45, yalign=1.0)
+
 ## 序章角色
 image mother_img = Transform("images/mother.png", zoom=0.45, yalign=1.0)
 image father_img = Transform("images/father.png", zoom=0.45, yalign=1.0)
@@ -259,7 +264,7 @@ init python:
         # 主角 (成年/童年/少年/青年)
         "player_char", "player_child", "player_teen", "player_young",
         # 南境游记 DLC
-        "corsair",
+        "corsair", "guild_master", "ship_boy", "dockhand",
     ]
 
     # 为每个角色注册 side image (默认 + 表情差分)

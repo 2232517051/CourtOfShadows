@@ -202,6 +202,7 @@ init python:
         "rel_hilda": "希尔达伯爵夫人", "rel_grey": "格雷伯爵",
         "rel_wells": "威尔斯子爵", "rel_stein": "施泰因伯爵夫人",
         "rel_people": "民心",
+        "rel_corsair": "赛琳",
     }
 
     def _show_stat_toast(name, delta, is_rel):
@@ -981,7 +982,7 @@ screen ending_route_map():
                 spacing 8
                 text "◆" size 20 color "#2e8b8b" yalign 0.5
                 text "南境游记 · 潮汐港结局" size 22 color "#2e8b8b" font "msyh.ttf"
-            text "已解锁 [len(s_seen)]/3 个" size 14 color "#6a5e48"
+            text "已解锁 [len(s_seen)]/5 个" size 14 color "#6a5e48"
             null height 6
 
             for sid, sname, sdesc, scolor, sicon in _southern_ending_info:

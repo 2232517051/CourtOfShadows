@@ -41,3 +41,5 @@ tmp/
 crisis_candidates.txt
 ai_smell_scan_*.txt
 first_meet_report_*.txt
+missing_portraits_*.txt
+missing_portraits_*.json
