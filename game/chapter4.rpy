@@ -1557,7 +1557,8 @@ label ch4_garden:
     $ set_mood("calm")
     $ set_weather("fireflies")
 
-    $ trigger_random_event("explore")
+    ## Zane 反馈(2026-06-07): 删掉此处随机事件 — 花园是脚本化的子时密会, 随机商人/遭遇会插在潜入之前"冒出来又没了"
+    ## (正对玩家"突然冒出跟剧情不搭的内容"那条; 只删这一处脚本化紧张段, 不全局降频——batch14 刻意调高过随机事件)
 
     "子时。"
 
@@ -1577,24 +1578,29 @@ label ch4_garden:
 
     "就在这时——"
 
-    "一个年轻人从花丛后走出来。他穿着华贵，但举止随意，像是在自家后院散步。"
+    "一个年轻人从花丛后走出来。他披着一件不起眼的灰斗篷，把华服遮在下面，走两步就回头看一眼来路。"
 
     $ hide_all_chars("prince_img")
     show prince_img at left with dissolve
 
-    prince "你来了。我还以为你不敢来。"
+    if prince_letter_response == "heed":
+        prince "你收到我的信了。我就知道你会来。"
+    elif prince_letter_response == "decline":
+        prince "你来了。我还以为，那封信你看过就当没看过。"
+    else:
+        prince "你来了。信还没核实清楚就敢来——比我想的有胆色。"
 
     hide prince_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "殿下的邀请，臣怎敢不来。"
+    player "殿下在信里说，宫里上下都是王后的耳目。可你这会儿怎么出得来？"
 
     hide player_char_img
     $ hide_all_chars("prince_img")
     show prince_img at left with dissolve
-    prince "别那么拘谨。我约你出来不是谈公事的。"
+    prince "秋水宫的后墙有一道花匠走的小门。守卫以为我歇下了。"
 
-    prince "嗯……好吧，也算是公事。"
+    prince "我顶多有半个时辰。听见脚步声，咱们就各走各的，别回头。"
 
     $ hide_all_chars()
     "他在一张石凳上坐下，拍了拍旁边的位置。"
@@ -2399,6 +2405,7 @@ label ch4_elena:
 
         "信的最后一行写着：「这是我的诚意。现在，你愿意信任我了吗？」"
 
+        $ griffin_known = True
         $ collect_item("baron_pact")
 
         menu:
@@ -3301,9 +3308,35 @@ label ch4_end:
         hide bishop_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "我会的。谢谢你，马修斯。"
 
-        hide bishop_img with dissolve
+        ## 选择深度 pass R2 (2026-06-16): 补"与教会结盟"选择, 激活此前从不置真的死 flag alliance_church
+        ## (被 ch5_exp 圣盾阵 / interludes / npc_depth 读 ~10 处, 之前全是死分支)。
+        ## 隐藏/延迟代价: 教会(费雷恩)本是杀父共犯, 结盟=接住这笔旧账(ch5 真相时兑现); 且与暗百合互斥。
+        menu:
+            "请教会公开站到你这边——与马修斯结盟" if faith >= 40 and not lily_full_member:
+                $ alliance_church = True
+                $ change_rel("rel_bishop", 10)
+                $ change_stat("faith", 6)
+                player "马修斯，光有一份遗诏不够。我要教会公开站到我这边。"
+                hide player_char_img
+                $ hide_all_chars("bishop_img")
+                show bishop_img at left with dissolve
+                bishop "……好。教会与您同进退。"
+                bishop "但有句话得说在前头——教会站出来，不只是为您，也是替费雷恩还债。"
+                bishop "您接住教会的支持，也就接住了这笔二十年的旧账。它干净不到哪里去。"
+                hide bishop_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "我接。"
+                $ hide_all_chars()
+                if dark_lily_joined:
+                    $ change_rel("rel_lily", -15)
+                    "话出口时你想起影卫。圣母教会和暗百合是不共戴天的两家——你这一步，影迟早会知道。"
+                else:
+                    "你点了头。这个盟友手上沾着你父亲的血——眼下你还顾不上跟它算这笔账。"
+            "心领，但不结盟——只留马修斯一个人证":
+                player "我会的。谢谢你，马修斯。教会就别牵涉进来了——你一个人作证，已经够危险。"
+                $ hide_all_chars()
 
         $ hide_all_chars()
         "你把皮卷筒贴身藏好。这薄薄的一卷羊皮纸——比任何武器都更具有毁灭性的力量。"

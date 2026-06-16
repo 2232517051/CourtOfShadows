@@ -206,6 +206,11 @@ init python:
     ## 0.4 → 原始 +5 变 +2，+8 变 +3，+10 变 +4，+3 变 +1
     STAT_CHANGE_SCALE = 0.4
 
+    ## 代价缩放系数（选择深度 pass 2026-06-16）：扣减比增益少衰减，让"机会成本"真的被感到。
+    ## 旧版扣减也吃 0.4 → 配对 -5 实际只掉 -2，几乎无感（批21 的配对代价基本失效）。
+    ## wealth 除外（其花钱经济按 0.4 校准，见 change_stat），其余 stat 扣减用此系数。
+    STAT_COST_SCALE = 0.6
+
     def change_stat(stat_name, delta, show_notification=True):
         """
         修改属性值的统一入口：
@@ -231,9 +236,17 @@ init python:
                 ## 高位衰减曲线: old=0 → 1.0x, 50 → 0.65x, 80 → 0.28x, 95+ → 0.25x (clamp)
                 decay = max(0.25, 1.0 - (old_val_pre / 100.0) ** 1.5)
                 scaled = abs(delta) * STAT_CHANGE_SCALE * decay
+                ## 选择深度 pass (2026-06-16): 80+ 高位不再 +1 保底，微小加成归 0，
+                ## 形成 ~80 软顶。终结"几百个 +1 堆到满"的膨胀（秦霸先/批19/批24 困难太易）。
+                if old_val_pre >= 80:
+                    delta = sign * int(round(scaled))
+                else:
+                    delta = sign * max(1, int(round(scaled)))
             else:
-                scaled = abs(delta) * STAT_CHANGE_SCALE
-            delta = sign * max(1, int(round(scaled)))
+                ## 代价按更高系数且不衰减 → 机会成本真的咬人 (wealth 保持 0.4 护其花钱经济)
+                cost_scale = STAT_CHANGE_SCALE if stat_name == "wealth" else STAT_COST_SCALE
+                scaled = abs(delta) * cost_scale
+                delta = sign * max(1, int(round(scaled)))
 
         old_val = getattr(store, stat_name, 0)
         old_tier = get_tier(stat_name)
@@ -465,9 +478,12 @@ screen stat_change_popup(stat_label, delta, new_val, tier_label, tier_color):
                 elif delta < 0:
                     text "[delta]" size 20 color "#e74c3c" bold True font "msyh.ttf"
                 else:
-                    ## 触顶/触底/无变化 — 不再假飘 "+0", 给明确语义
+                    ## 触顶/软顶/触底/无变化 — 不再假飘 "+0", 给明确语义
                     if new_val >= 100:
                         text "已至顶峰" size 16 color "#f0c050" bold True font "msyh.ttf"
+                    elif new_val >= 80:
+                        ## 选择深度 pass: 80+ 软顶, 加点几近无效 → 提示玩家分散投资
+                        text "已臻巅峰" size 16 color "#f0c050" bold True font "msyh.ttf"
                     elif new_val <= 0:
                         text "已至谷底" size 16 color "#7d6a8f" bold True font "msyh.ttf"
                     else:

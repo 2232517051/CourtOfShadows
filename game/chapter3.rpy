@@ -2141,7 +2141,7 @@ label ch3_tunnel_exploration:
             "羊皮纸已经发黄，但保存得非常好。干燥温暖的环境和矿石散发的微光似乎有某种防腐的效果。"
             "你翻开了第一卷。"
             "标题写着：《暗百合创始录》。"
-            "『先王格里菲斯一世建国之初，设七近卫以护王座。七近卫各司其职：剑卫护身、盾卫守城、幽卫暗察、鹰卫传讯、根卫通商、桥卫联络、莲卫守秘。暗百合即莲卫所创，取百合倒悬之形，意为隐于暗中、守护光明。后世暗百合分裂时，正统派承"影"之名（取莲卫之暗察遗风），是为下文影卫一脉——并非七近卫之幽卫。』"
+            "『先王格里菲斯一世建国之初，设七近卫以护王座。七近卫各司其职：剑卫护身、盾卫守城、幽卫暗察、鹰卫传讯、根卫通商、桥卫联络、莲卫守秘。暗百合即莲卫所创，取百合倒悬之形，意为隐于暗中、守护光明。后世暗百合分裂时，正统派承'影'之名（取莲卫之暗察遗风），是为下文影卫一脉——并非七近卫之幽卫。』"
             "第一卷记录了暗百合的起源——它确实是先王的七近卫之一建立的，目的是守护先王的真正遗愿。"
             "你继续翻看第二卷。"
             "标题：《历代影主志》。"
@@ -2913,7 +2913,8 @@ label ch3_dark_lily_hq:
             $ dark_lily_joined = True
             $ lily_full_member = True
             $ change_rel("rel_lily", 30)
-            $ change_stat("loyalty", 5)
+            ## 选择深度 pass: 秘密效忠影卫=分裂的忠诚(且无人知晓), 不该+。换来的是 rel_lily 与情报, 代价是治理底气
+            $ change_stat("loyalty", -4)
             $ log_decision("第三章", "加入暗百合·影卫")
             hide lily_master_img
             $ hide_all_chars("player_char_img")
@@ -2926,6 +2927,8 @@ label ch3_dark_lily_hq:
             lily_master "你的代号是……「继承者」。"
             lily_master "我会安排影卫中最优秀的人手保护你。同时，我会把我们掌握的所有情报交给你。"
             lily_master "但你必须记住一件事——影卫的铁律是：不到万不得已，不流无辜人的血。"
+            lily_master "还有一句你该清楚——戴上影卫的印记，圣母教会的门就对你关上了。"
+            lily_master "他们容得下悔过的罪人，容不下我们这样的人。日后你想借圣母的名义号令谁，没人会听。"
             hide lily_master_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -2950,7 +2953,8 @@ label ch3_dark_lily_hq:
             $ change_rel("rel_lily", -10)
             $ change_stat("power", 20)
             $ change_stat("loyalty", -3)
-            $ change_stat("faith", 8)
+            ## 选择深度 pass: 加入异端铁刺 → 不该+信仰(教会属性)。与圣光路线互斥的代价
+            $ change_stat("faith", -5)
             $ log_decision("第三章", "加入暗百合·铁荆棘")
             hide lily_master_img
             $ hide_all_chars("player_char_img")
@@ -4929,7 +4933,8 @@ label ch3_critical_choice:
         "全面反击——联合暗百合，发动政变" if not dark_lily_destroyed:
             if dark_lily_joined:
                 $ change_stat("power", 15)
-                $ change_stat("loyalty", 5)
+                ## 选择深度 pass: 联合异端发动政变 → 忠诚不该+。僭越王权又结盟异端, 民心动摇
+                $ change_stat("loyalty", -8)
                 $ change_rel("rel_lily", 10)
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve

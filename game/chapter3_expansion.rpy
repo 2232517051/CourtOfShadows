@@ -1242,7 +1242,8 @@ label ch3_exp_confrontation:
 
         "谈判策略「分化瓦解暗百合」" if intrigue >= 58:
             $ change_stat("intrigue", 12)
-            $ change_stat("reputation", 5)
+            ## 选择深度 pass: 分化瓦解=操弄手段, 走漏即损名, 不该+声望
+            $ change_stat("reputation", -5)
             $ log_decision("第三章扩展", "尝试分化瓦解暗百合")
 
             hide lily_master_img

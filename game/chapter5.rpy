@@ -1497,6 +1497,14 @@ label ch5_counsel_all:
                 show lily_master_img at left with dissolve
                 lily_master "有意思。你越来越像我们的人了。"
                 lily_master "我会安排的。具体的行动计划，稍后送到你手上。"
+                ## R2 隐藏/延迟代价: ch3"合作=互不臣属"看着干净, 但借影卫的刀=欠影卫的债, 那四个字开始作废
+                if not lily_full_member:
+                    lily_master "不过——当初你说『互不臣属』。这话还作数，但每借我们一次刀，那四个字就薄一分。"
+                    lily_master "今天这个忙，我记在账上了。"
+                    $ change_stat("reputation", -5)
+                    $ change_rel("rel_lily", 8)
+                    $ hide_all_chars()
+                    "你知道她没说错。一个领主使着影卫的人做暗活，这事一旦漏出去，『清白』两个字就跟你没关系了。"
 
             "表示感谢但暂时不需要":
                 hide lily_master_img
@@ -2003,7 +2011,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_shadow
             jump ending_shadow_king
 
-        "借教会之力，以信仰终止战争|信仰路线 → 圣光守护" if "holy_guardian" in _top_endings:
+        "借教会之力，以信仰终止战争|信仰路线 → 圣光守护" if "holy_guardian" in _top_endings and not lily_full_member:
             $ log_decision("第五章", "选择以信仰之光化解争端")
             $ ending_type = "holy_guardian"
             hide elena_img
@@ -2037,7 +2045,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_peoples
             jump ending_peoples_lord
 
-        "公布先王遗诏真相——让正义重见天日|真相路线 → 真相大白（最佳）" if true_killer_known and testament_original_obtained:
+        "公布先王遗诏真相——让正义重见天日|真相路线 → 真相大白" if true_killer_known and testament_original_obtained:
             $ log_decision("第五章", "选择揭露全部真相")
             $ ending_type = "truth"
             hide aldric_img
@@ -2051,7 +2059,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_truth
             jump ending_truth
 
-        "用毒药清理一切——以母亲的方式收尾|毒药路线 → 毒药公爵（坏结局）" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
+        "用毒药清理一切——以母亲的方式收尾|毒药路线 → 毒药公爵" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
             $ log_decision("第五章", "选择以毒药逐一清理敌人")
             $ ending_type = "borgia"
             hide aldric_img
@@ -4479,7 +4487,7 @@ label ending_truth:
 
     "你给所有相关方都发出了邀请——以「避免战争」为由。"
 
-    "王后派了代表，男爵亲自出席，教会派了主教。"
+    "王后没有派代表，而是亲自来了——这种动摇国本的事，她不放心交给任何人。她要亲眼看着，亲手压下去。男爵亲自出席，教会派来了主教。"
 
     "还有各地的领主、商人和百姓代表。"
 
@@ -4596,6 +4604,12 @@ label ending_truth:
         bishop "二十年了。二十年来我每天都在向圣母忏悔——"
         bishop "是的。遗诏是被篡改的。老领主是被毒杀的。我……参与了。"
         "教堂里爆发了巨大的喧哗。"
+        if alliance_church:
+            ## R2 延迟兑现: ch4 与教会结盟时马修斯说过"这笔账干净不到哪里去"。现在当众摊开——你的盟友是共犯。
+            "你站在原地，没动。这个低着头认罪的人，是你亲手请进来的盟友。"
+            "你接住教会支持的那天就被告知过：这笔账干净不到哪里去。现在它当着满堂的人摊开了。"
+            "你父亲的血，有一份就在你此刻盟友的手上。"
+            $ change_stat("reputation", -6)
         $ change_stat("faith", 12)
     else:
         hide bishop_img
@@ -4626,6 +4640,8 @@ label ending_truth:
             "那杯酒他没喝完。"
 
     if prince_ally and not prince_betrayed:
+        "你没料到他会出现在这里——一个本该被软禁在王宫里的人。"
+        "战事当前，王宫的守卫和耳目大半调去了别处。对一个隐忍十二年、早把人脉铺到宫墙之外的人，这点缝隙足够了。"
         ## 好感度过低：王子被迫反水
         if rel_prince < 25:
             call ch5_prince_betrayal from _call_ch5_prince_betrayal
@@ -4737,11 +4753,41 @@ label ending_truth:
             player "在场的各位是见证人——今天，正义不会再缺席。"
 
     $ hide_all_chars()
-    "王后沉默了很长时间。"
 
-    "她的目光掠过大厅里的每一张脸——她在寻找支持者。"
+    python:
+        ## 困难模式 + 声望/铁证不足 → 真相压不住一个掌权二十年的王后, 只能靠强硬手段惨胜。
+        ## (2026-06-16 秦霸先反馈: 真相大白是唯一不吃难度的主结局, 困难一次过。
+        ##  普通/简单仍走干净胜利, 不锁玩家; 仅困难下根基不够时付代价。)
+        _truth_weight = reputation + intrigue // 2
+        if poison_evidence:
+            _truth_weight += 20
+        if prince_ally and not prince_betrayed and rel_prince >= 25:
+            _truth_weight += 20
+        if dark_lily_joined:
+            _truth_weight += 10
+        _truth_contested = (persistent.difficulty == "hard" and _truth_weight < 85)
 
-    "但她看到的只有回避的目光和低下的头。二十年的恩威并施，在铁证面前轰然崩塌。"
+    if _truth_contested:
+        "王后没有立刻屈服。"
+
+        "她环顾大厅，去找那些还没有低头的人——而她找到了几个。"
+
+        "「老领主的冤屈该查。可蛮族就压在边境上，这个节骨眼上动摇王后，谁来收场？」北境一位领主开了口，附和声跟着响起来。"
+
+        "你压不住这股动摇。光靠一份二十年前的遗诏，撼不动一个掌权二十年的人。"
+
+        "你只能把话说重——点名那几个收过王后好处的领主，把当年的旧账一笔笔翻出来，逼他们把嘴闭上。"
+
+        "大厅安静了下来。你赢了，可赢得难看。在场的人都记住了你逼人就范的那副样子。"
+
+        $ change_stat("reputation", -8)
+        $ change_stat("loyalty", -4)
+    else:
+        "王后沉默了很长时间。"
+
+        "她的目光掠过大厅里的每一张脸——她在寻找支持者。"
+
+        "但她看到的只有回避的目光和低下的头。二十年的恩威并施，在铁证面前轰然崩塌。"
 
     hide player_char_img
     $ hide_all_chars("queen_img")
@@ -5410,6 +5456,15 @@ label ending_vassal:
     "你接过羽毛笔， 笔尖在墨池里蘸了一下。"
 
     "停了一会儿。"
+
+    ## 选择深度 pass B3 (2026-06-16): 第四章与王子结过盟的玩家, 在此把"投效王后"的延迟代价兑现——
+    ## 签字 = 背叛王子。之前结盟时看不到这一刀, 现在它落下来。
+    if prince_ally and not prince_betrayed:
+        "笔尖悬在纸面上。你想起花园里那只温暖有力的手，还有那句「当我登基的那天，我需要你的支持」。"
+        "你握手答应过他。现在这一签，等于把弗雷德里克卖给了他想推翻的母亲。"
+        "他不会原谅你。你也不打算解释。"
+        $ prince_betrayed = True
+        $ change_rel("rel_prince", -40)
 
     "然后写下了你的名字。"
 
