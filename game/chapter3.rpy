@@ -4861,11 +4861,14 @@ label ch3_critical_choice:
             $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "我认识几个。但他们是否愿意参与这种事……我不确定。"
+            aldric "还有一句话我得说在前头，大人。联络的人越多，您的意图就越藏不住。这些领主里，难保没有一个会拿您的密信去王后那儿换一份恩宠。"
             hide aldric_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "至少试试。"
+            player "我知道这个险。但坐着等死，是更大的险。至少试试。"
             $ change_stat("loyalty", 5)
+            ## 选择深度样板: 亮牌联络异见领主, 埋下"消息走漏"伏笔, ch4 觐见兑现
+            $ courted_rival_lords = True
 
         "防守为主——加强领地防御，等待对方露出破绽" if power >= 55:
             $ change_stat("power", 10)

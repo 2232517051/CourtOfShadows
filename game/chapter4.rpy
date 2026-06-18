@@ -1123,6 +1123,18 @@ label ch4_throne:
 
     queen "你父亲是个聪明人。可惜，聪明人往往活不长。"
 
+    ## 选择深度样板: ch3"主动出击"秘密联络异见领主的延迟代价 —— 王后早已知情
+    if courted_rival_lords:
+        queen "对了——听说你回北方之后，和格雷、施泰因那几位领主走得近了。"
+        $ hide_all_chars()
+        "她说得很随意，像在问今年的收成。你后背沁出一层薄汗。"
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "新领主多交朋友是好事。不过——挑朋友之前，先看清楚谁手里攥着你的把柄。"
+        $ hide_all_chars()
+        "她知道。你以为瞒得严严实实的事，到底还是传进了王座大厅。"
+        $ change_rel("rel_queen", -10)
+
     $ hide_all_chars()
     "你不确定这是感叹还是威胁。大厅中响起一阵低低的窃笑。"
 

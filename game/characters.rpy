@@ -190,6 +190,8 @@ default queen_trust = False
 ## 月光疾风反馈 v3.12 (2026-05-11): truth ending 王后自请退位分支
 ## 条件 rel_queen>=50 + prince_ally + not prince_betrayed → 私下夜谈 → 修道院静修 (非审判)
 default queen_reconciled = False
+## 选择深度样板(2026-06-18): ch3"主动出击"秘密联络异见领主 → ch4觐见王后兑现"消息走漏"代价
+default courted_rival_lords = False
 default prince_ally = False
 default prince_betrayed = False
 default prince_returned_willingly = False
