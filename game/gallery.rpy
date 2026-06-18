@@ -211,6 +211,9 @@ init python:
         ("audio/music/winter_wind.ogg", "朔风凛冽", "孤寂的冬日寒风", "寒", None),
         ("audio/music/dawn.ogg", "破晓新生", "新一天的开始", "晨", "chapter5"),
         ("audio/music/ritual.ogg", "暗夜仪式", "神秘的古老典礼", "祭", "chapter3"),
+        ## 番外配乐（剧情未直接使用，作为收藏曲）
+        ("audio/music/throne.ogg", "铁王座", "至高权力的孤独与重量", "座", "chapter5"),
+        ("audio/music/escape.ogg", "密道亡奔", "火把映墙，追兵在后", "逃", "chapter4"),
         ## 南境游记 DLC
         ("audio/music/southern_port.ogg", "潮汐港", "南方自由港的喧嚣与海风", "港", None),
         ("audio/music/southern_tavern.ogg", "断锚酒馆", "水手与走私客的粗粝欢闹", "酒", None),

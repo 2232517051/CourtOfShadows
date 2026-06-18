@@ -195,6 +195,13 @@ default prince_betrayed = False
 default prince_returned_willingly = False
 default prince_mentor_known = False
 default prince_trust_deep = False
+## Zane 反馈(2026-06-07): 章间王子密信原本无回应 flag, 也不与花园密会衔接 → 线索"莫名其妙地没了"
+## 取值: "" 未回应 / "heed" 应约 / "cautious" 存疑 / "decline" 婉拒; 花园开场据此分支
+default prince_letter_response = ""
+## 伏笔回收轮(2026-06-07): 以下三条抛出过却没回收, 补 flag + payoff
+default seventh_oak_note = False         # ch1 父亲密码笔记里"第七棵橡树下"花体字纸条
+default prince_sister_known = False       # 王子同父异母妹妹(farewell"直接问其他原因"分支揭示)
+default griffin_known = False             # "影子法官"格里芬=杀父实际动手者(ch4 prince_ally 信揭示)
 default elena_romance = False
 default court_faction = ""
 

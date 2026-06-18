@@ -17,6 +17,33 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.15 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.15" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "时间线 / 自述一致性修正" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.06.08" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "叙事时间线一致性（真相大白线玩家反馈）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 母亲画像「保留二十年」修正为「十五年」：母亲在主角七岁病逝，主角现二十二岁，应为十五年" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 艾琳娜往事去矛盾：删去「幼年被卖到城堡、老夫人收留教我识字」自述，改为从城堡老人处听闻老夫人——与第三章揭示的间谍身份（五年前王后派来、第四个任务）一致" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 队长雷恩跟随老领主年数统一为「十二年」，与其十二年前落难获救的往事吻合（此前主线说五年、第一/四章扩展说十五年，互相打架）" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.14 ──
             frame:
                 xfill True

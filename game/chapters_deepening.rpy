@@ -1820,7 +1820,7 @@ label ch4_deep_poet:
 
     $ hide_all_chars("court_poet_img")
     show court_poet_img at left with dissolve
-    court_poet "诸位大人，容小生献上新作一首——"
+    court_poet "诸位大人，容我献上一首新作——"
     court_poet "题为《北来的鹰》。"
 
     $ hide_all_chars()
@@ -1829,10 +1829,9 @@ label ch4_deep_poet:
 
     $ hide_all_chars("court_poet_img")
     show court_poet_img at left with dissolve
-    court_poet "北方飞来一只鹰，"
-    court_poet "羽翼未丰志已凌。"
-    court_poet "不知王庭风云险，"
-    court_poet "且看雏鸟能几程？"
+    court_poet "北方放来一只鹰——翅膀还没长硬，眼里却先盛下了整片天。"
+    court_poet "它不知道王座底下的风有多冷，"
+    court_poet "诸位且看，这只雏鸟能飞过几重宫墙。"
 
     $ hide_all_chars()
     "大厅里响起了一阵意味深长的笑声。"
@@ -1842,10 +1841,10 @@ label ch4_deep_poet:
 
     $ hide_all_chars("court_poet_img")
     show court_poet_img at left with dissolve
-    court_poet "莫笑少年骨未坚，"
-    court_poet "老木参天也曾纤。"
-    court_poet "他日若遂凌云志，"
-    court_poet "敢教日月换新天。"
+    court_poet "可也别忙着笑他年少骨软——"
+    court_poet "再高的橡树，当年也不过一指来粗。"
+    court_poet "假以时日，等这对翅膀长成，"
+    court_poet "这王庭的风，说不定要为他改向。"
 
     $ hide_all_chars()
     "先贬后褒——这个诗人很会拿捏分寸。既让其他贵族发笑，又不至于真正得罪你。"

@@ -41,7 +41,8 @@ define audio.sfx_crowd_murmur = "audio/sfx/crowd_murmur.ogg"
 define audio.sfx_bell_toll = "audio/sfx/bell_toll.ogg"
 
 ## 主菜单背景音乐
-define config.main_menu_music = "audio/music/main_theme.ogg"
+## (2026-06-05 玩家"大制图家"反馈 main_theme 太亢奋且循环 → 换庄严王座主题)
+define config.main_menu_music = "audio/music/throne.ogg"
 
 ## 音乐频道设置
 init python:

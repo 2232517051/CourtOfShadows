@@ -275,7 +275,7 @@ label interlude_ch3_ch4:
     $ hide_all_chars()
     "你拆开信。王子的字迹凌乱而急促："
 
-    "{i}致艾登堡领主：我被囚禁了。王后以「保护」之名将我软禁在秋水宫。她要对王国做出不可挽回的事。我需要能信任的人。如果你还记得父辈的誓约——请来。{/i}"
+    "{i}致艾登堡领主：母后召各地领主进京，想必你也在受召之列。我必须见你一面——可宫里上下都是她的耳目，你我不能在明面上相认。你到了王都，自会有人来引你。母后正在筹划一件无可挽回的事，我身边再没有信得过的人。若你还记得父辈之间的那个誓约——就走这一趟。{/i}"
 
     "父辈的誓约。你的父亲与先王之间的承诺。"
 
@@ -285,49 +285,42 @@ label interlude_ch3_ch4:
         "你不确定这个「誓约」具体指什么。但王子的语气中透着真实的恐惧。"
 
     menu:
-        "面对王子的求救信："
+        "面对王子的密信："
 
-        "立刻出发——如果信是真的，每耽搁一天都可能致命。":
+        "记下这个约定——到了王都，设法见他。":
             $ change_stat("courage", 5)
             $ change_rel("rel_prince", 5)
-            "你起身抓起佩剑。"
-            hide elena_img
-            show player_char_img at left with dissolve
-            player "备马。今夜出发。"
-            hide player_char_img
-            show elena_img at left with dissolve
-            elena "领主大人！您不能一个人——"
-            hide elena_img
-            show player_char_img at left with dissolve
-            player "我不是一个人。通知队长雷恩，挑选六名精锐随行。"
-
-        "先核实消息——这可能是王后设下的圈套。":
-            $ change_stat("intrigue", 5)
-            "你将信反复翻看，甚至对着烛光检查是否有隐写的文字。"
+            $ prince_letter_response = "heed"
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "这封信可能是伪造的。在确认之前，我不会贸然行动。"
+            player "父辈既然立过誓约，我总得听他把话说完。"
             hide player_char_img
             show elena_img at left with dissolve
-            elena "明智的选择。但如果是真的……"
-            hide elena_img
-            show player_char_img at left with dissolve
-            player "那我们必须更加小心。让我们的人先去探探路。"
+            elena "那我提前打点王都的门路。来引你去见他的那个人，得是我们信得过的。"
 
-        "这不关我的事——我要保护自己的领地。":
+        "先弄清这封信的真伪——别一头撞进王后的套里。":
+            $ change_stat("intrigue", 5)
+            $ prince_letter_response = "cautious"
+            "你将信反复翻看，对着烛光检查有没有隐写的字迹。"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "也可能是王后借王子的名义钓我。见可以，但得等我看清楚再说。"
+            hide player_char_img
+            show elena_img at left with dissolve
+            elena "稳妥。到了王都，我先替您探一探王子那边的虚实。"
+
+        "这趟浑水我不想趟——领地才是我的本分。":
             $ change_stat("power", 3)
             $ change_rel("rel_prince", -5)
-            "你将信放下，揉了揉太阳穴。"
+            $ prince_letter_response = "decline"
+            "你把信搁到一边，揉了揉太阳穴。"
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "艾登堡刚经历了瘟疫，我的人民需要我在这里。"
+            player "艾登堡刚熬过瘟疫，我的人在等我重建家园。王子的事，太大了。"
             hide player_char_img
             show elena_img at left with dissolve
-            elena "您确定吗？如果王子记恨——"
-            hide elena_img
-            show player_char_img at left with dissolve
-            player "比起一个被囚禁的王子，我更担心领地的重建。"
-            "但在接下来的几个夜晚，你总是会想起那封信上绝望的字迹。"
+            elena "您说了算。不过……这封信我先替您收着。"
+            "你没接话。可之后几个夜里，那封信总在你眼前晃。"
 
     if elena_romance:
         hide player_char_img
@@ -490,6 +483,18 @@ label interlude_ch4_ch5:
         "他离开多年，还有人在月夜里走那条小路——你心里某处轻轻地动了一下。"
     else:
         "你父亲的墓——你也已经很久没去看过了。"
+
+    if seventh_oak_note:
+        $ hide_all_chars()
+        "奥尔德里克提起墓地，让你想起父亲笔记本里夹着的那张花体字纸条——「记住，第七棵橡树下」。"
+        "你一直没弄懂那是哪棵树。可这一刻你忽然反应过来：城堡北面墓园里那排老橡树，父亲正葬在从东数第七棵的下面。"
+        "当夜你提了一盏灯过去。墓碑还是老样子，碑前那丛紫色野花谢了又开。"
+        "你绕到橡树背阴的一面，在盘结的树根缝里摸索，指尖碰到一块裹着油布的硬物。"
+        "是一只巴掌大的锡盒。盖子锈住了，你用匕首撬开。"
+        "里面是一封没署名的信，纸已经发脆。是父亲的字，但比笔记本上那些慢得多，一笔一画。他写这封信的时候，怕是已经知道没有下一封了。"
+        "{i}「孩子：你能找到这里，说明你已经走到了我没敢走完的那一步。盒子里没有刀，也没有能扳倒谁的名册——那些我另放了地方，该用的时候你自会找到。我只留一句话给你：守住艾登堡，可别把自己也搭进去。这桩事我查了十二年。比起查不出真凶，我更怕你查出来之后，活成你最恨的那种人。——你的父亲。」{/i}"
+        "你把信叠好，收进贴身的口袋。锡盒你留在了原处。"
+        "回城堡的路上，灯笼的光在橡树间晃。你心里悬了很久的一件事，落了地。"
 
     "你推开城堡的大门。"
 
