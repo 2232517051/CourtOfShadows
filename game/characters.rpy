@@ -192,6 +192,10 @@ default queen_trust = False
 default queen_reconciled = False
 ## 选择深度样板(2026-06-18): ch3"主动出击"秘密联络异见领主 → ch4觐见王后兑现"消息走漏"代价
 default courted_rival_lords = False
+## 鹰卫信使网络支线(2026-06-18): ch3读《六卫终录》识暗记 → ch4王都接头启用 → ch4觐见前送情报
+default knows_eagle_network = False   # 读过六卫终录, 认得鹰卫暗记
+default eagle_network = False          # 已接头启用鹰卫信网
+default eagle_intel = False            # 觐见前收到信网情报
 default prince_ally = False
 default prince_betrayed = False
 default prince_returned_willingly = False
