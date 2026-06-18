@@ -287,8 +287,9 @@ init python:
                 renpy.play("audio/sfx/ui_confirm.ogg", channel="sound")
 
     def check_max_stat():
+        ## 软顶后(2026-06-16 选择深度pass)属性绝对上限=80, ≥100 永不可达 → 阈值降到 78(专精 all-in 可达)
         for val in [power, wealth, faith, loyalty, reputation, intrigue]:
-            if val >= 100:
+            if val >= 78:
                 unlock_achievement("max_stat")
                 return
 
@@ -298,11 +299,12 @@ init python:
             unlock_achievement("romeo")
         if store.prince_betrayed:
             unlock_achievement("betrayer")
-        if store.wealth >= 100 and store.merchant_deal:
+        ## 软顶后属性上限=80(wealth 81), 原 ≥100 / >80 阈值全部失效 → 降到软顶下沿(wealth有花销压力取75)
+        if store.wealth >= 75 and store.merchant_deal:
             unlock_achievement("merchant_prince")
-        if store.intrigue >= 100:
+        if store.intrigue >= 78:
             unlock_achievement("silver_tongue")
-        if store.dark_lily_joined and store.intrigue > 80:
+        if store.dark_lily_joined and store.intrigue >= 75:
             unlock_achievement("dark_path")
         ## 八面玲珑：所有关系>=60
         all_rels = [store.rel_aldric, store.rel_elena, store.rel_bishop,
