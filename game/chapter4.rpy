@@ -1326,6 +1326,37 @@ label ch4_throne:
                 queen "嗯……这番话还算中听。"
                 queen "但我要你记住——下次在公开场合反对我之前，先来和我私下谈。"
                 queen "我不喜欢在人前被打脸。"
+
+            "动用情报网——不解释，反将一军" if eagle_intel and intrigue >= 50:
+                ## 消耗机制大轮 Phase 2: 花 intrigue 换决定性社交优势(把棋子翻成对手)
+                $ change_stat("intrigue", -30)  ## 当庭显露你早知她底牌=暴露王都有你的眼线, 那条暗线当场报废
+                $ change_stat("power", 8)
+                $ change_rel("rel_queen", 5)  ## 她重新评估你: 不是棋子, 是值得敬畏的对手
+                hide queen_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "时机。臣反对的是时机。"
+                player "不过——陛下真正想听的，恐怕不是这个。"
+                hide player_char_img
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
+                queen "哦？"
+                hide queen_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "陛下要的不是臣的税，是臣的刀。北境的男爵陛下容不下，想借臣的手除掉。"
+                player "臣说得对吗？"
+                $ hide_all_chars()
+                "大厅死一般安静。没有人敢这样跟王后说话。"
+                "王后盯着你看了很久。脸上的怒意慢慢退去，换成一种重新打量的神色。"
+                $ hide_all_chars("queen_img")
+                show queen_img at left with dissolve
+                queen "（轻声）你在王都有眼睛。"
+                queen "有意思。我以为艾登堡送来的是一条听话的狗。"
+                queen "看来是匹狼。"
+                $ hide_all_chars()
+                "这一回合你赢了——王后不再拿你当棋子，开始拿你当对手。"
+                "代价是那条把消息递进王宫的暗线。她今夜就会去揪它，你再也用不上了。"
     else:
         queen "第二，我有一个任务交给你。"
 
