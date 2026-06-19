@@ -3144,7 +3144,7 @@ label ch3_elena_secret:
         show player_char_img at left with dissolve
         player "你是暗百合的人。"
 
-        "不是疑问，而是陈述。"
+        "你没有抬调子。你不是在问她，是在告诉她。"
 
         hide player_char_img
         $ hide_all_chars("elena_img")
@@ -3989,7 +3989,7 @@ label ch3_truth_emerges:
 
         "你的证据链已经完整：动机、手段、受害者、证人、物证——"
 
-        "剩下的问题，不是找物证，而是如何使用它。"
+        "剩下的问题只有一个：怎么用它。"
 
         "影的话在你耳边回响：「有了原始遗诏，真相才有了无法辩驳的锋芒。」"
 
