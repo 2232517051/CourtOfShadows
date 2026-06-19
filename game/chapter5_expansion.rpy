@@ -2287,7 +2287,6 @@ label ch5_exp_eve_of_battle:
     if ch5_exp_speech_given or ch5_exp_aldric_legacy or ch5_exp_captain_oath or ch5_exp_elena_promise:
         "但你不是一个人。"
         "你的身后，站着每一个愿意为你而战的人。"
-        "这就够了。"
 
     "你站起身，推开书房的门，走进了黎明前最黑暗的那一刻。"
 

@@ -1985,7 +1985,7 @@ label crisis_spy:
             $ hide_all_chars("elena_img")
             show elena_img happy at left with dissolve
             elena "我们称之为「消息渠道」。听起来更文雅一些。"
-            "她第一次露出了真正的笑容——不是客套，不是敷衍，而是一种志同道合者之间的默契。"
+            "她第一次对你露出真正的笑容——志同道合的人之间才有的那种默契。"
             $ spy_network = True
             $ unlock_achievement("spy_master_ch1")
 

@@ -30,7 +30,7 @@ label interlude_ch1_ch2:
     if father_death_known:
         "父亲死因的疑云仍然笼罩在你心头。那些隐约的线索指向一个你不愿面对的真相。"
     else:
-        "关于父亲的死，你知道的仍然太少。或许有些事情，注定要在日后才能浮出水面。"
+        "关于父亲的死，你知道的仍然太少。有些事，现在还查不到。"
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve

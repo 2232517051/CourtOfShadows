@@ -2661,7 +2661,6 @@ label ending_peoples_epilogue:
         "你点点头，没有多说。她和你之间，从来就不是用很多话维系的。"
         "但她还在这里。"
         "在革命之后，在风暴落定之后——她选择留在艾登堡的这一畦菜地旁边。"
-        "这就够了。"
 
     hide elena_img with dissolve
 
