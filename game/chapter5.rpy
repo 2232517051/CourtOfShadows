@@ -24,6 +24,10 @@ label chapter5_start:
     call interlude_ch4_ch5_council from _call_interlude45_council
     call interlude_ch4_ch5 from _call_interlude45
 
+    ## 章节间过渡: 老朋友回归 (2026-05-17 dccdfrsx 反馈新增)
+    ## 马库斯/卡尔在战前最后给玩家一次出场, 回收伏笔
+    call interlude_ch4_ch5_old_friend from _call_interlude45_friend
+
     ## 章节深化：逃兵的故事
     call ch5_deep_deserter from _call_ch5_ddeserter
 
@@ -5767,6 +5771,10 @@ label game_ending:
 
     ## 播放详细尾声
     call ending_epilogue_router from _call_ending_epilogue_router
+
+    ## 老朋友的归宿 (2026-05-17 dccdfrsx 反馈新增)
+    ## 在结局个人尾声播完后给马库斯/卡尔一个 closure
+    call ending_side_characters_fate from _call_ending_side_chars
 
     ## 激活 New Game+
     $ activate_ng_plus()

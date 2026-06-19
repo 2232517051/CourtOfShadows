@@ -6,6 +6,14 @@
 ## (栀子 batch 11 第 5 条: 资源 menu 选民生优先后, ch4_ch5 章间仍报告"村庄请愿"重复)
 default villages_handled_in_council = False
 
+## ── 老朋友回归 flag (2026-05-17 dccdfrsx 反馈新增) ──
+## 玩家反馈"开局的同学(马库斯)和商人卡尔都埋了伏笔但后面没出现"。
+## 章间 interlude_ch4_ch5_old_friend 给马库斯/卡尔一次回归机会,
+## 设置这两个 flag 后, 终章 ending_side_characters_fate 据此选择不同的归宿台词。
+default marcus_returned = False
+default karl_returned = False
+default karl_returned_letter_only = False  ## 浅版回归: 仅一封信
+
 ## ── 第一章 → 第二章 过渡 ──────────────────────────
 
 label interlude_ch1_ch2:
@@ -1436,5 +1444,310 @@ label interlude_ch4_ch5_council:
     "——只要还有人愿意守到天亮。"
 
     hide player_char_img with dissolve
+
+    return
+
+
+## ============================================================
+## 第四章 → 第五章 章间补丁: 老朋友回归 (2026-05-17 反馈新增)
+## ────────────────────────────────────────────────────────────
+## 玩家反馈: 马库斯 (序章同学) 和 商人卡尔 (Karl Winterfell) 都
+## 有强烈铺垫但 chapter3 之后基本消失. 这一段在战前给他们一次
+## 出场, 让玩家感觉伏笔在被回收.
+##
+## 优先级 (二选一):
+##   deep_marcus_truly_loyal == True → 马库斯回归
+##   karl_past_done == True          → 卡尔回归 (深度版)
+##   karl_met == True (基础版)        → 卡尔写信 (短版)
+##   都不成立                         → 静默跳过
+## ============================================================
+
+label interlude_ch4_ch5_old_friend:
+
+    if deep_marcus_truly_loyal:
+        jump _interlude_marcus_returns
+    elif karl_past_done:
+        jump _interlude_karl_returns_deep
+    elif karl_met:
+        jump _interlude_karl_returns_letter
+    else:
+        return
+
+label _interlude_marcus_returns:
+
+    play music "audio/music/night_mystery.ogg" fadeout 2.0 fadein 3.0
+    scene bg_castle_corridor with dissolve
+    pause 1.0
+
+    "战前第四夜，城堡守得比平日更紧。"
+
+    "你独自从地窖回书房——这一段路你走了一年，几乎闭着眼都能走。"
+
+    "拐过最后一道转角时，烛光晃了一下。"
+
+    "你下意识按住了腰间的剑——但还没拔出来，一只手已经按在了你的手背上。"
+
+    "「别。是我。」"
+
+    pause 0.5
+
+    $ hide_all_chars("friend_marcus_img")
+    show friend_marcus_img at left with dissolve
+
+    friend_marcus "你的剑出鞘的速度，比修道院那会儿快多了。"
+
+    hide friend_marcus_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "马库斯。"
+
+    player "你怎么进来的？"
+
+    hide player_char_img
+    $ hide_all_chars("friend_marcus_img")
+    show friend_marcus_img at left with dissolve
+
+    friend_marcus "你父亲修的密道——我十二岁那年陪你爬过一次。"
+
+    friend_marcus "他说有一天会有用。"
+
+    friend_marcus "他说对了。"
+
+    hide friend_marcus_img with dissolve
+    pause 0.8
+
+    "他在你对面的椅子上坐下，把斗篷解开。"
+
+    "你这才看清——他比上次见时瘦了一圈，左手包着白布，渗着血。"
+
+    $ hide_all_chars("friend_marcus_img")
+    show friend_marcus_img at left with dissolve
+
+    friend_marcus "我这一年在王后的禁卫军里。"
+
+    friend_marcus "不是潜伏——是真的在效力。直到三周前，我看到了一份你不该看到的命令。"
+
+    friend_marcus "我决定不送达。然后我就开始往这里跑。"
+
+    hide friend_marcus_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "什么命令？"
+
+    hide player_char_img
+    $ hide_all_chars("friend_marcus_img")
+    show friend_marcus_img at left with dissolve
+
+    friend_marcus "决战时，第三禁卫团从北侧绕到你后方——不是与你交战，是把你和你的队伍隔开。"
+
+    friend_marcus "然后让人误以为是男爵下的手。"
+
+    friend_marcus "团长是雅各布·凡·霍恩——我以前的上级。我留了一封信在他那里。"
+
+    friend_marcus "如果你能在战场上叫出他的名字，并提到'冬日蜂巢'——他会带整个第三团反水。"
+
+    friend_marcus "不一定有用。但比什么都没有强。"
+
+    hide friend_marcus_img with dissolve
+    pause 0.8
+
+    "他从怀里取出一枚徽章，放在桌上。"
+
+    "是修道院毕业时你送给他的那一枚——你以为他早就丢了。"
+
+    $ hide_all_chars("friend_marcus_img")
+    show friend_marcus_img at left with dissolve
+
+    friend_marcus "我得回去了。再晚他们就会发现我不见了。"
+
+    friend_marcus "你不用谢我。修道院第一年那个发烧的冬天，是你把自己的毯子让给我的。"
+
+    friend_marcus "我一直记得。"
+
+    hide friend_marcus_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "马库斯。"
+
+    player "活着回来。"
+
+    hide player_char_img
+    $ hide_all_chars("friend_marcus_img")
+    show friend_marcus_img at left with dissolve
+
+    friend_marcus "你也是。"
+
+    hide friend_marcus_img with dissolve
+
+    pause 1.2
+
+    "他从你来时的那道密门出去了。烛火再次晃了一下，然后稳住。"
+
+    "你把那枚徽章放进怀里，紧挨着心口。"
+
+    $ marcus_returned = True
+    $ change_stat("intrigue", 5)
+    $ change_stat("courage", 3)
+
+    return
+
+label _interlude_karl_returns_deep:
+
+    play music "audio/music/grief.ogg" fadeout 2.0 fadein 3.0
+    scene bg_castle_gate with dissolve
+    pause 1.0
+
+    "战前第三天的清晨，城门刚刚开。"
+
+    "守门的士兵跑进来报告——有个老商人在城门口求见，说一定要亲手把东西交给您。"
+
+    "你披上斗篷出去。"
+
+    pause 0.5
+
+    scene bg_castle_gate with dissolve
+
+    $ hide_all_chars("merchant_karl_img")
+    show merchant_karl_img at left with dissolve
+
+    merchant "领主大人。"
+
+    merchant "看到您还活着，我就放心了。"
+
+    hide merchant_karl_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "卡尔——不，温特菲尔德先生。你怎么会在这里？"
+
+    hide player_char_img
+    $ hide_all_chars("merchant_karl_img")
+    show merchant_karl_img at left with dissolve
+
+    merchant "卡尔就好。这个名字我用了二十年了，最后这段路也想用着它。"
+
+    merchant "我来送一样东西。"
+
+    hide merchant_karl_img with dissolve
+    pause 0.5
+
+    "他从马背上取下一个用麻布包了三层的木匣。"
+
+    "他打开第一层、第二层、第三层——里面是一摞泛黄的账册，和几封封蜡完整的信。"
+
+    $ hide_all_chars("merchant_karl_img")
+    show merchant_karl_img at left with dissolve
+
+    merchant "温特菲尔德家族被王后家族灭门那一年，我父亲把这些账册和信藏在了商队的双层夹板里。"
+
+    merchant "二十年了，我一直在等一个能用得上它们的人。"
+
+    merchant "现在等到了。"
+
+    hide merchant_karl_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "这些是？"
+
+    hide player_char_img
+    $ hide_all_chars("merchant_karl_img")
+    show merchant_karl_img at left with dissolve
+
+    merchant "王后家族从二十年前到现在，每一笔通过暮色之露赚来的钱。"
+
+    merchant "每一笔，都有买家和卖家的真名。"
+
+    merchant "包括，您父亲被毒杀那一年的那一笔。"
+
+    hide merchant_karl_img with dissolve
+    pause 1.0
+
+    "你的手按在那摞账册上，许久没有动。"
+
+    "二十年的复仇，他攒成了一个木匣，现在交给你。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "你为什么不自己用？"
+
+    hide player_char_img
+    $ hide_all_chars("merchant_karl_img")
+    show merchant_karl_img at left with dissolve
+
+    merchant "因为我父亲临终前对我说——"
+
+    merchant "「卡尔，别让仇恨吃掉你。如果有一天你能把这些交给一个不为仇恨而战的人——交出去，然后回家。」"
+
+    merchant "我现在就要回家了。"
+
+    merchant "温特菲尔德的墓园荒了二十年。我得回去除草、立碑、给我父亲烧一壶他喜欢的酒。"
+
+    hide merchant_karl_img with dissolve
+    pause 0.8
+
+    "你想说很多话。但你知道这种时刻不该说很多话。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "保重，卡尔。"
+
+    hide player_char_img
+    $ hide_all_chars("merchant_karl_img")
+    show merchant_karl_img at left with dissolve
+
+    merchant "您也是。"
+
+    merchant "如果……您将来路过北方，请去温特菲尔德村看一看。我父亲坟前那棵橡树，是我五岁那年种的。"
+
+    merchant "现在应该不小了。"
+
+    hide merchant_karl_img with dissolve
+
+    pause 1.2
+
+    "他翻身上马，背影逐渐消失在晨雾里。"
+
+    "你抱着那个木匣回到书房。"
+
+    $ karl_returned = True
+    $ poison_evidence = True
+    $ change_stat("reputation", 3)
+    $ change_stat("intrigue", 4)
+
+    return
+
+label _interlude_karl_returns_letter:
+
+    scene bg_castle_corridor with dissolve
+    pause 0.5
+
+    "战前第二天的傍晚，一个穿着普通行商衣裳的小伙子来到城堡，递上一封信，说是商人卡尔托付他务必送到。"
+
+    "你拆开信。"
+
+    "字迹比你记忆中的更潦草——但还是认得出。"
+
+    pause 0.5
+
+    centered "{i}领主大人——{/i}"
+    centered "{i}集市上分别那一年, 我没能告诉您几件事. 不是不想说, 是当时说不清.{/i}"
+    centered "{i}现在也说不全, 这封信只想说一句:{/i}"
+    centered "{i}如果决战那天您撑过去了, 请去北方温特菲尔德村, 替我看一眼我父亲的坟.{/i}"
+    centered "{i}—— 卡尔{/i}"
+
+    pause 1.5
+
+    "信纸的右下角夹着一枚很小的金币——你能认出那枚印记: 温特菲尔德的家纹。"
+
+    "你把它和信一起折好, 放进了贴胸的口袋。"
+
+    $ karl_returned_letter_only = True
+    $ change_stat("reputation", 2)
 
     return
