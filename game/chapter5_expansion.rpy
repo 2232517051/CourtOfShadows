@@ -281,7 +281,7 @@ label ch5_exp_war_council:
 
         "分化瓦解——利用敌军内部矛盾":
             $ ch5_exp_war_strategy = "divide"
-            $ change_stat("intrigue", 5)
+            $ change_stat("intrigue", -15)  ## 消耗机制大轮: 动用全部情报渠道散假情报=烧网络, 谋略储备被花掉
             $ change_stat("reputation", 2)
 
             $ hide_all_chars("player_char_img")
@@ -318,6 +318,7 @@ label ch5_exp_war_council:
 
             $ hide_all_chars()
             "信息战没有硝烟，但杀伤力丝毫不逊于真刀真枪。"
+            "代价是，你这几年布下的眼线几乎要倾巢而出。假情报一旦散出去，对方迟早会顺着源头清查——你手里的暗子，能保住几个是几个。"
 
         "外交斡旋——以谈判化解战争" if alliance_church or faith >= 50:
             $ ch5_exp_war_strategy = "diplomacy"

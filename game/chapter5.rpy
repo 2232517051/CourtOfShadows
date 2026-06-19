@@ -2566,7 +2566,7 @@ label ending_iron_lord:
 
     menu:
         "用早就埋下的反间——让他们的右翼调头攻自己人" if intrigue >= 60:
-            $ change_stat("intrigue", 5)
+            $ change_stat("intrigue", -25)  ## 消耗机制大轮: 动用=烧暗子。布了三个月的反间用一次就废, 情报网元气大伤
             $ change_stat("loyalty", 2)
             $ change_stat("reputation", -3)  # 阴谋手段, 战后名声受损
             hide captain_img
@@ -2575,6 +2575,7 @@ label ending_iron_lord:
             player "雷恩， 现在。让你那个「被俘的」信使把假军令递出去。"
             $ hide_all_chars()
             "三个月前你就准备好了这一手——伪造的盟军调令， 骑着对方军队制服的信使。"
+            "这一手只能用一次。信使一旦递出假令就会暴露， 伪造的渠道也会被对方顺藤摸瓜查封——你布了三个月的这条暗线， 为这一仗烧光了。"
             $ trigger_crisis("intrigue", 6,
                 "信使要让敌军右翼指挥官相信那是自己将军的笔迹。这一刻——靠的是你伪造的细节真的骗得过老兵的眼睛。",
                 "ironlord_ruse_win", "ironlord_ruse_lose",
