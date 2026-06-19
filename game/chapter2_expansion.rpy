@@ -429,7 +429,7 @@ label ch2_exp_grand_hall:
             $ change_stat("reputation", 5)
             $ change_rel("rel_wells", 5)
             $ change_rel("rel_hilda", 5)
-            $ change_rel("rel_grey", 3)
+            $ change_rel("rel_queen", -8)  ## 厚度: 独立军费基金=王廷盯上的野心信号 (延迟代价, ch4-5 兑现)
             $ log_decision("第二章扩展", "提出折中方案")
 
             $ hide_all_chars("player_char_img")
@@ -440,6 +440,8 @@ label ch2_exp_grand_hall:
             "大厅静了几秒。然后格雷伯爵慢慢点了点头。"
             "希尔达和威尔斯没有表态——但都没有反对。"
             "新人第一次发言能让两派都说不出反对的话， 这本身就是一个胜利。"
+            "散会后， 格雷伯爵的文书还在记你那条「边境军费基金、本地监督、不经王廷」。"
+            "这种话不会只留在这间大厅里。它会顺着商道传到王都——传到某个一直在留意北境谁在攒钱、谁在攒兵的人耳朵里。"
 
         "支持税制改革「降低税率，促进贸易」":
             $ ch2_exp_tax_stance = "reform"

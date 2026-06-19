@@ -1294,8 +1294,9 @@ label ch3_exp_confrontation:
             $ ch3_cult_leader_fate = "negotiated"
 
         "暗中接管「取代首领的位置」" if intrigue >= 60:
-            $ change_stat("intrigue", 15)
+            $ change_stat("intrigue", 10)  ## 厚度: 原+15过厚, 政变非无代价
             $ change_stat("reputation", -3)  ## balance pass 修法 1: 冒名顶替阴谋, 一旦走漏名声崩
+            $ change_stat("loyalty", -6)  ## 厚度: 你靠把柄而非人心驾驭一群旧首领的人, 连奥尔德里克都被你的手段惊到
             $ change_courage(10)
             $ log_decision("第三章扩展", "试图暗中接管暗百合")
 
@@ -1330,6 +1331,10 @@ label ch3_exp_confrontation:
             "然后，你通过一系列精心安排的中间人，逐步将铁刺派残余势力收编为己用。"
 
             "三个月后，铁刺派的实际控制权，不知不觉间落入了你的手中。"
+
+            "但你收编的这些人，三个月前还效忠着此刻关在你地牢里的那个人。他们听你的令，是因为你捏着他们的把柄，不是因为他们服你。"
+
+            "从今往后这群人就在你手下做事。你得时时提防他们当中有人反咬一口。"
 
             "没有人知道艾登堡的年轻领主已经成了铁刺派的幕后操控者。"
 

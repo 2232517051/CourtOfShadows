@@ -1423,6 +1423,7 @@ label ch3_dark_lily_clues:
     menu:
         "什么都不出示——直接报出几个内部暗号" if intrigue >= 70:
             $ change_stat("intrigue", 5)
+            $ change_rel("rel_lily", -5)  ## 厚度: 外人能背出内部暗号=安全漏洞, 暗百合从一开始就提防你
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "「七瓣莲花将在月圆之夜绽放」。「壁炉后的人没有倒下」。"
@@ -1439,8 +1440,10 @@ label ch3_dark_lily_clues:
             "她盯着你， 终于叹了口气。"
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
+            apothecary "一个外人能一字不差地报出我们的暗号——你知道这说明什么吗？说明这套暗号已经不安全了。"
+            apothecary "你父亲怎么知道的， 你又记了多少——这些我们迟早要问清楚。在那之前， 你在我们眼里不是自己人， 是个会走路的窟窿。"
             apothecary "跟我来。"
-            "她推开了柜台后面的一扇暗门。"
+            "她推开了柜台后面的一扇暗门。门轴的声音很轻， 但她让你走在前面——她不放心把背留给你。"
 
         "出示在密道中找到的银质徽章" if intrigue >= 45:
             $ change_stat("intrigue", 8)
