@@ -94,6 +94,27 @@ label ending_decision_pause:
 
         "两个人就这样并排看着北方， 看了很久。"
 
+    elif marriage_route:
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at right with dissolve
+        ingrid "母亲让我捎句话——北境的兵已经到位了。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你大老远上来，就为了带句话？"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at right with dissolve
+        if marriage_warm:
+            ingrid "不全是。我想看看你做大决定时是什么样子。"
+        else:
+            ingrid "盟约里写着，议会有权知道你的动向。我来履约。"
+
+        $ hide_all_chars()
+        "她和你并排站着，看向北方那条她长大的盐路。你们没再说话。"
+
     elif rel_aldric >= 50:
         $ hide_all_chars("aldric_img")
         show aldric_img at right with dissolve
@@ -377,6 +398,37 @@ label ending_truth_epilogue:
         "她的手握得有点紧——你感觉得到她指尖的薄茧。"
 
         hide elena_img with dissolve
+
+    elif marriage_route:
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "南方商会的事，议会那边收到风声了。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你的人比我的信使还快。"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "盐路上跑商的人，眼睛和耳朵都比信使多。这是嫁妆的一部分，你早该习惯了。"
+
+        $ hide_all_chars()
+        "五年过去。北疆议会的渡鸦旗，如今和你家族的金鹰挂在同一座大殿里。北境的盐路再没断过，议会的卫队成了王畿以南最可靠的一支。"
+
+        if marriage_warm:
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "当年我以为我嫁的是一桩买卖。"
+            ingrid "结果买卖谈着谈着，成了日子。我母亲到现在都没想明白这是怎么回事。"
+            $ hide_all_chars()
+            "你没解释。有些账，本来就不是用来算清的。"
+        else:
+            "你和英格丽各有各的算盘，却也各守各的承诺。盟约稳固，北境太平。这桩婚事没给你一个温情的故事，却给了你半壁江山的安稳。"
+
+        $ hide_all_chars()
 
     else:
         "你一个人站在窗前，看着夕阳一寸一寸沉入城墙的轮廓后面。"
@@ -909,6 +961,41 @@ label ending_iron_epilogue:
 
         hide elena_img with dissolve
 
+    elif marriage_route:
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "那个外交官被你吓得话都说不利索。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你觉得我做得过分了。"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "我没这么说。北边的人用刀子讲道理，比你这个吓人多了。"
+        ingrid "我只提醒你一句——让人怕你，和让人服你，是两笔账。你现在收的是第一笔。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "第二笔更难收。"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        if marriage_warm:
+            ingrid "难，但不是收不了。你要是哪天想试，我陪你算。"
+        else:
+            ingrid "那是你的账。我只管议会那一份写在纸上的。"
+
+        $ hide_all_chars()
+        "她说完就去看北境的军报了。盟约里没写她要替你分担什么，她也不打算多管。"
+
+        hide ingrid_img with dissolve
+
     ## —— 第三幕：战场纪念碑 ——
 
     scene bg battlefield with dissolve
@@ -1423,6 +1510,39 @@ label ending_shadow_epilogue:
         $ hide_all_chars()
         "你站在花园里，一个人。"
         "月亮很亮。但你的影子很长。"
+
+    elif marriage_route:
+        scene bg palace_garden with dissolve
+
+        "午夜。你从密室出来，走进花园。英格丽已经在那里，披着一件北境的厚斗篷。"
+
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "你又一夜没睡。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你管得越来越宽了。"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "我管的是议会的盟约稳不稳。你这个样子——吃饭要试毒，睡觉藏刀——撑不了几年。"
+        ingrid "我不问你信不信我。我们当初谈的就不是信任，是利益。利益在，盟约就在。"
+
+        $ hide_all_chars()
+        if marriage_warm:
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "但我陪了你这几年，多少有点别的。所以我说一句多余的——"
+            ingrid "你控制得了整个王国。别到最后，连自己也算计进去。"
+            $ hide_all_chars()
+            "她替你把斗篷拢了拢，转身回屋。这是你们之间，最接近交心的一次。"
+        else:
+            "她说完就走了。脚步很稳，没有回头。她从不指望你的真心，所以你的猜忌也伤不到她。这或许是这桩婚事唯一的好处——也是它唯一的冷。"
+
+        $ hide_all_chars()
 
     else:
         "午夜。你从密室出来，独自走进了花园。"
@@ -2005,6 +2125,42 @@ label ending_faith_epilogue:
         "但就像这座正在建造的教堂——一砖一瓦，日积月累，坚不可摧。"
 
         hide elena_img with dissolve
+
+    elif marriage_route:
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "泥巴糊了一脸。公爵大人亲自搬石头，传出去北边没人信。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你觉得这些钱花得不值。"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "孤儿院、收容所——账上是亏的。但我在北边管过粮，我知道一件事：吃饱穿暖的人不会造反。"
+        ingrid "你这不是行善，是把钱花在了刀刃前头。比养一支军队便宜。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你总能把好事说得这么冷。"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        if marriage_warm:
+            ingrid "冷归冷。可这五年，我也开始替那些孩子记名字了。"
+            ingrid "别声张。传出去，北边更没人信。"
+        else:
+            ingrid "我只算账，不动感情。账是好账，我就支持。仅此而已。"
+
+        $ hide_all_chars()
+        "她替你擦掉脸上的泥，转身去验收石材了。渡鸦旗下的女儿，用她自己的方式，认下了你这条路。"
+
+        hide ingrid_img with dissolve
 
     ## —— 第三幕：孤儿的提问 ——
 

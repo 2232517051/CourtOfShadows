@@ -1004,6 +1004,29 @@ label ch5_preparation:
     scene bg great_hall with dissolve
     $ unlock_gallery("bg_great_hall")
 
+    ## ── 政治联姻线「盟约」· 婚约落定 ──
+    if marriage_route:
+        "决战之前，还有一桩事要了结。"
+
+        "婚礼在艾登堡办，北疆议会派了渡鸦旗下的全部话事人到场。希尔达站在英格丽身后，从头到尾没笑，却在仪式结束时对你点了头——这是你见过她最接近认可的表情。"
+
+        "盟约写进了血脉。北境的盐路重新由你的人马护送，议会的卫队第一次开进了王畿以南。"
+        $ change_stat("loyalty", 8)
+        $ unlock_achievement("statecraft_marriage")
+
+        if marriage_warm:
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "我母亲说，我把一桩买卖谈成了一段日子。"
+            ingrid "她不知道是夸我还是骂我。我也不知道。"
+            $ hide_all_chars()
+            "你没接话。但那天夜里，你们谁都没急着谈下一桩盟约。"
+        else:
+            "你和英格丽各守各的算盘。盟约稳固，日子客气。北境的兵是你的了，英格丽的心思仍是议会的。这桩婚事办成了它该办成的样子，不多不少。"
+
+        $ hide_all_chars()
+        scene bg great_hall with dissolve
+
     "决战在即。你再次召集核心幕僚，做最后的确认。"
 
     $ hide_all_chars("aldric_img")

@@ -867,6 +867,55 @@ label ch4_palace:
     $ unlock_gallery("bg_royal_palace")
     $ set_mood("normal")
 
+    ## ── 政治联姻线「盟约」· 王都会面 ──
+    if marriage_route:
+        scene bg royal_palace with dissolve
+        "觐见之前，你先见了另一个人。"
+
+        "英格丽随北疆议会的代表团一起到了王都，住在使馆区。希尔达没来——按她信里的话，『谈盟约不需要母亲在场，需要的是你们俩能不能共事』。"
+
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "艾登堡的继承人。比传闻里年轻。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "传闻里我什么样？"
+
+        hide player_char_img
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        ingrid "心狠，或者心软，看是谁在说。北边的人押不准你，所以母亲让我来看。"
+        ingrid "我把话说在前头。这桩婚事我不指望感情。我要的是北境的盐路重新通，要的是开春后议会不再饿肚子。你要什么，你自己清楚。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+
+        menu:
+            "把它当成纯粹的盟约，各取所需":
+                $ marriage_warm = False
+                $ log_decision("第四章", "联姻——纯粹的政治盟约")
+                player "那我们就把话挑明。我出兵和粮，议会给我北境的忠诚。婚约是封口的火漆，不是感情。"
+                hide player_char_img
+                $ hide_all_chars("ingrid_img")
+                show ingrid_img at left with dissolve
+                ingrid "痛快。我喜欢不绕弯的人。"
+
+            "盟约可以谈，但我想先认识你这个人":
+                $ marriage_warm = True
+                $ log_decision("第四章", "联姻——愿意认识英格丽本人")
+                $ change_stat("intrigue", 2)
+                player "盟约我答应。但既然要共度一生，我想知道我娶的是个什么样的人，而不只是一纸条款。"
+                $ hide_all_chars("ingrid_img")
+                show ingrid_img at left with dissolve
+                "英格丽愣了一下。她大概没料到这句。"
+                ingrid "……北边的男人不问这个。他们只问嫁妆和兵力。"
+                ingrid "你要是真想知道，那就慢慢看。我不是一封信能写完的人。"
+
+        $ hide_all_chars()
+
     "几日筹备过后——觐见的日子到了。"
 
     ## ── 鹰卫信使网络支线 · 兑现(觐见前送来王后底牌) ──
@@ -2347,7 +2396,7 @@ label ch4_elena:
         elena "这种感觉……很陌生。但我不讨厌它。"
 
         menu:
-            "握住她的手":
+            "握住她的手" if not marriage_route:
                 $ log_decision("第四章", "与艾琳娜确认浪漫关系")
                 $ elena_romance = True
                 $ change_rel("rel_elena", 25)

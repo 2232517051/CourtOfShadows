@@ -191,6 +191,8 @@ image servant_marta_img = Transform("images/servant_marta.png", zoom=0.45, yalig
 image priest_thomas_img = Transform("images/priest_thomas.png", zoom=0.45, yalign=1.0)
 image noble_werner_img = Transform("images/noble_werner.png", zoom=0.45, yalign=1.0)
 image countess_hilda_img = Transform("images/countess_hilda.png", zoom=0.45, yalign=1.0)
+## 英格丽: 政治联姻线对象(希尔达之女)
+image ingrid_img = Transform("images/ingrid.png", zoom=0.45, yalign=1.0)
 
 ## 第二章会前交际角色
 image count_grey_img = Transform("images/count_grey.png", zoom=0.45, yalign=1.0)
@@ -259,7 +261,7 @@ init python:
         "merchant_karl", "lily_master", "prince",
         "mother", "father", "tutor", "friend_marcus", "bully_kid",
         "old_guard", "servant_marta", "priest_thomas", "noble_werner",
-        "countess_hilda", "count_grey", "viscount_wells", "countess_stein",
+        "countess_hilda", "count_grey", "viscount_wells", "countess_stein", "ingrid",
         "storyteller", "assassin_char", "blacksmith_wife", "noble_lady",
         "soldier_generic", "servant_generic", "old_woman",
         "herbalist_vera", "lily_root", "queen_envoy", "stable_boy",

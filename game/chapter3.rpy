@@ -5806,6 +5806,50 @@ label ch3_end:
 
     "伤势最重的几个在医师的帐篷里呻吟了整整三天。你亲自守过其中两夜。"
 
+    ## ── 政治联姻线「盟约」入口(希尔达伯爵夫人遣使) ──
+    "你还没缓过气，北边先来了人。"
+
+    "灰隘口的信使在午后到达。他没穿议会的制服，斗篷上沾着北边的雪。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "希尔达伯爵夫人派你来的？"
+
+    "信使递上一封火漆封口的信。火漆上压的是北疆议会的渡鸦纹，不是哪一家的私章。你拆开。希尔达的字迹很硬，像她本人。"
+
+    "『艾登堡的继承人：北境的盐路断了三个月，议会撑不了第二个冬天。我需要一个南边的盟友，一个靠得住、不会在开春后翻脸的盟友。』"
+
+    "『把话挑明：我有一个女儿，英格丽。你还没成婚。盟约写在纸上随时能撕，写进血脉里就不一样了。你考虑清楚，开春前给我答复。』"
+
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
+    aldric "北疆议会的盟约……这不是小事。希尔达不是会为感情送女儿的人。她要的是艾登堡的兵和粮。"
+
+    hide aldric_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    menu:
+        "回信，愿意谈这桩联姻":
+            $ marriage_route = True
+            $ log_decision("第三章", "接受希尔达伯爵夫人的联姻提议")
+            $ change_stat("intrigue", 3)
+            player "回信给伯爵夫人。就说——这个冬天，艾登堡和北疆议会站在一起。"
+            hide player_char_img
+            $ hide_all_chars("aldric_img")
+            show aldric_img at left with dissolve
+            aldric "我这就安排。开春前，议会的人会再来。"
+
+        "婉拒，我另有打算":
+            $ log_decision("第三章", "婉拒联姻提议")
+            player "替我谢过伯爵夫人的好意。盟约可以谈，但不必用婚约来绑。"
+
+        "先拖着，看看北境的局势再说":
+            $ log_decision("第三章", "对联姻提议拖延")
+            player "回信说我需要时间。北境的事，我得先弄清楚。"
+
+    $ hide_all_chars()
+
     "就在你以为喘口气的时候，一封来自王都的信送到了艾登堡——"
 
     "尽管城堡刚刚经历了一场袭击，信使仍然准时送达了王后的旨意。"

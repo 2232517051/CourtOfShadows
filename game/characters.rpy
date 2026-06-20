@@ -27,6 +27,8 @@ define prince = Character("弗雷德里克王子", color="#4169e1", image="princ
 define count_grey = Character("格雷伯爵", color="#6b8e6b", image="count_grey")
 define viscount_wells = Character("威尔斯子爵", color="#b8860b", image="viscount_wells")
 define countess_stein = Character("施泰因伯爵夫人", color="#708090", image="countess_stein")
+## 英格丽: 希尔达伯爵夫人之女, 政治联姻线对象(北境/务实/冷色)
+define ingrid = Character("英格丽", color="#6a8aa8", image="ingrid")
 define storyteller = Character("说书人", color="#c8b890", image="storyteller")
 
 ## 序章特殊角色
@@ -209,6 +211,10 @@ default seventh_oak_note = False         # ch1 父亲密码笔记里"第七棵�
 default prince_sister_known = False       # 王子同父异母妹妹(farewell"直接问其他原因"分支揭示)
 default griffin_known = False             # "影子法官"格里芬=杀父实际动手者(ch4 prince_ally 信揭示)
 default elena_romance = False
+## 政治联姻线「盟约」(玩家反馈: 联姻路线缺失/特色剧情线需求, batch22+成就党批)
+## 与 Elena 恋爱线互斥: 走联姻则 ch4 暮色告白不再可选
+default marriage_route = False        # 接受希尔达伯爵夫人的联姻提议(ch3 入口)
+default marriage_warm = False         # ch4 会面子选择: 是否让政治盟约升温为真伙伴
 default court_faction = ""
 
 # 第五章/结局标记
@@ -261,6 +267,7 @@ init python:
         "southern_vassal":  ("王旗下的港", "促成潮汐港归附王廷，保住自治", False, "归附王廷换自治"),
         ## 隐藏成就 — 未解锁前不显示名称和描述
         "romeo":            ("权谋情圣", "与艾琳娜达成浪漫关系", True, "心 隐藏成就"),
+        "statecraft_marriage": ("盟约联姻", "与北疆议会缔结政治联姻", False, "接受希尔达伯爵夫人的联姻提议并完成婚约"),
         "betrayer":         ("背信弃义", "背叛弗雷德里克王子", True, "! 隐藏成就"),
         "merchant_prince":  ("商业巨擘", "财富达到100且与商人卡尔合作", True, "金 隐藏成就"),
         "lone_wolf":        ("独行之狼", "不与任何势力结盟通关", True, "狼 隐藏成就"),
