@@ -2270,17 +2270,17 @@ label ch3_tunnel_exploration:
     "她站在门口，手里端着一杯热茶。火光映照在她的脸上，柔和而美丽。"
 
     if not elena_spy_known:
-        "但你现在看她的眼神已经不同了。"
+        "林子里那一夜还压在你心头——她受过训练，手上有血。这些她认了。"
 
-        "你注意到很多之前忽略的细节——她的步态极其轻盈，几乎没有声音。她的目光虽然温和，但偶尔会快速扫过房间的每一个角落。"
+        "可她到底替谁做事，始终没说。"
 
-        "这不是一个普通侍从的习惯。这是受过训练的人才有的本能。"
+        "你看着她端茶的那只手。落杯无声，稳得不像一个普通侍从。"
 
         "你看着艾琳娜的脸，张了张嘴，又合上了。"
 
         "如果那些脚印真的是她的……如果她送出的信鸽是在向某人汇报你的行踪……"
 
-        "她是敌是友？"
+        "她到底站在哪一边？"
     else:
         "她的身份你早已知道——王后的眼线，也是暗百合的人。但今夜，她带来的是一杯热茶，不是一封报告。"
 
@@ -3161,7 +3161,12 @@ label ch3_elena_secret:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "我是王后安排到你身边的人。但同时——我也曾是暗百合的成员。"
+        if elena_spy_known:
+            elena "王后派我来的事，你在路上已经看穿了。但还有一层，我一直瞒着你——"
+
+            elena "我也曾是暗百合的成员。"
+        else:
+            elena "我是王后安排到你身边的人。但同时——我也曾是暗百合的成员。"
 
         elena "双重间谍。"
 
@@ -3331,7 +3336,12 @@ label ch3_elena_secret:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "我是王后安排到你身边的人。但同时……我也是暗百合的成员。"
+        if elena_spy_known:
+            elena "王后派我来的，这你在路上就看穿了。但还有一层我一直没说——"
+
+            elena "我也是暗百合的成员。"
+        else:
+            elena "我是王后安排到你身边的人。但同时……我也是暗百合的成员。"
 
         elena "双重间谍。"
 
@@ -3613,7 +3623,12 @@ label ch3_elena_secret:
         show elena_img at left with dissolve
         elena "你说得对。我不是普通的管家。"
 
-        elena "我是王后安排到你身边的人。但同时——我也是暗百合的成员。"
+        if elena_spy_known:
+            elena "王后派我来的事，你早就看穿了。但还有一层——"
+
+            elena "我也是暗百合的成员。"
+        else:
+            elena "我是王后安排到你身边的人。但同时——我也是暗百合的成员。"
 
         elena "双重间谍。"
 

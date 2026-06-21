@@ -905,11 +905,19 @@ label interlude_ch2_ch3_ambush:
 
 label interlude_ch3_ch4_confession:
 
-    if elena_identity_exposed_known:
-        return
-
     scene bg_study_night with dissolve
     play music "audio/music/conspiracy.ogg" fadeout 2.0 fadein 3.0
+
+    if elena_identity_exposed_known:
+        ## 身份已在第三章坦白, 不重复坦白; 她深夜来访是为了王都急报.
+        ## (猎鹰堡情报为剧情承载, 第五章会议会引用, 必须照常送达)
+        "那天晚上，你处理完公务，正要吹灭蜡烛。门外两声轻叩——艾琳娜进来了，一身便于夜行的灰色斗篷。"
+
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "领主大人。出发前，有件事你必须先看。"
+
+        jump interlude_ch34_conf_intel
 
     "那天晚上，你处理完一天的公务，正准备吹灭蜡烛。"
 
@@ -1043,6 +1051,10 @@ label interlude_ch3_ch4_confession:
 
     elena "但这不是最紧迫的。"
 
+label interlude_ch34_conf_intel:
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
     "她从斗篷内侧取出一个小小的蜡封纸卷。"
 
     elena "这是我最后一次从王都得到的消息。两天前到的。"
