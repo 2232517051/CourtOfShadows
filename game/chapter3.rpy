@@ -30,8 +30,8 @@ label chapter3_start:
 
     "更何况，暗处的敌人也不会给你喘息的机会。"
 
-    ## (旧位置) interlude_ch2_ch3 已挪到 chapter2.rpy:ch2_end summary 之后,
-    ## 因 chapter 3 开场已在艾登堡处理事务, 不应再回到路上.
+    ## interlude_ch2_ch3 已删除: 其返程/暗林谷伏击/瘟疫报信分别与 ch2_assassination、
+    ## ch2_end 回城戏、gov_plague 重复. chapter 3 开场直接在艾登堡处理事务.
 
     ## NPC深度支线
     call npc_captain_war_story from _call_npc_cws

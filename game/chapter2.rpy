@@ -3314,8 +3314,6 @@ label ch2_end:
     ## 章节结束统计
     call show_chapter_summary("第二章", "领主会议") from _call_show_chapter_summary
 
-    ## 章节间过渡：返程旅途（含暗林谷伏击）— 须在"回到艾登堡"scene 之前
-    call interlude_ch2_ch3 from _call_interlude23_at_ch2end
 
     $ play_music("audio/music/tension.ogg", fadein=2.0)
     scene bg castle_exterior with dissolve
