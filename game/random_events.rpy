@@ -239,8 +239,8 @@ init python:
                     "text": "购买药草「采购药材物资」",
                     "stat_req": None,
                     "success": {
-                        "narration": "你挑选了一批品质上乘的药草和绷带。商人还附赠了一小瓶香料——「老客户的福利！」\n\n这些物资在未来的日子里会很有用。",
-                        "effects": [("stat", "wealth", -5), ("stat", "loyalty", 2)],
+                        "narration": "你挑选了一批品质上乘的药草和绷带。商人还附赠了一小瓶香料——「老客户的福利！」\n\n绷带和药草都收进了行囊。打起仗来，止血的东西从不嫌多。",
+                        "effects": [("stat", "wealth", -5), ("stat", "loyalty", 2), ("item", "bandage", 3), ("item", "medicinal_herbs", 2)],
                     },
                     "failure": None,
                 },
@@ -248,8 +248,8 @@ init python:
                     "text": "购买铁矿石「强化军备」",
                     "stat_req": None,
                     "success": {
-                        "narration": "商人压低声音：「这批铁矿是从东方矿山偷偷运出来的，品质极佳。用来打造武器再好不过。」\n\n你仔细检查了成色，确实不错。谈好价格后成交。",
-                        "effects": [("stat", "wealth", -8), ("stat", "power", 3)],
+                        "narration": "商人压低声音：「这批铁矿是从东方矿山偷偷运出来的，品质极佳。用来打造武器再好不过。」\n\n你仔细检查了成色，确实不错。谈好价格后成交。铁矿石进了库房，等铁匠开炉就能打成兵器。",
+                        "effects": [("stat", "wealth", -8), ("stat", "power", 3), ("item", "iron_ore", 3)],
                     },
                     "failure": None,
                 },
@@ -343,8 +343,8 @@ init python:
                     "text": "购买走私货「便宜不占白不占」",
                     "stat_req": None,
                     "success": {
-                        "narration": "你仔细检查了货物的品质——确实是好东西。毒药提取物、圣水、上好的皮革，这些在市面上很难买到。\n\n你付了钱，蒙面人拐了个弯就不见了。\n\n虽然来路不正，但实用就好。",
-                        "effects": [("stat", "wealth", -3), ("stat", "intrigue", 4), ("stat", "power", 2)],
+                        "narration": "你仔细检查了货物的品质——确实是好东西。一管战阵上提神的涂料、几张上好的皮革，这些在市面上很难买到。\n\n你付了钱，蒙面人拐了个弯就不见了。\n\n东西都收进了行囊。来路不正，但实用就好。",
+                        "effects": [("stat", "wealth", -3), ("stat", "intrigue", 4), ("stat", "power", 2), ("item", "leather_scraps", 2), ("item", "war_paint", 1)],
                     },
                     "failure": {
                         "narration": "你掏钱买下了货物，回去打开一看——圣水是掺了盐的井水，毒药提取物不过是研碎的草药。\n\n你被骗了。那个蒙面人早已不知去向。",

@@ -374,7 +374,7 @@ label ch2_preparation:
     show elena_img at left with dissolve
     elena "在王宫里学的。王后身边的人，什么都得会一些。"
 
-    "她在你身旁坐下，望着城墙下的灯火。"
+    "她在你身旁坐下，望着溪边跳动的篝火。"
 
     elena "领主大人……我可以问您一个问题吗？"
 

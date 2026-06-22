@@ -103,7 +103,7 @@ label prologue_deep_childhood_1:
         "追问毒药的事。":
             $ change_stat("intrigue", 3)
             $ deep_mother_herb = "poison"
-            $ log_decision("序章深化", "询问毒药", "谋略+3")
+            $ log_decision("序章深化", "询问毒药", "谋略提升")
 
             hide mother_img
             $ hide_all_chars("player_child_img")
@@ -141,7 +141,7 @@ label prologue_deep_childhood_1:
         "问母亲关于治病的草药。":
             $ change_stat("faith", 3)
             $ deep_mother_herb = "healing"
-            $ log_decision("序章深化", "询问草药治病", "信仰+3")
+            $ log_decision("序章深化", "询问草药治病", "信仰提升")
 
             hide mother_img
             $ hide_all_chars("player_child_img")
@@ -174,7 +174,7 @@ label prologue_deep_childhood_1:
             $ change_stat("faith", 2)
             $ change_stat("faith", 1)
             $ deep_mother_herb = "question"
-            $ log_decision("序章深化", "追问缘由", "谋略+2 信仰+1")
+            $ log_decision("序章深化", "追问缘由", "谋略、信仰提升")
 
             hide mother_img
             $ hide_all_chars("player_child_img")
@@ -294,7 +294,7 @@ label prologue_deep_childhood_2:
             $ change_stat("intrigue", 4)
             $ deep_cellar_choice = "hide"
             $ deep_cellar_heard_lily = True
-            $ log_decision("序章深化", "躲藏偷听", "谋略+4")
+            $ log_decision("序章深化", "躲藏偷听", "谋略提升")
 
             "你几乎停止了呼吸。身体压得更低，缩在一只大酒桶的后面。"
 
@@ -330,7 +330,7 @@ label prologue_deep_childhood_2:
             $ change_stat("power", 2)
             $ change_stat("loyalty", 2)
             $ deep_cellar_choice = "reveal"
-            $ log_decision("序章深化", "现身面对", "权力+2 忠诚+2")
+            $ log_decision("序章深化", "现身面对", "权力、忠诚提升")
 
             "你从暗处走了出来。"
 
@@ -399,7 +399,7 @@ label prologue_deep_childhood_2:
             $ change_stat("intrigue", -1)
             $ change_courage(-3)
             $ deep_cellar_choice = "flee"
-            $ log_decision("序章深化", "恐惧逃跑", "谋略-1 勇气-3")
+            $ log_decision("序章深化", "恐惧逃跑", "谋略下降，大量消耗勇气")
 
             "恐惧像一盆冷水浇下来。"
 
@@ -496,7 +496,7 @@ label prologue_deep_childhood_3:
             $ change_stat("power", 3)
             $ change_courage(3)
             $ deep_farewell_promise = "strong"
-            $ log_decision("序章深化", "承诺变强", "权力+3 勇气+3")
+            $ log_decision("序章深化", "承诺变强", "权力提升，鼓起勇气")
 
             "伯特兰爵士看着你，忽然笑了。那张布满皱纹和伤疤的脸因为笑容变得温和了一瞬间。"
 
@@ -530,7 +530,7 @@ label prologue_deep_childhood_3:
         "\"我会变聪明的。用智慧守护这里。\"":
             $ change_stat("reputation", 3)
             $ deep_farewell_promise = "wise"
-            $ log_decision("序章深化", "承诺变聪明", "谋略+3")
+            $ log_decision("序章深化", "承诺变聪明", "谋略提升")
 
             hide player_child_img
             $ hide_all_chars("bertrand_img")
@@ -567,7 +567,7 @@ label prologue_deep_childhood_3:
             $ change_stat("loyalty", 3)
             $ change_courage(-1)
             $ deep_farewell_promise = "stay"
-            $ log_decision("序章深化", "恳求留下", "忠诚+3 勇气-1")
+            $ log_decision("序章深化", "恳求留下", "忠诚提升，略损勇气")
 
             "你的眼眶一下子就红了。"
 
@@ -703,7 +703,7 @@ label prologue_deep_youth_1:
         "留下来，仔细研读这些禁书。":
             $ change_stat("intrigue", 5)
             $ deep_forbidden_choice = "study"
-            $ log_decision("序章深化", "研读禁书", "谋略+8")
+            $ log_decision("序章深化", "研读禁书", "谋略大幅提升")
 
             "你看了马库斯一眼。"
 
@@ -752,7 +752,7 @@ label prologue_deep_youth_1:
         "向院长报告这个发现。":
             $ change_stat("faith", 8)
             $ deep_forbidden_choice = "report"
-            $ log_decision("序章深化", "报告院长", "信仰+8")
+            $ log_decision("序章深化", "报告院长", "信仰大幅提升")
 
             "你放下了手里的书。"
 
@@ -806,7 +806,7 @@ label prologue_deep_youth_1:
             $ change_stat("intrigue", 5)
             $ deep_forbidden_book = True
             $ deep_forbidden_choice = "steal"
-            $ log_decision("序章深化", "偷书", "谋略+5 获得禁书")
+            $ log_decision("序章深化", "偷书", "谋略提升，获得禁书")
 
             "你看了看四周。然后你做了一个决定。"
 
@@ -915,7 +915,7 @@ label prologue_deep_youth_2:
             $ change_stat("reputation", 3)
             $ change_courage(4)
             $ deep_street_justice = "confront"
-            $ log_decision("序章深化", "正面对峙", "权力+4 声望+3 勇气+4")
+            $ log_decision("序章深化", "正面对峙", "权力、声望提升，鼓起勇气")
 
             "你没有犹豫。"
 
@@ -964,7 +964,7 @@ label prologue_deep_youth_2:
             $ change_stat("reputation", 4)
             $ change_stat("reputation", 3)
             $ deep_street_justice = "shame"
-            $ log_decision("序章深化", "言语羞辱", "谋略+4 声望+3")
+            $ log_decision("序章深化", "言语羞辱", "谋略、声望提升")
 
             "你没有冲上去。你走过去，但保持着一种不远不近的距离。然后你开口了。"
 
@@ -1011,7 +1011,7 @@ label prologue_deep_youth_2:
             $ change_stat("loyalty", 4)
             $ change_stat("faith", 3)
             $ deep_street_justice = "help"
-            $ log_decision("序章深化", "暗中帮助", "忠诚+4 信仰+3")
+            $ log_decision("序章深化", "暗中帮助", "忠诚、信仰提升")
 
             "你没有上前。不是因为怕。是因为你知道，跟一个伯爵的儿子正面冲突不是明智之举。"
 
@@ -1158,7 +1158,7 @@ label prologue_deep_youth_3:
             $ deep_marcus_confession = "forgive"
             $ deep_marcus_truly_loyal = True
             $ change_rel("rel_captain", 3)
-            $ log_decision("序章深化", "原谅马库斯", "忠诚+10 马库斯忠诚")
+            $ log_decision("序章深化", "原谅马库斯", "忠诚大幅提升，赢得马库斯效忠")
 
             "你伸出手，放在他的肩膀上。"
 
@@ -1221,7 +1221,7 @@ label prologue_deep_youth_3:
             $ change_stat("power", 5)
             $ change_courage(2)
             $ deep_marcus_confession = "distance"
-            $ log_decision("序章深化", "疏远马库斯", "谋略+5 勇气+2")
+            $ log_decision("序章深化", "疏远马库斯", "谋略提升，鼓起勇气")
 
             "你站起来。走到窗前。"
 
@@ -1284,7 +1284,7 @@ label prologue_deep_youth_3:
         "利用这个局面——让马库斯传递假情报。":
             $ change_stat("intrigue", 5)
             $ deep_marcus_confession = "exploit"
-            $ log_decision("序章深化", "利用马库斯传假情报", "谋略+10")
+            $ log_decision("序章深化", "利用马库斯传假情报", "谋略大幅提升")
 
             "你的脑子开始高速运转。"
 
@@ -1451,11 +1451,11 @@ label prologue_deep_adult_1:
     "「一切都有价格。」"
 
     menu:
-        "付钱买情报。（财富-10）":
+        "付钱买情报。":
             $ change_stat("wealth", -10)
             $ deep_tavern_intel = True
             $ deep_tavern_choice = "pay"
-            $ log_decision("序章深化", "付钱买情报", "财富-15 获得情报")
+            $ log_decision("序章深化", "付钱买情报", "花费财富，获得情报")
 
             "你考虑了一下。然后你从腰间解下钱袋，放在桌上。"
 
@@ -1710,7 +1710,7 @@ label prologue_deep_adult_2:
             $ change_stat("power", 5)
             $ deep_night_visitor = "demand"
             $ deep_lily_contact_early = True
-            $ log_decision("序章深化", "要求表明身份", "谋略+5 提前接触暗百合")
+            $ log_decision("序章深化", "要求表明身份", "谋略提升，提前接触暗百合")
 
             "你一个翻身从床上起来，挡在了窗户前面。"
 
@@ -1781,7 +1781,7 @@ label prologue_deep_adult_2:
             $ change_stat("loyalty", 3)
             $ change_stat("loyalty", 2)
             $ deep_night_visitor = "heed"
-            $ log_decision("序章深化", "听从警告", "谋略+3 忠诚+2")
+            $ log_decision("序章深化", "听从警告", "谋略、忠诚提升")
 
             "你放下了短刀。"
 
@@ -1827,7 +1827,7 @@ label prologue_deep_adult_2:
             $ change_stat("power", 3)
             $ change_courage(3)
             $ deep_night_visitor = "dismiss"
-            $ log_decision("序章深化", "不为所动", "权力+3 勇气+3")
+            $ log_decision("序章深化", "不为所动", "权力提升，鼓起勇气")
 
             "你把短刀收了起来。你靠在床头，双手抱胸。"
 

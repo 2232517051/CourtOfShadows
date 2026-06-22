@@ -710,14 +710,11 @@ label ch3_exp_herbalist:
 
     show herbalist_vera_img at right with dissolve
 
-    hide herbalist_vera_img
-    $ hide_all_chars("elena_img")
-    show elena_img at left with dissolve
-    elena "您是……领主大人？"
+    herbalist_vera "您是……领主大人？"
 
     "你有些惊讶。这不是艾琳娜——但她的声音和艾琳娜有几分相似。"
 
-    hide elena_img
+    hide herbalist_vera_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
 

@@ -217,7 +217,7 @@ label prologue_childhood:
             $ change_stat("power", 5)
             $ change_courage(-5)
             $ prologue_bully_choice = "fight"
-            $ log_decision("序章", "还击费利克斯", "权力+5，勇气消耗")
+            $ log_decision("序章", "还击费利克斯", "权力提升，消耗勇气")
 
             "你冲上去，一拳砸在费利克斯的鼻子上。"
 
@@ -254,7 +254,7 @@ label prologue_childhood:
             $ change_stat("loyalty", 5)
             $ change_courage(3)
             $ prologue_bully_choice = "report"
-            $ log_decision("序章", "向父亲告状", "忠诚+5")
+            $ log_decision("序章", "向父亲告状", "忠诚提升")
 
             $ hide_all_chars()
             "你转身跑了。不是因为害怕——你去找父亲。"
@@ -289,7 +289,7 @@ label prologue_childhood:
             $ change_stat("intrigue", 5)
             $ change_courage(5)
             $ prologue_bully_choice = "endure"
-            $ log_decision("序章", "忍耐费利克斯", "谋略+5")
+            $ log_decision("序章", "忍耐费利克斯", "谋略提升")
 
             $ hide_all_chars()
             "你没动。"
@@ -355,7 +355,7 @@ label prologue_childhood:
         "父亲，我们家打过仗吗？":
             $ change_stat("power", 3)
             $ prologue_father_question = "war"
-            $ log_decision("序章", "询问战争故事", "权力+3")
+            $ log_decision("序章", "询问战争故事", "权力提升")
 
             $ hide_all_chars("father_img")
             show father_img at left with dissolve
@@ -378,7 +378,7 @@ label prologue_childhood:
         "父亲，我们家有秘密吗？":
             $ change_stat("reputation", 3)
             $ prologue_father_question = "secret"
-            $ log_decision("序章", "询问家族秘密", "谋略+3")
+            $ log_decision("序章", "询问家族秘密", "谋略提升")
 
             "父亲看了你一眼。那个眼神很复杂——惊讶，又混着一丝……警惕？你那时读不懂，只觉得自己问到了什么不该问的。"
 
@@ -407,7 +407,7 @@ label prologue_childhood:
         "父亲，我们为什么要去教堂？":
             $ change_stat("faith", 3)
             $ prologue_father_question = "faith"
-            $ log_decision("序章", "询问信仰传统", "信仰+3")
+            $ log_decision("序章", "询问信仰传统", "信仰提升")
 
             $ hide_all_chars("father_img")
             show father_img at left with dissolve
@@ -508,7 +508,7 @@ label prologue_childhood:
             $ change_stat("power", 2)
             $ change_courage(-3)
             $ prologue_grief_choice = "cry"
-            $ log_decision("序章", "号啕大哭", "权力+2（释放真实情感）")
+            $ log_decision("序章", "号啕大哭", "权力提升（释放真实情感）")
 
             "你蹲在走廊的角落里，哭了。"
 
@@ -526,7 +526,7 @@ label prologue_childhood:
             $ change_stat("power", 2)
             $ change_courage(3)
             $ prologue_grief_choice = "silent"
-            $ log_decision("序章", "沉默面对", "谋略+2（学会隐藏情感）")
+            $ log_decision("序章", "沉默面对", "谋略提升（学会隐藏情感）")
 
             "你没哭。"
 
@@ -544,7 +544,7 @@ label prologue_childhood:
             $ change_stat("faith", 3)
             $ change_courage(2)
             $ prologue_grief_choice = "pray"
-            $ log_decision("序章", "为母亲祈祷", "信仰+3")
+            $ log_decision("序章", "为母亲祈祷", "信仰提升")
 
             scene bg castle_chapel with dissolve
 
@@ -731,7 +731,7 @@ label prologue_youth:
         "剑术。身体是最可靠的武器。":
             $ change_stat("power", 5)
             $ prologue_study_focus = "sword"
-            $ log_decision("序章", "选修剑术", "权力+5")
+            $ log_decision("序章", "选修剑术", "权力提升")
 
             "你选了剑术。"
 
@@ -748,7 +748,7 @@ label prologue_youth:
         "策略。赢的方式不止一种。":
             $ change_stat("intrigue", 5)
             $ prologue_study_focus = "strategy"
-            $ log_decision("序章", "选修策略", "谋略+5")
+            $ log_decision("序章", "选修策略", "谋略提升")
 
             "你选了策略。"
 
@@ -769,7 +769,7 @@ label prologue_youth:
         "神学。在这个世界上，信仰是最大的权力。":
             $ change_stat("faith", 5)
             $ prologue_study_focus = "theology"
-            $ log_decision("序章", "选修神学", "信仰+5")
+            $ log_decision("序章", "选修神学", "信仰提升")
 
             "你选了神学。"
 
@@ -794,7 +794,7 @@ label prologue_youth:
         "商业。钱不是万能的，但没有钱万万不能。":
             $ change_stat("wealth", 5)
             $ prologue_study_focus = "commerce"
-            $ log_decision("序章", "选修商业", "财富+5")
+            $ log_decision("序章", "选修商业", "财富提升")
 
             "你选了商业。"
 
@@ -845,7 +845,7 @@ label prologue_youth:
             $ change_stat("power", 3)
             $ change_courage(-8)
             $ prologue_secret_heard = "confront"
-            $ log_decision("序章", "闯进去质问", "权力+3，勇气大量消耗")
+            $ log_decision("序章", "闯进去质问", "权力提升，大量消耗勇气")
 
             "你推开了门。"
 
@@ -884,7 +884,7 @@ label prologue_youth:
             $ change_stat("intrigue", 5)
             $ change_courage(3)
             $ prologue_secret_heard = "eavesdrop"
-            $ log_decision("序章", "偷听并记住", "谋略+5")
+            $ log_decision("序章", "偷听并记住", "谋略提升")
 
             "你屏住呼吸，贴着墙壁，一步一步向后退。"
 
@@ -904,7 +904,7 @@ label prologue_youth:
             $ change_stat("faith", 3)
             $ change_courage(2)
             $ prologue_secret_heard = "report_priest"
-            $ log_decision("序章", "向院长报告", "信仰+3")
+            $ log_decision("序章", "向院长报告", "信仰提升")
 
             "你去找了院长。"
 
@@ -976,7 +976,7 @@ label prologue_youth:
         "父亲，你是不是生病了？发生了什么？":
             $ change_stat("loyalty", 3)
             $ prologue_father_visit = "question"
-            $ log_decision("序章", "追问父亲状况", "谋略+3")
+            $ log_decision("序章", "追问父亲状况", "谋略提升")
 
             "你忍不住了。"
 
@@ -1024,7 +1024,7 @@ label prologue_youth:
         "父亲，我会照顾好自己的。你也要保重。":
             $ change_stat("loyalty", 5)
             $ prologue_father_visit = "comfort"
-            $ log_decision("序章", "安慰父亲", "忠诚+5")
+            $ log_decision("序章", "安慰父亲", "忠诚提升")
 
             $ hide_all_chars()
             "你没有问。"
@@ -1055,7 +1055,7 @@ label prologue_youth:
         "假装什么都没注意到。聊点别的。":
             $ change_stat("wealth", 3)
             $ prologue_father_visit = "ignore"
-            $ log_decision("序章", "假装正常", "财富+3（学会了圆滑处世）")
+            $ log_decision("序章", "假装正常", "财富提升（学会了圆滑处世）")
 
             "你选择了沉默。"
 
@@ -1265,7 +1265,7 @@ label prologue_adult:
             $ change_stat("reputation", 5)
             $ change_courage(-5)
             $ prologue_banquet_style = "shine"
-            $ log_decision("序章", "宴会上大放异彩", "声望+5，勇气消耗")
+            $ log_decision("序章", "宴会上大放异彩", "声望提升，消耗勇气")
 
             "你决定不当隐形人。"
 
@@ -1293,7 +1293,7 @@ label prologue_adult:
             $ change_stat("intrigue", 5)
             $ change_courage(3)
             $ prologue_banquet_style = "observe"
-            $ log_decision("序章", "低调观察宴会", "谋略+5")
+            $ log_decision("序章", "低调观察宴会", "谋略提升")
 
             "你选择做一个安静的旁观者。"
 
@@ -1315,7 +1315,7 @@ label prologue_adult:
             $ change_stat("loyalty", 5)
             $ change_courage(2)
             $ prologue_banquet_style = "network"
-            $ log_decision("序章", "结交盟友", "忠诚+5")
+            $ log_decision("序章", "结交盟友", "忠诚提升")
 
             "你开始走动。"
 
