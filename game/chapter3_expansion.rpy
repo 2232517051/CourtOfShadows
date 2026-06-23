@@ -96,13 +96,16 @@ label ch3_exp_investigation:
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 3)
             $ log_decision("第三章扩展", "选择外交调查路线")
+            "求周边领主借眼线、通消息，这种人情开了口就欠下了——日后他们要你回报，你推不掉。"
             jump ch3_exp_investigate_diplomatic
 
         "武力路线「雷霆扫穴」":
             $ ch3_investigation_path = "forceful"
             $ change_stat("power", 5)
             $ change_courage(5)
+            $ change_stat("reputation", -5)
             $ log_decision("第三章扩展", "选择武力调查路线")
+            "一百人压上去，村镇这几天别想安生。要是扑了空，弟兄白跑、百姓遭扰，怨气都得算到你头上。"
             jump ch3_exp_investigate_forceful
 
         "渗透路线「化暗为明」" if intrigue >= 45:
@@ -662,10 +665,14 @@ label ch3_exp_forest_expedition:
             "你不知道自己坐了多久。当你睁开眼睛时，夕阳已经将整个遗迹染成了金红色。"
 
             "暗百合既不是善，也不是恶。它是为了对抗黑暗而被造出来的，但同样的力量也能伤人。"
+            "你没有动手去翻那片废墟。藏在断墙暗格里的东西，今天你是看不成了——你选了静坐，就放下了搜寻。"
 
 
         "标记遗迹位置后迅速撤离「这里不安全」":
             $ change_stat("power", 3)
+            $ change_stat("faith", -6)
+
+            "这是父亲守过的地方，你却连一炷香的工夫都没留。脚步迈出拱门时，心里有什么东西轻轻沉了一下。"
 
             "直觉告诉你不宜久留。你在地图上标记了遗迹的位置，然后沿原路返回。"
 
@@ -1157,6 +1164,7 @@ label ch3_exp_confrontation:
             "三天后的黎明，你率领一百五十名精锐士兵突袭了铁刺派的三处据点——旧磨坊、森林中的地下大厅、以及城镇里的秘密仓库。"
 
             "行动迅速而果断。铁刺派的成员在睡梦中被惊醒，大多数人来不及反抗就被制服。"
+            "行动干净利落。但消息传开后，几位中立的小领主对你避而不见——他们怕的不是铁刺派，是一个说动手就动手、连审都不审的邻居。"
 
             "但铁刺派首领不在旧磨坊里。"
 
@@ -1191,7 +1199,7 @@ label ch3_exp_confrontation:
             "你脑子一片空白。"
 
             $ change_stat("power", 10)
-            $ change_stat("reputation", 8)
+            $ change_stat("reputation", 3)
             $ ch3_cult_leader_fate = "captured"
 
         "政治手段「向王廷举报」" if reputation >= 55:
@@ -1215,6 +1223,7 @@ label ch3_exp_confrontation:
             "两周后，王廷的回复到了——王后派出了一支皇家调查团，由一位资深的法官率领。"
 
             "调查团的到来让铁刺派陷入了前所未有的恐慌。他们的据点被逐一搜查，成员被一个个揪出。"
+            "皇家调查团带走了所有缴获的档案，也带走了对铁刺派的处置权。你守住了规矩，却把这股力量拱手让给了王都——往后它姓王，不姓你。"
 
             "铁刺派首领试图逃跑，但在边境被皇家骑士截获。"
 
@@ -1293,6 +1302,7 @@ label ch3_exp_confrontation:
             $ change_stat("intrigue", 10)  ## 厚度: 原+15过厚, 政变非无代价
             $ change_stat("reputation", -3)  ## balance pass 修法 1: 冒名顶替阴谋, 一旦走漏名声崩
             $ change_stat("loyalty", -6)  ## 厚度: 你靠把柄而非人心驾驭一群旧首领的人, 连奥尔德里克都被你的手段惊到
+            $ change_rel("rel_aldric", -10)  ## 接管=做了你父亲毕生阻止艾德蒙做的事, 老臣奥尔德里克心生芥蒂
             $ change_courage(10)
             $ log_decision("第三章扩展", "试图暗中接管暗百合")
 
@@ -1333,6 +1343,7 @@ label ch3_exp_confrontation:
             "从今往后这群人就在你手下做事。你得时时提防他们当中有人反咬一口。"
 
             "没有人知道艾登堡的年轻领主已经成了铁刺派的幕后操控者。"
+            "奥尔德里克没再多说什么，但接下来几天他对你公事公办，不像从前那样事事先替你想一步。他跟了你父亲一辈子——而你父亲一辈子都在阻止他弟弟做的，正是你刚做的事。"
 
             "当你终于与前任铁刺派首领面对面时，他已经被关在了你城堡的地牢里。"
 

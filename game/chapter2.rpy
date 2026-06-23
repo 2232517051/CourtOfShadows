@@ -1719,7 +1719,6 @@ label ch2_council:
     menu:
         "从容回应——『家父教导我，椅子的重量不在于谁坐，而在于谁站得住。』":
             $ change_stat("reputation", 15)
-            $ change_rel("rel_baron", 5)
             $ log_decision("第二章", "在会议上沉着应对男爵的挑衅")
             hide baron_img
             $ hide_all_chars("player_char_img")
@@ -1730,11 +1729,12 @@ label ch2_council:
             show baron_img at left with dissolve
             baron "……哼，倒是有几分令尊的风骨。"
             $ hide_all_chars()
-            "格雷伯爵微不可察地点了点头。其余领主没有表态，但议事厅里的气氛松动了一些。"
+            "格雷伯爵微不可察地点了点头。男爵收回目光，没再说话——他没占到便宜，但也没把你记成自己人。其余领主没有表态，议事厅里的气氛松动了一些。"
 
         "针锋相对——『男爵大人上次带了两百人来给家父吊唁，这份厚礼我还没来得及回报。』":
             $ change_stat("power", 10)
             $ change_rel("rel_baron", -15)
+            $ change_stat("reputation", -8)
             $ log_decision("第二章", "强硬反击男爵的挑衅")
             hide baron_img
             $ hide_all_chars("player_char_img")
@@ -1751,10 +1751,12 @@ label ch2_council:
             show count_grey_img at left with dissolve
             count_grey "年轻人有锐气是好事。但这里是议事厅，不是校场。各位，我们开始正事吧。"
             "气氛才勉强缓和下来。男爵的脸色铁青。施泰因伯爵夫人投来一个意味深长的目光，你读不出那是欣赏还是掂量。"
+            "格雷伯爵端起水杯抿了一口，没看你。你想起他昨晚的那句「少说话，多听」——这一开口，你就把它忘了个干净。"
 
         "谦虚低调——『晚辈初来乍到，还请各位前辈多多指教。』":
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 5)
+            $ change_stat("power", -5)
             $ log_decision("第二章", "谦逊回应男爵的挑衅")
             hide count_grey_img
             $ hide_all_chars("player_char_img")
@@ -1766,6 +1768,7 @@ label ch2_council:
             baron "呵……至少比令尊知道什么叫礼貌。"
             $ hide_all_chars()
             "你不动声色，但心里记下了这句话。"
+            "威尔斯子爵和身边随从交换了一个眼神，低笑了一声。在这张桌上，谦让被当成另一种东西——他们已经在心里给你标了价。"
             "格雷伯爵看了你一眼，没有表态。"
 
     hide baron_img with dissolve
@@ -1795,6 +1798,7 @@ label ch2_council:
         "如实汇报艾登堡的情况，包括困难":
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 3)
+            $ change_rel("rel_baron", -10)
             hide herald_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1803,25 +1807,30 @@ label ch2_council:
             $ hide_all_chars()
             "格雷伯爵点了点头，没有多说。其余领主面无表情。"
             "但男爵的嘴角露出了一丝冷笑——他大概把你的困难当成了可以利用的弱点。"
+            "男爵把你列出的每一条困难都记在了心里。在这张桌上，你刚刚亲手告诉了对手该往哪里下刀。"
 
         "报喜不报忧，展现实力":
             $ change_stat("power", 3)
             $ change_stat("reputation", 3)
+            $ change_rel("rel_grey", -8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "艾登堡一切安好。卫队已经扩编，商路畅通，百姓安居乐业。"
             $ hide_all_chars()
             "你说的并非全是事实，但在这张桌上，示弱等于送命。"
             "男爵狐疑地看着你，显然不太相信。但他没有证据反驳。"
+            "格雷伯爵抬眼看了你一会儿。刚才施泰因伯爵夫人那份不夸大、不隐瞒的汇报还摆在桌上，你这番太漂亮的太平话，落进他眼里就是另一回事了。"
 
         "避重就轻，转移话题":
             $ change_stat("intrigue", 5)
+            $ change_rel("rel_baron", -8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "艾登堡的情况各位都清楚，不必多说。我更关心的是——各位对最近频繁出现的盗匪问题有什么看法？"
             $ hide_all_chars()
             "你巧妙地把话题引向了公共安全，避免了暴露自己的弱点。"
             "几位领主开始讨论盗匪问题，男爵的脸色变得有些不自然——也许是因为有传言说那些盗匪和他有关。"
+            "你绕开了自己的难处，可一句正经汇报都没留下。男爵盯着你看了两眼——一个连自家近况都不肯说清的人，在他眼里要么是没底气，要么是有鬼。"
 
     "公共事务讨论开始。"
 
@@ -2620,8 +2629,8 @@ label ch2_after_council:
     menu:
         "派艾琳娜带两个民兵截在南门外——男爵的人怕暴露身份不敢拦" if loyalty >= 50:
             $ change_stat("loyalty", 5)
-            $ change_stat("intrigue", 3)
             $ ch2_baron_emissary_intercepted = True
+            $ change_rel("rel_baron", -12)
 
             hide captain_img
             $ hide_all_chars("player_char_img")
@@ -2651,10 +2660,18 @@ label ch2_after_council:
 
             elena "我们的两个民兵跟在骑手后面又走了一里，看清了卷封——男爵家的印戳。"
 
+            elena "还有件事——交接的时候，那骑手回头看了一眼。我们的人闪得快，但他多半已经觉出后面有尾巴了。"
+
+            hide elena_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "那男爵明早就会知道，昨夜他的人被人盯了。"
+
             $ hide_all_chars()
             "你在记录纸上又添了一行——"
 
             "「男爵和王后旧人的联系，比我们以为的早。」"
+            "这趟你拿到了想要的东西。代价是，男爵从此知道你在盯他——往后他会把话咽得更紧。"
 
         "派人跟踪那个陌生人":
             $ change_stat("intrigue", 5)
@@ -2699,7 +2716,7 @@ label ch2_after_council:
 
         "去找男爵当面问":
             $ change_stat("power", 3)
-            $ change_rel("rel_baron", -3)
+            $ change_rel("rel_baron", -12)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -2724,6 +2741,7 @@ label ch2_after_council:
             $ hide_all_chars()
             "卫兵的脸色变了一下，但还是恭敬地答应了。"
             "你转身离去。不管男爵今晚做了什么，你至少让他知道——你在看着。"
+            "接下来几天，男爵见你都隔着一层冷意——招呼照打，话却一句不肯多说。你赢了气势，丢了他这条线。"
 
     hide captain_img with dissolve
 
@@ -2934,6 +2952,7 @@ label ch2_ambush_prepared:
     menu:
         "交给雷恩审讯":
             $ change_stat("power", 5)
+            $ change_rel("rel_lily", -12)
             hide assassin_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
@@ -2955,6 +2974,7 @@ label ch2_ambush_prepared:
             show captain_img at left with dissolve
             captain "没死。我堵住了他的嘴。但他再也说不出话来了。"
             "七瓣莲花……月圆之夜……又是谜语。暗百合的人似乎只会用这种方式说话。"
+            "雷恩擦着刀，没接话。你心里清楚：你们这样待暗百合的人，今晚之后，那朵倒置的百合再不会把你当成能谈的对象。"
 
         "亲自审讯——用智慧而非暴力":
             $ change_stat("intrigue", 5)
@@ -2999,6 +3019,7 @@ label ch2_ambush_prepared:
         "放了他，让他带话回去":
             $ change_stat("intrigue", 8)
             $ change_rel("rel_lily", 10)
+            $ change_rel("rel_captain", -10)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -3033,6 +3054,7 @@ label ch2_ambush_prepared:
             show player_char_img at left with dissolve
             player "不确定。但如果暗百合真的和父亲有关联，我需要一条对话的渠道。"
             player "一条用弩箭打不开的渠道。"
+            "雷恩没再说话，但你看得出他不痛快。一个刚要你命的人，你却亲手割断了他的绳子——这事，他和他的弟兄们会记很久。"
 
     hide captain_img with dissolve
 

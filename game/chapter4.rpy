@@ -1363,6 +1363,7 @@ label ch4_throne:
             "解释并示好——为了百姓，非为不敬":
                 $ change_stat("reputation", 10)
                 $ change_rel("rel_queen", 5)
+                $ change_stat("power", -8)
                 hide queen_img
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
@@ -1374,6 +1375,8 @@ label ch4_throne:
                 queen "嗯……这番话还算中听。"
                 queen "但我要你记住——下次在公开场合反对我之前，先来和我私下谈。"
                 queen "我不喜欢在人前被打脸。"
+                $ hide_all_chars()
+                "你看见席间几位领主交换了眼神。当着满朝的面，你退了这一步，他们都记下了。"
 
             "动用情报网——不解释，反将一军" if eagle_intel and intrigue >= 50:
                 ## 消耗机制大轮 Phase 2: 花 intrigue 换决定性社交优势(把棋子翻成对手)
@@ -1433,10 +1436,12 @@ label ch4_throne:
                 queen "暗百合……那群疯子还没消停。"
                 queen "他们是一群危险的叛逆分子。你最好远离他们。"
             "你注意到她在说「叛逆分子」这四个字时，语气格外用力。仿佛这个词承载着比字面更重的分量。"
+            "你把暗百合递了出去。从这一刻起，她知道你愿意对她交底——这是你能给的诚意，也是递出去就收不回的一张牌。"
             $ queen_trust = True
 
         "只说不知——隐瞒暗百合":
             $ change_stat("intrigue", 5)
+            $ change_rel("rel_queen", -5)
             hide queen_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1448,6 +1453,8 @@ label ch4_throne:
             $ hide_all_chars()
             "王后的目光停留在你脸上多了一秒。你不确定她是否相信了。"
             "但你的表情没有任何破绽。在艾琳娜的训练下，你已经学会了如何在权力者面前戴上面具。"
+            "王后没再追问，只是把目光从你身上移开，不再多看一眼。"
+            "你守住了暗百合这张牌。但在她眼里，你刚刚从一个或许能交心的人，变回了一个普通的边境领主。"
 
         "反问——『也许陛下比我更清楚？』" if intrigue >= 50:
             $ change_stat("intrigue", 8)
@@ -1475,6 +1482,7 @@ label ch4_throne:
             queen "希望你是前者。"
             $ hide_all_chars()
             "她的嘴角浮现出一个意味深长的微笑。那个笑容让你的脊背一阵发凉。"
+            "你赢了这一个回合，赢来的是她的注意。但从今往后她看你，会先掂量你藏着什么，再听你说了什么。"
 
     "觐见结束。你退出王座大厅时，腿有些发软。"
 
@@ -1876,12 +1884,12 @@ label ch4_garden:
             prince "公平。明天，我会派人送一封信到你的住处。那里面有你想要的答案。"
             $ hide_all_chars()
             "你们握了手。喷泉的水声盖过了一切，王子的手掌温暖而有力。"
+            "他给你想要的一切——凶手的名字、减税、特许贸易权。可天底下没有白给的东西。从今夜起，他登基那天你得拿出兵来，这笔账记下了。"
             "他笑了一下，转身走开。你看着他的背影消失在喷泉那一侧的回廊。"
 
         "拒绝——你不想卷入王位之争":
             $ log_decision("第四章", "拒绝与王子结盟")
             $ change_rel("rel_prince", -10)
-            $ change_stat("power", 5)
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1892,8 +1900,9 @@ label ch4_garden:
             prince "可惜。回头有事派人来找我。"
             prince "不过，你迟早会发现——在这个国家，没有人能置身事外。"
             prince "你父亲试过。他的下场你也看到了。"
+            prince "还有——你父亲想知道的答案，就在我手里。你今晚要是走了，它就跟着我一起留在这座宫里。"
             $ hide_all_chars()
-            "这句话像一根刺，扎进了你的心里。"
+            "那句话像一根刺。但真正让你后半夜睡不着的，是你刚刚亲手推开了父亲案子唯一的线索。"
 
         "假意答应，实则向王后告密" if queen_trust:
             $ change_rel("rel_queen", 25)
@@ -2693,10 +2702,17 @@ label ch4_betrayal:
 
             "趁乱逃离王都":
                 $ change_stat("power", -5)
+                $ change_rel("rel_prince", -15)
                 hide captain_img
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "我们走。现在就走，趁他们还没来抓我。"
+                "雷恩跟在后面，半晌没出声，最后还是开了口。"
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "殿下还在地牢里。"
+                $ hide_all_chars()
+                "你没停下脚步。他也没再问第二遍。"
                 jump ch4_escape
     else:
         jump ch4_aftermath
@@ -3467,6 +3483,8 @@ label ch4_end:
             "心领，但不结盟——只留马修斯一个人证":
                 player "我会的。谢谢你，马修斯。教会就别牵涉进来了——你一个人作证，已经够危险。"
                 $ hide_all_chars()
+                "马修斯松了口气，肩膀塌下去一点，没再坚持。"
+                "教会不出面，意味着圣母会的名号、它能动员的虔诚领主、它替你呼吁停火的分量——这些你都用不上了。真打起来，你手里只剩自己这点人马。"
 
         $ hide_all_chars()
         "你把皮卷筒贴身藏好。这薄薄的一卷羊皮纸——比任何武器都更具有毁灭性的力量。"

@@ -214,7 +214,7 @@ label ch3_strange_signs:
 
         "让雷恩加派巡逻":
             $ change_stat("loyalty", 5)
-            $ change_stat("power", 5)
+            $ change_rel("rel_captain", -8)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -222,8 +222,11 @@ label ch3_strange_signs:
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "遵命。我会安排双倍巡逻。"
-            "雷恩走后，你盯着地上他靴子踩过的泥印。不安并没有消减——反而在安静下来后更加清晰了。"
+            "雷恩没有立刻应声。"
+            captain "……遵命。我会安排双倍巡逻。"
+            captain "只是大人——人手就这么多。林子大，分散开来，每一处都薄。真要有人动手，巡逻队拦不住，只能事后收尸。"
+            $ hide_all_chars()
+            "雷恩走后，你盯着地上他靴子踩过的泥印。你知道他说得对：双倍巡逻只是把人摊薄。你没下围剿的令，是因为还没拿准——可暗百合不会等你拿准。"
             jump ch3_after_field_choice
 
         "亲自去失踪地点调查":
@@ -2290,7 +2293,7 @@ label ch3_tunnel_exploration:
     menu:
         "直接质问她是否知道密道的存在":
             $ change_stat("power", 5)
-            $ change_rel("rel_elena", -5)
+            $ change_rel("rel_elena", -12)
             hide elena_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -2318,6 +2321,7 @@ label ch3_tunnel_exploration:
             show elena_img at left with dissolve
             elena "那我们需要谈谈。但不是现在——这里不安全。"
             elena "明天，在花园里。我会告诉你一切。"
+            "她答应了。但你看得出，从这一刻起，她看你的眼神里多了一层戒备——你亮了牌，她也收起了底牌。"
 
         "若无其事地与她交谈，暗中观察":
             $ change_stat("intrigue", 5)
@@ -2338,11 +2342,13 @@ label ch3_tunnel_exploration:
             "但你注意到她的靴子上有一点潮湿的泥土。"
             "密道里的泥土。"
             "你什么都没说。但你知道，艾琳娜藏着秘密。"
+            "你没有逼她，所以她也没给你答案。你多看清了一分，却也仍旧落在她后面一步——她明早还会照常进来回话，像什么都没发生过。"
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
 
         "问她关于暗百合的事" if not elena_spy_known:
             $ change_stat("intrigue", 8)
+            $ change_rel("rel_elena", -8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "艾琳娜，你听说过暗百合吗？"
@@ -2368,6 +2374,7 @@ label ch3_tunnel_exploration:
             show elena_img at left with dissolve
             elena "……那就很值得担忧了。领主大人是在哪里听到这些的？"
             "她的反应……有些奇怪。不像是惊讶，更像是——警惕。"
+            "你看见她的指尖几不可察地收紧了一瞬。你打探暗百合的事，等于告诉她你在往最深的地方挖——从今往后，她对你只会更小心。"
 
     elena "领主大人，不管怎样，请您注意安全。最近的事情太多了。"
 
@@ -2927,6 +2934,8 @@ label ch3_dark_lily_hq:
             $ change_rel("rel_lily", 30)
             ## 选择深度 pass: 秘密效忠影卫=分裂的忠诚(且无人知晓), 不该+。换来的是 rel_lily 与情报, 代价是治理底气
             $ change_stat("loyalty", -4)
+            ## 影卫印记=与圣母教会决裂(本分支台词已承诺), 落地 faith 代价, 对齐同菜单加入铁刺的 faith-5
+            $ change_stat("faith", -5)
             $ log_decision("第三章", "加入暗百合·影卫")
             hide lily_master_img
             $ hide_all_chars("player_char_img")
@@ -2942,6 +2951,11 @@ label ch3_dark_lily_hq:
             lily_master "还有一句你该清楚——戴上影卫的印记，圣母教会的门就对你关上了。"
             lily_master "他们容得下悔过的罪人，容不下我们这样的人。日后你想借圣母的名义号令谁，没人会听。"
             hide lily_master_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "那扇门我本来也没指望。"
+            $ hide_all_chars()
+            "话说得轻。你心里清楚：往后真要圣母教会站到你这边，已经没这条路了。"
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我记住了。"
