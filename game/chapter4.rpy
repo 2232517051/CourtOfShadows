@@ -548,7 +548,7 @@ label chapter4_start:
         "塞几枚银币让驿站管事「忘记」我们路过" if wealth >= 50:
             $ change_stat("wealth", -3)
             $ change_stat("intrigue", 5)
-            $ ch4_post_station_bribed = True
+            $ change_rel("rel_captain", -10)
 
             player "雷恩，停一下。我去后院。"
 
@@ -581,11 +581,13 @@ label chapter4_start:
             player "塞了几个银币。让他报上去的时候漏掉我们这一队。"
 
             player "五个银币换一晚的安静——这买卖划算。"
-
-            hide player_char_img with dissolve
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "划算。可那管事要是被王后的人一吓，照样把咱们抖出去。买来的嘴，不牢。"
+            hide captain_img with dissolve
 
         "停下补给，顺便打探消息":
-            $ change_stat("intrigue", 2)
+            $ change_stat("intrigue", 4)
 
             player "停一下。水袋也该灌满了。"
 
@@ -612,6 +614,7 @@ label chapter4_start:
 
         "不停，直接赶路":
             $ change_stat("power", 2)
+            $ change_stat("intrigue", -8)
 
             player "不停了。越少和人接触越好。"
 
@@ -627,6 +630,7 @@ label chapter4_start:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "他们记住了我们的旗帜。不过没关系，到了这里，想隐藏行踪本来就不现实。"
+            elena "只是这一路绕开了所有人，王都那边什么风声您也没听着。进城之前，咱们等于是蒙着眼。"
             hide elena_img with dissolve
 
     $ hide_all_chars()

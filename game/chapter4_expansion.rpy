@@ -884,7 +884,8 @@ label ch4_exp_court_social:
             menu:
                 "感谢他的称赞":
                     $ change_stat("reputation", 3)
-                    $ ch4_exp_reinhart_favor += 1
+                    $ change_rel("rel_queen", 6)
+                    $ change_rel("rel_stein", -5)
 
                     $ hide_all_chars("player_char_img")
                     show player_char_img at left with dissolve
@@ -896,11 +897,12 @@ label ch4_exp_court_social:
                     narrator "他递过一张烫金的名帖。「有空来喝茶。」"
 
                     "你收下名帖。这张纸比寻常的厚，也沉。"
+                    narrator "大厅另一侧，施泰因伯爵夫人的目光扫过你和莱因哈特之间那张名帖，停了一瞬。在她那一派人眼里，你刚刚站了队。"
 
                 "提起父亲，观察他的反应":
                     $ change_stat("intrigue", 5)
                     $ change_stat("reputation", -6)
-                    $ ch4_exp_reinhart_favor -= 1
+                    $ change_rel("rel_queen", -4)
 
                     $ hide_all_chars("player_char_img")
                     show player_char_img at left with dissolve
@@ -917,9 +919,11 @@ label ch4_exp_court_social:
                     "邻桌两位贵族交换了一个眼神。在这种场合提一位故去领主的旧账，不是聪明人会做的事——这话明天就会传开。"
 
                     "他对你父亲的事知道多少？——也许比他愿意表现出来的多得多。"
+                    narrator "莱因哈特会把今晚写进给王后的报告。你提的这个名字，本不该由你先开口。"
 
                 "客套几句后找理由离开":
                     $ change_stat("intrigue", 2)
+                    $ change_stat("reputation", -2)
 
                     $ hide_all_chars("player_char_img")
                     show player_char_img at left with dissolve
@@ -929,6 +933,7 @@ label ch4_exp_court_social:
                     narrator "「请便。」"
 
                     "他目送你离开，灰色的眼睛在你背后停留了片刻——你能感觉到那道目光的重量。"
+                    narrator "他不会主动来找你了。你在王都最有用的一双耳朵跟前，什么也没留下。"
 
         "先观察，不急着接触":
             $ change_stat("intrigue", 5)
@@ -999,8 +1004,8 @@ label ch4_exp_court_social:
     menu:
         "反问她——「您见过他几面，怎么这么了解我父亲？」" if intrigue >= 70:
             $ change_stat("intrigue", 5)
-            $ change_rel("rel_queen", -3)
-            $ ch4_exp_countess_trust += 3
+            $ change_rel("rel_queen", -8)
+            $ change_rel("rel_stein", 8)
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1017,11 +1022,12 @@ label ch4_exp_court_social:
             "她把酒杯放下， 看你的眼神变了。不是因为问的人聪明——是问的人精确到她无法回避。"
 
             narrator "「年轻人， 如果你在王都需要一个……不那么偏向王后的朋友， 我的府邸在北区玫瑰街尽头。」"
+            "几步之外，那位绿衣大臣的目光在你和伯爵夫人之间扫过一遍，又移开了。今晚谁跟谁多说了两句话，明天都会摆到王后案头。"
 
         "顺着她的话聊，拉近关系":
             $ change_stat("intrigue", 5)
-            $ change_rel("rel_queen", -2)
-            $ ch4_exp_countess_trust += 2
+            $ change_rel("rel_queen", -8)
+            $ change_rel("rel_stein", 5)
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1053,7 +1059,7 @@ label ch4_exp_court_social:
 
         "不动声色地为父亲说话":
             $ change_stat("reputation", 3)
-            $ ch4_exp_countess_trust += 1
+            $ change_rel("rel_stein", 3)
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1963,6 +1969,7 @@ label ch4_exp_eve:
         "（直视她）也许是为了你自己相信的东西":
             $ change_rel("rel_elena", 8)
             $ change_stat("loyalty", 3)
+            $ change_courage(-8)
 
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -1992,6 +1999,8 @@ label ch4_exp_eve:
                 "她低下头，声音变得几乎像是呢喃。"
                 elena "也许……也因为你。"
                 "你的心跳漏了一拍。你没有说话——有些话，不说出来反而更有重量。"
+
+            "你们就这样聊到烛火快烧尽。明天的觐见，你一个字都没多想——这一夜你给了她，没留给王后。"
 
         "（半开玩笑）也许是因为这杯酒太好喝了，不想浪费":
             $ change_rel("rel_elena", 5)
@@ -2035,6 +2044,7 @@ label ch4_exp_eve:
         "（严肃地）问她对明天觐见的看法":
             $ change_stat("intrigue", 5)
             $ change_rel("rel_elena", 3)
+            $ ch4_exp_preparation_level += 1
 
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -2065,6 +2075,7 @@ label ch4_exp_eve:
             elena "那就更不能伪装了。表现出能力，但同时表现出愿意为她所用。"
 
             elena "在她眼中，有能力的忠臣是资产。有能力的敌人……是必须消灭的威胁。"
+            "她把王后读人的习惯、说话的尺度，一条条讲给你听。你都记下了——这一夜的功夫，花在了明天的觐见上。"
 
     "你们静静地坐着，喝完了各自的酒。窗外的夜空渐渐透出鱼肚白的微光——天快亮了。"
 

@@ -524,10 +524,10 @@ label ch5_factions_move:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "谢谢你的消息。你会得到妥善的安置。"
-            "你把这个情报默默记在心里。也许有一天会用得上。"
+            "你把这个情报默默记在心里。河谷、小道、不足百人——大致的轮廓有了，可老人没说清具体在哪一段下手。真要用，还得另寻门路。"
 
         "追问更多细节":
-            $ change_stat("intrigue", 5)
+            $ change_stat("intrigue", 3)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "那条河谷小道的具体位置在哪里？护卫部队有多少人？都是什么编制？"
@@ -537,13 +537,16 @@ label ch5_factions_move:
             retired_steward "老朽记性不太好了……但大致的位置我可以在地图上指出来。"
             "你把老人带到书房，在地图上标注了男爵军补给线的位置。"
             "这条信息可能在关键时刻改变战局。"
+            $ baron_supply_intel = True
+            "你把老人留在书房，对着地图问了整整一个上午。等标完那条河谷小道，难民安置、城防部署都得往后挪一挪——但这条线的位置，你算是吃进肚里了。"
 
         "不太在意这些细节":
+            $ change_stat("loyalty", -7)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "好的，辛苦了。去休息吧。"
             $ hide_all_chars()
-            "你没有太在意这个细节。"
+            "老人愣了一下，慢慢退了出去。门口几个跟着难民进城的人把这一幕看在眼里——他们走了几十里来投奔你，换来的是一句『去休息吧』。这种事，传得比情报快。"
 
     "时间一天天过去。空气中的紧张气氛越来越浓。"
 
@@ -790,6 +793,7 @@ label ch5_military_deploy:
         "亲自指挥北墙改造——你要的是把它变成杀场" if power >= 70:
             $ change_stat("power", 5)
             $ change_stat("loyalty", 3)
+            $ change_stat("intrigue", -10)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -801,9 +805,11 @@ label ch5_military_deploy:
             $ hide_all_chars()
             "三天里你和士兵睡在城墙下。手上磨出两层老茧。但当北墙被加固到每块石都像是为攻城战量身定做时——士气也跟着起来了。"
             "走过来挑刺的老兵都摇头笑了一声。不只是力量本身——是力量摆出来的姿态。"
+            "这三天你眼里只有那段墙。城里另外那些要你亲自过问的人和事，只能先搁着——奥德递进来的几张条子，你压根没翻。"
 
         "加强北墙的防御":
             $ change_stat("power", 3)
+            $ change_stat("wealth", -8)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -811,11 +817,13 @@ label ch5_military_deploy:
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "好主意！我这就安排。"
+            captain "好主意。多调人手、再添一道木栅，料和工钱我从账上支。"
+            captain "省是省不下，但这道墙稳了。"
             "接下来两天，北墙的防御被大大加强了。"
 
         "在北墙设置陷阱":
             $ change_stat("intrigue", 3)
+            $ change_stat("loyalty", -12)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -824,14 +832,17 @@ label ch5_military_deploy:
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "领主大人好计谋！"
-            "北墙成了陷阱。表面看是弱点，其实是死地。"
+            captain "……是好计。可守北墙那批弟兄得知道，他们站的是请君入瓮的那道口子。"
+            captain "我去跟他们说。这话不好开口。"
+            "北墙成了陷阱。守在那儿的人嘴上不说，眼神里都明白自己站在哪。"
 
         "不做特别处理":
+            $ change_stat("loyalty", -8)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "北墙的情况暂时够用了。把精力放在其他方面。"
+            "雷恩没接话，记下了，转身去安排别处。当晚换防的老兵里有人提了一句北墙，话没说完就被旁边的人用胳膊肘顶了回去。"
 
     hide captain_img with dissolve
     hide player_char_img
@@ -2334,7 +2345,7 @@ label ending_iron_lord:
             $ hide_all_chars()
             "三天后，前线传来消息——敌军已经开始宰杀战马充饥。"
             if baron_supply_intel:
-                "你早从那个心虚的密使嘴里掏出过实底——男爵军的补给走河谷小道，护卫不足百人。这一刀，你知道往哪儿切。"
+                "男爵军的补给走河谷小道，护卫不足百人——这底细你早摸清了。这一刀，你知道往哪儿切。"
             "那座石桥是石桥谷百姓进出大山的唯一一条路。桥断了，这个春天他们运不出一捆柴、换不回一袋盐。"
             "军中也有怨言——在野外干等三天，比打仗还磨人。"
 
@@ -2441,6 +2452,7 @@ label ending_iron_lord:
         "亲自率领前锋出击":
             $ change_stat("power", 5)
             $ change_stat("reputation", 3)
+            $ change_rel("rel_captain", -12)
             "你策马冲在最前面，剑光划过空气。"
             "敌军的斥候被你的气势震慑，很快溃散。"
             "士兵们看到领主亲自冲锋，士气大振。"
@@ -2461,14 +2473,19 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "好小子！跟紧我！"
+            $ hide_all_chars()
+            "乱军里你挨了一记。左臂的甲被劈开一道口子，血顺着护腕往下淌。你顾不上——但回阵时雷恩的脸，比挨了刀还难看。"
 
         "让雷恩指挥前锋，自己统领全局":
             $ change_stat("intrigue", 3)
             $ change_stat("power", 2)
+            $ iron_war_score += 3
+            $ change_rel("rel_captain", 4)
             $ hide_all_chars()
             "你站在山丘上，用旗语指挥部队的行动。"
             "雷恩率领前锋以精妙的战术击溃了敌军斥候。"
             "你的冷静和判断力让整支军队像一台精密的机器一样运转。"
+            "雷恩在前头打得游刃有余。回阵时他朝山丘上的你点了点头——领主肯把刀递到他手里、自己稳坐中军，这份信他领了。代价是你没在士兵眼前露脸，这一仗的彩头记在雷恩名下，不在你头上。"
 
     "前哨战获胜后，你的军队继续推进。"
 
@@ -2494,7 +2511,7 @@ label ending_iron_lord:
         "亲自跪在老人面前——以你的名义起誓重建" if loyalty >= 70:
             $ change_stat("loyalty", 5)
             $ change_stat("reputation", 5)
-            $ change_stat("power", -1)
+            $ change_stat("power", -6)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "老人家。"
@@ -2503,12 +2520,13 @@ label ending_iron_lord:
             player "你的房子会有屋顶。你的田会有人翻。你儿子的坟前会有人烧纸。"
             $ hide_all_chars()
             "老人愣了。然后他握住你的手， 说不出话， 只是流泪。"
-            "周围的士兵默然——他们看见领主跪下了。这不是战术——是让所有人都看见你为什么打这场仗。"
-            "整支军队的士气在那一刻无声地涨了一截。"
+            "周围的士兵静下来了。他们看见领主单膝跪在一个庄稼老汉面前。"
+            "雷恩站在马边没动。这位打了十二年仗的老兵心里清楚：肯为一个老人下跪的领主，士兵会替他卖命；可下跪这件事本身，也让一些人记住了——原来这位领主也会跪。"
 
         "留下食物和士兵守这里":
             $ change_stat("loyalty", 3)
             $ change_stat("power", -1)
+            $ iron_war_score -= 3
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "留十个人在这里。帮老百姓重建家园。"
@@ -2520,15 +2538,16 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "执行命令。"
-            "你留下了一小队士兵和一些物资。代价是战力削弱了一分，换回来的是一夜安稳的睡眠。"
+            "十个人，加上半车干粮，从北上的队列里被划了出去。雷恩没再争——他只是在花名册上勾掉了那十个名字。这一队人马，三天后的旷野上你是用不上了。"
 
         "记住这一切，继续前进":
             $ change_stat("power", 2)
+            $ change_stat("loyalty", -5)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "记住这些。记住战争的代价。等一切结束了，我们会回来重建。"
             $ hide_all_chars()
-            "你带着沉重的心情继续前进。战争不会因为你的同情而停下脚步。"
+            "你勒转马头，队伍跟着你走了。没人出声。可你背后那点窸窣的脚步声里，少了点什么——昨夜篝火旁还跟你说笑的几个新兵，今早盯着那片废墟，谁也没看你。"
 
     "第三天和第四天，你又遇到了几次小规模遭遇。"
 
