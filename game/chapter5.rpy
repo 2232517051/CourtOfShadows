@@ -554,7 +554,8 @@ label ch5_factions_move:
 
     menu:
         "表示会认真考虑":
-            $ change_stat("intrigue", 2)
+            $ change_rel("rel_queen", 8)
+            $ change_stat("reputation", -3)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "这是一个很有诚意的提议。请转告王后陛下，我需要时间考虑。"
@@ -562,10 +563,11 @@ label ch5_factions_move:
             $ hide_all_chars("queen_envoy_img")
             show queen_envoy_img at left with dissolve
             queen_envoy "当然。但请不要等太久——时间不站在任何人这边。"
-            "特使走后，你把这个提议记在了心里——但没有做出承诺。"
+            "特使走后，你把这个提议压在了心里。门外几个老臣交换了眼神——领主对王室留了一道门，这事天黑前就会传遍内城。"
 
         "委婉拒绝":
             $ change_stat("reputation", 2)
+            $ change_rel("rel_queen", -8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "请转告王后陛下，艾登堡珍视与王室的关系。"
@@ -573,10 +575,11 @@ label ch5_factions_move:
             $ hide_all_chars("queen_envoy_img")
             show queen_envoy_img at left with dissolve
             queen_envoy "……我明白了。希望您不会后悔这个决定。"
+            "他没有再多说，但你听得出——「百姓的安全」这四个字，在王后耳朵里和「拒绝」是同一个意思。"
 
         "直接拒绝":
             $ change_stat("power", 2)
-            $ change_rel("rel_queen", -5)
+            $ change_rel("rel_queen", -15)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "回去告诉王后——我不是用爵位和金钱可以收买的。"
@@ -587,7 +590,7 @@ label ch5_factions_move:
             show player_char_img at left with dissolve
             player "送客。"
             $ hide_all_chars()
-            "特使面色铁青地离开了。你知道这可能激怒王后，但你不在乎。"
+            "特使面色铁青地离开了。你很清楚——从今往后，王后那扇门对你彻底关上了。你不在乎，至少现在不在乎。"
 
     "特使离开后不到两个时辰，又有一个人来了——"
 
@@ -626,6 +629,7 @@ label ch5_factions_move:
 
         "表示会认真考虑":
             $ change_stat("intrigue", 2)
+            $ change_rel("rel_queen", -8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "告诉男爵，我需要时间。"
@@ -635,9 +639,12 @@ label ch5_factions_move:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我听到了。"
+            $ hide_all_chars()
+            "拖一手有拖一手的代价。密使前脚出门，王后那边的眼线后脚就把消息递了回去——艾登堡的领主在两头之间留着话口子，谁也没回绝。王后不喜欢这种人。"
 
         "委婉拒绝":
-            $ change_stat("reputation", 2)
+            $ change_stat("reputation", -3)
+            $ change_rel("rel_baron", 6)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "感谢男爵的好意。但我有自己的考量。"
@@ -647,6 +654,8 @@ label ch5_factions_move:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "请转达我的敬意。"
+            $ hide_all_chars()
+            "你给密使留了体面，也给自己留了退路。可城里那些等着看领主硬气一回的人，这回什么都没等到——你既没把男爵的人轰出去，也没站到谁那边。一个没立场的领主，名声是攒不起来的。"
 
         "试图从密使那里套取更多情报":
             $ change_stat("intrigue", 4)

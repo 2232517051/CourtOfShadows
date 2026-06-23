@@ -2032,6 +2032,7 @@ label ch5_exp_eve_of_battle:
             "指示他们在关键战役时制造混乱":
                 $ ch5_exp_lily_advice_taken = True
                 $ change_stat("intrigue", 5)
+                $ change_rel("rel_lily", -10)
 
                 "你在回信的空白处落笔——字迹斟酌了许久。"
 
@@ -2042,11 +2043,14 @@ label ch5_exp_eve_of_battle:
                 "「信号——城楼上升起三面黑旗。」"
 
                 "你将纸片封入蜡丸，交给等在窗外的暗影信使。"
+                "散布假消息、烧粮草——要动用的人手是最多的。十二个加八个，几乎全数要露面。"
+                "几天后回执到了，只有一行小字：「这一次，我们押上了所有人。希望它值得。」"
 
             "让暗百合暗杀男爵军中的关键将领":
                 $ ch5_exp_lily_advice_taken = True
                 $ change_stat("intrigue", 4)
                 $ change_stat("power", 2)
+                $ change_rel("rel_elena", -8)
 
                 "你落笔回复——字迹冷硬如刀。"
 
@@ -2057,9 +2061,15 @@ label ch5_exp_eve_of_battle:
                 "「但我相信暗百合的能力。」"
 
                 "你合起蜡丸，将它交予窗外的信使。对方没有回话，只留下一片压低的羽毛作为回执。"
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "战前一夜在自己人的营帐里割喉……"
+                elena "我不拦你。但这种事做了，就别指望我替你说它干净。"
+                hide elena_img with dissolve
 
             "暂时保留这张底牌":
                 $ ch5_exp_lily_advice_taken = False
+                $ change_rel("rel_lily", 8)
 
                 "你提笔作答——字句简短。"
 
@@ -2067,9 +2077,9 @@ label ch5_exp_eve_of_battle:
 
                 "几天后，一片新的黑色纸片又悄无声息地出现在书桌上。"
 
-                "「谨慎。这是一种美德——只要它不变成犹豫。」"
+                "「沉得住气。一次性的刀，不该为了一时痛快就拔出来。」"
 
-                "「我的人会等待你的信号。但不要让他们等太久。」"
+                "「我的人会等你的信号。别让他们等到战事结束。」"
 
     elif dark_lily_destroyed:
         $ hide_all_chars()

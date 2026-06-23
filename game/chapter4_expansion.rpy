@@ -110,6 +110,7 @@ label ch4_exp_arrival:
         "认真学习每一条礼仪":
             $ change_stat("intrigue", 5)
             $ change_stat("reputation", 3)
+            $ change_courage(-8)
             $ ch4_exp_preparation_level += 2
 
             player "请详细说明。我不想在王后面前失礼。"
@@ -126,6 +127,7 @@ label ch4_exp_arrival:
             "鞠躬的角度、退步的距离、说话的措辞……每一个环节都有严格的规定。"
 
             "枯燥，但你知道这些知识在明天可能救你一命。"
+            "等你把七十二条规矩在脑子里过完，已是深夜。你回房躺下，那些角度和措辞还在翻来覆去，迷迷糊糊到天快亮才合眼。明天得顶着这口气上场。"
 
         "挑重点记，其他随机应变":
             $ change_stat("intrigue", 3)
@@ -144,13 +146,15 @@ label ch4_exp_arrival:
             narrator "「第三，如果王后赐酒，必须饮尽。这是信任的象征——拒绝等于表示你怀疑她会下毒。」"
 
             "你点点头，把这三条记在心里。"
+            "剩下的时间你留给了自己——早点歇下，养足精神。该记的记了，多的临场再说。"
 
             if poison_evidence:
                 "……第三条让你心中一凛。以她的手段，在酒中做手脚并非不可能。"
 
         "故意表现得不在意":
             $ change_stat("power", 3)
-            $ change_rel("rel_queen", -3)
+            $ change_rel("rel_queen", -10)
+            $ change_stat("reputation", -4)
 
             player "我是艾登堡领主，不是来参加舞会的学徒。该怎么做，我自有分寸。"
 
@@ -163,6 +167,7 @@ label ch4_exp_arrival:
             narrator "「当然，这也许只是巧合。」"
 
             "他的话让空气冷了几度。你没有接话，但心里暗暗记住了他说的一切。"
+            "奥伯特离开时没再多看你一眼。你清楚，今晚你这副态度，明天会一字不差地传进王后耳朵里。"
 
     narrator "礼典官收起羊皮纸，又说了一句：「对了，觐见是在后天。明天，王后安排了一场晚宴，欢迎各地来京的领主。」"
 
@@ -529,6 +534,7 @@ label ch4_exp_explore_cathedral:
         "捐一笔钱，借机打听消息":
             $ change_stat("faith", 5)
             $ change_stat("wealth", -3)
+            $ change_rel("rel_bishop", 8)
             $ ch4_exp_cathedral_prayer = True
 
             $ hide_all_chars("player_char_img")
@@ -541,6 +547,7 @@ label ch4_exp_explore_cathedral:
 
             $ hide_all_chars()
             "你掏出钱袋。年轻神职人员的态度立刻殷勤了三分。"
+            "一百银币的金灯不是小数目。从这一刻起，你在这座教堂里就是被记住的客人，不是被盯着的生人。"
 
             narrator "「请跟我来。我带您去圣光厅——那里是点长明灯的专用殿堂。」"
 
@@ -569,6 +576,7 @@ label ch4_exp_explore_cathedral:
 
         "在教堂中祈祷，感受氛围" if faith >= 45:
             $ change_stat("faith", 8)
+            $ change_rel("rel_bishop", 5)
             $ ch4_exp_cathedral_prayer = True
 
             $ hide_all_chars("player_char_img")
@@ -601,6 +609,7 @@ label ch4_exp_explore_cathedral:
 
         "不进教堂，在外面观察":
             $ change_stat("intrigue", 5)
+            $ change_rel("rel_bishop", -10)
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -612,6 +621,7 @@ label ch4_exp_explore_cathedral:
             "教堂后面是一片封闭的庭院——主教府。高墙上拉着铁丝网，门口有教会武装守卫把守。"
 
             "你注意到，主教府的守卫装备精良——他们穿的不是教会传统的白色盔甲，而是黑色的轻甲，腰间挂着短剑和袖弩。"
+            "你绕墙的时候，一名灰袍卫一直没把视线从你身上移开。等你走远，他低声对身边的人说了句什么。"
 
             hide player_char_img
             show elena_img at right with dissolve
@@ -621,6 +631,7 @@ label ch4_exp_explore_cathedral:
             elena "别看只有几十人，每一个都是从教会孤儿院中精挑细选、从小训练的精锐。"
 
             elena "忠诚度绝对没问题——因为他们的整个世界就是教会。"
+            elena "而且他们记性好得很。你今天在墙根下转的这一圈，主教府明天就会知道。"
 
             hide elena_img with dissolve
 
@@ -851,6 +862,7 @@ label ch4_exp_court_social:
         "主动上前自我介绍":
             $ change_stat("reputation", 5)
             $ change_stat("intrigue", 3)
+            $ change_rel("rel_queen", 4)
             $ ch4_exp_met_reinhart = True
 
             "你端着酒杯走了过去。"
@@ -867,6 +879,7 @@ label ch4_exp_court_social:
             narrator "「在边境问题上处理得相当漂亮。比您父亲当年……有过之而无不及。」"
 
             "他提到你父亲时，语气轻描淡写，像在说一道已经端走的菜。但你捕捉到了他话中的试探。"
+            "莱因哈特记下了你的名字。他记下的东西，王后迟早会看到——你主动走到了王后耳目的跟前。"
 
             menu:
                 "感谢他的称赞":
@@ -886,6 +899,7 @@ label ch4_exp_court_social:
 
                 "提起父亲，观察他的反应":
                     $ change_stat("intrigue", 5)
+                    $ change_stat("reputation", -6)
                     $ ch4_exp_reinhart_favor -= 1
 
                     $ hide_all_chars("player_char_img")
@@ -900,6 +914,7 @@ label ch4_exp_court_social:
                     narrator "「不过——在晚宴上聊这些未免扫兴。我们改天找个安静的地方细谈？」"
 
                     "他在转移话题。你笑着点了点头，但心里记下了他那一瞬间的表情变化。"
+                    "邻桌两位贵族交换了一个眼神。在这种场合提一位故去领主的旧账，不是聪明人会做的事——这话明天就会传开。"
 
                     "他对你父亲的事知道多少？——也许比他愿意表现出来的多得多。"
 
@@ -930,6 +945,7 @@ label ch4_exp_court_social:
             narrator "「战备？哈——王后陛下的视野不止于此。但这些不是在宴会上谈的话。」"
 
             "战备预算？这引起了你的注意。王后在为什么战争做准备？"
+            "你多知道了一件事，却也错过了让莱因哈特记住你的机会——今晚他不会主动来认你了。"
 
         "不理会他，去找施泰因伯爵夫人":
             $ change_stat("intrigue", 3)
