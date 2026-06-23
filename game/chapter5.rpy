@@ -2585,7 +2585,7 @@ label ending_iron_lord:
             "老兵们对望了一眼。这一令的意思他们都懂——头一排撞上去的人，活下来的不会多。"
             "战鼓擂响。你的军队如洪流般冲向敌阵。"
             "铁与铁的碰撞，血与血的交融。战场上响彻着惨叫和呐喊。"
-            if iron_war_score >= 22:
+            if iron_war_score >= 20:    # 选择深度 L2: 阈值-2 抵消战备菜单新增代价 (原 22)
                 "你的兵甲是这几个月一刀一枪攒出来的。硬撞之下，先撕开防线的是你。"
                 "代价不轻，但第一回合是你赢了。"
             else:
@@ -2606,7 +2606,7 @@ label ending_iron_lord:
             captain "……是。"
             $ hide_all_chars()
             "他没多说什么，但你听得出那个停顿。把两百人从主阵抽走，正面就得拿单薄的阵线去顶——他清楚，你也清楚。"
-            if iron_war_score >= 18:
+            if iron_war_score >= 16:    # 选择深度 L2: 阈值-2 (原 18)
                 "你的计划完美地执行了。当雷恩的部队从侧翼杀出时，敌军阵脚大乱。"
                 "一场漂亮的迂回战，让你以最小的代价取得了最大的战果。"
             else:
@@ -2624,7 +2624,7 @@ label ending_iron_lord:
             player "结成防御阵型。盾墙在前，长矛在后。让他们先来攻。"
             $ hide_all_chars()
             "对面阵中有人哄笑起来，隔着旷野喊艾登堡的领主缩了。这话会随败兵传开——可你不在乎，先挨过这几波再说。"
-            if iron_war_score >= 16:
+            if iron_war_score >= 14:    # 选择深度 L2: 阈值-2 (原 16)
                 "敌军发起了一波又一波的冲锋，但你的防线像磐石一样岿然不动。"
                 "随着进攻的失败，敌军的士气开始下降。终于，你看到了破绽——"
                 $ hide_all_chars("player_char_img")
@@ -2643,7 +2643,7 @@ label ending_iron_lord:
             show player_char_img at left with dissolve
             player "顶上去。没有别的办法了。"
             $ hide_all_chars()
-            if iron_war_score >= 14:
+            if iron_war_score >= 12:    # 选择深度 L2: 阈值-2 防累积代价致不公平战败 (原 14)
                 $ iron_battle_outcome = "pyrrhic"
                 "你没有奇兵，没有内应，能做的只有把人压上去。"
                 "靠一股不肯退的狠劲，你险险撕开了一道口子——但每一步都踩在自己人身上。"
