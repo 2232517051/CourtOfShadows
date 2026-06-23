@@ -221,6 +221,11 @@ default court_faction = ""
 default ending_type = ""
 default iron_battle_outcome = "decisive"  # 铁腕线战役结果 (decisive 决定性胜利 / pyrrhic 惨胜) — 由左翼危机 crisis 决定
 default iron_war_score = 0  # 铁腕线战力分 (花露水反馈): power/intrigue/loyalty + 领主好感 + 战前准备 累加, 决定会战成败
+# 选择深度 L2 第2批-B: 战备枢纽的延迟后果 flag
+default harsh_with_refugees = False  # ch5:168 强硬压制领民 → ch5:732 民兵志愿者锐减兑现
+default baron_supply_intel = False   # ch5:604 套出男爵军后勤弱点 → ch5:2272 截断补给线额外战力兑现
+default map_studied = False          # ch5:927 战前夜研舆图 → ch5_expansion 伏击 callback 兑现
+default ch5_pay_advance_pension = False  # ch5:842 预付抚恤金 (既有 orphan 补 default + 接 iron_war_score 兑现)
 
 ## ============================================================
 ## 持久化数据（跨存档）

@@ -100,6 +100,7 @@ label ch5_war_clouds:
     menu:
         "立即派出更多斥候，密切监视双方动向":
             $ change_stat("intrigue", 3)
+            $ change_stat("power", -8)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -109,9 +110,11 @@ label ch5_war_clouds:
             show captain_img at left with dissolve
             captain "明白！我立刻安排。"
             "你的斥候网络在接下来的日子里不断传回情报，让你对战局有了清晰的了解。"
+            captain "斥候全撒出去了，城头能巡墙的人就薄了。这几天我们看得清敌人，却也最经不起一支奇兵。"
 
         "加强城防，做好防御准备":
             $ change_stat("power", 3)
+            $ change_stat("wealth", -12)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -120,10 +123,12 @@ label ch5_war_clouds:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "遵命！我已经命人检查了所有防御工事，还有几处需要修缮。"
-            "城墙上的守军增加了一倍，每个箭垛都配备了弓手。"
+            "城墙上的守军增加了一倍，每个箭垛都配备了弓手。账房的开支也跟着翻了一番——火油、滚石、加饷，库银肉眼可见地往下掉。"
 
         "先确保百姓安全，疏散村庄":
             $ change_stat("loyalty", 3)
+            $ change_stat("wealth", -12)
+            $ change_stat("intrigue", -8)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -133,6 +138,7 @@ label ch5_war_clouds:
             show captain_img at left with dissolve
             captain "领主大人仁慈。我这就安排。"
             "接下来几天，源源不断的村民涌入艾登堡，城内很快变得拥挤起来。"
+            "粮仓的存粮按人头一算，原本能撑两个月，如今怕是连一个月都难。混在难民里的生面孔太多，谁是逃命的、谁是来探路的，一时也理不清。"
 
     hide captain_img with dissolve
 
@@ -176,27 +182,33 @@ label ch5_war_clouds:
             $ hide_all_chars()
             "老农泪流满面地磕头。铁匠挺起了胸膛。妇人紧紧地抱着孩子，终于不再颤抖。"
             "你的承诺像一颗石子投入湖面，在民间荡起了层层涟漪。人们开始称你为「守护者」。"
+            "你把话说满了。从这一刻起，任何一条留给自己的退路、任何一次见势不妙的撤退，都会变成背弃。你给了他们一个守护者，也给自己套上了一根再不能松开的链子。"
             $ change_stat("reputation", 2)
+            $ change_stat("intrigue", -8)
 
         "坦率地告知形势严峻":
             $ change_stat("reputation", 2)
             $ change_stat("intrigue", 2)
+            $ change_stat("loyalty", -6)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "我不会欺骗你们。形势确实严峻。但我也不会坐以待毙。"
             player "我需要你们的合作——能拿武器的，协助守城。老弱妇孺，在城堡里避难。"
             player "大家齐心协力，我们才能撑过去。"
-            "人们的脸上依然有恐惧，不过多了一份对你的信任。"
+            "人们脸上的恐惧没散。多数人点了头——也有几家当天夜里就收拾了细软，赶在城门落锁前出了城。"
+            "留下来的人信你。可城里少了几十张面孔。"
 
         "用强硬的语气让他们冷静下来":
             $ change_stat("power", 3)
+            $ change_stat("loyalty", -10)
+            $ harsh_with_refugees = True
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "都给我冷静！恐慌解决不了任何问题！"
             player "回去做好你们的本职工作。守城的事，交给我和士兵。"
             $ hide_all_chars()
-            "人群安静了下来。有些人看起来被你的威严震慑住了，有些人则面露不安。"
-            "混乱暂时被压制了。至于人心——那是另一回事。"
+            "人群安静了下来。有些人被你的威严震住，有些人则面露不安。"
+            "人群散了。铁匠没再开口，只是攥紧了拳头走在最后。"
 
     "领民们退下之后，大厅里只剩下你和几个亲信。"
 
@@ -673,6 +685,7 @@ label ch5_factions_move:
             show servant_generic_img at left with dissolve
             baron_envoy "……足够支撑整场战役。"
             "他说话时眼神闪烁——你知道他在撒谎。这证实了你之前得到的情报——男爵军的后勤确实是弱点。"
+            $ baron_supply_intel = True
 
     "送走了男爵的密使后，你独自在书房里坐了很久。"
 
@@ -738,7 +751,10 @@ label ch5_military_deploy:
 
     captain "常备军方面，我们有两百名正规军。其中六十名重步兵，八十名轻步兵，四十名弓箭手，二十名骑兵。"
 
-    captain "此外还有五十名民兵志愿者。他们的训练还不够充分，但保家卫国的热情很高。"
+    if harsh_with_refugees:
+        captain "民兵志愿者只来了二十几个。那天大厅里您发的那通火，传到村里就变了味——好些人觉得连您自己都没底，何必去送命。"
+    else:
+        captain "此外还有五十名民兵志愿者。他们的训练还不够充分，但保家卫国的热情很高。"
 
     hide captain_img
     $ hide_all_chars("player_char_img")
@@ -893,6 +909,7 @@ label ch5_military_deploy:
 
         "节省开支，准备长期消耗" if wealth >= 45:
             $ change_stat("wealth", 8)
+            $ change_stat("loyalty", -8)
             hide aldric_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -901,6 +918,9 @@ label ch5_military_deploy:
             $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
             aldric "明白。我会削减不必要的开支。"
+            aldric "……只是有句话得说在前头。抚恤和犒赏的钱都压下来了，底下已经有人嚼舌根，说领主把银子看得比命重。"
+            $ hide_all_chars()
+            "账面上省下的银子是实打实的。可那几天，操练场上的口令喊得没从前那么齐了。"
 
     hide aldric_img with dissolve
 
@@ -939,6 +959,7 @@ label ch5_military_deploy:
         "下城楼，亲自帮老人搬一块石头" if reputation >= 40:
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 3)
+            $ change_stat("intrigue", -10)
 
             "你解了披风，沿城墙的窄梯下到城下。"
 
@@ -949,10 +970,12 @@ label ch5_military_deploy:
             "他没说一个字。你也没问。"
 
             "老魏转头跟身边的邻居说了几句。他们看你的眼神变了。"
+            "垒完最后一块石头，天已经黑透了。书房里那张铺开的舆图，今晚是看不成了。"
 
         "去铁匠铺，给打了一夜的老铁匠送一壶水" if loyalty >= 40:
             $ change_stat("loyalty", 5)
             $ change_stat("reputation", 3)
+            $ change_stat("intrigue", -10)
 
             "铁匠铺烧了一整夜。老铁匠汉斯眼眶通红，手腕的肌腱凸起。"
 
@@ -965,6 +988,7 @@ label ch5_military_deploy:
             "你点了点头。没说话。"
 
             "汉斯转身又开始打铁。火光把他的脸染成深红色。"
+            "你在铁匠铺待到炉火压低。回主楼时雷恩已经睡下，舆图上该圈的隘口，只能等明早再说。"
 
         "回书房，把昨晚没看完的舆图研究完" if intrigue >= 40:
             $ change_stat("intrigue", 5)
@@ -983,17 +1007,23 @@ label ch5_military_deploy:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "我连夜带二十人过去勘察地形。"
+            $ map_studied = True
 
             hide captain_img with dissolve
 
         "不下城楼，继续看":
-            $ change_stat("power", 2)
+            $ change_stat("intrigue", 4)
+            $ change_stat("loyalty", -6)
 
             "你没动。城楼上风大，把你的披风吹得鼓起。"
 
             "你看着下面，一动不动，看了很久。"
 
             "风把搬石头的老人的咳嗽声、铁匠铺的打铁声、孩子们的哭声，都卷到你站的地方。"
+
+            "你把全城的备战看了个遍——哪段墙人手不够，哪队操练松垮，谁在偷懒。这些你都记下了。"
+
+            "城楼下的士兵抬头看了你几次。整整一个傍晚，领主站在高处一动不动，没下来跟他们说一句话。"
 
             "等天暗了，你才下城楼。"
 
@@ -2167,8 +2197,12 @@ label ending_iron_lord:
             iron_war_score += 5                          # 王子的人脉
         if rel_captain >= 60:
             iron_war_score += 3                          # 雷恩的精锐死忠
+        if ch5_pay_advance_pension:
+            iron_war_score += 3                          # 抚恤已发: 士兵知道家里有着落, 阵前不惜命 (选择深度 L2)
 
     "艾登堡的军队集结完毕。旗帜在春风中猎猎作响。"
+    if ch5_pay_advance_pension:
+        "队列里没人交头接耳。抚恤银上个月就发到了各家手里——他们清楚，就算自己回不来，家里也有米下锅。这种安静，雷恩说，比喊破嗓子的口号顶用。"
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -2280,7 +2314,11 @@ label ending_iron_lord:
 
         "截断补给线——让他们饿三天再打|谋略+ 敌军士气大降":
             $ change_stat("intrigue", 5)
+            $ change_stat("reputation", -8)
+            $ change_stat("loyalty", -4)
             $ iron_war_score += 6
+            if baron_supply_intel:
+                $ iron_war_score += 3
             hide elena_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -2295,11 +2333,15 @@ label ending_iron_lord:
             captain "遵命！"
             $ hide_all_chars()
             "三天后，前线传来消息——敌军已经开始宰杀战马充饥。"
-            "战斗还没开始，胜负已经倾斜了。"
+            if baron_supply_intel:
+                "你早从那个心虚的密使嘴里掏出过实底——男爵军的补给走河谷小道，护卫不足百人。这一刀，你知道往哪儿切。"
+            "那座石桥是石桥谷百姓进出大山的唯一一条路。桥断了，这个春天他们运不出一捆柴、换不回一袋盐。"
+            "军中也有怨言——在野外干等三天，比打仗还磨人。"
 
         "收买雇佣兵——瓦解敌军内部|需财富≥40 · 战场上获得内应" if wealth >= 40:
             $ change_stat("wealth", -10)
             $ change_stat("intrigue", 3)
+            $ change_stat("reputation", -5)
             $ iron_war_score += 6
             hide captain_img
             $ hide_all_chars("player_char_img")
@@ -2312,11 +2354,13 @@ label ending_iron_lord:
             elena "明白。我今夜就安排人去接触。"
             $ hide_all_chars()
             "第二天，回信来了——雇佣兵同意在战斗最激烈时「调转枪头」。"
+            "用钱买来的忠诚靠不靠得住，你心里没底。买通敌阵叛将这种事也瞒不了多久——传开了，没人会说这是光明正大的打法。"
             "一枚埋在敌军内部的棋子，已经就位了。"
 
         "山路绕后——前后夹击|需权力≥55 · 战术优势" if power >= 55:
             $ change_stat("power", 3)
             $ change_stat("intrigue", 3)
+            $ change_rel("rel_captain", -10)
             $ iron_war_score += 8
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -2327,6 +2371,7 @@ label ending_iron_lord:
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
             captain "声东击西，前后夹击！领主大人果然读过兵法！"
+            captain "只是——我带走的是您身边最好的一百个人。这一去，您正面就少了一道屏障。"
             "当夜，雷恩带着一百名精挑细选的士兵从西门出发。没有火把，没有号角，只有甲胄在黑暗中轻轻碰撞的声音。"
 
     hide elena_img with dissolve
@@ -2512,11 +2557,13 @@ label ending_iron_lord:
     menu:
         "正面强攻，以气势压倒对方|需权力≥60" if power >= 60:
             $ change_stat("power", 5)
+            $ change_stat("loyalty", -7)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "全军出击！一鼓作气冲垮他们！"
             $ hide_all_chars()
+            "老兵们对望了一眼。这一令的意思他们都懂——头一排撞上去的人，活下来的不会多。"
             "战鼓擂响。你的军队如洪流般冲向敌阵。"
             "铁与铁的碰撞，血与血的交融。战场上响彻着惨叫和呐喊。"
             if iron_war_score >= 22:
@@ -2530,14 +2577,16 @@ label ending_iron_lord:
         "采用迂回战术，先攻击敌军侧翼|需谋略≥55" if intrigue >= 55:
             $ change_stat("intrigue", 3)
             $ change_stat("power", 3)
+            $ change_rel("rel_captain", -8)
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "雷恩，带两百人从树林绕到敌军右翼。我在正面吸引他们的注意力。"
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "是！"
+            captain "……是。"
             $ hide_all_chars()
+            "他没多说什么，但你听得出那个停顿。把两百人从主阵抽走，正面就得拿单薄的阵线去顶——他清楚，你也清楚。"
             if iron_war_score >= 18:
                 "你的计划完美地执行了。当雷恩的部队从侧翼杀出时，敌军阵脚大乱。"
                 "一场漂亮的迂回战，让你以最小的代价取得了最大的战果。"
@@ -2549,11 +2598,13 @@ label ending_iron_lord:
         "先防御，等待敌军露出破绽再反击|需谋略≥45 · 忠诚≥50" if intrigue >= 45 and loyalty >= 50:
             $ change_stat("intrigue", 4)
             $ change_stat("loyalty", 2)
+            $ change_stat("reputation", -6)
             hide captain_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "结成防御阵型。盾墙在前，长矛在后。让他们先来攻。"
             $ hide_all_chars()
+            "对面阵中有人哄笑起来，隔着旷野喊艾登堡的领主缩了。这话会随败兵传开——可你不在乎，先挨过这几波再说。"
             if iron_war_score >= 16:
                 "敌军发起了一波又一波的冲锋，但你的防线像磐石一样岿然不动。"
                 "随着进攻的失败，敌军的士气开始下降。终于，你看到了破绽——"

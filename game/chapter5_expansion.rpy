@@ -1544,6 +1544,10 @@ label ch5_exp_skirmish:
             "壕沟里的干草和火油轰然燃起，火墙瞬间蹿起两丈高！"
 
             "冲在最前面的骑兵来不及勒马，连人带马栽入了火海。惨叫声和马的嘶鸣声混在一起。"
+            if map_studied:
+                "壕沟的位置正是雷恩照你昨夜在鹰隼峡圈下的地形定的——干草铺到哪一步、火油泼多宽，他都按你画的算过。"
+                "第一排骑兵栽进去时，没有一匹冲得出火墙。"
+                $ change_stat("intrigue", 3)
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
