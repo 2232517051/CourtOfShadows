@@ -774,7 +774,6 @@ label ch3_after_field_choice:
                     player "替我回信：领主三日后亲自前往。让男爵备好酒——也备好剑。"
                     "你不打算搞那些客气的虚招。男爵想试探， 你就让他直接看到锋。"
                     "三日后你按时到了。男爵的姿态一开始很高， 但你坐下不到半个时辰， 他的语调已经在悄悄软。"
-                    "硬碰硬不一定要打——只要让对方知道你「会」打就够。"
 
                 "写一封客气但模糊的回信":
                     $ change_stat("intrigue", 5)
@@ -1631,7 +1630,7 @@ label ch3_dark_lily_clues:
             hide player_char_img
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
-            lily_interviewer "……不错。你的目标很明确。"
+            lily_interviewer "复仇……一个容易理解的动机。但查真相和报私仇,走的不一定是同一条路。"
 
         "为了对抗王后和教会":
             hide lily_root_img
@@ -1673,7 +1672,7 @@ label ch3_dark_lily_clues:
             hide player_char_img
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
-            lily_interviewer "你的勇气令人钦佩。但勇气和鲁莽之间只有一线之隔。"
+            lily_interviewer "那不是勇气,是鲁莽。一个年轻领主单挑整个王国,只会被磨成齑粉。我们不需要烈士。"
 
         "我会寻找盟友，集聚力量，再做打算":
             $ change_stat("loyalty", 5)
@@ -1684,7 +1683,7 @@ label ch3_dark_lily_clues:
             hide player_char_img
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
-            lily_interviewer "聪明的回答。你父亲当年也是这么说的。"
+            lily_interviewer "现实的想法。但'集聚力量'要时间,而时间正是我们缺的。所以我们才需要你。"
 
         "我会权衡利弊，选择对领地最有利的道路":
             $ change_stat("wealth", 5)
@@ -1696,7 +1695,7 @@ label ch3_dark_lily_clues:
             hide player_char_img
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
-            lily_interviewer "务实。这是领主应有的品质。"
+            lily_interviewer "权衡利弊。可在我们这场仗里,对领地最有利的路,常常意味着背叛。你清楚自己要卷进什么吗?"
 
     lily_interviewer "最后一个问题——你信任你身边的人吗？"
 
@@ -1710,7 +1709,7 @@ label ch3_dark_lily_clues:
             hide player_char_img
             $ hide_all_chars("lily_root_img")
             show lily_root_img at left with dissolve
-            lily_interviewer "你的谨慎……有些过头了。但也许你是对的。"
+            lily_interviewer "那意味着你会拒绝我们伸出的手。一个孤身一人的领主,熬不过第一个冬天。"
 
         "我信任奥尔德里克和雷恩":
             $ change_stat("loyalty", 5)
@@ -2040,9 +2039,9 @@ label ch3_study_return:
     $ hide_all_chars()
     "你回想起刚才操作壁炉机关的情景。父亲在机关上设置了保护——错误操作三次就会锁死。"
 
-    "幸好你选择了仔细观察，而不是蛮力破解。"
+    "你这才明白，刚才在壁炉前若是急着乱试，机关早就锁死了。"
 
-    "父亲的谨慎挽救了一切。"
+    "父亲把最后一道防线藏在了顺序里。"
 
     "你合上日记，揉了揉疲惫的眼睛。"
 
