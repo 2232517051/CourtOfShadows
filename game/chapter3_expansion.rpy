@@ -35,7 +35,7 @@ label ch3_exp_investigation:
 
         "你在书房中铺开一张大羊皮纸，把接触过的所有信息一一写下：失踪的农民、倒置的百合符号、黑斗篷的陌生人、父亲的异常行为……"
 
-        "影卫给你的是一面，你自己看到的是另一面。两面拼上，棋盘才算完整。"
+        "影卫只肯给你他们那一层的情报，剩下的得你自己拼。两边对上，全局才看得清。"
     elif dark_lily_destroyed:
         "暗百合虽然已被你铲除，但缴获的档案和残余的网络里还有太多未解之谜。是时候把线索串起来了。"
 
@@ -119,7 +119,7 @@ label ch3_exp_investigate_diplomatic:
     scene bg castle_library with dissolve
 
     if dark_lily_joined:
-        "你决定以外交手段切入——不是冲着暗百合本身，而是借外部领主的消息判断暗焰在其他地盘的渗透范围。"
+        "你决定从外交入手。你不去直接碰暗百合，而是想从周边领主那里探出暗焰在别处的渗透范围。"
 
         "当天你便写了三封信，寄给格雷伯爵、威尔斯子爵和施泰因伯爵夫人。信里只字不提你和组织的关系，只询问他们领地里是否也出现了「异常失踪事件」。"
     elif dark_lily_destroyed:
@@ -185,7 +185,7 @@ label ch3_exp_investigate_diplomatic:
             show countess_stein_img at left with dissolve
             countess_stein "我知道的不多。但我知道——凶手就在你身边。在你每天都能见到的人当中。"
 
-            "她的话像一把冰锥，直直插入你的心脏。"
+            "她的话让你瞬间僵住。"
 
             $ stein_origin_revealed = True
 
@@ -661,9 +661,8 @@ label ch3_exp_forest_expedition:
 
             "你不知道自己坐了多久。当你睁开眼睛时，夕阳已经将整个遗迹染成了金红色。"
 
-            "在那一刻，你似乎理解了什么——暗百合不是善，也不是恶。它是人类为了对抗黑暗而创造的一把双刃剑。"
+            "暗百合既不是善，也不是恶。它是为了对抗黑暗而被造出来的，但同样的力量也能伤人。"
 
-            "问题从来不是剑本身，而是握剑的人。"
 
         "标记遗迹位置后迅速撤离「这里不安全」":
             $ change_stat("power", 3)
@@ -832,7 +831,7 @@ label ch3_exp_herbalist:
 
             herbalist_vera "记住最重要的一条——大多数毒药都有气味。如果你的酒闻起来有杏仁味，不要喝。"
 
-            "你把这些知识刻在了脑海中。在这个充满暗杀和阴谋的世界里，懂得毒药或许能救你一命。"
+            "这些知识你牢牢记住了。在这样的宫廷里，多懂一点毒药，多一分活命的机会。"
 
         "询问她是否知道暗百合组织的事":
             $ change_stat("loyalty", 5)
@@ -907,7 +906,7 @@ label ch3_exp_herbalist:
 
             "你接过薰衣草，礼貌地告别。"
 
-            "回城的路上，你的思绪全部集中在暗百合精华和解药上。浪漫？在这个时代，那是最奢侈的东西。"
+            "回城的路上，你脑子里只有暗百合精华和解药的事。没空想什么浪漫。"
 
     hide herbalist_vera_img with dissolve
     hide player_char_img with dissolve
@@ -1189,7 +1188,7 @@ label ch3_exp_confrontation:
             show lily_master_img at left with dissolve
             lily_master "我叫艾德蒙。你父亲的兄弟。你的……叔叔。铁刺派——是我从暗百合中分裂出来的。影主的路线太软弱了。"
 
-            "你的世界在这一刻天旋地转。"
+            "你脑子一片空白。"
 
             $ change_stat("power", 10)
             $ change_stat("reputation", 8)
