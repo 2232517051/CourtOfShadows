@@ -1217,6 +1217,36 @@ screen ending_complete_hint(current_ending=""):
             else:
                 text "* 恭喜！你已解锁全部结局！" size 18 color "#ffd700" font "msyh.ttf" xalign 0.5
 
+            ## 二周目奖励提示 (批30 w一_一w 反馈"可玩性被埋没": NG+ 原是 activate_ng_plus 静默激活,
+            ## 玩家不知道下周目会继承属性 → 在结局屏明示, 把"换条路再玩"变成有实利的选择)
+            if persistent.ng_plus_unlocked:
+                frame:
+                    xalign 0.5
+                    xpadding 20
+                    ypadding 12
+                    background Solid("#2a1f0860")
+
+                    vbox:
+                        spacing 6
+                        xalign 0.5
+                        text "◆ 已解锁二周目" size 16 color "#ffd700" font "msyh.ttf" xalign 0.5
+                        text "下周目开局自动继承部分属性，换一条路线更好上手：" size 13 color "#c8b890" font "msyh.ttf" xalign 0.5
+                        $ _ngp = persistent.ng_plus_bonus_power or 0
+                        $ _ngw = persistent.ng_plus_bonus_wealth or 0
+                        $ _ngi = persistent.ng_plus_bonus_intrigue or 0
+                        if _ngp > 0 or _ngw > 0 or _ngi > 0:
+                            hbox:
+                                xalign 0.5
+                                spacing 14
+                                if _ngp > 0:
+                                    text "权力+[_ngp]" size 14 color "#e74c3c" font "msyh.ttf"
+                                if _ngw > 0:
+                                    text "财富+[_ngw]" size 14 color "#f39c12" font "msyh.ttf"
+                                if _ngi > 0:
+                                    text "谋略+[_ngi]" size 14 color "#7f8c8d" font "msyh.ttf"
+                        else:
+                            text "（这条路线没攒下这三项，换条路会很不一样）" size 13 color "#8a7e60" font "msyh.ttf" xalign 0.5
+
             null height 12
 
             hbox:
