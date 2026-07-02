@@ -279,7 +279,7 @@ label npc_captain_past:
     show captain_img at left with dissolve
     captain "领主大人……我只是在想一些旧事。"
 
-    "你在他身旁的垛口坐下。远处的群山在暮色中变得模糊，像是一幅褪色的旧画。"
+    "你在他身旁的垛口坐下。远处的群山在暮色中变得模糊。"
 
     hide captain_img
     $ hide_all_chars("player_char_img")
@@ -931,13 +931,13 @@ label npc_bishop_confession:
 
             bishop "里面有一个铁箱。这把钥匙可以打开它。"
 
-            "你接过钥匙。它冰凉沉重，像是握着一段被封印的历史。"
+            "你接过钥匙。它冰凉沉重。"
 
             bishop "拿走它吧。也许它能帮你做成我二十年前没有勇气做的事。"
 
             bishop "但你要小心——王后如果知道旧遗诏还存在，她会不惜一切代价销毁它。和你。"
 
-            "你将钥匙贴身收好。这把小小的钥匙，也许打开的不仅仅是一个铁箱，还有整个王国的命运之锁。"
+            "你将钥匙贴身收好。"
 
             ## ── 玩家亲自下地下室取遗诏 ──
             hide bishop_img with dissolve

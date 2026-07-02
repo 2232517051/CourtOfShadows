@@ -136,7 +136,7 @@ label re_wandering_poet_send:
     $ hide_all_chars()
     "诗人收下食物，冲你举了举手中的干粮算是道谢，转身走向暮色中的远方。"
 
-    "山道上很快空无一人。风把他留下的脚印一点点抹平。那些远方的消息、那些未知的故事——像是从未来过一样。"
+    "山道上很快空无一人。风把他留下的脚印一点点抹平。"
 
     "但你的百姓记住了你的善意。一个连流浪者都愿意施舍食物的领主，不会太差。"
 
@@ -957,8 +957,6 @@ label re_orphan_foster:
     $ change_stat("wealth", -3)
     $ re_orphan_met = True
 
-    "善意，有时候不需要英雄壮举。一碗热粥、一间暖屋、一个愿意拉你一把的人——这就够了。"
-
     return
 
 label re_orphan_turn_away:
@@ -992,7 +990,7 @@ label re_orphan_turn_away:
     $ change_stat("wealth", 2)
     $ re_orphan_met = True
 
-    "理性的选择。你在心里重复了一遍这句话。但那个女孩的眼神，在之后的很多个夜晚，都会出现在你的梦里。"
+    "理性的选择。你在心里重复了一遍这句话。但那个女孩看你的那一眼，你忘不掉。"
 
     return
 
@@ -1105,7 +1103,7 @@ label re_duel_lose:
     $ change_stat("power", 3)
     $ re_duel_met = True
 
-    "你没有赢得他的剑，但赢得了他的尊重。在这个世界上，有时候后者比前者更珍贵。"
+    "你没有赢得他的剑，但赢得了他的尊重。"
 
     return
 

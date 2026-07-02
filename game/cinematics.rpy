@@ -335,7 +335,7 @@ label cinematic_chapter3:
     pause 0.5
 
     if not _cin_skip:
-        show screen cin_text("暗杀事件后的第三天。", "伤疤还在作痛，像一个不肯沉默的警告。")
+        show screen cin_text("暗杀事件后的第三天。", "伤疤还在作痛。")
         pause 4.0
         hide screen cin_text with cin_dissolve
         pause 0.5

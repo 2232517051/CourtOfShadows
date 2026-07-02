@@ -1532,7 +1532,7 @@ label ch3_deep_cure_poison:
     $ hide_all_chars()
     "桌上多了第二个小瓶——紫黑色的液体，像是浓缩了的夜色。"
     "一瓶救命，一瓶夺命。"
-    "它们并排摆放着，像是一个关于人性的隐喻。"
+    "它们并排摆放着。"
 
     $ ch3_deep_cure_found = True
     $ change_stat("intrigue", 8)
@@ -1610,7 +1610,7 @@ label ch4_deep_queen_weakness:
     queen "想你了。"
 
     $ hide_all_chars()
-    "就这两个字。轻轻的，碎碎的，像深秋最后一片落叶。"
+    "就这两个字。轻轻的，碎碎的。"
 
     "你退后了一步。脚下的石板发出了极其细微的声响——"
     "但在这安静的走廊里，它响如惊雷。"
@@ -2148,7 +2148,7 @@ label ch4_deep_dungeon_peace:
     show player_char_img at left with dissolve
     player "祖父……"
 
-    "你对着墙壁低声说话，就像王后对着画像说话一样。"
+    "你对着墙壁低声说话。"
 
     player "您用一年的苦难换来了和平。我不会让您的牺牲白费。"
     player "这一代——由我来终结仇恨。"
@@ -2851,7 +2851,7 @@ label ch5_deep_letter_tear:
     player "我还有太多事没有做完。死神想带走我——他得排队。"
 
     $ hide_all_chars()
-    "你拿起一杯酒，一饮而尽。酒液灼烧着喉咙——像是活着的证明。"
+    "你拿起一杯酒，一饮而尽。酒液灼烧着喉咙。"
 
     $ change_stat("power", 5)
     $ change_stat("reputation", 3)

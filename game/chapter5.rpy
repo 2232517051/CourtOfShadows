@@ -2628,7 +2628,7 @@ label ending_iron_lord:
             $ hide_all_chars()
             "你站在山丘上，用旗语指挥部队的行动。"
             "雷恩率领前锋以精妙的战术击溃了敌军斥候。"
-            "你的冷静和判断力让整支军队像一台精密的机器一样运转。"
+            "整支军队按你的旗语进退，没有一处脱节。"
             "雷恩在前头打得游刃有余。回阵时他朝山丘上的你点了点头——领主肯把刀递到他手里、自己稳坐中军，这份信他领了。代价是你没在士兵眼前露脸，这一仗的彩头记在雷恩名下，不在你头上。"
 
     "前哨战获胜后，你的军队继续推进。"
@@ -2769,7 +2769,7 @@ label ending_iron_lord:
             $ hide_all_chars()
             "对面阵中有人哄笑起来，隔着旷野喊艾登堡的领主缩了。这话会随败兵传开——可你不在乎，先挨过这几波再说。"
             if iron_war_score >= 14 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 (原 16); 批31: 难度修正
-                "敌军发起了一波又一波的冲锋，但你的防线像磐石一样岿然不动。"
+                "敌军发起了一波又一波的冲锋，但你的防线岿然不动。"
                 "随着进攻的失败，敌军的士气开始下降。终于，你看到了破绽——"
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
@@ -3506,7 +3506,7 @@ label ending_shadow_king:
             show player_char_img at left with dissolve
             player "正合我意。"
             $ hide_all_chars()
-            "假消息像毒药一样在男爵联军中蔓延。"
+            "假消息在男爵联军中传开了。"
             "果然，第二天的战斗中，维克托领主的部队突然撤出了战场。"
             "男爵的防线出现了巨大的缺口——但王后军也因为追击而阵型散乱。"
 
@@ -4199,7 +4199,7 @@ label ch5_negotiate_after_clash:
     show player_char_img at left with dissolve
     player "……"
 
-    "这是你为和平付出的代价——你拯救了人们的身体，但是否也束缚了他们的灵魂？"
+    "这是你为和平付出的代价。"
 
     hide aldric_img with dissolve
 
@@ -5231,7 +5231,7 @@ label ending_truth:
 
     "真相大白的那天，整个王国都震动了。"
 
-    "消息像野火一样传遍了每一个角落。"
+    "消息很快传遍了每一个角落。"
 
     "人们在街头巷尾议论着——二十年的谎言，终于被揭穿了。"
 

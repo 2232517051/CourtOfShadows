@@ -109,7 +109,7 @@ label ch4_prince_farewell:
         "篡改遗诏——你第一次听到这个说法，但王子说得如此笃定，不像是猜测。"
         $ testament_forged_known = True
     if not father_poisoned_known:
-        "谋杀？你一直以为父亲是病死的。王子的话像一把利刃刺穿了你心中最后的侥幸。"
+        "谋杀？你一直以为父亲是病死的。王子这句话，把你心里最后一点侥幸戳破了。"
         $ father_poisoned_known = True
 
     prince "这些东西只存在于王宫深处。只有我能接触到。"

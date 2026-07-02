@@ -881,7 +881,7 @@ label ch2_preparation:
 
     "还有艾琳娜。她到底是王后的眼睛，还是真心想帮你的人？"
 
-    "窗外，风声呜咽，像是某种预兆。"
+    "窗外，风声呜咽。"
 
     "你翻了个身，闭上眼睛。不管明天等待你的是什么，你都必须打起精神面对。"
 
@@ -1044,7 +1044,7 @@ label ch2_preparation:
     $ hide_all_chars()
     "篝火渐渐矮了下去。你往火堆里添了几根干柴，火焰重新跳跃起来。"
 
-    "远处的林子里传来一声狼嚎，悠长而凄厉，像是从远古传来的某种呼唤。"
+    "远处的林子里传来一声狼嚎，悠长而凄厉。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -1084,7 +1084,7 @@ label ch2_preparation:
     elena "夜深了。明天还要早起赶路。领主大人，晚安。"
 
     $ hide_all_chars()
-    "她走了。你独自坐在篝火旁，望着满天繁星，思绪像那些火星一样在黑暗中明灭不定。"
+    "她走了。你独自坐在篝火旁，望着满天繁星。"
 
     "风又起了，把篝火吹得忽明忽暗。"
 
@@ -2584,7 +2584,7 @@ label ch2_after_council:
     show elena_img at left with dissolve
     elena "有一天，如果我做了什么让您不理解的事——请相信，我有我的理由。"
 
-    "这句话来得毫无征兆，像是一颗突然落下的石子。"
+    "这句话来得毫无征兆。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -2847,7 +2847,7 @@ label ch2_assassination:
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "全军警戒！有埋伏！"
-                "你的声音在寂静的林中炸开，像是一块石头砸碎了一面镜子。"
+                "你的声音在寂静的林中炸开。"
                 jump ch2_ambush_prepared
 
             "悄悄让雷恩做准备":
@@ -3084,7 +3084,7 @@ label ch2_ambush_prepared:
     hide captain_img with dissolve
 
     $ hide_all_chars()
-    "战斗结束了，但疑问像刺客留下的血迹一样蔓延开来。"
+    "战斗结束了。"
 
     "你看着地上那些黑衣刺客的尸体。他们的装备精良，动作配合默契——这不是一般的盗匪。"
 
@@ -3411,7 +3411,7 @@ label ch2_end:
         show aldric_img at left with dissolve
         aldric "关于一切。"
 
-    "老骑士的语气异常沉重。你从他脸上读到了深深的忧虑——不只是为今晚的伏击，更像是某种古老的恐惧被重新唤醒。"
+    "老骑士的语气异常沉重。你从他脸上读到了深深的忧虑——不只是为今晚的伏击。"
 
     menu:
         "追问——「关于一切，是什么意思？」" if (intrigue >= 45 or rel_aldric >= 50) and not father_was_regent_known:
@@ -3724,7 +3724,7 @@ label ch2_end:
 
     "你拿起桌上的铜镜，仔细端详自己的面容。"
 
-    "铜镜里映出的是一张年轻的脸——但已经不再稚嫩了。脸颊上那道浅浅的血痕，像是命运留下的第一道刻印。"
+    "铜镜里映出的是一张年轻的脸——但已经不再稚嫩了。"
 
     "你把铜镜放下，闭上眼睛。"
 
@@ -3896,7 +3896,7 @@ label ch2_end:
 
     "回到艾登堡的那一刻，你才意识到自己有多累。"
 
-    "窗外，一只夜枭发出了一声长鸣。悠远而苍凉，像是古老的预言。"
+    "窗外，一只夜枭发出了一声长鸣，悠远而苍凉。"
 
     "你沉沉睡去。梦里，有一朵百合花在黑暗中缓缓绽放。"
 

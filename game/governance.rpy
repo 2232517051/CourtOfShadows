@@ -254,7 +254,7 @@ label gov_tax_progressive:
     hide aldric_img with dissolve
 
     $ hide_all_chars()
-    "消息像春风一样传遍了每个村庄。"
+    "消息很快传遍了每个村庄。"
     "在河谷、在磨坊、在田间地头，农民们第一次觉得——这位新领主，或许真的不一样。"
 
     $ change_stat("reputation", 10)
@@ -617,7 +617,7 @@ label gov_famine_crisis:
 
     "你骑马巡视领地，所见之处触目惊心。"
 
-    "干裂的土地上，枯黄的麦穗耷拉着头，像是在无声地哀求。"
+    "干裂的土地上，枯黄的麦穗耷拉着头。"
     "一个老农蹲在田埂上，双手捧着一把干土，泪流满面。"
 
     scene bg great_hall with dissolve
@@ -815,7 +815,7 @@ label gov_famine_ration:
     "配给制推行后，每家每户只能领到勉强维持生存的口粮。"
     "街上的人们面色蜡黄，脚步虚浮。活着，仅仅是活着。"
 
-    "然而，不满的声音像地下的火焰一样蔓延。"
+    "然而，不满的声音在暗地里蔓延。"
 
     $ hide_all_chars("farmer_rep_img")
     show farmer_rep_img at left with dissolve
@@ -882,7 +882,6 @@ label gov_famine_castle:
     $ hide_all_chars()
     "消息传遍了整个领地。"
     "人们口口相传——「新领主把自己的粮食分给了我们。」"
-    "在所有关于权谋和阴谋的故事里，这个简单的善举，像一束光照进了黑暗。"
 
     $ change_stat("loyalty", 15)
     $ change_stat("reputation", 10)
@@ -1286,7 +1285,7 @@ label gov_plague:
     scene bg village with dissolve
     play music "audio/music/tension.ogg" fadeout 1.0 fadein 1.0 if_changed
 
-    "坏消息像冬天的寒风一样席卷而来。"
+    "坏消息来得很突然。"
 
     show captain_img at right with dissolve
 
@@ -2014,7 +2013,7 @@ label gov_merchant_reject:
     player "从今天起，我将推行自由贸易政策。任何人都可以在艾登堡做买卖。"
     player "商会可以参与竞争，但不享有任何特权。"
 
-    "克劳斯的脸色变了。那种变化很微妙——像一潭深水下暗流涌动。"
+    "克劳斯的脸色变了。那种变化很微妙。"
 
     hide player_char_img
     $ hide_all_chars("merchant_guild_img")

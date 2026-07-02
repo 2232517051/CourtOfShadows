@@ -57,7 +57,7 @@ screen changelog_screen():
                     null height 4
                     text "· 39 处中期关键选项加入真实取舍与剧情走向差分" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 商会会长克劳斯的「这事没完」兑现；商人卡尔的复仇往事与结局归宿；世纪婚礼格雷伯爵后续；根卫暗记等十余处一次性钩子全部落地" size 14 color "#c8b890" font "msyh.ttf"
-                    text "· 全篇 117 处旁白措辞修订；修正多处前后矛盾与重复揭示" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 全篇 200 余处旁白措辞修订；渗透调查加入成败判定；困难模式会战更具挑战；修正多处前后矛盾与重复揭示" size 14 color "#c8b890" font "msyh.ttf"
 
             null height 4
 
