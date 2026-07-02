@@ -257,12 +257,12 @@ init python:
                     "text": "讨价还价「用口才压价」",
                     "stat_req": ("intrigue", 25),
                     "success": {
-                        "narration": "你漫不经心地翻看货物，指出几处瑕疵。商人脸色微变。\n\n「这品质，不值你开的价。」你又补了一句，「当然，我是个长期客户。以后你走这条路，都可以到艾登堡歇脚。」\n\n商人权衡了一番，同意以七折成交。你以极低的价格买到了一批上好的物资。",
-                        "effects": [("stat", "wealth", -3), ("stat", "intrigue", 2), ("stat", "power", 2), ("stat", "faith", 1)],
+                        "narration": "你漫不经心地翻看货物，指出几处瑕疵。商人脸色微变。\n\n「这品质，不值你开的价。」你又补了一句，「当然，我是个长期客户。以后你走这条路，都可以到艾登堡歇脚。」\n\n商人权衡了一番，同意以七折成交。你以极低的价格买到了一批上好的物资，药草和绷带装了满满一箱。",
+                        "effects": [("stat", "wealth", -3), ("stat", "intrigue", 2), ("stat", "power", 2), ("stat", "faith", 1), ("item", "medicinal_herbs", 2), ("item", "bandage", 2)],
                     },
                     "failure": {
-                        "narration": "你试图压价，但这个商人显然也是个老手。一番唇枪舌剑后，他寸步不让。\n\n最终你不得不按原价购买了一些物资。",
-                        "effects": [("stat", "wealth", -6), ("stat", "loyalty", 1)],
+                        "narration": "你试图压价，但这个商人显然也是个老手。一番唇枪舌剑后，他寸步不让。\n\n最终你不得不按原价购买了一些物资，好在绷带的成色不差。",
+                        "effects": [("stat", "wealth", -6), ("stat", "loyalty", 1), ("item", "bandage", 2)],
                     },
                 },
                 {

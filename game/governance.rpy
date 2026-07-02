@@ -27,6 +27,7 @@ default built_clinic = False
 default built_granary = False
 default built_watchtower = False
 default famine_prevented = False
+default gov_merchant_outcome = ""  ## "monopoly"/"regulated"/"reject" — 克劳斯商会谈判结果, interlude/ch5 回响用
 
 ################################################################################
 ## 3. 治理辅助函数
@@ -578,7 +579,10 @@ label gov_tax_reform_end:
 
     if prologue_study_focus == "commerce":
         "你习惯性地翻开账册，目光扫过每一行数字——修道院那个犹太裔学者教的那些东西，终于派上了用场。"
-        "凭着对货币流通的敏锐直觉，你很快发现了几处可以优化的环节：一批积压的羊毛可以趁价高出手，两条闲置的贸易通道可以重新启用。"
+        if karl_met:
+            "凭着对货币流通的敏锐直觉，你很快发现了几处可以优化的环节：一批积压的羊毛可以趁价高出手，卡尔提过的那两条闲置商路可以重新启用。"
+        else:
+            "凭着对货币流通的敏锐直觉，你很快发现了几处可以优化的环节：一批积压的羊毛可以趁价高出手，两条闲置的贸易通道可以重新启用。"
         "这些「小钱」加起来，足以让金库多喘一口气。"
         $ change_stat("wealth", 5)
 
@@ -626,7 +630,31 @@ label gov_famine_crisis:
     aldric "情况比我们预想的更糟。"
     aldric "照目前的估算，今年的收成最多只有往年的三成。"
 
-    if governance_prosperity >= 60:
+    if built_granary:
+        aldric "好在山上那座新粮仓建成了。五千石存粮一粒未动——省着吃，够全领地撑到开春。"
+        "（由于粮仓储备充足，危机就地化解。）"
+
+        hide aldric_img with dissolve
+
+        $ hide_all_chars()
+        "你当天就下令开仓。各村按户领粮，凭里正画押，每十日一次。"
+        "粮价没有涨起来，也没有人抢仓。头一批领到粮的，是河谷那几个受灾最重的村子。"
+
+        $ hide_all_chars("farmer_rep_img")
+        show farmer_rep_img at left with dissolve
+        farmer_rep "领主大人，河谷的人让我给您带句话——"
+        farmer_rep "您在山上动工的时候，还有人嘀咕这是乱花钱。现在没人说了。"
+
+        $ hide_all_chars()
+        "旱情一直拖到开春才缓。但艾登堡没有饿死一个人。"
+
+        $ change_stat("loyalty", 8)
+        $ change_stat("reputation", 5)
+        $ change_prosperity(5)
+        $ famine_prevented = True
+        $ governance_events_seen.append("famine_crisis")
+        return
+    elif governance_prosperity >= 60:
         aldric "不过，由于您之前的治理有方，我们的粮仓还有相当的储备。"
         aldric "至少……不至于饿死人。但我们仍需谨慎行事。"
         "（由于繁荣度较高，危机的烈度有所降低。）"
@@ -747,7 +775,10 @@ label gov_famine_buy:
     if governance_prosperity >= 60:
         if prologue_study_focus == "commerce":
             $ change_stat("wealth", -8)
-            "凭借你对粮食市场的了解，你找到了报价最合理的供货商，还谈下了分期付款。实际花费比预想的少得多。"
+            if gov_merchant_outcome in ("monopoly", "regulated"):
+                "凭借你对粮食市场的了解，加上克劳斯商会给的「合作价」，实际花费比预想的少得多。商会的门路，这一次帮了大忙。"
+            else:
+                "凭借你对粮食市场的了解，你找到了报价最合理的供货商，还谈下了分期付款。实际花费比预想的少得多。"
         else:
             $ change_stat("wealth", -10)
             "由于此前的储备充足，实际花费比预想的少一些。"
@@ -1909,6 +1940,7 @@ label gov_merchant_monopoly:
     $ change_stat("loyalty", -10)
     $ change_prosperity(-5)
 
+    $ gov_merchant_outcome = "monopoly"
     $ governance_events_seen.append("merchant_negotiation")
     jump gov_merchant_end
 
@@ -1956,6 +1988,7 @@ label gov_merchant_regulated:
     $ change_stat("reputation", 5)
     $ change_prosperity(5)
 
+    $ gov_merchant_outcome = "regulated"
     $ governance_events_seen.append("merchant_negotiation")
     jump gov_merchant_end
 
@@ -2016,6 +2049,7 @@ label gov_merchant_reject:
 
     "短期内财富略有损耗。但民心所向，自由贸易为长远发展奠定了基础。"
 
+    $ gov_merchant_outcome = "reject"
     $ governance_events_seen.append("merchant_negotiation")
     jump gov_merchant_end
 

@@ -560,6 +560,14 @@ label ch5_exp_mobilize:
 
         "你只能用你现有的一切去战斗。"
 
+    if built_granary:
+        "山丘上那座五千石的粮仓装得满满当当。管事的老吏拍着仓门告诉你：围城三个月，饿不死人。"
+        $ ch5_exp_defender_bonus += 1
+
+    if built_watchtower:
+        "北岗的望楼日夜有人值守，旗语白天传、烽火夜里传。敌军离城还有半天路程，你就能收到警报。"
+        $ ch5_exp_defender_bonus += 1
+
     ## --- 战前NPC对话 ---
 
     scene bg great_hall with dissolve
@@ -1674,7 +1682,10 @@ label ch5_exp_skirmish:
     if ch5_exp_casualties > 0:
         "战斗结束后，你走下城墙，来到临时搭建的伤兵棚。"
 
-        "大夫和修女们忙碌地穿梭在伤员之间。空气中弥漫着血腥味和草药的苦涩。"
+        if built_clinic:
+            "玛格丽特带着诊所的两个学徒在棚里坐镇，大夫和修女们听她调度。伤员没有一个因为等不到人而死。"
+        else:
+            "大夫和修女们忙碌地穿梭在伤员之间。空气中弥漫着血腥味和草药的苦涩。"
 
         "一个受了箭伤的年轻士兵躺在草席上，脸色苍白。你认出了他——就是昨晚写不出信的那个人。"
 

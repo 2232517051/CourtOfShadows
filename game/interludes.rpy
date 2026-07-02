@@ -899,9 +899,9 @@ label interlude_ch4_ch5_council:
         aldric "更糟的是，有人在煽动。有个来路不明的人在村子里散布谣言，说您要用农民的血来换贵族的权力。"
         "你心中一沉。内部的裂痕，有时比外敌更致命。"
 
-    elif first_decree == "economy":
-        aldric "您推行的商税改革引发了反弹。三家最大的商会联合抵制新税制，他们封锁了通往艾登堡的主要商路。"
-        aldric "市场上的粮价在三天内涨了两倍。如果再持续一周，城里就要断粮了。"
+    elif gov_merchant_outcome == "reject":
+        aldric "商会动手了。克劳斯纠集了另外两家商会，封锁了通往艾登堡的主要商路。"
+        aldric "市场上的粮价三天里涨了两倍。再拖一周，城里就要断粮。"
         "一场没有刀剑的围城战。那些商人比你想象的更有手段。"
 
     else:
@@ -929,10 +929,19 @@ label interlude_ch4_ch5_council:
 
     captain "他们在探路。这意味着大部队不远了。"
 
+    if re_smuggler_outcome == "recruit":
+        captain "还有——「南边那位朋友」的信也到了。王后军的粮船这个月在河湾多停了两回，卸下来的东西用油布盖着，不是粮。"
+        "走私商人的暗语信，比任何斥候都先摸到了补给线的动静。"
+        $ change_stat("intrigue", 2)
+
     $ hide_all_chars()
     "你的脑海中闪过那份关于王后秘密军队的情报。南边是王后的猎鹰堡，北边是蛮族的铁蹄——"
 
     "艾登堡夹在中间。"
+
+    if gov_merchant_outcome == "reject":
+        "蛮族的消息当晚就传遍了全城。第二天一早，克劳斯的商队自己回来了——商人比谁都清楚，战乱一起，封锁就是自杀。"
+        "商路之争还没分出胜负，战争先来了。"
 
     if alliance_church:
         "门被推开，主教马修斯走了进来。他的白色法袍在火把光中几乎发光。"
@@ -1395,6 +1404,9 @@ label _interlude_karl_returns_deep:
     show merchant_karl_img at left with dissolve
 
     merchant "您也是。"
+
+    if karl_debt_owed:
+        merchant "对了——那五百金币的账，一笔勾销。买家的身份，匣子里那本册子写得比我嘴里的清楚。"
 
     merchant "如果……您将来路过北方，请去温特菲尔德村看一看。我父亲坟前那棵橡树，是我五岁那年种的。"
 

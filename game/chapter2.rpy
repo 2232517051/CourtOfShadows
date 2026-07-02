@@ -46,8 +46,8 @@ label chapter2_start:
     call interlude_ch1_ch2 from _call_interlude12
     call interlude_ch1_ch2_dream from _call_interlude12_dream
 
-    ## NPC支线（第二章可用）— 先揭秘再承诺
-    call npc_merchant_karl_past from _call_npc_mkp
+    ## NPC支线（第二章可用）
+    ## （卡尔的过去移至第三章开头：须在哈伦堡贸易协议之后，深谈分支才可达）
     call npc_aldric_secret from _call_npc_as2
 
     ## NPC深度支线 — 基于已揭秘的骑士团身份展开
@@ -60,6 +60,10 @@ label chapter2_start:
 
     ## 章节深化
     call ch2_deep_church_midnight from _call_ch2_dcm
+
+    ## 治理系统：建设工程 / 饥荒危机（建设在前——粮仓建成可降低旱灾烈度）
+    call gov_building from _call_gov_build2
+    call gov_famine_crisis from _call_gov_famine2
 
     ## ============================================================
     ## 场景1：出发前的准备
@@ -1609,6 +1613,18 @@ label ch2_preparation:
 
     elena "这个商盟近年来势力扩张很快，甚至开始插手领主之间的事务。"
 
+    if "merchant_negotiation" in governance_events_seen:
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "北方商盟……克劳斯来谈独家经营权的时候，提过商会控制着南北整条供应链。"
+        player "艾登堡商会，多半也挂在这张网底下。"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "我回去后会查证这条线。"
+
     hide elena_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
@@ -2150,6 +2166,9 @@ label ch2_compromise_tax:
 
 label ch2_after_council:
 
+    ## 章节深化：间谍的代价（议事散场后的大厅）
+    call ch2_deep_spy from _call_ch2_dspy
+
     $ play_music("audio/music/market_bustle.ogg", fadein=2.0)
     scene bg market with dissolve
     $ unlock_gallery("bg_market")
@@ -2308,6 +2327,7 @@ label ch2_after_council:
             "他递过来一个沉甸甸的皮袋。你掂了掂，重量不假。"
             merchant "另外，送领主大人一个免费的消息——作为新客户的见面礼。"
             merchant "今晚子时，在集市西头的旧仓库——会有一场不该发生的交易。如果领主大人感兴趣的话。"
+            $ karl_warehouse_tip = True
             "他意味深长地笑了笑，往集市深处走了几步就和石墙的颜色混在了一起。"
 
         "先听听他的消息":
@@ -2328,6 +2348,10 @@ label ch2_after_council:
             merchant "一本关于毒药的书。"
 
             "你的心跳猛然加速。"
+
+            "你想起奥尔德里克在父亲书房里找到的那几张纸条——『货已备妥，待霜月交割。请务必亲至。』"
+
+            "写条子的那个「南方商人」，就坐在你面前。"
 
             hide merchant_karl_img
             $ hide_all_chars("player_char_img")
@@ -2441,6 +2465,7 @@ label ch2_after_council:
                     merchant "他属于一个……特殊的阶层。"
                     "特殊的阶层？教会？军队？还是别的什么？"
                     $ merchant_deal = True
+                    $ karl_debt_owed = True
 
                 "拒绝":
                     hide merchant_karl_img
@@ -3302,17 +3327,6 @@ label ch2_ambush_surprised:
 
     jump ch2_end
 
-    ## 章节深化：间谍的代价 / 男爵的私信
-    call ch2_deep_spy from _call_ch2_dspy
-    call ch2_deep_baron_letter from _call_ch2_dbl
-
-    ## 治理系统：饥荒危机 / 建设工程
-    call gov_famine_crisis from _call_gov_famine2
-    call gov_building from _call_gov_build2
-
-    ## 治理报告
-    call gov_report from _call_gov_rep2
-
     ## ============================================================
     ## 第二章结尾
     ## ============================================================
@@ -3812,6 +3826,10 @@ label ch2_end:
     "有人想要你的命。是男爵？是暗百合？还是另有其人？"
 
     "刺客的装备和训练水平都不是普通势力能提供的。在你的领地周围，有一股你看不见的力量在运作。"
+
+    if karl_warehouse_tip:
+        "离开哈伦堡前，你让艾琳娜的人盯过卡尔说的那座旧仓库。子时进出的货车没有徽记，可赶车人穿着男爵家马厩的皮围裙。"
+        "又是男爵。"
 
     if poison_evidence:
         "商人卡尔的话在你脑海中回响——父亲死于毒药，而买毒药的人……与教会有关。"

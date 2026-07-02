@@ -65,6 +65,9 @@ label ch5_war_clouds:
 
     "你站在城垛上，远眺北方的地平线。那里有隐约的烟尘——那是军队行进的痕迹。"
 
+    if built_watchtower:
+        "其实昨夜北岗望楼的烽火就亮了。旗语一站一站传回城里，你比任何斥候都早半天知道有军队开拔。"
+
     "一名骑兵从远处疾驰而来，马蹄声在清晨的空气中格外清晰。"
 
     $ hide_all_chars("captain_img")
@@ -96,6 +99,10 @@ label ch5_war_clouds:
     captain "是的。按目前的行军速度，他们将在十天后在艾登堡以北的平原交战。"
 
     captain "而我们的领地，正好在两军的必经之路上。"
+
+    if land_rumor_heard:
+        "你想起那场婚宴上格雷伯爵的提醒——有人在暗中收购你领地周围的土地。"
+        "军队未动，粮草先行。那些买地的人，买下的是大军过境的粮道。"
 
     menu:
         "立即派出更多斥候，密切监视双方动向":
@@ -138,7 +145,10 @@ label ch5_war_clouds:
             show captain_img at left with dissolve
             captain "领主大人仁慈。我这就安排。"
             "接下来几天，源源不断的村民涌入艾登堡，城内很快变得拥挤起来。"
-            "粮仓的存粮按人头一算，原本能撑两个月，如今怕是连一个月都难。混在难民里的生面孔太多，谁是逃命的、谁是来探路的，一时也理不清。"
+            if built_granary:
+                "多亏山上那座五千石的大粮仓，存粮按人头一算，挤一挤还能撑过两个月。混在难民里的生面孔太多，谁是逃命的、谁是来探路的，一时也理不清。"
+            else:
+                "粮仓的存粮按人头一算，原本能撑两个月，如今怕是连一个月都难。混在难民里的生面孔太多，谁是逃命的、谁是来探路的，一时也理不清。"
 
     hide captain_img with dissolve
 
@@ -852,13 +862,27 @@ label ch5_military_deploy:
 
     aldric "领主大人，关于物资储备的情况——"
 
-    aldric "粮仓中的存粮可以供城内目前的人口食用约两个月。"
+    if built_granary:
+        aldric "存粮将近三个月——您当年在山上建的那座粮仓，如今是全城的底气。"
 
-    aldric "如果继续有难民涌入，这个时间会缩短到一个月左右。"
+        aldric "就算难民继续涌入，也能撑过两个月。"
+    else:
+        aldric "粮仓中的存粮可以供城内目前的人口食用约两个月。"
+
+        aldric "如果继续有难民涌入，这个时间会缩短到一个月左右。"
 
     aldric "饮水方面，城堡内有两口深井，暂时不用担心。"
 
-    aldric "药草和绷带的储备也比较充足——多亏了教会的援助。"
+    if built_clinic:
+        aldric "药草和绷带的储备充足——玛格丽特的诊所平日就囤着药材，教会又补了一批。"
+    else:
+        aldric "药草和绷带的储备也比较充足——多亏了教会的援助。"
+
+    if gov_merchant_outcome == "monopoly":
+        aldric "军需采买由克劳斯的商会包办。价钱咬人，但货是真的齐。"
+
+    if re_smuggler_outcome == "buy":
+        aldric "还有秘密仓库里那批精钢兵器——也清点入册了。来路老臣不问，用起来确实趁手。"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
@@ -1435,6 +1459,36 @@ label ch5_counsel_all:
 
     hide elena_img with dissolve
 
+    ## --- 与英格丽谈话（政治联姻线, 批31: 婚约后终章戏份） ---
+
+    if marriage_route:
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+
+        ingrid "北边有消息。议会的卫队三天前过了界河，四百人，带了三个月的粮。"
+
+        ingrid "母亲的信使还说——男爵联军里有两家北境出身的骑士，议会去信敲打过了。开战的时候，他们的枪会抬高一寸。"
+
+        hide ingrid_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "替我谢过议会。"
+
+        if marriage_warm:
+            hide player_char_img
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "议会出兵，是因为盟约。我留在这里，不是。"
+            ingrid "你去打你的仗。我守你的城。"
+        else:
+            hide player_char_img
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "不必谢。盟约写得很清楚，艾登堡若失，北境的盐路跟着断。"
+            ingrid "这是买卖。买卖双方都活着，它才作数。"
+
+        hide ingrid_img with dissolve
+
     ## --- 与主教谈话 ---
 
     $ hide_all_chars("bishop_img")
@@ -1946,6 +2000,46 @@ label ch5_final_night:
 
     hide elena_img with dissolve
 
+    ## --- 英格丽（政治联姻线, 批31: 决战前夜戏份） ---
+
+    if marriage_route:
+        "艾琳娜走后没多久，回廊那头传来另一串脚步声。英格丽披着北境样式的毛披风，站在月光照不到的地方。"
+
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+
+        if marriage_warm:
+            ingrid "睡不着？我也是。"
+
+            ingrid "北境人出战前不祝好运。我们只说一句话——把火留着，我回来添柴。"
+
+            hide ingrid_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "把火留着。我回来添柴。"
+
+            $ hide_all_chars()
+            "她点了下头，转身走了。披风扫过廊柱，带落一小片霜。"
+        else:
+            ingrid "四百卫队的名册，放在你书房桌上了。每一队队正的名字都标了。"
+
+            ingrid "别把他们当填线的杂兵用。他们要是回不去，我在议会没法交代。"
+
+            hide ingrid_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我记住了。"
+
+            hide player_char_img
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "……活着回来。签了婚书就死，这买卖太亏。"
+
+            $ hide_all_chars()
+            "她说完就走了，没等你回话。"
+
+        hide ingrid_img with dissolve
+
     $ hide_all_chars()
     "花园里恢复了寂静。你抬头望向满天星斗。"
 
@@ -2057,7 +2151,7 @@ label ch5_final_choice:
 
     $ mark_important_choice()
     menu:
-        "以铁和血终结战争——用武力征服一切|权力路线 → 铁腕领主" if "iron_lord" in _top_endings:
+        "以铁和血终结战争——用武力征服一切|全军出击，同时迎战两路大军 → 铁腕领主" if "iron_lord" in _top_endings:
             $ log_decision("第五章", "选择以铁血手段终结战争")
             $ ending_type = "iron_lord"
             player "这个世界只尊重力量。既然和平无法用嘴巴说出来，那就用剑来实现。"
@@ -2071,7 +2165,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_iron
             jump ending_iron_lord
 
-        "让双方互相消耗，坐收渔利——暗中操控全局|谋略路线 → 影中之王" if "shadow_king" in _top_endings:
+        "让双方互相消耗，坐收渔利——暗中操控全局|按兵不动，让王后与男爵先斗，你在暗处收网 → 影中之王" if "shadow_king" in _top_endings:
             $ log_decision("第五章", "选择在暗影中操控一切")
             $ ending_type = "shadow_king"
             hide captain_img
@@ -2088,7 +2182,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_shadow
             jump ending_shadow_king
 
-        "借教会之力，以信仰终止战争|信仰路线 → 圣光守护" if "holy_guardian" in _top_endings and not lily_full_member:
+        "借教会之力，以信仰终止战争|请教会出面调停，以圣母之名逼双方停战 → 圣光守护" if "holy_guardian" in _top_endings and not lily_full_member:
             $ log_decision("第五章", "选择以信仰之光化解争端")
             $ ending_type = "holy_guardian"
             hide elena_img
@@ -2105,7 +2199,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_holy
             jump ending_holy_guardian
 
-        "保护子民——固守艾登堡，拒绝战争|忠诚路线 → 人民领主" if "peoples_lord" in _top_endings:
+        "保护子民——固守艾登堡，拒绝战争|不出城一步，只守不攻，保住城里每一个人 → 人民领主" if "peoples_lord" in _top_endings:
             $ log_decision("第五章", "选择守护人民的幸福")
             $ ending_type = "peoples_lord"
             hide bishop_img
@@ -2122,7 +2216,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_peoples
             jump ending_peoples_lord
 
-        "公布先王遗诏真相——让正义重见天日|真相路线 → 真相大白" if true_killer_known and testament_original_obtained:
+        "公布先王遗诏真相——让正义重见天日|当众公开遗诏，与王后正面对质 → 真相大白" if true_killer_known and testament_original_obtained:
             $ log_decision("第五章", "选择揭露全部真相")
             $ ending_type = "truth"
             hide aldric_img
@@ -2136,7 +2230,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_truth
             jump ending_truth
 
-        "用毒药清理一切——以母亲的方式收尾|毒药路线 → 毒药公爵" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
+        "用毒药清理一切——以母亲的方式收尾|不动刀兵，用「暮色之露」逐一清场 → 毒药公爵" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
             $ log_decision("第五章", "选择以毒药逐一清理敌人")
             $ ending_type = "borgia"
             hide aldric_img
@@ -2151,7 +2245,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_borgia
             jump ending_borgia
 
-        "效忠王后，换取艾登堡安全|附庸结局 → 附庸领主 (妥协)" if _vassal_available:
+        "效忠王后，换取艾登堡安全|签城下之盟——保人保地，交出自主 → 附庸领主" if _vassal_available:
             $ ending_type = "vassal"
             $ log_decision("第五章", "选择效忠王后, 艾登堡降为附庸")
             $ hide_all_chars("player_char_img")
@@ -2162,8 +2256,9 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_pragmatic
             jump ending_vassal
 
-        "加入男爵联军，对抗王后暴政|反抗路线 风险较高" if _resist_available:
+        "加入男爵联军，对抗王后暴政|与男爵会师，正面迎战王后军（风险较高）→ 铁腕领主" if _resist_available:
             $ ending_type = "iron_lord"
+            $ resist_route = True
             $ log_decision("第五章", "选择加入男爵联军反抗")
             player "王后的统治建立在谎言和暴力之上。是时候终结了。"
             player "告诉男爵——艾登堡与他并肩作战。"
@@ -2171,7 +2266,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_resist
             jump ending_iron_lord
 
-        "什么都做不了，等命运来到艾登堡的城门下|失败结局 → 艾登堡陷落" if _fall_only:
+        "什么都做不了，等命运来到艾登堡的城门下|不设防，不谈判 → 艾登堡陷落" if _fall_only:
             $ ending_type = "fall"
             $ log_decision("第五章", "无路可走, 静候艾登堡陷落")
             $ hide_all_chars("player_char_img")
@@ -2210,8 +2305,15 @@ label ending_iron_lord:
             iron_war_score += 3                          # 雷恩的精锐死忠
         if ch5_pay_advance_pension:
             iron_war_score += 3                          # 抚恤已发: 士兵知道家里有着落, 阵前不惜命 (选择深度 L2)
+        if marriage_route:
+            iron_war_score += 5                          # 北疆议会卫队四百人 (婚约承诺兑现, 批31)
 
     "艾登堡的军队集结完毕。旗帜在春风中猎猎作响。"
+    if resist_route:
+        "这一次，你的旗帜旁还立着男爵的黑狼旗。信使已经带回了他的亲笔回信——「并肩」。"
+        "你们的敌人只有一个：从南边压上来的王后军。"
+    if marriage_route:
+        "左翼列着北疆议会的四百卫队。渡鸦旗被雨水打湿，沉甸甸地垂着。"
     if ch5_pay_advance_pension:
         "队列里没人交头接耳。抚恤银上个月就发到了各家手里——他们清楚，就算自己回不来，家里也有米下锅。这种安静，雷恩说，比喊破嗓子的口号顶用。"
 
@@ -2271,7 +2373,12 @@ label ending_iron_lord:
     hide captain_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "我的探子带回了敌军的情报。他们的主力驻扎在北坡，大约八百人。"
+    if resist_route:
+        elena "我的探子带回了王后军的情报。他们的先锋主力驻扎在北坡，大约八百人。"
+    elif alliance_baron:
+        elena "我的探子带回了敌军的情报——王后军的先锋。他们的主力驻扎在北坡，大约八百人。"
+    else:
+        elena "我的探子带回了敌军的情报。他们的主力驻扎在北坡，大约八百人。"
 
     hide elena_img
     $ hide_all_chars("captain_img")
@@ -4142,7 +4249,10 @@ label ending_peoples_lord:
 
     "第一，加固城墙。每一块松动的石头都要重新加固。"
 
-    "第二，储备粮食。城内的粮仓必须装满，至少能支撑三个月。"
+    if built_granary:
+        "第二，把山上那座五千石的粮仓装满。当年建它，就是为了今天。"
+    else:
+        "第二，储备粮食。城内的粮仓必须装满，至少能支撑三个月。"
 
     "第三，收容难民。所有城外的百姓，不管来自哪个领地，一律接收。"
 
@@ -5457,8 +5567,24 @@ label ending_borgia:
         "你没有阻拦。你也没有派人去找。"
 
         $ change_rel("rel_elena", -50)
+    else:
+        "艾琳娜没有说破。她只是从那个月起，把每一份要她经手的情报都留了一份底。"
 
-    ## ── 第四幕：登顶 ──
+        "半年后她走了，走得干净——名册、暗号、线人，全部交接清楚。"
+
+        "她最后留给你的，是一张字条：「我父亲死在毒药手里。我不替用毒的人做事。」"
+
+    if rel_captain >= 60:
+        "雷恩来找过你一次。他把一份「近来暴毙贵族」的名单放在你桌上，什么都没问。"
+
+        "你也什么都没答。他行了个军礼，出去时把门带得很轻。"
+
+        "从那以后，他只管练兵守城。清单上的事，他一个字都不碰。"
+
+    if dark_lily_joined:
+        "暗百合分裂了。一半人认为你在做他们一直想做的事，另一半人认为你玷污了「守护」两个字。"
+
+        "首领最后下了封口令：不帮，不拦，不提。百合花从你的清单旁边绕了过去。"
     scene bg throne_room with dissolve
     pause 0.5
 
@@ -5639,6 +5765,9 @@ label ending_vassal:
         "艾琳娜在签约后第二天就消失了。"
         "你猜她回了她原来该回的地方。"
 
+    if dark_lily_joined:
+        "暗百合在王旗进城前就撤空了据点。首领留了话：「百合不开在别人的花瓶里。等你想通了，纹章还认。」"
+
     pause 1.2
 
     scene bg castle_garden with dissolve
@@ -5761,6 +5890,13 @@ label ending_fall:
 
     "大厅里着火了。 不知道是哪一边的人放的。"
 
+    if elena_romance:
+        "艾琳娜是三天前走的。她把最后一份撤离路线图拍在你桌上，求你带着人从西谷走。"
+        "你没走。她红着眼睛骂了你一句什么，你没听清。那是你最后一次见她。"
+    elif marriage_route:
+        "英格丽是前天走的。议会的快马来接她——盟约里写明了：城若不可守，北境保人不保城。四百卫队跟着撤回了界河以北。"
+        "她走前把那份卫队名册烧了。没解释。"
+
     "你抓起父亲的剑， 站在桌子后面。"
 
     "门外脚步声越来越近。"
@@ -5834,13 +5970,12 @@ label game_ending:
 
     centered "{size=+12}权谋之庭{/size}"
 
-    "最终属性："
-    "权力： [power] | 财富： [wealth] | 信仰： [faith]"
-    "忠诚： [loyalty] | 声望： [reputation] | 谋略： [intrigue]"
-
     if ending_type == "iron_lord":
         centered "{size=+8}结局：铁腕领主{/size}"
-        "以铁与血铸就和平。你的名字将被铭刻在战争的史册上。"
+        if resist_route:
+            "你与男爵并肩，终结了王后的暴政。你的名字将被铭刻在战争的史册上。"
+        else:
+            "以铁与血铸就和平。你的名字将被铭刻在战争的史册上。"
     elif ending_type == "shadow_king":
         centered "{size=+8}结局：影中之王{/size}"
         "在阴影中操控一切。你的名字无人知晓，但你的力量无处不在。"
@@ -5866,18 +6001,25 @@ label game_ending:
         centered "{size=+8}结局{/size}"
         "你的故事在这里画上了句号。"
 
-    "已解锁 [len(persistent.endings_seen)]/8 个结局"
-
-    if len(persistent.endings_seen) >= 8:
-        "恭喜你解锁了所有结局！你已经完整地体验了权谋之庭的每一条道路。"
-        "每一个选择都没有绝对的对错——只有不同的代价和收获。"
-
     ## 播放详细尾声
     call ending_epilogue_router from _call_ending_epilogue_router
 
     ## 老朋友的归宿 (2026-05-17 dccdfrsx 反馈新增)
     ## 在结局个人尾声播完后给马库斯/卡尔一个 closure
     call ending_side_characters_fate from _call_ending_side_chars
+
+    ## 终局结算（批31: 属性面板/图鉴计数下移至全部尾声之后, 不再打断叙事收束）
+    scene black with dissolve
+
+    "最终属性："
+    "权力： [power] | 财富： [wealth] | 信仰： [faith]"
+    "忠诚： [loyalty] | 声望： [reputation] | 谋略： [intrigue]"
+
+    "已解锁 [len(persistent.endings_seen)]/8 个结局"
+
+    if len(persistent.endings_seen) >= 8:
+        "恭喜你解锁了所有结局！你已经完整地体验了权谋之庭的每一条道路。"
+        "每一个选择都没有绝对的对错——只有不同的代价和收获。"
 
     ## 激活 New Game+
     $ activate_ng_plus()

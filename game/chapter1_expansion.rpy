@@ -887,6 +887,9 @@ label ch1_exp_morning_council:
         "书记官额头冒汗。你盯着他。"
         "两天后，他交来的明细表揭露了一个事实：前任账房中饱私囊，每年至少吃掉八十金币。"
         "你当即撤换了账房，堵住了这个漏洞。"
+        if ch1_deep_tax_verdict == "trust_collector":
+            "顺着账目往下翻，税务官格哈特的名字反复出现在几笔说不清去向的挂账里。法庭那天你在心里记下的备注，记对了。"
+            $ change_stat("intrigue", 2)
         $ change_stat("wealth", 5)
         $ change_stat("intrigue", 3)
         "缺口从三百缩小到了一百多。但仍然需要开源或节流。"

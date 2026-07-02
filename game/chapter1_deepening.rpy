@@ -23,6 +23,7 @@ default ch1_deep_tax_verdict = ""          # "audit" / "trust_collector" / "trus
 default ch1_deep_blackmarket_choice = ""   # "shutdown" / "infiltrate" / "buy"
 default ch1_deep_cellar_choice = ""        # "seal" / "secret" / "tell"
 default ch1_deep_guard_funeral = ""        # "military" / "peaceful" / "tower"
+default herman_moerg_tip = False           # 行脚商人赫尔曼: 莫格伯爵扩军传闻 (ch3 雷恩回响, 批31)
 
 ## ============================================================
 ## 场景一：父亲的坟前 (~220行)
@@ -601,6 +602,7 @@ label ch1_deep_patrol:
     "你没有揭穿他，而是问起了沿途的见闻。商人的嘴比他的货物还丰富。"
 
     "「哎，说起来，最近这一带可不太平。西边的莫格伯爵在扩军——招了两百多号人，说是剿匪，可谁信呢？」"
+    $ herman_moerg_tip = True
 
     "「北边的松林村那个铁匠——他家闺女跟一个外地来的骑士跑了，现在铁匠逢人就说要打断那骑士的腿。」"
 
@@ -956,10 +958,10 @@ label ch1_deep_court:
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "原告——丝绸商人维克多。被告——税务官格哈特。争议——维克多声称上一次缴税时被多收了三十枚银币。"
+    aldric "原告——丝绸商人马尔科。被告——税务官格哈特。争议——马尔科声称上一次缴税时被多收了三十枚银币。"
 
     $ hide_all_chars()
-    "商人维克多拱手行礼，姿态从容。"
+    "商人马尔科拱手行礼，姿态从容。"
 
     "「大人，我做的是正经生意。上个月我运了一批丝绸到领地内售卖，按照税率应缴纳七十枚银币。但格哈特大人收了我一百枚。多出来的三十枚，我要求退还。」"
 
@@ -967,7 +969,7 @@ label ch1_deep_court:
 
     "「大人，他说的不对。那批丝绸是从外邦进口的，按照外邦商品税率，应该加收三成。我收的完全合规。」"
 
-    "维克多冷笑了一声。"
+    "马尔科冷笑了一声。"
 
     "「外邦商品税？那条规矩是十五年前定的，早就没人执行了。您父亲在世时，从来没收过这个税。」"
 
@@ -994,7 +996,7 @@ label ch1_deep_court:
 
             "税务官的脸色白了一瞬。"
 
-            player "维克多——你也一样。把你的货运单据、交易记录全部整理好，交给管家。"
+            player "马尔科——你也一样。把你的货运单据、交易记录全部整理好，交给管家。"
 
             player "我不凭任何人的一面之词下判断。账本会告诉我真相。"
 
@@ -1010,7 +1012,7 @@ label ch1_deep_court:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "外邦商品税是写在律法里的。不管以前有没有执行，规矩就是规矩。维克多，三十枚银币不退。"
+            player "外邦商品税是写在律法里的。不管以前有没有执行，规矩就是规矩。马尔科，三十枚银币不退。"
 
             $ hide_all_chars()
             "商人的脸沉了下来，但他没有争辩。他只是深深地鞠了一躬。"
@@ -1034,10 +1036,10 @@ label ch1_deep_court:
 
             "税务官的嘴唇动了动，但没发出声音。"
 
-            player "退还维克多三十枚银币。如果要恢复外邦商品税，需要我正式颁布法令。在那之前，一切按旧规矩来。"
+            player "退还马尔科三十枚银币。如果要恢复外邦商品税，需要我正式颁布法令。在那之前，一切按旧规矩来。"
 
             $ hide_all_chars()
-            "维克多的脸上浮现出了笑意。他深深鞠躬。"
+            "马尔科的脸上浮现出了笑意。他深深鞠躬。"
 
             "「大人英明。」"
 

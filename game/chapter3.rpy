@@ -41,6 +41,12 @@ label chapter3_start:
     call npc_elena_past from _call_npc_ep3
     call npc_bishop_confession from _call_npc_bc3
 
+    ## 商人卡尔的过去（自第二章开头移入：哈伦堡贸易协议之后，深谈分支才可达）
+    call npc_merchant_karl_past from _call_npc_mkp
+
+    ## 章节深化（承接领主会议）：男爵的私信
+    call ch2_deep_baron_letter from _call_ch2_dbl
+
     ## 章节深化
     call ch3_deep_captain_scar from _call_ch3_dcs
     call ch3_deep_cure from _call_ch3_dcure
@@ -138,6 +144,12 @@ label ch3_strange_signs:
     hide player_char_img
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
+
+    if herman_moerg_tip:
+        captain "对了，上次那个行脚商人提的莫格伯爵——我托西边的同乡打听过了。两百新兵是真的，但到现在没出过营。"
+
+        captain "剿匪不像，倒像是在等着看谁先动手。西边暂时不用担心，但值得盯着。"
+
     captain "还有一件事。"
 
     "雷恩从怀中掏出一块粗糙的布片，上面画着一个奇怪的符号——一朵倒置的百合花。"
@@ -2161,6 +2173,8 @@ label ch3_tunnel_exploration:
             "你合上卷册。先王立七卫护王座，如今只剩莲卫一脉，以暗百合之名活到今天。"
             "你把鹰卫那一条又看了一遍——『识其暗记者，仍可凭之通信』。你记下了那个暗记的样子：一只展翅的鸟，刻在食指内侧。说不定哪天用得上。"
             $ knows_eagle_network = True
+            "根卫那一条旁边画着另一个记号：一团缠绕的树根。批注小字写着——『多刻于秤杆底端、门楣角上』。你也记下了。"
+            $ knows_root_network = True
             "你继续翻看第二卷。"
             "标题：《历代影主志》。"
             "第二卷记录了组织的传承——从建立到现在，已经有十七代首领。"
@@ -5876,6 +5890,7 @@ label ch3_end:
             player "替我谢过伯爵夫人的好意。盟约可以谈，但不必用婚约来绑。"
 
         "先拖着，看看北境的局势再说":
+            $ ch3_marriage_delayed = True
             $ log_decision("第三章", "对联姻提议拖延")
             player "回信说我需要时间。北境的事，我得先弄清楚。"
 

@@ -147,6 +147,8 @@ default dark_lily_field_intel = False
 default alliance_baron = False
 default alliance_church = False
 default merchant_deal = False
+default karl_warehouse_tip = False    # 卡尔赠的旧仓库交易情报 (ch2 末回响→男爵疑点, 批31)
+default karl_debt_owed = False        # 买家身份情报选了"先欠着" (卡尔深度回归时勾销, 批31)
 default assassination_survived = False
 default council_outcome = ""
 
@@ -179,6 +181,9 @@ default dark_lily_destroyed = False
 default shadow_guard_asset_revealed = False  # ch5 影卫王后女官眼线伏笔回收 (ch4_exp:1551 → ch5:1474)
 default true_killer_known = False
 default father_letters_found = False
+default wedding_attended = False        ## 世纪婚礼随机事件: 出席过婚宴 (ch4 格雷会面回响)
+default grey_support_promised = False   ## 世纪婚礼: 格雷伯爵许诺支持提案
+default land_rumor_heard = False        ## 世纪婚礼: 有人收购领地周边土地传闻 (ch5 开场回响)
 default ch3_dark_lily_visited = False
 default aldric_knows_passage = False
 ## 主角立绘版本切换 (chapter3 遇刺后 = True, 切换 player_char_scarred 立绘)
@@ -196,6 +201,7 @@ default queen_reconciled = False
 default courted_rival_lords = False
 ## 鹰卫信使网络支线(2026-06-18): ch3读《六卫终录》识暗记 → ch4王都接头启用 → ch4觐见前送情报
 default knows_eagle_network = False   # 读过六卫终录, 认得鹰卫暗记
+default knows_root_network = False    # 读过六卫终录, 认得根卫暗记 (ch4 王都南区集市回响, 批31)
 default eagle_network = False          # 已接头启用鹰卫信网
 default eagle_intel = False            # 觐见前收到信网情报
 default prince_ally = False
@@ -214,6 +220,8 @@ default elena_romance = False
 ## 政治联姻线「盟约」(玩家反馈: 联姻路线缺失/特色剧情线需求, batch22+成就党批)
 ## 与 Elena 恋爱线互斥: 走联姻则 ch4 暮色告白不再可选
 default marriage_route = False        # 接受希尔达伯爵夫人的联姻提议(ch3 入口)
+default ch3_marriage_delayed = False  # 联姻提议选了「先拖着」(ch4 王都希尔达二次来信收回提议)
+default resist_route = False          # 终章选「加入男爵联军」(铁腕结局的反抗变体文本)
 default marriage_warm = False         # ch4 会面子选择: 是否让政治盟约升温为真伙伴
 default court_faction = ""
 
@@ -274,9 +282,9 @@ init python:
         "romeo":            ("权谋情圣", "与艾琳娜达成浪漫关系", True, "心 隐藏成就"),
         "statecraft_marriage": ("盟约联姻", "与北疆议会缔结政治联姻", False, "接受希尔达伯爵夫人的联姻提议并完成婚约"),
         "betrayer":         ("背信弃义", "背叛弗雷德里克王子", True, "! 隐藏成就"),
-        "merchant_prince":  ("商业巨擘", "财富达到100且与商人卡尔合作", True, "金 隐藏成就"),
+        "merchant_prince":  ("商业巨擘", "财富攀至顶峰且与商人卡尔合作", True, "金 隐藏成就"),
         "lone_wolf":        ("独行之狼", "不与任何势力结盟通关", True, "狼 隐藏成就"),
-        "silver_tongue":    ("银舌如蛇", "谋略达到100", True, "刃 隐藏成就"),
+        "silver_tongue":    ("银舌如蛇", "谋略攀至顶峰", True, "刃 隐藏成就"),
         "all_friends":      ("八面玲珑", "所有角色好感度达到60以上", True, "* 隐藏成就"),
         "dark_path":        ("深渊凝视", "加入暗百合且谋略大于80", True, "暗 隐藏成就"),
         "pacifist":         ("和平使者", "不使用军事手段通关", True, "和 隐藏成就"),

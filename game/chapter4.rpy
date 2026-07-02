@@ -923,6 +923,16 @@ label ch4_palace:
 
         $ hide_all_chars()
 
+    ## ── 联姻拖延的后果（批31: 「先拖着」不再静默等同婉拒） ──
+    if ch3_marriage_delayed and not marriage_route:
+        "在王都的第二天，一个风尘仆仆的北疆信使追上了你。火漆还是那枚渡鸦纹。"
+
+        "『艾登堡的继承人：北境等不到你「弄清楚」的那一天。盐路一天不通，议会一天在失血。』"
+
+        "『提议就此作罢。愿你南边的事，办得比北边利落。——希尔达』"
+
+        $ change_rel("rel_hilda", -3)
+
     "几日筹备过后——觐见的日子到了。"
 
     ## ── 鹰卫信使网络支线 · 兑现(觐见前送来王后底牌) ──
@@ -934,6 +944,12 @@ label ch4_palace:
         "你现在知道她要什么了。这场觐见，你不是没准备走进去的。"
         $ change_stat("intrigue", 3)
         $ eagle_intel = True
+
+    ## ── 卡尔复仇支线兑现: 七人走私名单 (批31, 仿 eagle_intel 模式) ──
+    if karl_full_story:
+        "行囊夹层里还缝着一样东西——卡尔给你的那份名单。七个名字，一条从南方港口一直通到王宫膳房的走私链。"
+        "真到了对质的那一步，王后的账，不只写在王座上。"
+        $ change_stat("intrigue", 2)
 
     "天还未亮，内侍已在门外轻声传话——「王后陛下于巳时在王座大厅召见艾登堡领主。」"
 
@@ -979,7 +995,13 @@ label ch4_palace:
     hide player_char_img
     $ hide_all_chars("count_grey_img")
     show count_grey_img at left with dissolve
-    if grey_met:
+    if wedding_attended:
+        count_grey "又见面了，领主大人！婚宴上那半个时辰，老夫可还记得。"
+        if grey_support_promised:
+            count_grey "我许过的话作数——下次领主会议，老夫支持您的提案。今天来，是老夫也有一事相托。"
+        else:
+            count_grey "你我算是熟人了，不必寒暄。"
+    elif grey_met:
         count_grey "又见面了，领主大人！"
         count_grey "自上次会议一别，听闻您在艾登堡做得风生水起，果然名不虚传。"
     else:
@@ -1833,6 +1855,18 @@ label ch4_garden:
             prince "一个公平的王国。贵族和百姓不应该是狼和羊的关系。"
             prince "税收应该用在修路、建学堂、办济贫院上，而不是用来修建王后的城墙和宴会厅。"
             prince "我想让每一个孩子都有书读。让每一个农民都能吃饱饭。让正义不再只是有钱人的专利。"
+            if built_school:
+                hide prince_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "学堂我在艾登堡已经建了一座。农家的孩子上午下地，下午认字。"
+                hide player_char_img
+                $ hide_all_chars("prince_img")
+                show prince_img at left with dissolve
+                $ change_rel("rel_prince", 3)
+                prince "……真的？"
+                "他看你的眼神变了。不再是看一个可以争取的盟友，而是看一个已经在做他想做的事的人。"
+                prince "那你比我快了一步。"
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve

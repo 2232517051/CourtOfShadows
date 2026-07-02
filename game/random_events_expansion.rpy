@@ -542,12 +542,12 @@ init python:
                     "text": "盛装出席「全力展示实力」",
                     "stat_req": ("wealth", 30),
                     "success": {
-                        "narration": "你命人准备了最华贵的礼服和价值不菲的贺礼——一匹纯血的阿拉伯战马。\n\n婚宴上，你的风度和谈吐赢得了众多贵族的好感。格雷伯爵更是在私下与你密谈了半个时辰——他暗示愿意在下次领主会议上支持你的提案。\n\n最意外的收获是，你在宴席上偶遇了王后的侍女。她无意中透露了一个消息：王后近期打算派人巡视北方领地。\n\n这个提前得到的情报，价值无法估量。\n\n你带着满身的酒香和政治资本回到了艾登堡。",
-                        "effects": [("stat", "wealth", -8), ("stat", "reputation", 12), ("stat", "intrigue", 5)],
+                        "narration": "你命人准备了最华贵的礼服和价值不菲的贺礼——一匹纯血的阿拉伯战马。\n\n婚宴上，你的风度和谈吐赢得了众多贵族的好感。格雷伯爵更是在私下与你密谈了半个时辰——他许诺在下次领主会议上支持你的提案。\n\n最意外的收获是，你在宴席上偶遇了王后的侍女。她无意中透露了一个消息：王后近期打算派人巡视北方领地。\n\n这个提前得到的情报，价值无法估量。\n\n你带着满身的酒香和政治资本回到了艾登堡。",
+                        "effects": [("stat", "wealth", -8), ("stat", "reputation", 12), ("stat", "intrigue", 5), ("rel", "rel_grey", 8), ("flag", "wedding_attended", True), ("flag", "grey_support_promised", True)],
                     },
                     "failure": {
                         "narration": "你精心准备了出席婚宴，但在社交场合中不慎得罪了一位伯爵夫人——你把她的名字叫错了。\n\n这位善于记仇的贵妇人在宴席上处处为难你，让你在众多贵族面前十分尴尬。\n\n不过，格雷伯爵还是如约与你进行了私下交谈，收获不算全无。",
-                        "effects": [("stat", "wealth", -5), ("stat", "reputation", 3), ("stat", "intrigue", 3)],
+                        "effects": [("stat", "wealth", -5), ("stat", "reputation", 3), ("stat", "intrigue", 3), ("rel", "rel_grey", 3), ("flag", "wedding_attended", True)],
                     },
                 },
                 {
@@ -555,7 +555,7 @@ init python:
                     "stat_req": None,
                     "success": {
                         "narration": "你选择了简朴但得体的装束出席婚宴，没有刻意引人注目。\n\n在角落里安静观察，你反而看到了更多。\n\n你注意到男爵和一位你不认识的黑衣人在庭院中密谈；主教与来自罗马的特使交换了一个意味深长的眼神；而新娘的脸上，在众人祝福的时刻，闪过一丝不易察觉的悲伤。\n\n这场婚礼远不像表面上那么简单。每个人都在扮演着自己的角色，每一杯酒背后都是一笔交易。\n\n格雷伯爵的密谈也很有收获——他告诉你，有人在暗中收购你领地周围的土地。",
-                        "effects": [("stat", "intrigue", 10), ("stat", "reputation", 5), ("stat", "wealth", -3)],
+                        "effects": [("stat", "intrigue", 10), ("stat", "reputation", 5), ("stat", "wealth", -3), ("rel", "rel_grey", 3), ("flag", "wedding_attended", True), ("flag", "land_rumor_heard", True)],
                     },
                     "failure": None,
                 },

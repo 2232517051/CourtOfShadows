@@ -10,6 +10,7 @@ default re_wanderer_met = False
 default re_plague_doctor_met = False
 default re_fortune_told = False
 default re_smuggler_met = False
+default re_smuggler_outcome = ""      ## "buy"/"arrest"/"recruit" — 走私商人事件结果 (interlude/ch5 回响, 批31)
 default re_old_map_found = False
 default re_ghost_story_heard = False
 default re_orphan_met = False
@@ -495,7 +496,9 @@ label re_smuggler_buy:
     $ change_stat("wealth", 10)
     $ change_stat("power", 3)
     $ change_stat("reputation", -5)
+    $ add_item("iron_ore", 3)
     $ re_smuggler_met = True
+    $ re_smuggler_outcome = "buy"
 
     "如果有一天东窗事发……你最好确保这个商人永远闭嘴。"
 
@@ -527,6 +530,7 @@ label re_smuggler_arrest:
     $ change_stat("loyalty", 3)
     $ change_stat("wealth", 3)
     $ re_smuggler_met = True
+    $ re_smuggler_outcome = "arrest"
 
     "你做了正确的事。至少，在纸面上是这样。"
 
@@ -553,6 +557,7 @@ label re_smuggler_recruit:
     $ change_stat("intrigue", 10)
     $ change_stat("wealth", -2)
     $ re_smuggler_met = True
+    $ re_smuggler_outcome = "recruit"
 
     "从那天起，每隔半个月，就会有一封用暗语写成的信件，通过秘密渠道送到你的书房。"
 
