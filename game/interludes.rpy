@@ -422,6 +422,12 @@ label interlude_ch1_ch2_dream:
 
     "你开始做梦。"
 
+    if persistent.endings_seen:
+        ## 多周目记忆 (批7 stretch goal 轻实现): 走过结局的玩家, 梦里闪过前世碎片
+        "梦的开头有几个碎片，快得抓不住——雨里的战旗，烧着的大厅，一只朝你递过来的手。"
+
+        "都不是你经历过的事。可梦里的你，认得它们。"
+
     scene bg_study_night with dissolve
 
     "父亲的书房。一切都和你记忆中一模一样。"

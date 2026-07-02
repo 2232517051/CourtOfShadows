@@ -1391,6 +1391,11 @@ label gov_plague_clinic:
 label gov_plague_no_clinic:
     "没有诊所，没有医师——你几乎是赤手空拳面对这场灾难。"
 
+    if governance_health >= 60:
+        ## 治理子属性读点 (批31收尾轮): 民生健康底子好, 疫情起势慢
+        "唯一的好消息是，这些年领地的水井、沟渠一直有人管，百姓的底子不算差。疫病烧起来的势头，比预想的慢了几天。"
+        "这几天，就是你能用的全部。"
+
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 

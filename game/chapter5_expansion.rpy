@@ -571,6 +571,11 @@ label ch5_exp_mobilize:
     if famine_prevented:
         "民兵队列里有不少河谷来的面孔。那年大旱，领地没有饿死一个人——挨过那个冬天的人，如今站在这里。"
 
+    if governance_infrastructure >= 60:
+        ## 治理子属性读点 (批31收尾轮): 基建底子在守城战兑现
+        "这些年修的路和桥这时候显出用处：粮车从村里到城门只要半天，城墙根下的排水沟也早清过淤——雨季围城，最先垮的往往不是墙，是墙脚的积水。"
+        $ ch5_exp_defender_bonus += 1
+
     ## --- 战前NPC对话 ---
 
     scene bg great_hall with dissolve

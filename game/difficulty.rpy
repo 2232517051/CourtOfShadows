@@ -35,6 +35,16 @@ init 1 python:
         cfg = _ending_threshold_config.get(diff, _ending_threshold_config["normal"])
         return cfg.get(kind)
 
+    ## 铁腕会战阈值难度修正 (批31收尾轮): 模拟显示最优策略下完胜率 ~95% (normal),
+    ## hard +4 → 结盟玩家完胜~74% / 无盟友最优~38%完胜60%惨胜, 战败只惩罚无盟友乱打。
+    ## easy -2 保体验档爽感。sim: Tools/sim_batch31_balance.py
+    _war_threshold_mod = {"easy": -2, "normal": 0, "hard": 4}
+
+    def get_war_threshold_mod():
+        """铁腕会战 iron_war_score 判定阈值的难度修正"""
+        diff = persistent.difficulty or "normal"
+        return _war_threshold_mod.get(diff, 0)
+
     def get_difficulty_multiplier(delta):
         """根据难度调整属性变化量"""
         diff = persistent.difficulty or "normal"

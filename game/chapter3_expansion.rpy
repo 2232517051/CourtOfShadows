@@ -406,22 +406,12 @@ label ch3_exp_investigate_cunning:
             show player_char_img at left with dissolve
             player "播种者已经不在了。他让我来接替他。"
 
-            "蒙面人最终从怀中取出一张纸条推向你。"
-
-            hide player_char_img
-            $ hide_all_chars("assassin_char_img")
-            show assassin_char_img at left with dissolve
-            assassin "三天后，旧磨坊。别迟到。"
-
-            $ hide_all_chars()
-            "他站起身，走到拐角处头也没回。你低头看纸条——上面画着一朵百合花和一个地点的简图。"
-
-            "你成功打入了暗百合的外围。"
-
-            hide player_char_img with dissolve
-            hide assassin_char_img with dissolve
-
-            $ ch3_witness_count += 2
+            ## 渗透路线判定 #1 (栀子 2026-05-02 backlog: 渗透缺判定)
+            $ trigger_crisis("intrigue", 6,
+                "蒙面人的手在桌沿下按住了什么东西。这一刻——你的谎要圆得没有缝，眼神不能有半分闪躲。",
+                "ch3exp_bluff_win", "ch3exp_bluff_lose",
+                courage_cost=15)
+            call crisis_encounter from _call_crisis_ch3exp_bluff
 
         "暗中跟踪「看他去哪里」":
             $ change_stat("intrigue", 5)
@@ -429,17 +419,74 @@ label ch3_exp_investigate_cunning:
 
             "你没有打草惊蛇，而是在蒙面人离开酒馆后悄悄跟上。"
 
-            "他穿过了几条弯弯曲曲的小巷，最终进入了一间废弃的仓库。你在对面的屋顶上伏了两个时辰。"
+            ## 渗透路线判定 #2
+            $ trigger_crisis("intrigue", 5,
+                "他在第三条巷口突然停步回头。这一刻——你得在他的目光扫过来之前，变成一个恰好路过的醉汉。",
+                "ch3exp_tail_win", "ch3exp_tail_lose",
+                courage_cost=10)
+            call crisis_encounter from _call_crisis_ch3exp_tail
 
-            "在这段时间里，又有三个人先后进入仓库。他们都戴着面罩，走路的姿态刻意变换，以避免被认出。"
+    jump ch3_exp_crime_scene
 
-            "最后一个进去的人身形高大，走路带着微微的跛足。这个特征你见过——在男爵的领地。"
+## ── 渗透判定分支 (crisis 落点) ──
 
-            "暗百合和男爵之间，果然有联系。"
+label ch3exp_bluff_win:
 
-            "你记下了仓库的位置和每个人到达的时间。这些情报以后会派上用场。"
+    "蒙面人盯着你看了三息。然后从怀中取出一张纸条推向你。"
 
-            $ ch3_witness_count += 1
+    $ hide_all_chars("assassin_char_img")
+    show assassin_char_img at left with dissolve
+    assassin "三天后，旧磨坊。别迟到。"
+
+    $ hide_all_chars()
+    "他站起身，走到拐角处头也没回。你低头看纸条——上面画着一朵百合花和一个地点的简图。"
+
+    "你成功打入了暗百合的外围。"
+
+    $ ch3_witness_count += 2
+
+    jump ch3_exp_crime_scene
+
+label ch3exp_bluff_lose:
+
+    "蒙面人又低声问了一句：「种子落在哪里？」"
+
+    "这一句你接不上。停顿只有半息——够了。"
+
+    $ hide_all_chars()
+    "他起身离开，脚步不快，杯子都没有碰响。你追出门时，巷子里只剩下雨声。"
+
+    "三天后你派人盯住旧磨坊。那里空了——连地上的草料都被清走。酒馆这条线，断了。"
+
+    $ change_stat("intrigue", -6)
+
+    jump ch3_exp_crime_scene
+
+label ch3exp_tail_win:
+
+    "他穿过了几条弯弯曲曲的小巷，最终进入了一间废弃的仓库。你在对面的屋顶上伏了两个时辰。"
+
+    "在这段时间里，又有三个人先后进入仓库。他们都戴着面罩，走路的姿态刻意变换，以避免被认出。"
+
+    "最后一个进去的人身形高大，走路带着微微的跛足。这个特征你见过——在男爵的领地。"
+
+    "暗百合和男爵之间，果然有联系。"
+
+    "你记下了仓库的位置和每个人到达的时间。这些情报以后会派上用场。"
+
+    $ ch3_witness_count += 1
+
+    jump ch3_exp_crime_scene
+
+label ch3exp_tail_lose:
+
+    "你装醉靠墙的那一下慢了。他的目光在你身上停了一瞬，然后若无其事地继续走。"
+
+    "再拐过两个弯，人不见了。巷子是死的，墙头的浮灰没有蹬痕——他从哪出去的，你没看见。"
+
+    "第二天你让人把那片巷子翻了一遍。什么都没有。对方知道有人跟过他，这一片的据点只会换得更深。"
+
+    $ change_stat("intrigue", -4)
 
     jump ch3_exp_crime_scene
 

@@ -1952,6 +1952,23 @@ label ch4_deep_poet_befriend:
 
     "（你与莱昂间谍建立了友谊。一条通向南方情报的秘密渠道就此打开。）"
 
+    ## 公爵伏笔 (批27 backlog: 公爵无出场, 借莱昂渠道给存在感; 南方公爵=世纪婚礼新郎之父, 既有 canon)
+    hide court_poet_img
+    $ hide_all_chars("court_poet_img")
+    show court_poet_img at left with dissolve
+    court_poet "作为见面礼，送你一条我们莱昂人自己都觉得有意思的消息。"
+
+    court_poet "南方公爵——就是娶了格雷伯爵独女做儿媳的那位——这两年从莱昂买了三批好钢，走的全是私账。"
+
+    court_poet "王后不知道。或者说，装作不知道。你们王国的水，比表面上深。"
+
+    hide court_poet_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "（南方公爵……这盘棋上，原来不止王后和男爵两个下棋的人。）"
+
+    $ hide_all_chars()
+
     jump ch4_deep_poet_end
 
 label ch4_deep_poet_expose:
