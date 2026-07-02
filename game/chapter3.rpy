@@ -72,6 +72,10 @@ label ch3_strange_signs:
 
     "你站在城墙上，俯瞰着领地的全貌。田野、村庄、远处的森林——一切看起来平静如常。"
 
+    if merchant_deal:
+        "早上账房送来消息：卡尔商队的第一笔月钱入了库。两百金币，一枚不少。"
+        $ change_stat("wealth", 3)
+
     "但你心里清楚，麻烦还没过去。"
 
     show captain_img at right with dissolve

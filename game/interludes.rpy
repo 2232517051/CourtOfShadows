@@ -1166,14 +1166,14 @@ label interlude_ch4_ch5_council:
 
 label interlude_ch4_ch5_old_friend:
 
+    ## 批31 收尾: 马库斯不再顶掉卡尔 — 两条伏笔都到位的玩家两场都看 (顺序 call)
     if deep_marcus_truly_loyal:
-        jump _interlude_marcus_returns
-    elif karl_past_done:
-        jump _interlude_karl_returns_deep
+        call _interlude_marcus_returns from _call_int_marcus_ret
+    if karl_past_done:
+        call _interlude_karl_returns_deep from _call_int_karl_deep
     elif karl_met:
-        jump _interlude_karl_returns_letter
-    else:
-        return
+        call _interlude_karl_returns_letter from _call_int_karl_letter
+    return
 
 label _interlude_marcus_returns:
 

@@ -2111,18 +2111,11 @@ label ch5_final_choice:
 
     "这些人——奥尔德里克、雷恩、艾琳娜——还有城堡外那些等待你命令的士兵和百姓。"
 
-    "他们的命运，都系在你接下来的一句话上。"
-
-    $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
-    player "我已经做出了决定。"
-
-    "大厅里一片寂静。"
-
     ## 根据积累的属性，筛选最突出的路线（只显示最高的1-2条专属路线 + 真相 + 保底）
     ## 避免所有路线同时出现显得杂乱
     ## 2026-05-26 洋溢之后批次反馈: 困难模式 60 属性百分百过检定 → 改用 difficulty.rpy
     ## 的 get_ending_threshold(), 让 hard=72/无保底、normal=65/55、easy=55/45 真正生效
+    ## （批31 草图A: python 块前移, 供下面幕僚盘点与 menu 共用可见性变量）
     python:
         _ending_stats = [
             ("power", power, "iron_lord"),
@@ -2148,6 +2141,50 @@ label ch5_final_choice:
         _borgia_available = (deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence)
         _any_main = bool(_top_endings) or _truth_available or _borgia_available
         _fall_only = not (_any_main or _vassal_available or _resist_available)
+
+    ## ── 批31 草图A: 幕僚盘点 — 每条去向的实际含义, 与 menu 可见性同门控, 不判优劣 ──
+    if "iron_lord" in _top_endings:
+        $ hide_all_chars("captain_img")
+        show captain_img at left with dissolve
+        captain "要打，兵是现成的。但打就是同时接两路——王后军三千在南官道，男爵联军两千五在北边。"
+        hide captain_img
+
+    if "shadow_king" in _top_endings:
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "两边的粮道、信使、军饷册，我们都摸得到。您要是想让他们自己咬自己——线都埋好了。"
+        hide elena_img
+
+    if "holy_guardian" in _top_endings:
+        $ hide_all_chars("bishop_img")
+        show bishop_img at left with dissolve
+        bishop "教会随时可以出面调停。以圣母之名叫停一场仗——教会做得到，也做过。"
+        hide bishop_img
+
+    if "peoples_lord" in _top_endings:
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
+        aldric "存粮、水井、城墙，都点验过了。真要闭门不出，艾登堡守得住——只是外面的胜负，就与我们无关了。"
+        hide aldric_img
+
+    if _truth_available:
+        $ hide_all_chars()
+        "还有你怀里那份遗诏。它一旦当众展开，就再也收不回去。"
+
+    if _vassal_available or _resist_available:
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
+        aldric "王后的使者还在驿馆等回信。男爵的信使——也在。"
+        hide aldric_img
+
+    $ hide_all_chars()
+    "他们的命运，都系在你接下来的一句话上。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "我已经做出了决定。"
+
+    "大厅里一片寂静。"
 
     $ mark_important_choice()
     menu:

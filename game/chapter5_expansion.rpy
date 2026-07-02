@@ -568,6 +568,9 @@ label ch5_exp_mobilize:
         "北岗的望楼日夜有人值守，旗语白天传、烽火夜里传。敌军离城还有半天路程，你就能收到警报。"
         $ ch5_exp_defender_bonus += 1
 
+    if famine_prevented:
+        "民兵队列里有不少河谷来的面孔。那年大旱，领地没有饿死一个人——挨过那个冬天的人，如今站在这里。"
+
     ## --- 战前NPC对话 ---
 
     scene bg great_hall with dissolve

@@ -1024,10 +1024,10 @@ label gov_building:
         "建造望楼——加强防御，预警敌袭" if not built_watchtower:
             jump gov_build_watchtower
 
-        "暂不建设——现在不是花钱的时候":
+        "暂不建设——把人手和石料留到下一季":
             $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
-            aldric "也好。审慎理财也是一种美德。"
+            aldric "也好。工程一旦开了头，人手就抽不回来了。等局势明朗些再动工，不迟。"
             hide aldric_img with dissolve
             return
 

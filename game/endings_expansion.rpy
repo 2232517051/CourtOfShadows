@@ -29,9 +29,114 @@ label ending_epilogue_router:
         jump ending_faith_epilogue
     elif ending_type == "peoples_lord":
         jump ending_peoples_epilogue
+    elif ending_type == "borgia":
+        jump ending_borgia_epilogue
     else:
-        ## vassal / fall / borgia 不接额外 epilogue, 结局 label 内已自洽 (2026-05-27)
+        ## vassal / fall 不接额外 epilogue, 结局 label 内已自洽 (2026-05-27; borgia 批31 已接尾声)
         return
+
+## ============================================================
+## 结局六：毒药公爵 - 扩展尾声「公爵府的最后一冬」
+## (批31: 高投入隐藏向结局收尾最短, 补一段与主线结局同规格的尾声)
+## ============================================================
+
+label ending_borgia_epilogue:
+
+    scene black with fade
+    pause 1.0
+
+    centered "{size=+10}许多年后{/size}"
+
+    pause 1.5
+
+    scene bg study with dissolve
+
+    "公爵府的规矩，京城里人人都背得出。"
+
+    "膳房上三道锁，钥匙分在三个互不相识的人手里。每道菜先过银针，再喂狗，最后由试毒的仆人当面吃下一勺。"
+
+    "没人觉得这些规矩过分。活得久的人都懂——公爵府的规矩，就是公爵还活着的原因。"
+
+    "清单已经很多年没有添过新名字了。"
+
+    "不是你收手了。是没有人再站到需要上清单的位置上。想反对你的人，会先被他的同僚劝住——劝不住的，他的家人会替你劝。"
+
+    "到了这个地步，你甚至不用再做什么。"
+
+    if rel_aldric >= 50:
+        "有年春天，城郊老宅的家仆来报丧。奥尔德里克走得安静，床头摆着他妻子的画像，和一盆刚分栽的花苗。"
+
+        "你把那盆花苗移进了母亲的花园。它活了。"
+
+    if elena_romance:
+        "艾琳娜再没有回来。只有一年冬天，府上收到一个没有署名的小包裹——一把晒干的药草，是能解三种常见毒的那种。"
+
+        "你把它锁进抽屉。没用过，也没扔。"
+
+    "弗雷德里克王每年冬至来一次。他是这座府里唯一不用报备的客人。"
+
+    "他也老了。当年在月光花园里跟你谈「公平的王国」的年轻人，如今两鬓也白了。"
+
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
+    prince "公爵。今年的雪比往年大。"
+
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "陛下该多带些人来。路上不太平。"
+
+    hide player_char_img
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
+    prince "全国最太平的，就是来你府上这条路。谁敢在这条路上动手？"
+
+    $ hide_all_chars()
+    "他说这话的时候，没有笑。"
+
+    "喝完第三盏茶，他起身告辞。走到门口，他停了一下。"
+
+    $ hide_all_chars("prince_img")
+    show prince_img at left with dissolve
+    prince "我年轻的时候说过，要建一个公平的王国。"
+
+    prince "现在史官说我做到了。可我知道——它公平，是因为不肯公平的人都死了。"
+
+    hide prince_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "陛下觉得，这两者有分别吗？"
+
+    $ hide_all_chars()
+    "他没有回答。门外的雪光照进来，他的影子在门槛上停了一会儿，然后走了。"
+
+    pause 1.0
+
+    "最后那个冬天来得早，十一月就落了头一场雪。"
+
+    "你让人把炉火烧旺，然后遣开了所有仆人。"
+
+    "你从暗格里取出那份清单。纸已经脆了，最早的名字是二十多年前写下的。"
+
+    "你把它放进炉火。名字一个接一个卷起来，变黑，碎掉。"
+
+    "没有人知道这件事。就像没有人知道清单上一半的死因。"
+
+    "烧完清单，你坐回窗前。母亲花园里的狼毒草被雪盖住了，只露出几个深紫色的尖。"
+
+    "你想起很小的时候，母亲在那个花园里教你认药草。她说这一株碰不得，那一株能救命。"
+
+    "你都记住了。你这一辈子，记性一直很好。"
+
+    scene black with fade
+
+    centered "{size=+8}毒药公爵 · 尾声{/size}"
+    centered "「史书写他：辅佐两朝，谨慎恭肃，殁于冬。」"
+    centered "「关于毒药，一个字也没有。」"
+
+    pause 2.0
+
+    return
 
 ## ============================================================
 ## "决定后的夜" 共用呼吸段 — 北城反馈"终章稍微有点赶了"修复
@@ -2945,6 +3050,10 @@ label ending_peoples_epilogue:
 
     "你走过教堂，晚祷的钟声刚刚响起。"
     "几个老人坐在台阶上，闭着眼睛听钟声回荡在山谷之间。"
+
+    if governance_education >= 20:
+        "布告栏前围着几个人，一个半大孩子正给旁边的老人念新贴的文书。"
+        "从前的告示要专门派人下村去念。现在不用了。"
 
     "然后——"
 
