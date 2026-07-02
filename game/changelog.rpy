@@ -17,6 +17,50 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.16 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.16" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "建设入主线 · 结局收束 · 政治联姻" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.02" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "政治联姻线「盟约」" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 全新剧情线：北疆议会提亲（第三章）→ 王都会面（第四章）→ 婚约（第五章），与艾琳娜恋爱线互斥" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 英格丽在终章军议、决战前夜均有戏份；「议会的兵」在会战中真实兑现；五个结局各有联姻镜像 + 新成就「盟约联姻」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 提亲回信「先拖着」不再静默等同婉拒——北疆会有回应" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "城堡建设接入主线（玩家反馈：建设与游戏关联度不强）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第二章新增建设工程与旱灾危机事件；一周目最多可建三座建筑" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 建筑真正改变剧情：粮仓可化解旱灾并支撑围城；诊所决定第三章瘟疫走向与伤兵存活；望楼提前预警敌军；学堂在王子夜谈与结局中回响" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "结局收束（玩家反馈：终选模糊 / 收尾仓促）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 毒药公爵新增完整尾声「公爵府的最后一冬」" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 终章九个抉择的提示改为写明实际后果；决策前新增幕僚盘点；「加入男爵联军」有了专属的战场与结算文本" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 七个结局补齐雷恩、奥尔德里克、艾琳娜、暗百合等主要角色的下场；属性结算移至全部尾声之后，不再打断故事" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "选择深度与伏笔回收" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 39 处中期关键选项加入真实取舍与剧情走向差分" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 商会会长克劳斯的「这事没完」兑现；商人卡尔的复仇往事与结局归宿；世纪婚礼格雷伯爵后续；根卫暗记等十余处一次性钩子全部落地" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 全篇 117 处旁白措辞修订；修正多处前后矛盾与重复揭示" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.15 ──
             frame:
                 xfill True
