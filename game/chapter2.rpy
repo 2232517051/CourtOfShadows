@@ -1499,7 +1499,7 @@ label ch2_preparation:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "老先生，你的故事很有意思。百合花和国王——这是哪里的传说？"
-            "老人抬起头，看着你。他的眼睛浑浊，但目光深邃得像一口没有底的井。"
+            "老人抬起头，看着你。他的眼睛浑浊，但目光很深。"
             hide player_char_img
             $ hide_all_chars("storyteller_img")
             show storyteller_img at left with dissolve

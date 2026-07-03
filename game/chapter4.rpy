@@ -596,6 +596,15 @@ label chapter4_start:
             $ hide_all_chars()
             "驿站不大，但异常整洁——木桌擦得发亮，墙上挂着王室的旗帜。"
 
+            if knows_eagle_network:
+                "等水的工夫，你的目光扫过门楣。右下角有一道刻痕：三道弧线，叠成一座拱桥。"
+
+                "《六卫终录》页脚那个「此记已绝」的记号。可这道刻痕的木茬还是白的——新刻上去没多久。"
+
+                "一个死了几百年的记号，有人在重新刻它。"
+
+                $ bridge_mark_seen = True
+
             "驿站的管事是个面色红润的中年人，笑容热情得过了头。他一边替你们灌水，一边不停地打量队伍中的每个人。"
 
             $ hide_all_chars("elena_img")
@@ -1526,6 +1535,53 @@ label ch4_throne:
 
     hide queen_img with dissolve
 
+    ## ── backlog7·人物弧光: 艾琳娜的"留底"习惯（亲近的人有自己的规则） ──
+
+    scene bg study with dissolve
+
+    "回到住处，你想找艾琳娜复盘觐见时的每一句话。她的房门虚掩着。"
+
+    "她在桌前写东西。同一份记录，写了三份。"
+
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "觐见纪要。一份给您，一份送回艾登堡的档案柜。"
+
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "第三份呢？"
+
+    "她的笔没停。"
+
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "留底。"
+
+    elena "活下来的间谍都有这个习惯。您的信，王后的话，男爵开的价——每一份经我手的东西，我都留一份底。"
+
+    elena "藏在哪，只有我知道。哪天我死得不明不白，它们会替我说话。"
+
+    hide elena_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "……包括我的信。"
+
+    hide player_char_img
+    $ hide_all_chars("elena_img")
+    show elena_img at left with dissolve
+    elena "包括您的信。"
+
+    "她抬起头看你，没有一点歉意。"
+
+    elena "您可以现在命令我烧掉。我会烧——然后从明天起，我给您的每一份情报，您都得自己去判断真假。"
+
+    $ hide_all_chars()
+    "你没有下这个命令。"
+
+    "你信她。可你也头一次想到——如果有一天她要走，她手里带走的东西，比你以为的多得多。"
+
     ## ============================================================
     ## 新增场景：宫廷宴会
     ## ============================================================
@@ -2202,6 +2258,13 @@ label ch4_garden:
     "离开图书馆时，你回头看了一眼——在阴暗的走廊尽头，似乎有一个身影一闪而过。"
 
     "有人在跟踪你？"
+
+    if knows_eagle_network:
+        "但那个身影没有喊卫兵。宫里自己的人抓人，喊得越响功劳越大——只有收钱的耳目，看见了什么都只记在心里。"
+
+        "幽卫散部的行规：只看，不动手。明天，这份「看见」会卖给某个出价的人。"
+
+        "你不知道买主会是谁。这比被卫兵当场按住更冷。"
 
     "你加快脚步，回到了住所。"
 

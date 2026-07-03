@@ -202,11 +202,14 @@ default courted_rival_lords = False
 ## 鹰卫信使网络支线(2026-06-18): ch3读《六卫终录》识暗记 → ch4王都接头启用 → ch4觐见前送情报
 default knows_eagle_network = False   # 读过六卫终录, 认得鹰卫暗记
 default knows_root_network = False    # 读过六卫终录, 认得根卫暗记 (ch4 王都南区集市回响, 批31)
+default bridge_mark_seen = False      # 桥卫链 (backlog7): ch4 驿站门楣新鲜桥记 → vassal 结局收税官揭晓
+default ch2_baron_emissary_intercepted = False  # 既有 orphan 补 default (chapter2:2657 set): ch3 终录幽卫条目回想 read
 default eagle_network = False          # 已接头启用鹰卫信网
 default eagle_intel = False            # 觐见前收到信网情报
 default prince_ally = False
 default prince_betrayed = False
 default prince_answer_pending = False  ## ch4 结盟菜单选"试探/需要考虑" (批32: ch5 战前王子信使讨答复)
+default ch5_north_wall_neglected = False  ## ch5 城防菜单选"不做特别处理" (backlog7: 雷恩抗命私修北墙 beat)
 default prince_returned_willingly = False
 default prince_mentor_known = False
 default prince_trust_deep = False

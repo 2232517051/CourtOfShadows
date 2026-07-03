@@ -1581,15 +1581,27 @@ label ch3_dark_lily_clues:
     lily_interviewer "喝下它。"
 
     menu:
-        "毫不犹豫地喝下" if intrigue >= 45:
-            $ change_stat("intrigue", 8)
-            $ change_rel("rel_lily", 10)
+        "毫不犹豫地喝下":
             $ hide_all_chars()
             "你接过酒杯，一饮而尽。"
-            "酒液入喉，带着一股苦涩的草药味。你的视线模糊了一瞬，然后恢复了清明。"
-            $ hide_all_chars("lily_root_img")
-            show lily_root_img at left with dissolve
-            lily_interviewer "……你的胆量，像你父亲。"
+            if intrigue >= 45:
+                ## backlog7·检定重写: 门槛移入体内两档化 — 识破药性稳住舌头 vs 药性上头说漏嘴
+                $ change_stat("intrigue", 8)
+                $ change_rel("rel_lily", 10)
+                "酒液入喉，带着一股苦涩的草药味。舌根一麻——你认出来了：吐真草。这不是敬酒，是审讯。"
+                "你顺着药劲说话，句句是真，但每句都停在该停的地方。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                lily_interviewer "……你的胆量，像你父亲。舌头比他还稳。"
+            else:
+                $ change_rel("rel_lily", 5)
+                $ change_stat("reputation", -3)
+                "酒液入喉，带着一股苦涩的草药味。你的视线模糊了一瞬——然后话就自己往外走了。"
+                "等你咬住舌头，已经把翻过父亲书房暗格的事说了出去。老妇人一动不动地听着。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                lily_interviewer "胆量像你父亲。可惜舌头嫩了些——吐真草面前，嫩舌头是要吃亏的。"
+                "你不知道这句话会传到多少人的耳朵里。"
             "老妇人摘下了面具。一张布满皱纹却眼神锐利的脸，左眼下方有一道淡淡的旧伤疤。"
             lily_interviewer "我是暗百合的联络人。你可以叫我'根'。"
 
@@ -2169,16 +2181,23 @@ label ch3_tunnel_exploration:
             "第一卷记录了暗百合的起源——它确实是先王的七近卫之一建立的，目的是守护先王的真正遗愿。"
             "你在架子最底层抽出一卷更薄的——《六卫终录》。莲卫之外的六卫，下场都记在这里。"
             "『剑卫护身。先王崩，所护已无，遂解。残部老死于无名。』"
+            if ch1_deep_old_guard_story:
+                "「残部老死于无名。」你在这行字上停了一会儿。"
+                "西塔上那把剑还立在你的房里。柄尾磨平的记号，那个不肯留名的老头——老弗雷德里克问了四十三年没问出来的答案，原来写在这里。"
             "『盾卫守城。其守备之法为王后所取，并入王室禁军。今日宫墙之上仍循其制。』"
             "『鹰卫传讯。信鸽驿骑之网未断，散落各城，识其暗记者，仍可凭之通信。』"
             "『根卫通商。化整为零，没入南方诸商会。商路之上犹有其影。』"
             "『幽卫暗察。无主而自散，渐成游散耳目，受雇于出价之人。』"
+            if ch2_baron_emissary_intercepted:
+                "「受雇于出价之人。」你想起哈伦堡城门外那个深色斗篷的人——不是本地口音，拿了卷轴就往王后旧领的方向去。原来那一行人，几百年前就有了名字。"
             "『桥卫联络。分裂之际不知所踪，至今无人再见其标记。』"
             "你合上卷册。先王立七卫护王座，如今只剩莲卫一脉，以暗百合之名活到今天。"
             "你把鹰卫那一条又看了一遍——『识其暗记者，仍可凭之通信』。你记下了那个暗记的样子：一只展翅的鸟，刻在食指内侧。说不定哪天用得上。"
             $ knows_eagle_network = True
             "根卫那一条旁边画着另一个记号：一团缠绕的树根。批注小字写着——『多刻于秤杆底端、门楣角上』。你也记下了。"
             $ knows_root_network = True
+            "桥卫那一条的页脚也画着记号：三道弧线，叠成一座拱桥。批注只有半句——『此记已绝』。"
+            "一个再也不会出现的记号。你不知道为什么，还是把它记住了。"
             "你继续翻看第二卷。"
             "标题：《历代影主志》。"
             "第二卷记录了组织的传承——从建立到现在，已经有十七代首领。"
@@ -3575,6 +3594,10 @@ label ch3_elena_secret:
                 hide player_char_img
                 $ hide_all_chars("elena_img")
                 show elena_img at left with dissolve
+                if knows_eagle_network:
+                    elena "不过有个底细你该知道——他不是王后自己养的人，是买来的。干这行的散在各城，谁出价就替谁看。"
+                    elena "老话管这路人叫幽卫散部——先王七近卫散了之后剩下的一支。"
+                    elena "他不效忠她，只效忠价钱。这种人——也能被更高的价钱买走。"
                 elena "我可以帮你应付他。但你需要更加小心。"
                 $ change_stat("loyalty", 5)
 
@@ -3759,6 +3782,7 @@ label ch3_elena_secret:
             "这些情报有多可靠？证明你的价值" if intrigue >= 45:
                 $ change_rel("rel_elena", 5)
                 $ change_stat("intrigue", 8)
+                $ change_stat("reputation", -2)  ## backlog7: 补漏 — 对齐镜像分支 3555 的盘问代价
                 hide elena_img
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
@@ -3769,6 +3793,9 @@ label ch3_elena_secret:
                 show elena_img at left with dissolve
                 elena "王后正在集结力量。她计划召集所有领主入都觐见，筛选不够忠诚的人。"
                 elena "还有——那个新来的侍从，就是王后新派来的眼线。我可以帮你应付他。"
+                if knows_eagle_network:
+                    elena "顺带说一句，他不是王后自己养的人，是买来的——幽卫散部那一行的，谁出价替谁看。"
+                    elena "他不效忠她，只效忠价钱。记住这一点，说不定有用。"
                 $ change_stat("loyalty", 5)
 
             "父亲信任你的判断——我尊重他的选择" if loyalty >= 55:

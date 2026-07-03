@@ -491,6 +491,20 @@ label ch5_exp_mobilize:
 
             "你走上前，握住了他的手。"
 
+            if knows_eagle_network:
+                "握手的时候，你看见那把锈剑的柄尾——一个磨得快平的记号。和西塔上老弗雷德里克那把，是同一个。"
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "这把剑，哪来的？"
+
+                $ hide_all_chars("soldier_generic_img")
+                show soldier_generic_img at left with dissolve
+                veteran "我祖父传的。他说他的祖父给一个大人物当过卫兵——名字没传下来。"
+
+                $ hide_all_chars()
+                "『剑卫护身。残部老死于无名。』——剑卫散了几百年，无名的剑还在无名的人手里，守着一座城。"
+
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "你的勇气比一千把剑都锋利。"
@@ -1788,6 +1802,49 @@ label ch5_exp_skirmish:
         show elena_img at left with dissolve
         elena "你越来越可怕了，领主大人。"
         hide elena_img with dissolve
+
+    ## ── backlog7·人物弧光: 雷恩抗命私修北墙 (勾 ch5 城防菜单"不做特别处理") ──
+    if ch5_north_wall_neglected:
+        $ hide_all_chars()
+        "战报里有一处你盯了很久：敌军先锋在北墙试探了两轮，没讨到便宜，才转向别处。"
+
+        "你的命令是「北墙暂时够用」。"
+
+        "你去了北墙。内侧新砌了整整一排石料，灰浆还没干透。活很细，是老石匠的手艺。"
+
+        $ hide_all_chars("captain_img")
+        show captain_img at left with dissolve
+        captain "是我改的。用的我自己的饷银，换防的空档干的活，没占白天一个工。"
+
+        captain "您可以罚我。但那段墙后面，睡着城里四十几户人。"
+
+        hide captain_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+
+        menu:
+            "「罚一个月饷。然后把南墙也照这个修法给我修了。」":
+                $ change_rel("rel_captain", 6)
+                $ change_stat("loyalty", 3)
+                $ log_decision("第五章", "认下雷恩的抗命，罚饷并委以南墙")
+                player "罚一个月饷。然后——把南墙也照这个修法给我修了。"
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "……是。"
+                $ hide_all_chars()
+                "他敬了个礼，转身就走。你看见他嘴角压着一点没压住的东西。"
+                "罚单当天贴出去了。当晚军营里没人议论罚饷的事，人人都在说南墙。"
+
+            "「下不为例。」":
+                $ change_rel("rel_captain", -4)
+                $ change_stat("power", 2)
+                $ log_decision("第五章", "警告雷恩不得再抗命")
+                player "墙修得好。但命令就是命令——下不为例。"
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "是。"
+                $ hide_all_chars()
+                "一个字，干脆利落。他的军礼一丝不苟，眼神照直——你知道，下一次他还会这么干。"
 
     $ hide_all_chars()
     "前哨战结束了。但每个人都知道——这只是暴风雨前的闪电。"

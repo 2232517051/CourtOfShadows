@@ -128,7 +128,7 @@ label npc_merchant_karl_past:
 
     merchant "一夜之间，温特菲尔德商号的招牌被摘了下来。我站在空荡荡的店铺前，看着莫里斯的人把我父亲一辈子的心血搬空……"
 
-    "卡尔的声音终于碎裂了。他别过头去，望着窗外渐沉的暮色。"
+    "卡尔的声音哑了下去。他别过头去，望着窗外渐沉的暮色。"
 
     if merchant_deal:
 
@@ -772,7 +772,7 @@ label npc_elena_homeland:
     show elena_img at left with dissolve
     elena "没有人。"
 
-    "她的声音突然变冷了，像是有什么开关被触动。"
+    "她的声音突然变冷了。"
 
     if elena_spy_known:
         elena "你已经知道我是谁了——侍女学院出来的间谍，王后的棋子，后来变成暗百合的人。"

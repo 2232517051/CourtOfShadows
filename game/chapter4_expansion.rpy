@@ -250,6 +250,23 @@ label ch4_exp_arrival:
     show elena_img at left with dissolve
     elena "不好说。可能是王后的密探，也可能是其他势力的眼线。王都里盯人是一门生意。"
 
+    if knows_eagle_network:
+        elena "看左边那个换位置的走法——先停，数三步，再跟。只看，不动手，谁付钱替谁看。"
+
+        elena "这是幽卫散部传下来的手艺。七近卫散伙几百年了，这门生意一直没断过。"
+
+        hide elena_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+        player "你怎么懂这些？"
+
+        hide player_char_img
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
+        elena "莲卫的后人认得幽卫的后人。同一张桌子上散的伙，规矩都还认得。"
+
+        elena "区别是他们卖给出价的人。我们……挑主人。"
+
     elena "不用管他们。我们按计划行事就好。"
 
     hide elena_img with dissolve
@@ -878,7 +895,7 @@ label ch4_exp_court_social:
             player "莱因哈特大臣阁下，久仰大名。鄙人艾登堡领主[player_name]。"
 
             $ hide_all_chars()
-            narrator "莱因哈特转过身来，灰色的眼睛在你脸上停留了两秒——就像在扫描一份文件。"
+            narrator "莱因哈特转过身来，灰色的眼睛在你脸上停留了两秒——就像在核对一份文件。"
 
             narrator "「啊，年轻的艾登堡领主。我读过关于您的报告。」"
 
