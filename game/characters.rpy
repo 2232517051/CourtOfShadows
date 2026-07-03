@@ -206,6 +206,7 @@ default eagle_network = False          # 已接头启用鹰卫信网
 default eagle_intel = False            # 觐见前收到信网情报
 default prince_ally = False
 default prince_betrayed = False
+default prince_answer_pending = False  ## ch4 结盟菜单选"试探/需要考虑" (批32: ch5 战前王子信使讨答复)
 default prince_returned_willingly = False
 default prince_mentor_known = False
 default prince_trust_deep = False

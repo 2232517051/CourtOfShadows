@@ -2000,6 +2000,7 @@ label ch4_garden:
             show prince_img at left with dissolve
             prince "我会等你的答复。"
             prince "但别考虑太久。时间不站在我们这边。"
+            $ prince_answer_pending = True  ## 批32: "考虑"不再是死路, ch5 战前王子信使来讨答复
 
     ## ── 王子的过去：导师之死（加深动机） ──
 

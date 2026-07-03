@@ -700,7 +700,46 @@ label ch5_factions_move:
             "他说话时眼神闪烁——你知道他在撒谎。这证实了你之前得到的情报——男爵军的后勤确实是弱点。"
             $ baron_supply_intel = True
 
-    "送走了男爵的密使后，你独自在书房里坐了很久。"
+    "送走了男爵的密使后，你以为这一天的访客到头了。"
+
+    ## ── 批32: ch4「试探——我需要考虑」的答复在此兑现, 王子不再无声消失 ──
+    if prince_answer_pending and not prince_ally and not prince_betrayed:
+        "掌灯时分，第三个信使到了。没有仪仗，没有徽记，只递上一柄旧短剑——剑柄上刻着两个字：西里尔。"
+
+        "王子的信物。信只有两行。"
+
+        "『你说要考虑。现在军队已经开拔，我等不了了。』"
+
+        "『我把你要的答案先给了你。现在，我要你的。——F』"
+
+        menu:
+            "结盟——把兵押给王子":
+                $ prince_ally = True
+                $ prince_answer_pending = False
+                $ change_rel("rel_prince", 15)
+                $ change_rel("rel_queen", -10)
+                $ log_decision("第五章", "战前答复王子，结成同盟")
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "回去告诉殿下——艾登堡站在他那边。他登基那天，我出兵。"
+
+                $ hide_all_chars()
+                "信使把短剑留下，翻身上马。这个答复比王子期望的晚了一个月，但赶在了开战之前。"
+
+            "回绝——这场王位之争，艾登堡不下注":
+                $ prince_answer_pending = False
+                $ change_rel("rel_prince", -10)
+                $ log_decision("第五章", "战前回绝王子")
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "替我谢过殿下的耐心。但我的兵，只守艾登堡。"
+
+                $ hide_all_chars()
+                "信使收回短剑，上马走了。王子等的答复到此为止——下一次见面，你们各站各的位置。"
+
+    "你独自在书房里坐了很久。"
 
     "两边都在拉拢你，两边都在威胁你。"
 
