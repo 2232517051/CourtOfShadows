@@ -17,6 +17,39 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.17 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.17" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "七近卫兑现 · 结局尾声 · 选项修缮" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.05" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "剧情兑现与结局" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 先王七近卫的下落全部收口——影卫、铁刺、暗焰三支的恩怨在正文与结局中交代完整" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 「臣服」「城破」两个结局补上完整尾声；八个结局的主要角色都有了自己的收场" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 雷恩、奥尔德里克、艾琳娜等人的性格弧线贯穿五章，不再前后脱节" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复：第五章战前答应与王子结盟后，这条线不再无疾而终——信使会来讨你的答复" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "选项修缮（感谢玩家指出）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 高属性专属选项以前总带半句解释，比别的选项长一截，等于把「选我」写在脸上——已全部剪平，选项好坏请自己判断" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 全篇旁白与台词再打磨近百处；片尾新增「玩家反馈」鸣谢名单" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.16 ──
             frame:
                 xfill True
