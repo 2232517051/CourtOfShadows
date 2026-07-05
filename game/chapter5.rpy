@@ -839,7 +839,7 @@ label ch5_military_deploy:
     captain "唯一的弱点是北墙——去年冬天的暴风雪损坏了一段，虽然修补了，但强度不如其他地方。"
 
     menu:
-        "亲自指挥北墙改造——你要的是把它变成杀场" if power >= 70:
+        "亲自指挥北墙改造" if power >= 70:
             $ change_stat("power", 5)
             $ change_stat("loyalty", 3)
             $ change_stat("intrigue", -10)
@@ -1854,7 +1854,7 @@ label ch5_final_night:
     "这些人，都把自己的命运交到了你手上。"
 
     menu:
-        "把财库所有应急金分给士兵——明天活下来，这是退伍金" if wealth >= 50:
+        "把财库所有应急金分给士兵" if wealth >= 50:
             $ change_stat("wealth", -10)
             $ change_stat("loyalty", 8)
             $ change_stat("reputation", 5)

@@ -724,6 +724,9 @@ screen credits_roll():
             ## 感谢
             text "— 特 别 感 谢 —" size 18 color "#d4a942" xalign 0.5
             null height 10
+            text "玩家反馈" size 14 color "#8a7e60" xalign 0.5
+            text "北看成南" size 18 color "#e0d8c8" font "msyh.ttf" xalign 0.5
+            null height 16
             text "感谢每一位玩家的支持" size 20 color "#c8b890" font "msyh.ttf" xalign 0.5
             text "你们的选择，造就了这个故事" size 16 color "#8a7e60" xalign 0.5
             null height 60

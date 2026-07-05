@@ -127,7 +127,7 @@ label interlude_ch1_ch2:
 
     "在那里，更大的风暴正在酝酿。"
 
-    play sound "audio/sfx/page_turn.ogg"
+    play sound "audio/sfx/ui_page.ogg"
     scene black with fade
     pause 1.0
 
@@ -242,7 +242,7 @@ label interlude_ch3_ch4:
 
     "平静的日子已经结束了。"
 
-    play sound "audio/sfx/page_turn.ogg"
+    play sound "audio/sfx/ui_page.ogg"
     scene black with fade
     pause 1.0
 
@@ -399,7 +399,7 @@ label interlude_ch4_ch5:
 
     "最后的抉择，已经近在眼前。"
 
-    play sound "audio/sfx/page_turn.ogg"
+    play sound "audio/sfx/ui_page.ogg"
     scene black with fade
     pause 1.0
 

@@ -503,7 +503,7 @@ label ch2_preparation:
     caravan_hand "这一带入夜后不安全，求贵人行个方便！"
 
     menu:
-        "买下他们这趟运的全部货——一次解决他们整个商队的难题" if wealth >= 50:
+        "买下他们这趟运的全部货" if wealth >= 50:
             $ change_stat("wealth", -8)
             $ change_stat("reputation", 8)
             $ change_stat("loyalty", 3)
@@ -649,7 +649,7 @@ label ch2_preparation:
     "还有一对老夫妇，看起来像是农民，紧张兮兮地抱着一个包袱。"
 
     menu:
-        "私下找佣兵头领谈雇佣——你要建自己的硬刀" if power >= 25:
+        "私下找佣兵头领谈雇佣" if power >= 25:
             $ change_stat("power", 8)
             $ change_stat("wealth", -3)
             $ ch2_inn_mercenary_deal = True
@@ -1312,7 +1312,7 @@ label ch2_preparation:
     hide elena_img with dissolve
 
     menu:
-        "主动谈酒生意——你听说艾登堡北边山泉的水能配出好酒" if wealth >= 50:
+        "主动谈酒生意" if wealth >= 50:
             $ change_stat("wealth", 5)
             $ change_stat("reputation", 3)
             $ ch2_wells_business_talk = True
@@ -2652,7 +2652,7 @@ label ch2_after_council:
     captain "我不确定这意味着什么，但……总觉得不太对劲。"
 
     menu:
-        "派艾琳娜带两个民兵截在南门外——男爵的人怕暴露身份不敢拦" if loyalty >= 50:
+        "派艾琳娜带两个民兵截在南门外" if loyalty >= 50:
             $ change_stat("loyalty", 5)
             $ ch2_baron_emissary_intercepted = True
             $ change_rel("rel_baron", -12)

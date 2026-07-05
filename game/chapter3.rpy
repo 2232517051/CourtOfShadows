@@ -196,7 +196,7 @@ label ch3_strange_signs:
         $ dark_lily_exists_known = True
 
     menu:
-        "召集附近领主家臣联合搜山——以武力威慑暗百合" if power >= 50:
+        "召集附近领主家臣联合搜山" if power >= 50:
             $ change_stat("power", 8)
             $ change_stat("reputation", 3)
             $ change_stat("loyalty", -2)
@@ -397,7 +397,7 @@ label ch3_after_field_choice:
     hide blacksmith_wife_img with dissolve
 
     menu:
-        "召集所有铁匠樵夫家属当众发誓——艾登堡不放弃任何一个人" if reputation >= 50:
+        "召集所有铁匠樵夫家属当众发誓" if reputation >= 50:
             $ change_stat("reputation", 5)
             $ change_stat("loyalty", 5)
             $ ch3_public_oath = True
@@ -1191,7 +1191,7 @@ label ch3_fathers_study:
     "还是没有。"
 
     menu:
-        "回想父亲日记里的暗号系统——这些日子你翻得最熟" if intrigue >= 60:
+        "回想父亲日记里的暗号系统" if intrigue >= 60:
             $ change_stat("intrigue", 5)
             "你不去摸石头。你坐下来， 把日记翻到第一页。"
             "父亲所有暗号都是六位组合， 字母用花语代替。「左三右二左一」 = 「蔷薇蔷薇蔷薇 / 罂粟罂粟 / 蔷薇」。"
@@ -2910,7 +2910,7 @@ label ch3_dark_lily_hq:
     lily_master "如果你不在我们的保护下，你就是一个活靶子。"
 
     menu:
-        "提议合作而非加入——影卫给情报，我给艾登堡资源，双方互不臣属" if intrigue >= 60:
+        "提议合作而非加入，互不臣属" if intrigue >= 60:
             $ change_rel("rel_lily", 15)
             $ change_stat("intrigue", 8)
             $ change_stat("reputation", -2)
@@ -3065,7 +3065,7 @@ label ch3_dark_lily_hq:
             lily_master "好吧。即使你不加入我们，我也不会伤害你。"
             lily_master "但如果你需要帮助——老磨坊，随时。"
 
-        "摧毁暗百合——你们的存在本身就是不稳定因素" if power >= 60:
+        "摧毁暗百合" if power >= 60:
             $ dark_lily_destroyed = True
             $ change_stat("power", 15)
             $ change_stat("loyalty", -3)
