@@ -218,7 +218,7 @@ label ch4_prince_farewell:
     $ hide_all_chars()
     "你接过徽章。银子在晨光中闪着微弱的光。"
 
-    "它很轻。但你知道它代表的东西，比你见过的任何金银都要沉重。"
+    "它很轻。你把它收进怀里。"
 
     hide prince_img with dissolve
 
@@ -229,8 +229,6 @@ label ch4_prince_farewell:
     "你看着他的身影沿着南边的路渐渐远去，朝阳把他的影子拖得很长，直到和路面融为一体。"
 
     "一个浑身是伤的年轻人，骑着一匹偷来的马，独自走向一座试图杀死他的城市。"
-
-    "因为那里有他必须守护的东西。"
 
     "你转过头，望向北方。艾登堡在那里等着你。"
 
@@ -522,7 +520,7 @@ label ch5_prince_confronts_queen:
     show prince_img at left with dissolve
     prince "我爱你，母后。你是给我生命的人。这一点永远不会改变。"
 
-    "他的声音平静而坚定。十二年的隐忍，凝聚在这一刻。"
+    "他的声音平静而坚定。这句话，他等了十二年。"
 
     prince "但你做错了。"
 

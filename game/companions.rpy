@@ -591,9 +591,9 @@ screen companions_screen():
                                                     if not _uc_avail:
                                                         $ _uc_ch_ok = _get_current_chapter_num() >= _ucdata["recruit_chapter"]
                                                         if not _uc_ch_ok:
-                                                            text "需要： 第[_ucdata[「recruit_chapter」]]章" size 10 color "#4a4030"
+                                                            text "需要： 第[_ucdata[recruit_chapter]]章" size 10 color "#4a4030"
                                                         else:
-                                                            text "好感度： [_uc_rel]/[_ucdata[「loyalty_req」]]" size 10 color "#4a4030"
+                                                            text "好感度： [_uc_rel]/[_ucdata[loyalty_req]]" size 10 color "#4a4030"
                                                     else:
                                                         textbutton "招募":
                                                             text_size 12
@@ -663,7 +663,7 @@ screen companions_screen():
                                             hbox:
                                                 spacing 8
                                                 text _sc["title"] size 13 color "#8a7e60"
-                                                text "([_sc_role_names.get(_sc[「role」], 「未知」)])" size 12 color "#6a5e48"
+                                                text "([_sc_role_names.get(_sc['role'], '未知')])" size 12 color "#6a5e48"
 
                                     ## 描述
                                     text _sc["desc"] size 13 color "#c8b890" font "msyh.ttf" line_spacing 4
@@ -917,7 +917,6 @@ label check_companion_desertion_event:
     if _deserted_list:
         $ _deserted_msg = "、".join(_deserted_list)
         "你收到消息：[_deserted_msg]因为对你失望透顶，已经悄然离开了队伍。"
-        "也许你应该更加关注同伴的感受。"
     return
 
 
@@ -940,16 +939,16 @@ label try_recruit_companion(comp_id=""):
         return
 
     if comp_id in recruited_companions:
-        "[_tr_data[「name」]]已经是你的同伴了。"
+        "[_tr_data[name]]已经是你的同伴了。"
         return
 
     if not is_companion_available(comp_id):
         $ _tr_rel = getattr(store, _tr_data["rel_var"], 0)
-        "你还没有赢得[_tr_data[「name」]]足够的信任（好感度 [_tr_rel]/[_tr_data[「loyalty_req」]]）。"
+        "你还没有赢得[_tr_data[name]]足够的信任（好感度 [_tr_rel]/[_tr_data[loyalty_req]]）。"
         return
 
     $ recruit_companion(comp_id)
-    "[_tr_data[「name」]]加入了你的队伍！"
-    "[_tr_data[「name」]] —— [_tr_data[「title」]]"
-    "特殊技能：「[_tr_data[「skill」][0]]」—— [_tr_data[「skill」][2]]"
+    "[_tr_data[name]]加入了你的队伍！"
+    "[_tr_data[name]] —— [_tr_data[title]]"
+    "特殊技能：「[_tr_data[skill][0]]」—— [_tr_data[skill][2]]"
     return

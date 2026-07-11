@@ -133,8 +133,12 @@ label northern_dlc_start:
     else:
         aldric "夫人没见过您，帖子里客客气气，分量却没下定。北疆认实力，不认头衔。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "备马。我亲自走一趟。"
 
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
     aldric "雪线上冷。我让人多备了两件皮裘，还有……一个向导。北疆的路，外人走不得。"
 
     scene black with dissolve

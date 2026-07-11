@@ -187,8 +187,6 @@ label ch1_exp_father_study:
 
             "你在黑暗中站了一会儿，然后转身离开。"
 
-            "有些秘密，可以等。"
-
     jump ch1_exp_elena_encounter
 
 ## ── 厨房偶遇 ──
@@ -396,7 +394,6 @@ label ch1_exp_ramparts_night:
 
             $ hide_all_chars()
             "雷恩愣了一下。然后他点了点头， 表情第一次有了别的颜色——不只是悔。"
-            "你不是来安慰他的。你是来当领主的。"
             "他比你还清楚——这才是你父亲会让你做的事。"
 
             $ hide_all_chars("captain_img")
@@ -1049,7 +1046,7 @@ label ch1_exp_morning_council:
 
     "这些人的命运，现在握在你的手中。二十二岁的手。"
 
-    "你握紧了拳头。不是因为紧张——是因为决心。"
+    "你握紧了拳头。"
 
     jump ch1_exp_training_yard
 
@@ -1282,13 +1279,10 @@ label ch1_exp_training_yard:
         $ hide_all_chars()
         "窃窃私语停了。"
         "一个年轻士兵犹豫了一下，朝你敬了个礼。然后第二个，第三个。"
-        "不是因为你的领主身份。是因为你的坦诚。"
         $ change_stat("faith", 3)
         $ change_stat("loyalty", 3)
 
     "离开校场的时候，你的全身都在疼。但你的脚步很稳。"
-
-    "力量不是天生的。但可以练出来。"
 
     jump ch1_exp_village_visit
 
@@ -1519,8 +1513,6 @@ label ch1_exp_village_visit:
             "农民的脸涨得通红，但他不敢顶嘴。周围的村民们不满地议论着。"
 
             "你知道你这个裁决不得人心。但商路是领地的命脉。如果艾登堡的名声变成「会骗外地商人的地方」，损失远不止三十袋粮食。"
-
-            "有些时候，做正确的事和做受欢迎的事，不是同一回事。"
 
     hide merchant_karl_img with dissolve
 
@@ -1766,8 +1758,6 @@ label ch1_exp_evening_feast:
             "你饮尽杯中酒。「诚实的友谊」这几个字在空气中缓缓沉淀。每个人都在揣摩你到底知道些什么。"
 
             "威尔斯子爵的微笑终于出现了一丝裂痕。他在想——这个年轻人，到底是在随口说说，还是已经掌握了什么？"
-
-            "不确定性。这才是最好的武器。"
 
             $ ch1_exp_noble_impressed = True
 

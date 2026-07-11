@@ -191,7 +191,7 @@ label ch5_war_clouds:
             player "艾登堡的城墙会保护每一个人。"
             $ hide_all_chars()
             "老农泪流满面地磕头。铁匠挺起了胸膛。妇人紧紧地抱着孩子，终于不再颤抖。"
-            "你的承诺像一颗石子投入湖面，在民间荡起了层层涟漪。人们开始称你为「守护者」。"
+            "这句话当天就传遍了全城。人们开始称你为「守护者」。"
             "你把话说满了。从这一刻起，任何一条留给自己的退路、任何一次见势不妙的撤退，都会变成背弃。你给了他们一个守护者，也给自己套上了一根再不能松开的链子。"
             $ change_stat("reputation", 2)
             $ change_stat("intrigue", -8)
@@ -303,7 +303,7 @@ label ch5_war_clouds:
         $ hide_all_chars()
         "没有间谍网络的精准情报，你只能依靠老兵的直觉和地形的优势。但有时候，经验比情报更可靠。"
 
-    "你的手指在地图上缓缓移动，仿佛在下一盘巨大的棋局。"
+    "你的手指在地图上缓缓移动，在几处标记上停了又停。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -479,8 +479,6 @@ label ch5_factions_move:
         "王后军从南面来，男爵联军从北面来。教会在观望，暗百合在暗处。"
 
     "而你——站在所有力量的交汇点上。"
-
-    "不知不觉间，你已经成为了这盘棋上最关键的一颗棋子。"
 
     scene bg castle_exterior with dissolve
     $ unlock_gallery("bg_castle_exterior")
@@ -742,8 +740,6 @@ label ch5_factions_move:
     "你独自在书房里坐了很久。"
 
     "两边都在拉拢你，两边都在威胁你。"
-
-    "你就像一根绷紧的弦——两头都有人在拉，稍有不慎就会断裂。"
 
     scene bg castle_exterior with dissolve
     $ unlock_gallery("bg_castle_exterior")
@@ -1011,7 +1007,7 @@ label ch5_military_deploy:
 
     "他们排成整齐的队列，雷恩喊一声口令，全队走一遍刺杀。"
 
-    "每一次刺出，都伴随着整齐的呐喊——那是勇气的声音，也是恐惧的掩饰。"
+    "每一次刺出，都伴随着整齐的呐喊。"
 
     "你的目光掠过操场，看到了城墙下正在搬运物资的百姓。"
 
@@ -2689,7 +2685,7 @@ label ending_iron_lord:
     show farmer_rep_img at left with dissolve
     old_man "穿铠甲的人……我分不清是哪边的……对我们来说都一样……"
 
-    "战争的残酷不在于战场上的厮杀——而在于那些被波及的无辜之人。"
+    "你看着老人，又看了看他身后烧塌的房屋。"
 
     menu:
         "亲自跪在老人面前——以你的名义起誓重建" if loyalty >= 70:
@@ -2932,7 +2928,7 @@ label ending_iron_lord:
 
     "有些旗帜还在飘扬。有些永远倒下了。"
 
-    "遍地的尸体诉说着战争的残酷。有些面孔还保持着恐惧的表情，永远凝固在死亡的瞬间。"
+    "遍地都是尸体。有些面孔还保持着恐惧的表情，永远凝固在死亡的瞬间。"
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -3213,8 +3209,6 @@ label ending_iron_lord:
 
     $ hide_all_chars()
     "但有时在深夜，你会想起战场上那些倒下的人。"
-
-    "你赢了。但你失去了一些永远无法挽回的东西。"
 
     "这就是铁腕领主的代价。救了所有人，自己睡不着觉。"
 
@@ -3735,11 +3729,11 @@ label ending_shadow_king:
         $ hide_all_chars()
         "夜深了。书房里只有你一个人。"
         "你放下密报，望向窗外。夜色沉沉，只有远处城墙上巡逻兵的火把在移动。这座你亲手编织的权力之网，在黑暗中无声运转。"
-        "你赢了一切，却发现——站在巅峰的人，总是孤独的。"
+        "你赢了一切。可这间书房里，连一个能听你说这句话的人都没有。"
 
     "这就是影中之王的宿命——你拥有一切，却不能让任何人知道。"
 
-    "你的名字不会出现在史书上。但每一页历史的背后，都有你的影子。"
+    "你的名字不会出现在史书上。写史的人，甚至不会知道自己漏了谁。"
 
     $ unlock_achievement("shadow_king")
     $ persistent.endings_seen.add("shadow_king")
@@ -4956,7 +4950,7 @@ label ending_truth:
     show queen_img at left with dissolve
 
     $ hide_all_chars()
-    "大厅里的空气仿佛凝固了。所有人都看向王后，等待她的反应。"
+    "大厅里一片死寂。所有人都看向王后，等待她的反应。"
 
     "但伊莎贝拉王后没有崩溃。她甚至没有慌张。"
 
@@ -5439,10 +5433,6 @@ label ending_truth:
         "而你——还有一个王国等着你去守护。"
 
     "真相大白。正义实现。"
-
-    "但你知道——在这个世界上，真相从来都不是终点。"
-
-    "它是一个新的起点。"
 
     "一个更好的、建立在真相而非谎言之上的未来——正从你脚下展开。"
 

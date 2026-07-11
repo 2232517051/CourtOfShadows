@@ -17,6 +17,37 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.18 ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.18" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "文本终审 · 界面修复" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.11" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "文本终审" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 全篇旁白与台词终审一轮：删掉一百五十余处说教式收尾、格言腔和空洞比喻，把话还给人物和事" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 决战平衡完成全量推演验证：常规打法稳拿完胜，代价换来的惨胜只属于真正艰难的路" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复同伴招募与名册界面、锻造界面在特定情况下报错的问题" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修复「臣服」结局尾声与北疆开场两处立绘缺失" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.17 ──
             frame:
                 xfill True

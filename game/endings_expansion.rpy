@@ -76,6 +76,8 @@ label ending_vassal_epilogue:
     $ hide_all_chars()
     "你把羊皮纸摊在他面前，一条一条念。念完，把你的印章放在纸边上。"
 
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
     player "三条。加征不在里面。要改协约，请王后陛下重新用印——在那之前，贡额照旧。"
 
     "年轻人的手在剑柄上放了一会儿，又拿开了。"
@@ -669,8 +671,6 @@ label ending_truth_epilogue:
 
         "你没有回答。"
 
-        "有些遗憾不是用语言能说清的。有些路，注定是一个人走的。"
-
         "夕阳的余晖洒满了空旷的走廊。你转过身，走向书房。"
 
         "明天还有很多事要做。这个国家不会因为你的沉思而停下脚步。"
@@ -838,7 +838,6 @@ label ending_truth_epilogue:
     "老管家再也忍不住，佝偻着身子，默默哭了起来。"
 
     "秋风卷着落叶，在你们周围轻轻旋转。"
-    "就像时光在这一刻放慢了脚步，允许两代人的忠诚有一个温柔的告别。"
 
     hide aldric_img with dissolve
 
@@ -939,8 +938,8 @@ label ending_truth_epilogue:
     scene black with fade
 
     centered "{size=+8}真相之路 · 尾声{/size}"
-    centered "「有些路走了就不能回头。但回头看时，你会发现——」"
-    centered "「每一步都是值得的。」"
+    centered "「这条路走了就不能回头。」"
+    centered "「你走到了头。」"
 
     pause 2.0
 
@@ -2107,10 +2106,10 @@ label ending_shadow_epilogue:
         "但即便是背叛，也是精心计算的一步棋。他的倒下为你换来了王后的信任——那才是真正的筹码。"
     elif prince_ally:
         "他以为你是朋友。你确实对他不错——在他需要帮助时伸出手，在他迷茫时给出建议。"
-        "他不知道的是，每一次「帮助」都经过精心计算，每一条「建议」都通向你需要的方向。最残酷的操控，是让对方心怀感激。"
+        "他不知道的是，每一次「帮助」都经过精心计算，每一条「建议」都通向你需要的方向。"
     else:
         "你让精心操纵的信息流一步步将他逼入死角。退路被堵死，盟友被策反——最后他「自愿」退出了权力角逐。"
-        "他以为是命运弄人。他不知道命运有一个名字。"
+        "他以为是命运弄人。"
 
     "还有队长雷恩——棋盘上唯一一枚你从不当棋子用的棋子。"
 
@@ -2366,8 +2365,6 @@ label ending_faith_epilogue:
 
         $ hide_all_chars()
         "她的笑容在阳光下很温暖。"
-        "你们的爱不是轰轰烈烈的传奇。"
-        "但就像这座正在建造的教堂——一砖一瓦，日积月累，坚不可摧。"
 
         hide elena_img with dissolve
 
@@ -2758,22 +2755,22 @@ label ending_peoples_epilogue:
         "主治医师玛格丽特——五年前还在简陋诊所里独自撑着——"
         "如今已经成为远近闻名的名医，她亲手培训了五个新的医师。"
 
-        "\"玛格丽特大夫\"" "大人，新馆今天正式开业！我想请您剪彩。"
+        healer "大人，新馆今天正式开业！我想请您剪彩。"
 
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
         player "剪彩？我又不是什么大人物。"
 
-        "\"玛格丽特大夫\"" "在艾登堡，您是最大的人物。"
+        healer "在艾登堡，您是最大的人物。"
 
         player "好吧。不过剪完彩你得帮我看看膝盖。跳舞跳伤了。"
 
-        "\"玛格丽特大夫\"" "……大人，您今年才二十多岁。"
+        healer "……大人，您今年才二十多岁。"
 
         player "所以呢？"
 
         $ hide_all_chars()
-        "\"玛格丽特大夫\"" "所以您的膝盖不是伤了，是缺乏锻炼。"
+        healer "所以您的膝盖不是伤了，是缺乏锻炼。"
 
         "周围的人都笑了。你也笑了。"
 
@@ -3239,7 +3236,6 @@ label ending_peoples_epilogue:
 
     "夕阳越来越低，但你的影子越来越长。"
     "它落在每一座房屋上，每一条街道上。"
-    "不是遮挡——而是守护。"
 
     "你知道——明天太阳还会升起。"
     "孩子们还会去上学。铁匠还会敲锤子。老太太还会烤面包。"
@@ -3570,9 +3566,6 @@ label ending_father_son_epilogue:
 
     "你心里那个缺了十年的角落——被填满了。"
 
-    "不是被遗忘填满。"
-    "而是被告别填满。"
-
     "你在书桌前坐了很久。"
 
     "然后你站起来，走到门口。"
@@ -3609,8 +3602,8 @@ label ending_father_son_epilogue:
     scene black with fade
 
     centered "{size=+8}隐藏结局：父与子{/size}"
-    centered "「有些告别，要用十年才能说出口。」"
-    centered "「有些骄傲，要等孩子长大了才能听到。」"
+    centered "「我的孩子。我为你骄傲。」"
+    centered "「这句话，迟到了十年。」"
     centered "「关上那扇门——不是忘记。」"
     centered "「是终于学会了放手。」"
 

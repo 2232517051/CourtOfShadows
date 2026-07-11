@@ -181,7 +181,6 @@ label ch2_deep_spy_double:
     martin "小的……小的一定竭尽全力。"
 
     "你转身离去，心中已经在盘算该让男爵「知道」些什么。"
-    "一个精心编织的假情报网，比一千个士兵都要管用。"
 
     $ ch2_deep_spy_recruited = True
     $ change_stat("intrigue", 10)
@@ -730,7 +729,7 @@ label ch2_deep_church_end:
     hide bishop_img with dissolve
 
     "走出教堂时，东方已经泛起了鱼肚白。"
-    "新的一天又要开始了——带着它永远无法兑现的承诺。"
+    "新的一天又要开始了。"
 
     return
 
@@ -1635,7 +1634,7 @@ label ch4_deep_queen_weakness:
     show queen_img at left with dissolve
     queen "你看到了多少？"
 
-    "她的声音像结冰的湖面——表面平静，下面是致命的深渊。"
+    "她的声音平静得反常——刚才眼里那点恐惧，一丝都听不出来了。"
 
     menu:
         "坦诚——是的，我看到了。但我理解。":
@@ -1790,7 +1789,7 @@ label ch4_deep_queen_leave:
     "铁血女王也有人性的一面。"
     "但你选择了不去触碰它——无论是用善意还是用恶意。"
 
-    "有些秘密，最安全的处理方式就是当它不存在。"
+    "今晚看到的东西，你打算烂在肚子里。"
 
     $ ch4_deep_queen_weakness = True
     $ change_stat("loyalty", 3)
@@ -2347,7 +2346,7 @@ label ch5_deep_deserter_execute:
     $ change_stat("power", 8)
     $ change_stat("loyalty", -5)
 
-    "（你选择了铁腕手段。军纪得到了巩固，但某些东西在你心中永远碎掉了。）"
+    "（你选择了铁腕手段。军纪得到了巩固——代价是托马斯的命。）"
 
     jump ch5_deep_deserter_end
 
@@ -2407,7 +2406,7 @@ label ch5_deep_deserter_release:
     "越来越多的王后军逃兵开始主动向艾登堡投降，而不是逃回自己的村庄。"
     "因为消息已经传开了——艾登堡的领主，不杀俘虏。"
 
-    "（你的仁慈产生了意想不到的战略效果。仁义之名，比刀剑更加锋利。）"
+    "（你选择了释放逃兵。不杀俘虏的名声，开始替艾登堡瓦解王后的军队。）"
 
     jump ch5_deep_deserter_end
 
@@ -2951,7 +2950,7 @@ label ch5_deep_letter_give:
 
     hide aldric_img with dissolve
 
-    "（这一刻的温情，比任何战略都更有力量。有些东西值得你用生命去守护。）"
+    "（决战前夜，你陪奥尔德里克待到深夜，向他许下了活着回来的承诺。）"
 
     jump ch5_deep_letter_end
 

@@ -574,7 +574,6 @@ label interlude_ch1_ch2_dream:
             $ change_stat("faith", 1)
             "你用一条旧手帕将徽章层层包好，藏入床头暗格的最深处。"
             "梦也好，父亲的遗物也好——在你弄清楚一切之前，这将是你一个人的秘密。"
-            "有时候，沉默本身就是最强大的武器。"
 
     "窗外的天色渐渐亮了起来。"
 
@@ -903,7 +902,7 @@ label interlude_ch4_ch5_council:
         show aldric_img at left with dissolve
         aldric "您下令扩充的民兵……出了问题。三个村庄拒绝交出征召名额。他们说——您把他们的儿子送去当兵，田里的庄稼就没人收了。"
         aldric "更糟的是，有人在煽动。有个来路不明的人在村子里散布谣言，说您要用农民的血来换贵族的权力。"
-        "你心中一沉。内部的裂痕，有时比外敌更致命。"
+        "你心中一沉。"
 
     elif gov_merchant_outcome == "reject":
         aldric "商会动手了。克劳斯纠集了另外两家商会，封锁了通往艾登堡的主要商路。"
@@ -1147,9 +1146,9 @@ label interlude_ch4_ch5_council:
 
     "但艾登堡还没有倒下。你也没有。"
 
-    "黎明前的黑暗是最浓的。但黎明总会来。"
+    "离天亮还有几个时辰。"
 
-    "——只要还有人愿意守到天亮。"
+    "你在黑暗里站了一会儿，转身离开了大厅。"
 
     hide player_char_img with dissolve
 

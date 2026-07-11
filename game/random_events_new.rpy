@@ -532,7 +532,7 @@ label re_smuggler_arrest:
     $ re_smuggler_met = True
     $ re_smuggler_outcome = "arrest"
 
-    "你做了正确的事。至少，在纸面上是这样。"
+    "功劳上了文书，赏金入了金库。至少在纸面上，这事办得漂亮。"
 
     return
 
@@ -797,7 +797,7 @@ label re_ghost_night_investigate:
     $ change_stat("reputation", 5)
     $ re_ghost_story_heard = True
 
-    "这一夜，你用行动证明了一件事——在这座城堡里，没有鬼比活人更可怕。"
+    "白色的石灰粉扫干净之后，北塔再没有闹过鬼。"
 
     return
 
@@ -950,7 +950,7 @@ label re_orphan_foster:
 
     "那个带头的女孩被铁匠一家收养了。铁匠的妻子没有孩子，对她视如己出。"
 
-    "你看着孩子们被各自的新家庭领走，心中感到一种温和的满足。这也许不是最轰轰烈烈的决定，但它是对的。"
+    "你看着孩子们被各自的新家庭领走，心里松了一口气。"
 
     $ change_stat("loyalty", 5)
     $ change_stat("reputation", 5)
@@ -1133,7 +1133,7 @@ label re_duel_decline_wisely:
     $ change_stat("reputation", 5)
     $ re_duel_met = True
 
-    "有时候，放下剑比拿起剑更需要勇气。"
+    "塞德里克走后，火炉边的棋盘上还留着昨夜的残局。"
 
     return
 
@@ -1262,7 +1262,7 @@ label re_harvest_good:
     $ change_stat("reputation", 5)
     $ re_harvest_done = True
 
-    "仓廪实而知礼节。一个吃饱了的领地，才是一个安定的领地。"
+    "这个冬天，粮仓是满的，士兵和百姓的肚子也是。"
 
     return
 
@@ -1343,7 +1343,7 @@ label re_harvest_buy:
     $ change_stat("reputation", 3)
     $ re_harvest_done = True
 
-    "治国如治家——有时候，花钱买的不是东西，是人心。"
+    "金库见底的这笔账，你认。"
 
     return
 
@@ -1374,6 +1374,6 @@ label re_harvest_civilian:
     $ change_stat("reputation", 8)
     $ re_harvest_done = True
 
-    "你失去了一些战力，但收获了民心。而民心，在最黑暗的时刻，往往比刀剑更有力量。"
+    "你失去了一些战力，但收获了民心。"
 
     return

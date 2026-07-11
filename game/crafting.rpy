@@ -487,9 +487,9 @@ screen crafting_screen():
                                             spacing 2
                                             text "技能需求" size 12 color "#8a7e60"
                                             if _sel_skill_ok:
-                                                text "[_sel[「skill_req」]] (当前 [_sel_skill])" size 14 color "#2ecc71"
+                                                text "[_sel[skill_req]] (当前 [_sel_skill])" size 14 color "#2ecc71"
                                             else:
-                                                text "[_sel[「skill_req」]] (当前 [_sel_skill])" size 14 color "#e67e22"
+                                                text "[_sel[skill_req]] (当前 [_sel_skill])" size 14 color "#e67e22"
 
                                         vbox:
                                             spacing 2
@@ -505,7 +505,7 @@ screen crafting_screen():
                                         vbox:
                                             spacing 2
                                             text "产出" size 12 color "#8a7e60"
-                                            text "x[_sel[「result_qty」]]" size 14 color "#d4a942" bold True
+                                            text "x[_sel[result_qty]]" size 14 color "#d4a942" bold True
 
                                     ## 成功率进度条
                                     bar:
