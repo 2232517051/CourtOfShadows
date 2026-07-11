@@ -730,6 +730,7 @@ screen credits_roll():
             text "西伯利亚土豆子　金牛座花露水　麒莲　大制图家" size 18 color "#e0d8c8" font "msyh.ttf" xalign 0.5
             text "世界的尽头　Zane　玖　秦霸先" size 18 color "#e0d8c8" font "msyh.ttf" xalign 0.5
             text "w一_一w　Matrix　策策　北看成南" size 18 color "#e0d8c8" font "msyh.ttf" xalign 0.5
+            text "114514" size 18 color "#e0d8c8" font "msyh.ttf" xalign 0.5
             null height 16
             text "感谢每一位玩家的支持" size 20 color "#c8b890" font "msyh.ttf" xalign 0.5
             text "你们的选择，造就了这个故事" size 16 color "#8a7e60" xalign 0.5
