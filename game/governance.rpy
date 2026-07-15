@@ -993,42 +993,122 @@ label gov_famine_end:
 ## 6. Part 3: 建设工程 (gov_building)
 ################################################################################
 
-label gov_building:
+## ch = 调用方章节号 (2/3/5)。本 label 被三章各调一次, 开场必须按章分流——
+## 三章逐字相同的开场是玩家能原样复读的重复段 (默然 TapTap 反馈 "经常进入同一个
+## 以前经历过的剧情")。分流只在措辞层, 建设分支与 built_* 门控不变。
+label gov_building(ch=2):
     scene bg village with dissolve
     play music "audio/music/castle_calm.ogg" fadeout 1.0 fadein 1.0 if_changed
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
-    aldric "领主大人，是时候讨论一下本季度的建设计划了。"
-    aldric "领地的发展不能只靠应对危机——我们需要主动投资未来。"
+    ## 四项全建成: 菜单只会剩"暂不建设", 奥尔德里克却还劝"等局势明朗再动工"——
+    ## 无工可开时走独立收尾, 不进菜单
+    if built_school and built_clinic and built_granary and built_watchtower:
+        if ch >= 5:
+            aldric "领主大人，前几季该修的工程全修完了。这季度没有新项目可开。"
+            aldric "也好。省下的人手和材料，全投进备战里去。"
+            hide aldric_img with dissolve
+            $ hide_all_chars()
+            "你合上规划书。没有待办工程这件事，在眼下这节骨眼反倒成了好消息。"
+        else:
+            aldric "领主大人，学堂、诊所、粮仓、望楼——能修的都修完了。"
+            aldric "本季度没有新工程要开。难得清闲。"
+            hide aldric_img with dissolve
+            $ hide_all_chars()
+            "你合上规划书。空白的待办栏反倒让人踏实。"
+        return
+
+    if ch >= 5:
+        aldric "领主大人，开春了。按说该议建设的事，可王后在集结军队，冯·哈根男爵在北边举了旗……"
+        aldric "不过话说回来，该修的东西不修，等打起来再动手就晚了。"
+    elif ch >= 3:
+        aldric "领主大人，上季度的工程已经收尾。匠人们在问下一步修什么。"
+        aldric "经历了这些日子的事，领地哪儿还缺什么，您心里应该有数了。"
+    else:
+        aldric "领主大人，这是本季度的建设规划。您继任以来，头一回定这个。"
+        aldric "先大人在世时每季都亲自拍板。如今该您来了。"
 
     hide aldric_img with dissolve
 
-    "你翻开工程规划书，几个方案映入眼帘。"
+    if ch >= 5:
+        "你翻开规划书。太平年月拟好的方案，放在眼下有些不合时宜。"
+    elif ch >= 3:
+        "你翻开新一季的规划书，比上回厚了一些。"
+    else:
+        "你翻开工程规划书，几个备选方案列在纸上，旁边标着奥尔德里克预估的工期和用料。"
 
     $ hide_all_chars()
-    menu:
-        "本季度的建设重点是——"
 
-        "建造学堂——教化百姓，开启民智" if not built_school:
-            jump gov_build_school
+    if ch >= 5:
+        menu:
+            "战云压境，本季度的建设——"
 
-        "建造诊所——治病救人，保障民生" if not built_clinic:
-            jump gov_build_clinic
+            "建造学堂——仗打完了人还得过日子" if not built_school:
+                jump gov_build_school
 
-        "建造粮仓——广积粮草，以备不时之需" if not built_granary:
-            jump gov_build_granary
+            "建造诊所——打起来会有伤兵，得有地方救治" if not built_clinic:
+                jump gov_build_clinic
 
-        "建造望楼——加强防御，预警敌袭" if not built_watchtower:
-            jump gov_build_watchtower
+            "建造粮仓——仗一开打粮价翻倍，现在囤还来得及" if not built_granary:
+                jump gov_build_granary
 
-        "暂不建设——把人手和石料留到下一季":
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "也好。工程一旦开了头，人手就抽不回来了。等局势明朗些再动工，不迟。"
-            hide aldric_img with dissolve
-            return
+            "建造望楼——趁敌军没到，把防御修起来" if not built_watchtower:
+                jump gov_build_watchtower
+
+            "暂不建设——把人手和石料留到下一季":
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……也是。人手都得备着打仗，没余力搞工程了。石料和木材先囤着，等这仗过去再说。"
+                hide aldric_img with dissolve
+                return
+
+    elif ch >= 3:
+        menu:
+            "本季度的建设重点——"
+
+            "建造学堂——识字的人多了，谣言就传不动" if not built_school:
+                jump gov_build_school
+
+            "建造诊所——上回的事是教训，不能没有医馆" if not built_clinic:
+                jump gov_build_clinic
+
+            "建造粮仓——粮食储备还是薄，得再囤一批" if not built_granary:
+                jump gov_build_granary
+
+            "建造望楼——四周不太平，得有自己的耳目" if not built_watchtower:
+                jump gov_build_watchtower
+
+            "暂不建设——把人手和石料留到下一季":
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "也行。上季度刚收尾，匠人歇一歇也好。材料先存着，下回再议。"
+                hide aldric_img with dissolve
+                return
+
+    else:
+        menu:
+            "你的第一项建设决策——"
+
+            "建造学堂——领地的孩子该有书念了" if not built_school:
+                jump gov_build_school
+
+            "建造诊所——领民病了连个大夫都找不着" if not built_clinic:
+                jump gov_build_clinic
+
+            "建造粮仓——趁年景还行，多存些粮" if not built_granary:
+                jump gov_build_granary
+
+            "建造望楼——边界该有自己的哨塔" if not built_watchtower:
+                jump gov_build_watchtower
+
+            "暂不建设——把人手和石料留到下一季":
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "也好。工程一旦开了头，人手就抽不回来了。等局势明朗些再动工，不迟。"
+                hide aldric_img with dissolve
+                return
 
 label gov_build_school:
     $ built_school = True
@@ -2070,17 +2150,25 @@ label gov_merchant_end:
 ## 10. Part 7: 治理报告 (gov_report)
 ################################################################################
 
-label gov_report:
+## ch = 调用方章节号 (3/5)。同 gov_building: 两章复用一个开场会被玩家读成重复段。
+label gov_report(ch=3):
     scene bg study with dissolve
     play music "audio/music/castle_calm.ogg" fadeout 1.0 fadein 1.0 if_changed
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
-    aldric "领主大人，这是本季度的治理报告。"
-    aldric "请您过目。"
+    if ch >= 5:
+        aldric "领主大人，本季度的治理报告还是照规矩拟了。"
+        aldric "这些数字再过些日子管不管用另说——但该记的账不能断。您先过目。"
+    else:
+        aldric "领主大人，这是本季度的治理报告。"
+        aldric "请您过目。"
 
-    "奥尔德里克展开一卷写满数字和图表的羊皮纸。"
+    if ch >= 5:
+        "奥尔德里克展开那卷羊皮纸。工整的数字和图表，和窗外备战的嘈杂有些不搭。"
+    else:
+        "奥尔德里克展开一卷写满数字和图表的羊皮纸。"
 
     python:
         _pros_bar = get_governance_bar(governance_prosperity)

@@ -62,7 +62,7 @@ label chapter2_start:
     call ch2_deep_church_midnight from _call_ch2_dcm
 
     ## 治理系统：建设工程 / 饥荒危机（建设在前——粮仓建成可降低旱灾烈度）
-    call gov_building from _call_gov_build2
+    call gov_building(2) from _call_gov_build2
     call gov_famine_crisis from _call_gov_famine2
 
     ## ============================================================

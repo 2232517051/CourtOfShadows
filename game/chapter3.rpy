@@ -54,7 +54,7 @@ label chapter3_start:
     ## 治理系统：税务改革 / 瘟疫恐慌 / 建设
     call gov_tax_reform from _call_gov_tax1
     call gov_plague from _call_gov_plague3
-    call gov_building from _call_gov_build3
+    call gov_building(3) from _call_gov_build3
 
     ## ============================================================
     ## 第一部分：异常迹象（~400行）
@@ -2768,19 +2768,39 @@ label ch3_dark_lily_hq:
 
     "她带你走进另一间房间。这间房间里只有一面墙有内容——一张巨大的人物关系图。"
 
-    lily_master "格里菲斯七世不是自然死亡。有人在他的酒中下了慢性毒药。"
+    ## 影主不能把玩家刚在父亲日记里读到的东西当新秘密再揭一遍 (默然 TapTap 反馈
+    ## "前面已经得知了信息……后面导致内容出现矛盾冲突")。ch3_fathers_study 是顺序
+    ## 落入的必经段, 正常流程下 dusk_dew_known 到这里必为真 —— else 分支留给老存档
+    ## (save_compat.rpy 会把老档补进各种中间状态)。
+    ## 日记里没有、只有暗百合掌握的两条必须留在两个分支里: ①格温被灭口 ②父亲酒杯上的残留。
+    if dusk_dew_known:
+        lily_master "你读过你父亲的日记了。"
 
-    lily_master "你的父亲在调查这件事时，发现了毒药的来源——暮色之露。"
+        lily_master "暮色之露、格温、费雷恩——这些我不重复。"
 
-    lily_master "这种毒药极其罕见，只有教会的炼金术士才能制造。"
+        lily_master "但有两件事，日记里没有。"
 
-    lily_master "你父亲追踪到了一个关键人物——教会的药剂师格温。"
+        lily_master "你父亲接触格温之后不到半个月，格温溺死在炼金房的水槽里。官方说是意外。"
 
-    lily_master "格温在你父亲接触她之后不久，就「意外死亡」了。"
+        lily_master "灭口，手法干净。"
 
-    lily_master "而你的父亲……也在半年后去世了。官方说是疾病。"
+        lily_master "然后是你父亲。他死后，我的人检查了他的遗物——他的酒杯上有暮色之露的残留。"
 
-    lily_master "但我们检验了他的遗物——他的酒杯上有暮色之露的残留。"
+        lily_master "和先王一样的死法。"
+    else:
+        lily_master "格里菲斯七世不是自然死亡。有人在他的酒中下了慢性毒药。"
+
+        lily_master "你的父亲在调查这件事时，发现了毒药的来源——暮色之露。"
+
+        lily_master "这种毒药极其罕见，只有教会的炼金术士才能制造。"
+
+        lily_master "你父亲追踪到了一个关键人物——教会的药剂师格温。"
+
+        lily_master "格温在你父亲接触她之后不久，就「意外死亡」了。"
+
+        lily_master "而你的父亲……也在半年后去世了。官方说是疾病。"
+
+        lily_master "但我们检验了他的遗物——他的酒杯上有暮色之露的残留。"
 
     $ poison_evidence = True
     $ father_death_known = True
@@ -2789,7 +2809,10 @@ label ch3_dark_lily_hq:
     hide lily_master_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "同样的毒药……杀了先王，也杀了我父亲。"
+    if dusk_dew_known:
+        player "我猜到了。只是缺一个证据。"
+    else:
+        player "同样的毒药……杀了先王，也杀了我父亲。"
 
     hide player_char_img
     $ hide_all_chars("lily_master_img")
@@ -5850,7 +5873,7 @@ label ch3_chapter_crisis:
     ## 避免危机高潮后突然跳回平静调查场景
 
     ## 治理报告
-    call gov_report from _call_gov_rep3
+    call gov_report(3) from _call_gov_rep3
 
     ## ============================================================
     ## 第三章结尾

@@ -32,12 +32,12 @@ label chapter5_start:
     call ch5_deep_deserter from _call_ch5_ddeserter
 
     ## 治理系统：建设 / 丰收祭（如果达标）
-    call gov_building from _call_gov_build5
+    call gov_building(5) from _call_gov_build5
     if governance_prosperity >= 60:
         call gov_festival from _call_gov_fest5
 
     ## 治理报告
-    call gov_report from _call_gov_rep5
+    call gov_report(5) from _call_gov_rep5
 
     "开春了。冰雪消融，但空气中弥漫着战争的气息。"
 
