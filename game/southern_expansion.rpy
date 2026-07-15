@@ -262,7 +262,7 @@ label southern_arc:
 
     "他还是收拾了行李。第二天天没亮，你们就上了路。"
 
-    "先是六天陆路，翻过两道山，到王国南边的海港城换船。再往南，就出了王国的地界。"
+    "先是四天陆路，翻过两道山，到王国南边的海港城换船。再往南，就出了王国的地界。"
 
     "海船摇摇晃晃。奥尔德里克果然在甲板上吐了三天，吐到后来连胆汁都没了，还硬撑着替你打理文书。"
 
@@ -274,7 +274,7 @@ label southern_arc:
 
     "你站在船头，看海一点点变蓝、变深。越往南，水越暖，风里的味道越陌生。"
 
-    "第七天清晨，瞭望的水手喊了一声。天海交界处浮起一片密匝匝的桅杆，像从海里长出来的秃林——潮汐港，到了。"
+    "第五天清晨，瞭望的水手喊了一声。天海交界处浮起一片密匝匝的桅杆，像从海里长出来的秃林——潮汐港，到了。"
 
     $ hide_all_chars()
     pause 0.5
@@ -1260,10 +1260,10 @@ init python:
     ## 结局路线图用：(key, 名称, 描述, 颜色, 图标)
     _southern_ending_info = [
         ("free",  "自由港",     "促成联合，潮汐港自治存续",   "#2e8b8b", "港"),
-        ("ruler", "港口新主",   "倒向一方，掌港却失其自由",   "#b8860b", "旗"),
+        ("ruler", "借来的港",   "倒向一方，代管港务到开春",   "#b8860b", "旗"),
         ("fall",  "潮汐港陷落", "卖港换盐路，自由港覆灭",     "#3d3a36", "灰"),
-        ("outwit","螳螂捕蝉",   "纯靠谋略反将王廷，一兵未损",  "#9b59b6", "谋"),
-        ("vassal","王旗下的港", "归附王廷，保住港却失其名分",  "#7a6a4a", "附"),
+        ("outwit","扔出去的信", "把证据投进黑暗，舰队撤了",    "#9b59b6", "谋"),
+        ("vassal","该来的旗",   "归附王廷，而诏书未必因你而来",  "#7a6a4a", "附"),
     ]
 
 
@@ -1436,33 +1436,31 @@ label ending_southern_vassal:
 
     player "有。这样王廷不费一兵一卒得了潮汐港的名分，各国商会挑不出错，你也不必背屠港的恶名。三方都有台阶下。"
 
-    "主帅盯着你看了很久。一个内陆领主，替一个不属于他的港口，跟王室军队谈出了一条所有人都能活的路。"
+    "主帅盯着你，脸上看不出什么。"
 
-    royal_admiral "……我请示王廷。"
+    royal_admiral "……嗯。回去吧。"
 
     pause 0.8
     scene bg tideport_harbor with dissolve
 
-    "三天后，王廷的诏书到了。潮汐港归附王廷，为'自治海港'，永不驻军，商事自理。"
+    "你离了港，在官道上走了两天。一匹王廷快马从后头追上来，带了一纸诏书：潮汐港归附王廷，为自治海港，不驻军，商事自理。"
 
-    "港口的桅杆上，多了一面王旗。公会还是那个公会，船主还是那群船主，断锚酒馆照样卖它最不上头的酒。只是这港口三百年来头一回，头顶上有了个名义上的主子。"
+    "没有附信，没有解释。你分不清这是你那番话起了作用，还是王廷本来就打算这么收场。"
 
     show corsair_img at right with dissolve
     if corsair_romance:
-        corsair "挂面王旗就能换太平。我那些死脑筋的兄弟还在骂你卖了港。"
-        corsair "可我知道——你要不递这个台阶，今晚海堤上站着的人，明天就得有一半喂鱼。自由这东西，有里子，比有面子要紧。"
+        corsair "听说王旗挂上了。船主们都说是你谈来的。"
+        corsair "可那诏书来得也太快了——你那番话到底管没管用，你自己知道吗？"
     else:
-        corsair "挂面王旗换条命。船主们骂你，可没一个真愿拿命去换那面没有王旗的天空。"
-        corsair "你这台阶递得不光彩，却递得实在。潮汐港欠你一条命——尽管它未必肯认。"
+        corsair "王旗挂上了。有人说是你的功劳。"
+        corsair "不过谁也说不清，这诏书到底是你谈来的，还是王廷本来就要发的。"
 
     $ hide_all_chars()
     scene black with dissolve
 
-    centered "{size=+8}王旗下的港{/size}"
+    centered "{size=+8}该来的旗{/size}"
     pause 1.2
-    centered "{size=+3}潮汐港保住了里子，交出了名分。{/size}"
-    pause 1.0
-    centered "{size=+3}三百年的自由，从此挂在别人的旗下——可它还活着。{/size}"
+    centered "{size=+3}潮汐港挂上了王旗。你那番话管没管用，至今没人告诉你。{/size}"
     pause 2.0
 
     $ southern_finish("vassal", "southern_vassal")
@@ -1478,17 +1476,11 @@ label ending_southern_outwit:
     play music "audio/music/southern_scheme.ogg" fadeout 1.0 fadein 2.0 if_changed
     scene bg tideport_office with fade
 
-    "你没去联合谁，也没打算硬拼。你手里有更利的东西——费舍尔留下的全部证据，和一个看透了王廷算盘的脑子。"
+    "你没去联合谁，也没打算硬拼。你手里有一样东西——费舍尔留下的证据。"
 
-    "你想明白一件事：发兵的不是'王廷'，是王廷里某一派主战的人。他们想拿潮汐港立威、捞功。可这一派，在王廷里也有政敌。"
+    "你想了一夜。发兵的不见得是整个王廷——更像是王廷里有人想要这个港。谁，你猜不出来。"
 
-    "当夜，你誊了十几份东西，不是送给商船，是送给该送的人——"
-
-    "一份递往王都，交到主战派政敌手里：你看，他们假造海寇之乱、挑动自由港自相残杀，败坏王国信誉。"
-
-    "一份送往各国商会：王廷某派要吞港了，今天是潮汐港，明天就轮到你们的商路。"
-
-    "一份，你甚至设法递到了主战派自己手里：你们的密探费舍尔，证据在我手上。再往前一步，这些就不止我一个人知道。"
+    "当夜你把证据誊了几份，交给了过港的商船——费舍尔的名字、假造海寇之乱的手笔，一样不落。这些船南来北往的，你管不了它们驶去哪里，也不知道那些纸最后落进谁的手里。"
 
     pause 0.8
     scene bg tideport_fleet with dissolve
@@ -1497,20 +1489,16 @@ label ending_southern_outwit:
 
     scene bg tideport_harbor with dissolve
 
-    "后来你才拼出那一夜的事。"
-
-    "你递出去的证据在王都炸了锅。主战派的政敌抓住把柄，参了他们一本'擅启边衅、辱国丧信'。王廷为平息各方商会的物议，连夜下令撤兵，还把主战派几个头目下了狱。"
-
-    "费舍尔背后那只手缩了回去，缩得比伸出来还快。因为它发现，这局里最危险的不是潮汐港的刀和船，是一个内陆来的领主，和他手里那几张纸。"
+    "舰队走了。你不知道为什么。是那些证据到了该到的地方？还是王廷自己出了什么变故？你只知道他们来了，停了一夜，走了。"
 
     show corsair_img at right with dissolve
     corsair "我到现在还没回过味来。王廷的兵压到家门口了，你没调一兵一卒，没流一滴血，他们就……自己走了？"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
-    player "他们不怕潮汐港。他们怕自己人先把自己人办了。我只是把刀，递到了对的人手里。"
+    player "……老实说，我也不知道。证据交出去了，到了谁手里、有没有人看，一概不清楚。他们走了——可能跟我有关，可能压根不是。"
 
-    corsair "……内陆的权谋，比我们海上的刀邪门多了。"
+    corsair "……得，连你也不知道。"
 
     if corsair_romance:
         "她忽然凑近，盯着你的眼睛看了很久，像头一回认识你。"
@@ -1521,16 +1509,16 @@ label ending_southern_outwit:
         "她愣了一下，别开脸，耳根又红了。"
         corsair "……油嘴滑舌。"
 
-    "潮汐港保住了，一兵未损。公会、船主，谁都欠你一个天大的人情，却谁都没真正看懂，你是怎么做到的。"
+    "潮汐港保住了，一兵未损。你自己也说不清它是怎么保住的。"
 
     $ hide_all_chars()
     scene black with dissolve
 
-    centered "{size=+8}螳螂捕蝉{/size}"
+    centered "{size=+8}扔出去的信{/size}"
     pause 1.2
-    centered "{size=+3}你没赢下一场仗。你让想打这场仗的人，输给了他自己人。{/size}"
+    centered "{size=+3}你把证据交给了过港的商船。舰队走了。{/size}"
     pause 1.0
-    centered "{size=+3}潮汐港至今不知道，替它退了王室军队的，是一个外乡人。{/size}"
+    centered "{size=+3}这两件事有没有关系，你到现在说不清。{/size}"
     pause 2.0
 
     $ southern_finish("outwit", "southern_outwit")
@@ -1754,35 +1742,35 @@ label ending_southern_ruler:
 
     "硝烟散尽，潮汐港还在——只是它变了。"
 
-    "另一半人被你压了下去。从今往后，谁能进港、谁能出海、谁说了算，由你定。港务厅挂上了艾登堡的金鹰旗。"
+    "另一半人被你压了下去。港务厅的老吏员凑上来，递了个临时的头衔——「代管港务」，管到开春，等王廷定夺。"
 
-    "船照常进出，货照常装卸。你的盐路，从此稳稳当当。"
+    "船照常进出，货照常装卸。盐路暂时通了。到开春以后什么样，谁也说不准。"
 
     if corsair_romance and southern_faction == "pirates":
         $ hide_all_chars()
         show corsair_img sad at right with dissolve
-        corsair "我们赢了。可你看这港口……它现在有主人了。"
-        corsair "我跟了你，不后悔。只是往后再有人说'潮汐港是自由港'，我大概会笑一声。"
-        "她没再说下去。有些东西保住了，有些东西，是保不住的。"
+        corsair "代管到开春……然后呢？"
+        corsair "王廷来人接手，你拍屁股走？还是到时候再扯一轮皮？"
+        "你答不上来。她也没等你答。"
     else:
-        "你成了潮汐港实际的主人。一个三百年没有主人的港口，现在有了。"
+        "你成了潮汐港临时的代管人。一纸文书，管到开春。之后是留是走，不由你定。"
         "夜里你站在港务厅的窗前，听着外头照旧的喧闹。"
 
         "往后的潮汐港，再没有公会和船主的火并——只剩一个声音说了算，你的。"
 
-        "盐路稳了，税收清了，连海盗都少了。这港口从没这么有秩序过。"
+        "盐路通了，港里消停了几天。可你心里清楚，「代管」两个字后面跟着的是「到开春」。"
 
-        "只是偶尔，老船工会在背地里念叨：当年那个内陆来的领主，本来是来谈生意的。后来怎么就成了潮汐港的主人，谁也说不清。"
+        "偶尔有老船工念叨：来了个内陆的领主，说是代管，管到开春。到底能管几天，没人赌得准。"
 
     pause 0.5
     $ hide_all_chars()
     scene black with dissolve
 
-    centered "{size=+8}港口新主{/size}"
+    centered "{size=+8}借来的港{/size}"
     pause 1.2
-    centered "{size=+3}你保住了潮汐港。它开着，认你的旗。{/size}"
+    centered "{size=+3}你替潮汐港看着摊子。文书上写的是到开春。{/size}"
     pause 1.0
-    centered "{size=+3}只是它不再是谁都能自由进出的那个港了。{/size}"
+    centered "{size=+3}开春以后的事，文书上没写。{/size}"
     pause 2.0
 
     $ southern_finish("ruler", "southern_ruler")
@@ -3032,6 +3020,33 @@ label southern_act2:
     corsair "顺风的话，他们明天傍晚就到。"
 
     "几天？不。是几个时辰。"
+
+    ## 奥尔德里克随第一船盐提前回航。
+    ## 一石三鸟: ①解释他后半程(第三幕/备战/五个结局共约 700 行)为什么零出场;
+    ## ②回答"主角和老管家同时离领地一个月, 谁在看家"; ③接上 chapter2.rpy:46 的
+    ## interlude_ch1_ch2 —— 那场书房戏他必须在艾登堡等着递王室召令。
+    $ hide_all_chars()
+    "老管家找到你的时候，北去的盐船正在解缆。"
+
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
+    aldric "大人，老臣搭这条船走。"
+
+    hide aldric_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "现在？"
+
+    hide player_char_img
+    $ hide_all_chars("aldric_img")
+    show aldric_img at left with dissolve
+    aldric "再不走，港口一封就出不去了。艾登堡空着呢，老臣先回去把家看住。"
+
+    hide aldric_img
+    $ hide_all_chars()
+    "他没等你答应，已经上了跳板。"
+
+    "盐船出了港。桅灯远了，混进夜色里。"
 
     pause 1.5
     scene black with dissolve
