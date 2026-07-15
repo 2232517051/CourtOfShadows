@@ -2755,23 +2755,41 @@ label ending_peoples_epilogue:
         "主治医师玛格丽特——五年前还在简陋诊所里独自撑着——"
         "如今已经成为远近闻名的名医，她亲手培训了五个新的医师。"
 
+        $ hide_all_chars("healer_img")
+        show healer_img at left with dissolve
         healer "大人，新馆今天正式开业！我想请您剪彩。"
 
+        hide healer_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
         player "剪彩？我又不是什么大人物。"
 
+        hide player_char_img
+        $ hide_all_chars("healer_img")
+        show healer_img at left with dissolve
         healer "在艾登堡，您是最大的人物。"
 
+        hide healer_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "好吧。不过剪完彩你得帮我看看膝盖。跳舞跳伤了。"
 
+        hide player_char_img
+        $ hide_all_chars("healer_img")
+        show healer_img at left with dissolve
         healer "……大人，您今年才二十多岁。"
 
+        hide healer_img
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
         player "所以呢？"
 
-        $ hide_all_chars()
+        hide player_char_img
+        $ hide_all_chars("healer_img")
+        show healer_img at left with dissolve
         healer "所以您的膝盖不是伤了，是缺乏锻炼。"
 
+        $ hide_all_chars()
         "周围的人都笑了。你也笑了。"
 
         "这就是你想要的艾登堡。不是一个所有人都战战兢兢的地方。"
