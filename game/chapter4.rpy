@@ -32,6 +32,9 @@ label chapter4_start:
     ## NPC支线：男爵的隐藏荣誉
     call npc_baron_honor from _call_npc_bh4
 
+    ## 场景事件：本章随机抽一个 (random_events_new.rpy)
+    call re_scene_event(4) from _call_re_scene_ev4
+
     ## 章节深化场景移到"抵达王都并入住"之后再触发
     ## (下方 L747 附近)，避免在艾登堡出发前就出现"到达王都第三夜"的时间错乱
 

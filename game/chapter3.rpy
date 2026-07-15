@@ -56,6 +56,9 @@ label chapter3_start:
     call gov_plague from _call_gov_plague3
     call gov_building(3) from _call_gov_build3
 
+    ## 场景事件：本章随机抽一个 (random_events_new.rpy)
+    call re_scene_event(3) from _call_re_scene_ev3
+
     ## ============================================================
     ## 第一部分：异常迹象（~400行）
     ## ============================================================

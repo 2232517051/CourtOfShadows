@@ -65,6 +65,9 @@ label chapter2_start:
     call gov_building(2) from _call_gov_build2
     call gov_famine_crisis from _call_gov_famine2
 
+    ## 场景事件：本章随机抽一个 (random_events_new.rpy)
+    call re_scene_event(2) from _call_re_scene_ev2
+
     ## ============================================================
     ## 场景1：出发前的准备
     ## ============================================================

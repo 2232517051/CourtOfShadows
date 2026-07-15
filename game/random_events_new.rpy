@@ -18,6 +18,57 @@ default re_duel_met = False
 default re_harvest_done = False
 
 ## ============================================================
+## 场景事件调度 (批37)
+## ------------------------------------------------------------
+## 本文件的 9 个入口 label 此前全项目零调用点 —— 写完没接线, 约 1400 行成品剧情
+## 玩家从没见过。查过 call/jump、renpy.call()/renpy.jump()、jump expression、
+## screen 的 Jump()/Call() action、字符串引用, 全都没有。
+##
+## 接法: 每章从"本章可用且未触发过"的事件里随机抽一个, 单周目见 5/9, 每周目不同。
+## 不做成每章固定 2 个全量接入 —— 玩家反馈本作已经偏长(默然 2026-07: "故事很长,
+## 长到我绝对不会再玩第2次"), 随机抽反而给重玩理由, 也和现有 trigger_random_event
+## 的设计精神一致。
+##
+## 每个入口 label 自带守卫(如 re_wandering_poet 开头 `if re_wanderer_met: return`),
+## 所以即使被重复抽中也只会立刻返回, 不会重播。
+## ============================================================
+
+init python:
+
+    ## (入口 label, 守卫变量, 最早章, 最晚章)
+    _scene_events = [
+        ("re_wandering_poet",   "re_wanderer_met",      1, 5),
+        ## 瘟疫医生: 第三章才有瘟疫背景
+        ("re_plague_doctor",    "re_plague_doctor_met", 3, 5),
+        ("re_fortune_teller",   "re_fortune_told",      1, 4),
+        ## 走私商人: re_smuggler_outcome 在 interlude_ch4_ch5_council(interludes.rpy:937)
+        ## 和 chapter5.rpy:920 被读 —— 必须在第五章之前就有机会触发, 否则那两处永远读到空值
+        ("re_smuggler",         "re_smuggler_met",      2, 4),
+        ("re_old_map",          "re_old_map_found",     1, 4),
+        ("re_ghost_night",      "re_ghost_story_heard", 1, 5),
+        ("re_orphan",           "re_orphan_met",        1, 5),
+        ## 决斗挑战: 需要玩家已在贵族圈里露过面
+        ("re_duel_challenge",   "re_duel_met",          2, 5),
+        ("re_harvest",          "re_harvest_done",      1, 5),
+    ]
+
+    def pick_scene_event(ch):
+        """挑一个本章可用且未触发过的场景事件入口 label; 没有则返回 None"""
+        avail = [lab for lab, flag, lo, hi in _scene_events
+                 if lo <= ch <= hi and not getattr(store, flag, False)]
+        if not avail:
+            return None
+        return renpy.random.choice(avail)
+
+
+label re_scene_event(ch=1):
+    $ _scene_ev = pick_scene_event(ch)
+    if _scene_ev:
+        call expression _scene_ev from _call_scene_event
+    return
+
+
+## ============================================================
 ## 事件 1: 流浪诗人 (The Wandering Poet)
 ## ============================================================
 
@@ -387,7 +438,9 @@ label re_fortune_teller_dismiss:
     "你愣了一瞬，然后摇了摇头。一定是看错了。"
 
     $ change_stat("reputation", 2)
-    $ re_fortune_told = False
+    ## 守卫(302)查的就是这个标志。另两个分支(369/431)都置 True, 只有本分支置 False
+    ## —— 玩家选"嗤之以鼻"就等于没触发过, 整段算命婆会重播。
+    $ re_fortune_told = True
 
     "……对吧？"
 

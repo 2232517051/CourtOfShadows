@@ -39,6 +39,9 @@ label chapter5_start:
     ## 治理报告
     call gov_report(5) from _call_gov_rep5
 
+    ## 场景事件：本章随机抽一个 (random_events_new.rpy)
+    call re_scene_event(5) from _call_re_scene_ev5
+
     "开春了。冰雪消融，但空气中弥漫着战争的气息。"
 
     "王后以「镇压叛乱」为由，集结了王室军队，准备清洗不服从的领主。"

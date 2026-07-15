@@ -2334,6 +2334,9 @@ label first_decree:
     ## NPC支线：村长请求
     call npc_village_quest from _call_npc_vq1
 
+    ## 场景事件：本章随机抽一个 (random_events_new.rpy)
+    call re_scene_event(1) from _call_re_scene_ev1
+
     ## ============================================================
     ## 第一章结尾
     ## ============================================================
