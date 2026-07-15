@@ -1052,31 +1052,34 @@ label ch3_exp_cult_infiltration:
 
     "他的斗篷是深紫色的——与其他人的黑色不同。他的面罩上雕刻着一朵带刺的铁百合花。"
 
-    $ hide_all_chars("lily_master_img")
-    show lily_master_img at left with dissolve
+    $ hide_all_chars("edmund_masked_img")
+    show edmund_masked_img at left with dissolve
 
-    lily_master "同胞们。"
+    edmund_masked "同胞们。"
 
     "他的声音低沉而富有感染力，在地下大厅中回荡。这不是影主的声音——这是另一个人。"
 
-    lily_master "花园即将迎来新的季节。旧的枝叶必须修剪，新的种子必须播种。"
+    edmund_masked "花园即将迎来新的季节。旧的枝叶必须修剪，新的种子必须播种。"
 
-    lily_master "两百年来，我们在暗中守护这片土地。但守护的方式……需要改变。"
+    edmund_masked "两百年来，我们在暗中守护这片土地。但守护的方式……需要改变。"
 
     "他顿了顿，环视众人。"
 
-    lily_master "温和的手段已经不够了。那些贪婪的领主和腐败的教会，不会因为我们的善意而改变。"
+    edmund_masked "温和的手段已经不够了。那些贪婪的领主和腐败的教会，不会因为我们的善意而改变。"
 
-    lily_master "我们需要更……直接的手段。"
+    edmund_masked "我们需要更……直接的手段。"
 
     $ hide_all_chars()
     "你感到背脊发凉。这不是暗百合的正式集会——这是铁刺派的秘密会议，一个从暗百合分裂出来的激进派系。"
+
+    ## 旁白刚点破派系, 名牌从"???"跟进到"铁刺派首领"
+    $ edmund_name = "铁刺派首领"
 
     "接下来的内容更加令人震惊——铁刺派首领谈到了一个计划：在下个月的领主会议上制造混乱，趁机暗杀几位「阻碍正义」的贵族。"
 
     "而你的名字，赫然在列。"
 
-    hide lily_master_img with dissolve
+    hide edmund_masked_img with dissolve
 
     menu:
         "继续潜伏「获取更多情报」" if intrigue >= 55:
@@ -1217,15 +1220,15 @@ label ch3_exp_confrontation:
 
             "你在地下大厅的深处找到了他——紫色斗篷，铁百合面罩。他独自站在祭坛前，背对着你。"
 
-            show lily_master_img at right with dissolve
+            show edmund_masked_img at right with dissolve
 
-            lily_master "你来了。"
+            edmund_masked "你来了。"
 
             "他转过身。你看不到他的脸，但从他的声音中听不出恐惧。"
 
-            lily_master "你的父亲，用了二十年也没能阻止我，你三个月就做到了。该说你勇敢，还是鲁莽？"
+            edmund_masked "你的父亲，用了二十年也没能阻止我，你三个月就做到了。该说你勇敢，还是鲁莽？"
 
-            hide lily_master_img
+            hide edmund_masked_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
 
@@ -1238,10 +1241,14 @@ label ch3_exp_confrontation:
 
             "那是一张你不认识的脸——疤痕累累，冷酷而苍老。但他的眼睛……和你的眼睛有着某种相似之处。"
 
+            ## 面罩摘下 → 换成摘面罩立绘
             hide player_char_img
-            $ hide_all_chars("lily_master_img")
-            show lily_master_img at left with dissolve
-            lily_master "我叫艾德蒙。你父亲的兄弟。你的……叔叔。铁刺派——是我从暗百合中分裂出来的。影主的路线太软弱了。"
+            $ hide_all_chars("edmund_img")
+            show edmund_img at left with dissolve
+            edmund "我叫艾德蒙。你父亲的兄弟。你的……叔叔。铁刺派——是我从暗百合中分裂出来的。影主的路线太软弱了。"
+
+            ## 他刚自报家门, 名牌跟进
+            $ edmund_name = "艾德蒙"
 
             "你脑子一片空白。"
 
@@ -1278,14 +1285,16 @@ label ch3_exp_confrontation:
 
             "你看到了一张陌生而苍老的脸。但他的眼睛……让你感到一阵不安的熟悉。"
 
-            $ hide_all_chars("lily_master_img")
-            show lily_master_img at left with dissolve
+            ## 押回来时"面罩已经被摘下"(上一行旁白) → 用摘面罩立绘。
+            ## 本分支他只认叔侄、始终没报名字, 所以名牌停在"铁刺派首领"。
+            $ hide_all_chars("edmund_img")
+            show edmund_img at left with dissolve
 
-            lily_master "你赢了，侄子。"
+            edmund "你赢了，侄子。"
 
             "侄子？"
 
-            lily_master "你父亲从来没告诉过你吧？他有一个被家族除名的兄弟。我从暗百合中拉出了铁刺派——因为影主的手段太温吞了。"
+            edmund "你父亲从来没告诉过你吧？他有一个被家族除名的兄弟。我从暗百合中拉出了铁刺派——因为影主的手段太温吞了。"
 
             "你说不出话来。怪不得那双眼睛让你觉得熟悉。"
 
@@ -1298,7 +1307,6 @@ label ch3_exp_confrontation:
             $ change_stat("reputation", -5)
             $ log_decision("第三章扩展", "尝试分化瓦解暗百合")
 
-            hide lily_master_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
 
@@ -1332,10 +1340,11 @@ label ch3_exp_confrontation:
 
             "他的脸你不认识，但他的下一句话击碎了你所有的心理防线。"
 
+            ## 刚摘下面罩 → 摘面罩立绘。本分支同样没报名, 名牌停在"铁刺派首领"。
             hide player_char_img
-            show lily_master_img at right with dissolve
+            show edmund_img at right with dissolve
 
-            lily_master "你和你父亲一样聪明。不愧是我的侄子。"
+            edmund "你和你父亲一样聪明。不愧是我的侄子。"
 
             $ hide_all_chars()
             "叔叔。铁刺派的首领是你的叔叔。"
@@ -1353,7 +1362,6 @@ label ch3_exp_confrontation:
             $ change_courage(10)
             $ log_decision("第三章扩展", "试图暗中接管暗百合")
 
-            hide lily_master_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
 
@@ -1394,27 +1402,26 @@ label ch3_exp_confrontation:
 
             "当你终于与前任铁刺派首领面对面时，他已经被关在了你城堡的地牢里。"
 
-            show lily_master_img at right with dissolve
-            hide lily_master_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
+            ## 阶下囚, 面罩早没了 → 摘面罩立绘。
+            ## (原先这里有一段 show player_char_img 紧跟 hide、中间无台词的空转, 一并清掉)
+            $ hide_all_chars("edmund_img")
+            show edmund_img at left with dissolve
+            edmund "呵……你比你父亲更可怕。他只是暗百合的成员。你，却要成为铁刺派的主人。"
 
-            hide player_char_img
-            $ hide_all_chars("lily_master_img")
-            show lily_master_img at left with dissolve
-            lily_master "呵……你比你父亲更可怕。他只是暗百合的成员。你，却要成为铁刺派的主人。"
+            edmund "但你知道我是谁吗？"
 
-            lily_master "但你知道我是谁吗？"
-
-            hide lily_master_img
+            hide edmund_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "告诉我。"
 
             hide player_char_img
-            $ hide_all_chars("lily_master_img")
-            show lily_master_img at left with dissolve
-            lily_master "我是艾德蒙。你父亲的弟弟。我从暗百合中拉出了铁刺派——因为影主太优柔寡断。你们一家人……都与百合花脱不了干系。"
+            $ hide_all_chars("edmund_img")
+            show edmund_img at left with dissolve
+            edmund "我是艾德蒙。你父亲的弟弟。我从暗百合中拉出了铁刺派——因为影主太优柔寡断。你们一家人……都与百合花脱不了干系。"
+
+            ## 他刚自报家门, 名牌跟进
+            $ edmund_name = "艾德蒙"
 
             $ change_stat("intrigue", 5)
             $ dark_lily_joined = True

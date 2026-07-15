@@ -158,6 +158,11 @@ image captain_img = Transform("images/captain.png", zoom=0.45, yalign=1.0)
 image queen_img = Transform("images/queen.png", zoom=0.45, yalign=1.0)
 image merchant_karl_img = Transform("images/merchant_karl.png", zoom=0.45, yalign=1.0)
 image lily_master_img = Transform("images/lily_master.png", zoom=0.45, yalign=1.0)
+## 艾德蒙: 主角父亲康拉德的弟弟, 被家族除名, 从暗百合分裂出铁刺派 —— 与影主是两个人。
+## 蒙面(集会/对峙初) 与 摘面罩(揭身份后) 两张, 分别配 edmund_masked / edmund 两个 Character,
+## 保证 Character 的 image= 与 show 的 tag 始终一致 (CLAUDE.md 立绘规范)。
+image edmund_masked_img = Transform("images/edmund_masked.png", zoom=0.45, yalign=1.0)
+image edmund_img = Transform("images/edmund.png", zoom=0.45, yalign=1.0)
 image prince_img = Transform("images/prince.png", zoom=0.45, yalign=1.0)
 
 ## 南境游记 DLC — 渡鸦船长赛琳
@@ -258,7 +263,7 @@ init python:
     # 所有有立绘的角色ID列表
     _all_portrait_chars = [
         "aldric", "elena", "bishop", "baron", "captain", "queen",
-        "merchant_karl", "lily_master", "prince",
+        "merchant_karl", "lily_master", "edmund", "edmund_masked", "prince",
         "mother", "father", "tutor", "friend_marcus", "bully_kid",
         "old_guard", "servant_marta", "priest_thomas", "noble_werner",
         "countess_hilda", "count_grey", "viscount_wells", "countess_stein", "ingrid",

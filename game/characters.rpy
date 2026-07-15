@@ -20,6 +20,21 @@ define assassin = Character("???", color="#333333", image="assassin_char")
 ## 第三章新增角色
 define lily_master = Character("暗百合首领", color="#2d1b4e", image="lily_master")
 
+## 艾德蒙 — 铁刺派首领, 主角父亲康拉德的弟弟, 被家族除名。
+## 他和影主(lily_master, 女性)是两个人: changelog.rpy:780 记的旧修复"统一为女性首领「影」,
+## 铁刺派艾德蒙改为分裂势力头目"当年只落到了活代码上, chapter3_expansion 的分支当时不可达,
+## 就一直借用 lily_master 的角色和立绘 —— 名牌写着"暗百合首领"却自称艾德蒙, 旁白同时写着
+## "这不是影主的声音——这是另一个人"(chapter3_expansion.rpy:1060)。这里给他补上专属定义。
+##
+## 名牌随玩家认知推进(照 assassin 的 "???" 与 player 的 "[player_name]" 两个既有先例):
+##   "???" → 集会上初登场, 玩家只看见紫袍铁面
+##   "铁刺派首领" → 旁白点破派系之后
+##   "艾德蒙" → 他自报家门之后 (仅"captured"/"replaced" 两个分支会走到; 另两个分支
+##              他只认叔侄不报名, 名牌就停在"铁刺派首领")
+default edmund_name = "???"
+define edmund_masked = Character("[edmund_name]", color="#4a2d6b", image="edmund_masked")
+define edmund = Character("[edmund_name]", color="#4a2d6b", image="edmund")
+
 ## 第四章新增角色
 define prince = Character("弗雷德里克王子", color="#4169e1", image="prince")
 
