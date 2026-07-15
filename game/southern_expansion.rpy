@@ -118,15 +118,6 @@ label southern_arc_standalone:
         reputation = 50
         intrigue = 45
 
-    scene black with fade
-    pause 0.5
-
-    centered "{size=+8}南境游记{/size}"
-    pause 1.2
-    centered "{size=+4}第一弹 · 潮汐港的火并{/size}"
-    pause 1.5
-    scene black with dissolve
-
     call southern_arc from _call_southern_arc_standalone
     jump southern_dlc_complete
 
@@ -137,6 +128,22 @@ label southern_arc:
 
     $ southern_visited = True
     $ quick_menu = True
+
+    ## ── 章节框架: 只补一半 ──
+    ## 补 force_autosave / snapshot_chapter_start / show_chapter, 照 chapter2.rpy:12-17 的写法。
+    ## snapshot_chapter_start() 与 southern_arc_return 里的 show_chapter_summary 配对 ——
+    ## 缺了这一对, 南境的 42 处 change_stat 在第一章和第二章两份结算里都是 0。
+    ##
+    ## **不补 call apply_rel_chapter_effects**(chapter2-5.rpy 各 :18-19 有, 这里没有):
+    ## 它不是初始化, 是每调一次就按好感档位发一次被动的非幂等发钱器(effects.rpy:1357 →
+    ## _apply_rel_effects_python)。全主线只发 4 次。外章作为第 5 次会让南下的玩家白拿一整章
+    ## 被动, 而留守的玩家没有 —— 南下当场变成数值最优解, "去不去"这个两难直接塌掉。
+    ## **不补 call show_recap**: 玩家刚打完第一章, 不需要回顾。
+    $ renpy.force_autosave()
+    $ snapshot_chapter_start()
+
+    scene black with fade
+    call show_chapter("外章", "南境游记", "潮汐港的火并") from _call_show_chapter_southern
 
     ## ── 框架：一封来自南境的信 ──
     play music "audio/music/tension.ogg" fadeout 1.0 fadein 2.0 if_changed
@@ -1024,7 +1031,7 @@ label southern_to_tavern:
 
             "她替你满上酒，又给自己满上。这一坛，你们一人一半。"
 
-        "都不站——把两边按在一张桌子上谈（需 谋略≥45 或 声望≥45）" if intrigue >= 45 or reputation >= 45:
+        "都不站——把两边按在一张桌子上谈" if intrigue >= 35 or reputation >= 40 or port_insight >= 3:
             $ southern_faction = "neutral"
             $ southern_brokered_peace = True
             $ change_rel("rel_corsair", 12)
@@ -1177,8 +1184,13 @@ init python:
         unlock_achievement("southern_act1")
 
     def southern_finish(ending_key, achievement):
-        """登记 DLC 结局：独立 set + 成就 + 解锁画廊，不碰主线 endings_seen。"""
+        """登记外章分支结果：独立 set + 成就 + 解锁画廊，不碰主线 endings_seen。"""
         persistent.southern_endings_seen.add(ending_key)
+        ## 南境对主线的唯一接口。五个 ending_southern_* 都经由本函数收口,
+        ## 所以在这里置位一次即可, 不必在五处结局各写一遍。
+        ## (主线只读 southern_outcome, 不读 persistent.southern_endings_seen ——
+        ##  后者是跨周目图鉴, 拿它当本周目判据会让第二周目的玩家凭空继承上一周目的南境后果。)
+        store.southern_outcome = ending_key
         unlock_achievement(achievement)
         if corsair_romance:
             unlock_achievement("southern_lover")
@@ -1261,8 +1273,10 @@ label southern_act3:
 
     "桌上静了。打不过，买不动，谈不拢。屋里十几个人，头一回真切尝到'无路可走'是什么滋味。"
 
-    ## ── 破局点：否认借口（高谋略玩家自己想到，否则由 NPC 点破）──
-    if intrigue >= 50:
+    ## ── 破局点：否认借口（谋略够、或在港里走访得够多的玩家自己想到，否则由 NPC 点破）──
+    ## 门槛改挂 port_insight: 原 intrigue>=50 是按外传 45 基线调的, 主线第一章末 intrigue
+    ## 起点才 20 且加点互斥, 几乎没人够 —— 主门槛给"你在港里干了什么", 属性只当捷径。
+    if intrigue >= 35 or port_insight >= 3:
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
         player "那就不打。"
@@ -1309,8 +1323,9 @@ label southern_act3:
         "促成联合——让整个港口站成一条心，逼王室军队师出无名":
             $ log_decision("南境游记", "第三幕：促成两派联合，否认王室军队借口")
 
-            ## 联合是否成功：调停过 / 声望或谋略够 / 恋爱加成
-            if southern_brokered_peace or reputation >= 50 or intrigue >= 50 or corsair_romance:
+            ## 联合是否成功：调停过 / 走访够 / 赛琳信你 / 声望够 / 恋爱加成
+            ## 不改的话, 低属性玩家会被静默踢进 ending_southern_ruler(下面的 else)
+            if southern_brokered_peace or corsair_romance or port_insight >= 3 or rel_corsair >= 40 or reputation >= 45:
                 $ southern_united = True
                 call southern_prepare from _call_southern_prepare
                 jump ending_southern_free
@@ -1325,7 +1340,7 @@ label southern_act3:
             $ southern_united = False
             jump ending_southern_ruler
 
-        "智取——不靠人多，单凭证据和谋略，反将王廷一军" if intrigue >= 60 and evidence_count >= 3:
+        "智取——不靠人多，单凭证据和谋略，反将王廷一军" if evidence_count >= 4 or (evidence_count >= 3 and intrigue >= 40):
             $ log_decision("南境游记", "第三幕：智取，揭破王廷阴谋反制")
             jump ending_southern_outwit
 
@@ -1333,7 +1348,7 @@ label southern_act3:
             $ log_decision("南境游记", "第三幕：与王室军队私下交易，出卖港口")
             jump ending_southern_fall
 
-        "代潮汐港向王廷请附——归顺王廷，换一纸自治诏书" if reputation >= 55:
+        "代潮汐港向王廷请附——归顺王廷，换一纸自治诏书" if reputation >= 45 or southern_first_impression == "polite":
             $ log_decision("南境游记", "第三幕：促成潮汐港归附王廷为自治领")
             jump ending_southern_vassal
 
@@ -1393,7 +1408,7 @@ label ending_southern_vassal:
     pause 2.0
 
     $ southern_finish("vassal", "southern_vassal")
-    jump southern_dlc_complete
+    jump southern_arc_return
 
 
 ## ============================================================
@@ -1461,7 +1476,7 @@ label ending_southern_outwit:
     pause 2.0
 
     $ southern_finish("outwit", "southern_outwit")
-    jump southern_dlc_complete
+    jump southern_arc_return
 
 
 ## ============================================================
@@ -1620,7 +1635,7 @@ label ending_southern_free:
     pause 2.0
 
     $ southern_finish("free", "southern_free")
-    jump southern_dlc_complete
+    jump southern_arc_return
 
 
 ## ============================================================
@@ -1713,7 +1728,7 @@ label ending_southern_ruler:
     pause 2.0
 
     $ southern_finish("ruler", "southern_ruler")
-    jump southern_dlc_complete
+    jump southern_arc_return
 
 
 ## ============================================================
@@ -1805,12 +1820,50 @@ label ending_southern_fall:
     pause 2.0
 
     $ southern_finish("fall", "southern_fall")
-    jump southern_dlc_complete
+    jump southern_arc_return
 
 
 ## ============================================================
 ## DLC 通关结算
 ## ============================================================
+
+## ============================================================
+## 外章收口 —— 五个分支结果都汇到这里
+## ============================================================
+## 两个入口在这里分道:
+##   独立外传(章节选择「外章」) → 跳 southern_dlc_complete, 走原来的完结流程回主菜单
+##   主线第一章末南下          → 走返程 coda, 然后 return 回 script.rpy 接第二章
+## southern_from_mainline 的极性见文件头的 default: 默认 False, 由主线调用方置 True,
+## 所以老档(停在外传里的)读进来必然走独立分支, 与并入前一致。
+
+label southern_arc_return:
+
+    $ southern_quest_stage = 3
+    $ persistent.southern_dlc_progress = 3
+
+    ## 章节选择的解锁判据(gallery.rpy:426 查 ch_id in persistent.chapters_completed)。
+    ## 主线南下过的玩家之后也该能从章节选择重进外章 —— 但"没亲自去"(delegated)不算通关,
+    ## 那条路玩家连潮汐港都没看见, 不该解锁。
+    python:
+        if southern_outcome not in ("none", "delegated"):
+            if persistent.chapters_completed is None:
+                persistent.chapters_completed = set()
+            persistent.chapters_completed.add("southern")
+
+    if not southern_from_mainline:
+        jump southern_dlc_complete
+
+    ## ── 以下只在"从主线南下"时执行 ──
+    ## 返程 coda 按 southern_outcome 五分支(文案填入中)
+
+    ## 本章属性结算: 必须补, 否则南境的 42 处 change_stat / 29 处 change_rel 在
+    ## 第一章和第二章两份"本章属性变化"报告里都是 0 —— script.rpy 的 ch1 结算已经放完、
+    ## chapter2.rpy:13 的 snapshot_chapter_start() 还没拍, 这段落在结算死区里。
+    ## 对应的 snapshot_chapter_start() 在 southern_arc 开头。
+    call show_chapter_summary("外章", "南境游记") from _call_show_chapter_summary_southern
+
+    return
+
 
 label southern_dlc_complete:
 
@@ -2646,8 +2699,8 @@ label southern_act2:
 
     "船是空的。密报是假的。劝人硬抗的，和递假密报的，会不会是同一只手？"
 
-    ## ── 调取已知信息：玩家若谋略/声望高，自己就能拼出动机 ──
-    if intrigue >= 45 or reputation >= 45:
+    ## ── 调取已知信息：谋略/声望够、或在港里走访得够多，自己就能拼出动机 ──
+    if intrigue >= 35 or reputation >= 40 or port_insight >= 3:
         "你不用别人提醒，也想得通这背后图什么。"
         "潮汐港三百年不归王法。王廷要它，缺的从来不是兵，是借口。"
         "让港口自己打起来，打到港务厅扛不住，开口'请王室军队入港平乱'——借口就有了。船一进来，就不走了。"

@@ -2400,4 +2400,19 @@ label chapter1_end:
 
     $ renpy.force_autosave()
 
+    ## ── 外章 · 南境游记 ──
+    ## 艾登堡的盐路断在南边(三成走南境海路), 主角在赴哈伦堡领主会议之前先走这一趟。
+    ##
+    ## 为什么钉在这里: 主线本来就缺这一块。上面 L2397"满月之夜就要到了"约的是磨坊那封
+    ## 密信(父亲死因), 而 chapter2.rpy:24 开场是"一个月过去了", 到 chapter2.rpy 的磨坊戏
+    ## 才写"今夜就是满月" —— 主角眼睁睁看着第一个满月过去、毫无理由地放了父亲真相的鸽子。
+    ## 南境填的就是这一个月: 季节对得上(此处深秋, 信里"潮汐港停一个月您冬天就得拿木柴腌肉"
+    ## "撑不到开春"只在冬天还没来时成立), 时长也对得上(往返约四周 ≈ "一个月过去了")。
+    ##
+    ## southern_from_mainline 置 True: 让 southern_arc_return 走返程 coda 并 return 回这里,
+    ## 而不是外传的"完结回主菜单"收尾。也是"要不要亲自去"那个抉择菜单的显示条件 ——
+    ## 从章节选择进外章的玩家不该被问要不要去。
+    $ southern_from_mainline = True
+    call southern_arc from _call_southern_arc
+
     jump chapter2_start
