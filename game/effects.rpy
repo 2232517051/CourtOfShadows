@@ -981,8 +981,8 @@ screen ending_route_map():
             hbox:
                 spacing 8
                 text "◆" size 20 color "#2e8b8b" yalign 0.5
-                text "南境游记 · 潮汐港结局" size 22 color "#2e8b8b" font "msyh.ttf"
-            text "已解锁 [len(s_seen)]/5 个" size 14 color "#6a5e48"
+                text "外章 · 潮汐港分支" size 22 color "#2e8b8b" font "msyh.ttf"
+            text "已解锁 [len(s_seen)]/5 条分支" size 14 color "#6a5e48"
             null height 6
 
             for sid, sname, sdesc, scolor, sicon in _southern_ending_info:
@@ -1013,7 +1013,7 @@ screen ending_route_map():
                                 text sdesc size 14 color "#8a7e60"
                             else:
                                 text "？?? — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
-                                text "在南境游记中达成此结局" size 14 color "#2a2030"
+                                text "在外章中走出此分支" size 14 color "#2a2030"
 
                         if s_is:
                             text ">" xalign 1.0 yalign 0.5 size 20 color scolor

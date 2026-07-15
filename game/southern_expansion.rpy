@@ -88,9 +88,9 @@ define xiao_liu = Character("学徒小六", color="#a89878", image="stable_boy")
 define inn_keeper = Character("客栈老板", color="#8a8a7a", image="servant_generic")
 define guild_clerk = Character("公会账房", color="#9a8a6a", image="merchant_karl")
 define dissenter = Character("动摇的船主", color="#6a6a5a", image="soldier_generic")
-## 第三幕王军特使 / 主帅
-define envoy_royal = Character("王军特使", color="#7a5a5a", image="soldier_generic")
-define royal_admiral = Character("王军主帅", color="#5a4a4a", image="royal_admiral")
+## 第三幕王廷特使 / 主帅
+define envoy_royal = Character("王廷特使", color="#7a5a5a", image="soldier_generic")
+define royal_admiral = Character("王室主帅", color="#5a4a4a", image="royal_admiral")
 
 
 ## ============================================================
@@ -789,7 +789,7 @@ label southern_to_tavern:
             $ southern_first_impression = "wary"
             $ change_rel("rel_corsair", 3)
 
-            "你没动。一杯来路不明的酒，背后总挂着价钱。你想先看清这价钱是什么。做了这些年领主，你学会的头一桩事，就是天上不会无缘无故掉下好处——掉下来的，多半是钩子。"
+            "你没动。一杯来路不明的酒，背后总挂着价钱。你想先看清这价钱是什么。打小看着你爹待客，你记住一件事：笑着端上来的东西，底下多半有钩子。"
 
             "她端着酒走过来，自己拉开你对面的椅子坐下。这一坐，满屋子的目光又活络起来——渡鸦肯跟谁同桌，在这港口，本身就是一种态度。你还没开口，就被她拽进了局里。"
 
@@ -944,7 +944,7 @@ label southern_to_tavern:
     ## ── 选边前：给玩家一天亲眼看两派（块3 深入两派）──
     $ hide_all_chars("player_char_img", "corsair_img")
     show player_char_img at left with dissolve
-    player "两位的话我都听了。可我做了这些年领主，学会一件事：光听人说，要吃亏。"
+    player "两位的话我都听了。不过我有个毛病——光凭嘴上说的，我拿不准。"
 
     player "给我一天。公会怎么运转，船主怎么过活，我都亲眼看看。明晚，给二位答复。"
 
@@ -1200,7 +1200,7 @@ init python:
 ## ============================================================
 ## 第三幕 · 潮信
 ## ------------------------------------------------------------
-## 王军压境的高潮 + 3 分歧结局：
+## 王室军队压境的高潮 + 3 分歧结局：
 ##   自由港(联合/最佳) · 港口新主(倒向一方/bittersweet) · 陷落(坏)
 ## 由第一幕站队 + 本幕最终抉择 + 属性/恋爱共同决定。
 ## ============================================================
@@ -1224,7 +1224,7 @@ label southern_act3:
     show corsair_img at right with dissolve
     show guild_master_img at left with dissolve
 
-    guild_master "港务厅那帮老爷已经在备茶水彩绸，准备开门迎王师了。在他们眼里，换个主子而已。"
+    guild_master "港务厅那帮老爷已经在备茶水彩绸，准备开门迎王室军队了。在他们眼里，换个主子而已。"
 
     corsair "我的船能堵航道。可我有三条快船，对面是一支分舰队。堵得了一时，堵不住。"
 
@@ -1233,7 +1233,7 @@ label southern_act3:
     ## ── 破局前的推演（块13）：几条法子都被否 ──
     $ hide_all_chars("soldier_generic_img")
     show sea_dog_img at left with dissolve
-    sea_dog "没赢面也得打！我老汉斯这把骨头，宁可喂鱼，不给王军当顺民！"
+    sea_dog "没赢面也得打！我老汉斯这把骨头，宁可喂鱼，不给官军当顺民！"
 
     $ hide_all_chars("corsair_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img")
     show corsair_img at right with dissolve
@@ -1245,7 +1245,7 @@ label southern_act3:
 
     $ hide_all_chars("guild_master_img")
     show guild_master_img at left with dissolve
-    guild_master "老法子——撒钱，买通王军的军官，让他们出工不出力。"
+    guild_master "老法子——撒钱，买通对面的军官，让他们出工不出力。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
@@ -1269,7 +1269,7 @@ label southern_act3:
 
         "两个人都看你。"
 
-        player "王军要的是'平乱'这个名义。港口乱，他们进来才叫平乱。"
+        player "王室军队要的是'平乱'这个名义。港口乱，他们进来才叫平乱。"
         player "可要是傍晚他们到的时候，整个港口好端端的，人人站在码头上，秩序得像过节——他们一炮打过来，那就不是平乱，是当着全海域的面屠港。"
 
         player "王廷丢不起这个脸。别的自由港会看，给王国跑海运的商会也会看。"
@@ -1306,8 +1306,8 @@ label southern_act3:
     ## ============================================================
 
     menu:
-        "促成联合——让整个港口站成一条心，逼王军师出无名":
-            $ log_decision("南境游记", "第三幕：促成两派联合，否认王军借口")
+        "促成联合——让整个港口站成一条心，逼王室军队师出无名":
+            $ log_decision("南境游记", "第三幕：促成两派联合，否认王室军队借口")
 
             ## 联合是否成功：调停过 / 声望或谋略够 / 恋爱加成
             if southern_brokered_peace or reputation >= 50 or intrigue >= 50 or corsair_romance:
@@ -1321,7 +1321,7 @@ label southern_act3:
                 jump ending_southern_ruler
 
         "靠你站定的那一方硬抗，用港口的地利拼一场" if southern_faction == "guild" or southern_faction == "pirates":
-            $ log_decision("南境游记", "第三幕：倒向一方武力对抗王军")
+            $ log_decision("南境游记", "第三幕：倒向一方武力对抗王室军队")
             $ southern_united = False
             jump ending_southern_ruler
 
@@ -1329,8 +1329,8 @@ label southern_act3:
             $ log_decision("南境游记", "第三幕：智取，揭破王廷阴谋反制")
             jump ending_southern_outwit
 
-        "给王军主帅递话——用艾登堡的名义换盐路特许，保自己":
-            $ log_decision("南境游记", "第三幕：与王军私下交易，出卖港口")
+        "给王室主帅递话——用艾登堡的名义换盐路特许，保自己":
+            $ log_decision("南境游记", "第三幕：与王室军队私下交易，出卖港口")
             jump ending_southern_fall
 
         "代潮汐港向王廷请附——归顺王廷，换一纸自治诏书" if reputation >= 55:
@@ -1347,7 +1347,7 @@ label ending_southern_vassal:
     play music "audio/music/southern_fleet.ogg" fadeout 1.0 fadein 2.0 if_changed
     scene bg tideport_fleet with fade
 
-    "你没让两边硬拼，也没出卖谁。你做了一件公会和船主都想不到的事——去跟王军主帅，谈条件。"
+    "你没让两边硬拼，也没出卖谁。你做了一件公会和船主都想不到的事——去跟王室主帅，谈条件。"
 
     $ hide_all_chars("soldier_generic_img")
     show soldier_generic_img at right with dissolve
@@ -1363,7 +1363,7 @@ label ending_southern_vassal:
 
     player "有。这样王廷不费一兵一卒得了潮汐港的名分，各国商会挑不出错，你也不必背屠港的恶名。三方都有台阶下。"
 
-    "主帅盯着你看了很久。一个内陆领主，替一个不属于他的港口，跟王军谈出了一条所有人都能活的路。"
+    "主帅盯着你看了很久。一个内陆领主，替一个不属于他的港口，跟王室军队谈出了一条所有人都能活的路。"
 
     royal_admiral "……我请示王廷。"
 
@@ -1420,7 +1420,7 @@ label ending_southern_outwit:
     pause 0.8
     scene bg tideport_fleet with dissolve
 
-    "傍晚，王军舰队压到港外。可它没进攻。它在外海停了整整一夜。第二天清晨，掉头走了——比来时还急。"
+    "傍晚，王室舰队压到港外。可它没进攻。它在外海停了整整一夜。第二天清晨，掉头走了——比来时还急。"
 
     scene bg tideport_harbor with dissolve
 
@@ -1431,7 +1431,7 @@ label ending_southern_outwit:
     "费舍尔背后那只手缩了回去，缩得比伸出来还快。因为它发现，这局里最危险的不是潮汐港的刀和船，是一个内陆来的领主，和他手里那几张纸。"
 
     show corsair_img at right with dissolve
-    corsair "我到现在还没回过味来。王军压到家门口了，你没调一兵一卒，没流一滴血，他们就……自己走了？"
+    corsair "我到现在还没回过味来。王廷的兵压到家门口了，你没调一兵一卒，没流一滴血，他们就……自己走了？"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
@@ -1457,7 +1457,7 @@ label ending_southern_outwit:
     pause 1.2
     centered "{size=+3}你没赢下一场仗。你让想打这场仗的人，输给了他自己人。{/size}"
     pause 1.0
-    centered "{size=+3}潮汐港至今不知道，替它退了王军的，是一个外乡人。{/size}"
+    centered "{size=+3}潮汐港至今不知道，替它退了王室军队的，是一个外乡人。{/size}"
     pause 2.0
 
     $ southern_finish("outwit", "southern_outwit")
@@ -1474,7 +1474,7 @@ label ending_southern_free:
     play music "audio/music/southern_fleet.ogg" fadeout 1.5 fadein 2.0 if_changed
     scene bg tideport_fleet with fade
 
-    "傍晚。王军的桅灯排成一道墙，压到了港口外的浅水线。"
+    "傍晚。王室军队的桅灯排成一道墙，压到了港口外的浅水线。"
 
     scene bg tideport_harbor with dissolve
 
@@ -1496,9 +1496,9 @@ label ending_southern_free:
 
     "你站在最前头。手里是费舍尔烧剩的半卷文书，和维斯帕连夜从港务厅翻出的往来账。"
 
-    "你早把消息递了出去——递给昨夜过港的他国商船，递给下游两个自由港。此刻港口外，除了王军的船，还泊着十几条挂着各色旗号的商船，都在看。"
+    "你早把消息递了出去——递给昨夜过港的他国商船，递给下游两个自由港。此刻港口外，除了王室军队的船，还泊着十几条挂着各色旗号的商船，都在看。"
 
-    "王军特使乘小艇上岸，身后跟着一队甲士。他准备好的说辞是'应港务厅之请，入港平乱'。可他眼前的港口，没有乱。"
+    "王廷特使乘小艇上岸，身后跟着一队甲士。他准备好的说辞是'应港务厅之请，入港平乱'。可他眼前的港口，没有乱。"
 
     $ hide_all_chars("soldier_generic_img")
     show soldier_generic_img at right with dissolve
@@ -1533,7 +1533,7 @@ label ending_southern_free:
     $ hide_all_chars("player_char_img", "corsair_img")
     show player_char_img at left with dissolve
     show corsair_img at right with dissolve
-    player "他没词了。因为按他的本子，这会儿你们俩该正杀得你死我活，好给王师一个'平乱'的由头。"
+    player "他没词了。因为按他的本子，这会儿你们俩该正杀得你死我活，好给王室军队一个'平乱'的由头。"
 
     "你举起那半卷烧焦的文书。焦边底下，是王廷密探费舍尔的手记——怎么递假密报给公会，怎么劝船主动手，怎么把一条空盐船说成军火船。"
 
@@ -1589,7 +1589,7 @@ label ending_southern_free:
         show corsair_img at right with dissolve
         corsair "盐路的事，公会算他们的。我算我的。"
 
-        corsair "下一趟你的盐船北上，我亲自押。我想看看艾登堡的雪——听说内陆的雪，落在海上化得慢。"
+        corsair "下一趟你的盐船北上，我亲自押。我想看看艾登堡的雪——在海上混了这么久，还没见过雪长什么样。"
 
         "她说完，把那枚你还回去的铜哨又塞回你手里。"
 
@@ -1597,7 +1597,7 @@ label ending_southern_free:
 
         "渡鸦船长说话算话。这一点，整片南海都知道。"
 
-        "那年冬天，一支挂着金鹰旗的盐船第一次驶进艾登堡的港湾。押船的女人站在船头，看着内陆的雪落进海里，看了很久。"
+        "那年冬天，一队挂着金鹰旗的盐车第一次碾进艾登堡的城门。押车的女人站在雪地里仰着头，看了很久。"
 
         "她没看过雪。可她说，值得跑这一趟。"
 
@@ -1633,36 +1633,36 @@ label ending_southern_ruler:
     play music "audio/music/southern_fleet.ogg" fadeout 1.5 fadein 2.0 if_changed
     scene bg tideport_fleet with fade
 
-    "傍晚。王军压到港外。你没有整个港口，你只有半个。"
+    "傍晚。王室军队压到港外。你没有整个港口，你只有半个。"
 
     if southern_faction == "pirates":
         $ hide_all_chars("corsair_img")
         show corsair_img at right with dissolve
         corsair "公会缩着不动？随他们。这片海，是我们船主的主场。"
-        "船主联盟的快船倾巢而出。赛琳的渡鸦号当先，借着对暗礁和潮汐的熟，在王军大船之间穿梭——放火、撞舵、割锚索。"
-        "王军的大舰在窄水里转不开身，被快船咬得焦头烂额。可快船毕竟小，一轮齐射下来，沉了三条。"
+        "船主联盟的快船倾巢而出。赛琳的渡鸦号当先，借着对暗礁和潮汐的熟，在王室军队的大船之间穿梭——放火、撞舵、割锚索。"
+        "王室军队的大舰在窄水里转不开身，被快船咬得焦头烂额。可快船毕竟小，一轮齐射下来，沉了三条。"
         menu:
             "撤回快船，改守港口窄口，保存实力":
                 $ change_stat("intrigue", 2)
-                "你没让船主硬填。快船退守窄口，用沉船和暗礁卡住王军。损失小了，王军也突不进来。僵住了。"
-            "让快船缠住王军主力，掩护火船冲阵":
+                "你没让船主硬填。快船退守窄口，用沉船和暗礁卡住王室军队。损失小了，对面也突不进来。僵住了。"
+            "让快船缠住王室军队主力，掩护火船冲阵":
                 $ change_stat("power", 2)
                 $ change_rel("rel_corsair", -2)
-                "你赌了一把。快船死死缠住王军主力，几条火船冲进舰队。旗舰中了火，乱了阵脚——可冲锋的船主，回来的不到一半。"
+                "你赌了一把。快船死死缠住王室军队主力，几条火船冲进舰队。旗舰中了火，乱了阵脚——可冲锋的船主，回来的不到一半。"
     elif southern_faction == "guild":
         $ hide_all_chars("guild_master_img")
         show guild_master_img at left with dissolve
         guild_master "船主那帮泥腿子靠不住。打仗，还得看公会的银子。"
-        "公会砸下重金，雇光了港里所有能拿刀的人，又买通王军几个押粮的军官，让火药受了潮。"
+        "公会砸下重金，雇光了港里所有能拿刀的人，又买通王室军队几个押粮的军官，让火药受了潮。"
         "船主冷眼旁观——你昨天站了公会，今天他们凭什么帮你。"
         menu:
-            "再撒一笔钱，从内部瓦解王军":
+            "再撒一笔钱，从内部瓦解王室军队":
                 $ change_stat("wealth", -4)
                 $ change_stat("intrigue", 2)
-                "维斯帕又撒下一笔钱。王军里收了钱的军官越来越多，攻势一波比一波软。这一仗，是用银子堆退的。"
+                "维斯帕又撒下一笔钱。王室军队里收了钱的军官越来越多，攻势一波比一波软。这一仗，是用银子堆退的。"
             "把雇兵摆在明处，做出死守的架势":
                 $ change_stat("power", 2)
-                "你把雇佣兵全摆上城防，刀枪林立，做出血战到底的样子。王军主帅掂量了一下硬啃的代价，到底没下死手。"
+                "你把雇佣兵全摆上城防，刀枪林立，做出血战到底的样子。王室主帅掂量了一下硬啃的代价，到底没下死手。"
     else:
         "你站谁都没站，临阵才拢起一支杂凑的队伍。渔民、散兵、看不下去的店家，各打各的。"
         "没有一条心的港口，打起仗来像一盘散沙。你亲自压在最前头，才勉强没让阵脚垮掉。"
@@ -1672,9 +1672,9 @@ label ending_southern_ruler:
                 "你提着剑堵在码头缺口。身边的人见领主都拼了，也红了眼。这一仗赢得惨，你胳膊上添了道见骨的口子。"
             "弃守外港，把人收进内港死守":
                 $ change_stat("intrigue", 2)
-                "你当机立断弃了外港，把人全收进内港。丢了半个港，保住了人。王军占了空港，讨不到便宜，悻悻退了。"
+                "你当机立断弃了外港，把人全收进内港。丢了半个港，保住了人。王室军队占了空港，讨不到便宜，悻悻退了。"
 
-    "这一仗，王军没占到便宜，到底撤了。可港口烧塌了小半，海面上浮着的，是两边的人。"
+    "这一仗，王室军队没占到便宜，到底撤了。可港口烧塌了小半，海面上浮着的，是两边的人。"
 
     pause 0.5
     scene bg tideport_beach with dissolve
@@ -1728,7 +1728,7 @@ label ending_southern_fall:
 
     "你没等到傍晚。"
 
-    "午后，你乘小艇出港，登上了王军旗舰。"
+    "午后，你乘小艇出港，登上了王室旗舰。"
 
     $ hide_all_chars("soldier_generic_img")
     show royal_admiral_img at right with dissolve
@@ -1745,10 +1745,10 @@ label ending_southern_fall:
     royal_admiral "就这？空口白话谁都会说。你拿什么让我信，你不是来替那帮海寇拖时间的？"
 
     menu:
-        "交出费舍尔的证据，帮王军把'平乱'做实":
+        "交出费舍尔的证据，帮王室军队把'平乱'做实":
             $ change_stat("intrigue", 2)
             "你把查到的一切——费舍尔的内陆官文、港务官的证词——当着主帅的面，一把火烧了。"
-            player "这些东西，本能让王军师出无名。现在它们没了。这是我的诚意。"
+            player "这些东西，本能让王室军队师出无名。现在它们没了。这是我的诚意。"
             "主帅笑了。他要的就是这个：让唯一能戳穿这场局的人，亲手毁掉证据。"
             royal_admiral "痛快。艾登堡的盐铁特许，我替你向王廷请。"
 
@@ -1762,7 +1762,7 @@ label ending_southern_fall:
 
     "一个内陆领主肯让路，比一场仗省事得多。主帅很满意。"
 
-    "傍晚，王军不费一炮进了港。港务厅开门迎接，彩绸铺到了栈桥上。"
+    "傍晚，王室军队不费一炮进了港。港务厅开门迎接，彩绸铺到了栈桥上。"
 
     "公会被'整编'，维斯帕成了王廷的港务官，绸袍换了官袍，脸上没什么两样。"
 
@@ -1780,7 +1780,7 @@ label ending_southern_fall:
         "听说渡鸦号在合围里冲出了一个缺口，扯着破帆遁进了夜雾。听说而已。"
         "从此南海上，再没人见过那面黑帆。"
 
-        "潮汐港改了名，叫'靖海卫'。王廷在港口立了座碑，记着王师'平定海寇之乱'的功绩。"
+        "潮汐港改了名，叫'靖海卫'。王廷在港口立了座碑，记着王室军队'平定海寇之乱'的功绩。"
 
         "碑文里没有费舍尔，没有海雀号，没有那场子虚乌有的'走私'。"
 
@@ -1842,8 +1842,11 @@ label southern_dlc_complete:
 label southern_deep_dive:
 
     ## ── 上午 · 金锚公会 ──
+    ## 原为 bg council_hall —— 那张图玩家在 chapter1_expansion.rpy:658 已认作艾登堡议事厅、
+    ## chapter2.rpy:1683 又是领主会议厅。并入主线后同一张图演南境公会大楼会当场撞脸。
+    ## bg_tideport_office.webp 是南境的专属图, 已在 images/ 里, 零美术成本。
     play music "audio/music/great_hall.ogg" fadeout 1.0 fadein 2.0 if_changed
-    scene bg council_hall with fade
+    scene bg tideport_office with fade
 
     "第二天一早，公会的人领你进了金锚的大楼。比港里任何屋子都气派——这钱，看得见来路。"
 
@@ -1986,7 +1989,7 @@ label southern_deep_dive:
             $ change_stat("intrigue", 2)
             "你没动。你想看看，这港口的火药桶，到底一点就炸到什么地步。"
             "对峙差点变成械斗，亏得两边头目赶来连拉带骂才压下去。可那一刻剑拔弩张的样子，你记住了。"
-            "两边都绷到了极限。再来一两回这样的事，不用王军，潮汐港自己就能烧成一片白地。"
+            "两边都绷到了极限。再来一两回这样的事，不用王室军队，潮汐港自己就能烧成一片白地。"
 
     "一场险些见血的械斗，就为一个破船泊位。可你越想越觉得，这火，有人在底下扇。"
 
@@ -2107,7 +2110,8 @@ label si_ledger:
         "你以盟友身份进了公会账房，说要核对艾登堡的盐铁记录。没人拦你翻'密报'那一栏。"
     else:
         "公会账房进不去。赛琳找了个欠她人情的公会小吏，半夜放你进去翻了一刻钟。"
-    scene bg council_hall with fade
+    ## 同上: 公会账房不能用主线的议事厅图
+    scene bg tideport_office with fade
     "举报海雀号'走私军火'的那份密报，是匿名的——塞进举报箱，没署名。"
 
     "可你比对了日子：密报投进来那天，正是费舍尔在港里出现的第三天。"
@@ -2265,7 +2269,7 @@ label si_together:
 
     "等那两人走了，你们才从盐袋后头出来。"
 
-    corsair "军人。内陆口音。费舍尔背后，是王军。你这一趟，捅到根上了。"
+    corsair "军人。内陆口音。费舍尔背后，是王廷的人。你这一趟，捅到根上了。"
 
     "她看着你，黑暗里眼睛亮得很。"
 
@@ -2281,15 +2285,15 @@ label si_together:
 
 
 ## ============================================================
-## 第三幕 · 备战（选联合后 call，逼退王军前的一天准备）
+## 第三幕 · 备战（选联合后 call，逼退王室军队前的一天准备）
 ## ============================================================
 
 label southern_prepare:
     play music "audio/music/battle_prepare.ogg" fadeout 1.0 fadein 2.0 if_changed
     scene bg tideport_tavern with fade
-    "你选了最难走的一条路——在王军到来之前，让公会和船主拧成一股绳。"
+    "你选了最难走的一条路——在王室军队到来之前，让公会和船主拧成一股绳。"
 
-    "从今夜到明天傍晚王军压境，只剩一天。一天里，你得做完平时一个月都未必办成的事。"
+    "从今夜到明天傍晚王室军队压境，只剩一天。一天里，你得做完平时一个月都未必办成的事。"
 
     ## ── 环节一：说服维斯帕联手 ──
     $ hide_all_chars("guild_master_img")
@@ -2298,16 +2302,16 @@ label southern_prepare:
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
-    player "听清楚：王军不是来帮你的。费舍尔是王廷的人，点这把火，就是要逼出'港口大乱'，好让王军名正言顺进来——把整个港，连你的公会，一锅端。"
+    player "听清楚：王室军队不是来帮你的。费舍尔是王廷的人，点这把火，就是要逼出'港口大乱'，好让王室军队名正言顺进来——把整个港，连你的公会，一锅端。"
 
     "你把那半张烧剩的官文，连同港务官的话，摊在他面前。维斯帕的算盘，头一回打不响了。"
 
     menu:
-        "跟他算账：王军进来，你公会几十年的家业归谁？（谋略）":
+        "跟他算账：王室军队进来，你公会几十年的家业归谁？（谋略）":
             $ change_stat("intrigue", 3)
             $ hide_all_chars("guild_master_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
             show guild_master_img at left with dissolve
-            guild_master "……归王廷。账本、护航、放贷，全成了王军的。"
+            guild_master "……归王廷。账本、护航、放贷，全成了他们的。"
             guild_master "我维斯帕算了一辈子账，倒没算到这一笔。"
 
         "摊牌：你不联手，我现在就把证据给船主，让他们只冲你来（威逼）":
@@ -2331,16 +2335,16 @@ label southern_prepare:
     show player_char_img at left with dissolve
     player "我没让你忘。我让你先分清，今晚谁要你的命。"
 
-    player "公会逼你，逼的是钱。王军来了，要的是命，是整个港。先把要命的挡回去，钱的账，往后跟公会一笔一笔算。"
+    player "公会逼你，逼的是钱。王室军队来了，要的是命，是整个港。先把要命的挡回去，钱的账，往后跟公会一笔一笔算。"
 
     menu:
         "搬出海雀号：你现在跟公会拼，那七条命就真没了（忠诚）":
             $ change_stat("loyalty", 2)
             $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
             show sea_dog_img at left with dissolve
-            sea_dog "……海雀号。好。看在那七条命的份上，我这口气先咽下。先打王军。"
+            sea_dog "……海雀号。好。看在那七条命的份上，我这口气先咽下。先打官军。"
 
-        "实话：你们各自都打不过王军，合起来才有一线（声望）":
+        "实话：你们各自都打不过王室军队，合起来才有一线（声望）":
             $ change_stat("reputation", 2)
             $ hide_all_chars("sea_dog_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
             show sea_dog_img at left with dissolve
@@ -2354,30 +2358,30 @@ label southern_prepare:
     show corsair_img at right with dissolve
     corsair "两边都点头了？你这张嘴，比我这把刀管用。"
 
-    corsair "可光合心不够。王军是分舰队，硬碰没赢面。怎么打？"
+    corsair "可光合心不够。来的是王廷的分舰队，硬碰没赢面。怎么打？"
 
     corsair "我活了这么大，头一回觉得，光有刀和船不够使。这一仗要赢，得靠你那套内陆人的弯弯绕。说吧，领主——你脑子里那点鬼主意。"
 
     menu:
         "沉几条旧船，封死航道窄口，让大船进不来":
             $ change_stat("intrigue", 2)
-            "你指着港口入口那道窄水。几条不能再用的旧船，灌满石头沉下去，王军的大舰就挤不进来，只能在外海干瞪眼。"
+            "你指着港口入口那道窄水。几条不能再用的旧船，灌满石头沉下去，王室军队的大舰就挤不进来，只能在外海干瞪眼。"
             corsair "……这主意够损，够好。我这就让人去办。"
 
-        "让船主的快船散进外海，专咬王军的补给和侧翼":
+        "让船主的快船散进外海，专咬王室军队的补给和侧翼":
             $ change_stat("power", 2)
             "你让快船趁夜散出去，不正面打，专咬补给船和落单的侧翼。蚊子叮不死人，能叮得人睡不着。"
             corsair "游击。我们最擅长。成。"
 
     ## ── 环节四：散证据 + 联络他国商船 ──
     scene bg tideport_beach with dissolve
-    "可你心里清楚，真正能逼退王军的，不是沉船，也不是快船——是让王军没法'名正言顺'。"
+    "可你心里清楚，真正能逼退王室军队的，不是沉船，也不是快船——是让它没法'名正言顺'。"
 
     "当夜，你把费舍尔的内陆官文、港务官的证词，连同这场火的来龙去脉，抄了十几份，连夜送上港里泊着的他国商船，送往下游两个自由港。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
-    player "告诉他们：明天傍晚，来看王军怎么'平乱'。他们要敢炮轰一个好端端的自由港，今天看戏的，明天就是下一个。"
+    player "告诉他们：明天傍晚，来看王室军队怎么'平乱'。他们要敢炮轰一个好端端的自由港，今天看戏的，明天就是下一个。"
 
     "消息像退潮一样，悄没声地铺了出去。到天亮，港外多了十几条挂各色旗号的商船——都等着看。"
 
@@ -2418,7 +2422,7 @@ label southern_prepare:
         show player_char_img at left with dissolve
         player "你也是。"
 
-        corsair "明天傍晚王军就到。我打过不少仗，可没一次像这回——赢面这么小，要护的东西这么大。"
+        corsair "明天傍晚王廷的兵就到。我打过不少仗，可没一次像这回——赢面这么小，要护的东西这么大。"
 
         "她难得露出这样的神情。不是渡鸦船长，只是一个怕失去的人。"
 
@@ -2646,7 +2650,7 @@ label southern_act2:
     if intrigue >= 45 or reputation >= 45:
         "你不用别人提醒，也想得通这背后图什么。"
         "潮汐港三百年不归王法。王廷要它，缺的从来不是兵，是借口。"
-        "让港口自己打起来，打到港务厅扛不住，开口'请王军入港平乱'——借口就有了。船一进来，就不走了。"
+        "让港口自己打起来，打到港务厅扛不住，开口'请王室军队入港平乱'——借口就有了。船一进来，就不走了。"
         $ change_stat("intrigue", 4)
     else:
         "可一个掮客，挑动两伙人互相捅刀，图什么？这上头你还想不透。"
@@ -2811,7 +2815,7 @@ label southern_act2:
 
                     "你没去看她的脸，只是在她身边坐下。两个人之间隔着一掌的距离，谁也没去填，可谁也没挪开。"
 
-                    "海堤下，渡鸦号随浪轻轻摇。远处港口的灯火明明灭灭。这一刻没有公会，没有王军，没有明天的仗——只有海风，和身边这个人的呼吸。"
+                    "海堤下，渡鸦号随浪轻轻摇。远处港口的灯火明明灭灭。这一刻没有公会，没有王室军队，没有明天的仗——只有海风，和身边这个人的呼吸。"
 
             "现在先别说这些。费舍尔还没揪出来":
                 $ change_rel("rel_corsair", 5)
@@ -2866,7 +2870,7 @@ label southern_act2:
 
     $ hide_all_chars("guild_master_img", "corsair_img")
     show guild_master_img at left with dissolve
-    guild_master "王军的'护港分舰队'。打着平乱的旗号。比我想的快。"
+    guild_master "王廷的'护港分舰队'。打着平乱的旗号。比我想的快。"
 
     guild_master "费舍尔不是去报信。他是来确认我们打到了哪一步——好让那支船队，名正言顺地进港。"
 
@@ -2892,7 +2896,7 @@ label southern_act2:
     if corsair_romance:
         centered "{size=+3}费舍尔点了第一刀就跑了。剩下的烂摊子和那支逼近的船队，你和她一起扛。{/size}"
     else:
-        centered "{size=+3}王军压境。这一回，潮汐港要么拧成一股，要么不剩一块板。{/size}"
+        centered "{size=+3}王室军队压境。这一回，潮汐港要么拧成一股，要么不剩一块板。{/size}"
     pause 2.0
 
     $ persistent.southern_dlc_progress = 2
