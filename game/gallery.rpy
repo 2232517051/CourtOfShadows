@@ -214,13 +214,18 @@ init python:
         ## 番外配乐（剧情未直接使用，作为收藏曲）
         ("audio/music/throne.ogg", "铁王座", "至高权力的孤独与重量", "座", "chapter5"),
         ("audio/music/escape.ogg", "密道亡奔", "火把映墙，追兵在后", "逃", "chapter4"),
-        ## 南境游记 DLC
-        ("audio/music/southern_port.ogg", "潮汐港", "南方自由港的喧嚣与海风", "港", None),
-        ("audio/music/southern_tavern.ogg", "断锚酒馆", "水手与走私客的粗粝欢闹", "酒", None),
-        ("audio/music/southern_corsair.ogg", "渡鸦船长", "豪迈中藏着柔情的海上之心", "渡", None),
-        ("audio/music/southern_scheme.ogg", "火并疑云", "码头暗处有人在拨弄棋局", "谋", None),
-        ("audio/music/southern_fleet.ogg", "王军压境", "黑水之上压来的桅灯之墙", "舰", None),
-        ("audio/music/southern_freeport.ogg", "自由港", "守住了自由，代价也已付清", "由", None),
+        ## 外章 · 南境游记
+        ## 解锁条件原本是 None —— 而 is_music_unlocked(None) 恒返回 True(见下), 于是没去过
+        ## 南境的玩家在音乐室里就能读到「王军压境」「自由港，守住了自由，代价也已付清」
+        ## 这类曲名和描述, 等于把外章的走向提前剧透。改挂 "southern"。
+        ## (老档靠 save_compat.rpy 的 init 迁移补上 chapters_completed 里的 "southern",
+        ##  否则这一行会从每个老玩家的音乐室里抽走 6 首已经听过的曲子。)
+        ("audio/music/southern_port.ogg", "潮汐港", "南方自由港的喧嚣与海风", "港", "southern"),
+        ("audio/music/southern_tavern.ogg", "断锚酒馆", "水手与走私客的粗粝欢闹", "酒", "southern"),
+        ("audio/music/southern_corsair.ogg", "渡鸦船长", "豪迈中藏着柔情的海上之心", "渡", "southern"),
+        ("audio/music/southern_scheme.ogg", "火并疑云", "码头暗处有人在拨弄棋局", "谋", "southern"),
+        ("audio/music/southern_fleet.ogg", "王军压境", "黑水之上压来的桅灯之墙", "舰", "southern"),
+        ("audio/music/southern_freeport.ogg", "自由港", "守住了自由，代价也已付清", "由", "southern"),
     ]
 
     def is_music_unlocked(req_chapter):
@@ -395,16 +400,22 @@ screen achievement_screen():
 ## ════════════════════════════════════════════════════════════
 
 init python:
+    ## 「外章」= 原「南境游记」DLC, 已并入主线目录, 排在第一章与第二章之间(它在时间线上
+    ## 就落在那个月里: script.rpy 第一章末深秋 → chapter2.rpy 开场"一个月过去了")。
+    ## 主菜单不再为它单开一栏(screens.rpy 原 443-467 已删)。
     chapter_list = [
         ("prologue", "序章", "金鹰之子", "prologue", "学院、王都，归乡前最后的日子"),
         ("chapter1", "第一章", "新主登基", "chapter1_start", "初临领地，面对未知的挑战"),
+        ("southern", "外章", "南境游记", "southern_arc_standalone", "潮汐港的火并，与一条断了的盐路"),
         ("chapter2", "第二章", "领主会议", "chapter2_start", "贵族间的明争暗斗"),
         ("chapter3", "第三章", "暗百合", "chapter3_start", "神秘组织浮出水面"),
         ("chapter4", "第四章", "王都风云", "chapter4_start", "踏入更大的棋局"),
         ("chapter5", "第五章", "最终决战", "chapter5_start", "一切的终章"),
     ]
 
-    chapter_icons = ["序", "I", "II", "III", "IV", "V"]
+    ## **必须与 chapter_list 等长**: 下面 screen 里是 `for idx, (...) in enumerate(chapter_list)`
+    ## 再按 idx 取图标, 少一个元素直接 IndexError 崩掉整个章节选择页。
+    chapter_icons = ["序", "I", "外", "II", "III", "IV", "V"]
 
 screen chapter_select():
     tag menu

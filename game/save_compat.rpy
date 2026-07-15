@@ -6,6 +6,27 @@
 
 
 ################################################################################
+## 0. 老档迁移：南境游记并入主线目录
+################################################################################
+## 「南境游记」原本是主菜单上单开的一栏(screens.rpy 原 443-467), 现已并入「章节选择」
+## 的「外章」。章节选择的解锁判据是 `ch_id in persistent.chapters_completed`
+## (gallery.rpy:426), 而 chapters_completed 的 6 个写点(prologue.rpy / script.rpy /
+## chapter2-5)没有一个写过 "southern" —— 老档里这个 key 永远为空。
+##
+## 后果: 已通关南境的老玩家, 结局图鉴里明明记着 5/5, 却因为主菜单入口被删、章节选择又
+## 判他没通关, 而**永久失去重玩南境的途径**。同一行也兜住音乐室的 6 首南境 BGM
+## (gallery.rpy 的 southern_* 解锁条件本次由 None 改成 "southern")。
+##
+## **必须放 init python, 不能放下面的 after_load** —— after_load 只在读档时跑, 而章节
+## 选择和音乐室是主菜单上的 persistent 驱动界面, 玩家盯着主菜单时它根本不触发。
+init python:
+    if persistent.southern_endings_seen:
+        if persistent.chapters_completed is None:
+            persistent.chapters_completed = set()
+        persistent.chapters_completed.add("southern")
+
+
+################################################################################
 ## 1. after_load 标签 — 旧存档加载后初始化缺失的变量
 ################################################################################
 

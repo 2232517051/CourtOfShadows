@@ -202,7 +202,31 @@ init python:
         "loyalty":    "忠诚",
     }
 
-    ## 全局增益缩放系数（调小此值可让属性成长更慢）
+    ## 【注意】本文件的 change_stat 是死代码, 下面这两个缩放系数不生效 —— 配平前先读这段。
+    ## (2026-07-15 真机实测确认, 不是静态推测)
+    ##
+    ## 全项目 change_stat 的真实链条:
+    ##   1. attr_system.rpy(本文件, init python) 定义 change_stat —— 含 STAT_CHANGE_SCALE
+    ##      与高位衰减
+    ##   2. effects.rpy:220(同为 init python, 优先级 0) 同名覆盖 —— Ren'Py 按文件名字典序
+    ##      加载, attr_system < effects, 所以本文件这版从此不再被调用
+    ##   3. difficulty.rpy:94(init **1** python, 优先级更高、最后跑) 把全局 change_stat
+    ##      整个换成 change_stat_with_difficulty:
+    ##         难度倍率(easy ×1.5 / normal ×1.0 / hard ×0.7, 见 :48)
+    ##       → 递减收益(0-40:100% | 40-60:70% | 60-80:40% | 80+:20%, 见 :58)
+    ##       → 调 effects.rpy:220 那版(原值直加 + clamp 0..100)
+    ##
+    ## 即: **STAT_CHANGE_SCALE=0.4 与本文件的高位衰减公式都不生效**, 但"高位加点变弱"这个
+    ## 行为是有的 —— 由 difficulty.rpy 的 _diminishing_returns 提供, 分档更粗。
+    ## 实测(easy): intrigue 20 +10 → 35; intrigue 80 +10 → 83。
+    ##
+    ## 另: Tools/sim_batch31_balance.py:2 自陈"公式 1:1 复刻自 attr_system.rpy change_stat"
+    ## —— 它模拟的是本文件这版, 即不生效的那版, 配平别用它的数。
+    ##
+    ## 本次(南境并入主线)不动这个链条: 爆炸半径覆盖全项目 1158 个 change_stat 调用点。
+    ## 要收敛的话应单独立项, 且优先删本文件的死版本而不是改它。
+
+    ## 全局增益缩放系数（调小此值可让属性成长更慢）—— 见上, 当前不生效
     ## 0.4 → 原始 +5 变 +2，+8 变 +3，+10 变 +4，+3 变 +1
     STAT_CHANGE_SCALE = 0.4
 

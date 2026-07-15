@@ -440,31 +440,10 @@ screen navigation():
                 at menu_btn_hover
                 action ShowMenu("gallery_hub")
 
-            ## 南境游记 DLC：通关任意结局后解锁；开发/测试模式(config.developer)下直接可进
-            if persistent.endings_seen or config.developer:
-                textbutton _("南境游记 ◆"):
-                    at menu_btn_hover
-                    action Start("southern_dlc_start")
-                    text_size 26
-                    text_font "msyh.ttf"
-                    text_color "#2e8b8b"
-                    text_hover_color "#5fd0d0"
-            else:
-                textbutton _("南境游记（通关任意结局后解锁）"):
-                    action None
-                    text_size 22
-                    text_font "msyh.ttf"
-                    text_color "#4a4a4a"
-
-            ## 北境游记 DLC（第二弹·开发中）：暂仅开发模式可见，玩家正式版完全不显示
-            if config.developer:
-                textbutton _("北境游记 ◆（开发中）"):
-                    at menu_btn_hover
-                    action Start("northern_dlc_start")
-                    text_size 26
-                    text_font "msyh.ttf"
-                    text_color "#6a8aa8"
-                    text_hover_color "#a8c8e8"
+            ## 南境游记的入口已并入「章节选择」(gallery.rpy chapter_list 的「外章」),
+            ## 与「序章」并列 —— 它是主线目录的一部分, 不再是主菜单上单开的一栏。
+            ## 北境游记(开发中)的入口一并移除: 它本来就锁在 config.developer 后面、无 else 分支,
+            ## 正式版玩家从来看不见, 删掉零可见变化; 开发者仍可 shift+O 控制台 jump northern_dlc_start。
 
             textbutton _("宣传PV"):
                 at menu_btn_hover

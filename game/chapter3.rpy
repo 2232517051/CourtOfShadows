@@ -2470,6 +2470,12 @@ label ch3_dark_lily_hq:
     $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     $ unlock_gallery("lily_master")
+    ## 显式置位, 与 chapter2.rpy:1703-1709 的 grey_met/wells_met/steinfurt_met 写法一致:
+    ## 让关系条在"见到人"时出现, 而不是等到第一次好感变动。
+    ## (注: effects.rpy:294 的 change_rel 本来就会自动置 met flag —— 批35 的 commit
+    ##  说明里"该 flag 全项目零置位、关系条从不显示"是错的, 那是 grep 不到 setattr 动态
+    ##  置位导致的误判。2026-07-15 真机实测: change_rel("rel_lily",5) 后 lily_master_met
+    ##  即为 True。本行不是 bug 修复, 只是把时机提前到初见并显式化。)
     $ lily_master_met = True
 
     lily_master "欢迎来到暗百合的中枢。"

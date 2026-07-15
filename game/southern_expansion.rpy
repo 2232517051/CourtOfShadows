@@ -42,8 +42,23 @@ default investigate_insider = False
 default investigate_faction2 = False
 default investigate_together = False
 default persistent.southern_dlc_progress = 0
-## DLC 结局单独成 set，不混进主线 persistent.endings_seen（避免污染 8 结局图鉴计数）
+## 南境的 5 个分支结果单独成 set，不混进主线 persistent.endings_seen（避免污染 8 结局图鉴计数）。
+## 两个 set 必须保持独立: 本文件存的是裸 key("vassal"/"fall"), 主线也有同名 key,
+## 合并会让两边互相点亮。
 default persistent.southern_endings_seen = set()
+
+## ─── 并入主线用的状态契约 ───
+## southern_from_mainline: 南境是从主线第一章末 call 进来的(True), 还是从章节选择当外传
+##   单独进入的(False)。**极性不能反**: 默认 False, 由主线调用方置 True —— 这样老档
+##   (停在外传里的)读进来走 default=False → 老收尾 → 与今天逐字一致。反过来写会让老档
+##   落进主线返程戏, 然后在空 call stack 上 return 被甩回主菜单。
+default southern_from_mainline = False
+## southern_outcome: 南境结果对主线的唯一接口。"none"=没去过; "delegated"=出钱不亲自去;
+##   其余为五个分支 key(vassal/outwit/free/ruler/fall)。主线只读这一个变量。
+default southern_outcome = "none"
+## 关系面板守卫(screens_custom.rpy REL_MET_GUARD): rel_corsair 有 29 处 change_rel 却
+## 一直没有 met flag, 关系条从不显示。effects.rpy 的 change_rel 会自动由 rel_corsair 推出它。
+default corsair_met = False
 
 ## ─── 南境 DLC 新角色 ───
 ## 渡鸦船长赛琳：自由船主联盟话事人之一，精明、盗亦有道，非刻板凶悍海盗
@@ -82,13 +97,19 @@ define royal_admiral = Character("王军主帅", color="#5a4a4a", image="royal_a
 ## 入口
 ## ============================================================
 
+## 兼容别名: 老存档的 call stack / 旧引用仍按这个名字找入口, 保留一个版本周期。
+## (既有的 `from _call_X` 子句一个字不许改 —— Ren'Py 存档记的是那个返回点名。)
 label southern_dlc_start:
+    jump southern_arc_standalone
 
-    $ southern_visited = True
-    $ quick_menu = True
+
+## ── 入口 A: 独立外传(章节选择的「外章」走这条) ──
+## 属性基线留在这里, 与并入主线前的体验逐字一致。
+label southern_arc_standalone:
 
     ## 外传设定在领主治下，主角已立足——给一个已成势的属性基线，
     ## 而非主线开局的新丁数值（否则 intrigue/reputation 门槛选项全为死枝）。
+    ## **这个块只属于独立入口**: 从主线 call 进来时绝不能跑, 否则直接抹掉玩家真实属性。
     python:
         power = 50
         wealth = 50
@@ -105,6 +126,17 @@ label southern_dlc_start:
     centered "{size=+4}第一弹 · 潮汐港的火并{/size}"
     pause 1.5
     scene black with dissolve
+
+    call southern_arc from _call_southern_arc_standalone
+    jump southern_dlc_complete
+
+
+## ── 入口 B: 正文本体(主线 call 这条; 独立入口也经由上面 call 进来) ──
+## **零属性写入** —— 属性由调用方负责。
+label southern_arc:
+
+    $ southern_visited = True
+    $ quick_menu = True
 
     ## ── 框架：一封来自南境的信 ──
     play music "audio/music/tension.ogg" fadeout 1.0 fadein 2.0 if_changed

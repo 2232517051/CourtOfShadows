@@ -29,10 +29,13 @@ init python:
         ("rel_wells", "威尔斯子爵", "南部", "#bc8f8f"),
         ("rel_stein", "施泰因伯爵夫人", "西部", "#9b6b9b"),
         ("rel_lily", "暗百合首领", "暗影", "#8a2be2"),
+        ("rel_corsair", "赛琳", "渡鸦号船长", "#2e8b8b"),
         ("rel_people", "民心", "百姓", "#cd853f"),
     ]
 
     ## rel_X -> met flag 守卫表 (没在表里的 rel 不需守卫永远显示)
+    ## 注意: 往 relation_data 加人时**必须同时**在这里加守卫, 否则 L342 的
+    ## `_met_var is None` 恒真 → 该角色从第一章起就显示在关系面板上 = 剧透。
     REL_MET_GUARD = {
         "rel_prince": "prince_met",
         "rel_hilda":  "hilda_met",
@@ -40,6 +43,7 @@ init python:
         "rel_wells":  "wells_met",
         "rel_stein":  "steinfurt_met",
         "rel_lily":   "lily_master_met",
+        "rel_corsair": "corsair_met",
         "rel_people": "people_met",
     }
 
