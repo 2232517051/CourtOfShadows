@@ -76,7 +76,7 @@ NPC 提自己往事不限（"我十年前 / 你父亲在世时"等可以）。
 | NPC | 必记事实 |
 |---|---|
 | 队长雷恩 | 12 年前西境战役老兵, **不能问"你上过战场吗"** |
-| Elena | 主线坦白点要设 flag (`elena_truth_known`); 森林夜话之类后续场景要检查 flag, 否则会重复说秘密 |
+| Elena | 主线坦白点要设 flag: 间谍身份用 `elena_spy_known`, 身份被公开揭穿用 `elena_identity_exposed_known` (**没有 `elena_truth_known` 这个变量, 别再按这个名字写检查**); 森林夜话之类后续场景要检查 flag, 否则会重复说秘密 |
 | Aldric | 跨章节状态变化追踪 (好感 / 是否知道遗诏) |
 | 王后 | 跟王子身份矛盾时优先王后 canon |
 | 小鹿 / 阿鲁斯 | 这是 BOOOM 项目 NPC, 不是 CoS, 别穿越 |

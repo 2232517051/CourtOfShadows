@@ -98,6 +98,7 @@ label ch2_exp_banquet:
     noble_werner "但无论如何，希望我们都能证明自己配得上手中的权力。尤其是——某些刚刚继位的年轻领主。"
 
     $ hide_all_chars()
+    $ hilda_met = True
     "嘲讽之意溢于言表。其他领主的反应各不相同——威尔斯子爵尴尬地咳嗽，施泰因伯爵夫人皱起了眉头，希尔达伯爵夫人面无表情地看着你。"
 
     "格雷伯爵轻轻碰了碰你的手肘。"
@@ -660,6 +661,7 @@ label ch2_exp_aftermath:
     hide countess_stein_img with dissolve
     $ hide_all_chars("countess_hilda_img")
     show countess_hilda_img at left with dissolve
+    $ hilda_met = True
 
     countess_hilda "年轻人，你还有很长的路要走。别松懈。"
 

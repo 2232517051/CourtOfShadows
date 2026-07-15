@@ -2467,6 +2467,7 @@ label ch3_dark_lily_hq:
     $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     $ unlock_gallery("lily_master")
+    $ lily_master_met = True
 
     lily_master "欢迎来到暗百合的中枢。"
 

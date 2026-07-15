@@ -719,7 +719,7 @@ label gov_famine_crisis:
             $ change_stat("reputation", 5)
             $ change_stat("wealth", -3)
             $ change_prosperity(3)
-            $ governance_events_seen.append("famine")
+            $ governance_events_seen.append("famine_crisis")
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
