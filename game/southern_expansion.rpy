@@ -182,6 +182,64 @@ label southern_arc:
 
     "你心里算了下府库的存盐。撑不到开春。盐这东西，平日没人想得起它，可一旦断了，腌不了肉、留不住鱼，一整个冬天的口粮都得跟着遭殃。一个内陆领主的命脉，竟系在千里之外一个不归他管的港口上——这道理，今天才嚼出味来。"
 
+    ## ── 可选门 ──
+    ## 只对"从主线第一章末南下"的玩家显示: 从章节选择进外章的玩家是专程来玩它的,
+    ## 不该被问要不要去。
+    ## 位置: 盐账(上面几行)之后、"备马"之前 —— 让信、铁锚火漆、奥尔德里克算的那笔账
+    ## 先把动机立住, 再让玩家选。盐路危机对所有玩家都是主线 canon, 所以它留在门之前。
+    ## "亲自南下"直接顺序落入下面的原文, 正文零改动。
+    if southern_from_mainline:
+        $ hide_all_chars()
+        menu:
+            "奥尔德里克还站在那里，等你拿主意。"
+
+            "亲自去潮汐港看看。":
+                pass
+
+            "从中间商手里买盐，贵就贵吧。":
+                $ log_decision("外章", "没亲自南下，出钱从中间商买高价盐")
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "奥尔德里克，绕过潮汐港，盐还有别的路子吗？"
+
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "中间商。北岸有几家囤货的，手里有盐，开价至少翻两番。"
+
+                hide aldric_img
+                $ hide_all_chars()
+                "翻两番。秋税刚入库，这一刀下去府库过冬就紧巴巴的。"
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "买。今冬的量一次买足。"
+
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……大人，这个价——"
+
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "我知道。"
+
+                hide player_char_img
+                $ hide_all_chars()
+                "奥尔德里克没再说。他当天派了管事带银票和护卫上路。"
+
+                "盐在十二天后到了。整整三车，够腌到来年开春。代价是秋税去了一大半，冬衣采买砍了三成，城墙西段的修缮推到明年。"
+
+                "潮汐港那边的消息断断续续传来——封港、开港、公会跟船主翻了脸，后来据说王室的军船也开进去了。你听了一耳朵，没多问。手头够忙的。"
+
+                "那封铁锚火漆的信压在账册底下。南边到底怎么了——你没去看过。"
+
+                $ change_stat("wealth", -8)
+                $ southern_outcome = "delegated"
+                jump southern_arc_return
+
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img", "harbor_master_img", "tavern_keeper_img", "royal_admiral_img")
     show player_char_img at left with dissolve
     player "备马。不，备船。"
@@ -1854,7 +1912,41 @@ label southern_arc_return:
         jump southern_dlc_complete
 
     ## ── 以下只在"从主线南下"时执行 ──
-    ## 返程 coda 按 southern_outcome 五分支(文案填入中)
+    ## 返程 coda: 把玩家从潮汐港送回艾登堡, 接第二章的哈伦堡领主会议。
+    ## 五个分支的落点都是"回到艾登堡", 但这一趟在他身上留下的东西各不相同。
+    ## delegated(没亲自去)不进这里 —— 它自己那段已经收尾了, 直接走结算。
+
+    $ hide_all_chars()
+
+    if southern_outcome == "free":
+        "你站在甲板上看潮汐港的灯火一点点缩成海平面上的亮斑。没人来送——也没人有义务送。"
+        "港口签了新约，盐路照旧通行。你没在新约上留名，也没挂旗。"
+        "回程的海风比来时顺。你在船舱里补了好几天觉。"
+        "艾登堡的码头出现在晨雾里时，奥尔德里克等在栈桥上。他开口第一句是问你吃了没。"
+
+    elif southern_outcome == "ruler":
+        "潮汐港的旗杆上挂了金鹰旗。你离港前回头看了一眼——码头上站着人，没有欢呼。"
+        "回程的船上你翻了一遍潮汐港的港务簿。码头维护、灯塔油费、冬季疏浚——这些账以后都是你的。"
+        "船到艾登堡时河面结了薄冰，船身磕在冰碴上嘎吱响。"
+        "奥尔德里克看你搬下来两箱卷宗，什么都没问。他只说了句：哈伦堡的帖子到了，诸领主冬季会审。"
+
+    elif southern_outcome == "vassal":
+        "你在最后一份文书上按了印。诏书的措辞是「王廷之恩赐」——好像这座港是国王赏给自己的。"
+        "回程路上你没怎么说话。护卫以为你晕船。"
+        "盐路保住了，港口的人没流血。但你在那张桌上争来的每一条——自治权、免税三年、港务自选——王廷一道手令就能收回。"
+        "到岸时码头有人喊「大人回来了」。你下船，先问奥尔德里克这一个月府里出了什么事。"
+
+    elif southern_outcome == "outwit":
+        "舰队撤走那天你在港口二楼窗户后面看着。一百二十面帆，走得比来时还急。"
+        "没人知道为什么。港里传了七八个说法，没一个跟你沾边。"
+        "回去的商船上你翻来覆去想同一件事——费舍尔那份东西到底递到王都没有？政敌真拿它参了主战派？还是舰队本来就要撤？"
+        "想不出结论。到了艾登堡你就不想了。盐路通了，够了。"
+
+    elif southern_outcome == "fall":
+        "你从旗舰走下来时，码头上的人看你的眼神跟看王室军官没两样。"
+        "回程坐的是王室快船——交易的添头。你在船舱里把盐铁特许状翻来覆去看了三遍，条款很好，好到你不想多琢磨为什么这么好。"
+        "渡鸦号不见了，公会散了，潮汐港不再是你来时的样子。艾登堡的盐有着落了。"
+        "靠岸那天下着小雨。奥尔德里克打伞等在栈桥上，看了你一眼，什么都没说。"
 
     ## 本章属性结算: 必须补, 否则南境的 42 处 change_stat / 29 处 change_rel 在
     ## 第一章和第二章两份"本章属性变化"报告里都是 0 —— script.rpy 的 ch1 结算已经放完、

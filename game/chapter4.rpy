@@ -2521,7 +2521,15 @@ label ch4_elena:
         elena "这种感觉……很陌生。但我不讨厌它。"
 
         menu:
-            "握住她的手" if not marriage_route:
+            ## corsair_romance(外章 · 南境的赛琳)与 elena_romance 互斥。
+            ## 但不能只给上面这条加守卫了事 —— 那样赛琳线玩家会发现"握住她的手"凭空消失、
+            ## 只剩"保持距离", 读起来是游戏吞了他的选项。所以补一条等价的、承认赛琳的分支,
+            ## 让拒绝是主角自己做的决定。
+            ## 注意: 赛琳线的定情点在 southern_expansion.rpy:2807(第二幕), 而南境五个结局的
+            ## 抉择在第三幕 —— 即 corsair_romance 可与全部五个结局共存, **包括主角把她的港
+            ## 卖掉的 fall 线**。所以这段台词不能假设她还在等他, 也不能引用任何某一结局
+            ## 特有的情节。锚点用"衣领上的咸味": 主角在潮汐港待过一个月, 全线成立。
+            "握住她的手" if not marriage_route and not corsair_romance:
                 $ log_decision("第四章", "与艾琳娜确认浪漫关系")
                 $ elena_romance = True
                 $ change_rel("rel_elena", 25)
@@ -2543,6 +2551,54 @@ label ch4_elena:
                 "夕阳完全沉入了地平线。最后一缕金光消失的瞬间，她把头靠在了你的肩上。"
                 "你们就这样在暮色中坐了很久。"
                 "没有说话。不需要说话。"
+
+            "沉默片刻，把目光移向远处的天际线" if not marriage_route and corsair_romance:
+                $ log_decision("第四章", "婉拒艾琳娜——心里已经有了南境的人")
+
+                $ hide_all_chars()
+                "你没有握她的手。"
+                "不是不想。"
+                "你看着天边最后那点橘色慢慢褪掉，发现自己又在走神。"
+
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "……你回来之后就这样。看天的时候老走神。"
+                elena "我还以为是军务。"
+
+                hide elena_img
+                $ hide_all_chars()
+                "她顿了一下。"
+
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "间谍的眼力，到底还是不够用。"
+
+                hide elena_img
+                $ hide_all_chars()
+                "她说这话的时候在笑，语气很轻，像是自嘲，又像是把什么东西小心地放下了。"
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "艾琳娜。"
+                player "……对不起。"
+
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "你道什么歉。"
+
+                hide elena_img
+                $ hide_all_chars()
+                "她站起来，拍了拍裙摆上的草屑。背对着你，声音稳稳的。"
+
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "我早就闻到了。你衣领上，有股海风里腌过的咸味。洗了好几遍都没散干净。"
+
+                hide elena_img
+                $ hide_all_chars()
+                "她走了几步，没回头。晚风灌进来的时候，你听见她说了句什么，很短，被风吹散了大半。"
+                "你没追上去问。"
 
             "感谢她的付出，但保持距离":
                 $ log_decision("第四章", "与艾琳娜保持距离")
