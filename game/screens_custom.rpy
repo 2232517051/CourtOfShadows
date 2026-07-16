@@ -419,6 +419,15 @@ screen stats_screen():
                             text "• 摧毁了暗百合" size 13 color "#8a7e60"
                         if elena_romance:
                             text "• 与艾琳娜的浪漫" size 13 color "#9370db"
+                        ## 赛琳(外章 · 南境)与艾琳娜互斥(chapter4.rpy:2532), 但此前只有艾琳娜
+                        ## 有条目 —— 玩家为赛琳拒掉了艾琳娜, 打开面板却什么都看不到。
+                        if corsair_romance:
+                            text "• 与赛琳的浪漫" size 13 color "#2e8b8b"
+                        ## 外章走向: 玩家跑完整段南境(或选择不去), "重要事件"里此前一个字都没有
+                        if southern_outcome == "delegated":
+                            text "• 外章: 没亲自南下，买了高价盐" size 13 color "#8a7e60"
+                        elif southern_outcome != "none":
+                            text "• 外章 · 潮汐港: [southern_outcome_label]" size 13 color "#8a7e60"
                         if queen_trust:
                             text "• 获得王后信任" size 13 color "#800080"
                         if first_decree:

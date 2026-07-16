@@ -29,7 +29,7 @@ init python:
         ("bg_tideport_beach", "潮汐港海堤"),
         ("bg_tideport_ship", "海雀号"),
         ("bg_tideport_office", "港务厅"),
-        ("bg_tideport_fleet", "王军压境"),
+        ("bg_tideport_fleet", "兵临港外"),
     ]
 
     gallery_characters = [
@@ -224,7 +224,7 @@ init python:
         ("audio/music/southern_tavern.ogg", "断锚酒馆", "水手与走私客的粗粝欢闹", "酒", "southern"),
         ("audio/music/southern_corsair.ogg", "渡鸦船长", "豪迈中藏着柔情的海上之心", "渡", "southern"),
         ("audio/music/southern_scheme.ogg", "火并疑云", "码头暗处有人在拨弄棋局", "谋", "southern"),
-        ("audio/music/southern_fleet.ogg", "王军压境", "黑水之上压来的桅灯之墙", "舰", "southern"),
+        ("audio/music/southern_fleet.ogg", "兵临港外", "黑水之上压来的桅灯之墙", "舰", "southern"),
         ("audio/music/southern_freeport.ogg", "自由港", "守住了自由，代价也已付清", "由", "southern"),
     ]
 

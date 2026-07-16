@@ -1257,6 +1257,19 @@ init python:
                    "bg_tideport_ship", "bg_tideport_office", "bg_tideport_fleet", "corsair"):
             unlock_gallery(_g)
 
+    ## 面板/UI 显示用: 由 _southern_ending_info 派生, **不要再抄一份名称表**。
+    ## (本轮的教训: 同一批结局名此前散在 _southern_ending_info 与 characters.rpy 的
+    ##  achievement_data 两处, 批43 改名时只改了一处, 成就弹窗当场打脸标题卡。
+    ##  第三处显示点一律从这里取, 不再新增名称表。)
+    def get_southern_outcome_label(key=None):
+        k = key if key is not None else getattr(store, "southern_outcome", "none")
+        if k in ("none", "delegated", ""):
+            return ""
+        for _k, _name, _desc, _c, _i in _southern_ending_info:
+            if _k == k:
+                return _name
+        return ""
+
     ## 结局路线图用：(key, 名称, 描述, 颜色, 图标)
     _southern_ending_info = [
         ("free",  "自由港",     "促成联合，潮汐港自治存续",   "#2e8b8b", "港"),
@@ -1443,9 +1456,9 @@ label ending_southern_vassal:
     pause 0.8
     scene bg tideport_harbor with dissolve
 
-    "你离了港，在官道上走了两天。一匹王廷快马从后头追上来，带了一纸诏书：潮汐港归附王廷，为自治海港，不驻军，商事自理。"
+    "你正在码头上等最后几箱货装船。一个穿王廷制服的信使骑马赶到港口，翻身下马，递过来一纸诏书：潮汐港归附王廷，为自治海港，不驻军，商事自理。"
 
-    "没有附信，没有解释。你分不清这是你那番话起了作用，还是王廷本来就打算这么收场。"
+    "没有附信，没有多余的话。你收起诏书，说不好这是你那番话起了作用，还是王廷早就拿定了主意。"
 
     show corsair_img at right with dissolve
     if corsair_romance:
@@ -1932,9 +1945,9 @@ label southern_arc_return:
         "奥尔德里克看你从车上卸下两箱卷宗，什么都没问。他只说了句：哈伦堡的帖子到了，诸领主冬季会审。"
 
     elif southern_outcome == "vassal":
-        "官道两边的麦田收过了，只剩短茬。你离开艾登堡的时候还是青的。"
+        "官道两边的树叶落干净了，光秃秃的枝丫戳在灰天里。你走的时候还挂着几片黄叶。"
         "路上遇见几拨盐商，车辙比来时深——看来不管谁的功劳，盐已经在走了。"
-        "拐过官道最后那段弯路，城门口有人喊「大人回来了」。你翻身下马，先问奥尔德里克这一个月府里出了什么事。"
+        "拐过官道最后那段弯路，城门口有人喊「大人回来了」。你翻身下马，头一件事是找奥尔德里克问府里的账。"
 
     elif southern_outcome == "outwit":
         "搭回程商船那天风向不错，船老大说入冬前还能跑两趟盐。你在甲板上坐了一下午，看海鸥跟着船尾抢鱼内脏。"
