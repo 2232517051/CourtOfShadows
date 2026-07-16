@@ -3,12 +3,12 @@
     "google_play_key": null,
     "google_play_salt": null,
     "heap_size": "3",
-    "icon_name": "\u6743\u8c0b\u4e4b\u5ead",
+    "icon_name": "权谋之庭",
     "include_pil": false,
     "include_sqlite": false,
     "layout": null,
-    "name": "\u6743\u8c0b\u4e4b\u5ead",
-    "numeric_version": 103,
+    "name": "权谋之庭",
+    "numeric_version": 104,
     "orientation": "sensorLandscape",
     "package": "com.xiaoyiai.courtofshadows",
     "permissions": [],
@@ -18,5 +18,5 @@
     "update_always": true,
     "update_icons": true,
     "update_keystores": true,
-    "version": "1.0.3"
+    "version": "1.0.4"
 }
