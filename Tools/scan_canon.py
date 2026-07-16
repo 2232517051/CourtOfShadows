@@ -60,6 +60,15 @@ TYPO_PATTERNS = [
     (r'家族徽章.{0,8}(?<!金)鹰', 'D 检查"鹰" 前后是否加"金"'),
 ]
 
+# ============ 术语统一 ============
+# 主线五章零使用"王军/王师", 规范说法是"王室军队"(chapter5.rpy:47)。
+# 批40 统一南境时**只扫了 southern_expansion.rpy**, 漏了 characters.rpy 的成就 hint 和
+# gallery.rpy 的鉴赏/音乐室条目名 —— "找到一张表就收工"这个毛病本轮犯了两次, 下沉到扫描。
+# 例外: 特使/主帅正式发言里自称"王师"是官腔(正义之师), 与旁白的中立叙述分野, 那 5 处保留。
+TERM_PATTERNS = [
+    (r'王军', 'T 术语: 主线规范是"王室军队"(chapter5.rpy:47), 全项目零使用"王军"'),
+]
+
 # ============ 艾登堡地理 (CANON.md 二·B) ============
 # 艾登堡是内陆领地: 不靠海、无海港、无码头栈桥, 附近只有渡口(浅滩)。
 # 去南方海路要"先四天陆路翻两道山, 到王国南边的海港城换船"(southern_expansion.rpy:265)。
@@ -81,6 +90,30 @@ SKIP_FILE_NAMES = {
     'changelog.rpy', 'attr_system.rpy', 'images_def.rpy',
     'screens.rpy', 'options.rpy', 'gui.rpy', '_developer.rpy',
 }
+
+
+def scan_raw_lines(path, patterns):
+    """扫原始行, 不走 DIALOGUE_RE。返回 [(line_num, name, snippet)].
+
+    为什么要单开一个: DIALOGUE_RE 只认引号内 >=6 字的串, 所以像
+    gallery.rpy:32 ("bg_tideport_fleet", "王军压境") 这种 4 字条目名
+    **从来不在任何 canon 规则的视野里** —— 批40 漏掉鉴赏/音乐室的"王军"就是这么漏的。
+    术语类检查(名字/条目名/成就名, 通常很短)必须扫原始行。
+    """
+    hits = []
+    try:
+        with open(path, encoding='utf-8') as f:
+            lines = f.readlines()
+    except Exception:
+        return hits
+    for ln, line in enumerate(lines, 1):
+        if line.strip().startswith('#'):
+            continue          # 跳过注释, 免得注释里举例的错词自己报自己
+        for pat, name in patterns:
+            if re.search(pat, line):
+                t = line.strip()
+                hits.append((ln, name, t if len(t) <= 120 else t[:117] + '...'))
+    return hits
 
 
 def scan_file_for_patterns(path, patterns):
@@ -147,6 +180,18 @@ def main():
             print(f'{os.path.relpath(path).replace(chr(92), "/")}:{ln}  [{name}]  {snip}')
             total_geo += 1
     print(f'  → {total_geo} 处')
+
+    # 1.6 术语统一
+    print()
+    print('=' * 60)
+    print('术语统一 (王军 → 王室军队):')
+    print('=' * 60)
+    total_term = 0
+    for path in sorted(files):
+        for ln, name, snip in scan_raw_lines(path, TERM_PATTERNS):
+            print(f'{os.path.relpath(path).replace(chr(92), "/")}:{ln}  [{name}]  {snip}')
+            total_term += 1
+    print(f'  → {total_term} 处')
 
     # 2. canon 词偏差 (错别字 / 错纹章)
     print()
