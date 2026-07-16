@@ -1221,9 +1221,15 @@ screen southern_dlc_return():
             spacing 18
             xalign 0.5
 
-            text "南境游记 · 第一弹到此结束" size 24 color "#d4a942" font "msyh.ttf" xalign 0.5
+            text "外章 · 南境游记" size 24 color "#d4a942" font "msyh.ttf" xalign 0.5
 
-            text "感谢试玩。你在潮汐港的选择已记录，将影响后续幕次。" size 15 color "#c8b890" font "msyh.ttf" xalign 0.5
+            ## 原文是"感谢试玩。你在潮汐港的选择已记录, 将影响后续幕次。"
+            ## 后半句在**这条路上是假的**: 本 screen 的按钮是 MainMenu(confirm=False), 当场终结
+            ## 本周目, southern_outcome(南境对主线的唯一接口)随之丢弃。真正影响主线的是"从第一章
+            ## 一路走过来"的那条路 —— 它走 southern_arc_return 的返程 coda 再 return 回第二章,
+            ## 根本不经过这个 screen。
+            ## 前半句"选择已记录"是真的(persistent.southern_endings_seen 亮图鉴、跨周目保留), 保留。
+            text "你在潮汐港的选择已记录。从第一章进入外章时，选择会带入主线。" size 15 color "#c8b890" font "msyh.ttf" xalign 0.5
 
             null height 6
 
@@ -1979,14 +1985,19 @@ label southern_dlc_complete:
 
     python:
         _seen = len(persistent.southern_endings_seen)
-    centered "{size=+4}南境游记 · 第一弹 完{/size}"
+    ## 去 DLC 试玩包装: 它现在是主线目录里与「序章」并列的「外章」, 开头是主线章节卡
+    ## (show_chapter("外章","南境游记","潮汐港的火并")), 结尾不能还是试玩卡。
+    ## 「第一弹」暗示第二弹 —— 而北境的入口本轮已删(它只有 218 行骨架, 4/6 个 label 是
+    ## 「正文待扩写」占位符), 不该再承诺。
+    ## 「结局」改「分支」: 并入主线后这 5 个是外章分支, 不是第 9-13 个主线结局
+    ## (口径与 effects.rpy 的图鉴栏「已解锁 X/5 条分支」一致)。
+    centered "{size=+4}外章 · 南境游记 · 完{/size}"
     pause 1.0
-    centered "{size=+3}潮汐港结局收集：[_seen]/5{/size}"
+    centered "{size=+3}已解锁 [_seen]/5 条分支{/size}"
     pause 1.0
     if _seen >= 5:
-        centered "{size=+3}你已看遍潮汐港的五种命运。{/size}"
+        centered "{size=+3}潮汐港的五条路，你都走过了。{/size}"
         pause 1.2
-    centered "{size=+3}——后续卷次开发中——{/size}"
     pause 2.0
 
     call screen southern_dlc_return
