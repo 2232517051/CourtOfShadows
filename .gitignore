@@ -43,3 +43,7 @@ ai_smell_scan_*.txt
 first_meet_report_*.txt
 missing_portraits_*.txt
 missing_portraits_*.json
+
+# 临时验证脚本 (会 override splashscreen, 绝不能入库)
+game/_tmp_verify.rpy
+game/_tmp_*.rpy
