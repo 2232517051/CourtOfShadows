@@ -27,6 +27,20 @@ python Tools/scan_canon.py      # 扫反逻辑 + canon 偏差 + 触发词频次
 
 双人同屏例外：`show ... at right` 不加 `hide_all_chars`（全项目 121 处 at right，其中 14 处是 A+B 同屏对话，callback 方案会毁它们）。详见 `feedback_cos_hide_all_chars` 记忆。
 
+## 改 screen 的文本插值必须真渲染验证（强制）
+
+**来源：3.5 线上事故（云鹤归 2026-07-16）**。状态面板里写了 `[southern_outcome_label]`——
+但那是个不存在的变量（存在的是同名函数 `get_southern_outcome_label()`），Ren'Py 文本插值
+只查变量、不调函数。凡本版亲自南下过的玩家，从第二章起点开状态面板必 NameError 异常屏。
+
+**为什么三道闸全漏了**：renpy lint 不查 screen 插值的变量存在性；三步剧本扫描只管立绘；
+端到端整局跑通两遍但 harness 接管了 call_screen——那个 screen 从未被真渲染。
+
+**规矩**：凡新增/修改 screen 里的 `[变量]` 插值，必须用 harness 真渲染该 screen 一次
+（`renpy.show_screen(...)` + `renpy.screenshot(...)`，置好相关变量后截图确认），
+**不接受**对源码的子串检查当验证——那个模式已三次把自己注释/坏代码匹配成"通过"
+（批41 注释当调用、批45 注释当错词、批47 坏插值当存在）。
+
 ## 每次改完剧本必跑（强制，不能跳过）
 
 **无论改动多小**（加一行叙事文本、改一个台词、插一段选项），完成后都必须跑下面三步，全部归零才算完成：
