@@ -427,7 +427,13 @@ screen stats_screen():
                         if southern_outcome == "delegated":
                             text "• 外章: 没亲自南下，买了高价盐" size 13 color "#8a7e60"
                         elif southern_outcome != "none":
-                            text "• 外章 · 潮汐港: [southern_outcome_label]" size 13 color "#8a7e60"
+                            ## 3.5 线上事故(云鹤归 2026-07-16): 这里原写 [southern_outcome_label],
+                            ## 但那个**变量不存在** —— 存在的是函数 get_southern_outcome_label(),
+                            ## 而 Ren'Py 文本插值只查变量、不调函数 → 任何亲自南下过的玩家从第二章起
+                            ## 打开状态面板必 NameError。存档本身无损。
+                            ## 修法: 屏幕语言的 $ 先算进局部变量再插值(每次刷新重算, 与图鉴同源)。
+                            $ _southern_arc_label = get_southern_outcome_label()
+                            text "• 外章 · 潮汐港: [_southern_arc_label]" size 13 color "#8a7e60"
                         if queen_trust:
                             text "• 获得王后信任" size 13 color "#800080"
                         if first_decree:
