@@ -277,7 +277,10 @@ screen choice(items):
 
             for idx, i in enumerate(items):
                 ## 解析选项文本和提示：用 "|" 分隔，如 "选择王室|权力+10 声望-5"
-                $ _parts = i.caption.split("|", 1)
+                ## 先做变量替换再拆分——menu 语句的 caption 传到这里时 [var] 尚未展开,
+                ## 软检定提示(soft_hint 返回 "|xx不足…")靠替换后才出现的 "|" 挂载副行。
+                ## 下方 text 均已 substitute False, 不会二次替换。
+                $ _parts = renpy.substitute(i.caption).split("|", 1)
                 $ _caption = _parts[0]
                 $ _hint = _parts[1] if len(_parts) > 1 else ""
 
@@ -317,6 +320,7 @@ screen choice(items):
                                     style "choice_button_text"
                                     yalign 0.0
                                     xfill True
+                                    substitute False
 
                             ## 后果提示
                             if _hint:
@@ -325,11 +329,11 @@ screen choice(items):
                                     spacing 8
                                     for _h in _hint.split():
                                         if "+" in _h:
-                                            text _h size 13 color "#2ecc71"
+                                            text _h size 13 color "#2ecc71" substitute False
                                         elif "-" in _h:
-                                            text _h size 13 color "#e74c3c"
+                                            text _h size 13 color "#e74c3c" substitute False
                                         else:
-                                            text _h size 13 color "#8a7e60"
+                                            text _h size 13 color "#8a7e60" substitute False
 
     ## 重要抉择结束后自动重置标记
     if getattr(store, "important_choice", False):

@@ -1444,30 +1444,75 @@ label ch3_dark_lily_clues:
 
     "你注意到她的围裙上绣着一朵百合花——不是倒置的，但你直觉告诉你这不是巧合。"
 
+    ## 软检定试点3: 隐藏门控 → 可见+失败分支(KCD2拆解 9.1)
+    $ _sh = soft_hint("intrigue", 70)
     menu:
-        "什么都不出示——直接报出几个内部暗号" if intrigue >= 70:
-            $ change_stat("intrigue", 5)
-            $ change_rel("rel_lily", -5)  ## 厚度: 外人能背出内部暗号=安全漏洞, 暗百合从一开始就提防你
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "「七瓣莲花将在月圆之夜绽放」。「壁炉后的人没有倒下」。"
-            $ hide_all_chars()
-            "老妇人的研磨棒停了。她看了你三秒， 然后慢慢转身， 把店门口的木牌翻成了「已打烊」。"
-            $ hide_all_chars("lily_root_img")
-            show lily_root_img at left with dissolve
-            apothecary "你哪里学来的？"
-            hide lily_root_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "我父亲留给我一本日记。我翻得不下百遍。"
-            $ hide_all_chars()
-            "她盯着你， 终于叹了口气。"
-            $ hide_all_chars("lily_root_img")
-            show lily_root_img at left with dissolve
-            apothecary "一个外人能一字不差地报出我们的暗号——你知道这说明什么吗？说明这套暗号已经不安全了。"
-            apothecary "你父亲怎么知道的， 你又记了多少——这些我们迟早要问清楚。在那之前， 你在我们眼里不是自己人， 是个会走路的窟窿。"
-            apothecary "跟我来。"
-            "她推开了柜台后面的一扇暗门。门轴的声音很轻， 但她让你走在前面——她不放心把背留给你。"
+        "什么都不出示——直接报出几个内部暗号[_sh]":
+            if soft_check("ch3_lily_codes", "intrigue", 70):
+                $ change_stat("intrigue", 5)
+                $ change_rel("rel_lily", -5)  ## 厚度: 外人能背出内部暗号=安全漏洞, 暗百合从一开始就提防你
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "「七瓣莲花将在月圆之夜绽放」。「壁炉后的人没有倒下」。"
+                $ hide_all_chars()
+                "老妇人的研磨棒停了。她看了你三秒， 然后慢慢转身， 把店门口的木牌翻成了「已打烊」。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "你哪里学来的？"
+                hide lily_root_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "我父亲留给我一本日记。我翻得不下百遍。"
+                $ hide_all_chars()
+                "她盯着你， 终于叹了口气。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "一个外人能一字不差地报出我们的暗号——你知道这说明什么吗？说明这套暗号已经不安全了。"
+                apothecary "你父亲怎么知道的， 你又记了多少——这些我们迟早要问清楚。在那之前， 你在我们眼里不是自己人， 是个会走路的窟窿。"
+                apothecary "跟我来。"
+                "她推开了柜台后面的一扇暗门。门轴的声音很轻， 但她让你走在前面——她不放心把背留给你。"
+            else:
+                ## 失败分支: 谋略不足 — 报出的是二十年前的废号, 当场被拿捏
+                $ change_stat("intrigue", 2)
+                $ change_rel("rel_lily", -10)  ## 能背出死暗号的外人比无知者更麻烦
+                $ ch3_lily_old_code = True
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "「七瓣莲花将在月圆之夜绽放」。「壁炉后的人没有倒下」。"
+                $ hide_all_chars()
+                "老妇人的研磨棒停了。她转过身，眼睛眯起来，打量你的方式变了——从「又一个买跌打药的贵族」变成了别的什么。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "这两句话，你从哪听来的？"
+                hide lily_root_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "我父亲的日记。"
+                hide player_char_img
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "你父亲。"
+                $ hide_all_chars()
+                "她把研钵搁下，擦了擦手，慢慢走到店门口，把木牌翻成了「已打烊」。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "「壁炉后的人没有倒下」——这句口令六年前就废了。能背出一句死暗号的外人，比什么都不知道的人麻烦十倍。"
+                apothecary "把你的徽章摘下来。"
+                hide lily_root_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "什么？"
+                hide player_char_img
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "银的那个。摘下来放桌上，我要验。你是谁家的、有没有资格站在这里，不是你说了算。"
+                $ hide_all_chars()
+                "你解下徽章放在柜台上。她拿起来翻到背面，指甲沿着铸纹刮了一道，看了很久，才把它扔回你怀里——不是归还的手势，是验完了成色，暂且懒得追究来路。"
+                $ hide_all_chars("lily_root_img")
+                show lily_root_img at left with dissolve
+                apothecary "跟我来。走前面。"
+                $ hide_all_chars()
+                "她推开柜台后面一扇暗门。门轴的声音很轻。你走在前面，后背发紧——她的目光一路钉在你背上。"
 
         "出示在密道中找到的银质徽章" if intrigue >= 45:
             $ change_stat("intrigue", 8)
@@ -4592,6 +4637,8 @@ label ch3_bishop_take_to_vault:
 
     bishop "二十年……我带着这个秘密活了二十年。每天都在祈祷上天宽恕我的怯懦。"
 
+    ## 软检定试点4: 隐藏门控 → 可见+失败分支(KCD2拆解 9.1)
+    $ _sh_bishop = soft_hint("faith", 58)
     menu:
         "为他设一条退路——以艾登堡的名义保他余生" if loyalty >= 60:
             $ change_stat("loyalty", 5)
@@ -4627,25 +4674,54 @@ label ch3_bishop_take_to_vault:
             show bishop_img at left with dissolve
             bishop "……是。我会的。这是我唯一能赎罪的方式。"
 
-        "表示理解——'你也是受害者'" if faith >= 58:
-            $ change_rel("rel_bishop", 15)
-            $ change_stat("faith", 12)
-            hide bishop_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "费雷恩的错不应该由你来承担。你保住了这份遗诏——这已经足够。"
-            hide player_char_img
-            $ hide_all_chars("bishop_img")
-            show bishop_img at left with dissolve
-            bishop "领主大人……你和老领主一样宽容。"
-            hide bishop_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "但从现在起，你必须和我站在一起。"
-            hide player_char_img
-            $ hide_all_chars("bishop_img")
-            show bishop_img at left with dissolve
-            bishop "我愿意。以上天之名，我愿意。"
+        "表示理解——'你也是受害者'[_sh_bishop]":
+            if soft_check("ch3_bishop_mercy", "faith", 58):
+                $ change_rel("rel_bishop", 15)
+                $ change_stat("faith", 12)
+                hide bishop_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "费雷恩的错不应该由你来承担。你保住了这份遗诏——这已经足够。"
+                hide player_char_img
+                $ hide_all_chars("bishop_img")
+                show bishop_img at left with dissolve
+                bishop "领主大人……你和老领主一样宽容。"
+                hide bishop_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "但从现在起，你必须和我站在一起。"
+                hide player_char_img
+                $ hide_all_chars("bishop_img")
+                show bishop_img at left with dissolve
+                bishop "我愿意。以上天之名，我愿意。"
+            else:
+                ## 失败分支: 信仰不足 — 话说对了, 心口不一, 宽恕成了借据
+                $ change_rel("rel_bishop", 5)
+                $ change_stat("faith", 4)
+                $ ch3_bishop_grudging = True
+                hide bishop_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "费雷恩的错不应该由你来承担。你保住了这份遗诏——这已经足够。"
+                $ hide_all_chars()
+                "你听见自己说了正确的话。每个字都对。"
+                "但马修斯抬起头来时，你从他的眼神里看到了一样东西：他听出来了。"
+                "你话里有刺。你自己没察觉，但它在那儿——在「足够」两个字的尾音上，在你垂下眼睛的速度里。那不是宽恕，是一个年轻人咬着牙做出的让步。"
+                $ hide_all_chars("bishop_img")
+                show bishop_img at left with dissolve
+                bishop "……领主大人，您太像您的父亲了。"
+                $ hide_all_chars()
+                "他说这话时声音很轻。但你知道这不是上一次他说同样的话时那个意思。上一次是赞许。这一次——他在安慰自己。"
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "从现在起，你必须和我站在一起。"
+                hide player_char_img
+                $ hide_all_chars("bishop_img")
+                show bishop_img at left with dissolve
+                bishop "我会的。我欠您父亲的，我会还给您。"
+                $ hide_all_chars()
+                "他说「欠」和「还」。没有说「愿意」。"
+                "你收好遗诏。该办的事办了，该拿的东西拿到了。只是你心里清楚——你想给出宽恕，但给出来的是一张借据。"
 
         "冷静分析——'这份遗诏需要验证'":
             $ change_stat("reputation", 5)
@@ -5683,6 +5759,8 @@ label ch3_chapter_crisis:
 
     "你咬紧牙关。"
 
+    ## 软检定试点5: 「主动出击」隐藏门控 → 可见+失败分支(KCD2拆解 9.1)
+    $ _sh_sortie = soft_hint("power", 65)
     menu:
         "全力防守——死守城堡" if power >= 60:
             $ change_stat("power", 15)
@@ -5761,36 +5839,68 @@ label ch3_chapter_crisis:
             "奥尔德里克带着两个信使消失在城堡地下。"
             "你则留在城墙上，指挥防御。"
 
-        "主动出击——在他们完成包围之前冲出去" if power >= 65:
-            $ change_stat("power", 20)
-            $ change_stat("loyalty", 5)
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "他们还没有完成包围。南面的这支是主力——北面一定薄弱。"
-            hide player_char_img
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "大人想突围？"
-            hide captain_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "不是突围。是反击。"
-            player "我亲自带五十人从北门出击，绕到他们侧翼。雷恩，你带剩下的人守城。"
-            hide player_char_img
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "大人！太危险了！"
-            hide captain_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "让他去。他父亲年轻时也是这样——亲自上阵。"
-            $ hide_all_chars()
-            "你带着五十名精锐骑兵从北门冲出。"
-            "正如你所料，敌人的主力集中在南面。北面只有少量哨骑。"
-            "你绕了一个大弧，从西面杀入敌人的侧翼。"
-            "突如其来的打击让敌人阵脚大乱。他们没想到守军会主动出击。"
-            "混战持续了不到半个小时。敌人撤退了，留下了十几具尸体。"
-            "你俘虏了三个人。也许能从他们口中得到有用的信息。"
+        "主动出击——在他们完成包围之前冲出去[_sh_sortie]":
+            if soft_check("ch3_sortie", "power", 65):
+                $ change_stat("power", 20)
+                $ change_stat("loyalty", 5)
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "他们还没有完成包围。南面的这支是主力——北面一定薄弱。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "大人想突围？"
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "不是突围。是反击。"
+                player "我亲自带五十人从北门出击，绕到他们侧翼。雷恩，你带剩下的人守城。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "大人！太危险了！"
+                hide captain_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "让他去。他父亲年轻时也是这样——亲自上阵。"
+                $ hide_all_chars()
+                "你带着五十名精锐骑兵从北门冲出。"
+                "正如你所料，敌人的主力集中在南面。北面只有少量哨骑。"
+                "你绕了一个大弧，从西面杀入敌人的侧翼。"
+                "突如其来的打击让敌人阵脚大乱。他们没想到守军会主动出击。"
+                "混战持续了不到半个小时。敌人撤退了，留下了十几具尸体。"
+                "你俘虏了三个人。也许能从他们口中得到有用的信息。"
+            else:
+                ## 失败分支: 权力不足 — 判断没错, 兵带不动, 折人无获
+                $ change_stat("power", 6)
+                $ change_stat("loyalty", -2)
+                $ ch3_sortie_costly = True
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "他们还没有完成包围。南面的这支是主力——北面一定薄弱。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "大人想突围？"
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "不是突围。是反击。我带五十人从北门出击，绕到他们侧翼。雷恩，你带剩下的人守城。"
+                hide player_char_img
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "大人！太——"
+                hide captain_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "让他去。"
+                $ hide_all_chars()
+                "你带五十骑从北门冲出。北面果然薄弱，只有零散哨骑。你的判断没有错。"
+                "错的是后面的事。"
+                "绕行到半途，队列开始拉散。前排的轻骑冲得太快，后排的重甲跟不上，中间裂开一道口子。你回头喊了两次，声音被蹄声吞掉了。敌军哨骑从侧面切进那道口子，一下子咬住了四五个人。"
+                "你不得不掉头收拢队伍。等阵型勉强拢回来，已经折了三个人，侧翼奇袭的窗口也没了。"
+                "你带人退回城内。敌人被这一下打得犹豫，当夜没有继续合围——但你没有俘虏，没有缴获，什么也没捞到。"
+                "雷恩在城门口接应你。他什么都没说，接过你手里的缰绳，替你把落在最后的几个伤兵带进来。他补位的动作太熟练了——你知道那不是第一次替主将收拾这种场面。"
 
         "通过密道转移证据——保命要紧" if secret_passage_found:
             $ change_stat("intrigue", 8)

@@ -23,8 +23,12 @@ default crisis_allow_skip = True     ## 是否允许玩家退缩(False = 强制�
 default crisis_result = ""           ## "success" / "fail" / "retreat"
 default crisis_roll_value = 0        ## 骰子结果
 default crisis_injury_text = ""      ## 受伤描述
+default crisis_context_mods = []     ## 本次危机的语境修正 [(标签, 数值), ...], trigger_crisis 时生成
 
-## 受伤减益效果
+## 受伤减益效果 — 已废弃(2026-07-26)。这三个变量从未真正扣属性、也不参与判定,
+## 受伤界面却显示「权力 -3(伤势影响)」, 属于显示欺诈; 真实惩罚一直是
+## crisis_injuries 计数(每伤 bonus -1, 上限 -2), 界面已改为如实显示后者。
+## default 保留仅为旧存档兼容, 不再有任何读写。
 default injury_debuff_power = 0      ## 权力减益
 default injury_debuff_intrigue = 0   ## 谋略减益
 default injury_debuff_faith = 0      ## 信仰减益
@@ -52,38 +56,61 @@ init python:
         "survival": ["严寒让你的手指失去了知觉。", "缺水和饥饿让你体力不支。", "你在荒野中迷路，身心俱疲。"],
     }
 
+    ## 危机类型 → 属性/中文名 映射(bonus 计算与界面共用一份)
+    CRISIS_STAT_MAP = {
+        "combat":   "power",
+        "intrigue": "intrigue",
+        "faith":    "faith",
+        "survival": "loyalty",
+    }
+    CRISIS_STAT_CN = {
+        "combat": "权力", "intrigue": "谋略", "faith": "信仰", "survival": "忠诚",
+    }
+
+    def _auto_context_mods(crisis_type):
+        """自动语境修正: 玩家攒下的剧情关系在对应类型的危机里帮一把。
+        每条 +1(= 一个骰面 = 10% 成功率), 与 chapter4 潜入难度随暗百合关系
+        变化的手写先例(chapter4.rpy _stealth_diff)同量级。"""
+        mods = []
+        if crisis_type == "intrigue" and getattr(store, "dark_lily_joined", False):
+            mods.append(("暗百合的眼线", 1))
+        if crisis_type == "faith" and getattr(store, "alliance_church", False):
+            mods.append(("教会同盟", 1))
+        if crisis_type == "combat" and getattr(store, "ch1_exp_captain_respect", False):
+            mods.append(("雷恩的信服", 1))
+        return mods
+
+    def crisis_bonus_parts(crisis_type):
+        """统一计算危机判定加成, 返回 (总加成, 分项列表[(标签, 数值), ...])。
+        判定界面与结算共用这一份, 杜绝两处逻辑各自漂移。"""
+        stat_name = CRISIS_STAT_MAP.get(crisis_type, "power")
+        stat_val = getattr(store, stat_name, 30)
+
+        parts = []
+        base = max(-3, min(7, (stat_val - 30) // 10))
+        parts.append(("{} {}".format(CRISIS_STAT_CN.get(crisis_type, "属性"), stat_val), base))
+
+        if store.courage >= 60:
+            parts.append(("勇气充沛", 1))
+
+        injury_penalty = min(2, store.crisis_injuries)
+        if injury_penalty:
+            parts.append(("伤势 {}处".format(store.crisis_injuries), -injury_penalty))
+
+        for _label, _val in store.crisis_context_mods:
+            parts.append((_label, _val))
+
+        total = sum(v for _, v in parts)
+        return total, parts
+
     def calculate_crisis_chance(crisis_type, difficulty):
         """
-        新判定：布兰特式 1d10 + bonus vs difficulty
-        返回显示用的成功概率（整数 0-100，给 UI 用）
-
-        stat_map: combat→power, intrigue→intrigue, faith→faith, survival→loyalty
-        bonus = (stat_val - 30) // 10，范围 -3 到 +7
-        意志>=60 时额外 +1 bonus
-        受伤减益：每次受伤 -1 bonus（最多 -2）
-
+        布兰特式 1d10 + bonus vs difficulty, 返回显示用成功概率(0-100)。
+        bonus 组成见 crisis_bonus_parts(属性/勇气/伤势/语境修正)。
         成功概率 = 可成功的骰面数 / 10 * 100
         例：difficulty=6, bonus=2 → 需要 roll>=4 → 7个面 → 70%
         """
-        stat_map = {
-            "combat":   "power",
-            "intrigue": "intrigue",
-            "faith":    "faith",
-            "survival": "loyalty",
-        }
-        stat_name = stat_map.get(crisis_type, "power")
-        stat_val = getattr(store, stat_name, 30)
-
-        bonus = max(-3, min(7, (stat_val - 30) // 10))
-
-        ## 意志加成
-        if store.courage >= 60:
-            bonus += 1
-
-        ## 受伤减益（最多 -2）
-        total_injuries = store.crisis_injuries
-        injury_penalty = min(2, total_injuries)
-        bonus -= injury_penalty
+        bonus, _ = crisis_bonus_parts(crisis_type)
 
         ## 需要骰子 >= (difficulty - bonus)
         needed_roll = difficulty - bonus
@@ -93,8 +120,10 @@ init python:
 
         return max(0, min(100, chance))
 
-    def trigger_crisis(crisis_type, difficulty, description, success_label, fail_label, courage_cost=20, courage_gain=15, allow_skip=True):
-        """触发危机事件。allow_skip=False 强制玩家面对(隐藏退缩按钮), 用于剧情上不能逃避的关键时刻。"""
+    def trigger_crisis(crisis_type, difficulty, description, success_label, fail_label, courage_cost=20, courage_gain=15, allow_skip=True, context_mods=None):
+        """触发危机事件。allow_skip=False 强制玩家面对(隐藏退缩按钮), 用于剧情上不能逃避的关键时刻。
+        context_mods: 额外语境修正 [(标签, 数值), ...], 叠加在自动修正之上,
+        供调用点把「此时此地」的剧情状态写进判定(标签会逐条显示给玩家)。"""
         store.crisis_active = True
         store.crisis_type = crisis_type
         store.crisis_difficulty = difficulty
@@ -104,6 +133,7 @@ init python:
         store.crisis_courage_cost = courage_cost
         store.crisis_courage_gain = courage_gain
         store.crisis_allow_skip = allow_skip
+        store.crisis_context_mods = _auto_context_mods(crisis_type) + list(context_mods or [])
         store.crisis_success_chance = calculate_crisis_chance(crisis_type, difficulty)
         store.crisis_result = ""
         store.crisis_roll_value = 0
@@ -120,22 +150,10 @@ init python:
             ## 消耗勇气
             change_will(-store.crisis_courage_cost)
 
-            ## 确定属性
-            stat_map = {
-                "combat":   "power",
-                "intrigue": "intrigue",
-                "faith":    "faith",
-                "survival": "loyalty",
-            }
-            stat_name = stat_map.get(store.crisis_type, "power")
-
-            ## 受伤减益计入 bonus 前先算一次基础 bonus
-            stat_val = getattr(store, stat_name, 30)
-            bonus = max(-3, min(7, (stat_val - 30) // 10))
-            if store.courage >= 60:
-                bonus += 1
-            injury_penalty = min(2, store.crisis_injuries)
-            bonus -= injury_penalty
+            ## 加成与界面同源(crisis_bonus_parts), 含属性/勇气/伤势/语境修正。
+            ## 注意: 勇气修正读的是扣完 courage_cost 之后的值——与旧逻辑一致,
+            ## 玩家在界面上看到的加成可能因这次消耗掉档, 属已知口径, 不在本次改动。
+            bonus, _ = crisis_bonus_parts(store.crisis_type)
 
             ## 掷骰
             roll = _crisis_random.randint(1, 10)
@@ -170,20 +188,11 @@ init python:
         store.crisis_active = False
 
     def _apply_injury(crisis_type):
-        """受伤时施加减益效果"""
+        """受伤: 抽一条受伤文案。实际惩罚由 crisis_injuries 计数承担
+        (crisis_bonus_parts 里每伤 -1, 上限 -2; 满 3 处死亡),
+        不再写入 injury_debuff_*(那套减益从未生效, 见文件头注释)。"""
         descs = INJURY_DESCRIPTIONS.get(crisis_type, INJURY_DESCRIPTIONS["combat"])
         store.crisis_injury_text = _crisis_random.choice(descs)
-
-        ## 根据危机类型施加不同减益
-        if crisis_type == "combat":
-            store.injury_debuff_power += 3
-        elif crisis_type == "intrigue":
-            store.injury_debuff_intrigue += 3
-        elif crisis_type == "faith":
-            store.injury_debuff_faith += 3
-        else:
-            store.injury_debuff_power += 2
-            store.injury_debuff_intrigue += 1
 
     def is_dead():
         """检查是否死亡"""
@@ -298,14 +307,20 @@ screen crisis_event():
                             left_bar Solid("#e74c3c")
                         right_bar Solid("#1a1528")
 
-                    ## 判定说明（新增）
-                    $ _stat_map_cn = {"combat": "权力", "intrigue": "谋略", "faith": "信仰", "survival": "忠诚"}
-                    $ _stat_attr_map = {"combat": "power", "intrigue": "intrigue", "faith": "faith", "survival": "loyalty"}
-                    $ _stat_label_cn = _stat_map_cn.get(crisis_type, "属性")
-                    $ _stat_val_disp = getattr(store, _stat_attr_map.get(crisis_type, "power"), 0)
-                    $ _bonus_show = max(-3, min(7, (_stat_val_disp - 30) // 10))
-                    $ _bonus_show = _bonus_show + (1 if store.courage >= 60 else 0) - min(2, crisis_injuries)
-                    text "1d10 + [_bonus_show] ≥ [crisis_difficulty]（[_stat_label_cn] [_stat_val_disp]）" size 12 color "#8a7e60" font "msyh.ttf" xalign 0.5
+                    ## 判定公式 + 加成分项(与结算共用 crisis_bonus_parts, 见 9.2 语境修正改造)
+                    $ _bonus_show, _bonus_parts = crisis_bonus_parts(crisis_type)
+                    text "1d10 + [_bonus_show] ≥ [crisis_difficulty]" size 12 color "#8a7e60" font "msyh.ttf" xalign 0.5
+
+                    vbox:
+                        spacing 2
+                        xalign 0.5
+                        for _plabel, _pval in _bonus_parts:
+                            if _pval > 0:
+                                text "[_plabel]　{color=#2ecc71}+[_pval]{/color}" size 12 color "#8a7e60" font "msyh.ttf" xalign 0.5
+                            elif _pval < 0:
+                                text "[_plabel]　{color=#e74c3c}[_pval]{/color}" size 12 color "#8a7e60" font "msyh.ttf" xalign 0.5
+                            else:
+                                text "[_plabel]　+0" size 12 color "#8a7e60" font "msyh.ttf" xalign 0.5
 
             ## 当前伤势提醒
             if crisis_injuries > 0:
@@ -443,15 +458,11 @@ screen injury_screen():
 
                 text " [crisis_injuries]/3" size 18 color "#e74c3c" bold True
 
-            ## 减益效果
-            if injury_debuff_power > 0:
-                text "权力 -[injury_debuff_power]（伤势影响）" size 14 color "#e74c3c" xalign 0.5
-
-            if injury_debuff_intrigue > 0:
-                text "谋略 -[injury_debuff_intrigue]（伤势影响）" size 14 color "#e74c3c" xalign 0.5
-
-            if injury_debuff_faith > 0:
-                text "信仰 -[injury_debuff_faith]（伤势影响）" size 14 color "#e74c3c" xalign 0.5
+            ## 减益效果 — 如实显示真正生效的惩罚(危机判定加成扣减, 上限-2),
+            ## 不再显示从未生效的「权力 -3(伤势影响)」假减益。
+            $ _injury_penalty_disp = min(2, crisis_injuries)
+            if _injury_penalty_disp > 0:
+                text "此后危机判定加成 -[_injury_penalty_disp]（伤势影响）" size 14 color "#e74c3c" xalign 0.5
 
             ## 死亡警告
             if crisis_injuries >= 2:

@@ -380,25 +380,63 @@ label ch1_exp_ramparts_night:
 
     captain "我应该保护好他的。这是我唯一的职责。但我失败了。"
 
+    ## 软检定试点1: 隐藏门控 → 可见+失败分支(KCD2拆解 9.1)
+    $ _sh = soft_hint("intrigue", 50)
     menu:
-        "下令调出父亲遇袭那夜的卷宗——你要从头查这件事" if intrigue >= 50:
-            $ change_stat("intrigue", 5)
-            $ change_rel("rel_captain", 5)
-            $ ch1_exp_captain_respect = True
+        "下令调出父亲遇袭那夜的卷宗——你要从头查这件事[_sh]":
             $ log_decision("第一章扩展", "调阅父亲遇袭卷宗")
+            if soft_check("ch1_dossier", "intrigue", 50):
+                $ change_stat("intrigue", 5)
+                $ change_rel("rel_captain", 5)
+                $ ch1_exp_captain_respect = True
 
-            hide captain_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "雷恩， 把那一夜每个值班士兵的名字、岗位、当晚行动列出来。我要看。"
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "雷恩， 把那一夜每个值班士兵的名字、岗位、当晚行动列出来。我要看。"
 
-            $ hide_all_chars()
-            "雷恩愣了一下。然后他点了点头， 表情第一次有了别的颜色——不只是悔。"
-            "他比你还清楚——这才是你父亲会让你做的事。"
+                $ hide_all_chars()
+                "雷恩愣了一下。然后他点了点头， 表情第一次有了别的颜色——不只是悔。"
+                "他比你还清楚——这才是你父亲会让你做的事。"
 
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "我天亮前送到您书房。"
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "我天亮前送到您书房。"
+            else:
+                ## 失败分支: 谋略不足 — 卷宗调得动, 方向说不出
+                $ change_stat("intrigue", 2)
+                $ change_rel("rel_captain", 2)
+                $ ch1_exp_dossier_stalled = True
+
+                hide captain_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "雷恩， 把那一夜每个值班士兵的名字、岗位、当晚行动列出来。我要看。"
+
+                $ hide_all_chars()
+                "雷恩愣了一下，随即点头。"
+
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "天亮前送到您书房。"
+                captain "……您要从哪一头查起？值岗、门禁、还是外围哨的轮换？您给个方向，我好把要紧的先理出来。"
+
+                $ hide_all_chars()
+                "你张了张嘴。值岗、门禁、轮换——每一个词你都懂，但它们在你脑子里排不成一条线。父亲看这种东西，半柱香就能圈出三个疑点；你连该先怀疑哪一摞纸都说不上来。"
+
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "……都送来。我自己看。"
+
+                $ hide_all_chars()
+                "雷恩看了你两秒。夜色里看不清他的表情，但你听得出他放缓了语气。"
+
+                $ hide_all_chars("captain_img")
+                show captain_img at left with dissolve
+                captain "是。我把换班时间对不上的两个名字单独抄出来，压在最上面。"
+
+                $ hide_all_chars()
+                "他转身去安排了。你站在原地，攥着一句没能说出口的话——你要查的东西就在那堆纸里，但你还没有那双能看见它的眼睛。"
 
         "「不是你的错。我也没能保护他。」":
             $ change_rel("rel_captain", 10)

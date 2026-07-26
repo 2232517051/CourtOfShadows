@@ -3423,56 +3423,97 @@ label ch2_end:
 
     "老骑士的语气异常沉重。你从他脸上读到了深深的忧虑——不只是为今晚的伏击。"
 
+    ## 软检定试点2: 复合门控(谋略 或 交情) → 可见+失败分支(KCD2拆解 9.1);
+    ## 「已知晓摄政身份」仍是硬隐藏条件, 不参与软化
+    $ _sh = soft_hint_or("intrigue", 45, rel_aldric >= 50, "，与他的交情也未到")
     menu:
-        "追问——「关于一切，是什么意思？」" if (intrigue >= 45 or rel_aldric >= 50) and not father_was_regent_known:
-            $ change_stat("intrigue", 5)
-            hide aldric_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "雷恩，让人都退下。"
-            player "奥尔德里克——「关于一切」，是什么意思？刚才那刀差点穿过我的喉咙。我想我有资格现在就听。"
+        "追问——「关于一切，是什么意思？」[_sh]" if not father_was_regent_known:
+            if soft_check_cond("ch2_ask_aldric", intrigue >= 45 or rel_aldric >= 50):
+                $ change_stat("intrigue", 5)
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "雷恩，让人都退下。"
+                player "奥尔德里克——「关于一切」，是什么意思？刚才那刀差点穿过我的喉咙。我想我有资格现在就听。"
 
-            hide player_char_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "……领主大人。"
-            aldric "好吧。也许该让你知道一些了——尤其是在你刚刚活下来之后。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……领主大人。"
+                aldric "好吧。也许该让你知道一些了——尤其是在你刚刚活下来之后。"
 
-            aldric "你父亲不是寻常的边境领主。先王临终前，留下过一道遗诏——指定一位摄政者，辅佐年幼的王子，直至他成年。"
+                aldric "你父亲不是寻常的边境领主。先王临终前，留下过一道遗诏——指定一位摄政者，辅佐年幼的王子，直至他成年。"
 
-            aldric "那个名字……是你父亲。"
+                aldric "那个名字……是你父亲。"
 
-            $ father_was_regent_known = True
+                $ father_was_regent_known = True
 
-            hide aldric_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "……父亲？摄政？"
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "……父亲？摄政？"
 
-            "你听见自己的声音从很远的地方传来。"
+                "你听见自己的声音从很远的地方传来。"
 
-            hide player_char_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "但那道遗诏从未公开生效。其中的曲折，老领主从未对老臣细说——他守得太严了。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "但那道遗诏从未公开生效。其中的曲折，老领主从未对老臣细说——他守得太严了。"
 
-            aldric "老臣只知道，从那一天起，王都对艾登堡的态度就变了。变冷，变重，变得像在防一个不肯认输的对手。"
+                aldric "老臣只知道，从那一天起，王都对艾登堡的态度就变了。变冷，变重，变得像在防一个不肯认输的对手。"
 
-            aldric "您身上背负的，不只是这一片封地。还有别的东西——具体是什么，等您准备好，得自己去查。"
+                aldric "您身上背负的，不只是这一片封地。还有别的东西——具体是什么，等您准备好，得自己去查。"
 
-            aldric "今晚的暗百合、那位伯爵夫人、王都那位陛下——他们手里的线，最终都通向那道没能公开的遗诏。"
+                aldric "今晚的暗百合、那位伯爵夫人、王都那位陛下——他们手里的线，最终都通向那道没能公开的遗诏。"
 
-            hide aldric_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "你为什么现在才说？"
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "你为什么现在才说？"
 
-            hide player_char_img
-            $ hide_all_chars("aldric_img")
-            show aldric_img at left with dissolve
-            aldric "因为老领主让老臣发誓——除非您自己问起来，否则别开口。"
-            aldric "他说，如果您没注意到那些迹象，说明时机还没到。"
-            aldric "今夜……您问了。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "因为老领主让老臣发誓——除非您自己问起来，否则别开口。"
+                aldric "他说，如果您没注意到那些迹象，说明时机还没到。"
+                aldric "今夜……您问了。"
+            else:
+                ## 失败分支: 谋略与交情都未到 — 他把话咽回去, 摄政秘密不泄露
+                $ change_stat("intrigue", 2)
+                $ ch2_aldric_deflected = True
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "雷恩，让人都退下。"
+                player "奥尔德里克——「关于一切」，是什么意思？刚才那刀差点穿过我的喉咙。我想我有资格现在就听。"
+
+                $ hide_all_chars()
+                "奥尔德里克沉默了几秒。他看着你，像在掂量什么——不是犹豫要不要说，是在判断你能不能接住。"
+
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "……您的伤口还没处理。"
+
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "我问的不是伤口。"
+
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "我知道您问的是什么，领主大人。"
+
+                $ hide_all_chars()
+                "他站起身，走到门边，替你叫了侍女端热水来。等他转回来时，脸上那个豁口已经关上了。"
+
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "等您再长几年，有些事自然会到您面前。今晚不是时候。"
+
+                $ hide_all_chars()
+                "他的语气不是搪塞。他是真的觉得你还不到时候。"
+                "你想追问。但他已经在检查你肩上的绷带了，手势稳而仔细，像过去二十年照看你父亲时那样。你把话咽了回去——不是被说服了，是知道今晚撬不开他的嘴。"
 
         "尊重他——明日再说":
             $ change_stat("loyalty", 3)
