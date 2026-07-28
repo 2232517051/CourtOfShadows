@@ -1,20 +1,38 @@
 # -*- coding: utf-8 -*-
 """批31 平衡验证: ①ch2 粮仓化解饥荒 ②marriage_route 铁腕会战 +5
-公式 1:1 复刻自 attr_system.rpy change_stat / chapter5.rpy iron_war_score"""
+公式 1:1 复刻自真实链条 difficulty.rpy change_stat_with_difficulty →
+_diminishing_returns → effects.rpy change_stat (2026-07-28 对齐;
+旧版曾复刻 attr_system.rpy 的死代码公式, 数字全不作数)"""
 import itertools
 
-SCALE, COST = 0.4, 0.6
+_DIFF_MULT = {
+    "easy":   (1.5, 0.5),
+    "normal": (1.0, 1.0),
+    "hard":   (0.7, 1.5),
+}
 
-def eff(old, d, stat="x"):
-    """change_stat 实际变化量"""
+def eff(old, d, stat="x", difficulty="normal"):
+    """change_stat 实际变化量(含 clamp)。逐字复刻:
+    - get_difficulty_multiplier: int(d*mult) 截断; 结果为0且d≠0取±1
+    - _diminishing_returns: 仅正增益, >=80:20% >=60:40% >=40:70%, 各档 max(1,int(·))
+    - effects.change_stat: clamp(old+delta, 0, 100)"""
+    pos, neg = _DIFF_MULT[difficulty]
     if d > 0:
-        decay = max(0.25, 1.0 - (old / 100.0) ** 1.5)
-        s = d * SCALE * decay
-        return int(round(s)) if old >= 80 else max(1, int(round(s)))
-    if d < 0:
-        cs = SCALE if stat == "wealth" else COST
-        return -max(1, int(round(abs(d) * cs)))
-    return 0
+        adj = int(d * pos)
+    elif d < 0:
+        adj = int(d * neg)
+    else:
+        return 0
+    if adj == 0:
+        adj = 1 if d > 0 else -1
+    if adj > 0:
+        if old >= 80:
+            adj = max(1, int(adj * 0.2))
+        elif old >= 60:
+            adj = max(1, int(adj * 0.4))
+        elif old >= 40:
+            adj = max(1, int(adj * 0.7))
+    return max(0, min(100, old + adj)) - old
 
 # ---------- A. 饥荒六路对比 ----------
 print("=" * 76)
@@ -54,6 +72,8 @@ def base_score(power, intrigue, loyalty, baron, prince, captain60, pension, marr
     if captain60: s += 3
     if pension: s += 3
     if marriage: s += 5
+    # iron_thorn_controlled (总部可选化·接管线) 未纳入形参: 该线玩家极少数,
+    # 网格里按无此加成保守估计; 需要时手动 +3
     return s
 
 def best_prep(power, intrigue, loyalty, faith, wealth, baron_supply_intel=False):

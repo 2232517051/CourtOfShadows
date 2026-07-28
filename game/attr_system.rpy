@@ -202,137 +202,20 @@ init python:
         "loyalty":    "忠诚",
     }
 
-    ## 【注意】本文件的 change_stat 是死代码, 下面这两个缩放系数不生效 —— 配平前先读这段。
-    ## (2026-07-15 真机实测确认, 不是静态推测)
+    ## 【墓碑】本文件原有的 change_stat(含 STAT_CHANGE_SCALE=0.4 / STAT_COST_SCALE=0.6
+    ## 与高位衰减公式)已于 2026-07-28 删除 —— 它自 effects.rpy 出现起就是死代码, 从未生效
+    ## (2026-07-15 真机实测确认)。
     ##
-    ## 全项目 change_stat 的真实链条:
-    ##   1. attr_system.rpy(本文件, init python) 定义 change_stat —— 含 STAT_CHANGE_SCALE
-    ##      与高位衰减
-    ##   2. effects.rpy:220(同为 init python, 优先级 0) 同名覆盖 —— Ren'Py 按文件名字典序
-    ##      加载, attr_system < effects, 所以本文件这版从此不再被调用
-    ##   3. difficulty.rpy:94(init **1** python, 优先级更高、最后跑) 把全局 change_stat
-    ##      整个换成 change_stat_with_difficulty:
-    ##         难度倍率(easy ×1.5 / normal ×1.0 / hard ×0.7, 见 :48)
-    ##       → 递减收益(0-40:100% | 40-60:70% | 60-80:40% | 80+:20%, 见 :58)
-    ##       → 调 effects.rpy:220 那版(原值直加 + clamp 0..100)
-    ##
-    ## 即: **STAT_CHANGE_SCALE=0.4 与本文件的高位衰减公式都不生效**, 但"高位加点变弱"这个
-    ## 行为是有的 —— 由 difficulty.rpy 的 _diminishing_returns 提供, 分档更粗。
+    ## 全项目 change_stat 的真实链条(唯一权威):
+    ##   difficulty.rpy:94  change_stat = change_stat_with_difficulty
+    ##     → 难度倍率 (正: easy ×1.5 / normal ×1.0 / hard ×0.7; 负: easy ×0.5 / hard ×1.5; int 截断, 归零取±1)
+    ##     → _diminishing_returns 递减收益 (0-40:100% | 40-60:70% | 60-80:40% | 80+:20%)
+    ##     → effects.rpy change_stat (原值直加 + clamp 0..100 + record_stat + toast
+    ##       + 预警 + 成就)
     ## 实测(easy): intrigue 20 +10 → 35; intrigue 80 +10 → 83。
     ##
-    ## 另: Tools/sim_batch31_balance.py:2 自陈"公式 1:1 复刻自 attr_system.rpy change_stat"
-    ## —— 它模拟的是本文件这版, 即不生效的那版, 配平别用它的数。
-    ##
-    ## 本次(南境并入主线)不动这个链条: 爆炸半径覆盖全项目 1158 个 change_stat 调用点。
-    ## 要收敛的话应单独立项, 且优先删本文件的死版本而不是改它。
-
-    ## 全局增益缩放系数（调小此值可让属性成长更慢）—— 见上, 当前不生效
-    ## 0.4 → 原始 +5 变 +2，+8 变 +3，+10 变 +4，+3 变 +1
-    STAT_CHANGE_SCALE = 0.4
-
-    ## 代价缩放系数（选择深度 pass 2026-06-16）：扣减比增益少衰减，让"机会成本"真的被感到。
-    ## 旧版扣减也吃 0.4 → 配对 -5 实际只掉 -2，几乎无感（批21 的配对代价基本失效）。
-    ## wealth 除外（其花钱经济按 0.4 校准，见 change_stat），其余 stat 扣减用此系数。
-    STAT_COST_SCALE = 0.6
-
-    def change_stat(stat_name, delta, show_notification=True):
-        """
-        修改属性值的统一入口：
-        1. 应用 STAT_CHANGE_SCALE 缩放（保留正负，最小绝对值为1）
-        2. 高位加点衰减：old 越高加点效果越弱，自然形成软上限
-           （扣减不衰减，失分痛感保留 — 让玩家敬畏 - 选项）
-        3. 记录旧阶位
-        4. 修改并 clamp 到 0-100
-        5. 记录历史（趋势箭头）
-        6. 显示浮动通知（按 clamp 后的 actual_delta，触顶时显示"已至顶峰"）
-        7. 检查阶位跨越，显示叙事文字
-        8. 检查成就
-
-        注：洋溢 / 千品 / 栀子 反馈"中间事件数值溢出"。全项目 1158 个 change_stat
-        理论净增 intrigue +585、power +402、reputation +386，全是 cap 100 的 3-6 倍。
-        高位衰减让玩家在 80+ 区间加点效果只剩 1/3, 自然抑制触顶。
-        """
-        orig_delta = delta
-        if delta != 0:
-            sign = 1 if delta > 0 else -1
-            old_val_pre = getattr(store, stat_name, 0)
-            if delta > 0:
-                ## 高位衰减曲线: old=0 → 1.0x, 50 → 0.65x, 80 → 0.28x, 95+ → 0.25x (clamp)
-                decay = max(0.25, 1.0 - (old_val_pre / 100.0) ** 1.5)
-                scaled = abs(delta) * STAT_CHANGE_SCALE * decay
-                ## 选择深度 pass (2026-06-16): 80+ 高位不再 +1 保底，微小加成归 0，
-                ## 形成 ~80 软顶。终结"几百个 +1 堆到满"的膨胀（秦霸先/批19/批24 困难太易）。
-                if old_val_pre >= 80:
-                    delta = sign * int(round(scaled))
-                else:
-                    delta = sign * max(1, int(round(scaled)))
-            else:
-                ## 代价按更高系数且不衰减 → 机会成本真的咬人 (wealth 保持 0.4 护其花钱经济)
-                cost_scale = STAT_CHANGE_SCALE if stat_name == "wealth" else STAT_COST_SCALE
-                scaled = abs(delta) * cost_scale
-                delta = sign * max(1, int(round(scaled)))
-
-        old_val = getattr(store, stat_name, 0)
-        old_tier = get_tier(stat_name)
-
-        new_val = max(0, min(100, old_val + delta))
-        setattr(store, stat_name, new_val)
-
-        ## clamp 后的实际变化 — 触顶/触底时为 0, popup 据此显示触顶提示而非假"+1"
-        actual_delta = new_val - old_val
-
-        ## 记录历史
-        record_stat(stat_name, new_val)
-
-        if show_notification and orig_delta != 0:
-            label_cn = STAT_LABELS_CN.get(stat_name, stat_name)
-            tier_label = get_tier_label(stat_name)
-            tier_color = get_tier_color(stat_name)
-            renpy.show_screen(
-                "stat_change_popup",
-                stat_label=label_cn,
-                delta=actual_delta,
-                new_val=new_val,
-                tier_label=tier_label,
-                tier_color=tier_color,
-            )
-
-        ## 检查阶位跨越
-        new_tier = get_tier(stat_name)
-        cross_data = TIER_CROSS_NARRATIVE.get(stat_name, {})
-        THRESHOLDS = [20, 40, 60, 80]
-
-        if new_tier > old_tier:
-            ## 升阶：找到跨过的最高阈值
-            for thresh in THRESHOLDS:
-                if old_val < thresh <= new_val and thresh in cross_data:
-                    t_label, t_color, rise_text, _ = cross_data[thresh]
-                    renpy.show_screen(
-                        "tier_cross_popup",
-                        text=rise_text,
-                        tier_label=t_label,
-                        tier_color=t_color,
-                    )
-                    break
-        elif new_tier < old_tier:
-            ## 降阶：找到跨过的最低阈值
-            for thresh in reversed(THRESHOLDS):
-                if new_val < thresh <= old_val and thresh in cross_data:
-                    t_label, t_color, _, fall_text = cross_data[thresh]
-                    renpy.show_screen(
-                        "tier_cross_popup",
-                        text=fall_text,
-                        tier_label=t_label,
-                        tier_color=t_color,
-                    )
-                    break
-
-        ## 检查成就
-        check_max_stat()
-        check_hidden_achievements()
-
-        ## 检查高属性代价
-        check_high_stat_warnings()
+    ## Tools/sim_batch31_balance.py 已同步改为模拟上述真实链条(同一提交)。
+    ## 本文件保留的 get_tier / TIER_CROSS_NARRATIVE / 路线印记等均为存活代码, 别顺手删。
 
     ## ──────────────────────────────────────────────
     ## D. 路线印记系统 (Identity Path)
