@@ -17,6 +17,49 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.19 (商店版 v3.6) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.19" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "夜宴可赴，亦可不赴 · 商店版 v3.6" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.28" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "新内容" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第三章赴约之夜新增抉择门：暗百合之约现在可以选择不赴" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 不赴约进入全新铁刺派调查线，含渗透集会与四种处置路径" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 四种处置结果在第四、五章各有后续回响，结局命运表新增对应条目" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 新关键人物登场（不赴约路线限定）" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "便利性" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 章节选择页新增「带档开始」，载入该章开头自动存档继续游玩" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 快捷菜单新增「跳抉择」按钮，附确认框防误触" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 长按快进彩蛋转正，确认弹窗已汉化" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 注：自动存档从本版起积累，先经过一次章节开头，该章「带档开始」方可出现" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "文案修订" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 商人卡尔场景对白、南境证据链叙述等十余处对白与叙述打磨" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 修复王都与英格丽会面后立绘卡住不动的问题" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.18 ──
             frame:
                 xfill True
