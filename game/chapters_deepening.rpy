@@ -621,11 +621,11 @@ label ch2_deep_church_encourage:
     player "神为什么不阻止？为什么让坏人得逞？"
 
     player "但后来我想明白了一件事——"
-    player "如果没有黑暗，我们又怎么知道什么是光明？"
+    player "没人回答我。但天一亮，城门要开，粮仓要点数。活人的事不等人。"
 
-    player "您的信仰不是用来解释苦难的——它是用来战胜苦难的。"
-    player "我父亲走了，但您还在。这座教堂还在。那些需要您引导的人还在。"
-    player "如果您现在倒下了，谁来照亮他们的路？"
+    player "您这三十年替多少人撑过了最难的日子——您自己这一关，不能过不去。"
+    player "我父亲走了，但您和这座教堂都还在。外头那些半夜睡不着的人，还指望您呢。"
+    player "您要是也撑不住，他们去找谁？"
 
     "马修斯的眼泪终于掉了下来。"
 
@@ -651,13 +651,13 @@ label ch2_deep_church_encourage:
     "他走到圣坛前，重新点燃了一根快要熄灭的蜡烛。"
 
     bishop "从明天起，我会更坚定地站在你身边。"
-    bishop "不只是作为教会的代表——而是作为一个被你重新点燃信念的人。"
+    bishop "不是因为教会的差事——是你刚才那番话，让老头子觉得这三十年没白熬。"
 
     $ change_stat("faith", 5)
     $ change_rel("rel_bishop", 8)
     $ change_stat("reputation", 3)
 
-    "（你用温暖和力量重新点燃了主教的信仰之火。他将成为你最坚定的精神支柱。）"
+    "（主教重拾信念。他将成为你最坚定的支持者。）"
 
     jump ch2_deep_church_end
 
@@ -777,7 +777,7 @@ label ch3_deep_ritual:
 
     $ hide_all_chars()
     "影主站在石台后方，今晚她没有戴兜帽。"
-    "一张沉静而威严的面容，深褐色的眼睛在烛光中闪烁着锐利的光芒。"
+    "一张看不出年纪的面容，沉静而威严，深褐色的眼睛在烛光中纹丝不动。"
     "唯有那双眼睛，深邃得像两口枯井，让人不敢久视。"
 
     $ hide_all_chars("lily_master_img")
@@ -1124,8 +1124,6 @@ label ch3_deep_captain_scar:
     $ hide_all_chars()
     "他的声音里有一丝不好意思——这个铁骨铮铮的汉子，在接受温柔时反而手足无措。"
 
-    "你看着这一幕，心中感慨万千。"
-
     menu:
         "男爵会为此付出代价。我发誓。":
             jump ch3_deep_scar_vengeance
@@ -1155,7 +1153,7 @@ label ch3_deep_scar_vengeance:
     hide captain_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "这不只是为了你。是为了那个被屠杀的村子。是为了所有被男爵践踏过的人。"
+    player "这不只是为了你。那个被屠杀的村子，所有被男爵践踏过的人——都算在里头。"
 
     "雷恩身体微微前倾，放下了正在擦拭的剑。"
 
@@ -1177,7 +1175,7 @@ label ch3_deep_scar_vengeance:
     $ change_stat("power", 5)
     $ change_rel("rel_baron", -5)
 
-    "（你向雷恩许下了复仇的誓言。队长的士气和忠诚大大提升，但复仇之路往往充满荆棘。）"
+    "（你向雷恩许下了复仇的誓言。他的士气和忠诚大大提升——但树敌也在所难免。）"
 
     jump ch3_deep_scar_end
 
@@ -1204,7 +1202,7 @@ label ch3_deep_scar_justice:
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
     captain "你父亲也是这么说的。"
-    captain "他说——「真正的强者不需要用暴力证明自己。」"
+    captain "他说——「刀能杀人，杀不出公道。」"
     captain "我信了他。现在，我也信你。"
 
     hide captain_img
@@ -1286,7 +1284,7 @@ label ch3_deep_cure:
 
     elena "你需要看看这个。"
 
-    "艾琳娜在桌上铺开了一张泛黄的羊皮纸——上面画满了植物图谱和复杂的化学配方。"
+    "艾琳娜在桌上铺开了一张泛黄的羊皮纸——上面画满了植物图谱和复杂的配药方子。"
 
     elena "这是一页毒理学手稿——我以前在侍女学院抄录过的。"
     elena "看这里——「影月草」。"
@@ -1322,7 +1320,7 @@ label ch3_deep_cure:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "是的。但这里写着一件非常有趣的事——"
+    elena "是的。但这里还写了一段——"
 
     "她指向羊皮纸底部的一段文字。"
 
@@ -1346,15 +1344,15 @@ label ch3_deep_cure:
     show elena_img at left with dissolve
 
     $ hide_all_chars()
-    "艾琳娜在书房里支起了一套简陋的蒸馏装置——烧瓶、冷凝管和各种奇形怪状的玻璃容器。"
+    "艾琳娜在书房里支起了一套简陋的蒸馏装置——曲颈瓶、铜管和各种奇形怪状的玻璃器皿。"
     "影月草被小心地切成薄片，浸泡在一种澄清的液体中。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "必须精确控制温度。太高会分解有效成分，太低则无法激活解毒因子。"
+    elena "火候必须拿准。太猛会毁掉药性，太弱又逼不出解毒的那股劲。"
 
     $ hide_all_chars()
-    "她的动作极其谨慎——处理的毕竟是世界上最致命的毒素之一。"
+    "她的动作极其谨慎——手里这东西，沾上一滴就能要人命。"
     "你在旁边帮忙递器具，同时也在学习整个过程。"
 
     hide elena_img
@@ -1389,8 +1387,8 @@ label ch3_deep_cure:
     elena "一滴就能中和足以杀死三个人的毒素。"
 
     $ hide_all_chars()
-    "你拿起那个小瓶，对着烛光端详。浅紫色的液体在瓶中微微摇晃——"
-    "看起来那么无害，那么平静。就像它的另一面——毒药——也是那么无害、那么平静。"
+    "你拿起那个小瓶，对着烛光端详。浅绿色的液体在瓶中微微摇晃——"
+    "看起来那么无害，那么平静——和杀死你父亲的那瓶东西，出自同一棵草。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -1477,7 +1475,7 @@ label ch3_deep_cure_share:
     $ change_stat("reputation", 3)
     $ change_rel("rel_elena", 5)
 
-    "（你选择分享救命的知识。这体现了领主对子民的责任感，也赢得了艾琳娜更深的尊敬。）"
+    "（你选择分享救命的知识，也赢得了艾琳娜更深的尊敬。）"
 
     jump ch3_deep_cure_end
 
@@ -1499,7 +1497,7 @@ label ch3_deep_cure_poison:
     show player_char_img at left with dissolve
     player "有矛就要有盾，有盾也要有矛。"
     player "我不会主动用毒。但如果有一天——我们被逼到了绝境——"
-    player "我需要知道我们有这个选项。"
+    player "我需要知道手里还有这张牌。"
 
     "走廊里有脚步声经过，又渐渐远去。"
 
@@ -1675,12 +1673,12 @@ label ch4_deep_queen_empathy:
     hide queen_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "二十三。"
+    player "二十二。"
 
     hide player_char_img
     $ hide_all_chars("queen_img")
     show queen_img at left with dissolve
-    queen "……二十三。我像你这么大的时候，也刚失去了母亲。"
+    queen "……二十二。我像你这么大的时候，也刚失去了母亲。"
     queen "那时候我以为痛苦会随时间消退。现在才知道——它只是学会了藏起来。"
 
     "她转身看向画像。"
@@ -1719,7 +1717,7 @@ label ch4_deep_queen_empathy:
     $ change_stat("reputation", 5)
     $ change_rel("rel_queen", 8)
 
-    "（你用真诚回应了王后的脆弱。一段微妙的信任在铁幕之后开始萌芽。）"
+    "（你用真诚回应了王后的脆弱。铁面之下，一丝信任悄然落地。）"
 
     jump ch4_deep_queen_weakness_end
 
@@ -1860,7 +1858,7 @@ label ch4_deep_poet:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "有意思的通讯方式。"
+    player "有意思的传信法子。"
 
     $ hide_all_chars()
     "诗人猛然转身，脸上的血色在月光下可见地褪去。"
@@ -1871,7 +1869,7 @@ label ch4_deep_poet:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "你的诗写得不错。但你更大的才华似乎是——情报工作？"
+    player "你的诗写得不错。但你更大的本事似乎是——替人刺探消息？"
 
     $ hide_all_chars()
     "你从他手中夺过信鸽，取下了那封信。"
@@ -1924,7 +1922,7 @@ label ch4_deep_poet_befriend:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "我是认真的。「敢教日月换新天」——有气魄。"
+    player "我是认真的。「这王庭的风，说不定要为他改向」——有气魄。"
     player "一个有才华的人不应该困在这种危险的工作里。"
 
     $ hide_all_chars("court_poet_img")
@@ -2160,7 +2158,7 @@ label ch4_deep_dungeon_peace:
     $ change_stat("loyalty", 8)
     $ change_stat("reputation", 3)
 
-    "（你决心打破世代循环。和解的道路漫长而艰难，但也许这正是祖父所期望的。）"
+    "（你决心打破世代循环。这条路不好走——但祖父当年也是这么选的。）"
 
     jump ch4_deep_dungeon_end
 
@@ -2219,7 +2217,7 @@ label ch4_deep_dungeon_fate:
     $ change_stat("faith", 5)
     $ change_stat("loyalty", 3)
 
-    "（你在历史的回声中汲取力量。家族的传承成为你前进的动力。）"
+    "（祖辈的选择沉甸甸地压在肩上——也撑住了你的脊梁。）"
 
     jump ch4_deep_dungeon_end
 
@@ -2570,7 +2568,7 @@ label ch5_deep_prayer_inspire:
     player "然后问自己——你愿意让他们落入敌人手中吗？"
 
     $ hide_all_chars()
-    "篝火噼啪作响。然后——一个士兵站了起来。"
+    "烛火噼啪爆了个灯花。然后——一个士兵站了起来。"
 
     $ hide_all_chars("soldier_generic_img")
     show soldier_generic_img at left with dissolve
@@ -2627,13 +2625,13 @@ label ch5_deep_prayer_honest:
 
     player "不是因为我不怕死——而是因为有些东西比死亡更重要。"
     player "是你们。是这个家。是我父亲留给我的信念——"
-    player "人可以被打败，但不能被击垮。"
+    player "输了可以再来，跪下去就完了。"
 
     $ hide_all_chars()
     "教堂里很安静。没有欢呼，没有口号。"
     "但你看到了一些比那更珍贵的东西——"
     "每一张脸上，恐惧仍在，但它们的眼神中多了一样东西。"
-    "是信任。是「你跟你走」的无声承诺。"
+    "是信任。是「跟你走」的无声承诺。"
 
     $ ch5_deep_final_prayer = True
     $ change_stat("loyalty", 8)
@@ -2660,13 +2658,12 @@ label ch5_deep_prayer_silent:
     "没有人说话。没有人命令。"
     "领主和仆人跪在同一片地面上，将军和铁匠的肩膀靠在一起。"
 
-    "在这一刻，没有尊卑，没有贫富，没有主仆。"
     "只有一群即将共同面对命运的人。"
 
     "不知道过了多久。"
 
     "当你睁开眼睛时，蜡烛已经短了一截。"
-    "但每一张面孔都平静了。恐惧没有消失——它被一种更深沉的力量所包裹。"
+    "但每一张面孔都平静了。恐惧还在——只是不再是脸上最大的东西了。"
 
     $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve
