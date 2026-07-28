@@ -2392,7 +2392,7 @@ label ch2_after_council:
             if dusk_dew_known:
                 merchant "就在老领主去世的那一天，有人从我的另一个客户那里买走了一瓶「暮色之露」。"
 
-                "这个名字你听过——你已经知道那是什么。从卡尔的语气里，他显然也不意外你认得这个词。"
+                "暮色之露——你当然知道它意味着什么。卡尔看你的神情，分明早就料到你不会陌生。"
 
                 hide merchant_karl_img
                 $ hide_all_chars("player_char_img")
@@ -2402,7 +2402,7 @@ label ch2_after_council:
                 hide player_char_img
                 $ hide_all_chars("merchant_karl_img")
                 show merchant_karl_img at left with dissolve
-                merchant "聪明。既然您已经知道它是什么，我就省去解释——直接说关键。"
+                merchant "聪明。既然您已经知道它是什么，我就不多费口舌了。"
             else:
                 merchant "就在老领主去世的那一天，有人从我的另一个客户那里买走了一瓶「暮色之露」。"
 
