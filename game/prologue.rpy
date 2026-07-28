@@ -349,7 +349,7 @@ label prologue_childhood:
     $ hide_all_chars()
     "他没有再说下去。你后来很多年才明白这句话的分量——一个边境小领主，和一位国王之间，本不该有这样的牵连。"
 
-    "你那时不懂这句话的意义。你只是好奇。"
+    "但那会儿，你只是好奇。"
 
     menu:
         "父亲，我们家打过仗吗？":
@@ -380,7 +380,7 @@ label prologue_childhood:
             $ prologue_father_question = "secret"
             $ log_decision("序章", "询问家族秘密", "谋略提升")
 
-            "父亲看了你一眼。那个眼神很复杂——惊讶，又混着一丝……警惕？你那时读不懂，只觉得自己问到了什么不该问的。"
+            "父亲看了你一眼。眼神里有惊讶，又混着一丝……警惕？你读不懂那个眼神，只觉得自己问到了什么不该问的。"
 
             $ hide_all_chars("father_img")
             show father_img at left with dissolve
@@ -415,7 +415,7 @@ label prologue_childhood:
 
             "他说得很平静，没有平时跟神父说话时的那种客套。"
 
-            father "不一定是信上帝。但你要信点什么。哪怕是信你自己。"
+            father "不一定非得信上帝。但你总得信点什么。"
 
             $ hide_all_chars()
             "你歪着头想了想。"
@@ -491,7 +491,7 @@ label prologue_childhood:
 
     "她停了停，像是在攒最后一点力气。"
 
-    mother "不管将来发生什么……做个好人。"
+    mother "……做个好人。"
 
     hide mother_img with dissolve
 
@@ -537,8 +537,6 @@ label prologue_childhood:
             "你想起母亲最后的样子。那只冰凉的手。那个笑容。"
 
             "你把被子拉过头顶，在黑暗里蜷成一团。"
-
-            "从那天起，你学会了把痛苦藏起来。"
 
         "去教堂。为母亲祈祷。":
             $ change_stat("faith", 3)
@@ -633,12 +631,12 @@ label cinematic_prologue_2:
     hide screen cin_sub
 
     voice "audio/narration/ch0_p2_line2.mp3"
-    show screen cin_sub("圣·尤里安修道院——王国最高学府。贵族子弟的摇篮，也是权力的温床。")
+    show screen cin_sub("圣·尤里安修道院——王国最高学府，未来的领主与主教从这里走出。")
     $ wait_voice(8.0)
     hide screen cin_sub
 
     voice "audio/narration/ch0_p2_line3.mp3"
-    show screen cin_sub("在修道院的殿堂中，他将明白——知识既是盾，也是剑。")
+    show screen cin_sub("在那里，他不再是领主唯一的儿子——只是诸多贵族子弟中的一个。")
     $ wait_voice(6.0)
     hide screen cin_sub
 
@@ -861,8 +859,6 @@ label prologue_youth:
 
             "你说：你们在说我父亲。我听到了。"
 
-            "走廊里的火把在风中晃了晃，影子在墙上猛地扭曲了一下。"
-
             "然后托马斯笑了。一种你从未在他脸上见过的笑容——温和的，安抚的，虚假的。"
 
             $ hide_all_chars("priest_thomas_img")
@@ -1050,7 +1046,7 @@ label prologue_youth:
 
             hide father_img with dissolve
 
-            "你突然意识到一件事——父亲老了。真的老了。而你还不够强大。"
+            "父亲老了。真的老了。而你还没准备好。"
 
         "假装什么都没注意到。聊点别的。":
             $ change_stat("wealth", 3)
@@ -1064,8 +1060,6 @@ label prologue_youth:
             "你开始聊修道院的饭菜。聊你养的一只猫。聊隔壁宿舍那个打呼噜像打雷的胖子。"
 
             "父亲听着，偶尔发出一两声低笑。那种笑很轻，但真实。"
-
-            "你发现了一个技巧——有时候，假装一切正常，反而是最好的安慰。"
 
             "临走那天，父亲送你到城门口。以前从来没有过。"
 
@@ -1142,12 +1136,12 @@ label cinematic_prologue_3:
     hide screen cin_sub
 
     voice "audio/narration/ch0_p3_line2.mp3"
-    show screen cin_sub("名声是一把双刃剑。它吸引盟友，也招来敌人。")
+    show screen cin_sub("名声这东西，引来的不只是朋友。")
     $ wait_voice(6.0)
     hide screen cin_sub
 
     voice "audio/narration/ch0_p3_line3.mp3"
-    show screen cin_sub("但在他选择自己的道路之前，命运已经替他做出了选择。")
+    show screen cin_sub("但你还没来得及选自己的路，变故先到了。")
     $ wait_voice(6.0)
     hide screen cin_sub
     hide screen cin_sub
@@ -1344,7 +1338,7 @@ label prologue_adult:
 
             hide friend_marcus_img with dissolve
 
-            "宴会结束的时候，你的口袋里多了五张名片。都不是什么响当当的名字——但在这种棋局里，最不起眼的棋子，往往是用得最久的那枚。"
+            "宴会散场的时候，你怀里多了五张写着名字的纸条。都不是什么响当当的名字。但你觉得够用了。"
 
     ## ──────────────────────────────────────
     ## 场景2：父亲的最后一封信
@@ -1378,8 +1372,6 @@ label prologue_adult:
     "「父。」"
 
     "你把信读了三遍。"
-
-    "第一遍读内容。第二遍读情绪。第三遍——读恐惧。"
 
     "这不是一封普通的家书。这是一封遗书。"
 
