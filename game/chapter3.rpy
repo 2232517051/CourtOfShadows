@@ -10,6 +10,8 @@ label chapter3_start:
     window auto
 
     $ renpy.force_autosave()
+    ## 二周目: 章节入口自动存档(带档开始的数据源), 见 replay.rpy
+    $ auto_chapter_save("chapter3")
     $ snapshot_chapter_start()
     scene black with fade
 

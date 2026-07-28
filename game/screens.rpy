@@ -372,7 +372,8 @@ screen quick_menu():
                 ## PC/平板: 完整快捷栏
                 textbutton _("回退") action Rollback()
                 textbutton _("历史") action ShowMenu('history')
-                textbutton _("快进") action Skip() alternate Skip(fast=True, confirm=True)
+                textbutton _("快进") action Skip() alternate SkipToChoice()
+                textbutton _("跳抉择") action SkipToChoice()
                 textbutton _("自动") action Preference("auto-forward", "toggle")
                 textbutton _("存档") action ShowMenu('save')
                 textbutton _("读档") action ShowMenu('load')
@@ -387,7 +388,8 @@ screen quick_menu():
                 textbutton _("读档") action ShowMenu('load')
                 textbutton _("快存") action QuickSave()
                 textbutton _("快读") action QuickLoad()
-                textbutton _("快进") action Skip() alternate Skip(fast=True, confirm=True)
+                textbutton _("快进") action Skip() alternate SkipToChoice()
+                textbutton _("跳抉择") action SkipToChoice()
                 textbutton _("状态") action Show("stats_screen")
                 textbutton _("设置") action ShowMenu('preferences')
 

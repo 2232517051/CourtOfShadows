@@ -429,7 +429,7 @@ screen chapter_select():
                 text "【章】" size 24 color "#d4a942" yalign 0.5
                 text "章节选择" size 26 color "#d4a942" font "msyh.ttf"
 
-            text "通关后解锁对应章节" size 14 color "#6a5e48"
+            text "通关后解锁章节——从头开始，或带档重玩" size 14 color "#6a5e48"
 
             null height 10
 
@@ -443,33 +443,59 @@ screen chapter_select():
                     background Solid("#1a152800")
 
                     if is_unlocked:
-                        button:
-                            action Start(ch_label)
+                        ## 带档开始(replay.rpy): 槽位来自真实游玩经过该章开头时的自动存档。
+                        ## 白板开局先置 _skip_next_chapter_autosave, 防止默认状态覆盖真周目槽位;
+                        ## 只对入口有自动存档的章节设(序章/外章白板路径上没有这个存档点)。
+                        $ ch_slot = "auto_ch-" + ch_id
+                        $ has_slot = renpy.can_load(ch_slot)
+                        $ blank_action = ([SetField(persistent, "_skip_next_chapter_autosave", True), Start(ch_label)]
+                                          if ch_id in ("chapter1", "chapter2", "chapter3", "chapter4", "chapter5")
+                                          else Start(ch_label))
+                        hbox:
                             xfill True
-                            xpadding 20
-                            ypadding 16
-                            background Solid("#1a152840")
-                            hover_background Solid("#1a152880")
+                            spacing 6
+                            button:
+                                action blank_action
+                                xsize (0.80 if has_slot else 1.0)
+                                xpadding 20
+                                ypadding 16
+                                background Solid("#1a152840")
+                                hover_background Solid("#1a152880")
 
-                            hbox:
-                                spacing 16
-                                yalign 0.5
+                                hbox:
+                                    spacing 16
+                                    yalign 0.5
 
-                                ## 章节编号
-                                frame:
-                                    xsize 56
-                                    ysize 56
-                                    background Solid("#d4a94215")
-                                    text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#d4a942" font "msyh.ttf"
+                                    ## 章节编号
+                                    frame:
+                                        xsize 56
+                                        ysize 56
+                                        background Solid("#d4a94215")
+                                        text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#d4a942" font "msyh.ttf"
 
-                                vbox:
-                                    spacing 3
-                                    text ch_num size 13 color "#d4a942"
-                                    text ch_name size 20 color "#e0d8c8" font "msyh.ttf" bold True
-                                    text ch_desc size 13 color "#8a7e60"
+                                    vbox:
+                                        spacing 3
+                                        text ch_num size 13 color "#d4a942"
+                                        text ch_name size 20 color "#e0d8c8" font "msyh.ttf" bold True
+                                        text ch_desc size 13 color "#8a7e60"
 
-                                ## 箭头
-                                text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                                    ## 箭头
+                                    text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+
+                            if has_slot:
+                                button:
+                                    action FileLoad(ch_slot, slot=True)
+                                    xfill True
+                                    ypadding 16
+                                    background Solid("#d4a94218")
+                                    hover_background Solid("#d4a94230")
+                                    vbox:
+                                        xalign 0.5
+                                        yalign 0.5
+                                        spacing 2
+                                        text "带档开始" xalign 0.5 size 15 color "#d4a942" font "msyh.ttf"
+                                        text "续上次轨迹" xalign 0.5 size 11 color "#8a7e60"
+
                     else:
                         frame:
                             xfill True

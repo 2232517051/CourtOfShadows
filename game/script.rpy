@@ -19,6 +19,9 @@ label start:
 
 label chapter1_start:
 
+    ## 二周目: 章节入口自动存档(带档开始的数据源), 见 replay.rpy
+    $ auto_chapter_save("chapter1")
+
     ## ============================================================
     ## 第一章：新主登基
     ## ============================================================
@@ -2412,6 +2415,8 @@ label chapter1_end:
     ## southern_from_mainline 置 True: 让 southern_arc_return 走返程 coda 并 return 回这里,
     ## 而不是外传的"完结回主菜单"收尾。也是"要不要亲自去"那个抉择菜单的显示条件 ——
     ## 从章节选择进外章的玩家不该被问要不要去。
+    ## 二周目: 外章入口自动存档(带档开始 = 回到这里重新出发), 见 replay.rpy
+    $ auto_chapter_save("southern")
     $ southern_from_mainline = True
     call southern_arc from _call_southern_arc
 
