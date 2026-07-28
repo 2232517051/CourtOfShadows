@@ -394,5 +394,36 @@ def main():
     print("\nReports: missing_portraits_A.txt, missing_portraits_B.txt, missing_portraits_full.json")
 
 
+
+def check_char_img_registry():
+    """静态闸门(2026-07-24 英格丽残留事故后加): 凡在剧本里被 show 的 *_img,
+    必须出现在 char_helpers.rpy 的 CHAR_IMG_TAGS 里 —— 否则 hide_all_chars 清不掉它,
+    立绘会一路残留到下一次 scene 切换(玩家可见)。注释行不算。"""
+    import re
+    ch = open(os.path.join(GAME_DIR, "char_helpers.rpy"), encoding="utf-8").read()
+    m = re.search(r"CHAR_IMG_TAGS = \[(.*?)\]", ch, re.S)
+    registered = set(re.findall(r'"(\w+_img)"', m.group(1)))
+    bad = []
+    for fname in sorted(os.listdir(GAME_DIR)):
+        if not fname.endswith(".rpy"):
+            continue
+        for i, line in enumerate(open(os.path.join(GAME_DIR, fname), encoding="utf-8"), 1):
+            if line.strip().startswith("#"):
+                continue
+            for tag in re.findall(r"show (\w+_img)", line):
+                if tag not in registered:
+                    bad.append((fname, i, tag))
+    if bad:
+        print()
+        print("!! 未注册进 CHAR_IMG_TAGS 却被 show 的立绘 (hide_all_chars 清不掉, 会残留):")
+        for f, i, t in bad:
+            print("   %s:%d  %s" % (f, i, t))
+    else:
+        print()
+        print("CHAR_IMG_TAGS 注册闸门: 0 处未注册")
+    return len(bad)
+
+
 if __name__ == "__main__":
     main()
+    check_char_img_registry()

@@ -22,7 +22,13 @@ init python:
         "countess_stein_img", "court_herald_img", "court_poet_img",
         "edmund_img", "edmund_masked_img", "elena_img",
         "farmer_rep_img", "father_img", "friend_marcus_img", "healer_img",
-        "herald_img", "herbalist_vera_img", "lily_master_img", "lily_root_img",
+        "herald_img", "herbalist_vera_img",
+        ## ingrid: 2026-07-24 玩家 bjhhfdffffddd 报"王都见英格丽后立绘卡住不走" —— 她的
+        ## 会面戏靠段尾 hide_all_chars() 清场, 而这个 tag 一直没注册, 遍历不到清不掉,
+        ## 一路残留到艾琳娜出场(chapter4:1127)。联姻线在 ch4/ch5/endings 共 26 处 show,
+        ## 全是同一雷。这正是 CLAUDE.md 立绘规范第 2 条要求"四处对齐"的原因。
+        "ingrid_img",
+        "lily_master_img", "lily_root_img",
         "merchant_guild_img", "merchant_karl_img", "mother_img",
         "noble_lady_img", "noble_werner_img", "old_guard_img", "old_woman_img",
         "player_char_img", "player_child_img", "player_teen_img",
