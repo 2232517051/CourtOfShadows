@@ -1971,7 +1971,7 @@ label ending_shadow_epilogue:
 
         "他环顾四周，看着墙上的地图、桌上的文件、角落里的密码本。"
 
-        aldric "做得不错。比我当年强多了。"
+        aldric "这摊子铺得够大。我当年可没这个手笔。"
 
         hide aldric_img
         $ hide_all_chars("player_char_img")
@@ -1981,11 +1981,11 @@ label ending_shadow_epilogue:
         hide player_char_img
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
-        aldric "不是。我是来……告别的。"
+        aldric "不是。我来……把该交代的交代了。"
 
         "他缓缓坐下，喘了好一阵气。"
 
-        aldric "大夫说我活不过这个冬天。"
+        aldric "肺里的毛病，大夫说熬不过这个冬天。"
 
         hide aldric_img
         $ hide_all_chars("player_char_img")
@@ -1995,7 +1995,7 @@ label ending_shadow_epilogue:
         hide player_char_img
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
-        aldric "别摆出那副表情。我们这行的人，能死在床上就算幸运了。"
+        aldric "别那个表情。干我们这行的，多少人连尸首都找不着——我能躺在床上等死，够体面了。"
         aldric "我来，是想亲眼确认一件事——"
 
         aldric "我没有看错人。"
@@ -2019,7 +2019,7 @@ label ending_shadow_epilogue:
         aldric "该做的事……"
 
         "老人笑了。那笑容苍老而苦涩。"
-        aldric "你知道吗？我年轻的时候也这么说。"
+        aldric "我刚入行那年，也把这句话挂在嘴边。"
 
         aldric "「该做的事。」这四个字害了多少人，你知道吗？"
 
@@ -2033,15 +2033,15 @@ label ending_shadow_epilogue:
         hide player_char_img
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
-        aldric "后悔？不。后悔是弱者的奢侈。"
+        aldric "后悔？干这行没有后悔的资格，后悔了手就会抖。"
 
-        aldric "但如果能重来……我会选一条有光的路。"
+        aldric "但要是能重来一遍……我不想再过这种见不得光的日子了。"
 
         "他站起来，摇摇晃晃地走向门口。"
 
         aldric "记住一句话——"
 
-        aldric "影子之所以存在，是因为有光。如果光灭了……影子也就没有意义了。"
+        aldric "干我们这行的，一辈子躲在影子里。可你想想——没有光的地方，连影子都没有。别把光弄灭了。"
 
         "他没有回头。"
 
