@@ -239,7 +239,7 @@ label ch5_exp_war_council:
             $ hide_all_chars()
             "众人点头。这是最保守、也最稳妥的策略。"
 
-            "但你知道——被动等待意味着把命运交给别人。而你从不喜欢这样做。"
+            "但你也知道——被动等待，就是把主动权让出去。两军先打谁，打多久，全看天意。"
 
         "主动出击——趁敌军分散，各个击破":
             $ ch5_exp_war_strategy = "attack"
@@ -317,7 +317,7 @@ label ch5_exp_war_council:
             hide elena_img with dissolve
 
             $ hide_all_chars()
-            "代价是，你这几年布下的眼线几乎要倾巢而出。假情报一旦散出去，对方迟早会顺着源头清查——你手里的暗子，能保住几个是几个。"
+            "代价是，你手上的眼线几乎要倾巢而出。假情报一旦散出去，对方迟早会顺着源头清查——保得住几个是几个。"
 
         "外交斡旋——以谈判化解战争" if alliance_church or faith >= 50:
             $ ch5_exp_war_strategy = "diplomacy"
@@ -374,7 +374,7 @@ label ch5_exp_war_council:
     "地图上，它小得用一根手指就能盖住。"
 
     if ch5_exp_council_unity >= 4:
-        "你的人是团结的。在这场风暴中，团结就是最坚固的城墙。"
+        "你的人站在一起。这就够了。"
         $ change_stat("loyalty", 3)
     elif ch5_exp_council_unity >= 2:
         "你的幕僚们各有想法，但最终都选择了信任你的判断。"
@@ -399,7 +399,7 @@ label ch5_exp_mobilize:
 
     "城门外的道路上，满载着粮食和木材的牛车排成了长队。城墙上，石匠和士兵并肩工作，修补每一处裂缝。"
 
-    "空气中弥漫着铁锈、汗水和新鲜锯木的气息——那是战争准备的味道。"
+    "空气中弥漫着铁锈、汗水和新鲜锯木的气息。"
 
     "你穿上轻便的皮甲，决定亲自巡视城防。"
 
@@ -504,7 +504,7 @@ label ch5_exp_mobilize:
 
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你的勇气比一千把剑都锋利。"
+            player "老兵到场，这城守得住。"
 
             "民兵们爆发出了一阵欢呼。他们或许不是精锐，但保卫家园的决心不输任何人。"
 
@@ -538,7 +538,7 @@ label ch5_exp_mobilize:
     if governance_prosperity >= 70:
         "过去几个月的治理成果在此刻充分显现。"
 
-        "广场上，训练有素的民兵正在队列演练。他们的装备整齐划一——这是你投资军事基础设施的回报。"
+        "广场上，训练有素的民兵正在队列演练。装备整齐划一——银子花对了地方。"
 
         "粮仓区传来清点物资的吆喝声——储备充足，至少能撑三个月。"
 
@@ -584,7 +584,7 @@ label ch5_exp_mobilize:
 
     if governance_infrastructure >= 60:
         ## 治理子属性读点 (批31收尾轮): 基建底子在守城战兑现
-        "这些年修的路和桥这时候显出用处：粮车从村里到城门只要半天，城墙根下的排水沟也早清过淤——雨季围城，最先垮的往往不是墙，是墙脚的积水。"
+        "先前修的路和桥这时候显出用处：粮车从村里到城门只要半天，城墙根下的排水沟也早清过淤——雨季围城，最先垮的往往不是墙，是墙脚的积水。"
         $ ch5_exp_defender_bonus += 1
 
     ## --- 战前NPC对话 ---
@@ -725,7 +725,7 @@ label ch5_exp_mobilize:
         $ change_rel("rel_captain", 5)
     else:
         captain "军人不该谈论恐惧。但我可以告诉您——"
-        captain "我的剑磨好了，铠甲也擦亮了。准备就是最好的勇气。"
+        captain "我的剑磨好了，铠甲也擦亮了。明天见分晓。"
 
     $ ch5_exp_npc_farewells += 1
 
@@ -810,7 +810,7 @@ label ch5_exp_mobilize:
 
         elena "但这段时间——你让我明白了一件事。"
 
-        elena "有些人，值得你放下一切去守护。"
+        elena "艾登堡的人不欠我什么——但我不想看他们死。"
 
         hide elena_img
         $ hide_all_chars("player_char_img")
@@ -820,7 +820,7 @@ label ch5_exp_mobilize:
         hide player_char_img
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "别谢我。谢你自己——是你让我变了。"
+        elena "别谢我。我留下来是因为自己想留。"
 
     $ ch5_exp_npc_farewells += 1
 
@@ -1145,7 +1145,7 @@ label ch5_exp_last_night:
     show elena_img at left with dissolve
     elena "不。这是我做过的最好的决定。"
 
-    "她从树下走出来，你等眼睛适应了黑暗后第一次注意到——她的眼睛里不再只有冰冷的算计，还有一种柔软的光。"
+    "她从树下走出来。你等眼睛适应了黑暗，才看清她的神色——不像白天那样滴水不漏。"
 
     elena "有件事我一直没告诉你。"
 
@@ -1484,7 +1484,7 @@ label ch5_exp_skirmish:
 
             "你什么也没说。"
 
-            "先锋官等了很久，脸上的怒意渐渐变成了不安。沉默有时候比任何回答都更有压迫力。"
+            "先锋官等了很久，脸上的怒意渐渐变成了不安。"
 
             "最终，他拨马离开了。"
 
@@ -1501,7 +1501,7 @@ label ch5_exp_skirmish:
     hide captain_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "明白了。他们想看看我们有多少人，火力怎么样。"
+    player "明白了。他们想看看我们有多少人，守备怎么样。"
 
     hide player_char_img
     $ hide_all_chars("captain_img")
@@ -1511,7 +1511,7 @@ label ch5_exp_skirmish:
     $ hide_all_chars()
     "你快速分析了局势。三百骑兵，不足以攻城，但足以造成压力。他们的真正目的是侦察。"
 
-    "如果你让他们轻松得到情报，主力到达后会制定出针对性的攻击方案。"
+    "如果你让他们轻松摸清了底细，主力到达后就会对着你的软肋下刀。"
 
     "如果你能给他们一个深刻的教训——主力部队就会犹豫。"
 
@@ -1662,7 +1662,7 @@ label ch5_exp_skirmish:
             show player_char_img at left with dissolve
             player "我要让他们以为我们只有很少的守军。这样他们回去汇报后，主力会轻视我们。"
 
-            player "轻敌的敌人，才是最容易击败的敌人。"
+            player "让他们轻敌。轻敌了，就会露出破绽。"
 
             hide player_char_img
             $ hide_all_chars("captain_img")
@@ -1682,7 +1682,7 @@ label ch5_exp_skirmish:
 
             "你在城墙后面听着他们的嘲笑，面无表情。"
 
-            "让他们笑吧。笑得最大声的人，往往死得最快。"
+            "让他们笑吧。你等得起。"
 
             "敌军在城下耀武扬威了一阵，然后心满意足地撤退了。他们认为已经摸清了你的「底细」。"
 
@@ -1730,8 +1730,6 @@ label ch5_exp_skirmish:
         "他笑了笑。然后闭上了眼睛。"
 
         "你站在伤兵棚外面，感到一种锥心的痛。"
-
-        "这只是前哨战。真正的战争来临时，伤亡会是这个数字的十倍、百倍。"
 
         "你能承受得住吗？"
 
@@ -2109,7 +2107,7 @@ label ch5_exp_eve_of_battle:
                 $ change_stat("intrigue", 5)
                 $ change_rel("rel_lily", -10)
 
-                "你在回信的空白处落笔——字迹斟酌了许久。"
+                "你在回信的空白处提笔——斟酌了许久才落下第一个字。"
 
                 "「等双方主力交战最激烈的时候再行动。」"
 
@@ -2129,7 +2127,7 @@ label ch5_exp_eve_of_battle:
 
                 "你落笔回复——字迹冷硬如刀。"
 
-                "「男爵联军的指挥系统本就混乱。战前夜除掉一两个关键将领——联军就会自行瓦解。」"
+                "「男爵联军的号令本就不齐。战前夜除掉一两个关键将领——联军就会自行瓦解。」"
 
                 "「暗杀有风险。若失败，你们的人会暴露。」"
 
@@ -2352,7 +2350,7 @@ label ch5_exp_eve_of_battle:
     "明天之后，这个标记可能变成一个战场——也可能变成一个传奇。"
 
     if power >= 50:
-        "你把腰间的剑拔出一寸又推了回去。力量是最直接的语言。如果谈判和计谋都失败了——剑，永远是最后的答案。"
+        "你把腰间的剑拔出一寸又推了回去。够了——明天让它说话。"
     if intrigue >= 50:
         "你微微一笑。棋盘已经摆好，所有的棋子都在它们应该在的位置上。接下来，只需要等待对手犯错。"
     if faith >= 50:
