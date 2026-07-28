@@ -11,6 +11,7 @@ default ch3_herbalist_met = False
 default ch3_herbalist_romance = False
 default ch3_cult_infiltrated = False
 default ch3_cult_leader_fate = ""
+default iron_thorn_controlled = False   ## 接管线专用: 幕后控制铁刺派残部(从未见过影主), 与 dark_lily_joined(影主盟友)分离
 default ch3_ancient_ruin_found = False
 default ch3_antidote_learned = False
 default ch3_witness_count = 0
@@ -1424,7 +1425,12 @@ label ch3_exp_confrontation:
             $ edmund_name = "艾德蒙"
 
             $ change_stat("intrigue", 5)
-            $ dark_lily_joined = True
+            ## 总部可选化(2026-07-24)拆雷: 原此处 $ dark_lily_joined = True —— 但下游 30+ 处
+            ## 读者把该 flag 演成"与影主结盟/领了徽章/认得她笔迹"(ch5:1618 影主熟人般接见、
+            ## ch5_exp:2082"你认得那笔迹"、影王尾声"我选对了继承人"), 而接管线玩家从未见过
+            ## 影主("你没有现身……没有人知道")。改用独立 flag, 接管玩家走各处现成的 else
+            ## 分支 —— 隐身正是这条线的题眼。save_compat:120 的老档推断也因此恢复正确。
+            $ iron_thorn_controlled = True
             $ ch3_cult_leader_fate = "replaced"
 
     ## ── 真相揭晓 ──
@@ -1460,7 +1466,12 @@ label ch3_exp_confrontation:
 
     "明天，又是新的一天。"
 
-    $ true_killer_known = True
+    ## 总部可选化(2026-07-24)拆雷: 原此处对全部四个处置分支无条件 $ true_killer_known = True
+    ## —— 与它上面十行自己的旁白("而那个始终悬而未决的谜题——到底是谁在你父亲的酒中
+    ## 下了毒?")正面矛盾, 且一颗 flag 就把没查明真凶的玩家送进"真相大白"结局门槛
+    ## (chapter5 _truth_available)。删除。爽约玩家的合法真相来源在第四章:
+    ## 花园"试探"(无门槛必达, chapter4.rpy:2044/2051) 或 "结盟"+第五章"召见幕僚"
+    ## (chapter4_prince.rpy:324)。
 
     return
 

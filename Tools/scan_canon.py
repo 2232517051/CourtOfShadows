@@ -41,11 +41,12 @@ ANTI_LOGIC_PHRASES = [
     (r'我了解过.{1,8}的', 'C 反逻辑: "我了解过 X 的"'),
     (r'我打听过.{1,8}的', 'C 反逻辑: "我打听过 X 的"'),
     (r'你的事情我都听说过', 'C 反逻辑: "你的事情我都听说过"'),
-    # 时间跨度: 主线 30 天 / 5 章, 不该出现"这一年""去年""半年前"等长跨度
+    # 时间跨度: 主线约 4-5 个月 / 5 章 (CANON.md 时间线, 2026-07 修订), 不该出现
+    # "这一年""去年"等长跨度。结局尾声在终章之后, 跨一年合法 — 加 # canon-ok 放行。
     # (有些 NPC 提自己往事可以, 但谈主角处境时不行 — 误报由人工排除)
-    (r'你这一年', 'C 时间线: "你这一年" — 主线只跨 30 天'),
+    (r'你这一年', 'C 时间线: "你这一年" — 主线约 4-5 个月, 不满一年'),
     (r'这一年来', 'C 时间线: "这一年来" — 主线跨度不到一年'),
-    (r'你这半年', 'C 时间线: "你这半年" — 主线跨度不到半年'),
+    (r'你这半年', 'C 时间线: "你这半年" — 主线约 4-5 个月, 勉强但先报出来人工判'),
     (r'继任.{0,4}(半年|一年)', 'C 时间线: 继任跨度跟主线不符'),
 ]
 
@@ -109,6 +110,8 @@ def scan_raw_lines(path, patterns):
     for ln, line in enumerate(lines, 1):
         if line.strip().startswith('#'):
             continue          # 跳过注释, 免得注释里举例的错词自己报自己
+        if 'canon-ok' in line:
+            continue          # 行尾 # canon-ok: <理由> = 人工判过的合法例外
         for pat, name in patterns:
             if re.search(pat, line):
                 t = line.strip()
@@ -126,6 +129,7 @@ def scan_file_for_patterns(path, patterns):
 
     for ln, line in enumerate(lines, 1):
         if line.strip().startswith('#'): continue
+        if 'canon-ok' in line: continue   # 行尾 # canon-ok: <理由> = 人工判过的合法例外
         for m in DIALOGUE_RE.finditer(line):
             text = m.group(1)
             for pat, name in patterns:
