@@ -111,13 +111,13 @@ label ch2_exp_banquet:
 
     count_grey "到你了。"
 
-    "全场的目光集中到你身上。这是你在宴会上展现自我的时刻。"
+    "全场的目光集中到了你身上。"
 
     hide count_grey_img with dissolve
     hide noble_werner_img with dissolve
 
     menu:
-        "维尔纳公子的挑衅需要一个回应。你的祝词将定义你在众人心中的形象。"
+        "维尔纳公子的挑衅需要一个回应。"
 
         "谦逊应对「以退为进」":
             $ ch2_exp_banquet_toast = "humble"
@@ -138,7 +138,7 @@ label ch2_exp_banquet:
 
             player "所以我的祝词很简单——敬所有在困境中依然坚守的人。不论是战场上流血的士兵，还是田地里劳作的农民。"
 
-            player "我们坐在这里享用美酒佳肴，是因为有人在替我们负重前行。"
+            player "我们坐在这里举杯喝酒，是因为有人在外面替我们扛着。"
 
             "杯盏碰撞的声音都停了下来。然后，格雷伯爵第一个鼓起了掌。"
 
@@ -167,7 +167,7 @@ label ch2_exp_banquet:
 
             player "但至少——我是亲自坐在这里，而不是替我躲在家里的老父亲跑腿。"
 
-            "全场倒吸一口凉气。你知道这句话很不客气，但维尔纳公子先开的火。"
+            "全场倒吸一口凉气。"
 
             hide count_grey_img
             show noble_werner_img at right with dissolve
@@ -242,12 +242,10 @@ label ch2_exp_banquet:
 
     noble_werner "有些账……以后再算。"
 
-    "你感受到了这句话中隐含的威胁。"
-
     hide noble_werner_img with dissolve
 
     $ hide_all_chars()
-    "宴会在午夜时分结束。宾客们陆续散去。你独自走在回房的路上，脑中翻涌着今日的种种见闻。"
+    "宴会在午夜时分结束。宾客们陆续散去。你独自走在回房的路上。"
 
     "忽然——"
 
@@ -272,7 +270,7 @@ label ch2_exp_night_intrigue:
 
     "走廊里很暗。蜡烛已经熄灭了大半，火把的光只照到三步远。"
 
-    "那个黑影拐进了通往档案室的走廊，脚步声轻得像猫。你的心跳加速了——档案室里存放着哈伦堡的历年会议记录、各领主的秘密协议副本，甚至还有王室的特许令状。"
+    "那个黑影拐进了通往档案室的走廊。你的心跳加速了——档案室里存放着哈伦堡的历年会议记录、各领主的秘密协议副本，甚至还有王室的特许令状。"
 
     "如果有人在偷取这些文件……"
 
@@ -321,7 +319,7 @@ label ch2_exp_night_intrigue:
             show player_char_img at left with dissolve
             player "艾琳娜？！你在这里做什么？"
 
-            "艾琳娜的脸上闪过复杂的表情——惊慌、羞愧，还有一丝决绝。"
+            "艾琳娜咬住了下唇。"
 
             hide player_char_img
             $ hide_all_chars("elena_img")
@@ -384,7 +382,7 @@ label ch2_exp_night_intrigue:
                     show elena_img at left with dissolve
                     elena "这正是王后想要的。"
 
-                    "艾琳娜小心翼翼地将文件收好。她看着你，目光中多了一些说不清的东西。"
+                    "艾琳娜小心翼翼地将文件收好，然后抬头看着你。"
 
                     elena "谢谢你。我以为你会抓我交给其他领主。"
 
@@ -556,9 +554,7 @@ label ch2_exp_night_intrigue:
                     $ log_decision("第二章扩展", "暂时隐瞒暗百合间谍信息")
 
                     $ hide_all_chars()
-                    "你决定暂时不说。在权谋之庭中，信息就是权力。而你现在拥有了一份别人都不知道的信息。"
-
-                    "这份筹码，你要在最关键的时刻打出去。"
+                    "你决定暂时不说。"
 
                     $ hide_all_chars("player_char_img")
                     show player_char_img at left with dissolve
@@ -576,8 +572,6 @@ label ch2_exp_night_intrigue:
             "你转身回了自己的房间，锁好门，但一夜未能安睡。"
 
             "窗外的月亮被乌云遮住了。黑暗中，你隐约觉得有什么重要的东西正在从指缝间流走。"
-
-    "无论你做了什么选择，这个夜晚都改变了你对这场领主会议的认知。"
 
     "税制和贸易，只是摆在桌面上的东西。桌面底下，每个人都揣着自己的算计。"
 
@@ -665,7 +659,7 @@ label ch2_exp_aftermath:
     show countess_hilda_img at left with dissolve
     $ hilda_met = True
 
-    countess_hilda "年轻人，你还有很长的路要走。别松懈。"
+    countess_hilda "北方的冬天比你想的长。别让人觉得你只是运气好。"
 
     "格雷伯爵最后一个离开。他坐在马车里，掀开帘子看了你一眼。"
 
@@ -680,7 +674,7 @@ label ch2_exp_aftermath:
     $ hide_all_chars()
     "马车渐行渐远，消失在蜿蜒的山路上。"
 
-    "你深深地吸了一口气。冬日的空气冷冽清新，但你心中的火焰比任何时候都烧得旺盛。"
+    "你深深吸了一口气。冬日的空气冷冽清新。"
 
     "这场领主会议散了。往后这些领主盘算局势的时候，少不了要把你算进去。"
 
@@ -688,7 +682,7 @@ label ch2_exp_aftermath:
 
     ## 属性变化总结
     if ch2_exp_secret_letter:
-        "某些秘密文件落入了你的手中。它们将在未来发挥关键作用。"
+        "某些秘密文件落入了你的手中。"
 
     if ch2_exp_night_choice == "confront":
         "你在黑夜中正面拦下了潜入者，也因此知道了艾琳娜的秘密。"

@@ -136,7 +136,7 @@ label ch2_preparation:
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "权谋之局，从无简单之人。领主大人务必谨慎。"
+    aldric "这些人没有一个好对付的。领主大人多留个心眼。"
 
     aldric "对了，路途需要两天，沿途并不太平。老臣建议带足护卫。"
 
@@ -152,7 +152,7 @@ label ch2_preparation:
 
     aldric "但艾琳娜会随行。她对宫廷礼仪和各家底细都颇为熟悉。"
 
-    "奥尔德里克顿了顿，目光变得意味深长。"
+    "奥尔德里克顿了顿，压低了声音。"
 
     aldric "另外……注意她的一举一动。她是王后派来的人，别忘了这一点。"
 
@@ -210,7 +210,7 @@ label ch2_preparation:
 
     "出门前你不知道有人在背后议论你的安危，现在你知道了。"
 
-    "她的身份你以后总会查清——但今晚的两次提点，都是实打实救你于风险。"
+    "她的身份你以后总会查清——但今晚这两次提点，实实在在帮你避了坑。"
 
     "至少这一点，你愿意先信。"
 
@@ -254,7 +254,6 @@ label ch2_preparation:
             $ hide_all_chars()
             "你花了一整个上午，将每位与会者的底牌摸了个透。"
             "每个人的姻亲、债务、领地隐患、近年来的政策失误——你一一记在心里。"
-            "你把这些信息记在心里。知道每个人的弱点，谈判时就多了几分底气。"
 
         "准备丰厚的礼物，以示诚意":
             $ change_stat("wealth", -10)
@@ -318,7 +317,6 @@ label ch2_preparation:
             hide bishop_img with dissolve
             $ hide_all_chars()
             "你带着教会的旗帜出发。一路上，沿途的百姓看到旗帜都跪下祈祷。"
-            "教会的影响力，远比你想象的深远。"
 
     hide elena_img with dissolve
 
@@ -338,7 +336,7 @@ label ch2_preparation:
 
     "初冬的清晨寒意逼人，呼出的白气在空中凝成一团又一团的小云朵。"
 
-    "道路两旁的橡树已经落尽了叶子，光秃秃的枝干伸向灰蒙蒙的天空。初冬的林子格外荒凉。"
+    "道路两旁的橡树已经落尽了叶子，光秃秃的枝干伸向灰蒙蒙的天空。"
 
     "你骑在马背上，身后是二十名卫兵和三辆辎重车。艾琳娜骑着一匹枣红色的母马，紧跟在你右侧。"
 
@@ -423,7 +421,7 @@ label ch2_preparation:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……您比我想象的更像您父亲。"
-            "她的眼神中闪过一丝难以捉摸的光，转瞬即逝。"
+            "她垂下目光，嘴唇动了动，像要说什么，又咽了回去。"
 
         "因为真相——『我要查清父亲的死因。』":
             $ change_stat("loyalty", 5)
@@ -526,7 +524,7 @@ label ch2_preparation:
             show player_char_img at left with dissolve
             player "你们这一车货， 我全要了。运到艾登堡再算账。"
             $ hide_all_chars()
-            "商人愣了几秒， 然后跪了下来——这不是答谢， 是发自内心的感激。"
+            "商人愣了几秒， 然后一下子跪了下来，额头抵着地面。"
             "他们今天不只是修了车——是不用担心明年开春能不能再启程。"
             "艾登堡在卡尔达商道上的口碑， 从这一刻起多了一个版本。"
             $ hide_all_chars("captain_img")
@@ -579,7 +577,7 @@ label ch2_preparation:
             show soldier_generic_img at left with dissolve
             soldier "禀领主大人，没有异常。就是普通的商人，车确实坏了。"
             hide soldier_generic_img with dissolve
-            "你这才下令帮忙。虚惊一场，但小心无大错。"
+            "你这才下令帮忙。虚惊一场。"
 
         "无暇顾及，继续赶路":
             hide soldier_generic_img
@@ -588,7 +586,7 @@ label ch2_preparation:
             player "我们赶时间。继续走。"
             $ hide_all_chars()
             "商人们失望地看着你的队伍从旁边经过。你听到身后传来低声的咒骂。"
-            "有时候，赶路比施恩更重要。但你心里隐约有些不舒服。"
+            "商人的咒骂声在风里断断续续，跟了你好一阵才散。"
 
     hide captain_img with dissolve
 
@@ -720,7 +718,7 @@ label ch2_preparation:
             show soldier_generic_img at left with dissolve
             soldier "嗯。最近南方的活儿不好接了。王后在整顿军务，好多领主不敢再私下雇佣兵了。"
             soldier "所以我们往北走，看看有没有人需要刀子。"
-            "你在心里记下了这个信息。王后在削弱地方领主的武装力量——这和新税法是一套组合拳。"
+            "王后一手推新税法，一手整顿军务——南方的佣兵被赶到北方来了。"
 
         "和教士聊天":
             $ change_stat("faith", 8)
@@ -779,7 +777,7 @@ label ch2_preparation:
             $ hide_all_chars("servant_generic_img")
             show servant_generic_img at left with dissolve
             refugee "靠近……靠近冯·哈根男爵领地的边界。"
-            "又是男爵的方向。你把这件事记在了心里。"
+            "又是男爵的方向。"
 
         "早点休息，养精蓄锐":
             $ hide_all_chars()
@@ -872,7 +870,7 @@ label ch2_preparation:
             show elena_img at left with dissolve
             elena "我不确定。但在这个节骨眼上，任何异常都值得注意。"
 
-    elena "领主大人，早点休息吧。明天到了哈伦堡，才是真正的较量。"
+    elena "领主大人，早点休息吧。明天进了哈伦堡的门，就没有说废话的余裕了。"
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -897,7 +895,7 @@ label ch2_preparation:
 
     "窗外，风声呜咽。"
 
-    "你翻了个身，闭上眼睛。不管明天等待你的是什么，你都必须打起精神面对。"
+    "你翻了个身，闭上眼睛。"
 
     "……"
 
@@ -908,7 +906,7 @@ label ch2_preparation:
     "你推开旅店的后门，走进院子。几个值夜的士兵在篝火旁围坐着，火光在他们疲惫的脸上投下跳动的光影。"
 
     $ play_music("audio/music/campfire.ogg", fadein=2.0)
-    "你走向篝火，在一截枯木上坐下。夜风很冷，但火焰的温度让你的心稍稍安定了些。"
+    "你走向篝火，在一截枯木上坐下。夜风刮在脸上像刀子，凑近火堆才好了一点。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -954,9 +952,9 @@ label ch2_preparation:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "没有。但我在王宫里见过太多类似的场面。权谋的底层逻辑是相通的。"
+    elena "没有。但我在王宫里见过太多类似的场面。换一张桌子，招数还是那几套。"
 
-    "她用一根树枝拨了拨火堆。火焰窜高了一些，照亮了她的半张脸。那双紫灰色的眼眸里映着火光，深邃得像两口古井。"
+    "她用一根树枝拨了拨火堆。火焰窜高了一些，照亮了她的半张脸。"
 
     elena "领主大人，您想过吗——到了会议上，您打算扮演什么角色？"
 
@@ -992,7 +990,7 @@ label ch2_preparation:
             hide player_char_img
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
-            elena "那就记住一件事——在圆桌上，沉默有时候比千言万语更有力量。"
+            elena "那就记住一件事——别人说话的时候，管住自己的嘴。"
 
         "我要展示力量——让他们知道艾登堡不可欺":
             $ change_stat("power", 8)
@@ -1197,17 +1195,13 @@ label ch2_preparation:
 
     "铁匠铺传来叮叮当当的打铁声，面包房飘出新鲜出炉的麦香，皮革商的摊位上挂满了各种颜色的皮囊和马具。"
 
-    "一群孩子在街上追逐嬉戏，一个老人在墙角晒太阳，一对年轻夫妇在摊位前挑选布料。"
+    "有个小孩蹲在水沟边拿树枝戳蚂蚁，旁边卖布的妇人吆喝了一嗓子，把他吓得一激灵。"
 
-    "如此平常的景象。你站在原地看了很久，脚步怎么也迈不动。这里的人不用操心领地的安危，不用应对男爵的野心，不用揣测王后的意图。"
-
-    "他们只需要过好自己的日子。而你——你必须为艾登堡所有人的日子负责。"
+    "你看了一会儿，莫名觉得羡慕。"
 
     "街上的人比你预想的多——不仅有本地居民，还有不少外地来的商人和旅客。"
 
     "你注意到街上有好几家酒馆生意兴隆。领主会议对哈伦堡来说是一年中最赚钱的时候。"
-
-    "显然，领主会议带来了可观的人气和商机。"
 
     show elena_img at right with dissolve
 
@@ -1231,8 +1225,6 @@ label ch2_preparation:
 
     $ hide_all_chars()
     "你安顿好行李后，决定趁下午的时间在城里转转。"
-
-    "这既是为了了解哈伦堡的环境，也是为了——如艾琳娜所说——制造一些有价值的「偶遇」。"
 
     ## ============================================================
     ## 场景1.8：会前交际
@@ -1293,7 +1285,7 @@ label ch2_preparation:
 
             count_grey "你倒是站到这里来了。"
 
-            "老人的语气里有一种复杂的情绪——既是替自己儿子惋惜，也是一种长辈对你的认可。"
+            "他说这话的时候看着你，眼神和看自己儿子时不太一样。"
 
             count_grey "年轻人，明天的会议上，老夫有一个忠告给你——"
             count_grey "少说话，多听。第一次参加会议的领主，最容易犯的错就是急于表态。"
@@ -1305,7 +1297,7 @@ label ch2_preparation:
             $ hide_all_chars("count_grey_img")
             show count_grey_img at left with dissolve
             count_grey "不是指点，是老人家的唠叨。哈哈。"
-            "格雷伯爵拍拍你的肩膀，拿着买好的书离开了。简短的交流，但你感觉这位老领主对你的印象不错。"
+            "格雷伯爵拍拍你的肩膀，拿着买好的书离开了。"
 
         "暂时不去，先看看其他人":
             $ hide_all_chars()
@@ -1441,9 +1433,9 @@ label ch2_preparation:
     hide countess_stein_img with dissolve
 
     $ hide_all_chars()
-    "她没有多说什么，带着卫兵转身离开。短短几句话，却让你感受到了一种沉稳的力量。"
+    "她没有多说什么，带着卫兵转身离开了。"
 
-    "你注意到她走路时微微跛着一条腿——也许是旧伤。一个在丈夫死后独自撑起领地的女人，背后一定有不为人知的故事。"
+    "你注意到她走路时微微跛着一条腿——也许是旧伤。"
 
     "……"
 
@@ -1527,7 +1519,6 @@ label ch2_preparation:
             "老人的声音突然变得很轻，像是在自言自语。"
             storyteller "权力就像那朵百合花。你想拥有它，就必须让它长在泥土里。拔起来戴在头上——你和它一起死。"
             storyteller "真正聪明的人不会去摘花。他会去做花园的泥土。"
-            "这个看似普通的老人，说出的话却字字扎心。"
             hide storyteller_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
@@ -1536,7 +1527,7 @@ label ch2_preparation:
             $ hide_all_chars("storyteller_img")
             show storyteller_img at left with dissolve
             storyteller "不敢当。老朽只是个讲故事的人。"
-            "他笑了笑，拾起碗里的铜板，背着琴慢慢离开。碗底还留着一枚他没拿走的铜板——你弯腰捡起来，发现铜板的背面刻着一个你从未见过的符号。这个人远不像表面上那么简单。"
+            "他笑了笑，拾起碗里的铜板，背着琴慢慢离开。碗底还留着一枚他没拿走的铜板——你弯腰捡起来，发现铜板的背面刻着一个你从未见过的符号。"
             $ log_decision("第二章", "与说书人交谈，听到关于权力的寓言")
 
         "记在心里，但不去接触——也许有人在看着":
@@ -1600,7 +1591,7 @@ label ch2_preparation:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……好。如果他真的是那边的人，他会懂这句话。"
-            "你满意地点了点头。谨慎不是懦弱——在这个人人都可能是棋子的局面里，每一步都要走得滴水不漏。"
+            "你满意地点了点头。"
             $ log_decision("第二章", "谨慎行事，回城堡后秘密派艾琳娜联络说书人")
 
         "不以为意——只是一个老头在讨钱罢了":
@@ -1640,7 +1631,7 @@ label ch2_preparation:
     hide elena_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "政治和金钱，永远纠缠在一起。"
+    player "伯爵夫人搭上商盟这条线，倒是比男爵的路数高明。"
 
     hide player_char_img
     $ hide_all_chars("elena_img")
@@ -1740,7 +1731,6 @@ label ch2_council:
     baron "令尊在世时，可是这张桌上的常客。不知年轻的领主……能否撑起这把椅子？"
 
     $ hide_all_chars()
-    "议事厅内一片寂静。所有人都在看你。"
 
     "议事厅里安静得能听见墙上挂毯被穿堂风吹动的声音。所有人都在等你的回答。"
 
@@ -1856,7 +1846,7 @@ label ch2_council:
             show player_char_img at left with dissolve
             player "艾登堡的情况各位都清楚，不必多说。我更关心的是——各位对最近频繁出现的盗匪问题有什么看法？"
             $ hide_all_chars()
-            "你巧妙地把话题引向了公共安全，避免了暴露自己的弱点。"
+            "话题被你岔开了。"
             "几位领主开始讨论盗匪问题，男爵的脸色变得有些不自然——也许是因为有传言说那些盗匪和他有关。"
             "你绕开了自己的难处，可一句正经汇报都没留下。男爵盯着你看了两眼——一个连自家近况都不肯说清的人，在他眼里要么是没底气，要么是有鬼。"
 
@@ -1864,7 +1854,7 @@ label ch2_council:
 
     "先是一些例行公事——商路维护的费用分摊、边境巡逻的协调安排、以及对两起领地纠纷的仲裁。"
 
-    "格雷伯爵在纠纷仲裁时展现了惊人的法律素养。他引经据典，不偏不倚，让双方都无话可说。"
+    "格雷伯爵主导了纠纷仲裁——引经据典，不偏不倚，两边都被他说得哑口无言。"
 
     "你默默观察着每个人的反应。威尔斯子爵在无聊地转着手中的酒杯；男爵则不耐烦地敲着桌面，显然在等真正的重头戏。"
 
@@ -1873,8 +1863,6 @@ label ch2_council:
     "例行议程结束后，议事官清了清嗓子，拿出了一份新的文书。"
 
     "你注意到他的手在微微发抖——显然，他也知道接下来要宣布的内容会在这间屋子里掀起风暴。"
-
-    "讨论进入了核心议题——"
 
     "正式议程开始。第一个议题就是王后推行的新税法——"
 
@@ -1903,7 +1891,7 @@ label ch2_council:
     $ hide_all_chars()
     "果然——"
 
-    "领主们议论纷纷。这时，男爵站了起来。"
+    "男爵站了起来。"
 
     "他的椅子在石板地面上发出刺耳的摩擦声，整个议事厅都安静了下来。"
 
@@ -1936,8 +1924,6 @@ label ch2_council:
     elena "（低声）支持王后，男爵会视你为叛徒。折中方案风险最小，但也最考验你的口才。"
 
     hide elena_img with dissolve
-
-    "这是一个关键时刻。你的表态将决定你在贵族圈中的立场。"
 
     menu:
         "支持男爵，反对新税法":
@@ -1997,7 +1983,7 @@ label ch2_oppose_tax:
 
     show elena_img sad at right with dissolve
     elena "（低声）领主大人……你确定要与王后为敌吗？"
-    "你注意到艾琳娜的表情变得复杂。她的眼中有担忧，也有……别的什么。"
+    "你注意到艾琳娜的神色变了。她咬了一下嘴唇，像是把到嘴边的话又咽了回去。"
 
     elena "（低声）联名信送到王都的那天，你的名字就会出现在王后的案头。"
 
@@ -2163,7 +2149,7 @@ label ch2_compromise_tax:
     show elena_img at left with dissolve
     elena "……我会把今天的讨论详细报告给王后。相信我，她比你想象的更开明。"
 
-    "你注意到艾琳娜说这话时，语气里带着一种微妙的骄傲——像是在为王后辩护，又像是在向你保证什么。"
+    "你注意到艾琳娜说这话时下巴微微扬起——那是她每次提到王后时才有的神态。"
 
     hide elena_img with dissolve
 
@@ -2229,7 +2215,7 @@ label ch2_after_council:
         "你只知道——那个戴皮帽的，你再没见过。"
 
         if deep_marcus_truly_loyal:
-            "原来他从昨夜起就一直跟在暗处。你给过他一次原谅，他还你一辈子的看护。"
+            "原来他从昨夜起就一直跟在暗处。那晚你给了他一次原谅，他记住了。"
 
     "然后，一个穿着旅行斗篷的中年人拦住了你。"
 
@@ -2283,7 +2269,7 @@ label ch2_after_council:
     show merchant_karl_img at left with dissolve
     merchant "这要看领主大人更关心哪方面。关于领主会议的内幕，还是关于……更私人的事？"
 
-    "他的目光直直地看着你，瞳孔深处闪烁着精明的光。"
+    "他盯着你，不像在看人，倒像在估价。"
 
     menu:
         "签订贸易协议":
@@ -2428,7 +2414,7 @@ label ch2_after_council:
             $ dusk_dew_known = True
 
             $ hide_all_chars()
-            "你强压住内心的震动，不动声色。但你的脑海里已经翻起了惊涛骇浪。"
+            "你不动声色，只是呼吸慢了半拍。"
 
             "父亲不是病死的。他是被毒杀的。"
 
@@ -2553,7 +2539,7 @@ label ch2_after_council:
     hide elena_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "在想……我父亲在这张桌上坐了三十年，每一次是不是也像今天这样累。"
+    player "在想……我父亲在那张议事桌前坐了三十年，每一次是不是也像今天这样累。"
 
     hide player_char_img
     $ hide_all_chars("elena_img")
@@ -2949,7 +2935,7 @@ label ch2_ambush_prepared:
 
     "你扯下他的面罩——是一张陌生的脸，年纪不大，二十出头，面容清秀得不像杀手。"
 
-    "但他的眼神冰冷如铁——那是受过严格训练的人才会有的目光。"
+    "但他的眼神一动不动，像在看一件死物。"
 
     "你翻开他的袖子——手腕内侧有一个刺青。"
 
@@ -2962,7 +2948,7 @@ label ch2_ambush_prepared:
     hide captain_img with dissolve
 
     if father_death_known:
-        "和那封密信上的标记一模一样。暗百合——先是神秘的信件，现在是杀手。他们到底是敌是友？"
+        "和那封密信上的标记一模一样。写信的人请你赴约，眼前这些人却要你的命。"
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -2984,7 +2970,7 @@ label ch2_ambush_prepared:
     show assassin_char_img at left with dissolve
     assassin "杀了我吧。我什么都不会说。"
 
-    "他的语气平静得可怕，像是真的已经做好了赴死的准备。"
+    "他的语气平静得可怕。"
 
     menu:
         "交给雷恩审讯":
@@ -3036,7 +3022,7 @@ label ch2_ambush_prepared:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "让我猜猜。你们中有人想让我活着，有人想让我死。而你属于后者。"
-            "刺客沉默了很长时间。然后，他说了一句话。"
+            "刺客沉默了很久。"
             hide player_char_img
             $ hide_all_chars("assassin_char_img")
             show assassin_char_img at left with dissolve
@@ -3051,7 +3037,7 @@ label ch2_ambush_prepared:
             captain "他……死了。"
             $ hide_all_chars()
             "你看着那具瘫软的身体。"
-            "父亲是百合花的一片花瓣——这是什么意思？"
+            "你盯着那具尸体，脑子里全是刺客最后那句话。"
 
         "放了他，让他带话回去":
             $ change_stat("intrigue", 8)
@@ -3061,7 +3047,7 @@ label ch2_ambush_prepared:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "回去告诉你的主人，我不是猎物，是谈判对象。"
-            "刺客惊愕地看着你。显然，他没有想到这种反应。"
+            "刺客死死盯着你。"
             player "下次再来，带的不是弩箭，而是条件。"
             $ hide_all_chars()
             "你割断了他的绳子。"
@@ -3075,7 +3061,7 @@ label ch2_ambush_prepared:
             show player_char_img at left with dissolve
             player "放他走，雷恩。"
             $ hide_all_chars()
-            "刺客活动了一下麻木的手腕。他看了你很久，然后做了一件出人意料的事——"
+            "刺客活动了一下麻木的手腕。他看了你很久——"
             "他单膝跪下，对你行了一礼。"
             hide player_char_img
             $ hide_all_chars("assassin_char_img")
@@ -3100,7 +3086,7 @@ label ch2_ambush_prepared:
 
     "你看着地上那些黑衣刺客的尸体。他们的装备精良，动作配合默契——这不是一般的盗匪。"
 
-    "训练这样一支队伍需要大量的时间和金钱。暗百合的背后，一定有强大的力量支撑。"
+    "能训练出这种人的组织，不会只有今晚这几个杀手。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -3196,7 +3182,7 @@ label ch2_ambush_surprised:
 
     "如果你晚偏一寸——那支箭就射进了你的眼睛。"
 
-    "疼痛让你瞬间清醒。恐惧紧随其后——但很快被愤怒取代。"
+    "疼痛让你瞬间清醒。"
 
     $ play_sound("audio/sfx/sword_draw.ogg")
 
@@ -3260,15 +3246,11 @@ label ch2_ambush_surprised:
 
     "一瞬间，林中又恢复了死一般的寂静。只有伤者的呻吟和马匹的嘶鸣。"
 
-    "你的卫队拼死反击，最终击退了袭击者。"
-
     "地上留下了三具黑衣人的尸体。没有活口。"
 
     "你的队伍损失惨重——四人受伤，一匹马倒毙。那个中第一箭的士兵，已经没有了呼吸。"
 
     "你蹲在他身边，看着他年轻的、永远定格在惊愕中的脸。他叫什么名字？你竟然不知道。"
-
-    "一个在你的队伍里为你卖命的人，你连他的名字都不知道。"
 
     "你蹲在那里没动。靴子在血泊边缘蹭了一下，留下一道红印。"
 
@@ -3548,7 +3530,7 @@ label ch2_end:
     $ hide_all_chars()
     "你让她帮你清洗了脸上的伤口。药膏涂上去的时候，一阵刺痛让你咬紧了牙关。"
 
-    "侍女退下后，你独自坐在大厅的长椅上。壁炉里的火烧得很旺，但你觉得浑身发冷——那是战斗过后的虚脱，也是肾上腺素退去后的反噬。"
+    "侍女退下后，你独自坐在大厅的长椅上。壁炉里的火烧得很旺，但你觉得浑身发冷。"
 
     "你的手还在微微发抖。你把手插进口袋里，不想让任何人看到。"
 
@@ -3621,7 +3603,7 @@ label ch2_end:
     show player_char_img at left with dissolve
     player "我甚至不知道他叫什么名字。一个为我卖命的人，我连他是谁都不知道。"
 
-    "你的声音在最后几个字上微微发颤。你没有刻意隐藏——也许是因为太累了，也许是因为，在这个深夜的壁炉前，你终于可以不像一个领主那样伪装。"
+    "你的声音在最后几个字上微微发颤。你没有隐藏。"
 
     hide player_char_img
     $ hide_all_chars("elena_img")
@@ -3640,7 +3622,7 @@ label ch2_end:
     show elena_img at left with dissolve
     elena "我记住了队伍里每一个人的名字和来历。这是我的习惯。"
 
-    "她的眼眶微微泛红，但没有哭。她只是静静地看着你。那目光里没有同情，也没有怜悯——是共鸣。"
+    "她的眼眶微微泛红，但没有哭。她静静地看着你——不是旁观者的目光。"
 
     elena "领主大人，吕克的死不是你的错。战场上的事，谁都无法完全掌控。"
 
@@ -3681,7 +3663,7 @@ label ch2_end:
             show elena_img at left with dissolve
             elena "不用谢我。我只是……在做我想做的事。"
             $ hide_all_chars()
-            "她的手指微微收紧了你的手背。那一刻，你觉得她不像王后的密探，不像精于权术的侍从——"
+            "她的手指微微收紧了你的手背。"
             "她只是一个在深夜里握着你手的人。"
 
         "保持距离——『你不需要担心我。我是领主，这是我的责任。』":
@@ -3762,7 +3744,7 @@ label ch2_end:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "领主大人，喝完药就去休息吧。伤口需要时间愈合——身上的和心里的都是。"
+    elena "领主大人，喝完药就去休息吧。明天还有得忙。"
 
     "她最后看了你一眼，然后轻轻地走了。"
 
@@ -3781,7 +3763,7 @@ label ch2_end:
 
     "你把铜镜放下，闭上眼睛。"
 
-    "你闭上眼，但脑子停不下来。"
+    "可脑子停不下来。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -3856,7 +3838,7 @@ label ch2_end:
 
     scene bg bedroom with dissolve
 
-    "你上楼，躺在床上。"
+    "你上楼，回到卧房。"
 
     "身体因为疲惫而沉重，但脑子却异常清醒。"
 
@@ -3874,7 +3856,7 @@ label ch2_end:
         "你的折中方案赢得了广泛赞誉。但真正的考验是——王后会接受你的条件吗？"
         "如果她接受了，你就是促成领主与王室和解的功臣。如果她拒绝……你就在两边都不讨好。"
 
-    "而暗杀事件让一切变得更加复杂。"
+    "然后是今夜的伏击。"
 
     "有人想要你的命。是男爵？是暗百合？还是另有其人？"
 
@@ -3958,7 +3940,7 @@ label ch2_end:
     if not father_death_known:
         "远处，城堡的钟楼响起了午夜的钟声。十二下沉闷的回响，在寂静的夜空中久久不散。"
 
-    "回到艾登堡的那一刻，你才意识到自己有多累。"
+    "你合上眼的那一刻，才意识到自己有多累。"
 
     "窗外，一只夜枭发出了一声长鸣，悠远而苍凉。"
 
@@ -3967,7 +3949,7 @@ label ch2_end:
     if dusk_dew_known:
         "它的花瓣洁白如雪，却散发着淡淡的苦杏仁味——那是暮色之露的气息。"
     else:
-        "它的花瓣洁白如雪，却散发着一股淡淡的苦杏仁味——那味道你从未闻过，但它让你背脊发凉，仿佛本能知道那不属于花香的范畴。"
+        "它的花瓣洁白如雪，却散发着一股淡淡的苦杏仁味——那味道你从未闻过，但它让你背脊发凉，像是花不该有的气味。"
 
     "花瓣上站着七个影子。其中一个，看起来很像你的父亲。"
 
