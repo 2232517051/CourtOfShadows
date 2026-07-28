@@ -245,7 +245,7 @@ label chapter4_start:
                 $ hide_all_chars("elena_img")
                 show elena_img at left with dissolve
                 elena "最初是。但后来……"
-                "她下意识看了一眼门口，确认没有第三个人。"
+                "她下意识朝左右扫了一眼，确认附近没有人。"
                 elena "后来的事情变得复杂了。"
             hide elena_img
             $ hide_all_chars("player_char_img")
@@ -501,7 +501,6 @@ label chapter4_start:
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
             elena "……也是。我也一样。"
-            elena "有些人的命运，从出生的那一刻就被写好了。"
             "火堆中的木头塌了一块，溅起一串火星。"
             $ change_rel("rel_elena", 3)
 
@@ -521,7 +520,7 @@ label chapter4_start:
             hide player_char_img
             $ hide_all_chars("elena_img")
             show elena_img at left with dissolve
-            elena "是观察。学者有学者的力量——他们用知识改变世界，而不是用刀剑。"
+            elena "是观察。至少埋在书堆里的人，不用防着暗箭从背后来。"
             $ change_stat("intrigue", 3)
             $ change_rel("rel_elena", 5)
 
@@ -682,7 +681,7 @@ label chapter4_start:
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "明天到了王都，一切都会不一样。在那里，笑容是武器，沉默是盾牌。"
+    elena "明天到了王都，一切都会不一样。那里人人脸上挂着笑，但没有一个说真话的。"
 
     elena "记住——不要轻信任何人的善意。包括那些看起来最真诚的人。"
     hide elena_img with dissolve
@@ -751,7 +750,7 @@ label chapter4_start:
     show elena_img at left with dissolve
     elena "王后的野心和她的城墙一样大。"
 
-    "她的声音里有一种复杂的情绪——敬畏中夹杂着厌恶。"
+    "她说这话时没看你，目光落在城墙上，像在看一个老对手。"
 
     hide elena_img with dissolve
 
@@ -780,8 +779,6 @@ label chapter4_start:
     "偶尔能看到穿着华丽的贵族乘坐马车经过，车厢上镶着家族徽章。"
 
     "也有衣衫褴褛的乞丐蜷缩在墙角，用空洞的眼神看着这个繁华的世界。"
-
-    "你注意到，王都的繁华和贫穷就这样贴在一起。"
 
     menu:
         "仔细观察街道上的人群":
@@ -1057,14 +1054,14 @@ label ch4_palace:
             hide count_grey_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "伯爵，互相帮助是好事。但您也清楚——艾登堡的名声这一年也传到了王都。"
+            player "伯爵，互相帮助是好事。但您也清楚——艾登堡的名声这些日子也传到了王都。"
             player "我们之间不是一方求另一方的关系。是同盟。"
             hide player_char_img
             $ hide_all_chars("count_grey_img")
             show count_grey_img at left with dissolve
             count_grey "哈哈……果然不能拿对待新人的态度看你。"
             count_grey "好。同盟。改日设宴，我请你喝艾登堡进贡的那种红酒——你应该比我更熟悉它的味道。"
-            "格雷伯爵这一次的笑意终于到了眼底。这是声望的价值——别人不再把你当作可施舍的对象。"
+            "格雷伯爵这一次的笑意终于到了眼底。他不再拿你当需要施舍的后辈了。"
 
         "答应帮忙，换取将来的支持":
             $ change_stat("intrigue", 5)
@@ -1126,7 +1123,7 @@ label ch4_palace:
 
     "城门上方雕刻着王室的徽章——一只戴着王冠的狮子，脚下踩着蔓延的荆棘。"
 
-    "穿过第一道城门，是一片宽阔的庭院。两排银杏树整齐地排列在道路两侧，金色的叶子在微风中簌簌作响。"
+    "穿过第一道城门，是一片宽阔的庭院。两排银杏树整齐地排列在道路两侧，枝干光秃秃地伸向灰白的天空，树下铺着一层薄薄的残雪。"
 
     "第二道城门内是近卫军的营房和兵器库。你看到成排的铠甲在阳光下闪着寒光。"
 
@@ -1136,7 +1133,7 @@ label ch4_palace:
 
     "台阶两侧站着身穿金甲的近卫，手持长戟，纹丝不动，像是雕像。"
 
-    "你拾级而上，每一步都能感受到这座建筑的重量——它不仅仅是石头的重量，更是权力的重量。"
+    "你拾级而上。石阶沉重，踩上去像是整座王国压在脚底。"
 
     show elena_img at right with dissolve
 
@@ -1150,7 +1147,7 @@ label ch4_palace:
     $ hide_all_chars()
     "一位侍从引你穿过长长的走廊。"
 
-    "走廊的天花板是拱形的，上面绑着精美的壁画——描绘着王国建立以来的重大事件。"
+    "走廊的天花板是拱形的，上面绘满精美的壁画——描绘着王国建立以来的重大事件。"
 
     "开国之战、加冕典礼、条约签订、教堂落成……每一幅画都在诉说着这个王国的荣耀。"
 
@@ -1206,7 +1203,7 @@ label ch4_throne:
 
     "这是你见过的最大的室内空间。穹顶高达十丈，由十二根巨大的石柱支撑。"
 
-    "每根石柱上都缠绕着镀金的浮雕——蛇、鹰、狮子和荆棘交织在一起，象征着王权的力量。"
+    "每根石柱上都缠绕着镀金的浮雕——蛇、鹰、狮子和荆棘交织在一起，从柱脚一直攀到穹顶。"
 
     "阳光从彩色玻璃窗洒入，在地面上投下五彩斑斓的光斑。"
 
@@ -1331,7 +1328,7 @@ label ch4_throne:
             hide queen_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "臣愿领旨。陛下可问王都的人——艾登堡这一年的民望，不输王室任何一个直辖郡。这便是臣给陛下的担保。"
+            player "臣愿领旨。陛下可问王都的人——艾登堡继任以来的民望，不输王室任何一个直辖郡。这便是臣给陛下的担保。"
             hide player_char_img
             $ hide_all_chars("queen_img")
             show queen_img at left with dissolve
@@ -1508,7 +1505,7 @@ label ch4_throne:
             else:
                 queen "暗百合……那群疯子还没消停。"
                 queen "他们是一群危险的叛逆分子。你最好远离他们。"
-            "你注意到她在说「叛逆分子」这四个字时，语气格外用力。仿佛这个词承载着比字面更重的分量。"
+            "你注意到她在说「叛逆分子」这四个字时，语气格外用力。指尖在扶手上收紧了一瞬。"
             "你把暗百合递了出去。从这一刻起，她知道你愿意对她交底——这是你能给的诚意，也是递出去就收不回的一张牌。"
             $ queen_trust = True
 
@@ -1525,7 +1522,7 @@ label ch4_throne:
             queen "是吗。"
             $ hide_all_chars()
             "王后的目光停留在你脸上多了一秒。你不确定她是否相信了。"
-            "但你的表情没有任何破绽。在艾琳娜的训练下，你已经学会了如何在权力者面前戴上面具。"
+            "但你的表情纹丝不动。跟着艾琳娜这些日子，至少学会了一件事——不让脸替你说话。"
             "王后没再追问，只是把目光从你身上移开，不再多看一眼。"
             "你守住了暗百合这张牌。但在她眼里，你刚刚从一个或许能交心的人，变回了一个普通的边境领主。"
 
@@ -1757,7 +1754,7 @@ label ch4_throne:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             "你站起身，但没有走向那位女子。你环视四周，微微抱拳——"
-            player "诸位，在下边境出身，不擅这等贵人之舞。但若有人愿听『艾登堡』这一年的故事——欢迎过来一谈。"
+            player "诸位，在下边境出身，不擅这等贵人之舞。但若有人愿听『艾登堡』这些日子的故事——欢迎过来一谈。"
             $ hide_all_chars()
             "片刻安静。然后角落里传来一声轻笑——是格雷伯爵。"
             "陆续有人走过来。穿鹅黄裙的女子微微一怔，但很快也跟着围了过来。"
@@ -1891,7 +1888,7 @@ label ch4_garden:
 
     prince "我在这种宴会上长大。从七岁开始，每一顿饭都是一场战争。"
 
-    prince "你不知道哪一杯酒里有毒，哪一句话会被断章取义，哪一个微笑背后藏着匕首。"
+    prince "你猜不到哪杯酒有毒，哪句话明天会变成罪状。连对你笑的人，你都不敢信。"
 
     hide prince_img
     $ hide_all_chars("player_char_img")
@@ -1927,7 +1924,7 @@ label ch4_garden:
 
     prince "我需要盟友。"
 
-    "你警觉地打量着这个年轻的王子。他看起来真诚，但在王宫里，真诚可能是最精巧的伪装。"
+    "你警觉地打量着这个年轻的王子。他看起来真诚——但你在王宫里待了这几天，已经不太敢信这个字了。"
 
     menu:
         "问他理想中的王国是什么样子":
@@ -1944,7 +1941,7 @@ label ch4_garden:
             "他抬头望着月亮，思索了一会儿。"
             prince "一个公平的王国。贵族和百姓不应该是狼和羊的关系。"
             prince "税收应该用在修路、建学堂、办济贫院上，而不是用来修建王后的城墙和宴会厅。"
-            prince "我想让每一个孩子都有书读。让每一个农民都能吃饱饭。让正义不再只是有钱人的专利。"
+            prince "农家的孩子能认字，种地的人能吃饱。判案的时候不看谁有钱。"
             if built_school:
                 hide prince_img
                 $ hide_all_chars("player_char_img")
@@ -1955,12 +1952,12 @@ label ch4_garden:
                 show prince_img at left with dissolve
                 $ change_rel("rel_prince", 3)
                 prince "……真的？"
-                "他看你的眼神变了。不再是看一个可以争取的盟友，而是看一个已经在做他想做的事的人。"
+                "他看你的眼神变了。"
                 prince "那你比我快了一步。"
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "这是很好的愿景。但实现它需要付出巨大的代价。"
+            player "说得好听。但做起来，代价不小。"
             hide player_char_img
             $ hide_all_chars("prince_img")
             show prince_img at left with dissolve
@@ -2069,7 +2066,7 @@ label ch4_garden:
                 $ true_killer_known = True
                 $ hide_all_chars()
                 "你闭上眼睛。尽管你已经有了心理准备，但亲耳听到这个真相，依然像一把刀。"
-                "月光依旧温柔，但你的世界已经不一样了。"
+                "月光没变。变的是你。"
             else:
                 prince "你应该已经知道了——遗诏的事，还有你父亲的死因。"
                 prince "下令的人，是我的母亲。这一点我可以亲口证实。"
@@ -2157,8 +2154,8 @@ label ch4_garden:
         "保持沉默，不作评价":
             $ prince_mentor_known = True
             $ hide_all_chars()
-            "你没有说话。有些痛苦，不需要语言来回应。"
-            "两个失去过重要之人的年轻人沉默地坐着，安静得能听见远处狗吠。"
+            "你没有说话。"
+            "你们沉默地坐着。远处传来几声狗吠。"
             "喷泉的水声填满了一切空隙。"
 
     hide prince_img with dissolve
@@ -2408,8 +2405,6 @@ label ch4_garden:
 
     "但你已经知道了太多。退路已经断了。"
 
-    "唯一的选择，是继续向前。"
-
     ## ============================================================
     ## 场景4：艾琳娜的真心
     ## ============================================================
@@ -2426,7 +2421,7 @@ label ch4_elena:
 
     "觐见的事务告一段落，你感到疲惫。"
 
-    "在王都的每一刻，你都必须保持警惕，每一句话都要经过三重思考才能说出口。"
+    "在王都的每一刻，你都必须保持警惕，每一句话都得反复掂量才敢说出口。"
 
     "你在花园的长椅上坐下，想要片刻的安宁。"
 
@@ -2464,7 +2459,7 @@ label ch4_elena:
 
     "她脸上没有浓妆，皮肤被风霜磨过，颧骨边有一道浅浅的旧疤。这张脸在满厅贵妇里显得格格不入。"
 
-    "她的眼睛里没有了平时的机警和算计，取而代之的是一种你从未见过的柔软。"
+    "她的眼睛里没有了平时的机警和算计，只剩下一种你从未见过的柔软。"
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
@@ -2516,7 +2511,8 @@ label ch4_elena:
 
         elena "他把我介绍给了暗百合。他们说，王后才是真正的敌人。"
     else:
-        elena "我父亲识破我、把我引向暗百合——这些你都听我讲过了。"
+        ## 代词修正: if 分支说的是"你的父亲"(康拉德)识破并引荐, else 复述时误写成"我父亲"
+        elena "你父亲识破我、把我引向暗百合——这些你都听我讲过了。"
 
     elena "但在暗百合……我依然只是一枚棋子。只是换了一个主人。"
 
@@ -2639,7 +2635,6 @@ label ch4_elena:
                 elena "……谢谢你。"
                 $ hide_all_chars()
                 "她的声音很轻，但你听到了其中的重量。"
-                "像一个背负了太久重担的人，终于听到有人说：「你可以放下了。」"
     else:
         elena "……算了，什么都没有。"
         "她别过头去，但你看到她的睫毛上似乎有什么东西在闪烁。"
@@ -2732,8 +2727,6 @@ label ch4_elena:
 
         "你拆开信封。里面是一张薄薄的纸——王子的笔迹，工整而有力。"
 
-        "信的内容比你预想的更加震撼——"
-
         "王子列出了三个关键人物的名字：主教马修斯、宰相蒙塔古伯爵、以及一个你从未听过的名字——「影子法官」格里芬。"
 
         "据王子所说，这三个人参与了对你父亲的谋害。"
@@ -2756,7 +2749,6 @@ label ch4_elena:
                 $ change_stat("reputation", -2)
                 "你把信上的每一个字都深深刻进脑海，然后将信纸投入壁炉的火焰中。"
                 "纸张在火中卷曲、发黑、化为灰烬。"
-                "有些东西，只能存在于记忆中。"
 
     elif prince_betrayed:
         "你在房间里写了一封密信，详细记录了王子昨晚的言行。"
@@ -3137,7 +3129,7 @@ label ch4_rescue_inner:
             $ hide_all_chars()
             "你拔出剑，冲在最前面。"
             "短暂而激烈的搏斗。火把被打翻，在地上滚动，光影混乱。"
-            "你的剑法也许不如那些职业剑手，但你的决心弥补了技术的不足。"
+            "你的步法生疏，好几次被格挡得踉跄后退——但你没有退。"
             "雷恩挡下了一记劈砍，反手一剑刺穿了对方的肩膀。"
             "三分钟后，六个守卫全部倒下。没有人被杀死——你只用了剑背和剑柄。"
             hide player_char_img
@@ -3194,15 +3186,13 @@ label ch4_rescue_aftermath:
 
         "城墙上的信号灯亮了——他们已经发现了。"
 
-        "你们成功逃出了地牢，在暗夜中离开了王都。"
-
     "但你知道，从这一刻起，你和王后之间再无回旋的余地。"
 
     "你不再是一个安分守己的边境领主了。"
 
-    "你是一个叛逆者。一个通缉犯。一个站在王子身边的人。"
+    "你是一个叛逆者。一个通缉犯。"
 
-    "而王子——这个浑身是伤、却依然昂着头的年轻人——他用沙哑的声音说——"
+    "王子用沙哑的声音说——"
 
     $ hide_all_chars("prince_img")
     show prince_img at left with dissolve
@@ -3292,7 +3282,6 @@ label ch4_deny:
     hide elena_img with dissolve
 
     $ hide_all_chars()
-    "王后派人来问过话。你应对得滴水不漏。"
 
     "最终，由于缺乏证据，你被允许离开王都。"
 
@@ -3345,7 +3334,7 @@ label ch4_escape:
     scene bg forest_path with dissolve
     $ unlock_gallery("bg_forest_path")
 
-    "雷恩带着卫队在城外五里的林子里接应。看到你浑身湿透、狼狈不堪的样子，他的脸上闪过一丝心疼。"
+    "雷恩带着卫队在城外五里的林子里接应。看到你浑身湿透、狼狈不堪的样子，他把自己的斗篷甩了过来。"
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -3447,7 +3436,7 @@ label ch4_aftermath:
 
         "他看到了你。"
 
-        "他的眼里满是不可置信。然后——那不可置信变成了一种深沉的、无法言喻的悲伤。"
+        "他的眼里满是不可置信。然后——他的嘴角动了动，像是想说什么，最终什么也没说出口。"
 
         "他没有说话。只是慢慢地摇了摇头。"
 
@@ -3484,7 +3473,7 @@ label ch4_aftermath:
         hide elena_img with dissolve
 
         $ hide_all_chars()
-        "你被允许在戒严解除后离开。但这次经历让你对王都的权力游戏有了更深的认识。"
+        "你被允许在戒严解除后离开。"
 
         "你照艾琳娜说的做了——收拾行装，尽快动身。"
 
@@ -3683,9 +3672,7 @@ label ch4_end:
                 "教会不出面，意味着圣母会的名号、它能动员的虔诚领主、它替你呼吁停火的分量——这些你都用不上了。真打起来，你手里只剩自己这点人马。"
 
         $ hide_all_chars()
-        "你把皮卷筒贴身藏好。这薄薄的一卷羊皮纸——比任何武器都更具有毁灭性的力量。"
-
-        "你现在手中握着的，是能够颠覆整个王国的真相。"
+        "你把皮卷筒贴身藏好。薄薄一卷羊皮纸——比一座军械库都凶险。"
 
         $ change_rel("rel_bishop", 15)
 
@@ -3729,9 +3716,8 @@ label ch4_end:
         aldric "还有……"
         "老骑士看了一眼站在你身后的艾琳娜。"
         aldric "我注意到你和艾琳娜小姐之间的关系似乎……有了变化。"
-        aldric "老臣多嘴一句——在权力的游戏中，感情是最大的弱点。"
-        aldric "但也是最强的铠甲。"
-        aldric "看你怎么用了。"
+        aldric "老臣多嘴一句——这种局面，动了真情就是把软肋亮给对手看。"
+        aldric "小心些。"
     else:
         aldric "还有——你身边那位艾琳娜小姐。"
         aldric "她是个能干的人，但别忘了她的过去。信任要给，但要留三分。"
@@ -3756,7 +3742,7 @@ label ch4_end:
     show aldric_img at left with dissolve
     aldric "因为你去了一趟王都，见了王后，见了王子——然后活着回来了。"
 
-    aldric "在如今的局势下，活着从王都回来本身就是一种能力的证明。"
+    aldric "在如今的局势下，能活着从王都回来，本身就是本事。"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
@@ -3793,7 +3779,7 @@ label ch4_end:
     hide player_char_img
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
-    elena "那就让每一步都值得。"
+    elena "怕也得走。"
 
     hide elena_img with dissolve
 
@@ -3839,8 +3825,6 @@ label ch4_end:
     "「无论如何，保护艾登堡的百姓。」"
 
     "这是你给自己的底线。"
-
-    "不管接下来的风暴有多猛烈，这条底线不能突破。"
 
     scene black with dissolve
 

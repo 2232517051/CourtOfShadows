@@ -69,7 +69,7 @@ label ch4_prince_farewell:
     show player_char_img at left with dissolve
     player "回去？回那个差点杀了你的地方？"
 
-    "王子笑了。那个笑容里有疲惫，有苦涩，但也有一种你之前没见过的东西——决心。"
+    "王子笑了，又苦又倦，但眼神反倒比方才任何时候都清醒。"
 
     hide player_char_img with dissolve
     $ hide_all_chars("prince_img")
@@ -191,7 +191,7 @@ label ch4_prince_farewell:
             prince "她今年十四岁。如果我不回去……就没有人保护她了。"
             $ prince_sister_known = True
             $ hide_all_chars()
-            "你感到一阵刺痛。这个年轻人背负的东西比你想象的多得多。"
+            "你感到一阵刺痛。他回去不是赴死——是回去护一个十四岁的孩子。"
 
     $ prince_returned_willingly = True
 
