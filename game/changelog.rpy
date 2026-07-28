@@ -17,6 +17,40 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.20 (商店版 v3.7) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.20" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "全篇文案体检 · 商店版 v3.7" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.28" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "文案修订" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 序章至八结局、南境外章、全支线逐句审校，652 处修订" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 清除穿越时代的现代用语与不当比喻" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 删除空洞格言腔收尾与段内复读" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正季节、场景、时间线事实错误" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正人称代词错位" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 影之王结局两条告别分支各写独立台词，不再共用" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 清理一套未生效的旧数值公式代码" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.19 (商店版 v3.6) ──
             frame:
                 xfill True
