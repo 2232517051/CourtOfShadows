@@ -6220,6 +6220,7 @@ label ending_sea:
 
     "第三天下了山。空气变了。潮，带咸味。"
 
+    $ play_sound("audio/sfx/wave_lap.ogg")
     "第四天傍晚，你看到了海。"
 
     "你在山坡上站了一会儿。海很大——你没见过这么大片没有边的东西。"
@@ -6281,6 +6282,7 @@ label ending_sea:
 
         scene bg tideport_ship with dissolve
 
+        $ play_sound("audio/sfx/ship_creak.ogg")
         "渡鸦号在夜色中驶出港湾。潮汐港的灯火缩成一排光点，沉进了海平线。"
 
         "你站在船尾。风灌满斗篷。身后是来路，身前是水，一望无际。"
@@ -6302,6 +6304,7 @@ label ending_sea:
 
         "甲板在脚下轻轻摇晃。你扶住缆绳站稳。"
 
+        $ play_sound("audio/sfx/ship_creak.ogg")
         "船在入夜后起锚。你站在船尾，看港城的灯火一点点缩小，最后变成海面上一粒模糊的亮。"
 
         "风灌进斗篷。咸的，冷的。"

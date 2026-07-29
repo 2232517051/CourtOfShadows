@@ -66,5 +66,21 @@
   "heartbeat": {
     "status": "done",
     "duration": 4.0
+  },
+  "arrow_fly": {
+    "status": "done",
+    "duration": 2.5
+  },
+  "fire_burst": {
+    "status": "done",
+    "duration": 3.0
+  },
+  "wave_lap": {
+    "status": "done",
+    "duration": 8.0
+  },
+  "ship_creak": {
+    "status": "done",
+    "duration": 6.0
   }
 }
