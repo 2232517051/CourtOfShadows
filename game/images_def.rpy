@@ -36,7 +36,7 @@ image bg_castle_corridor = Transform("images/bg_council_hall.webp", size=(1280, 
 image bg_castle_gate = Transform("images/bg_castle_exterior.webp", size=(1280, 720), fit="cover")
 image bg_road_night = Transform("images/bg_forest_path.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#667799"))
 image bg_road_dawn = Transform("images/bg_forest_path.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#ffddaa"))
-image bg_study_night = Transform("images/bg_study.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#667799"))
+image bg_study_night = Transform("images/bg_study_night.webp", size=(1280, 720), fit="cover")  ## 下划线别名改指专属夜图(interludes 3处夜戏)
 image bg_bedroom = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
 image bg_ancient_ruins = Transform("images/bg_ancient_ruins.webp", size=(1280, 720), fit="cover")
 image bg_crypt = Transform("images/bg_crypt.webp", size=(1280, 720), fit="cover")
@@ -136,6 +136,13 @@ image bg royal_palace_night = ConditionSwitch(
 ## ════════════════════════════════════════════════════════════
 ## 背景图 - 黄昏变体
 ## ════════════════════════════════════════════════════════════
+
+image bg palace_garden_night = ConditionSwitch(
+    "renpy.loadable('images/bg_garden_night.webp')",
+    Transform("images/bg_garden_night.webp", size=(1280, 720), fit="cover"),
+    "True",
+    Transform("images/bg_palace_garden.webp", size=(1280, 720), fit="cover", matrixcolor=TintMatrix("#8899cc"))
+)
 
 image bg castle_exterior_dusk = ConditionSwitch(
     "renpy.loadable('images/bg_castle_exterior_dusk.webp')",

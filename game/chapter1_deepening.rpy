@@ -1329,7 +1329,7 @@ label ch1_deep_elena_lesson:
     $ play_music("audio/music/night_mystery.ogg", fadein=2.0)
     $ set_mood("intrigue")
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "夜深了。城堡里大多数人已经入睡。"
 
@@ -1814,7 +1814,7 @@ label ch1_deep_cellar:
     $ play_music("audio/music/night_mystery.ogg", fadein=2.0)
     $ set_mood("mystery")
 
-    scene bg castle_exterior with dissolve
+    scene bg castle_exterior_night with dissolve
 
     "你失眠了。"
 

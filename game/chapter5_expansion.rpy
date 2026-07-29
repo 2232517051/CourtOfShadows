@@ -923,7 +923,7 @@ label ch5_exp_last_night:
 
     $ play_music("audio/music/campfire.ogg", fadein=2.0)
 
-    scene bg castle_exterior with dissolve
+    scene bg castle_exterior_night with dissolve
     $ unlock_gallery("bg_castle_exterior")
     $ set_mood("melancholy")
     $ set_weather("clear", "normal")
@@ -1029,8 +1029,8 @@ label ch5_exp_last_night:
 
     ## --- 与Aldric的深夜回忆 ---
 
-    scene bg study with dissolve
-    $ unlock_gallery("bg_study")
+    scene bg study_night with dissolve
+    $ unlock_gallery("bg_study_night")
 
     "路过书房时，你看到里面还亮着灯。推开门，奥尔德里克正坐在桌前，面前摊着一本泛黄的册子。"
 
@@ -1094,7 +1094,7 @@ label ch5_exp_last_night:
 
     ## --- 与Elena的坦白 ---
 
-    scene bg palace_garden with dissolve
+    scene bg palace_garden_night with dissolve
     $ unlock_gallery("bg_palace_garden")
 
     "你来到花园。星星稀稀拉拉挂了几颗，花丛的轮廓在暗中起伏。"
@@ -1723,7 +1723,7 @@ label ch5_exp_skirmish:
         young_soldier "我……我没给您丢脸吧？"
 
         $ hide_all_chars("player_char_img")
-        show player_char_img at left with dissolve
+        show player_char_img sad at left with dissolve
         player "你是最勇敢的战士。"
 
         $ hide_all_chars()

@@ -440,7 +440,7 @@ label ch5_prince_betrayal:
 
     hide prince_img
     $ hide_all_chars("queen_img")
-    show queen_img at left with dissolve
+    show queen_img happy at left with dissolve
     queen "弗雷德里克，你做了正确的选择。"
 
     "王后的脸上浮现出一个微笑。不是冰冷的那种——而是一种母亲看到浪子回头的……满足。"

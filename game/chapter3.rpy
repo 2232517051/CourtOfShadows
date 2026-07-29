@@ -1033,7 +1033,7 @@ label ch3_fathers_study:
     "你的眼眶微微湿润了。"
 
     $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
+    show player_char_img sad at left with dissolve
     player "父亲……"
 
     $ hide_all_chars()
@@ -4502,7 +4502,7 @@ label ch3_confront_bishop_early:
             "主教闭上了眼睛。你看到他的眼角有泪光。"
             hide player_char_img
             $ hide_all_chars("bishop_img")
-            show bishop_img at left with dissolve
+            show bishop_img sad at left with dissolve
             bishop "老领主……是一个好人。我也这么认为。"
             bishop "费雷恩的事……我知道一些。但我一直害怕面对。"
             bishop "好吧。跟我来。有些东西我保存了很多年，一直不敢看。"
@@ -5826,7 +5826,7 @@ label ch3_chapter_crisis:
             "你站在城墙最显眼的位置，让所有人都能看到你。"
             hide captain_img
             $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
+            show player_char_img angry at left with dissolve
             player "他们以为两百人就能拿下艾登堡？告诉他们，他们错了！"
             $ hide_all_chars()
             "守军齐声吼了回去。"

@@ -509,7 +509,7 @@ label re_smuggler:
     if re_smuggler_met:
         return
 
-    scene bg marketplace with dissolve
+    scene bg market_night with dissolve
 
     "深夜。一个神秘的商人悄悄找到你的侍从，声称有一批「极为划算」的货物想要出售。"
 
@@ -897,7 +897,7 @@ label re_ghost_night_morale:
 
 label re_ghost_night_pray:
 
-    scene bg church with dissolve
+    scene bg castle_chapel with dissolve
 
     "你走进城堡的礼拜堂，点燃了祭坛前的每一根蜡烛。温暖的烛光驱散了黑暗，也驱散了一些恐惧。"
 

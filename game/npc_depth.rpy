@@ -955,7 +955,7 @@ label npc_aldric_promise:
 
     $ aldric_promise_done = True
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "又是一个深夜。灰烬塌了一块，炉子里的木头烧到一半就灭了——没人加柴。"
 

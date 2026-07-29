@@ -164,7 +164,7 @@ label prologue_childhood:
     "庭院的另一边，卫兵们在换岗。铠甲碰撞的声音清脆而有节奏，像某种你听不懂的音乐。你停下来看他们，直到一个老卫兵朝你咧嘴一笑。"
 
     $ hide_all_chars("old_guard_img")
-    show old_guard_img at left with dissolve
+    show old_guard_img happy at left with dissolve
 
     old_guard "小少爷，又跑出来啦？夫人到处找你呢。"
 
@@ -425,7 +425,7 @@ label prologue_childhood:
             "父亲没有马上回答。他看着壁炉里跳动的火焰，很久。"
 
             $ hide_all_chars("father_img")
-            show father_img at left with dissolve
+            show father_img happy at left with dissolve
             father "我信这面盾牌。信这座城堡。信你母亲。信你。"
 
             "他低头看你，罕见地露出一个笑容。"
@@ -862,7 +862,7 @@ label prologue_youth:
             "然后托马斯笑了。一种你从未在他脸上见过的笑容——温和的，安抚的，虚假的。"
 
             $ hide_all_chars("priest_thomas_img")
-            show priest_thomas_img at left with dissolve
+            show priest_thomas_img happy at left with dissolve
             priest_thomas "孩子，你听错了。我们在讨论教区的事务。「艾登」是一个教区的名字。跟你父亲没有关系。"
 
             hide priest_thomas_img with dissolve
@@ -1332,7 +1332,7 @@ label prologue_adult:
             "马库斯想了一会儿，笑了。"
 
             $ hide_all_chars("friend_marcus_img")
-            show friend_marcus_img at left with dissolve
+            show friend_marcus_img happy at left with dissolve
 
             friend_marcus "行。你比我想的聪明。"
 
@@ -1351,9 +1351,10 @@ label prologue_adult:
 
     "跟以往不同。这封信很长。"
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "你坐在窗边，就着月光读。"
+    $ play_sound("audio/sfx/letter_open.ogg")
 
     "「吾儿：」"
 

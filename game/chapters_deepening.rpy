@@ -1551,7 +1551,7 @@ label ch3_deep_cure_end:
 
 label ch4_deep_queen_weakness:
 
-    scene bg royal_palace with dissolve
+    scene bg royal_palace_night with dissolve
 
     "到达王都的第三个夜晚，你发现了一件奇怪的事。"
 
@@ -2262,7 +2262,7 @@ label ch5_deep_deserter:
     player "先别急。告诉我你的名字和经历。"
 
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show soldier_generic_img sad at left with dissolve
     "逃兵努力控制住颤抖。"
 
     deserter "我叫……我叫托马斯。从莱顿村来的。"
@@ -2493,7 +2493,7 @@ label ch5_deep_prayer:
     "主教站在圣坛前，今晚他穿上了最华丽的法袍，连袖口的金线都一丝不苟。"
 
     $ hide_all_chars("bishop_img")
-    show bishop_img at left with dissolve
+    show bishop_img sad at left with dissolve
     bishop "孩子们——今晚，我不讲经文。"
     bishop "因为明天的太阳升起时，我们中的一些人——也许再也看不到第二天的日落。"
 
@@ -2666,7 +2666,7 @@ label ch5_deep_prayer_silent:
     "但每一张面孔都平静了。恐惧还在——只是不再是脸上最大的东西了。"
 
     $ hide_all_chars("bishop_img")
-    show bishop_img at left with dissolve
+    show bishop_img sad at left with dissolve
     bishop "……"
 
     $ hide_all_chars()
@@ -2696,6 +2696,7 @@ label ch5_deep_last_letter:
 
     "所有人都睡了——或者至少在假装入睡。"
     "你独自坐在书房里，面前摊着一张空白的羊皮纸。"
+    $ play_sound("audio/sfx/letter_open.ogg")
 
     "旁边的墨水已经研好了。笔搁在砚台上，等待着。"
 
@@ -2915,7 +2916,7 @@ label ch5_deep_letter_give:
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
+    show player_char_img sad at left with dissolve
     player "奥尔德里克。看着我。"
 
     "他抬起头。满脸泪水。"
@@ -2925,7 +2926,7 @@ label ch5_deep_letter_give:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img sad at left with dissolve
     aldric "大人……您小时候摔倒了从来不哭。每次都自己爬起来。"
     aldric "老奴总是站在旁边看着，随时准备扶您——但您从来不需要。"
     aldric "老奴一直为此骄傲。但现在……老奴只希望您还是那个会哭的孩子……"

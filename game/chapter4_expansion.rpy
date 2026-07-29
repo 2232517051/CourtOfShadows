@@ -1747,7 +1747,7 @@ label ch4_exp_inv_solo:
 label ch4_exp_eve:
 
     $ play_music("audio/music/campfire.ogg", fadein=2.0)
-    scene bg royal_palace with dissolve
+    scene bg royal_palace_night with dissolve
     $ set_mood("calm")
 
     "夜已经很深了。窗外的月光被云层遮去了大半，只在地板上投下一片朦胧的银灰。"

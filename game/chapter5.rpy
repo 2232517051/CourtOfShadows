@@ -165,7 +165,7 @@ label ch5_war_clouds:
     "一个白发苍苍的老农跪在地上，身体在发抖。"
 
     $ hide_all_chars("farmer_rep_img")
-    show farmer_rep_img at left with dissolve
+    show farmer_rep_img sad at left with dissolve
     old_farmer "领主大人！求您救救我们啊！北边的村子说看到了军队的旗帜！"
 
     old_farmer "上次打仗的时候，我还是个孩子……那些兵就像蝗虫一样，抢走了一切……"
@@ -174,7 +174,7 @@ label ch5_war_clouds:
     "一个年轻的铁匠站出来，眼中带着愤怒。"
 
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show soldier_generic_img angry at left with dissolve
     young_blacksmith "领主大人，让我们拿起武器吧！我们愿意为保卫家园而战！"
 
     $ hide_all_chars()
@@ -1971,7 +1971,7 @@ label ch5_final_night:
 
     ## --- 与艾琳娜的最后对话 ---
 
-    scene bg palace_garden with dissolve
+    scene bg palace_garden_night with dissolve
     $ unlock_gallery("bg_palace_garden")
 
     "夜深了。你独自来到城堡的花园。"
@@ -2283,6 +2283,7 @@ label ch5_final_choice:
         "没有人提起这条路。但你记得，它一直在。"
 
     $ mark_important_choice()
+    $ play_sound("audio/sfx/heartbeat.ogg")
     menu:
         "以铁和血终结战争——用武力征服一切|全军出击，同时迎战两路大军 → 铁腕领主" if "iron_lord" in _top_endings:
             $ log_decision("第五章", "选择以铁血手段终结战争")
@@ -2612,6 +2613,7 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "准备五百金币，通过暗线联系那支雇佣兵的头领。"
+            $ play_sound("audio/sfx/coin_drop.ogg")
             player "告诉他——临阵倒戈，事后加倍付酬。拒绝的话，战后秋后算账。"
             hide player_char_img
             $ hide_all_chars("elena_img")
@@ -2672,6 +2674,7 @@ label ending_iron_lord:
     captain "荣幸之至。"
 
     hide captain_img with dissolve
+    $ play_sound("audio/sfx/sword_draw.ogg")
 
     "你骑上战马，拔出佩剑，对着你的士兵们高声说道——"
 
@@ -2686,6 +2689,7 @@ label ending_iron_lord:
     player "但只要我们团结一致，就没有任何力量能击败我们！"
 
     player "为了艾登堡！为了我们的家！"
+    $ play_sound("audio/sfx/crowd_murmur.ogg")
 
     crowd "「为了艾登堡！！！」"
 
@@ -2704,6 +2708,7 @@ label ending_iron_lord:
 
     menu:
         "亲自率领前锋出击":
+            $ play_sound("audio/sfx/horse_gallop.ogg")
             $ change_stat("power", 5)
             $ change_stat("reputation", 3)
             $ change_rel("rel_captain", -12)
@@ -2838,6 +2843,7 @@ label ending_iron_lord:
             $ hide_all_chars()
             "老兵们对望了一眼。这一令的意思他们都懂——头一排撞上去的人，活下来的不会多。"
             "战鼓擂响。你的军队如洪流般冲向敌阵。"
+            $ play_sound("audio/sfx/sword_draw.ogg")
             "铁与铁的碰撞，血混着泥。战场上响彻着惨叫和呐喊。"
             if iron_war_score >= 20 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 抵消战备菜单代价 (原 22); 批31: 难度修正 easy-2/hard+4
                 "你的兵甲是这几个月一刀一枪攒出来的。硬撞之下，先撕开防线的是你。"
@@ -2876,6 +2882,7 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "结成防御阵型。盾墙在前，长矛在后。让他们先来攻。"
+            $ play_sound("audio/sfx/crowd_murmur.ogg")
             $ hide_all_chars()
             "对面阵中有人哄笑起来，隔着旷野喊艾登堡的领主缩了。这话会随败兵传开——可你不在乎，先挨过这几波再说。"
             if iron_war_score >= 14 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 (原 16); 批31: 难度修正
@@ -2956,6 +2963,7 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "左翼继续坚守！右翼绕到敌军后方——给我咬住他们！"
+            $ play_sound("audio/sfx/horse_gallop.ogg")
             $ hide_all_chars()
             $ trigger_crisis("intrigue", 5,
                 "右翼要走一个大弧线绕到敌军后方。这一刻——靠的是你定的时间表真的对得上, 不晚不早。",
@@ -2978,6 +2986,7 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "随我冲！！！"
+            $ play_sound("audio/sfx/horse_gallop.ogg")
             $ hide_all_chars()
             "铁蹄声如雷。你的骑兵像一把利剑，直接刺入了敌军的心脏。"
             "敌将的护卫拼死抵抗，但骑兵已经冲出了惯性，人和马的重量碾过去，什么都拦不住。"
@@ -3936,7 +3945,7 @@ label ending_holy_guardian:
 
             hide baron_img
             $ hide_all_chars("queen_img")
-            show queen_img at right with dissolve
+            show queen_img angry at right with dissolve
             queen "（冷笑）我先收剑——这一次。"
 
             hide queen_img with dissolve
@@ -4521,7 +4530,7 @@ label ending_peoples_lord:
     "一个受伤的男人被同伴搀扶着走进来。他的左臂缠着血迹斑斑的绷带。"
 
     $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at left with dissolve
+    show soldier_generic_img sad at left with dissolve
     wounded_man "大人……我们村被烧了……我老婆还在里面……没出来……"
 
     "他说着说着就哭了。你的牙关咬紧，颊骨绷出一条线。"
@@ -5211,7 +5220,7 @@ label ending_truth:
     ## ============================================================
     if rel_queen >= 50 and prince_ally and not prince_betrayed:
         $ play_music("audio/music/sad.ogg", fadein=2.0)
-        scene bg study with dissolve
+        scene bg study_night with dissolve
 
         "那天夜里，宫廷大殿熄了灯。"
 
@@ -5429,7 +5438,7 @@ label ending_truth:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img sad at left with dissolve
     aldric "领主大人……"
 
     "老管家终于没有忍住，泪水顺着布满皱纹的脸颊流了下来。"
@@ -6193,6 +6202,7 @@ label ending_sea:
     "「印戒在信封里。它该留在艾登堡。」"
 
     "「我没脸写'对不起'。你知道的。」"
+    $ play_sound("audio/sfx/letter_open.ogg")
 
     "你把信折好，滴上封蜡。手指触到金鹰印戒——顿了一下，然后拧下来，塞进信封。"
 

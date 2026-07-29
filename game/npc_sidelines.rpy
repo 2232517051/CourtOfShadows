@@ -40,7 +40,7 @@ label npc_aldric_secret:
 
     $ aldric_personal_done = True
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "深夜，书房中只剩一盏孤灯。你正在翻阅父亲留下的旧日志，忽然听到门外传来沉重而犹豫的脚步声。"
 

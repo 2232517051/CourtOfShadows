@@ -1361,7 +1361,7 @@ label ch2_preparation:
             "子爵上下打量了你一下，脸上挂起了商人式的笑容。"
             hide player_char_img
             $ hide_all_chars("viscount_wells_img")
-            show viscount_wells_img at left with dissolve
+            show viscount_wells_img happy at left with dissolve
             if wells_met:
                 viscount_wells "哟，小艾登堡领主！没想到这么快就又见面了。"
                 viscount_wells "令尊那股倔脾气你没少学吧？每次开会都要和男爵吵个天翻地覆。"
@@ -1525,7 +1525,7 @@ label ch2_preparation:
             player "多谢指教。"
             hide player_char_img
             $ hide_all_chars("storyteller_img")
-            show storyteller_img at left with dissolve
+            show storyteller_img happy at left with dissolve
             storyteller "不敢当。老朽只是个讲故事的人。"
             "他笑了笑，拾起碗里的铜板，背着琴慢慢离开。碗底还留着一枚他没拿走的铜板——你弯腰捡起来，发现铜板的背面刻着一个你从未见过的符号。"
             $ log_decision("第二章", "与说书人交谈，听到关于权力的寓言")
@@ -1761,7 +1761,7 @@ label ch2_council:
             "议事厅内倒吸一口凉气。男爵的脸色变得铁青。"
             hide player_char_img
             $ hide_all_chars("baron_img")
-            show baron_img at left with dissolve
+            show baron_img angry at left with dissolve
             baron "你——！"
             "格雷伯爵轻轻咳了一声，出面打圆场。"
             hide baron_img
@@ -2314,7 +2314,7 @@ label ch2_after_council:
             player "成交。先把贸易的事定下来，其他的以后再说。"
             hide player_char_img
             $ hide_all_chars("merchant_karl_img")
-            show merchant_karl_img at left with dissolve
+            show merchant_karl_img happy at left with dissolve
             merchant "愉快的合作！"
             $ hide_all_chars()
             "卡尔从斗篷内层掏出一份羊皮纸契约，条款写得密密麻麻，但核心内容和他说的一致。"
@@ -2490,7 +2490,7 @@ label ch2_after_council:
                     player "成交。把契约拿来吧。"
                     hide player_char_img
                     $ hide_all_chars("merchant_karl_img")
-                    show merchant_karl_img at left with dissolve
+                    show merchant_karl_img happy at left with dissolve
                     merchant "爽快！"
                     "卡尔从斗篷内层掏出一份羊皮纸契约，你仔细审阅后签下了名字。"
                     merchant "合作愉快。这是第一个月的定金——五十金币。"
@@ -2603,8 +2603,8 @@ label ch2_after_council:
 
     "明天一早就出发回艾登堡。会议的事已经尘埃落定，没有必要在哈伦堡多待。"
 
-    scene bg study with dissolve
-    $ unlock_gallery("bg_study")
+    scene bg study_night with dissolve
+    $ unlock_gallery("bg_study_night")
 
     "入夜后，你在房间里整理今天的笔记。蜡烛的光在墙上投下摇曳的影子。"
 
@@ -3637,7 +3637,7 @@ label ch2_end:
             $ log_decision("第二章", "在受伤后向艾琳娜敞开心扉")
             hide elena_img
             $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
+            show player_char_img sad at left with dissolve
             player "艾琳娜……有时候，我真的不知道自己能不能扛住这一切。"
             player "父亲扛了三十年。他比我强太多了。而我——我只是个从学院回来的年轻人。"
             player "我甚至不知道怎么给一个为我死去的士兵的家人写信。"
@@ -3929,7 +3929,7 @@ label ch2_end:
 
         "你迅速环顾四周。月光下，远处似乎有个影子一闪而过，但当你追出门时，只剩空荡荡的林间小路。"
 
-        scene bg study with dissolve
+        scene bg study_night with dissolve
 
         "你沿原路返回城堡，心跳一路没有平复。"
 

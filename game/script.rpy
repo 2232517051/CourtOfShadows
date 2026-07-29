@@ -45,6 +45,7 @@ label chapter1_start:
     ## ============================================================
 
     $ play_music("audio/music/rain_storm.ogg", fadein=2.0)
+    $ play_sound("audio/sfx/thunder.ogg")
     scene bg study with dissolve
     $ unlock_gallery("bg_study")
 
@@ -516,7 +517,7 @@ label great_hall:
     "他的笑容温和而得体，但你注意到他的眼睛——那双眼睛精明、冷静，与那张笑脸完全不搭调。"
 
     $ hide_all_chars("bishop_img")
-    show bishop_img at left with dissolve
+    show bishop_img happy at left with dissolve
     bishop "主教马修斯，代表圣母教会，向新任领主致以祝福。"
 
     $ bishop_met = True
@@ -538,7 +539,7 @@ label great_hall:
             player "自然。父亲的虔诚，我会继承。"
             hide player_char_img
             $ hide_all_chars("bishop_img")
-            show bishop_img at left with dissolve
+            show bishop_img happy at left with dissolve
             bishop "如此甚好。圣母会保佑领主大人的。"
             "主教满意地点了点头。你注意到他的笑容终于蔓延到了眼睛里。"
 
@@ -770,7 +771,7 @@ label great_hall:
             player "略通皮毛罢了。修道院里学的是书本，比不上你们在马背上长大的人。"
             hide player_char_img
             $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
+            show captain_img happy at left with dissolve
             captain "领主大人谦虚了。"
             "雷恩举杯向你致意，脸上浮现出一丝善意的微笑。"
 
@@ -855,7 +856,7 @@ label great_hall:
     $ set_mood("mystery")
     $ set_weather("clear", "light")
     $ play_music("audio/music/night_mystery.ogg", fadein=2.0)
-    scene bg castle_exterior with dissolve
+    scene bg castle_exterior_night with dissolve
 
     "晚宴散去后，大厅里只剩下残烛和冷掉的食物。你没有回房，而是独自沿着石阶登上了城堡的南城墙。"
 
@@ -1136,8 +1137,8 @@ label first_night:
     $ play_music("audio/music/night_mystery.ogg", fadein=2.0)
     $ set_mood("mystery")
     $ set_weather("fog", "light")
-    scene bg study with dissolve
-    $ unlock_gallery("bg_study")
+    scene bg study_night with dissolve
+    $ unlock_gallery("bg_study_night")
     $ play_sound("audio/sfx/fire_crackle.ogg")
 
     $ trigger_random_event("rest")
@@ -1274,7 +1275,7 @@ label crisis_intrigue_letter_lose:
 
 label after_letter_crisis:
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
     "你继续翻阅桌上的文件。在一叠积压已久的信件中，你找到了几封有意思的东西——"
 
     "一封来自南方商人的信，提议开辟新的贸易路线，愿意预付一笔定金。"
@@ -1816,7 +1817,7 @@ label crisis_church:
 
     hide player_char_img
     $ hide_all_chars("bishop_img")
-    show bishop_img at left with dissolve
+    show bishop_img happy at left with dissolve
     bishop "领主大人信赖教会，教会自然不会坐视不理。"
 
     "主教的笑容变得更加温和了——那种商人看到大主顾上门时的温和。"
@@ -1840,7 +1841,7 @@ label crisis_church:
             player "教会的慈悲，理应得到回报。"
             hide player_char_img
             $ hide_all_chars("bishop_img")
-            show bishop_img at left with dissolve
+            show bishop_img happy at left with dissolve
             bishop "领主大人果然虔诚。放心，有教会在，无人敢犯艾登堡。"
             $ hide_all_chars()
             "主教双手合十，做出一副感恩戴德的姿态。但他的眼睛在笑——那是赢家的笑。"
@@ -2072,7 +2073,7 @@ label first_decree:
             player "安全是一切的基础。征召新兵，加固边境哨所。"
             hide aldric_img with dissolve
             $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
+            show captain_img happy at left with dissolve
             captain "遵命！领主大人英明！"
             "雷恩激动得差点拔出剑来——他及时忍住了，但脸上的兴奋遮掩不住。"
             hide captain_img

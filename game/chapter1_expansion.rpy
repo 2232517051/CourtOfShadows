@@ -1766,7 +1766,7 @@ label ch1_exp_evening_feast:
             $ log_decision("第一章扩展", "以暗含深意的方式致祝酒词")
 
             $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
+            show player_char_img happy at left with dissolve
             player "各位尊贵的来客——"
 
             "你露出一个恰到好处的微笑。"
@@ -1796,7 +1796,7 @@ label ch1_exp_evening_feast:
 
     hide viscount_wells_img with dissolve
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "宴会在午夜时分结束。客人们被安排在客房过夜。"
 

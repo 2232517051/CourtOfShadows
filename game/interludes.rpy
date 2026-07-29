@@ -58,6 +58,7 @@ label interlude_ch1_ch2:
 
     $ hide_all_chars()
     "你拆开信函。羊皮纸上的字迹工整而冰冷："
+    $ play_sound("audio/sfx/letter_open.ogg")
 
     "{i}致艾登堡领主：兹令各领地之主于霜月十五日齐聚王都，参加年度领主会议。届时将商讨边境防务、税制改革及继承法修订等议题。缺席者将被视为对王座的不敬。{/i}"
 

@@ -431,7 +431,7 @@ label chapter4_start:
 
     hide player_char_img
     $ hide_all_chars("captain_img")
-    show captain_img at left with dissolve
+    show captain_img happy at left with dissolve
     captain "老领主能在那些人中间周旋了一辈子，您肯定也行。"
 
     captain "况且——您还有我们保护您的安全，不是吗？"
@@ -1058,7 +1058,7 @@ label ch4_palace:
             player "我们之间不是一方求另一方的关系。是同盟。"
             hide player_char_img
             $ hide_all_chars("count_grey_img")
-            show count_grey_img at left with dissolve
+            show count_grey_img happy at left with dissolve
             count_grey "哈哈……果然不能拿对待新人的态度看你。"
             count_grey "好。同盟。改日设宴，我请你喝艾登堡进贡的那种红酒——你应该比我更熟悉它的味道。"
             "格雷伯爵这一次的笑意终于到了眼底。他不再拿你当需要施舍的后辈了。"
@@ -1072,7 +1072,7 @@ label ch4_palace:
             player "伯爵的提案，我愿意考虑。但相应地，也许将来艾登堡需要帮助的时候……"
             hide player_char_img
             $ hide_all_chars("count_grey_img")
-            show count_grey_img at left with dissolve
+            show count_grey_img happy at left with dissolve
             count_grey "那是自然！自然！我们互相帮助嘛！"
             "格雷伯爵满面笑容地离开了。你不确定他的承诺值多少钱，但在王都多一个朋友总比多一个敌人好。"
 
@@ -1084,7 +1084,7 @@ label ch4_palace:
             player "伯爵的好意我领了。但在听到具体提案之前，我不便表态。"
             hide player_char_img
             $ hide_all_chars("count_grey_img")
-            show count_grey_img at left with dissolve
+            show count_grey_img happy at left with dissolve
             count_grey "哈哈……年轻人就是谨慎。好，好。那我们改日再谈。"
             "格雷伯爵笑着离开了，但你注意到他眼中的笑意并没有到达眼底。"
 
@@ -1096,7 +1096,7 @@ label ch4_palace:
             player "伯爵是王都的常客。不知觐见王后时，有什么需要注意的？"
             hide player_char_img
             $ hide_all_chars("count_grey_img")
-            show count_grey_img at left with dissolve
+            show count_grey_img happy at left with dissolve
             count_grey "哦？年轻人虚心请教，好事！好事！"
             count_grey "记住一件事——王后问你什么，你都要回答。但不要回答她没有问的事。"
             count_grey "还有，千万不要直视她的眼睛超过三秒。她不喜欢被人盯着看。"
@@ -1362,7 +1362,7 @@ label ch4_throne:
                 player "臣愿效力。但容臣算一笔账——艾登堡年贡六百金币，北防开支至少八百。若陛下减免一年税赋，臣可将差额全部投入边防。对王室而言，这笔买卖比直接拨款更划算。"
                 hide player_char_img
                 $ hide_all_chars("queen_img")
-                show queen_img at left with dissolve
+                show queen_img happy at left with dissolve
                 queen "（微微一笑）你倒是把账算到我头上来了。"
                 "她沉吟片刻，手指轻叩扶手。"
                 queen "一年。减免一年。但我要看到成效。"
@@ -2043,7 +2043,7 @@ label ch4_garden:
             player "殿下说得有理。我愿意效力。"
             hide player_char_img
             $ hide_all_chars("prince_img")
-            show prince_img at left with dissolve
+            show prince_img happy at left with dissolve
             prince "太好了！我就知道你是可以信任的人。"
             $ hide_all_chars()
             "你微笑着，心里已经在盘算如何将这件事报告给王后。"
@@ -2938,6 +2938,7 @@ label ch4_rescue:
         $ change_stat("intrigue", 5)
     else:
         "你用金币买通了一个看守。代价不菲。"
+        $ play_sound("audio/sfx/coin_drop.ogg")
         $ change_stat("wealth", -15)
         elena "（低声）他只能给我们一刻钟的时间。我们必须快。"
 
@@ -3786,8 +3787,8 @@ label ch4_end:
 
     hide elena_img with dissolve
 
-    scene bg study with dissolve
-    $ unlock_gallery("bg_study")
+    scene bg study_night with dissolve
+    $ unlock_gallery("bg_study_night")
 
     "入夜。你回到书房，铺开地图。"
 
@@ -3815,7 +3816,7 @@ label ch4_end:
     "你的手指在地图上缓缓移动，最终停在了艾登堡的标记上。"
 
     $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
+    show player_char_img sad at left with dissolve
     player "父亲……你当年是不是也坐在这里，看着同样的地图，思考着同样的问题？"
 
     $ hide_all_chars()

@@ -1670,7 +1670,7 @@ label ending_southern_free:
 
     if fisher_husband_found or fisher_wife_promise:
         $ hide_all_chars("blacksmith_wife_img")
-        show blacksmith_wife_img at right with dissolve
+        show blacksmith_wife_img happy at right with dissolve
         "陈嫂抱着孩子挤到你面前，她男人就站在身后——海雀号的人，一个没少地回来了。"
         fisher_wife "贵人……我不会说漂亮话。这条命，这一家，记您一辈子。"
         "她男人没出声，只冲你深深一揖，到底红了眼。"

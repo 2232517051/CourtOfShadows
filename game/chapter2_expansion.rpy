@@ -217,7 +217,7 @@ label ch2_exp_banquet:
             "格雷伯爵笑得合不拢嘴。威尔斯子爵笑得更是前仰后合。"
 
             hide countess_hilda_img
-            show viscount_wells_img at right with dissolve
+            show viscount_wells_img happy at right with dissolve
 
             viscount_wells "这个年轻人——有趣！我喜欢！"
 

@@ -135,6 +135,7 @@ label ending_sea_epilogue:
         "第三周在一个南方小港补给。码头上有人议论北边的战事——某个边城被围了，又说没有，说是和谈。你听了一会儿，没问那个边城叫什么。"
 
         "又过了一个月。赛琳从一个中转商手里买到一封信——辗转了四个港口，信封皱得不成样子。字迹你认得。奥尔德里克的。"
+        $ play_sound("audio/sfx/letter_open.ogg")
 
         "信很短。他没有骂你。"
 
@@ -377,7 +378,7 @@ label ending_decision_pause:
 
     "门关上的瞬间， 大厅的空气重新变冷。"
 
-    scene bg castle_exterior with dissolve
+    scene bg castle_exterior_night with dissolve
 
     "你独自走上了城堡最高的那段城墙。"
 
@@ -584,7 +585,7 @@ label ending_truth_epilogue:
 
         hide player_char_img
         $ hide_all_chars("prince_img")
-        show prince_img at left with dissolve
+        show prince_img happy at left with dissolve
         prince "你总是这样……用真相解决一切问题。"
 
         "国王笑了。那是一个年轻人对老师的笑——带着敬意，也带着一丝调侃。"
@@ -702,7 +703,7 @@ label ending_truth_epilogue:
 
         hide elena_img
         $ hide_all_chars("player_char_img")
-        show player_char_img at left with dissolve
+        show player_char_img happy at left with dissolve
         player "不。我高兴的是——我永远不用担心被人蒙在鼓里。"
 
         hide player_char_img
@@ -874,6 +875,7 @@ label ending_truth_epilogue:
 
     $ hide_all_chars()
     "你从怀中取出一封信——那是多年前从父亲书房里找到的最后一封家书。"
+    $ play_sound("audio/sfx/letter_open.ogg")
     "信纸已经泛黄，字迹却依然清晰。"
 
     $ hide_all_chars("player_char_img")
@@ -886,7 +888,7 @@ label ending_truth_epilogue:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img sad at left with dissolve
     aldric "领主大人……"
 
     "你转过头，看到老管家的眼里满是泪水。"
@@ -904,7 +906,7 @@ label ending_truth_epilogue:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img happy at left with dissolve
     aldric "不过……"
 
     "老管家用袖子擦了擦眼睛，露出一个有些不好意思的笑容。"
@@ -925,7 +927,7 @@ label ending_truth_epilogue:
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
+    show player_char_img sad at left with dissolve
     player "奥尔德里克，你……"
 
     hide player_char_img
@@ -950,7 +952,7 @@ label ending_truth_epilogue:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img sad at left with dissolve
     aldric "……领主大人。"
 
     $ hide_all_chars()
@@ -962,7 +964,7 @@ label ending_truth_epilogue:
 
     ## —— 第三幕：真相的代价 ——
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "夜深了。你回到艾登堡，坐在父亲曾经的书房里。"
 
@@ -1745,7 +1747,7 @@ label ending_shadow_epilogue:
     ## —— 第二幕：爱人的质问 ——
 
     if elena_romance:
-        scene bg palace_garden with dissolve
+        scene bg palace_garden_night with dissolve
 
         "午夜。你从密室出来，走进了城堡后面的花园。"
 
@@ -1865,7 +1867,7 @@ label ending_shadow_epilogue:
         "月亮很亮。但你的影子很长。"
 
     elif marriage_route:
-        scene bg palace_garden with dissolve
+        scene bg palace_garden_night with dissolve
 
         "午夜。你从密室出来，走进花园。英格丽已经在那里，披着一件北境的厚斗篷。"
 
@@ -2306,7 +2308,7 @@ label ending_faith_epilogue:
 
     hide player_char_img
     $ hide_all_chars("bishop_img")
-    show bishop_img at left with dissolve
+    show bishop_img happy at left with dissolve
 
     "主教马修斯——已经八十多岁了。他坐在教堂角落的轮椅上，颤巍巍地鼓着掌。"
 
@@ -2854,7 +2856,7 @@ label ending_peoples_epilogue:
     "你哈哈大笑，跟着音乐的节奏笨拙地转了两圈。"
 
     $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
+    show player_char_img happy at left with dissolve
     player "等等——我不会这个步子——"
 
     $ hide_all_chars()
@@ -2932,7 +2934,7 @@ label ending_peoples_epilogue:
 
         hide player_char_img
         $ hide_all_chars("healer_img")
-        show healer_img at left with dissolve
+        show healer_img happy at left with dissolve
         healer "所以您的膝盖不是伤了，是缺乏锻炼。"
 
         $ hide_all_chars()
@@ -3005,7 +3007,7 @@ label ending_peoples_epilogue:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img sad at left with dissolve
     aldric "大人……我……"
 
     "老管家的嘴唇颤抖着。他努力说些什么，但话到嘴边就碎成了零散的音节。"
@@ -3031,7 +3033,7 @@ label ending_peoples_epilogue:
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
-    show aldric_img at left with dissolve
+    show aldric_img happy at left with dissolve
     aldric "是三十六年。不是三十年。"
 
     aldric "我四十岁那年进了卡尔大人的家门。到今年……三十六年了。"
@@ -3524,7 +3526,7 @@ label ending_father_son_epilogue:
 
     pause 1.5
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
 
     "深夜。"
 
@@ -3686,7 +3688,7 @@ label ending_father_son_epilogue:
     "\"我该走了。\""
 
     $ hide_all_chars("player_char_img")
-    show player_char_img at left with dissolve
+    show player_char_img sad at left with dissolve
     player "父亲——"
 
     $ hide_all_chars()
