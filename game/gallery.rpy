@@ -227,6 +227,11 @@ init python:
         ("audio/music/southern_scheme.ogg", "火并疑云", "码头暗处有人在拨弄棋局", "谋", "southern"),
         ("audio/music/southern_fleet.ogg", "兵临港外", "黑水之上压来的桅灯之墙", "舰", "southern"),
         ("audio/music/southern_freeport.ogg", "自由港", "守住了自由，代价也已付清", "由", "southern"),
+        ## ── 2026-07-30 资源体检新增(suno, 用户官网生成) ──
+        ("audio/music/sea_theme.ogg", "远渡", "大提琴送别，海风裹着未还的债", "帆", "chapter5"),
+        ("audio/music/ending_triumph.ogg", "破晓", "铜管吹散长夜，霜痕留在旗上", "旭", "chapter5"),
+        ("audio/music/ending_dark.ogg", "丧钟", "低弦拖过空殿，余音不散", "墟", "chapter5"),
+        ("audio/music/ending_bitter.ogg", "残局", "小调收弦处圆号独暖，赢了又如何", "茧", "chapter5"),
     ]
 
     def is_music_unlocked(req_chapter):

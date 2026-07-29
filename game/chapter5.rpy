@@ -6161,7 +6161,8 @@ label ending_fall:
 
 label ending_sea:
 
-    $ play_music("audio/music/escape.ogg", fadein=2.0)
+    ## 资源体检P1: 原借 escape(追逐曲)与诀别信场景情绪相反, 换 suno 专属主题曲
+    $ play_music("audio/music/sea_theme.ogg", fadein=2.0)
     scene black with dissolve
 
     "大厅的门在身后合上。走廊空荡荡的，只有你的脚步声和远处风刮旗杆的闷响。"
@@ -6357,6 +6358,15 @@ label game_ending:
         $ unlock_achievement("completionist")
 
     scene black with dissolve
+
+    ## 资源体检P2: 结局揭幕曲三色(suno), 此前揭幕瞬间沿用流程通用曲听感无差;
+    ## 南渡不切——sea_theme 贯穿到底
+    if ending_type in ("truth", "peoples_lord", "holy_guardian"):
+        $ play_music("audio/music/ending_triumph.ogg", fadein=1.5)
+    elif ending_type in ("borgia", "fall"):
+        $ play_music("audio/music/ending_dark.ogg", fadein=1.5)
+    elif ending_type in ("iron_lord", "shadow_king", "vassal"):
+        $ play_music("audio/music/ending_bitter.ogg", fadein=1.5)
 
     centered "{size=+12}权谋之庭{/size}"
 
