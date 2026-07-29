@@ -127,7 +127,10 @@ label ending_sea_epilogue:
 
         "你在渡鸦号上有了自己的活——修补铁件、铜扣、锚链上磨坏的环。日出洗甲板，午后修帆绳，黄昏赛琳拿出一壶走私来的酒。"
 
+        show cg_confession_corsair with dissolve
+        $ unlock_gallery("cg_confession_corsair")
         "她说你绑的绳结太紧了。你说不紧不放心。她笑了一声没接话。"
+        hide cg_confession_corsair with dissolve
 
         "第三周在一个南方小港补给。码头上有人议论北边的战事——某个边城被围了，又说没有，说是和谈。你听了一会儿，没问那个边城叫什么。"
 

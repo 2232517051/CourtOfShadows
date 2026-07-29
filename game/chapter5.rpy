@@ -6229,6 +6229,8 @@ label ending_sea:
 
     "然后继续往下走。"
 
+    scene bg south_port with dissolve
+    $ unlock_gallery("bg_south_port")
     "港城的轮廓在暮色里浮出来。灯火亮起的时候，像碎金洒在水面。"
 
     if corsair_romance:
@@ -6291,7 +6293,7 @@ label ending_sea:
         "你站在船尾。风灌满斗篷。身后是来路，身前是水，一望无际。"
     else:
         $ play_music("audio/music/southern_freeport.ogg", fadein=2.0)
-        scene bg tideport_harbor with dissolve
+        scene bg south_port with dissolve
 
         "码头上挤满了渔船和商船。到处是卸货的苦力和叫卖的小贩。没人多看你一眼。"
 
@@ -6370,6 +6372,38 @@ label game_ending:
         $ play_music("audio/music/ending_dark.ogg", fadein=1.5)
     elif ending_type in ("iron_lord", "shadow_king", "vassal"):
         $ play_music("audio/music/ending_bitter.ogg", fadein=1.5)
+
+    ## 资源体检: 结局揭幕 CG(避脸物件空景), 与揭幕配乐同拍亮相
+    if ending_type == "iron_lord":
+        scene cg_end_iron with dissolve
+        $ unlock_gallery("cg_end_iron")
+    elif ending_type == "shadow_king":
+        scene cg_end_shadow with dissolve
+        $ unlock_gallery("cg_end_shadow")
+    elif ending_type == "holy_guardian":
+        scene cg_end_holy with dissolve
+        $ unlock_gallery("cg_end_holy")
+    elif ending_type == "peoples_lord":
+        scene cg_end_people with dissolve
+        $ unlock_gallery("cg_end_people")
+    elif ending_type == "truth":
+        scene cg_end_truth with dissolve
+        $ unlock_gallery("cg_end_truth")
+    elif ending_type == "borgia":
+        scene cg_end_borgia with dissolve
+        $ unlock_gallery("cg_end_borgia")
+    elif ending_type == "vassal":
+        scene cg_end_vassal with dissolve
+        $ unlock_gallery("cg_end_vassal")
+    elif ending_type == "fall":
+        scene cg_end_fall with dissolve
+        $ unlock_gallery("cg_end_fall")
+    elif ending_type == "sea":
+        scene cg_end_sea with dissolve
+        $ unlock_gallery("cg_end_sea")
+    if ending_type:
+        pause 2.5
+        scene black with dissolve
 
     centered "{size=+12}权谋之庭{/size}"
 

@@ -36,6 +36,20 @@ init python:
         ("bg_herb_garden", "药草园"),
         ("bg_forest_grave", "林间墓地"),
         ("bg_study_night", "书房之夜"),
+        ("bg_south_port", "南港暮色"),
+        ## ── CG(避脸构图, 2026-07-30) ──
+        ("cg_unmask", "面具坠地"),
+        ("cg_confession_elena", "星下双影"),
+        ("cg_confession_corsair", "船首星辰"),
+        ("cg_end_iron", "残旗破晓"),
+        ("cg_end_shadow", "密室烛影"),
+        ("cg_end_holy", "彩窗圣典"),
+        ("cg_end_people", "麦野长桌"),
+        ("cg_end_truth", "晨光诏书"),
+        ("cg_end_borgia", "王冠鸩影"),
+        ("cg_end_vassal", "鹰旗低垂"),
+        ("cg_end_fall", "烬中金鹰"),
+        ("cg_end_sea", "船尾斗篷"),
     ]
 
     gallery_characters = [
@@ -75,7 +89,7 @@ screen cg_gallery():
 
             null height 4
 
-            grid 4 7:
+            grid 4 10:
                 spacing 12
                 xfill True
 
@@ -107,7 +121,7 @@ screen cg_gallery():
                                 text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
                             text "？??" size 12 xalign 0.5 color "#3a3040"
 
-                for i in range(4 * 7 - len(gallery_images)):
+                for i in range(4 * 10 - len(gallery_images)):
                     null
 
             null height 20

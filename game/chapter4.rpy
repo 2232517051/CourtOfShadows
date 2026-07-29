@@ -2570,8 +2570,11 @@ label ch4_elena:
                 "不是那种训练出来的微笑，也不是面具般的礼貌。"
                 "是一种从心底溢出来的、带着泪光的笑。"
                 "夕阳完全沉入了地平线。最后一缕金光消失的瞬间，她把头靠在了你的肩上。"
+                show cg_confession_elena with dissolve
+                $ unlock_gallery("cg_confession_elena")
                 "你们就这样在暮色中坐了很久。"
                 "没有说话。不需要说话。"
+                hide cg_confession_elena with dissolve
 
             "沉默片刻，把目光移向远处的天际线" if not marriage_route and corsair_romance:
                 $ log_decision("第四章", "婉拒艾琳娜——心里已经有了南境的人")

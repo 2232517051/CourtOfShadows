@@ -1236,7 +1236,10 @@ label ch3_exp_confrontation:
             player "把面罩摘下来。"
 
             $ hide_all_chars()
+            show cg_unmask with dissolve
+            $ unlock_gallery("cg_unmask")
             "然后，他慢慢摘下了铁百合的面罩。"
+            hide cg_unmask with dissolve
 
             "你看到了那张脸，心猛然一沉。"
 
@@ -1339,7 +1342,10 @@ label ch3_exp_confrontation:
             player "游戏结束了。"
 
             $ hide_all_chars()
+            show cg_unmask with dissolve
+            $ unlock_gallery("cg_unmask")
             "铁刺派首领看着你，慢慢摘下了自己的铁百合面罩。"
+            hide cg_unmask with dissolve
 
             "他的脸你不认识，但他开口了。"
 
