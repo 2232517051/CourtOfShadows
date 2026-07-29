@@ -125,7 +125,11 @@ screen cg_gallery():
                                 xsize 190
                                 ysize 107
                                 background Solid("#0f0d1a")
-                                text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
+                                $ _lk = ui_icon("ui_lock", 44)
+                                if _lk:
+                                    add Transform(_lk, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5)) xalign 0.5 yalign 0.5
+                                else:
+                                    text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
                             text "？？？" size 12 xalign 0.5 color "#3a3040"
 
                 for i in range(4 * 11 - len(gallery_images)):
@@ -174,7 +178,11 @@ screen cg_gallery():
                                 xsize 150
                                 ysize 150
                                 background Solid("#0f0d1a")
-                                text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
+                                $ _lk = ui_icon("ui_lock", 44)
+                                if _lk:
+                                    add Transform(_lk, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5)) xalign 0.5 yalign 0.5
+                                else:
+                                    text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
                             text "？？？" size 12 xalign 0.5 color "#3a3040"
 
                 for i in range(5 * 2 - len(gallery_characters)):
@@ -504,7 +512,11 @@ screen chapter_select():
                                         xsize 56
                                         ysize 56
                                         background Solid("#d4a94215")
-                                        text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#d4a942" font "msyh.ttf"
+                                        $ _ci = ui_icon(UI_CHAPTER_ICONS[idx], 44)
+                                        if _ci:
+                                            add _ci xalign 0.5 yalign 0.5
+                                        else:
+                                            text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#d4a942" font "msyh.ttf"
 
                                     vbox:
                                         spacing 3
@@ -544,7 +556,11 @@ screen chapter_select():
                                     xsize 56
                                     ysize 56
                                     background Solid("#0f0d1a")
-                                    text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#2a2040" font "msyh.ttf"
+                                    $ _cil = ui_icon(UI_CHAPTER_ICONS[idx], 44)
+                                    if _cil:
+                                        add Transform(_cil, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.55)) xalign 0.5 yalign 0.5
+                                    else:
+                                        text chapter_icons[idx] xalign 0.5 yalign 0.5 size 26 color "#2a2040" font "msyh.ttf"
 
                                 vbox:
                                     spacing 3

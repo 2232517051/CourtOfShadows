@@ -142,11 +142,23 @@ screen difficulty_select():
                             ysize 44
                             background Solid(_border_color + "40")
                             if diff_key == "easy":
-                                text "日" xalign 0.5 yalign 0.5 size 22
+                                $ _di = ui_icon(UI_DIFF_ICONS["easy"], 46)
+                        if _di:
+                            add _di xalign 0.5 yalign 0.5
+                        else:
+                            text "日" xalign 0.5 yalign 0.5 size 22
                             elif diff_key == "normal":
-                                text "剑" xalign 0.5 yalign 0.5 size 22
+                                $ _di = ui_icon(UI_DIFF_ICONS["normal"], 46)
+                        if _di:
+                            add _di xalign 0.5 yalign 0.5
+                        else:
+                            text "剑" xalign 0.5 yalign 0.5 size 22
                             else:
-                                text "难" xalign 0.5 yalign 0.5 size 22
+                                $ _di = ui_icon(UI_DIFF_ICONS["hard"], 46)
+                        if _di:
+                            add _di xalign 0.5 yalign 0.5
+                        else:
+                            text "难" xalign 0.5 yalign 0.5 size 22
 
                         vbox:
                             spacing 2

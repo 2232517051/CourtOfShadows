@@ -167,7 +167,12 @@ screen stats_screen():
                             vbox:
                                 spacing 2
                                 hbox:
-                                    text "剑 权力" size 14 color "#e0d8c8" xsize 70
+                                    $ _si_power = ui_icon(UI_STAT_ICONS["power"], 18)
+                                    if _si_power:
+                                        add _si_power yalign 0.5
+                                        text "权力" size 14 color "#e0d8c8" xsize 52
+                                    else:
+                                        text "剑 权力" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_power = get_stat_trend("power")
                                     if _trend_power == "up":
                                         text "↑" size 12 color "#2ecc71" yalign 0.5
@@ -187,7 +192,12 @@ screen stats_screen():
                             vbox:
                                 spacing 2
                                 hbox:
-                                    text "金 财富" size 14 color "#e0d8c8" xsize 70
+                                    $ _si_wealth = ui_icon(UI_STAT_ICONS["wealth"], 18)
+                                    if _si_wealth:
+                                        add _si_wealth yalign 0.5
+                                        text "财富" size 14 color "#e0d8c8" xsize 52
+                                    else:
+                                        text "金 财富" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_wealth = get_stat_trend("wealth")
                                     if _trend_wealth == "up":
                                         text "↑" size 12 color "#2ecc71" yalign 0.5
@@ -207,7 +217,12 @@ screen stats_screen():
                             vbox:
                                 spacing 2
                                 hbox:
-                                    text "十 信仰" size 14 color "#e0d8c8" xsize 70
+                                    $ _si_faith = ui_icon(UI_STAT_ICONS["faith"], 18)
+                                    if _si_faith:
+                                        add _si_faith yalign 0.5
+                                        text "信仰" size 14 color "#e0d8c8" xsize 52
+                                    else:
+                                        text "十 信仰" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_faith = get_stat_trend("faith")
                                     if _trend_faith == "up":
                                         text "↑" size 12 color "#2ecc71" yalign 0.5
@@ -227,7 +242,12 @@ screen stats_screen():
                             vbox:
                                 spacing 2
                                 hbox:
-                                    text "盾 忠诚" size 14 color "#e0d8c8" xsize 70
+                                    $ _si_loyalty = ui_icon(UI_STAT_ICONS["loyalty"], 18)
+                                    if _si_loyalty:
+                                        add _si_loyalty yalign 0.5
+                                        text "忠诚" size 14 color "#e0d8c8" xsize 52
+                                    else:
+                                        text "盾 忠诚" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_loyalty = get_stat_trend("loyalty")
                                     if _trend_loyalty == "up":
                                         text "↑" size 12 color "#2ecc71" yalign 0.5
@@ -247,7 +267,12 @@ screen stats_screen():
                             vbox:
                                 spacing 2
                                 hbox:
-                                    text "* 声望" size 14 color "#e0d8c8" xsize 70
+                                    $ _si_reputation = ui_icon(UI_STAT_ICONS["reputation"], 18)
+                                    if _si_reputation:
+                                        add _si_reputation yalign 0.5
+                                        text "声望" size 14 color "#e0d8c8" xsize 52
+                                    else:
+                                        text "* 声望" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_reputation = get_stat_trend("reputation")
                                     if _trend_reputation == "up":
                                         text "↑" size 12 color "#2ecc71" yalign 0.5
@@ -267,7 +292,12 @@ screen stats_screen():
                             vbox:
                                 spacing 2
                                 hbox:
-                                    text "刃 谋略" size 14 color "#e0d8c8" xsize 70
+                                    $ _si_intrigue = ui_icon(UI_STAT_ICONS["intrigue"], 18)
+                                    if _si_intrigue:
+                                        add _si_intrigue yalign 0.5
+                                        text "谋略" size 14 color "#e0d8c8" xsize 52
+                                    else:
+                                        text "刃 谋略" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_intrigue = get_stat_trend("intrigue")
                                     if _trend_intrigue == "up":
                                         text "↑" size 12 color "#2ecc71" yalign 0.5

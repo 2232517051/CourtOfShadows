@@ -368,3 +368,51 @@ init python:
                     renpy.image(_img_tag, Transform(_expr_path, zoom=0.45, yalign=1.0))
             else:
                 renpy.image(_img_tag, Transform(_base_path, zoom=0.45, yalign=1.0))
+
+## ════════════════════════════════════════════════════════════
+## UI 图标(2026-07-30 gpt-image 生成, 鎏金浮雕透明底)
+## 使用处一律 if renpy.loadable(...) 兜底, 缺图回退原文字
+## ════════════════════════════════════════════════════════════
+init python:
+    UI_CHAPTER_ICONS = ["ch_prologue", "ch_1", "ch_side", "ch_2", "ch_3", "ch_4", "ch_5"]
+    UI_ENDING_ICONS = {
+        "iron_lord": "end_iron_lord", "shadow_king": "end_shadow_king",
+        "holy_guardian": "end_holy_guardian", "peoples_lord": "end_peoples_lord",
+        "truth": "end_truth", "borgia": "end_borgia",
+        "vassal": "end_vassal", "fall": "end_fall", "sea": "end_sea",
+    }
+    UI_STAT_ICONS = {
+        "power": "stat_power", "wealth": "stat_wealth", "faith": "stat_faith",
+        "loyalty": "stat_loyalty", "reputation": "stat_reputation", "intrigue": "stat_intrigue",
+    }
+
+
+    ## 全量 UI 图标索引(2026-07-30 codex 生成)
+    UI_DIFF_ICONS = {"easy": "diff_easy", "normal": "diff_normal", "hard": "diff_hard"}
+    UI_SOUTH_ICONS = {"ruler": "south_port", "vassal": "south_vassal",
+                      "outwit": "south_scheme", "free": "south_flag", "fall": "south_ash"}
+    UI_MUS_ICONS = {  # 音乐室曲目 → 十类别
+        "war": "mus_war", "scheme": "mus_scheme", "sea": "mus_sea", "holy": "mus_holy",
+        "grief": "mus_grief", "feast": "mus_feast", "night": "mus_night",
+        "town": "mus_town", "nature": "mus_nature", "finale": "mus_finale",
+    }
+    UI_ACH_ICONS = {"chapter": "ach_chapter", "ending": "ach_ending", "south": "ach_south",
+                    "stat": "ach_stat", "collect": "ach_collect", "hidden": "ach_hidden"}
+    UI_MAP_ICONS = {"castle": "map_castle", "border": "map_border", "hall": "map_hall",
+                    "market": "map_market", "forest": "map_forest", "cave": "map_cave",
+                    "church": "map_church", "capital": "map_capital", "palace": "map_palace",
+                    "garden": "map_garden", "dungeon": "map_dungeon", "lily": "map_lily"}
+
+    def ui_avatar(char_id, size=56):
+        """角色头像(从立绘裁的圆角图); 缺则 None"""
+        path = "images/ui/avatar/%s.png" % char_id
+        if renpy.loadable(path):
+            return Transform(path, size=(size, size), fit="cover")
+        return None
+
+    def ui_icon(name, size=40):
+        """UI 图标; 缺图返回 None 让调用处回退文字"""
+        path = "images/ui/%s.png" % name
+        if renpy.loadable(path):
+            return Transform(path, size=(size, size), fit="contain")
+        return None

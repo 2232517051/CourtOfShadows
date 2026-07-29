@@ -960,10 +960,17 @@ screen ending_route_map():
                             ysize 52
                             background Solid(e_color + "30" if is_seen else "#1a1528")
 
-                            if is_seen:
+                            $ _ei = ui_icon(UI_ENDING_ICONS.get(e_key, ""), 44) if is_seen else None
+                            if _ei:
+                                add _ei xalign 0.5 yalign 0.5
+                            elif is_seen:
                                 text e_icon xalign 0.5 yalign 0.5 size 24
                             else:
-                                text "？" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
+                                $ _eil = ui_icon("ui_lock", 40)
+                                if _eil:
+                                    add Transform(_eil, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5)) xalign 0.5 yalign 0.5
+                                else:
+                                    text "？" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
 
                         vbox:
                             spacing 3
