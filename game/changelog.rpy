@@ -17,6 +17,56 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.21 (商店版 v3.8) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.21" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "南渡 · 商店版 v3.8" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.30" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "新内容" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第九结局「南渡」：战前抉择新增南下出海路线，仅走过南境的玩家可见" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 与赛琳定情的玩家可在潮汐港登渡鸦号，孤身南渡走另一条航线" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 南渡路线含临行留信、四天翻山、战局永不揭晓三段叙事" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 南渡结局专属主题曲「远渡」" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "视听升级" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 九个结局各配专属揭幕 CG（避脸物件空景构图）" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 九个结局各配揭幕配乐，凯旋 / 丧钟 / 残局三色分轨" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 第五章守城战补齐箭矢、火油等此前静默的战斗音效" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 新增拆信、金币、雷鸣、心跳、拔剑冲锋等 17 处音效" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "美术" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 20+ 张背景新增或归位，村庄、酒馆、药草园、墓地等不再借用错图" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 海港城与潮汐港各有独立背景；6 张库存背景接入对应场景" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 夜间场景配上真夜景背景；主菜单更换暗金定制 logo" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "角色与画廊" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 表情差分调用量翻三倍；联姻线英格丽新增三种表情" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 恋爱线亲密立绘「闪脸」修复；画廊扩容全部新图入册" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· CG 查看器裁切修复；TapTap 触屏按钮反馈音补齐" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.20 (商店版 v3.7) ──
             frame:
                 xfill True
