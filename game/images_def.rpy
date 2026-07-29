@@ -159,7 +159,8 @@ image captain_img = Transform("images/captain.png", zoom=0.45, yalign=1.0)
 image queen_img = Transform("images/queen.png", zoom=0.45, yalign=1.0)
 image merchant_karl_img = Transform("images/merchant_karl.png", zoom=0.45, yalign=1.0)
 image lily_master_img = Transform("images/lily_master.png", zoom=0.45, yalign=1.0)
-## 艾德蒙: 主角父亲康拉德的弟弟, 被家族除名, 从暗百合分裂出铁刺派 —— 与影主是两个人。
+## 艾德蒙: 主角叔辈(正文自称"你父亲的弟弟", 父名未绑定, 辈分归属待定——见
+## memory/reference_cos_brante_canon_issues.md), 被家族除名, 从暗百合分裂出铁刺派 —— 与影主是两个人。
 ## 蒙面(集会/对峙初) 与 摘面罩(揭身份后) 两张, 分别配 edmund_masked / edmund 两个 Character,
 ## 保证 Character 的 image= 与 show 的 tag 始终一致 (CLAUDE.md 立绘规范)。
 image edmund_masked_img = Transform("images/edmund_masked.png", zoom=0.45, yalign=1.0)

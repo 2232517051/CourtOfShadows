@@ -20,7 +20,9 @@ define assassin = Character("???", color="#333333", image="assassin_char")
 ## 第三章新增角色
 define lily_master = Character("暗百合首领", color="#2d1b4e", image="lily_master")
 
-## 艾德蒙 — 铁刺派首领, 主角父亲康拉德的弟弟, 被家族除名。
+## 艾德蒙 — 铁刺派首领, 被家族除名。正文自称"你父亲的弟弟"(主角的叔叔), 但父名未在
+## 正文绑定; 按现 canon 主角父亲=卡尔、祖父=康拉德, 他到底是谁的弟弟待用户拍板
+## (见 memory/reference_cos_brante_canon_issues.md 艾德蒙辈分条目)。
 ## 他和影主(lily_master, 女性)是两个人: changelog.rpy:780 记的旧修复"统一为女性首领「影」,
 ## 铁刺派艾德蒙改为分裂势力头目"当年只落到了活代码上, chapter3_expansion 的分支当时不可达,
 ## 就一直借用 lily_master 的角色和立绘 —— 名牌写着"暗百合首领"却自称艾德蒙, 旁白同时写着
