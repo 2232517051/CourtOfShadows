@@ -1728,7 +1728,7 @@ label ending_southern_free:
 label ending_southern_ruler:
 
     $ hide_all_chars()
-    play music "audio/music/southern_fleet.ogg" fadeout 1.5 fadein 2.0 if_changed
+    play music "audio/music/coronation.ogg" fadeout 1.5 fadein 2.0 if_changed  ## 资源体检P1: ruler大胜与fall惨败共用压迫战舰曲, 加冕曲更贴
     scene bg tideport_fleet with fade
 
     "傍晚。王室军队压到港外。你没有整个港口，你只有半个。"
@@ -1825,7 +1825,7 @@ label ending_southern_ruler:
 label ending_southern_fall:
 
     $ hide_all_chars()
-    play music "audio/music/southern_fleet.ogg" fadeout 1.5 fadein 2.0 if_changed
+    play music "audio/music/grief.ogg" fadeout 1.5 fadein 2.0 if_changed  ## 资源体检P1: 陨落结局改哀恸
     scene bg tideport_fleet with fade
 
     "你没等到傍晚。"

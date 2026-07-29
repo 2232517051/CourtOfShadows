@@ -31,7 +31,7 @@ default herman_moerg_tip = False           # 行脚商人赫尔曼: 莫格伯爵
 
 label ch1_deep_father_grave:
 
-    $ play_music("audio/music/sad_theme.ogg", fadein=3.0)
+    $ play_music("audio/music/sad.ogg", fadein=3.0)
     $ set_mood("melancholy")
 
     scene bg forest_path with dissolve
@@ -1570,7 +1570,7 @@ label ch1_deep_elena_lesson:
 
 label ch1_deep_old_guard:
 
-    $ play_music("audio/music/sad_theme.ogg", fadein=3.0)
+    $ play_music("audio/music/sad.ogg", fadein=3.0)
     $ set_mood("melancholy")
 
     scene bg castle_exterior with dissolve

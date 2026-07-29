@@ -3857,7 +3857,7 @@ label ch4_end:
 label ch4_rescue_partial_recovery:
     ## fail 路径: 玩家撤回艾登堡, 几日后通过暗线汇合王子
     scene black with dissolve
-    $ play_music("audio/music/dawn_after_storm.ogg", fadein=2.0)
+    $ play_music("audio/music/dawn.ogg", fadein=2.0)
 
     "三天后，艾登堡。"
 

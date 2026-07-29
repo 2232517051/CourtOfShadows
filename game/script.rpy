@@ -877,7 +877,7 @@ label great_hall:
 
     hide player_char_img with dissolve
 
-    $ play_sound("audio/sfx/footstep.ogg")
+    $ play_sound("audio/sfx/footsteps.ogg")
 
     "身后传来极轻的脚步声。你转过头——"
 

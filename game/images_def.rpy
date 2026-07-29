@@ -59,7 +59,8 @@ image bg castle_library = Transform("images/bg_study.webp", size=(1280, 720), fi
 image bg castle_interior = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
 image bg cellar = Transform("images/bg_underground.webp", size=(1280, 720), fit="cover")
 image bg town_market = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
-image bg tavern = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
+image bg tavern = Transform("images/bg_tavern.webp", size=(1280, 720), fit="cover")
+image bg mountain_pass = Transform("images/bg_mountain_pass.webp", size=(1280, 720), fit="cover")  ## 资源体检: 闲置素材接线(南渡四天山路)
 image bg player_room = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
 image bg marketplace = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
 image bg church = Transform("images/bg_church_interior.webp", size=(1280, 720), fit="cover")
@@ -319,7 +320,20 @@ init python:
             _expr_path = f"images/{_cn}_{_ex}.png"
             _base_path = f"images/{_cn}.png"
 
+            ## 资源体检P0(防闪脸): elena/corsair 亲密态下, 普通脸表情差分会把
+            ## ConditionSwitch 的亲密底图打回原形——同一场戏里脸来回切换。
+            ## 修法: 亲密态时表情差分回退到亲密底图(保脸弃表情, 完整解需生成亲密表情差分)。
+            _intimate_conds = {
+                "elena": "rel_elena >= 80 or elena_romance",
+                "corsair": "rel_corsair >= 80 or corsair_romance",
+            }
+            _intimate_path = f"images/{_cn}_intimate.png"
             if renpy.loadable(_expr_path):
-                renpy.image(_img_tag, Transform(_expr_path, zoom=0.45, yalign=1.0))
+                if _cn in _intimate_conds and renpy.loadable(_intimate_path):
+                    renpy.image(_img_tag, ConditionSwitch(
+                        _intimate_conds[_cn], Transform(_intimate_path, zoom=0.45, yalign=1.0),
+                        "True", Transform(_expr_path, zoom=0.45, yalign=1.0)))
+                else:
+                    renpy.image(_img_tag, Transform(_expr_path, zoom=0.45, yalign=1.0))
             else:
                 renpy.image(_img_tag, Transform(_base_path, zoom=0.45, yalign=1.0))

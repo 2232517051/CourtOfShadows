@@ -160,7 +160,8 @@ screen fullscreen_image(img):
     zorder 200
 
     add Solid("#000000ee")
-    add img xalign 0.5 yalign 0.5
+    ## 资源体检P0: 原尺寸绘制会裁切/溢出 1024 级立绘, 统一 contain 适配虚拟画布
+    add Transform(img, size=(1280, 720), fit="contain") xalign 0.5 yalign 0.5
 
     ## 关闭提示
     frame:

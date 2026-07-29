@@ -38,7 +38,7 @@ label ch4_exp_arrival:
 
     "贵宾馆的套房比艾登堡那间石砌卧室阔气太多，你至今没习惯。"
 
-    $ play_sound("audio/sfx/knock.ogg")
+    $ play_sound("audio/sfx/door_knock.ogg")
 
     "一阵急促的敲门声打断了你的思绪。"
 
@@ -1758,7 +1758,7 @@ label ch4_exp_eve:
 
     "一阵轻轻的敲门声打断了你的思绪。"
 
-    $ play_sound("audio/sfx/knock.ogg")
+    $ play_sound("audio/sfx/door_knock.ogg")
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -1940,7 +1940,7 @@ label ch4_exp_eve:
 
     "雷恩离开后不久，又传来一阵更轻的敲门声。"
 
-    $ play_sound("audio/sfx/knock.ogg")
+    $ play_sound("audio/sfx/door_knock.ogg")
 
     hide player_char_img
     show elena_img at right with dissolve

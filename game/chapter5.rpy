@@ -1699,6 +1699,8 @@ label ch5_counsel_all:
     ## 未写——都不进此场景。与 dark_lily_joined 互斥(那批人这一夜去见影主)。
     elif ch3_cult_leader_fate in ("captured", "replaced"):
 
+        ## 资源体检P1: 备战进行曲盖亲情戏穿帮, 切地牢滴水声
+        $ play_music("audio/music/dungeon_drip.ogg", fadein=2.0)
         scene bg dungeon with dissolve
         $ unlock_gallery("bg_dungeon")
 
@@ -6206,7 +6208,7 @@ label ending_sea:
 
     "城门在身后关上。声音很轻。你没有回头。"
 
-    scene bg forest_path with dissolve
+    scene bg mountain_pass with dissolve
 
     "接下来是四天的路。你走了没人走的山路。"
 

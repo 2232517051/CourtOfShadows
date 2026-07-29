@@ -15,6 +15,8 @@ define config.check_conflicting_properties = True
 ################################################################################
 
 define gui.hover_sound = "audio/sfx/ui_hover.ogg"
+## 资源体检P1: 触屏无 hover, TapTap 端此前近乎无 UI 反馈音; ui_click 已生成一直闲置
+define gui.activate_sound = "audio/sfx/ui_click.ogg"
 
 
 ################################################################################
