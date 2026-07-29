@@ -908,9 +908,10 @@ init python:
         "borgia":       ("毒药公爵", "成为母亲故事里那个王后 (坏结局)", "#5d2e8c", "毒"),
         "vassal":       ("附庸领主", "保住城堡，失去自主 (妥协结局)", "#8a7e60", "盾"),
         "fall":         ("艾登堡陷落", "什么都没做的代价 (失败结局)", "#3d3a36", "灰"),
+        "sea":          ("南渡", "放下一切，向南走", "#4a7c8a", "帆"),
     }
 
-    _ending_keys = ["iron_lord", "shadow_king", "holy_guardian", "peoples_lord", "truth", "borgia", "vassal", "fall"]
+    _ending_keys = ["iron_lord", "shadow_king", "holy_guardian", "peoples_lord", "truth", "borgia", "vassal", "fall", "sea"]
 
     _key_choices = [
         ("第一章", "第一个危机", ["外交", "军事", "教会", "间谍"]),
@@ -918,7 +919,7 @@ init python:
         ("第二章", "领主会议立场", ["支持王后", "反对王后", "折中方案"]),
         ("第三章", "暗百合", ["加入", "摧毁", "利用", "回绝"]),
         ("第四章", "王都阵营", ["王后", "王子", "中立"]),
-        ("第五章", "最终决战", ["铁腕", "暗影", "圣光", "人民", "真相"]),
+        ("第五章", "最终决战", ["铁腕", "暗影", "圣光", "人民", "真相", "南渡"]),
     ]
 
 screen ending_route_map():
@@ -934,7 +935,7 @@ screen ending_route_map():
                 text "结局路线图" size 26 color "#d4a942" font "msyh.ttf"
 
             $ seen = persistent.endings_seen if persistent.endings_seen else set()
-            text "已解锁 [len(seen)]/8 个结局" size 14 color "#6a5e48"
+            text "已解锁 [len(seen)]/9 个结局" size 14 color "#6a5e48"
 
             null height 10
 

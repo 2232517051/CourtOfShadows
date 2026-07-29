@@ -2225,6 +2225,9 @@ label ch5_final_choice:
         _resist_available = rel_baron >= (30 if _primary_th >= 70 else 0)
         _truth_available = true_killer_known and testament_original_obtained
         _borgia_available = (deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence)
+        # 南渡(出海)结局: 亲走过南境五线之一才知道那条路 (谓词沿用全项目既有写法)。
+        # 有意与 _fall_only 共存 —— 弃局正是败局玩家的生路。
+        _sea_available = southern_outcome not in ("none", "delegated")
         _any_main = bool(_top_endings) or _truth_available or _borgia_available
         _fall_only = not (_any_main or _vassal_available or _resist_available)
 
@@ -2271,6 +2274,11 @@ label ch5_final_choice:
     player "我已经做出了决定。"
 
     "大厅里一片寂静。"
+
+    if _sea_available:
+        "你的目光越过争论的人群，落向南面那扇窗。风从窗缝灌进来——你在南境闻过这种气味。是海。"
+
+        "没有人替这条路说话。但你自己知道它在那里。"
 
     $ mark_important_choice()
     menu:
@@ -2378,6 +2386,18 @@ label ch5_final_choice:
             "你做出了一个务实的选择。不光荣，但你的人和领地保住了。"
             call ending_decision_pause from _call_decision_pause_pragmatic
             jump ending_vassal
+
+        "放下一切，向南走——不守城，不打仗，不做领主了|翻两道山到南边海港城登船，把战争和艾登堡留在身后 → 南渡" if _sea_available:
+            $ ending_type = "sea"
+            $ log_decision("第五章", "弃局南渡, 出海离开")
+            player "……"
+
+            "你慢慢站起来。桌上的酒杯空了，你没有再倒。"
+
+            "你走出了大厅。金鹰旗帜在火光中晃了一下。身后的争论声隔着门板变得模糊，然后什么都听不见了。"
+
+            ## 不走 ending_decision_pause: 那段是死守前夜语境(城墙夜巡/摸绳结备战), 与弃局相悖
+            jump ending_sea
 
         "加入男爵联军，对抗王后暴政|与男爵会师，正面迎战王后军（风险较高）→ 铁腕领主" if _resist_available:
             $ ending_type = "iron_lord"
@@ -6137,6 +6157,177 @@ label ending_fall:
     jump game_ending
 
 
+label ending_sea:
+
+    $ play_music("audio/music/escape.ogg", fadein=2.0)
+    scene black with dissolve
+
+    "大厅的门在身后合上。走廊空荡荡的，只有你的脚步声和远处风刮旗杆的闷响。"
+
+    "你没有回卧房。拐进了书房。桌上的烛台还亮着——仆人忘了熄。"
+
+    scene bg study with dissolve
+
+    "你坐下来，铺开一张纸，拿起笔。然后停住了。"
+
+    "写什么。怎么写。"
+
+    "你盯着空白的纸面看了很久。蜡烛矮了一截。"
+
+    "落笔。写了一行，划掉。又写，又划掉。"
+
+    "第三遍。你不改了。"
+
+    "「奥尔德里克，」"
+
+    "「你看到这封信的时候，我应该已经翻过界山了。」"
+
+    "「什么都没安排好就走了。城交给你——你比我清楚怎么做。」"
+
+    "「父亲的事，我没有查出来。走了就永远查不出来了。我知道。」"
+
+    "「印戒在信封里。从今天起它不该在我手上了。」"
+
+    "「我没脸写'对不起'。但你知道我的意思。」"
+
+    "你把信折好，滴上封蜡。手指触到金鹰印戒——顿了一下，然后拧下来，塞进信封。"
+
+    "信放在书桌正中。他每天天不亮就来这里。"
+
+    "你回卧房。旧斗篷，一袋银币，匕首。没带金鹰徽章，没带领主佩剑。"
+
+    "行囊轻得像出门打猎。"
+
+    scene black with dissolve
+
+    "天还没亮。你从仆人通道走到后门。守夜的士兵靠墙打盹，你从他身边走过。他没有醒。"
+
+    "你走下石阶。台阶上有层薄霜——三月了，夜里还会结冰。"
+
+    "城门在身后关上。声音很轻。你没有回头。"
+
+    scene bg forest_path with dissolve
+
+    "接下来是四天的路。你走了没人走的山路。"
+
+    "第一天你一直在等——等骑兵追上来，等有人在身后喊你的名字。什么都没有。路上只有风和你自己的脚步。"
+
+    "第二天翻界山。山脊上回头看了一眼——艾登堡的方向只剩灰蒙蒙一片。你没有停。"
+
+    "路上遇到一队赶牲口的商人。没人认出你。你混在他们中间走了半天，听他们聊盐价和北边的传闻。"
+
+    "第三天下了山。空气变了。潮，带咸味。"
+
+    "第四天傍晚，你看到了海。"
+
+    "你在山坡上站了一会儿。海很大——你没见过这么大片没有边的东西。"
+
+    "然后继续往下走。"
+
+    "港城的轮廓在暮色里浮出来。灯火亮起的时候，像碎金洒在水面。"
+
+    if corsair_romance:
+        $ play_music("audio/music/southern_corsair.ogg", fadein=2.0)
+        scene bg tideport_harbor with dissolve
+
+        "你没有进港城。沿海岸向东——潮汐港。"
+
+        if southern_outcome == "ruler":
+            "港口的石堤你走过。上次来，你还在替这座港清点货单。"
+
+        "渡鸦号停在港湾的老位置。黑色船身在暮光中像一截浮木。"
+
+        $ hide_all_chars()
+        show corsair_img at right with dissolve
+
+        "赛琳坐在甲板的缆桩上编绳。她没抬头。"
+
+        corsair "轻装。"
+
+        "她扫了一眼你的行囊。"
+
+        corsair "跑路的。"
+
+        "不是问句。你点了点头。"
+
+        "她跳下缆桩走到你面前。"
+
+        if southern_outcome != "fall":
+            "你从口袋里掏出那截旧绳头。她教你打的第一个结——你揣了四天山路，之前揣了更久。绳头磨得起了毛。"
+
+            "赛琳接过去。手指在绳结上停了一下。"
+
+            corsair "结没散。"
+
+            "她把绳头塞回你手里，转身朝船上喊了一声。有人放下跳板。"
+        else:
+            ## 南境陨落线正典: 绳结不在了(空缺意象, 与 ending_decision_pause 的 fall 变体一致)
+            "你下意识往口袋里摸。指尖抵到布底——空的。绳头在南境之后就不在了。"
+
+            "赛琳看了一眼你空着的手。"
+
+            corsair "丢了就丢了。"
+
+            "她转身朝船上喊了一声。有人放下跳板。"
+
+        corsair "走。潮水不等人。"
+
+        if rel_corsair >= 80:
+            "你踏上甲板的时候她回过头，拇指蹭了一下你的手背——很轻，像风过绳面。"
+
+        hide corsair_img with dissolve
+
+        scene bg tideport_ship with dissolve
+
+        "渡鸦号在夜色中驶出港湾。潮汐港的灯火缩成一排光点，沉进了海平线。"
+
+        "你站在船尾。风灌满斗篷。身后是来路，身前是水，一望无际。"
+    else:
+        $ play_music("audio/music/southern_freeport.ogg", fadein=2.0)
+        scene bg tideport_harbor with dissolve
+
+        "码头上挤满了渔船和商船。到处是卸货的苦力和叫卖的小贩。没人多看你一眼。"
+
+        "你找到一条向南跑货的三桅船。船长是个红鼻子的胖子，用秤砣一样的目光上下打量你。"
+
+        "他问你会不会干活。你说会。问从哪来。你说北边。他又看了你一眼，没追问。"
+
+        "五十个银币，一个铺位，三周口粮。他数完钱，朝船上努了努嘴。"
+
+        "你踏上跳板。没有人送行。"
+
+        scene bg tideport_ship with dissolve
+
+        "甲板在脚下轻轻摇晃。你扶住缆绳站稳。"
+
+        "船在入夜后起锚。你站在船尾，看港城的灯火一点点缩小，最后变成海面上一粒模糊的亮。"
+
+        "风灌进斗篷。咸的，冷的。"
+
+        "你把手插进口袋。口袋是空的。"
+
+        "海风把斗篷吹成一面旗——什么徽章都没有的旗。"
+
+        "船头劈开黑色的海面，向南。"
+
+        "你不知道要去哪里。暂时不用知道。"
+
+    scene black with dissolve
+
+    centered "{size=+8}南渡{/size}"
+
+    centered "「史书记：是年春，艾登堡领主弃城南下，不知所终。」"
+
+    centered "「信和印戒，收到的人锁起来了，一个字没说。」"
+
+    pause 3.0
+
+    $ unlock_achievement("sea_ending")
+    $ persistent.endings_seen.add("sea")
+
+    jump game_ending
+
+
     ## ============================================================
     ## 通用结局处理
     ## ============================================================
@@ -6156,8 +6347,8 @@ label game_ending:
     if not alliance_baron and power < 60 and reputation >= 60:
         $ unlock_achievement("pacifist")
 
-    ## 检查是否达成全结局 (5 主线 + borgia + vassal + fall = 8 总数, 2026-05-27 vassal/fall 实装后修正)
-    if len(persistent.endings_seen) >= 8:
+    ## 检查是否达成全结局 (5 主线 + borgia + vassal + fall + sea = 9 总数, 2026-07-29 南渡实装后修正)
+    if len(persistent.endings_seen) >= 9:
         $ unlock_achievement("completionist")
 
     scene black with dissolve
@@ -6191,6 +6382,9 @@ label game_ending:
     elif ending_type == "fall":
         centered "{size=+8}结局：艾登堡陷落{/size}"
         "什么也没做， 是最容易的选择， 也是代价最重的。"
+    elif ending_type == "sea":
+        centered "{size=+8}结局：南渡{/size}"
+        "你走了。从此自由，也从此不会知道故事的结局。"
     else:
         centered "{size=+8}结局{/size}"
         "你的故事在这里画上了句号。"
@@ -6200,7 +6394,10 @@ label game_ending:
 
     ## 老朋友的归宿 (2026-05-17 dccdfrsx 反馈新增)
     ## 在结局个人尾声播完后给马库斯/卡尔一个 closure
-    call ending_side_characters_fate from _call_ending_side_chars
+    ## 南渡结局跳过命运表: 人已出海, 整张表以"你在艾登堡打听/收信"为叙事支点,
+    ## 留守者的交代由 ending_sea_epilogue 从船上视角给
+    if ending_type != "sea":
+        call ending_side_characters_fate from _call_ending_side_chars
 
     ## 终局结算（批31: 属性面板/图鉴计数下移至全部尾声之后, 不再打断叙事收束）
     scene black with dissolve
@@ -6209,11 +6406,11 @@ label game_ending:
     "权力： [power] | 财富： [wealth] | 信仰： [faith]"
     "忠诚： [loyalty] | 声望： [reputation] | 谋略： [intrigue]"
 
-    "已解锁 [len(persistent.endings_seen)]/8 个结局"
+    "已解锁 [len(persistent.endings_seen)]/9 个结局"
 
-    if len(persistent.endings_seen) >= 8:
-        "恭喜你解锁了所有结局！你已经完整地体验了权谋之庭的每一条道路。"
-        "八条路的代价，你都亲手付过了。"
+    if len(persistent.endings_seen) >= 9:
+        "恭喜你解锁了所有结局！你已经走完了权谋之庭的每一条道路。"
+        "九条路，九种代价。你一个没落下。"
 
     ## 激活 New Game+
     $ activate_ng_plus()
