@@ -170,9 +170,9 @@ screen stats_screen():
                                     text "剑 权力" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_power = get_stat_trend("power")
                                     if _trend_power == "up":
-                                        text "^" size 12 color "#2ecc71" yalign 0.5
+                                        text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_power == "down":
-                                        text "v" size 12 color "#e74c3c" yalign 0.5
+                                        text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[power]" size 14 color "#e74c3c" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(power, 100)
@@ -190,9 +190,9 @@ screen stats_screen():
                                     text "金 财富" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_wealth = get_stat_trend("wealth")
                                     if _trend_wealth == "up":
-                                        text "^" size 12 color "#2ecc71" yalign 0.5
+                                        text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_wealth == "down":
-                                        text "v" size 12 color "#e74c3c" yalign 0.5
+                                        text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[wealth]" size 14 color "#f39c12" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(wealth, 100)
@@ -210,9 +210,9 @@ screen stats_screen():
                                     text "十 信仰" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_faith = get_stat_trend("faith")
                                     if _trend_faith == "up":
-                                        text "^" size 12 color "#2ecc71" yalign 0.5
+                                        text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_faith == "down":
-                                        text "v" size 12 color "#e74c3c" yalign 0.5
+                                        text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[faith]" size 14 color "#9b59b6" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(faith, 100)
@@ -230,9 +230,9 @@ screen stats_screen():
                                     text "盾 忠诚" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_loyalty = get_stat_trend("loyalty")
                                     if _trend_loyalty == "up":
-                                        text "^" size 12 color "#2ecc71" yalign 0.5
+                                        text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_loyalty == "down":
-                                        text "v" size 12 color "#e74c3c" yalign 0.5
+                                        text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[loyalty]" size 14 color "#3498db" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(loyalty, 100)
@@ -250,9 +250,9 @@ screen stats_screen():
                                     text "* 声望" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_reputation = get_stat_trend("reputation")
                                     if _trend_reputation == "up":
-                                        text "^" size 12 color "#2ecc71" yalign 0.5
+                                        text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_reputation == "down":
-                                        text "v" size 12 color "#e74c3c" yalign 0.5
+                                        text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[reputation]" size 14 color "#2ecc71" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(reputation, 100)
@@ -270,9 +270,9 @@ screen stats_screen():
                                     text "刃 谋略" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_intrigue = get_stat_trend("intrigue")
                                     if _trend_intrigue == "up":
-                                        text "^" size 12 color "#2ecc71" yalign 0.5
+                                        text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_intrigue == "down":
-                                        text "v" size 12 color "#e74c3c" yalign 0.5
+                                        text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[intrigue]" size 14 color "#7f8c8d" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(intrigue, 100)

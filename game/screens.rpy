@@ -623,24 +623,10 @@ screen main_menu():
         yalign 0.92
         spacing 4
 
-        ## 主标题
-        text "权谋之庭":
-            font "msyh.ttf"
-            size 62
-            color "#d4a942"
-            outlines [(3, "#000000cc", 0, 0), (6, "#d4a94220", 0, 0)]
-            at title_breathe
-
-        ## 副标题
-        text "Court of Shadows":
-            font "msyh.ttf"
-            size 20
-            color "#8a7e60"
-            outlines [(2, "#000000cc", 0, 0)]
+        ## 主标题(资源体检: 系统字排版换定制暗金 logo, PIL 产 game/images/logo.png)
+        add Transform("images/logo.png", size=(420, 140), fit="contain"):
             xalign 1.0
-
-        ## 装饰线
-        add Solid("#d4a94240") xsize 200 ysize 1 xalign 1.0
+            at title_breathe
 
         null height 4
 
