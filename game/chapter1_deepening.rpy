@@ -48,7 +48,8 @@ label ch1_deep_father_grave:
 
     "十五分钟后，你看到了它。"
 
-    scene bg church with dissolve
+    scene bg forest_grave with dissolve
+    $ unlock_gallery("bg_forest_grave")
 
     "一块灰色的石十字架，立在一棵老橡树下。没有围栏，没有雕饰，甚至连基座都是用普通的河石砌成的。"
 
@@ -130,7 +131,7 @@ label ch1_deep_father_grave:
 
     ## ── 回到现实 ──
 
-    scene bg church with dissolve
+    scene bg forest_grave with dissolve
 
     "你睁开眼睛。泪水不知什么时候已经流了下来。"
 

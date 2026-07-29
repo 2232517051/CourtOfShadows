@@ -39,6 +39,7 @@ default deep_lily_contact_early = False # 是否提前接触暗百合
 label prologue_deep_childhood_1:
 
     scene bg castle_garden with dissolve
+    $ unlock_gallery("bg_herb_garden")
 
     "你六岁那年的春天，城堡后花园里开满了花。"
 

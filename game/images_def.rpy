@@ -54,17 +54,20 @@ image bg_underground = Transform("images/bg_underground.webp", size=(1280, 720),
 image bg bedroom = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
 image bg ancient_ruins = Transform("images/bg_ancient_ruins.webp", size=(1280, 720), fit="cover")
 image bg crypt = Transform("images/bg_crypt.webp", size=(1280, 720), fit="cover")
-image bg castle_garden = Transform("images/bg_palace_garden.webp", size=(1280, 720), fit="cover")
+image bg castle_garden = Transform("images/bg_herb_garden.webp", size=(1280, 720), fit="cover")  ## 资源体检: 药草园此前借王宫玫瑰园
 image bg castle_library = Transform("images/bg_study.webp", size=(1280, 720), fit="cover")
 image bg castle_interior = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
 image bg cellar = Transform("images/bg_underground.webp", size=(1280, 720), fit="cover")
 image bg town_market = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
 image bg tavern = Transform("images/bg_tavern.webp", size=(1280, 720), fit="cover")
 image bg mountain_pass = Transform("images/bg_mountain_pass.webp", size=(1280, 720), fit="cover")  ## 资源体检: 闲置素材接线(南渡四天山路)
+image bg raven_deck = Transform("images/bg_raven_deck.webp", size=(1280, 720), fit="cover")  ## 渡鸦号夜海甲板(海雀号底舱图归还给海雀号)
+image bg forest_grave = Transform("images/bg_forest_grave.webp", size=(1280, 720), fit="cover")  ## 父亲坟前(此前借大教堂内景)
+image bg study_night = Transform("images/bg_study_night.webp", size=(1280, 720), fit="cover")  ## 书房夜戏差分
 image bg player_room = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
 image bg marketplace = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
 image bg church = Transform("images/bg_church_interior.webp", size=(1280, 720), fit="cover")
-image bg village = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
+image bg village = Transform("images/bg_village.webp", size=(1280, 720), fit="cover")  ## 资源体检: 17处农村戏此前借集市图
 image bg castle_hall = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
 image bg castle_chapel = Transform("images/bg_castle_chapel.webp", size=(1280, 720), fit="cover")
 image bg castle_armory = Transform("images/bg_castle_armory.webp", size=(1280, 720), fit="cover")

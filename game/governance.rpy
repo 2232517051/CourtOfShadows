@@ -609,6 +609,7 @@ label gov_famine_crisis:
         return
 
     scene bg village with dissolve
+    $ unlock_gallery("bg_village")
     play music "audio/music/sad.ogg" fadeout 1.0 fadein 1.0 if_changed
 
     "入秋以来，雨水就断了。"

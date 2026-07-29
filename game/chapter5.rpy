@@ -6169,7 +6169,8 @@ label ending_sea:
 
     "你没有回卧房。拐进了书房。桌上的烛台还亮着——仆人忘了熄。"
 
-    scene bg study with dissolve
+    scene bg study_night with dissolve
+    $ unlock_gallery("bg_study_night")
 
     "你坐下来，铺开一张纸，拿起笔。然后停住了。"
 
@@ -6281,7 +6282,8 @@ label ending_sea:
 
         hide corsair_img with dissolve
 
-        scene bg tideport_ship with dissolve
+        scene bg raven_deck with dissolve
+        $ unlock_gallery("bg_raven_deck")
 
         $ play_sound("audio/sfx/ship_creak.ogg")
         "渡鸦号在夜色中驶出港湾。潮汐港的灯火缩成一排光点，沉进了海平线。"
@@ -6301,7 +6303,8 @@ label ending_sea:
 
         "你踏上跳板。没有人送行。"
 
-        scene bg tideport_ship with dissolve
+        scene bg raven_deck with dissolve
+        $ unlock_gallery("bg_raven_deck")
 
         "甲板在脚下轻轻摇晃。你扶住缆绳站稳。"
 

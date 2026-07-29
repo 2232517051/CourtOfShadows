@@ -27,9 +27,15 @@ init python:
         ("bg_tideport_harbor", "潮汐港"),
         ("bg_tideport_tavern", "断锚酒馆"),
         ("bg_tideport_beach", "潮汐港海堤"),
-        ("bg_tideport_ship", "海雀号"),
+        ("bg_tideport_ship", "海雀号货舱"),
         ("bg_tideport_office", "港务厅"),
         ("bg_tideport_fleet", "兵临港外"),
+        ## ── 2026-07-30 资源体检新增(Codex 生成) ──
+        ("bg_village", "村庄"),
+        ("bg_raven_deck", "渡鸦号"),
+        ("bg_herb_garden", "药草园"),
+        ("bg_forest_grave", "林间墓地"),
+        ("bg_study_night", "书房之夜"),
     ]
 
     gallery_characters = [
@@ -69,7 +75,7 @@ screen cg_gallery():
 
             null height 4
 
-            grid 4 5:
+            grid 4 7:
                 spacing 12
                 xfill True
 
@@ -101,7 +107,7 @@ screen cg_gallery():
                                 text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
                             text "？??" size 12 xalign 0.5 color "#3a3040"
 
-                for i in range(4 * 5 - len(gallery_images)):
+                for i in range(4 * 7 - len(gallery_images)):
                     null
 
             null height 20

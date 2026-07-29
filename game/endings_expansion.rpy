@@ -121,7 +121,7 @@ label ending_sea_epilogue:
 
     if corsair_romance:
         $ play_music("audio/music/southern_corsair.ogg", fadein=2.0)
-        scene bg tideport_ship with dissolve
+        scene bg raven_deck with dissolve
 
         "三个月后。"
 
