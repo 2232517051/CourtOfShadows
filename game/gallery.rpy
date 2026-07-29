@@ -50,6 +50,13 @@ init python:
         ("cg_end_vassal", "鹰旗低垂"),
         ("cg_end_fall", "烬中金鹰"),
         ("cg_end_sea", "船尾斗篷"),
+        ## ── 孤儿资产接线批(2026-07-30) ──
+        ("bg_castle_kitchen", "炉火深厨"),
+        ("bg_poor_district", "暮色穷巷"),
+        ("bg_healer_house", "药草小屋"),
+        ("bg_blacksmith", "锻铁炉前"),
+        ("bg_castle_treasury", "地库密藏"),
+        ("bg_interrogation_room", "石室讯堂"),
     ]
 
     gallery_characters = [
@@ -89,7 +96,7 @@ screen cg_gallery():
 
             null height 4
 
-            grid 4 10:
+            grid 4 11:
                 spacing 12
                 xfill True
 
@@ -121,7 +128,7 @@ screen cg_gallery():
                                 text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
                             text "？？？" size 12 xalign 0.5 color "#3a3040"
 
-                for i in range(4 * 10 - len(gallery_images)):
+                for i in range(4 * 11 - len(gallery_images)):
                     null
 
             null height 20

@@ -669,7 +669,8 @@ label ch4_exp_explore_cathedral:
 
 label ch4_exp_explore_slums:
 
-    scene bg royal_palace with dissolve
+    scene bg poor_district with dissolve
+    $ unlock_gallery("bg_poor_district")
     $ set_mood("dark")
 
     "西区的贫民区像是另一个世界。"

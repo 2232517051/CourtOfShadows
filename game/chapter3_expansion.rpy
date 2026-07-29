@@ -781,7 +781,10 @@ label ch3_exp_herbalist:
     show herbalist_vera_img at left with dissolve
     herbalist_vera "森林里没有秘密。何况，您的佩剑上有家族纹章。请进吧——我煮了新鲜的薄荷茶。"
 
+    scene bg healer_house with dissolve
+    $ unlock_gallery("bg_healer_house")
     "你走进小屋。屋内的每一面墙上都挂着药草，架子上摆满了装着各色粉末和液体的瓶瓶罐罐。空气中弥漫着草药特有的清苦芬芳。"
+    show herbalist_vera_img at left with dissolve
 
     $ ch3_herbalist_met = True
 
@@ -927,6 +930,7 @@ label ch3_exp_herbalist:
 
     ## ── 草药师浪漫支线（可选） ──
 
+    scene bg forest_path with dissolve
     "临走时，薇拉送你到门口。夕阳透过树叶洒下斑驳的光影，落在她琥珀色的眼睛上。"
 
     "她递给你一小束干燥的薰衣草。"

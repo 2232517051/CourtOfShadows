@@ -85,6 +85,12 @@ image bg village = Transform("images/bg_village.webp", size=(1280, 720), fit="co
 image bg castle_hall = Transform("images/bg_great_hall.webp", size=(1280, 720), fit="cover")
 image bg castle_chapel = Transform("images/bg_castle_chapel.webp", size=(1280, 720), fit="cover")
 image bg castle_armory = Transform("images/bg_castle_armory.webp", size=(1280, 720), fit="cover")
+image bg castle_kitchen = Transform("images/bg_castle_kitchen.webp", size=(1280, 720), fit="cover")  ## 孤儿资产接线批
+image bg poor_district = Transform("images/bg_poor_district.webp", size=(1280, 720), fit="cover")
+image bg healer_house = Transform("images/bg_healer_house.webp", size=(1280, 720), fit="cover")
+image bg blacksmith = Transform("images/bg_blacksmith.webp", size=(1280, 720), fit="cover")
+image bg castle_treasury = Transform("images/bg_castle_treasury.webp", size=(1280, 720), fit="cover")
+image bg interrogation_room = Transform("images/bg_interrogation_room.webp", size=(1280, 720), fit="cover")
 
 ## ── 南境游记 DLC 场景（优先用专属图 bg_tideport_*，缺失回退通用海港素材）──
 image bg tideport_harbor = Transform(safe_image("images/bg_tideport_harbor.webp", "images/bg_harbor.webp"), size=(1280, 720), fit="cover")

@@ -200,6 +200,8 @@ label ch1_exp_kitchen_night:
     "厨房里竟然还亮着灯。一缕温暖的光线从门缝中透出来，伴随着轻微的碗碟碰撞声。"
 
     "你推开门——"
+    scene bg castle_kitchen with dissolve
+    $ unlock_gallery("bg_castle_kitchen")
 
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve

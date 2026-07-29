@@ -1055,6 +1055,8 @@ label ch5_military_deploy:
             $ change_stat("reputation", 3)
             $ change_stat("intrigue", -10)
 
+            scene bg blacksmith with dissolve
+            $ unlock_gallery("bg_blacksmith")
             "铁匠铺烧了一整夜。老铁匠汉斯眼眶通红，手腕的肌腱凸起。"
 
             "你递过一壶凉水。他接过去，没说谢，一口气喝完。"

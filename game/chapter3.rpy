@@ -4568,8 +4568,8 @@ label ch3_bishop_take_to_vault:
 
     hide bishop_img with dissolve
 
-    scene bg underground with dissolve
-    $ unlock_gallery("bg_underground")
+    scene bg castle_treasury with dissolve
+    $ unlock_gallery("bg_castle_treasury")
 
     $ hide_all_chars("bishop_img")
     show bishop_img at left with dissolve

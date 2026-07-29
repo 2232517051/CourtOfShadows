@@ -1239,7 +1239,8 @@ label npc_baron_honor:
 
     $ baron_honor_known = True
 
-    scene bg dungeon with dissolve
+    scene bg interrogation_room with dissolve
+    $ unlock_gallery("bg_interrogation_room")
 
     "地牢中弥漫着潮湿和铁锈的气味。你来审讯一个在边境冲突中被俘的男爵士兵。"
 
