@@ -2278,7 +2278,7 @@ label ch5_final_choice:
     if _sea_available:
         "你的目光越过争论的人群，落向南面那扇窗。风从窗缝灌进来——你在南境闻过这种气味。是海。"
 
-        "没有人替这条路说话。但你自己知道它在那里。"
+        "没有人提起这条路。但你记得，它一直在。"
 
     $ mark_important_choice()
     menu:
