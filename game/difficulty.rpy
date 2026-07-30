@@ -155,7 +155,12 @@ screen difficulty_select():
                             text _dc["desc"] size 12 color "#8a7e60"
 
                         if _selected:
-                            text ">" xalign 1.0 yalign 0.5 size 20 color "#d4a942"
+                            ## 资源体检: 半角 > 换成播放箭头
+                            $ _sel = ui_icon("ui_play", 18)
+                            if _sel:
+                                add Transform(_sel, matrixcolor=TintMatrix("#d4a942")) xalign 1.0 yalign 0.5
+                            else:
+                                text ">" xalign 1.0 yalign 0.5 size 20 color "#d4a942"
 
             null height 12
             add Solid("#d4a94220") xsize 400 ysize 1 xalign 0.5

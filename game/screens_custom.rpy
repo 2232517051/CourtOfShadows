@@ -132,13 +132,17 @@ screen stats_screen():
                         text "[player_name]" size 24 color "#d4a942" font "msyh.ttf" outlines [(2, "#000000cc", 0, 0)]
                         text "艾登堡领主" size 14 color "#8a7e60"
 
-                    textbutton "X":
+                    ## 资源体检: 半角 X 换成关闭图标
+                    $ _xk = ui_icon("ui_close", 20)
+                    button:
                         xalign 1.0
-                        yalign 0.0
-                        text_size 20
-                        text_color "#6a5e48"
-                        text_hover_color "#d4a942"
+                        yalign 0.5
+                        background None
                         action Hide("stats_screen")
+                        if _xk:
+                            add Transform(_xk, matrixcolor=TintMatrix("#8a7e60"))
+                        else:
+                            text "X" size 20 color "#6a5e48"
 
             ## 分隔线
             add Solid("#d4a94230") xsize 1.0 ysize 2

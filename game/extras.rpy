@@ -135,7 +135,12 @@ screen character_codex():
                                 xsize 56
                                 ysize 56
                                 background Solid("#0f0d1a")
-                                text "？" xalign 0.5 yalign 0.5 size 26 color "#2a2040"
+                                ## 资源体检: 未解锁位由挂锁图标替代问号
+                                $ _clk = ui_icon("ui_lock", 26)
+                                if _clk:
+                                    add Transform(_clk, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.45)) xalign 0.5 yalign 0.5
+                                else:
+                                    text "？" xalign 0.5 yalign 0.5 size 26 color "#2a2040"
 
                             vbox:
                                 spacing 3
@@ -388,7 +393,14 @@ screen world_map():
                     add Solid("#d4a94208") xpos 0 ypos i xsize 820 ysize 1
 
             ## 地图标题
-            text "* 王国全境图" xpos 10 ypos 10 size 16 color "#d4a942aa" font "msyh.ttf" outlines [(2, "#0a0812", 0, 0)]
+            hbox:
+                xpos 10
+                ypos 10
+                spacing 6
+                $ _hd4 = ui_icon("ico_diamond", 14)
+                if _hd4:
+                    add _hd4 yalign 0.5
+                text "王国全境图" size 16 color "#d4a942aa" font "msyh.ttf" yalign 0.5 outlines [(2, "#0a0812", 0, 0)]
 
             ## 地点标记
             for loc_id, loc_name, loc_desc, lx, ly, loc_req, loc_icon in map_locations:
@@ -653,7 +665,12 @@ screen collectibles_screen():
                                         xsize 40
                                         ysize 40
                                         background Solid("#0f0d1a")
-                                        text "？" xalign 0.5 yalign 0.5 size 18 color "#2a2040"
+                                        ## 资源体检: 同上
+                                        $ _zlk = ui_icon("ui_lock", 20)
+                                        if _zlk:
+                                            add Transform(_zlk, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.45)) xalign 0.5 yalign 0.5
+                                        else:
+                                            text "？" xalign 0.5 yalign 0.5 size 18 color "#2a2040"
                                     vbox:
                                         text "？？？" size 16 color "#3a3040" font "msyh.ttf"
                                         text collectible_hints.get(_cid, "在游戏中探索发现") size 12 color "#2a2030"
@@ -898,7 +915,13 @@ screen chapter_summary(ch_name="第一章", ch_title="新主登基"):
             null height 6
 
             ## 属性变化对比
-            text "* 属性变化" size 18 color "#d4a942" font "msyh.ttf" xalign 0.5
+            hbox:
+                spacing 6
+                xalign 0.5
+                $ _hd5 = ui_icon("ico_diamond", 16)
+                if _hd5:
+                    add _hd5 yalign 0.5
+                text "属性变化" size 18 color "#d4a942" font "msyh.ttf" yalign 0.5
 
             null height 4
 

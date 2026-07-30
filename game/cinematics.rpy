@@ -137,12 +137,20 @@ screen cin_overlay():
     # 羊皮纸纹理
     add "gui/overlay/parchment_overlay.png" alpha 0.4
     # 跳过按钮
-    textbutton "跳过 ▶▶":
+    button:
         xalign 0.97 yalign 0.02
-        text_size 18
-        text_color "#8a7a5a"
-        text_hover_color "#c9a84c"
+        background None
         action Function(skip_cinematic)
+        hbox:
+            spacing 6
+            yalign 0.5
+            text "跳过" size 18 color "#8a7a5a" yalign 0.5
+            ## 资源体检: 原为蓝色系统 emoji ▶▶, 与暗金 UI 脱节
+            $ _ck = ui_icon("ctl_skip_arrow", 20)
+            if _ck:
+                add Transform(_ck, matrixcolor=TintMatrix("#8a7a5a")) yalign 0.5
+            else:
+                text "▶▶" size 18 color "#8a7a5a" yalign 0.5
 
 # 中央叙事文字
 screen cin_text(line1, line2=""):

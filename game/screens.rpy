@@ -729,7 +729,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     use navigation
 
-    textbutton _("<< 返回"):
+    textbutton _("« 返回"):
         style "return_button"
         action Return()
         text_outlines [(2, "#000000cc", 0, 0)]
@@ -902,7 +902,7 @@ screen file_slots(title):
                     xalign 0.5
                     spacing gui.page_spacing
 
-                    textbutton _("<<") action FilePagePrevious()
+                    textbutton _("«") action FilePagePrevious()
                     key "save_page_prev" action FilePagePrevious()
 
                     if config.has_autosave:
@@ -914,7 +914,7 @@ screen file_slots(title):
                     for page in range(1, 10):
                         textbutton "[page]" action FilePage(page)
 
-                    textbutton _(">") action FilePageNext()
+                    textbutton _("»") action FilePageNext()
                     key "save_page_next" action FilePageNext()
 
                 if config.has_sync:

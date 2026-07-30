@@ -1817,7 +1817,12 @@ screen random_event_result_screen(event_title="", narration="", effects=None, is
                         if effects:
                             add Solid("#d4a94220") xsize 1.0 ysize 1
 
-                            text "* 影响" size 16 color "#d4a942" font "msyh.ttf"
+                            hbox:
+                                spacing 6
+                                $ _hd6 = ui_icon("ico_diamond", 14)
+                                if _hd6:
+                                    add _hd6 yalign 0.5
+                                text "影响" size 16 color "#d4a942" font "msyh.ttf" yalign 0.5
 
                             for _eff in effects:
                                 if _eff[0] == "stat":

@@ -580,12 +580,19 @@ screen tutorial_overlay():
             xalign 0.5
 
             ## 标题
-            text "* 操作指南":
-                size 30
-                color "#d4a942"
-                font "msyh.ttf"
+            ## 资源体检: 半角 * 换成菱形图标
+            hbox:
+                spacing 8
                 xalign 0.5
-                outlines [(2, "#000000cc", 0, 0)]
+                $ _hd1 = ui_icon("ico_diamond", 22)
+                if _hd1:
+                    add _hd1 yalign 0.5
+                text "操作指南":
+                    size 30
+                    color "#d4a942"
+                    font "msyh.ttf"
+                    yalign 0.5
+                    outlines [(2, "#000000cc", 0, 0)]
 
             add Solid("#d4a94230") xsize 400 ysize 1 xalign 0.5
 
@@ -691,11 +698,18 @@ screen rating_popup():
             spacing 14
             xalign 0.5
 
-            text "* 感谢游玩！":
-                size 28
-                color "#d4a942"
-                font "msyh.ttf"
+            ## 资源体检: 同上
+            hbox:
+                spacing 8
                 xalign 0.5
+                $ _hd2 = ui_icon("ico_diamond", 20)
+                if _hd2:
+                    add _hd2 yalign 0.5
+                text "感谢游玩！":
+                    size 28
+                    color "#d4a942"
+                    font "msyh.ttf"
+                    yalign 0.5
 
             add Solid("#d4a94230") xsize 300 ysize 1 xalign 0.5
 
@@ -1016,7 +1030,7 @@ screen ending_route_map():
                                 text e_name size 20 color "#e0d8c8" font "msyh.ttf" bold True
                                 text e_desc size 14 color "#8a7e60"
                             else:
-                                text "？?? — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
+                                text "？？？ — 未解锁" size 20 color "#3a3040" font "msyh.ttf"
                                 text "完成游戏解锁此结局" size 14 color "#2a2030"
 
                         if is_seen:
@@ -1056,10 +1070,17 @@ screen ending_route_map():
                             xsize 52
                             ysize 52
                             background Solid(scolor + "30" if s_is else "#1a1528")
-                            if s_is:
+                            $ _si = ui_icon(UI_SOUTH_ICONS.get(sid, ""), 44) if s_is else None
+                            if _si:
+                                add _si xalign 0.5 yalign 0.5
+                            elif s_is:
                                 text sicon xalign 0.5 yalign 0.5 size 22
                             else:
-                                text "？" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
+                                $ _sl = ui_icon("ui_lock", 40)
+                                if _sl:
+                                    add Transform(_sl, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5)) xalign 0.5 yalign 0.5
+                                else:
+                                    text "？" xalign 0.5 yalign 0.5 size 24 color "#2a2040"
 
                         vbox:
                             spacing 3
@@ -1067,11 +1088,15 @@ screen ending_route_map():
                                 text sname size 20 color "#e0d8c8" font "msyh.ttf" bold True
                                 text sdesc size 14 color "#8a7e60"
                             else:
-                                text "？?? — 锁 未解锁" size 20 color "#3a3040" font "msyh.ttf"
+                                text "？？？ — 未解锁" size 20 color "#3a3040" font "msyh.ttf"
                                 text "在外章中走出此分支" size 14 color "#2a2030"
 
                         if s_is:
-                            text ">" xalign 1.0 yalign 0.5 size 20 color scolor
+                            $ _sa = ui_icon("ui_play", 18)
+                            if _sa:
+                                add Transform(_sa, matrixcolor=TintMatrix(scolor)) xalign 1.0 yalign 0.5
+                            else:
+                                text ">" xalign 1.0 yalign 0.5 size 20 color scolor
 
             null height 16
             add Solid("#d4a94220") xsize 1.0 ysize 1
@@ -1101,7 +1126,12 @@ screen ending_route_map():
                             spacing 12
                             text ch_name size 13 color "#d4a942" yalign 0.5 xminimum 60
                             text choice_name size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
-                            text "->" size 14 color "#6a5e48" yalign 0.5
+                            ## 资源体检: ASCII -> 换成箭头图标
+                            $ _ar = ui_icon("ui_play", 12)
+                            if _ar:
+                                add Transform(_ar, matrixcolor=TintMatrix("#6a5e48")) yalign 0.5
+                            else:
+                                text "→" size 14 color "#6a5e48" yalign 0.5
                             text " / ".join(options) size 13 color "#6a5e48" yalign 0.5
 
             null height 16
@@ -1219,7 +1249,13 @@ screen ending_complete_hint(current_ending=""):
             xalign 0.5
 
             ## 当前结局
-            text "* 恭喜通关！" size 30 color "#d4a942" font "msyh.ttf" xalign 0.5 outlines [(2, "#000000cc", 0, 0)]
+            hbox:
+                spacing 8
+                xalign 0.5
+                $ _hd3 = ui_icon("ico_diamond", 22)
+                if _hd3:
+                    add _hd3 yalign 0.5
+                text "恭喜通关！" size 30 color "#d4a942" font "msyh.ttf" yalign 0.5 outlines [(2, "#000000cc", 0, 0)]
 
             add Solid("#d4a94230") xsize 400 ysize 1 xalign 0.5
 
@@ -1270,11 +1306,23 @@ screen ending_complete_hint(current_ending=""):
                                 $ ei = _ending_info[eid]
                                 hbox:
                                     spacing 8
-                                    text "•" size 14 color "#6a5e48"
+                                    ## 资源体检: bullet 换成挂锁
+                                    $ _ul = ui_icon("ui_lock", 14)
+                                    if _ul:
+                                        add Transform(_ul, matrixcolor=TintMatrix("#6a5e48")) yalign 0.5
+                                    else:
+                                        text "•" size 14 color "#6a5e48"
                                     text "？？？" size 14 color "#4a4040"
                                     text "— 尝试不同的选择路线" size 13 color "#3a3030"
             else:
-                text "* 恭喜！你已解锁全部结局！" size 18 color "#ffd700" font "msyh.ttf" xalign 0.5
+                ## 资源体检: 半角 * 换成星形图标
+                hbox:
+                    spacing 8
+                    xalign 0.5
+                    $ _cs = ui_icon("ico_star", 20)
+                    if _cs:
+                        add _cs yalign 0.5
+                    text "恭喜！你已解锁全部结局！" size 18 color "#ffd700" font "msyh.ttf" yalign 0.5
 
             ## 二周目奖励提示 (批30 w一_一w 反馈"可玩性被埋没": NG+ 原是 activate_ng_plus 静默激活,
             ## 玩家不知道下周目会继承属性 → 在结局屏明示, 把"换条路再玩"变成有实利的选择)
