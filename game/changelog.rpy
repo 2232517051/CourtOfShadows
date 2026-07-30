@@ -21,6 +21,44 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.23 (商店版 v3.9.1) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.23" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "拾遗 · 商店版 v3.9.1" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.30" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "未解锁" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 角色图鉴与收藏品未解锁格问号换挂锁" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 结局列表未解锁条目圆点换挂锁" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "控件" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 领主面板右上角 X 关闭键换图形按钮" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 难度选择界面选中项大于号换箭头图形" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 抉择回顾选项与结果间 -> 换箭头图形" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 存档翻页 << 与 > 不对称，统一为 « »" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "标记" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 操作指南等六处标题星号换菱形浮雕" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 五处【汉字】占位符换卷轴、触屏等图形" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.22 (商店版 v3.9) ──
             frame:
                 xfill True
