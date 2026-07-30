@@ -12,7 +12,11 @@ screen changelog_screen():
             ## 标题
             hbox:
                 spacing 8
-                text "【卷】" size 24 color "#d4a942" yalign 0.5
+                $ _cl_ico = ui_icon("ui_chronicle", 26)
+                if _cl_ico:
+                    add _cl_ico yalign 0.5
+                else:
+                    text "【卷】" size 24 color "#d4a942" yalign 0.5
                 text "更新日志" size 26 color "#d4a942" font "msyh.ttf"
 
             null height 8

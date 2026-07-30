@@ -654,7 +654,13 @@ screen tutorial_overlay():
                     spacing 6
                     add Solid("#d4a94220") xsize 400 ysize 1 xalign 0.5
                     null height 4
-                    text "【触屏操作】" size 16 color "#d4a942" font "msyh.ttf" xalign 0.5
+                    hbox:
+                        spacing 6
+                        xalign 0.5
+                        $ _tut_touch = ui_icon("ico_touch", 20)
+                        if _tut_touch:
+                            add _tut_touch yalign 0.5
+                        text "触屏操作" size 16 color "#d4a942" font "msyh.ttf" yalign 0.5
                     text "• 点击屏幕推进对话" size 13 color "#8a7e60" xalign 0.5
                     text "• 底部快捷栏：存档、状态、设置" size 13 color "#8a7e60" xalign 0.5
                     text "• 返回键打开菜单" size 13 color "#8a7e60" xalign 0.5
@@ -1142,7 +1148,12 @@ screen ending_route_map():
                 xpadding 24
                 ypadding 12
                 background Solid("#1a152840")
-                text "【提示】 不同的选择组合将导向不同的结局" size 14 color "#8a7e60" font "msyh.ttf"
+                hbox:
+                    spacing 6
+                    $ _hint1 = ui_icon("ico_alert", 16)
+                    if _hint1:
+                        add _hint1 yalign 0.5
+                    text "不同的选择组合将导向不同的结局" size 14 color "#8a7e60" font "msyh.ttf" yalign 0.5
 
 
 ################################################################################

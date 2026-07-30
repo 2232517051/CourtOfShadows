@@ -305,7 +305,12 @@ screen decision_journal():
                 xpadding 24
                 ypadding 12
                 background Solid("#1a152840")
-                text "【提示】 每个决策都影响着故事的走向和最终结局" size 14 color "#8a7e60" font "msyh.ttf"
+                hbox:
+                    spacing 6
+                    $ _hint2 = ui_icon("ico_alert", 16)
+                    if _hint2:
+                        add _hint2 yalign 0.5
+                    text "每个决策都影响着故事的走向和最终结局" size 14 color "#8a7e60" font "msyh.ttf" yalign 0.5
 
 
 ################################################################################
@@ -1077,7 +1082,12 @@ screen timed_choice_timer(seconds=10):
             spacing 4
             hbox:
                 xfill True
-                text "【时】 限时决策" size 13 color _tc_color font "msyh.ttf"
+                hbox:
+                    spacing 5
+                    $ _tc_ico = ui_icon("ico_alert", 14)
+                    if _tc_ico:
+                        add _tc_ico yalign 0.5
+                    text "限时决策" size 13 color _tc_color font "msyh.ttf" yalign 0.5
                 text "[_timed_choice_remaining]秒" size 14 color _tc_color bold True xalign 1.0
 
             bar:
