@@ -47,6 +47,16 @@ init python:
         "rel_people": "people_met",
     }
 
+    ## rel_X -> images/ui/avatar/<file>.png 映射(任务D组3)
+    ## 只列头像文件确实存在的 12 个; 希尔达(无 countess_hilda 头像)与民心(非人物)
+    ## 不在表内 -> .get(var, "") 返回 "" -> ui_avatar 内 renpy.loadable 失败 -> None -> 走 null 占位分支
+    REL_AVATAR = {
+        "rel_aldric": "aldric", "rel_elena": "elena", "rel_bishop": "bishop",
+        "rel_baron": "baron", "rel_captain": "captain", "rel_queen": "queen",
+        "rel_prince": "prince", "rel_grey": "count_grey", "rel_wells": "viscount_wells",
+        "rel_stein": "countess_stein", "rel_lily": "lily_master", "rel_corsair": "corsair",
+    }
+
     ## 关系等级阈值
     _rel_thresholds = [("冷淡", -50), ("中立", -10), ("友好", 20), ("亲密", 60), ("满", 100)]
 
@@ -153,7 +163,11 @@ screen stats_screen():
                         ## ─── 核心属性 ─── ##
                         hbox:
                             spacing 6
-                            text "*" size 18 color "#d4a942" yalign 0.5
+                            $ _hdr_stat = ui_icon("ico_star", 18)
+                            if _hdr_stat:
+                                add _hdr_stat yalign 0.5
+                            else:
+                                text "*" size 18 color "#d4a942" yalign 0.5
                             text "核心属性" size 18 color "#d4a942" font "msyh.ttf"
 
                         null height 4
@@ -364,7 +378,11 @@ screen stats_screen():
                         ## ─── 人物关系 ─── ##
                         hbox:
                             spacing 6
-                            text "*" size 18 color "#d4a942" yalign 0.5
+                            $ _hdr_rel = ui_icon("ico_star", 18)
+                            if _hdr_rel:
+                                add _hdr_rel yalign 0.5
+                            else:
+                                text "*" size 18 color "#d4a942" yalign 0.5
                             text "人物关系" size 18 color "#d4a942" font "msyh.ttf"
 
                         null height 6
@@ -395,6 +413,11 @@ screen stats_screen():
                                             xfill True
                                             hbox:
                                                 spacing 8
+                                                $ _rel_av = ui_avatar(REL_AVATAR.get(var_name, ""), 24)
+                                                if _rel_av:
+                                                    add _rel_av yalign 0.5
+                                                else:
+                                                    null width 24
                                                 text char_name size 15 color char_color font "msyh.ttf" bold True yalign 0.5
                                                 text title size 11 color "#6a5e48" yalign 0.5
 
@@ -426,7 +449,11 @@ screen stats_screen():
                         ## ─── 剧情标记 ─── ##
                         hbox:
                             spacing 6
-                            text "【卷】" size 18 color "#d4a942" yalign 0.5
+                            $ _hdr_mark = ui_icon("ico_scroll", 18)
+                            if _hdr_mark:
+                                add _hdr_mark yalign 0.5
+                            else:
+                                text "【卷】" size 18 color "#d4a942" yalign 0.5
                             text "重要抉择" size 18 color "#d4a942" font "msyh.ttf"
 
                         null height 4

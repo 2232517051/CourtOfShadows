@@ -433,7 +433,11 @@ screen autosave_indicator():
 
         hbox:
             spacing 6
-            text "【存】" size 14 yalign 0.5
+            $ _as_quill = ui_icon("ico_quill", 18)
+            if _as_quill:
+                add _as_quill yalign 0.5
+            else:
+                text "【存】" size 14 yalign 0.5
             text "自动存档..." size 13 color "#8a7e60" yalign 0.5
 
     timer 2.0 action Hide("autosave_indicator")
@@ -587,21 +591,33 @@ screen tutorial_overlay():
 
                 hbox:
                     spacing 12
-                    text "【鼠】" size 20 yalign 0.0
+                    $ _tut_mouse = ui_icon("ico_hand", 22)
+                    if _tut_mouse:
+                        add _tut_mouse yalign 0.0
+                    else:
+                        text "【鼠】" size 20 yalign 0.0
                     vbox:
                         text "点击屏幕 / 回车" size 18 color "#e0d8c8" font "msyh.ttf"
                         text "推进对话" size 14 color "#8a7e60"
 
                 hbox:
                     spacing 12
-                    text "【S】" size 20 yalign 0.0
+                    $ _tut_key = ui_icon("ico_key_s", 22)
+                    if _tut_key:
+                        add _tut_key yalign 0.0
+                    else:
+                        text "【S】" size 20 yalign 0.0
                     vbox:
                         text "按 S 键" size 18 color "#e0d8c8" font "msyh.ttf"
                         text "查看领主状态（属性 & 人物关系）" size 14 color "#8a7e60"
 
                 hbox:
                     spacing 12
-                    text "【存】" size 20 yalign 0.0
+                    $ _tut_save = ui_icon("ico_quill", 22)
+                    if _tut_save:
+                        add _tut_save yalign 0.0
+                    else:
+                        text "【存】" size 20 yalign 0.0
                     vbox:
                         text "右键 / ESC" size 18 color "#e0d8c8" font "msyh.ttf"
                         text "打开游戏菜单（存档/读档/设置）" size 14 color "#8a7e60"
@@ -712,7 +728,7 @@ screen rating_popup():
 ## 8. 成就解锁弹窗
 ################################################################################
 
-screen achievement_popup(ach_name="", ach_desc=""):
+screen achievement_popup(ach_name="", ach_desc="", ach_key=""):
     zorder 260
 
     frame at achievement_pop_anim:
@@ -726,12 +742,16 @@ screen achievement_popup(ach_name="", ach_desc=""):
             spacing 14
             yalign 0.5
 
-            ## 星星图标
+            ## 成就类别徽章(解锁瞬间一律彩色; 无 key 或缺图回退星号)
             frame:
                 xsize 44
                 ysize 44
                 background Solid("#d4a94225")
-                text "*" xalign 0.5 yalign 0.5 size 24 color "#ffd700"
+                $ _ap = ach_badge(ach_key, True, False, 36) if ach_key else None
+                if _ap:
+                    add _ap xalign 0.5 yalign 0.5
+                else:
+                    text "*" xalign 0.5 yalign 0.5 size 24 color "#ffd700"
 
             vbox:
                 spacing 2
@@ -931,7 +951,11 @@ screen ending_route_map():
             ## 标题
             hbox:
                 spacing 8
-                text "【图】" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_route = ui_icon("ico_map", 26)
+                if _hdr_route:
+                    add _hdr_route yalign 0.5
+                else:
+                    text "【图】" size 24 color "#d4a942" yalign 0.5
                 text "结局路线图" size 26 color "#d4a942" font "msyh.ttf"
 
             $ seen = persistent.endings_seen if persistent.endings_seen else set()
@@ -960,7 +984,7 @@ screen ending_route_map():
                             ysize 52
                             background Solid(e_color + "30" if is_seen else "#1a1528")
 
-                            $ _ei = ui_icon(UI_ENDING_ICONS.get(e_key, ""), 44) if is_seen else None
+                            $ _ei = ui_icon(UI_ENDING_ICONS.get(eid, ""), 44) if is_seen else None
                             if _ei:
                                 add _ei xalign 0.5 yalign 0.5
                             elif is_seen:

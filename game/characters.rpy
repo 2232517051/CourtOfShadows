@@ -338,7 +338,7 @@ init python:
         if name not in persistent.achievements:
             persistent.achievements.add(name)
             if name in achievement_data:
-                renpy.show_screen("achievement_popup", ach_name=achievement_data[name][0], ach_desc=achievement_data[name][1])
+                renpy.show_screen("achievement_popup", ach_name=achievement_data[name][0], ach_desc=achievement_data[name][1], ach_key=name)
                 renpy.play("audio/sfx/ui_confirm.ogg", channel="sound")
 
     def check_max_stat():

@@ -416,3 +416,37 @@ init python:
         if renpy.loadable(path):
             return Transform(path, size=(size, size), fit="contain")
         return None
+
+    ## 成就 key → 六类别徽章(36/36 全覆盖); 表外 key 兜底 collect
+    UI_ACH_CATEGORY = {
+        ## 章节进度 / 主线路线里程碑 (8)
+        "first_steps": "chapter", "diplomat": "chapter", "warrior": "chapter",
+        "holy_man": "chapter", "spy_master_ch1": "chapter", "council_master": "chapter",
+        "truth_seeker": "chapter", "statecraft_marriage": "chapter",
+        ## 九结局 + 全结局收集 (10)
+        "iron_lord": "ending", "shadow_king": "ending", "holy_guardian": "ending",
+        "peoples_lord": "ending", "truth_ending": "ending", "borgia_ending": "ending",
+        "vassal_ending": "ending", "fall_ending": "ending", "sea_ending": "ending",
+        "completionist": "ending",
+        ## 南境游记 DLC(含其六条结局线) (7)
+        "southern_act1": "south", "southern_free": "south", "southern_ruler": "south",
+        "southern_fall": "south", "southern_vassal": "south", "southern_outwit": "south",
+        "southern_lover": "south",
+        ## 属性极值 (4)
+        "max_stat": "stat", "silver_tongue": "stat", "merchant_prince": "stat",
+        "dark_path": "stat",
+        ## 收集 / 探索 / 全好感 (3)
+        "secret_passage": "collect", "village_patrol": "collect", "all_friends": "collect",
+        ## 通关方式类隐藏成就(无对应类别, 解锁后仍用密纹徽章) (4)
+        "romeo": "hidden", "betrayer": "hidden", "lone_wolf": "hidden", "pacifist": "hidden",
+    }
+
+    def ach_badge(key, unlocked=False, hidden=False, size=36):
+        """成就徽章: 已解锁彩色, 未解锁灰化, 隐藏且未解锁一律密纹; 缺图返回 None 让调用处回退文字"""
+        cat = "hidden" if (hidden and not unlocked) else UI_ACH_CATEGORY.get(key, "collect")
+        d = ui_icon(UI_ACH_ICONS.get(cat, "ach_collect"), size)
+        if d is None:
+            return None
+        if unlocked:
+            return d
+        return Transform(d, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5))

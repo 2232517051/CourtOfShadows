@@ -89,7 +89,11 @@ screen cg_gallery():
             ## ─── 场景 ───
             hbox:
                 spacing 8
-                text "*" size 20 color "#d4a942" yalign 0.5
+                $ _hdr_scene = ui_icon("ico_star", 22)
+                if _hdr_scene:
+                    add _hdr_scene yalign 0.5
+                else:
+                    text "*" size 20 color "#d4a942" yalign 0.5
                 text "场景画廊" size 22 color "#d4a942" font "msyh.ttf"
             $ scene_unlocked = len([x for x, _ in gallery_images if x in persistent.gallery_unlocked])
             text "已解锁 [scene_unlocked]/[len(gallery_images)] 幅场景" size 13 color "#6a5e48"
@@ -142,7 +146,11 @@ screen cg_gallery():
             ## ─── 角色 ───
             hbox:
                 spacing 8
-                text "*" size 20 color "#d4a942" yalign 0.5
+                $ _hdr_char = ui_icon("ico_star", 22)
+                if _hdr_char:
+                    add _hdr_char yalign 0.5
+                else:
+                    text "*" size 20 color "#d4a942" yalign 0.5
                 text "角色肖像" size 22 color "#d4a942" font "msyh.ttf"
             $ char_unlocked = len([x for x, _ in gallery_characters if x in persistent.gallery_unlocked])
             text "已解锁 [char_unlocked]/[len(gallery_characters)] 位角色" size 13 color "#6a5e48"
@@ -269,6 +277,62 @@ init python:
         ("audio/music/ending_bitter.ogg", "残局", "小调收弦处圆号独暖，赢了又如何", "茧", "chapter5"),
     ]
 
+    ## ── 曲目 → UI_MUS_ICONS 十类别(2026-07-30) ──
+    ## 键用文件路径而非曲名: tension.ogg 与 conspiracy.ogg 都叫"暗流涌动", 用曲名会互相顶掉。
+    ## 缺键 / 缺图时渲染处回退 music_tracks_data 第4元素的单字图标, 不崩。
+    MUS_TRACK_CATEGORY = {
+        ## 战阵 mus_war(剑 + 号角)
+        "audio/music/battle_prepare.ogg": "war",
+        "audio/music/war_drums.ogg": "war",
+        "audio/music/southern_fleet.ogg": "war",
+        ## 权谋 mus_scheme(蛛网中的后棋)
+        "audio/music/great_hall.ogg": "scheme",
+        "audio/music/tension.ogg": "scheme",
+        "audio/music/conspiracy.ogg": "scheme",
+        "audio/music/revelation.ogg": "scheme",
+        "audio/music/betrayal.ogg": "scheme",
+        "audio/music/throne.ogg": "scheme",
+        "audio/music/southern_scheme.ogg": "scheme",
+        ## 海事 mus_sea(锚 + 浪)
+        "audio/music/harbor_waves.ogg": "sea",
+        "audio/music/southern_port.ogg": "sea",
+        "audio/music/southern_corsair.ogg": "sea",
+        "audio/music/southern_freeport.ogg": "sea",
+        "audio/music/sea_theme.ogg": "sea",
+        ## 圣礼 mus_holy(圣杯 + 十字 + 光芒)
+        "audio/music/church_choir.ogg": "holy",
+        "audio/music/coronation.ogg": "holy",
+        ## 悲悼 mus_grief(垂首之花 + 泪滴)
+        "audio/music/sad.ogg": "grief",
+        "audio/music/grief.ogg": "grief",
+        "audio/music/ending_dark.ogg": "grief",
+        "audio/music/ending_bitter.ogg": "grief",
+        ## 庆典 mus_feast(高脚杯 + 桂冠)
+        "audio/music/victory.ogg": "feast",
+        "audio/music/tavern_lively.ogg": "feast",
+        "audio/music/southern_tavern.ogg": "feast",
+        ## 夜行 mus_night(新月 + 星)
+        "audio/music/night_mystery.ogg": "night",
+        "audio/music/dungeon_drip.ogg": "night",
+        "audio/music/chase.ogg": "night",
+        "audio/music/escape.ogg": "night",
+        "audio/music/romance.ogg": "night",
+        "audio/music/ritual.ogg": "night",
+        ## 市井 mus_town(摊棚 + 天平)
+        "audio/music/castle_calm.ogg": "town",
+        "audio/music/market_bustle.ogg": "town",
+        ## 自然 mus_nature(橡叶 + 露珠)
+        "audio/music/forest_ambient.ogg": "nature",
+        "audio/music/rain_storm.ogg": "nature",
+        "audio/music/campfire.ogg": "nature",
+        "audio/music/winter_wind.ogg": "nature",
+        ## 终章 mus_finale(王冠 + 帷幕)
+        "audio/music/main_theme.ogg": "finale",
+        "audio/music/hope.ogg": "finale",
+        "audio/music/dawn.ogg": "finale",
+        "audio/music/ending_triumph.ogg": "finale",
+    }
+
     def is_music_unlocked(req_chapter):
         if req_chapter is None:
             return True
@@ -287,7 +351,11 @@ screen music_room():
 
             hbox:
                 spacing 8
-                text "【乐】" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_mus = ui_icon("ui_music", 26)
+                if _hdr_mus:
+                    add _hdr_mus yalign 0.5
+                else:
+                    text "【乐】" size 24 color "#d4a942" yalign 0.5
                 text "音乐鉴赏" size 26 color "#d4a942" font "msyh.ttf"
 
             $ _unlocked_music = len([1 for _,_,_,_,req in music_tracks_data if is_music_unlocked(req)])
@@ -314,12 +382,16 @@ screen music_room():
                                 spacing 14
                                 yalign 0.5
 
-                                ## 图标
+                                ## 图标(优先鎏金类别图标, 缺映射/缺图回退原单字)
                                 frame:
                                     xsize 44
                                     ysize 44
                                     background Solid("#d4a94215")
-                                    text track_icon xalign 0.5 yalign 0.5 size 20
+                                    $ _mi = ui_icon(UI_MUS_ICONS.get(MUS_TRACK_CATEGORY.get(track_file, ""), ""), 32)
+                                    if _mi:
+                                        add _mi xalign 0.5 yalign 0.5
+                                    else:
+                                        text track_icon xalign 0.5 yalign 0.5 size 20
 
                                 vbox:
                                     spacing 2
@@ -327,7 +399,11 @@ screen music_room():
                                     text track_desc size 13 color "#6a5e48"
 
                                 ## 播放图标
-                                text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                                $ _mp = ui_icon("ui_play", 24)
+                                if _mp:
+                                    add Transform(_mp, alpha=0.55) xalign 1.0 yalign 0.5
+                                else:
+                                    text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
                     else:
                         hbox:
                             spacing 14
@@ -336,7 +412,11 @@ screen music_room():
                                 xsize 44
                                 ysize 44
                                 background Solid("#0f0d1a")
-                                text "锁" xalign 0.5 yalign 0.5 size 16
+                                $ _ml = ui_icon("ui_lock", 26)
+                                if _ml:
+                                    add Transform(_ml, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.5)) xalign 0.5 yalign 0.5
+                                else:
+                                    text "锁" xalign 0.5 yalign 0.5 size 16
                             vbox:
                                 text track_name size 18 color "#3a3040" font "msyh.ttf"
                                 if track_req:
@@ -355,11 +435,19 @@ screen music_room():
                 ypadding 10
                 background Solid("#1a152880")
 
-                textbutton "# 停止播放":
-                    action Stop("music", fadeout=1.0)
-                    text_size 16
-                    text_color "#8a7e60"
-                    text_hover_color "#d4a942"
+                hbox:
+                    spacing 8
+                    yalign 0.5
+                    $ _ms = ui_icon("ui_close", 20)
+                    if _ms:
+                        add Transform(_ms, alpha=0.7) yalign 0.5
+                    else:
+                        text "#" size 16 color "#8a7e60" yalign 0.5
+                    textbutton "停止播放":
+                        action Stop("music", fadeout=1.0)
+                        text_size 16
+                        text_color "#8a7e60"
+                        text_hover_color "#d4a942"
 
 
 ## ════════════════════════════════════════════════════════════
@@ -375,7 +463,11 @@ screen achievement_screen():
             ## 标题
             hbox:
                 spacing 8
-                text "*" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_ach = ui_icon("ui_trophy", 26)
+                if _hdr_ach:
+                    add _hdr_ach yalign 0.5
+                else:
+                    text "*" size 24 color "#d4a942" yalign 0.5
                 text "成就殿堂" size 26 color "#d4a942" font "msyh.ttf"
 
             $ ach_count = len(persistent.achievements) if persistent.achievements else 0
@@ -410,13 +502,16 @@ screen achievement_screen():
                         spacing 14
                         yalign 0.5
 
-                        ## 成就图标
+                        ## 成就类别徽章(已解锁彩色 / 未解锁灰化 / 隐藏未解锁密纹)
                         frame:
                             xsize 44
                             ysize 44
                             background Solid("#d4a94220" if unlocked else "#1a1528")
 
-                            if unlocked:
+                            $ _ab = ach_badge(key, unlocked, a_hidden, 36)
+                            if _ab:
+                                add _ab xalign 0.5 yalign 0.5
+                            elif unlocked:
                                 text "*" xalign 0.5 yalign 0.5 size 22 color "#ffd700"
                             elif a_hidden:
                                 text "？" xalign 0.5 yalign 0.5 size 22 color "#6a3080"
@@ -467,7 +562,11 @@ screen chapter_select():
             ## 标题
             hbox:
                 spacing 8
-                text "【章】" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_ch = ui_icon("ico_bookmark", 26)
+                if _hdr_ch:
+                    add _hdr_ch yalign 0.5
+                else:
+                    text "【章】" size 24 color "#d4a942" yalign 0.5
                 text "章节选择" size 26 color "#d4a942" font "msyh.ttf"
 
             text "通关后解锁章节——从头开始，或带档重玩" size 14 color "#6a5e48"
@@ -525,7 +624,11 @@ screen chapter_select():
                                         text ch_desc size 13 color "#8a7e60"
 
                                     ## 箭头
-                                    text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                                    $ _ch_arrow = ui_icon("ui_play", 18)
+                                    if _ch_arrow:
+                                        add _ch_arrow xalign 1.0 yalign 0.5
+                                    else:
+                                        text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
 
                             if has_slot:
                                 button:
@@ -580,6 +683,10 @@ screen chapter_select():
 
                 hbox:
                     spacing 12
-                    text "【卷】" size 18 yalign 0.5
+                    $ _end_scroll = ui_icon("ico_scroll", 22)
+                    if _end_scroll:
+                        add _end_scroll yalign 0.5
+                    else:
+                        text "【卷】" size 18 yalign 0.5
                     $ endings_count = len(persistent.endings_seen) if persistent.endings_seen else 0
                     text "已解锁结局： [endings_count]/9" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5

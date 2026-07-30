@@ -64,7 +64,11 @@ screen character_codex():
             ## 标题
             hbox:
                 spacing 8
-                text "*" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_codex = ui_icon("ico_star", 22)
+                if _hdr_codex:
+                    add _hdr_codex yalign 0.5
+                else:
+                    text "*" size 24 color "#d4a942" yalign 0.5
                 text "角色图鉴" size 26 color "#d4a942" font "msyh.ttf"
 
             $ _codex_unlocked = len([1 for cid, *_ in codex_characters if is_codex_unlocked(cid)])
@@ -96,7 +100,11 @@ screen character_codex():
                                     xsize 56
                                     ysize 56
                                     background Solid(char_color + "30")
-                                    text char_name[0] xalign 0.5 yalign 0.5 size 26 color char_color font "msyh.ttf"
+                                    $ _cx_av = ui_avatar(char_id, 52)
+                                    if _cx_av:
+                                        add _cx_av xalign 0.5 yalign 0.5
+                                    else:
+                                        text char_name[0] xalign 0.5 yalign 0.5 size 26 color char_color font "msyh.ttf"
 
                                 vbox:
                                     spacing 3
@@ -113,7 +121,11 @@ screen character_codex():
                                         text "[_codex_rel_val]" size 16 color char_color bold True xalign 0.5
                                         text "好感" size 10 color "#6a5e48" xalign 0.5
 
-                                text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                                $ _cx_arrow = ui_icon("ui_play", 18)
+                                if _cx_arrow:
+                                    add _cx_arrow xalign 1.0 yalign 0.5
+                                else:
+                                    text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
                     else:
                         hbox:
                             spacing 16
@@ -157,7 +169,11 @@ screen codex_detail(char_name="", char_title="", char_color="#d4a942", char_brie
                     xsize 52
                     ysize 52
                     background Solid(char_color + "30")
-                    text char_name[0] xalign 0.5 yalign 0.5 size 24 color char_color font "msyh.ttf"
+                    $ _dt_av = ui_avatar(char_id, 48)
+                    if _dt_av:
+                        add _dt_av xalign 0.5 yalign 0.5
+                    else:
+                        text char_name[0] xalign 0.5 yalign 0.5 size 24 color char_color font "msyh.ttf"
                 vbox:
                     text char_name size 28 color char_color font "msyh.ttf" bold True
                     text char_title size 15 color "#8a7e60"
@@ -217,7 +233,11 @@ screen decision_journal():
             ## 标题
             hbox:
                 spacing 8
-                text "【卷】" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_jrnl = ui_icon("ico_scroll", 26)
+                if _hdr_jrnl:
+                    add _hdr_jrnl yalign 0.5
+                else:
+                    text "【卷】" size 24 color "#d4a942" yalign 0.5
                 text "决策日志" size 26 color "#d4a942" font "msyh.ttf"
 
             $ _all_decisions = get_decisions()
@@ -315,6 +335,35 @@ init python:
             return True  # 宽松解锁：只要到达该章节即可
         return False
 
+
+init 10 python:
+    ## 地点 id → UI 图标名(images/ui/*.png 的文件名, 不带扩展名)
+    ## 用 init 10 而不是 init: 图标索引表在 images_def.rpy 的 init python(优先级 0) 里定义,
+    ## 同优先级下 Ren'Py 按文件名排序执行, extras.rpy 在 images_def.rpy 之前,
+    ## 在 init python 里直接引用 UI_MAP_ICONS 会 NameError。
+    MAP_LOC_ICONS = {
+        "aidenburg":   UI_MAP_ICONS["castle"],
+        "border":      UI_MAP_ICONS["border"],
+        "halenborg":   UI_MAP_ICONS["hall"],
+        "market":      UI_MAP_ICONS["market"],
+        "forest":      UI_MAP_ICONS["forest"],
+        "underground": UI_MAP_ICONS["lily"],
+        "church":      UI_MAP_ICONS["church"],
+        "capital":     UI_MAP_ICONS["capital"],
+        "palace":      UI_MAP_ICONS["palace"],
+        "garden":      UI_MAP_ICONS["garden"],
+        "dungeon":     UI_MAP_ICONS["dungeon"],
+        "battlefield": UI_MUS_ICONS["war"],
+    }
+
+    def map_icon_for_name(loc_name):
+        """按地点名反查图标名"""
+        for _l in map_locations:
+            if _l[1] == loc_name:
+                return MAP_LOC_ICONS.get(_l[0], "")
+        return ""
+
+
 screen world_map():
     tag menu
     use game_menu(_("地图"), scroll=None):
@@ -322,31 +371,28 @@ screen world_map():
             xsize 820
             ysize 560
 
-            ## 地图底色
-            add Solid("#0a0812") xsize 820 ysize 560
-
-            ## 网格装饰
-            for i in range(0, 820, 82):
-                add Solid("#d4a94208") xpos i ypos 0 xsize 1 ysize 560
-            for i in range(0, 560, 56):
-                add Solid("#d4a94208") xpos 0 ypos i xsize 820 ysize 1
+            ## 底图: 羊皮纸全境图(缺图回退原来的暗底+网格)
+            $ _wm_bg = "images/ui/world_map.png"
+            if renpy.loadable(_wm_bg):
+                add Transform(_wm_bg, size=(820, 560), fit="cover")
+                add Solid("#0a081259") xsize 820 ysize 560
+            else:
+                add Solid("#0a0812") xsize 820 ysize 560
+                for i in range(0, 820, 82):
+                    add Solid("#d4a94208") xpos i ypos 0 xsize 1 ysize 560
+                for i in range(0, 560, 56):
+                    add Solid("#d4a94208") xpos 0 ypos i xsize 820 ysize 1
 
             ## 地图标题
-            text "* 王国全境图" xpos 10 ypos 10 size 16 color "#d4a94260" font "msyh.ttf"
-
-            ## 连接线（简化版）
-            ## 艾登堡 -> 北方边境
-            add Solid("#d4a94215") xpos 287 ypos 101 xsize 2 ysize 200
-            ## 艾登堡 -> 教堂
-            add Solid("#d4a94215") xpos 287 ypos 308 xsize 123 ysize 2
-            ## 哈伦堡 -> 王都
-            add Solid("#d4a94215") xpos 533 ypos 140 xsize 2 ysize 84
+            text "* 王国全境图" xpos 10 ypos 10 size 16 color "#d4a942aa" font "msyh.ttf" outlines [(2, "#0a0812", 0, 0)]
 
             ## 地点标记
             for loc_id, loc_name, loc_desc, lx, ly, loc_req, loc_icon in map_locations:
                 $ _loc_unlocked = is_location_unlocked(loc_req)
                 $ _lx = int(lx * 820)
                 $ _ly = int(ly * 560)
+                $ _mi = ui_icon(MAP_LOC_ICONS.get(loc_id, ""), 28) if _loc_unlocked else None
+                $ _mlk = None if _loc_unlocked else ui_icon("ui_lock", 18)
 
                 if _loc_unlocked:
                     button:
@@ -355,13 +401,17 @@ screen world_map():
                         xsize 40
                         ysize 40
                         background None
+                        padding (0, 0)
                         action Show("map_location_detail", loc_name=loc_name, loc_desc=loc_desc, loc_icon=loc_icon)
 
                         vbox:
                             spacing 2
                             xalign 0.5
-                            text loc_icon xalign 0.5 size 22
-                            text loc_name xalign 0.5 size 10 color "#d4a942" font "msyh.ttf"
+                            if _mi:
+                                add _mi xalign 0.5
+                            else:
+                                text loc_icon xalign 0.5 size 22
+                            text loc_name xalign 0.5 size 10 color "#d4a942" font "msyh.ttf" outlines [(1, "#0a0812", 0, 0)]
                 else:
                     frame:
                         xpos _lx - 12
@@ -369,7 +419,11 @@ screen world_map():
                         xsize 24
                         ysize 24
                         background Solid("#1a1528")
-                        text "？" xalign 0.5 yalign 0.5 size 12 color "#2a2040"
+                        padding (2, 2)
+                        if _mlk:
+                            add Transform(_mlk, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.35)) xalign 0.5 yalign 0.5
+                        else:
+                            text "？" xalign 0.5 yalign 0.5 size 12 color "#2a2040"
 
 
 ## 地点详情弹窗
@@ -391,7 +445,11 @@ screen map_location_detail(loc_name="", loc_desc="", loc_icon=""):
             spacing 12
             xalign 0.5
 
-            text loc_icon xalign 0.5 size 40
+            $ _di = ui_icon(map_icon_for_name(loc_name), 72)
+            if _di:
+                add _di xalign 0.5
+            else:
+                text loc_icon xalign 0.5 size 40
             text loc_name size 26 color "#d4a942" font "msyh.ttf" xalign 0.5 bold True
             add Solid("#d4a94230") xsize 300 ysize 1 xalign 0.5
             text loc_desc size 16 color "#c8b890" xalign 0.5 text_align 0.5
@@ -487,7 +545,11 @@ screen collectible_found_toast(item_name=""):
 
         hbox:
             spacing 10
-            text "【物】" size 18 yalign 0.5
+            $ _toast_chest = ui_icon("ico_chest", 20)
+            if _toast_chest:
+                add _toast_chest yalign 0.5
+            else:
+                text "【物】" size 18 yalign 0.5
             text "获得收藏品：" size 16 color "#8a7e60" font "msyh.ttf" yalign 0.5
             text item_name size 18 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
 
@@ -502,7 +564,11 @@ screen collectibles_screen():
 
             hbox:
                 spacing 8
-                text "【物】" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_col = ui_icon("ico_chest", 26)
+                if _hdr_col:
+                    add _hdr_col yalign 0.5
+                else:
+                    text "【物】" size 24 color "#d4a942" yalign 0.5
                 text "收藏品" size 26 color "#d4a942" font "msyh.ttf"
 
             $ _found = len(persistent.collectibles_found) if persistent.collectibles_found else 0
@@ -559,14 +625,22 @@ screen collectibles_screen():
                                             xsize 40
                                             ysize 40
                                             background Solid("#d4a94220")
-                                            text "【卷】" xalign 0.5 yalign 0.5 size 18
+                                            $ _col_ico = ui_icon("ico_scroll", 30)
+                                            if _col_ico:
+                                                add _col_ico xalign 0.5 yalign 0.5
+                                            else:
+                                                text "【卷】" xalign 0.5 yalign 0.5 size 18
 
                                         vbox:
                                             spacing 2
                                             text _c_data[0] size 16 color "#e0d8c8" font "msyh.ttf" bold True
                                             text _c_data[2] size 12 color "#8a7e60"
 
-                                        text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
+                                        $ _col_arrow = ui_icon("ui_play", 18)
+                                        if _col_arrow:
+                                            add _col_arrow xalign 1.0 yalign 0.5
+                                        else:
+                                            text ">" xalign 1.0 yalign 0.5 size 16 color "#d4a94260"
                             else:
                                 hbox:
                                     spacing 14
@@ -602,7 +676,11 @@ screen collectible_detail(item_name="", item_type="", item_desc="", item_text=""
 
             hbox:
                 spacing 10
-                text "【卷】" size 22 yalign 0.5
+                $ _cd_scroll = ui_icon("ico_scroll", 24)
+                if _cd_scroll:
+                    add _cd_scroll yalign 0.5
+                else:
+                    text "【卷】" size 22 yalign 0.5
                 vbox:
                     text item_name size 24 color "#d4a942" font "msyh.ttf" bold True
                     text "[item_type] — [item_desc]" size 13 color "#8a7e60"
@@ -712,7 +790,11 @@ screen credits_roll():
                             xsize 36
                             ysize 36
                             background Solid(_ccolor + "30")
-                            text _cname[0] xalign 0.5 yalign 0.5 size 18 color _ccolor font "msyh.ttf"
+                            $ _cr_av = ui_avatar(_cid, 34)
+                            if _cr_av:
+                                add _cr_av xalign 0.5 yalign 0.5
+                            else:
+                                text _cname[0] xalign 0.5 yalign 0.5 size 18 color _ccolor font "msyh.ttf"
                         vbox:
                             text _cname size 18 color _ccolor font "msyh.ttf"
                             text _ctitle size 12 color "#6a5e48"
@@ -844,7 +926,15 @@ screen chapter_summary(ch_name="第一章", ch_title="新主登基"):
             ## 本章决策
             $ _ch_decs = get_decisions_by_chapter(ch_name)
             if len(_ch_decs) > 0:
-                text "【卷】 本章决策" size 18 color "#d4a942" font "msyh.ttf" xalign 0.5
+                $ _sum_scroll = ui_icon("ico_scroll", 20)
+                if _sum_scroll:
+                    hbox:
+                        spacing 8
+                        xalign 0.5
+                        add _sum_scroll yalign 0.5
+                        text "本章决策" size 18 color "#d4a942" font "msyh.ttf" yalign 0.5
+                else:
+                    text "【卷】 本章决策" size 18 color "#d4a942" font "msyh.ttf" xalign 0.5
                 for _dc, _dchoice, _dresult in _ch_decs:
                     hbox:
                         spacing 8
@@ -1011,7 +1101,11 @@ screen accessibility_settings():
 
             hbox:
                 spacing 8
-                text "【辅】" size 24 color "#d4a942" yalign 0.5
+                $ _hdr_acc = ui_icon("ico_touch", 26)
+                if _hdr_acc:
+                    add _hdr_acc yalign 0.5
+                else:
+                    text "【辅】" size 24 color "#d4a942" yalign 0.5
                 text "辅助功能" size 26 color "#d4a942" font "msyh.ttf"
 
             null height 8

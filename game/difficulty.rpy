@@ -137,28 +137,17 @@ screen difficulty_select():
                         spacing 14
                         yalign 0.5
 
+                        ## 资源体检: 单字→鎏金徽章; 图标统一方形画布, frame 内居中
+                        $ _di = ui_icon(UI_DIFF_ICONS[diff_key], 76)
+                        $ _dtxt = {"easy": "日", "normal": "剑", "hard": "难"}[diff_key]
                         frame:
-                            xsize 44
-                            ysize 44
+                            xsize 80
+                            ysize 80
                             background Solid(_border_color + "40")
-                            if diff_key == "easy":
-                                $ _di = ui_icon(UI_DIFF_ICONS["easy"], 46)
-                        if _di:
-                            add _di xalign 0.5 yalign 0.5
-                        else:
-                            text "日" xalign 0.5 yalign 0.5 size 22
-                            elif diff_key == "normal":
-                                $ _di = ui_icon(UI_DIFF_ICONS["normal"], 46)
-                        if _di:
-                            add _di xalign 0.5 yalign 0.5
-                        else:
-                            text "剑" xalign 0.5 yalign 0.5 size 22
+                            if _di:
+                                add _di xalign 0.5 yalign 0.5
                             else:
-                                $ _di = ui_icon(UI_DIFF_ICONS["hard"], 46)
-                        if _di:
-                            add _di xalign 0.5 yalign 0.5
-                        else:
-                            text "难" xalign 0.5 yalign 0.5 size 22
+                                text _dtxt xalign 0.5 yalign 0.5 size 22
 
                         vbox:
                             spacing 2
@@ -287,7 +276,11 @@ screen name_easter_egg(egg_text=""):
 
         hbox:
             spacing 10
-            text "【蛋】" size 18 yalign 0.5
+            $ _egg_ico = ui_icon("ico_diamond", 20)
+            if _egg_ico:
+                add _egg_ico yalign 0.5
+            else:
+                text "【蛋】" size 18 yalign 0.5
             text egg_text size 16 color "#ffd700" font "msyh.ttf" yalign 0.5
 
     timer 4.0 action Hide("name_easter_egg")
