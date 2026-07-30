@@ -1454,9 +1454,13 @@ screen skip_indicator():
         hbox:
             spacing 6
             text _("快进中")
-            text ">" at delayed_blink(0.0, 1.0) style "skip_triangle"
-            text ">" at delayed_blink(0.2, 1.0) style "skip_triangle"
-            text ">" at delayed_blink(0.4, 1.0) style "skip_triangle"
+            $ _sk = ui_icon("ctl_skip_arrow", 22)
+            if _sk:
+                add _sk at delayed_blink(0.0, 1.0) yalign 0.5
+            else:
+                text ">" at delayed_blink(0.0, 1.0) style "skip_triangle"
+                text ">" at delayed_blink(0.2, 1.0) style "skip_triangle"
+                text ">" at delayed_blink(0.4, 1.0) style "skip_triangle"
 
 
 style skip_frame is empty

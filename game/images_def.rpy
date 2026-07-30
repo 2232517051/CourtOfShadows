@@ -384,6 +384,8 @@ init python:
     UI_STAT_ICONS = {
         "power": "stat_power", "wealth": "stat_wealth", "faith": "stat_faith",
         "loyalty": "stat_loyalty", "reputation": "stat_reputation", "intrigue": "stat_intrigue",
+        ## 第七属性: 勇气(此前漏接, 玩家在状态面板可见"火 勇气")
+        "courage": "stat_courage",
     }
 
 
@@ -409,6 +411,12 @@ init python:
         if renpy.loadable(path):
             return Transform(path, size=(size, size), fit="cover")
         return None
+
+    ## 属性中文名 → 图标键(浮层 toast 只拿得到中文名)
+    UI_STAT_BY_CN = {
+        "权力": "power", "财富": "wealth", "信仰": "faith",
+        "忠诚": "loyalty", "声望": "reputation", "谋略": "intrigue", "勇气": "courage",
+    }
 
     def ui_icon(name, size=40):
         """UI 图标; 缺图返回 None 让调用处回退文字"""

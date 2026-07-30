@@ -452,9 +452,17 @@ screen injury_screen():
                 ## 显示伤痕标记
                 for i in range(3):
                     if i < crisis_injuries:
-                        text "X" size 22 color "#e74c3c" bold True
+                        $ _ij = ui_icon("ico_alert", 22)
+                        if _ij:
+                            add _ij yalign 0.5
+                        else:
+                            text "X" size 22 color "#e74c3c" bold True
                     else:
-                        text "O" size 22 color "#4a4a4a"
+                        $ _ijo = ui_icon("ico_alert", 22)
+                        if _ijo:
+                            add Transform(_ijo, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.6)) yalign 0.5
+                        else:
+                            text "O" size 22 color "#4a4a4a"
 
                 text " [crisis_injuries]/3" size 18 color "#e74c3c" bold True
 
@@ -517,9 +525,15 @@ screen death_screen(cause="你的伤势过重，倒在了权谋的漩涡中。")
             hbox:
                 xalign 0.5
                 spacing 6
-                text "X" size 24 color "#8b0000" bold True
-                text "X" size 24 color "#8b0000" bold True
-                text "X" size 24 color "#8b0000" bold True
+                $ _dx = ui_icon("ico_alert", 26)
+                if _dx:
+                    add Transform(_dx, matrixcolor=TintMatrix("#8b0000")) yalign 0.5
+                    add Transform(_dx, matrixcolor=TintMatrix("#8b0000")) yalign 0.5
+                    add Transform(_dx, matrixcolor=TintMatrix("#8b0000")) yalign 0.5
+                else:
+                    text "X" size 24 color "#8b0000" bold True
+                    text "X" size 24 color "#8b0000" bold True
+                    text "X" size 24 color "#8b0000" bold True
 
             null height 20
 

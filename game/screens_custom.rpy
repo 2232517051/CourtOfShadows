@@ -189,9 +189,17 @@ screen stats_screen():
                                         text "剑 权力" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_power = get_stat_trend("power")
                                     if _trend_power == "up":
-                                        text "↑" size 12 color "#2ecc71" yalign 0.5
+                                        $ _tu = ui_icon("ui_up", 13)
+                                        if _tu:
+                                            add Transform(_tu, matrixcolor=TintMatrix("#2ecc71")) yalign 0.5
+                                        else:
+                                            text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_power == "down":
-                                        text "↓" size 12 color "#e74c3c" yalign 0.5
+                                        $ _td = ui_icon("ui_down", 13)
+                                        if _td:
+                                            add Transform(_td, matrixcolor=TintMatrix("#e74c3c")) yalign 0.5
+                                        else:
+                                            text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[power]" size 14 color "#e74c3c" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(power, 100)
@@ -214,9 +222,17 @@ screen stats_screen():
                                         text "金 财富" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_wealth = get_stat_trend("wealth")
                                     if _trend_wealth == "up":
-                                        text "↑" size 12 color "#2ecc71" yalign 0.5
+                                        $ _tu = ui_icon("ui_up", 13)
+                                        if _tu:
+                                            add Transform(_tu, matrixcolor=TintMatrix("#2ecc71")) yalign 0.5
+                                        else:
+                                            text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_wealth == "down":
-                                        text "↓" size 12 color "#e74c3c" yalign 0.5
+                                        $ _td = ui_icon("ui_down", 13)
+                                        if _td:
+                                            add Transform(_td, matrixcolor=TintMatrix("#e74c3c")) yalign 0.5
+                                        else:
+                                            text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[wealth]" size 14 color "#f39c12" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(wealth, 100)
@@ -239,9 +255,17 @@ screen stats_screen():
                                         text "十 信仰" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_faith = get_stat_trend("faith")
                                     if _trend_faith == "up":
-                                        text "↑" size 12 color "#2ecc71" yalign 0.5
+                                        $ _tu = ui_icon("ui_up", 13)
+                                        if _tu:
+                                            add Transform(_tu, matrixcolor=TintMatrix("#2ecc71")) yalign 0.5
+                                        else:
+                                            text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_faith == "down":
-                                        text "↓" size 12 color "#e74c3c" yalign 0.5
+                                        $ _td = ui_icon("ui_down", 13)
+                                        if _td:
+                                            add Transform(_td, matrixcolor=TintMatrix("#e74c3c")) yalign 0.5
+                                        else:
+                                            text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[faith]" size 14 color "#9b59b6" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(faith, 100)
@@ -264,9 +288,17 @@ screen stats_screen():
                                         text "盾 忠诚" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_loyalty = get_stat_trend("loyalty")
                                     if _trend_loyalty == "up":
-                                        text "↑" size 12 color "#2ecc71" yalign 0.5
+                                        $ _tu = ui_icon("ui_up", 13)
+                                        if _tu:
+                                            add Transform(_tu, matrixcolor=TintMatrix("#2ecc71")) yalign 0.5
+                                        else:
+                                            text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_loyalty == "down":
-                                        text "↓" size 12 color "#e74c3c" yalign 0.5
+                                        $ _td = ui_icon("ui_down", 13)
+                                        if _td:
+                                            add Transform(_td, matrixcolor=TintMatrix("#e74c3c")) yalign 0.5
+                                        else:
+                                            text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[loyalty]" size 14 color "#3498db" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(loyalty, 100)
@@ -289,9 +321,17 @@ screen stats_screen():
                                         text "* 声望" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_reputation = get_stat_trend("reputation")
                                     if _trend_reputation == "up":
-                                        text "↑" size 12 color "#2ecc71" yalign 0.5
+                                        $ _tu = ui_icon("ui_up", 13)
+                                        if _tu:
+                                            add Transform(_tu, matrixcolor=TintMatrix("#2ecc71")) yalign 0.5
+                                        else:
+                                            text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_reputation == "down":
-                                        text "↓" size 12 color "#e74c3c" yalign 0.5
+                                        $ _td = ui_icon("ui_down", 13)
+                                        if _td:
+                                            add Transform(_td, matrixcolor=TintMatrix("#e74c3c")) yalign 0.5
+                                        else:
+                                            text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[reputation]" size 14 color "#2ecc71" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(reputation, 100)
@@ -314,9 +354,17 @@ screen stats_screen():
                                         text "刃 谋略" size 14 color "#e0d8c8" xsize 70
                                     $ _trend_intrigue = get_stat_trend("intrigue")
                                     if _trend_intrigue == "up":
-                                        text "↑" size 12 color "#2ecc71" yalign 0.5
+                                        $ _tu = ui_icon("ui_up", 13)
+                                        if _tu:
+                                            add Transform(_tu, matrixcolor=TintMatrix("#2ecc71")) yalign 0.5
+                                        else:
+                                            text "↑" size 12 color "#2ecc71" yalign 0.5
                                     elif _trend_intrigue == "down":
-                                        text "↓" size 12 color "#e74c3c" yalign 0.5
+                                        $ _td = ui_icon("ui_down", 13)
+                                        if _td:
+                                            add Transform(_td, matrixcolor=TintMatrix("#e74c3c")) yalign 0.5
+                                        else:
+                                            text "↓" size 12 color "#e74c3c" yalign 0.5
                                     text "[intrigue]" size 14 color "#7f8c8d" xalign 1.0 bold True
                                 bar:
                                     value StaticValue(intrigue, 100)
@@ -332,7 +380,11 @@ screen stats_screen():
                         ## ─── 勇气系统 ─── ##
                         hbox:
                             spacing 6
-                            text "火" size 18 color "#d4a942" yalign 0.5
+                            $ _cg_hdr = ui_icon(UI_STAT_ICONS["courage"], 22)
+                            if _cg_hdr:
+                                add _cg_hdr yalign 0.5
+                            else:
+                                text "火" size 18 color "#d4a942" yalign 0.5
                             text "勇气" size 18 color "#d4a942" font "msyh.ttf"
 
                         null height 4
@@ -342,7 +394,12 @@ screen stats_screen():
                             hbox:
                                 $ _c_color = get_courage_color()
                                 $ _c_level = get_courage_level()
-                                text "火 勇气" size 14 color "#e0d8c8" xsize 70
+                                $ _cg_i = ui_icon(UI_STAT_ICONS["courage"], 18)
+                                if _cg_i:
+                                    add _cg_i yalign 0.5
+                                    text "勇气" size 14 color "#e0d8c8" xsize 52
+                                else:
+                                    text "火 勇气" size 14 color "#e0d8c8" xsize 70
                                 text _c_level size 12 color _c_color yalign 0.5
                                 text "[courage]/[max_courage]" size 14 color _c_color xalign 1.0 bold True
                             bar:
@@ -362,9 +419,17 @@ screen stats_screen():
                                 text "伤势：" size 14 color "#e74c3c" font "msyh.ttf"
                                 for _inj_i in range(3):
                                     if _inj_i < crisis_injuries:
-                                        text "X" size 16 color "#e74c3c" bold True
+                                        $ _ij = ui_icon("ico_alert", 16)
+                                        if _ij:
+                                            add _ij yalign 0.5
+                                        else:
+                                            text "X" size 16 color "#e74c3c" bold True
                                     else:
-                                        text "O" size 16 color "#4a4a4a"
+                                        $ _ijo = ui_icon("ico_alert", 16)
+                                        if _ijo:
+                                            add Transform(_ijo, matrixcolor=SaturationMatrix(0.0) * BrightnessMatrix(-0.6)) yalign 0.5
+                                        else:
+                                            text "O" size 16 color "#4a4a4a"
                             if crisis_injuries >= 2:
                                 text "! 濒死状态！" size 10 color "#ff0000"
 

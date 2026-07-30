@@ -139,7 +139,7 @@ screen character_codex():
 
                             vbox:
                                 spacing 3
-                                text "？??" size 20 color "#3a3040" font "msyh.ttf"
+                                text "？？？" size 20 color "#3a3040" font "msyh.ttf"
                                 text "在游戏中遇到此角色后解锁" size 13 color "#2a2030"
 
 
@@ -280,7 +280,11 @@ screen decision_journal():
                                 spacing 4
                                 hbox:
                                     spacing 8
-                                    text "+" size 14 color "#d4a94280" yalign 0.0 yoffset 2
+                                    $ _g0 = ui_icon("ico_plus", 14)
+                                    if _g0:
+                                        add Transform(_g0, matrixcolor=TintMatrix("#d4a94280")) yalign 0.0 yoffset 2
+                                    else:
+                                        text "+" size 14 color "#d4a94280" yalign 0.0 yoffset 2
                                     text _choice size 16 color "#e0d8c8" font "msyh.ttf"
                                 if _result:
                                     hbox:
@@ -651,7 +655,7 @@ screen collectibles_screen():
                                         background Solid("#0f0d1a")
                                         text "？" xalign 0.5 yalign 0.5 size 18 color "#2a2040"
                                     vbox:
-                                        text "？??" size 16 color "#3a3040" font "msyh.ttf"
+                                        text "？？？" size 16 color "#3a3040" font "msyh.ttf"
                                         text collectible_hints.get(_cid, "在游戏中探索发现") size 12 color "#2a2030"
 
 
@@ -939,7 +943,11 @@ screen chapter_summary(ch_name="第一章", ch_title="新主登基"):
                     hbox:
                         spacing 8
                         xalign 0.5
-                        text "+" size 12 color "#d4a94280" yalign 0.0 yoffset 3
+                        $ _g1 = ui_icon("ico_plus", 14)
+                        if _g1:
+                            add Transform(_g1, matrixcolor=TintMatrix("#d4a94280")) yalign 0.0 yoffset 3
+                        else:
+                            text "+" size 12 color "#d4a94280" yalign 0.0 yoffset 3
                         text _dchoice size 14 color "#c8b890"
 
             null height 14

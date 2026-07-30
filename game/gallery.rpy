@@ -324,7 +324,7 @@ init python:
         ## 自然 mus_nature(橡叶 + 露珠)
         "audio/music/forest_ambient.ogg": "nature",
         "audio/music/rain_storm.ogg": "nature",
-        "audio/music/campfire.ogg": "nature",
+        "audio/music/campfire.ogg": "nature",  ## 篝火→自然(专属 mus_campfire 若在则由映射外优先)
         "audio/music/winter_wind.ogg": "nature",
         ## 终章 mus_finale(王冠 + 帷幕)
         "audio/music/main_theme.ogg": "finale",

@@ -352,6 +352,9 @@ screen stat_toast(stat_name="", delta=0, is_rel=False, slot=0, tag_id=0):
     $ sign = "+" if delta > 0 else ""
     $ color = "#2ecc71" if delta > 0 else "#e74c3c"
     $ icon = "心" if is_rel else "*"
+    ## 资源体检: 浮层图标图形化——关系用交握之手, 属性按中文名反查专属徽记
+    $ _tk = None if is_rel else UI_STAT_BY_CN.get(stat_name)
+    $ _ti = ui_icon("ui_relation", 20) if is_rel else (ui_icon(UI_STAT_ICONS[_tk], 20) if _tk else None)
 
     frame at stat_toast_anim:
         xalign 0.5
@@ -362,7 +365,10 @@ screen stat_toast(stat_name="", delta=0, is_rel=False, slot=0, tag_id=0):
 
         hbox:
             spacing 10
-            text icon size 18 color "#d4a942" yalign 0.5
+            if _ti:
+                add _ti yalign 0.5
+            else:
+                text icon size 18 color "#d4a942" yalign 0.5
             text stat_name size 17 color "#e0d8c8" font "msyh.ttf" yalign 0.5
             text "[sign][delta]" size 20 color color bold True yalign 0.5
 
@@ -624,7 +630,11 @@ screen tutorial_overlay():
 
                 hbox:
                     spacing 12
-                    text "剑" size 20 yalign 0.0
+                    $ _tt = ui_icon(UI_STAT_ICONS["power"], 22)
+                    if _tt:
+                        add _tt yalign 0.0
+                    else:
+                        text "剑" size 20 yalign 0.0
                     vbox:
                         text "选择很重要！" size 18 color "#d4a942" font "msyh.ttf"
                         text "每个决定影响属性、好感度和故事走向" size 14 color "#8a7e60"
@@ -881,7 +891,11 @@ screen story_recap(chapter_id):
                     xalign 0.5
                     at fade_in_up(0.6 + idx * 0.2)
 
-                    text "+" size 14 color "#d4a94280" yalign 0.0 yoffset 4
+                    $ _g0 = ui_icon("ico_plus", 14)
+                    if _g0:
+                        add Transform(_g0, matrixcolor=TintMatrix("#d4a94280")) yalign 0.0 yoffset 4
+                    else:
+                        text "+" size 14 color "#d4a94280" yalign 0.0 yoffset 4
                     text line size 18 color "#c8b890" xmaximum 600
 
             null height 16
@@ -1006,14 +1020,22 @@ screen ending_route_map():
                                 text "完成游戏解锁此结局" size 14 color "#2a2030"
 
                         if is_seen:
-                            text ">" xalign 1.0 yalign 0.5 size 20 color e_color
+                            $ _ea = ui_icon("ui_play", 18)
+                            if _ea:
+                                add Transform(_ea, matrixcolor=TintMatrix(e_color)) xalign 1.0 yalign 0.5
+                            else:
+                                text ">" xalign 1.0 yalign 0.5 size 20 color e_color
 
             ## ── 南境游记 DLC 结局（独立 set，不并入上面 8 结局计数）──
             null height 14
             $ s_seen = persistent.southern_endings_seen if persistent.southern_endings_seen else set()
             hbox:
                 spacing 8
-                text "◆" size 20 color "#2e8b8b" yalign 0.5
+                $ _sd = ui_icon("ico_diamond", 20)
+                if _sd:
+                    add Transform(_sd, matrixcolor=TintMatrix("#2e8b8b")) yalign 0.5
+                else:
+                    text "◆" size 20 color "#2e8b8b" yalign 0.5
                 text "外章 · 潮汐港分支" size 22 color "#2e8b8b" font "msyh.ttf"
             text "已解锁 [len(s_seen)]/5 条分支" size 14 color "#6a5e48"
             null height 6
@@ -1059,7 +1081,11 @@ screen ending_route_map():
             if len(seen) > 0:
                 hbox:
                     spacing 8
-                    text "+" size 20 color "#d4a942" yalign 0.5
+                    $ _g1 = ui_icon("ico_plus", 20)
+                    if _g1:
+                        add Transform(_g1, matrixcolor=TintMatrix("#d4a942")) yalign 0.5
+                    else:
+                        text "+" size 20 color "#d4a942" yalign 0.5
                     text "关键分支点" size 22 color "#d4a942" font "msyh.ttf"
 
                 null height 6
@@ -1245,7 +1271,7 @@ screen ending_complete_hint(current_ending=""):
                                 hbox:
                                     spacing 8
                                     text "•" size 14 color "#6a5e48"
-                                    text "？??" size 14 color "#4a4040"
+                                    text "？？？" size 14 color "#4a4040"
                                     text "— 尝试不同的选择路线" size 13 color "#3a3030"
             else:
                 text "* 恭喜！你已解锁全部结局！" size 18 color "#ffd700" font "msyh.ttf" xalign 0.5
