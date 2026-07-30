@@ -1,7 +1,7 @@
 ## 游戏基本配置
 
 define config.name = _("权谋之庭 - Court of Shadows")
-define config.version = "3.8"
+define config.version = "3.9"
 
 define gui.show_name = True
 define gui.about = _p("""

@@ -17,6 +17,48 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.22 (商店版 v3.9) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.22" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "纹章 · 商店版 v3.9" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.30" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "界面图形化" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 103 件鎏金浮雕纹章图标替换全部汉字占位符" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 章节徽章 7 枚：卷轴/金鹰/船锚/双旗/百合/塔楼/交叉剑" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 结局徽章 9 枚 + 南境 5 枚" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 属性图标 6 枚：铁拳握剑/钱袋/圣杯/剑穿心/桂冠星/匕首面具" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 难度选择图标 3 枚：羽毛笔盾/剑盾/三剑" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 成就六类别徽章、音乐十类别徽章替换星号文字" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 对话框底板、名牌、选项按钮、存档槽等控件图形化" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 复选框、单选钮、滚动条、确认框、通知条全部换图" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "角色与地图" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 角色图鉴与关系面板首字占位换为立绘裁切头像" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 世界地图重做为手绘羊皮纸王国全境图，12 地点各有纹章" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 难度选择界面图标布局错位修正" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 画廊全屏查看器立绘裁切修复" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.21 (商店版 v3.8) ──
             frame:
                 xfill True
