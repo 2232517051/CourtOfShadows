@@ -382,7 +382,7 @@ screen crafting_screen():
                                                         vbox:
                                                             text _rdata["name"] size 14 color ("#e0d8c8" if _r_can else "#6a5e48") font "msyh.ttf"
                                                             $ _r_rate = get_success_rate(_rid)
-                                                            text "成功率 [_r_rate]%%" size 10 color _r_status_color
+                                                            text "成功率 [_r_rate]%" size 10 color _r_status_color
 
                                                         ## 状态点
                                                         text "*" size 10 color _r_status_color xalign 1.0 yalign 0.5
@@ -500,7 +500,7 @@ screen crafting_screen():
                                                 $ _rate_color = "#e67e22"
                                             else:
                                                 $ _rate_color = "#e74c3c"
-                                            text "[_sel_rate]%%" size 14 color _rate_color bold True
+                                            text "[_sel_rate]%" size 14 color _rate_color bold True
 
                                         vbox:
                                             spacing 2
@@ -524,7 +524,7 @@ screen crafting_screen():
 
                                     ## 提示
                                     if _sel_skill > 30:
-                                        text "技能 > 30 时有 10%% 概率暴击（双倍产出）" size 11 color "#6a5e48"
+                                        text "技能 > 30 时有 10% 概率暴击（双倍产出）" size 11 color "#6a5e48"
                                     if not _sel_can:
                                         text "！ 材料不足，无法制作" size 12 color "#e74c3c"
                                     elif not _sel_skill_ok:

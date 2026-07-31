@@ -801,7 +801,7 @@ init python:
         """玩家进入闪避姿态"""
         store.combat_player_stamina = max(0, store.combat_player_stamina - 5)
         store.combat_dodge_bonus = 30
-        add_combat_log("你进入闪避姿态（下回合闪避+30%%）")
+        add_combat_log("你进入闪避姿态（下回合闪避+30%）")
 
     ## ──────────────── 使用物品 ────────────────
 
@@ -1422,8 +1422,8 @@ screen combat_screen():
                 spacing 10
                 text "攻[combat_player_attack]" size 11 color "#e74c3c"
                 text "防[combat_player_defense]" size 11 color "#3498db"
-                text "闪[combat_player_dodge]%%" size 11 color "#2ecc71"
-                text "暴[combat_player_crit]%%" size 11 color "#f39c12"
+                text "闪[combat_player_dodge]%" size 11 color "#2ecc71"
+                text "暴[combat_player_crit]%" size 11 color "#f39c12"
                 if combat_respite_stacks > 0:
                     text "气[combat_respite_stacks]" size 11 color "#9b59b6"
 
@@ -1612,7 +1612,7 @@ screen combat_screen():
                             yalign 0.5
                             $ _retreat_pct = min(90, 60 + int(intrigue * 0.3))
                             text "退 撤退" size 14 color "#e74c3c" font "msyh.ttf" xalign 0.5
-                            text "成功率[_retreat_pct]%%" size 9 color "#6a5e48" xalign 0.5
+                            text "成功率[_retreat_pct]%" size 9 color "#6a5e48" xalign 0.5
 
                     ## 占位（2x4 grid需要8个元素）
                     null
@@ -1653,7 +1653,7 @@ screen combat_screen():
                             yalign 0.5
                             spacing 2
                             text "头部" size 15 color "#e74c3c" font "msyh.ttf" xalign 0.5 bold True
-                            text "1.5x伤 -15%%命中" size 10 color "#c8b890" xalign 0.5
+                            text "1.5x伤 -15%命中" size 10 color "#c8b890" xalign 0.5
                             text "可眩晕" size 10 color "#f39c12" xalign 0.5
 
                     ## 颈部（新增！）
@@ -1669,7 +1669,7 @@ screen combat_screen():
                             yalign 0.5
                             spacing 2
                             text "颈部" size 15 color "#ff6b6b" font "msyh.ttf" xalign 0.5 bold True
-                            text "2.0x伤 -25%%命中" size 10 color "#c8b890" xalign 0.5
+                            text "2.0x伤 -25%命中" size 10 color "#c8b890" xalign 0.5
                             text "可流血" size 10 color "#e7283c" xalign 0.5
 
                     ## 躯干
@@ -1701,7 +1701,7 @@ screen combat_screen():
                             yalign 0.5
                             spacing 2
                             text "四肢" size 15 color "#2ecc71" font "msyh.ttf" xalign 0.5 bold True
-                            text "0.75x伤 +10%%命中" size 10 color "#c8b890" xalign 0.5
+                            text "0.75x伤 +10%命中" size 10 color "#c8b890" xalign 0.5
                             text "高命中" size 10 color "#2ecc71" xalign 0.5
 
                 ## 取消按钮
@@ -1883,7 +1883,7 @@ screen combat_victory():
                     hbox:
                         xfill True
                         text "剩余HP" size 13 color "#6a5e48" font "msyh.ttf"
-                        text "[combat_player_hp]/[combat_player_max_hp] ([_hp_remain_pct]%%)" size 13 color "#c8b890" xalign 1.0
+                        text "[combat_player_hp]/[combat_player_max_hp] ([_hp_remain_pct]%)" size 13 color "#c8b890" xalign 1.0
                     hbox:
                         xfill True
                         text "回合数" size 13 color "#6a5e48" font "msyh.ttf"
@@ -2063,10 +2063,10 @@ init python:
         """切换姿态： balanced -> offensive -> defensive -> balanced"""
         if store.combat_stance == "balanced":
             store.combat_stance = "offensive"
-            add_combat_log("切换至【攻势】: +20%%伤害, -10闪避")
+            add_combat_log("切换至【攻势】: +20%伤害, -10闪避")
         elif store.combat_stance == "offensive":
             store.combat_stance = "defensive"
-            add_combat_log("切换至【守势】: +15闪避, -20%%伤害, 可反击")
+            add_combat_log("切换至【守势】: +15闪避, -20%伤害, 可反击")
         else:
             store.combat_stance = "balanced"
             add_combat_log("切换至【均衡】: 标准战斗状态")
