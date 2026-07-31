@@ -156,6 +156,144 @@ label test_desktop_choice_sanity_fixture:
 
 
 ################################################################################
+## 3.9.2 regression: accessibility controls must drive Ren'Py preferences.
+################################################################################
+
+default _test_accessibility_original_font_size = 1.0
+default _test_accessibility_original_high_contrast = False
+default _test_accessibility_original_text_cps = 0
+default _test_accessibility_seventh_selected = False
+
+testsuite test_accessibility_settings:
+    before testcase:
+        $ _test.timeout = 4.0
+        $ _test_accessibility_original_font_size = preferences.font_size
+        $ _test_accessibility_original_high_contrast = preferences.high_contrast
+        $ preferences.font_size = 1.0
+        $ preferences.high_contrast = False
+
+    after testcase:
+        $ preferences.font_size = _test_accessibility_original_font_size
+        $ preferences.high_contrast = _test_accessibility_original_high_contrast
+        $ renpy.restart_interaction()
+
+    testcase branded_size_buttons_set_exact_native_factors:
+        run ShowMenu("accessibility_settings") until screen "accessibility_settings" timeout 4.0
+
+        click "小"
+        assert eval (preferences.font_size == 0.9)
+        click "标准"
+        assert eval (preferences.font_size == 1.0)
+        click "大"
+        assert eval (preferences.font_size == 1.25)
+        click "特大"
+        assert eval (preferences.font_size == 1.5)
+
+    testcase contrast_buttons_set_native_preference:
+        run ShowMenu("accessibility_settings") until screen "accessibility_settings" timeout 4.0
+
+        click "开启"
+        assert eval (preferences.high_contrast)
+        click "关闭"
+        assert eval (not preferences.high_contrast)
+
+    testcase normal_preferences_page_exposes_accessibility_entry:
+        run ShowMenu("preferences") until screen "preferences" timeout 4.0
+        assert eval (renpy.get_displayable("preferences", "accessibility_entry") is not None)
+
+
+testsuite test_accessibility_render:
+    before testcase:
+        $ _test.timeout = 4.0
+        $ _test_accessibility_original_font_size = preferences.font_size
+        $ _test_accessibility_original_high_contrast = preferences.high_contrast
+        $ _test_accessibility_original_text_cps = preferences.text_cps
+        $ preferences.font_size = 1.5
+        $ preferences.high_contrast = False
+        $ preferences.text_cps = 0
+
+    after testcase:
+        $ preferences.font_size = _test_accessibility_original_font_size
+        $ preferences.high_contrast = _test_accessibility_original_high_contrast
+        $ preferences.text_cps = _test_accessibility_original_text_cps
+        $ renpy.restart_interaction()
+
+    testcase small_touch_dialogue_and_seven_long_choices_render_at_150_percent:
+        if eval (renpy.variant("small")):
+            run Start("test_accessibility_render_fixture") until screen "say" timeout 4.0
+            assert eval (renpy.get_screen("say").scope["_say_window_height"] >= int(gui.textbox_height * preferences.font_size))
+            screenshot "accessibility_150_dialogue"
+            click
+            pause until screen "choice" timeout 4.0
+            pause 2.0
+            screenshot "accessibility_150_choices_initial"
+            scroll id "choice_scroll" amount 1000
+            pause 0.5
+            screenshot "accessibility_150_choices_scrolled"
+            click "第七项：放下旧日的王冠，与所有盟友共同建立公开、平等而长久的新议会秩序"
+            pause until screen "say" timeout 4.0
+            assert eval (_test_accessibility_seventh_selected)
+
+
+testcase test_accessibility_migration:
+    $ _legacy_accessibility = type("LegacyAccessibility", (), {})()
+    $ _legacy_accessibility.text_size_offset = 8
+    $ _legacy_accessibility.high_contrast = True
+    $ _legacy_accessibility.accessibility_preferences_migrated = False
+    $ _native_accessibility = type("NativeAccessibility", (), {})()
+    $ _native_accessibility.font_size = 1.0
+    $ _native_accessibility.high_contrast = False
+    $ _migrate_legacy_accessibility_preferences(_legacy_accessibility, _native_accessibility)
+    assert eval (_native_accessibility.font_size == 1.5)
+    assert eval (_native_accessibility.high_contrast)
+    assert eval (_legacy_accessibility.accessibility_preferences_migrated)
+
+    ## A completed migration must never overwrite a later player choice.
+    $ _native_accessibility.font_size = 0.9
+    $ _native_accessibility.high_contrast = False
+    $ _migrate_legacy_accessibility_preferences(_legacy_accessibility, _native_accessibility)
+    assert eval (_native_accessibility.font_size == 0.9)
+    assert eval (not _native_accessibility.high_contrast)
+
+    ## Legacy defaults carry no intent and must preserve existing native choices.
+    $ _legacy_defaults = type("LegacyAccessibilityDefaults", (), {})()
+    $ _legacy_defaults.text_size_offset = 0
+    $ _legacy_defaults.high_contrast = False
+    $ _legacy_defaults.accessibility_preferences_migrated = False
+    $ _native_existing = type("NativeAccessibilityExisting", (), {})()
+    $ _native_existing.font_size = 1.25
+    $ _native_existing.high_contrast = True
+    $ _migrate_legacy_accessibility_preferences(_legacy_defaults, _native_existing)
+    assert eval (_native_existing.font_size == 1.25)
+    assert eval (_native_existing.high_contrast)
+
+
+label test_accessibility_render_fixture:
+    $ _test_accessibility_seventh_selected = False
+
+    "这是百分之一百五十字号下的真实对话渲染测试：较长的句子应当完整换行，不能被对话框边缘或快捷菜单裁切。"
+
+    menu:
+        "第一项：接受摄政之位，以王廷法统维持北境来之不易的和平与稳定|权力 +10 盟友信任 -5":
+            return
+        "第二项：公开父亲遇害的全部证据，让贵族与教会共同接受公正审判|声望 +10 阴谋 -5":
+            return
+        "第三项：率领边境军团继续南下，彻底结束诸侯割据造成的漫长战乱|权力 +15 忠诚 -10":
+            return
+        "第四项：兑现对自由城邦的承诺，承认港口、商路与议会的自治权利|财富 +10 王廷关系 -5":
+            return
+        "第五项：邀请暗百合进入议会，以秘密情报守护来之不易的脆弱新秩序|阴谋 +10 教会关系 -5":
+            return
+        "第六项：将兵权交还各地领主，用公开盟约约束每一位未来的统治者|忠诚 +10 权力 -10":
+            return
+        "第七项：放下旧日的王冠，与所有盟友共同建立公开、平等而长久的新议会秩序|全体关系 +10 历史将记住这一刻":
+            $ _test_accessibility_seventh_selected = True
+            "第七个无障碍渲染测试分支已执行。"
+
+    return
+
+
+################################################################################
 ## 3.9.2 regression: every formal chapter entry must initialize a blank run once
 ################################################################################
 

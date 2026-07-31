@@ -151,8 +151,13 @@ style frame:
 
 screen say(who, what):
 
+    $ _say_window_height = int(gui.textbox_height * preferences.font_size) if renpy.variant("small") and preferences.font_size > 1.0 else gui.textbox_height
+
     window:
         id "window"
+        if renpy.variant("small") and preferences.font_size > 1.0:
+            ysize _say_window_height
+            background Transform("gui/textbox.png", xalign=0.5, yalign=1.0, ysize=_say_window_height)
 
         if who is not None:
             window:
@@ -358,16 +363,17 @@ screen choice_items(items, choice_ready):
                                 spacing 8
                                 for _h in _hint.split():
                                     if "+" in _h:
-                                        text _h size 13 color "#2ecc71" substitute False
+                                        text _h style "choice_hint_text" color "#2ecc71" substitute False
                                     elif "-" in _h:
-                                        text _h size 13 color "#e74c3c" substitute False
+                                        text _h style "choice_hint_text" color "#e74c3c" substitute False
                                     else:
-                                        text _h size 13 color "#8a7e60" substitute False
+                                        text _h style "choice_hint_text" color "#8a7e60" substitute False
 
 
 style choice_vbox is vbox
 style choice_button is button
 style choice_button_text is button_text
+style choice_hint_text is default
 style choice_side is side
 style choice_viewport is viewport
 style choice_vscrollbar is vscrollbar
@@ -382,6 +388,9 @@ style choice_button is default:
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
     outlines [(2, "#000000", 0, 0), (1, "#000000", 1, 1)]
+
+style choice_hint_text:
+    size (gui.interface_text_size * 3 // 5)
 
 style choice_side:
     xalign 0.5
@@ -1072,6 +1081,12 @@ screen preferences():
                         textbutton _("全部静音"):
                             action Preference("all mute", "toggle")
                             style "mute_all_button"
+
+            null height gui.pref_spacing
+            textbutton _("辅助功能设置"):
+                id "accessibility_entry"
+                action ShowMenu("accessibility_settings")
+                style "check_button"
 
 
 style pref_label is gui_label

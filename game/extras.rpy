@@ -1125,14 +1125,32 @@ label _timed_choice_timeout:
 
 default persistent.text_size_offset = 0
 default persistent.high_contrast = False
+default persistent.accessibility_preferences_migrated = False
 
 init python:
-    def apply_accessibility():
-        """应用辅助功能设置"""
-        offset = persistent.text_size_offset or 0
-        style.default.size = 24 + offset
-        style.say_dialogue.size = 24 + offset
-        style.say_label.size = 26 + offset
+    def _migrate_legacy_accessibility_preferences(legacy, native):
+        """Move old custom accessibility values to Ren'Py once."""
+        if getattr(legacy, "accessibility_preferences_migrated", False):
+            return False
+
+        legacy_size = getattr(legacy, "text_size_offset", 0)
+        size_factor = {
+            -2: 0.9,
+            4: 1.25,
+            8: 1.5,
+        }.get(legacy_size)
+
+        ## Default legacy values carry no user intent, so preserve any native
+        ## preference already selected through Ren'Py's accessibility menu.
+        if size_factor is not None:
+            native.font_size = size_factor
+        if getattr(legacy, "high_contrast", False):
+            native.high_contrast = True
+
+        legacy.accessibility_preferences_migrated = True
+        return True
+
+    _migrate_legacy_accessibility_preferences(persistent, preferences)
 
 screen accessibility_settings():
     tag menu
@@ -1162,41 +1180,45 @@ screen accessibility_settings():
                     spacing 10
 
                     text "字体大小" size 18 color "#e0d8c8" font "msyh.ttf"
-                    text "调整游戏文字的显示大小" size 13 color "#6a5e48"
+                    text "调整游戏文字的显示大小" style "accessibility_helper_text" color "#6a5e48"
 
-                    $ _ts_label = "标准" if persistent.text_size_offset == 0 else ("大" if persistent.text_size_offset == 4 else ("特大" if persistent.text_size_offset == 8 else "小"))
-                    text "当前： [_ts_label]" size 14 color "#d4a942"
+                    $ _ts_label = "小" if preferences.font_size == 0.9 else ("大" if preferences.font_size == 1.25 else ("特大" if preferences.font_size == 1.5 else "标准"))
+                    text "当前： [_ts_label]" style "accessibility_status_text" color "#d4a942"
 
                     hbox:
                         spacing 12
 
-                        $ _tc_small = "#d4a942" if persistent.text_size_offset == -2 else "#6a5e48"
+                        $ _tc_small = "#d4a942" if preferences.font_size == 0.9 else "#6a5e48"
                         textbutton "小":
                             text_size 16
                             text_color _tc_small
                             text_hover_color "#ffd866"
-                            action SetField(persistent, "text_size_offset", -2)
+                            selected preferences.font_size == 0.9
+                            action Preference("font size", 0.9)
 
-                        $ _tc_std = "#d4a942" if persistent.text_size_offset == 0 else "#6a5e48"
+                        $ _tc_std = "#d4a942" if preferences.font_size == 1.0 else "#6a5e48"
                         textbutton "标准":
                             text_size 18
                             text_color _tc_std
                             text_hover_color "#ffd866"
-                            action SetField(persistent, "text_size_offset", 0)
+                            selected preferences.font_size == 1.0
+                            action Preference("font size", 1.0)
 
-                        $ _tc_big = "#d4a942" if persistent.text_size_offset == 4 else "#6a5e48"
+                        $ _tc_big = "#d4a942" if preferences.font_size == 1.25 else "#6a5e48"
                         textbutton "大":
                             text_size 20
                             text_color _tc_big
                             text_hover_color "#ffd866"
-                            action SetField(persistent, "text_size_offset", 4)
+                            selected preferences.font_size == 1.25
+                            action Preference("font size", 1.25)
 
-                        $ _tc_xl = "#d4a942" if persistent.text_size_offset == 8 else "#6a5e48"
+                        $ _tc_xl = "#d4a942" if preferences.font_size == 1.5 else "#6a5e48"
                         textbutton "特大":
                             text_size 22
                             text_color _tc_xl
                             text_hover_color "#ffd866"
-                            action SetField(persistent, "text_size_offset", 8)
+                            selected preferences.font_size == 1.5
+                            action Preference("font size", 1.5)
 
             ## 高对比度
             frame:
@@ -1208,23 +1230,25 @@ screen accessibility_settings():
                 vbox:
                     spacing 10
                     text "高对比度模式" size 18 color "#e0d8c8" font "msyh.ttf"
-                    text "增强文字与背景的对比度，方便阅读" size 13 color "#6a5e48"
+                    text "增强文字与背景的对比度，方便阅读" style "accessibility_helper_text" color "#6a5e48"
 
                     hbox:
                         spacing 16
-                        $ _hc_on = "#d4a942" if persistent.high_contrast else "#6a5e48"
+                        $ _hc_on = "#d4a942" if preferences.high_contrast else "#6a5e48"
                         textbutton "开启":
                             text_size 16
                             text_color _hc_on
                             text_hover_color "#ffd866"
-                            action SetField(persistent, "high_contrast", True)
+                            selected preferences.high_contrast
+                            action Preference("high contrast text", "enable")
 
-                        $ _hc_off = "#d4a942" if not persistent.high_contrast else "#6a5e48"
+                        $ _hc_off = "#d4a942" if not preferences.high_contrast else "#6a5e48"
                         textbutton "关闭":
                             text_size 16
                             text_color _hc_off
                             text_hover_color "#ffd866"
-                            action SetField(persistent, "high_contrast", False)
+                            selected not preferences.high_contrast
+                            action Preference("high contrast text", "disable")
 
             ## 自动文字速度
             frame:
@@ -1236,7 +1260,7 @@ screen accessibility_settings():
                 vbox:
                     spacing 10
                     text "文字显示速度" size 18 color "#e0d8c8" font "msyh.ttf"
-                    text "调整对话文字的显示速度" size 13 color "#6a5e48"
+                    text "调整对话文字的显示速度" style "accessibility_helper_text" color "#6a5e48"
 
                     bar:
                         value Preference("text speed")
@@ -1255,7 +1279,7 @@ screen accessibility_settings():
                 vbox:
                     spacing 10
                     text "自动前进速度" size 18 color "#e0d8c8" font "msyh.ttf"
-                    text "自动前进模式下的等待时间" size 13 color "#6a5e48"
+                    text "自动前进模式下的等待时间" style "accessibility_helper_text" color "#6a5e48"
 
                     bar:
                         value Preference("auto-forward time")
@@ -1263,3 +1287,10 @@ screen accessibility_settings():
                         ysize 28
                         left_bar Solid("#d4a942")
                         right_bar Solid("#1a1528")
+
+
+style accessibility_helper_text is default:
+    size (gui.interface_text_size * 3 // 5)
+
+style accessibility_status_text is default:
+    size (gui.interface_text_size * 2 // 3)
