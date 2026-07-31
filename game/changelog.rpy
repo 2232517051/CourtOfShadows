@@ -21,6 +21,39 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.24 (商店版 v3.9.2) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.24" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "校正 · 商店版 v3.9.2" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.07.31" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "关键修复" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 杀父案线索拆分为中毒方式、执行者与幕后主使，第三章证据不再提前开放真相结局" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正终局候选计算，任何合法状态都至少保留一个可选结局" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 章节选择统一经过新周目初始化，不再跳过难度、命名与初始装备" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "界面与无障碍" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 手机端长选项支持滚动，150% 字号下仍可查看并选择全部路线" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 字号与高对比设置改用引擎原生偏好，切换后即时生效" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 修正战斗与锻造界面的百分号重复显示" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.23 (商店版 v3.9.1) ──
             frame:
                 xfill True
