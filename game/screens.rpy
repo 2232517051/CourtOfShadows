@@ -251,11 +251,12 @@ screen choice(items):
 
     ## 防误触计时器：选项出现后短暂延迟才可点击
     default choice_ready = False
+    default choice_is_important = getattr(store, "important_choice", False)
     timer 0.6 action SetScreenVariable("choice_ready", True)
 
     fixed:
         ## 重要抉择模式：特殊视觉效果
-        if getattr(store, "important_choice", False):
+        if choice_is_important:
             add Solid("#0a0812cc")
             ## 顶部提示
             vbox:
@@ -272,7 +273,7 @@ screen choice(items):
         if renpy.variant("small"):
             side "c r":
                 style "choice_side"
-                if getattr(store, "important_choice", False):
+                if choice_is_important:
                     ypos 160
                     ysize 440
                 else:
@@ -286,20 +287,20 @@ screen choice(items):
                     mousewheel True
                     pagekeys True
 
-                    use choice_items(items, choice_ready)
+                    use choice_items(items, choice_ready, choice_is_important)
 
                 vbar:
                     style "choice_vscrollbar"
                     value YScrollValue("choice_scroll")
         else:
-            use choice_items(items, choice_ready)
+            use choice_items(items, choice_ready, choice_is_important)
 
     ## 重要抉择结束后自动重置标记
-    if getattr(store, "important_choice", False):
+    if choice_is_important:
         timer 0.1 action SetVariable("important_choice", False)
 
 
-screen choice_items(items, choice_ready):
+screen choice_items(items, choice_ready, choice_is_important):
     style_prefix "choice"
 
     vbox:
@@ -330,7 +331,7 @@ screen choice_items(items, choice_ready):
 
                 if not choice_ready:
                     background Solid("#1a152866")
-                elif getattr(store, "important_choice", False):
+                elif choice_is_important:
                     background Solid("#1a1528cc")
                     hover_background Solid("#2a2040ee")
                 else:
