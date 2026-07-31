@@ -175,6 +175,7 @@ testsuite test_accessibility_settings:
     after testcase:
         $ preferences.font_size = _test_accessibility_original_font_size
         $ preferences.high_contrast = _test_accessibility_original_high_contrast
+        $ renpy.save_persistent()
         $ renpy.restart_interaction()
 
     testcase branded_size_buttons_set_exact_native_factors:
@@ -216,16 +217,38 @@ testsuite test_accessibility_render:
         $ preferences.font_size = _test_accessibility_original_font_size
         $ preferences.high_contrast = _test_accessibility_original_high_contrast
         $ preferences.text_cps = _test_accessibility_original_text_cps
+        $ renpy.save_persistent()
         $ renpy.restart_interaction()
 
     testcase small_touch_dialogue_and_seven_long_choices_render_at_150_percent:
         if eval (renpy.variant("small")):
             run Start("test_accessibility_render_fixture") until screen "say" timeout 4.0
-            assert eval (renpy.get_screen("say").scope["_say_window_height"] >= int(gui.textbox_height * preferences.font_size))
+            $ _quick_history_displayable = renpy.get_displayable("quick_menu", "quick_history")
+            $ _quick_preferences_displayable = renpy.get_displayable("quick_menu", "quick_preferences")
+            $ _quick_bar_displayable = renpy.get_displayable("quick_menu", "quick_menu_bar")
+            assert eval (_quick_history_displayable is not None)
+            assert eval (_quick_preferences_displayable is not None)
+            assert eval (_quick_bar_displayable is not None)
+            $ _quick_history_bounds = renpy.test.testfocus.focus_from_displayable(_quick_history_displayable)
+            $ _quick_preferences_bounds = renpy.test.testfocus.focus_from_displayable(_quick_preferences_displayable)
+            $ _quick_bar_bounds = renpy.test.testfocus.focus_from_displayable(_quick_bar_displayable)
+            assert eval (_quick_history_bounds is not None)
+            assert eval (_quick_preferences_bounds is not None)
+            assert eval (_quick_bar_bounds is not None)
+            assert eval (_quick_history_bounds.x >= 0)
+            assert eval (_quick_preferences_bounds.x + _quick_preferences_bounds.w <= config.screen_width)
+            $ _say_what_bounds = renpy.test.testfocus.focus_from_displayable(renpy.get_displayable("say", "what"))
+            assert eval (_say_what_bounds is not None)
+            assert eval (_say_what_bounds.y + _say_what_bounds.h <= _quick_bar_bounds.y)
             screenshot "accessibility_150_dialogue"
-            click
+            click pos (0.5, 0.5)
             pause until screen "choice" timeout 4.0
             pause 2.0
+            $ _choice_viewport_bounds = renpy.test.testfocus.focus_from_displayable(renpy.get_displayable("choice", "choice_scroll"))
+            $ _choice_quick_bar_bounds = renpy.test.testfocus.focus_from_displayable(renpy.get_displayable("quick_menu", "quick_menu_bar"))
+            assert eval (_choice_viewport_bounds is not None)
+            assert eval (_choice_quick_bar_bounds is not None)
+            assert eval (_choice_viewport_bounds.y + _choice_viewport_bounds.h <= _choice_quick_bar_bounds.y)
             screenshot "accessibility_150_choices_initial"
             scroll id "choice_scroll" amount 1000
             pause 0.5
@@ -233,6 +256,10 @@ testsuite test_accessibility_render:
             click "第七项：放下旧日的王冠，与所有盟友共同建立公开、平等而长久的新议会秩序"
             pause until screen "say" timeout 4.0
             assert eval (_test_accessibility_seventh_selected)
+            click "设置"
+            pause until screen "preferences" timeout 4.0
+            assert screen "preferences"
+            screenshot "accessibility_150_preferences"
 
 
 testcase test_accessibility_migration:

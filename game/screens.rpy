@@ -419,13 +419,14 @@ screen quick_menu():
 
     if quick_menu:
         hbox:
-            style_prefix "quick"
+            id "quick_menu_bar"
+            style_prefix ("quick_compact" if renpy.variant("small") and preferences.font_size > 1.0 else "quick")
             style "quick_menu"
 
             if not renpy.variant("small"):
                 ## PC/平板: 完整快捷栏
                 textbutton _("回退") action Rollback()
-                textbutton _("历史") action ShowMenu('history')
+                textbutton _("历史") id "quick_history" action ShowMenu('history')
                 textbutton _("快进") action Skip() alternate SkipToChoice()
                 textbutton _("跳抉择") action SkipToChoice()
                 textbutton _("自动") action Preference("auto-forward", "toggle")
@@ -434,10 +435,10 @@ screen quick_menu():
                 textbutton _("快存") action QuickSave()
                 textbutton _("快读") action QuickLoad()
                 textbutton _("状态") action Show("stats_screen")
-                textbutton _("设置") action ShowMenu('preferences')
+                textbutton _("设置") id "quick_preferences" action ShowMenu('preferences')
             else:
                 ## 手机: 精简快捷栏
-                textbutton _("历史") action ShowMenu('history')
+                textbutton _("历史") id "quick_history" action ShowMenu('history')
                 textbutton _("存档") action ShowMenu('save')
                 textbutton _("读档") action ShowMenu('load')
                 textbutton _("快存") action QuickSave()
@@ -445,7 +446,7 @@ screen quick_menu():
                 textbutton _("快进") action Skip() alternate SkipToChoice()
                 textbutton _("跳抉择") action SkipToChoice()
                 textbutton _("状态") action Show("stats_screen")
-                textbutton _("设置") action ShowMenu('preferences')
+                textbutton _("设置") id "quick_preferences" action ShowMenu('preferences')
 
 
 init python:
@@ -455,6 +456,8 @@ init python:
 style quick_menu is hbox
 style quick_button is default
 style quick_button_text is button_text
+style quick_compact_button is quick_button
+style quick_compact_button_text is quick_button_text
 
 style quick_menu:
     xalign 0.5
@@ -462,6 +465,10 @@ style quick_menu:
 
 style quick_button:
     properties gui.button_properties("quick_button")
+
+style quick_compact_button:
+    left_padding 8
+    right_padding 8
 
 style quick_button_text:
     properties gui.text_properties("quick_button")
