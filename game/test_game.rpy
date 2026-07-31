@@ -10,43 +10,61 @@
 ################################################################################
 
 ## 主测试：快速走通游戏，验证不会崩溃
-testcase test_walkthrough:
-    ## 从主菜单稳定启动，并完成一次性开局设置
-    $ persistent.privacy_agreed = True
-    $ persistent.tutorial_seen = True
-    run Start() until screen "difficulty_select" timeout 4.0
-    click "确认"
-    pause until screen "name_input_screen" timeout 4.0
-    click "使用默认"
-    pause 0.5
+testsuite test_walkthrough:
+    before testcase:
+        $ _test.walkthrough_persistent_snapshot = {"privacy_agreed": persistent.privacy_agreed, "tutorial_seen": persistent.tutorial_seen}
+        $ persistent.privacy_agreed = True
+        $ persistent.tutorial_seen = True
 
-    ## 连续点击推进剧情，直到遇到选择
-    ## 第一章
-    ## 自动点击推进剧情
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
-    pause 0.3
-    click
+    after testcase:
+        if not screen "main_menu":
+            run MainMenu(confirm=False)
+        $ persistent.privacy_agreed = _test.walkthrough_persistent_snapshot["privacy_agreed"]
+        $ persistent.tutorial_seen = _test.walkthrough_persistent_snapshot["tutorial_seen"]
+        assert eval (all(getattr(persistent, name) == value for name, value in _test.walkthrough_persistent_snapshot.items()))
+        $ renpy.save_persistent()
+
+    testcase quick_start:
+        ## 从主菜单稳定启动，并完成一次性开局设置
+        run Start() until screen "difficulty_select" timeout 4.0
+        click "确认"
+        pause until screen "name_input_screen" timeout 4.0
+        click "使用默认"
+        pause 0.5
+
+        ## 连续点击推进剧情，直到遇到选择
+        ## 第一章
+        ## 自动点击推进剧情
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
+        pause 0.3
+        click
 
 
 ## 3.9.2 critical regression: finale routes must always expose a valid choice,
 ## and legacy chapter-three truth state must not imply chapter-four knowledge.
 testcase test_critical_finale_routes:
+    $ father_poisoned_known = False
+    $ father_poison_method_known = False
+    $ confirm_father_poison_method()
+    assert eval (father_poisoned_known)
+    assert eval (father_poison_method_known)
+
     $ _full_lily_faith = get_finale_route_availability(faith=80, difficulty="hard", lily_full_member=True, rel_queen=20, rel_baron=20)
     $ _full_lily_holy_hidden = not _full_lily_faith["holy_guardian"]
     $ _full_lily_fall_visible = _full_lily_faith["fall"]
@@ -88,6 +106,97 @@ testcase test_critical_finale_routes:
 
 
 ################################################################################
+## 3.9.2 save compatibility: legacy HQ executor knowledge needs exact provenance.
+################################################################################
+
+testsuite test_evidence_migration:
+    before testcase:
+        if not screen "main_menu":
+            run MainMenu(confirm=False)
+        $ _test.timeout = 4.0
+        $ _test.evidence_chapters_completed_snapshot = None if persistent.chapters_completed is None else set(persistent.chapters_completed)
+
+    after testcase:
+        if not screen "main_menu":
+            run MainMenu(confirm=False)
+        $ persistent.chapters_completed = None if _test.evidence_chapters_completed_snapshot is None else set(_test.evidence_chapters_completed_snapshot)
+        $ renpy.save_persistent()
+
+    testcase legacy_executor_provenance_matrix:
+        parameter (entry_label, expected_executor) = [
+            ("test_evidence_migration_joined", True),
+            ("test_evidence_migration_destroyed", True),
+            ("test_evidence_migration_independent", True),
+            ("test_evidence_migration_skipped", False),
+            ("test_evidence_migration_mid_scene", False),
+        ]
+
+        run Start(entry_label) until screen "say" timeout 4.0
+        assert eval (father_poison_executor_known == expected_executor)
+
+    testcase prince_murder_disclosure_does_not_imply_poison_method:
+        run Start("test_evidence_migration_prince_only") until screen "say" timeout 4.0
+        assert eval (father_poisoned_known)
+        assert not eval (father_poison_method_known)
+
+
+label test_evidence_migration_joined:
+    call test_evidence_migration_driver(joined=True, visited=True) from _call_test_evidence_migration_joined
+    "旧档递毒者迁移检查完成。"
+    return
+
+
+label test_evidence_migration_destroyed:
+    call test_evidence_migration_driver(destroyed=True, visited=True) from _call_test_evidence_migration_destroyed
+    "旧档递毒者迁移检查完成。"
+    return
+
+
+label test_evidence_migration_independent:
+    call test_evidence_migration_driver(visited=True, decisions=[("第三章", "保持独立，不加入暗百合", "")]) from _call_test_evidence_migration_independent
+    "旧档递毒者迁移检查完成。"
+    return
+
+
+label test_evidence_migration_skipped:
+    call test_evidence_migration_driver() from _call_test_evidence_migration_skipped
+    "旧档递毒者迁移检查完成。"
+    return
+
+
+label test_evidence_migration_mid_scene:
+    call test_evidence_migration_driver(visited=True) from _call_test_evidence_migration_mid_scene
+    "旧档递毒者迁移检查完成。"
+    return
+
+
+label test_evidence_migration_prince_only:
+    $ persistent.chapters_completed = set()
+    $ father_poisoned_known = True
+    $ father_poison_method_known = False
+    $ poison_evidence = False
+    $ ch3_deep_cure_found = False
+    $ true_killer_known = False
+    call after_load from _call_after_load_evidence_migration_prince_only
+    "王子只确认谋杀，不确认毒物。"
+    return
+
+
+label test_evidence_migration_driver(joined=False, destroyed=False, visited=False, decisions=None):
+    $ true_killer_known = True
+    $ father_poison_executor_known = False
+    $ father_murder_mastermind_known = False
+    $ dark_lily_joined = joined
+    $ dark_lily_destroyed = destroyed
+    $ ch3_dark_lily_visited = visited
+    $ prince_ally = False
+    $ prince_answer_pending = False
+    $ _decisions = list(decisions or [])
+    call after_load from _call_after_load_evidence_migration
+    return
+
+
+################################################################################
 ## Mobile regression: all seven finale choices must remain reachable.
 ################################################################################
 
@@ -99,9 +208,18 @@ testcase test_mobile_choice_overflow:
         run Start("test_mobile_choice_overflow_fixture") until screen "choice" timeout 4.0
         screenshot "mobile_choice_overflow_important"
         pause 2.0
+        assert eval (renpy.get_screen_variable("choice_is_important", screen="choice") is True)
+        $ _mobile_choice_viewport = renpy.get_displayable("choice", "choice_scroll")
+        $ _mobile_choice_viewport_bounds = renpy.test.testfocus.focus_from_displayable(_mobile_choice_viewport)
+        assert eval (_mobile_choice_viewport_bounds is not None)
+        assert eval (_mobile_choice_viewport_bounds.y == 160)
+        assert eval (_mobile_choice_viewport_bounds.h == 440)
         screenshot "mobile_choice_overflow_initial"
-        scroll id "choice_scroll" amount 8
+        scroll id "choice_scroll" amount 1000
         pause 0.5
+        $ _mobile_choice_viewport = renpy.get_displayable("choice", "choice_scroll")
+        assert eval (_mobile_choice_viewport.yadjustment.range > 0)
+        assert eval (_mobile_choice_viewport.yadjustment.value == _mobile_choice_viewport.yadjustment.range)
         screenshot "mobile_choice_overflow_scrolled"
         click "第七项：放下旧日的王冠，与所有盟友共同建立新的议会秩序"
         pause until screen "say" timeout 4.0
@@ -330,6 +448,7 @@ testsuite test_new_run_bootstrap:
             run MainMenu(confirm=False)
 
         $ _test.timeout = 4.0
+        $ _test.bootstrap_persistent_snapshot = {"privacy_agreed": persistent.privacy_agreed, "tutorial_seen": persistent.tutorial_seen, "ng_plus_unlocked": persistent.ng_plus_unlocked, "ng_plus_bonus_power": persistent.ng_plus_bonus_power, "ng_plus_bonus_wealth": persistent.ng_plus_bonus_wealth, "ng_plus_bonus_intrigue": persistent.ng_plus_bonus_intrigue, "difficulty": persistent.difficulty}
         $ persistent.privacy_agreed = True
         $ persistent.tutorial_seen = True
         $ persistent.ng_plus_unlocked = False
@@ -341,6 +460,15 @@ testsuite test_new_run_bootstrap:
     after testcase:
         if not screen "main_menu":
             run MainMenu(confirm=False)
+        $ persistent.privacy_agreed = _test.bootstrap_persistent_snapshot["privacy_agreed"]
+        $ persistent.tutorial_seen = _test.bootstrap_persistent_snapshot["tutorial_seen"]
+        $ persistent.ng_plus_unlocked = _test.bootstrap_persistent_snapshot["ng_plus_unlocked"]
+        $ persistent.ng_plus_bonus_power = _test.bootstrap_persistent_snapshot["ng_plus_bonus_power"]
+        $ persistent.ng_plus_bonus_wealth = _test.bootstrap_persistent_snapshot["ng_plus_bonus_wealth"]
+        $ persistent.ng_plus_bonus_intrigue = _test.bootstrap_persistent_snapshot["ng_plus_bonus_intrigue"]
+        $ persistent.difficulty = _test.bootstrap_persistent_snapshot["difficulty"]
+        assert eval (all(getattr(persistent, name) == value for name, value in _test.bootstrap_persistent_snapshot.items()))
+        $ renpy.save_persistent()
 
     testcase blank_formal_entries_require_setup:
         parameter (entry_label, bootstrap_return) = [

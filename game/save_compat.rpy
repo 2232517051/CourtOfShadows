@@ -25,6 +25,23 @@ init python:
             persistent.chapters_completed = set()
         persistent.chapters_completed.add("southern")
 
+    def legacy_true_implies_executor(
+            legacy_true_killer_known,
+            dark_lily_joined=False,
+            dark_lily_destroyed=False,
+            decisions=None):
+        """旧 true flag 只有在暗百合总部剧情已完成时才代表已知递毒者。"""
+        if not legacy_true_killer_known:
+            return False
+        if dark_lily_joined or dark_lily_destroyed:
+            return True
+        for decision in decisions or ():
+            if (len(decision) >= 2
+                    and decision[0] == "第三章"
+                    and decision[1] == "保持独立，不加入暗百合"):
+                return True
+        return False
+
     def legacy_true_implies_mastermind(
             legacy_true_killer_known,
             prince_ally=False,
@@ -138,15 +155,16 @@ label after_load:
 
         ## ---- 父亲遇害证据链迁移（保守、幂等） ----
         if (getattr(store, "poison_evidence", False)
-                or getattr(store, "father_poisoned_known", False)):
+                or getattr(store, "ch3_deep_cure_found", False)
+                or "chapter3" in _ch):
             father_poison_method_known = True
 
         _legacy_true = getattr(store, "true_killer_known", False)
-        _hq_disclosure_complete = (
-            getattr(store, "dark_lily_joined", False)
-            or getattr(store, "dark_lily_destroyed", False)
-        )
-        if _legacy_true and _hq_disclosure_complete:
+        if legacy_true_implies_executor(
+                _legacy_true,
+                dark_lily_joined=getattr(store, "dark_lily_joined", False),
+                dark_lily_destroyed=getattr(store, "dark_lily_destroyed", False),
+                decisions=getattr(store, "_decisions", ())):
             father_poison_executor_known = True
 
         if legacy_true_implies_mastermind(

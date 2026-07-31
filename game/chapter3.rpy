@@ -2909,8 +2909,7 @@ label ch3_dark_lily_hq:
 
     $ poison_evidence = True
     $ father_death_known = True
-    $ father_poisoned_known = True
-    $ father_poison_method_known = True
+    $ confirm_father_poison_method()
 
     hide lily_master_img
     $ hide_all_chars("player_char_img")

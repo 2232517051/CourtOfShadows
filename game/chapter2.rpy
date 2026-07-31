@@ -2411,7 +2411,7 @@ label ch2_after_council:
 
             $ father_death_known = True
             $ poison_evidence = True
-            $ father_poisoned_known = True
+            $ confirm_father_poison_method()
             $ dusk_dew_known = True
 
             $ hide_all_chars()

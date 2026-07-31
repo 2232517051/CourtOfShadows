@@ -1370,11 +1370,12 @@ label ch4_exp_inv_library:
 
             "你的手微微发抖。这段描述和先王生前最后一年的状况完全吻合——体力衰退、面色灰暗、记忆混乱……"
 
-            if father_poisoned_known:
+            if father_poison_method_known:
                 "你早已知道——父亲也是被同样的毒药害死的。这本古书只是再一次证实了那个残酷的事实。"
             else:
                 "更可怕的是——你父亲死前也出现了同样的症状。"
-                $ father_poisoned_known = True
+
+            $ confirm_father_poison_method()
 
             if poison_evidence:
                 "之前你已经找到了毒物的物证。现在又有了文献佐证。两条证据链正在合拢。"

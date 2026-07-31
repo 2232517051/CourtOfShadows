@@ -200,6 +200,13 @@ default father_poison_method_known = False       # 已确认暮色之露是父�
 default father_poison_executor_known = False     # 已确认汉斯是直接递毒环节
 default father_murder_mastermind_known = False   # 已确认王后下令谋害父亲
 default true_killer_known = False                # 已弃用：仅供旧档输入/旧版本兼容镜像
+
+init python:
+    def confirm_father_poison_method():
+        """确认父亲遭毒杀，且所用毒物为暮色之露。"""
+        store.father_poisoned_known = True
+        store.father_poison_method_known = True
+
 default father_letters_found = False
 default wedding_attended = False        ## 世纪婚礼随机事件: 出席过婚宴 (ch4 格雷会面回响)
 default grey_support_promised = False   ## 世纪婚礼: 格雷伯爵许诺支持提案
@@ -281,7 +288,7 @@ init python:
         "holy_man":         ("虔诚之心", "寻求教会帮助解决危机", False, "在第一章尝试寻求教会帮助"),
         "spy_master_ch1":   ("暗影之主", "建立间谍网络", False, "在第一章探索城堡的秘密"),
         "council_master":   ("纵横捭阖", "在领主会议中获得最佳结果", False, "在第二章领主会议中表现出色"),
-        "truth_seeker":     ("真相猎人", "发现父亲死因的全部真相", False, "在第三章深入调查"),
+        "truth_seeker":     ("真相猎人", "查明父亲所中之毒及递毒者", False, "在第三章深入调查"),
         "secret_passage":   ("密道探索者", "发现城堡密道", False, "仔细探索城堡"),
         "village_patrol":   ("巡视村庄", "在第一章亲自走遍领地的村庄，听百姓的声音", False, "在第一章扩展剧情里完整走完巡视村庄"),
         "iron_lord":        ("铁腕领主", "达成铁腕领主结局", False, "以武力统一天下"),

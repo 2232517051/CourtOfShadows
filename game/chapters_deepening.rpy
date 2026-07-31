@@ -1300,7 +1300,8 @@ label ch3_deep_cure:
         $ hide_all_chars()
         "这个名字让你的血液一瞬间变冷。"
         "影月草——暮色之露的原料。杀死你父亲的，就是用这种植物炼制的毒药。"
-        $ father_poisoned_known = True
+
+    $ confirm_father_poison_method()
 
     hide player_char_img
     $ hide_all_chars("elena_img")
