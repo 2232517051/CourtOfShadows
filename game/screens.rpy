@@ -264,85 +264,113 @@ screen choice(items):
         else:
             add Solid("#0a081288")
 
-        vbox:
-            xalign 0.5
-            if renpy.variant("small"):
-                yalign 0.30
-                ## 限制最大高度，留出底部quick_menu空间，防止选项误触存档按钮
-                ymaximum 560
-            else:
-                yalign 0.45
-            yfit True
-            spacing 8
+        if renpy.variant("small"):
+            side "c r":
+                style "choice_side"
+                if getattr(store, "important_choice", False):
+                    ypos 160
+                    ysize 440
+                else:
+                    ypos 35
+                    ysize 565
 
-            for idx, i in enumerate(items):
-                ## 解析选项文本和提示：用 "|" 分隔，如 "选择王室|权力+10 声望-5"
-                ## 先做变量替换再拆分——menu 语句的 caption 传到这里时 [var] 尚未展开,
-                ## 软检定提示(soft_hint 返回 "|xx不足…")靠替换后才出现的 "|" 挂载副行。
-                ## 下方 text 均已 substitute False, 不会二次替换。
-                $ _parts = renpy.substitute(i.caption).split("|", 1)
-                $ _caption = _parts[0]
-                $ _hint = _parts[1] if len(_parts) > 1 else ""
+                viewport:
+                    id "choice_scroll"
+                    style "choice_viewport"
+                    draggable True
+                    mousewheel True
+                    pagekeys True
 
-                button:
-                    if choice_ready:
-                        action i.action
-                    else:
-                        action NullAction()
-                    at choice_appear(idx * 0.1), choice_hover
-                    xsize gui.choice_button_width
-                    yalign 0.5
-                    xalign 0.5
+                    use choice_items(items, choice_ready)
 
-                    if not choice_ready:
-                        background Solid("#1a152866")
-                    elif getattr(store, "important_choice", False):
-                        background Solid("#1a1528cc")
-                        hover_background Solid("#2a2040ee")
-                    else:
-                        background Solid("#1a1528bb")
-                        hover_background Solid("#2a2040dd")
-
-                    frame:
-                        xfill True
-                        xpadding 24
-                        ypadding 14
-                        background None
-
-                        vbox:
-                            spacing 4
-                            hbox:
-                                xfill True
-                                ## 选项序号
-                                text str(idx + 1) + "." size 20 color "#d4a942" yalign 0.0 xsize 30 outlines [(1, "#000000", 0, 0)]
-
-                                text _caption:
-                                    style "choice_button_text"
-                                    yalign 0.0
-                                    xfill True
-                                    substitute False
-
-                            ## 后果提示
-                            if _hint:
-                                hbox:
-                                    xoffset 30
-                                    spacing 8
-                                    for _h in _hint.split():
-                                        if "+" in _h:
-                                            text _h size 13 color "#2ecc71" substitute False
-                                        elif "-" in _h:
-                                            text _h size 13 color "#e74c3c" substitute False
-                                        else:
-                                            text _h size 13 color "#8a7e60" substitute False
+                vbar:
+                    style "choice_vscrollbar"
+                    value YScrollValue("choice_scroll")
+        else:
+            use choice_items(items, choice_ready)
 
     ## 重要抉择结束后自动重置标记
     if getattr(store, "important_choice", False):
         timer 0.1 action SetVariable("important_choice", False)
 
 
+screen choice_items(items, choice_ready):
+    style_prefix "choice"
+
+    vbox:
+        xalign 0.5
+        if not renpy.variant("small"):
+            yalign 0.45
+        yfit True
+        spacing 8
+
+        for idx, i in enumerate(items):
+            ## 解析选项文本和提示：用 "|" 分隔，如 "选择王室|权力+10 声望-5"
+            ## 先做变量替换再拆分——menu 语句的 caption 传到这里时 [var] 尚未展开,
+            ## 软检定提示(soft_hint 返回 "|xx不足…")靠替换后才出现的 "|" 挂载副行。
+            ## 下方 text 均已 substitute False, 不会二次替换。
+            $ _parts = renpy.substitute(i.caption).split("|", 1)
+            $ _caption = _parts[0]
+            $ _hint = _parts[1] if len(_parts) > 1 else ""
+
+            button:
+                if choice_ready:
+                    action i.action
+                else:
+                    action NullAction()
+                at choice_appear(idx * 0.1), choice_hover
+                xsize gui.choice_button_width
+                yalign 0.5
+                xalign 0.5
+
+                if not choice_ready:
+                    background Solid("#1a152866")
+                elif getattr(store, "important_choice", False):
+                    background Solid("#1a1528cc")
+                    hover_background Solid("#2a2040ee")
+                else:
+                    background Solid("#1a1528bb")
+                    hover_background Solid("#2a2040dd")
+
+                frame:
+                    xfill True
+                    xpadding 24
+                    ypadding 14
+                    background None
+
+                    vbox:
+                        spacing 4
+                        hbox:
+                            xfill True
+                            ## 选项序号
+                            text str(idx + 1) + "." size 20 color "#d4a942" yalign 0.0 xsize 30 outlines [(1, "#000000", 0, 0)]
+
+                            text _caption:
+                                style "choice_button_text"
+                                yalign 0.0
+                                xfill True
+                                substitute False
+
+                        ## 后果提示
+                        if _hint:
+                            hbox:
+                                xoffset 30
+                                spacing 8
+                                for _h in _hint.split():
+                                    if "+" in _h:
+                                        text _h size 13 color "#2ecc71" substitute False
+                                    elif "-" in _h:
+                                        text _h size 13 color "#e74c3c" substitute False
+                                    else:
+                                        text _h size 13 color "#8a7e60" substitute False
+
+
 style choice_vbox is vbox
 style choice_button is button
 style choice_button_text is button_text
+style choice_side is side
+style choice_viewport is viewport
+style choice_vscrollbar is vscrollbar
 
 style choice_vbox:
     xalign 0.5
@@ -354,6 +382,23 @@ style choice_button is default:
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
     outlines [(2, "#000000", 0, 0), (1, "#000000", 1, 1)]
+
+style choice_side:
+    xalign 0.5
+    xsize gui.choice_button_width + gui.scrollbar_size + 18
+    spacing 18
+
+style choice_viewport:
+    xsize gui.choice_button_width
+    yfill True
+
+style choice_vscrollbar:
+    xsize gui.scrollbar_size
+    yfill True
+    base_bar Solid("#3a3040dd")
+    thumb Solid("#d4a942")
+    hover_thumb Solid("#ffe082")
+    unscrollable "show"
 
 
 ################################################################################

@@ -88,6 +88,73 @@ testcase test_critical_finale_routes:
 
 
 ################################################################################
+## Mobile regression: all seven finale choices must remain reachable.
+################################################################################
+
+default _test_mobile_choice_overflow_seventh_selected = False
+default _test_desktop_choice_first_selected = False
+
+testcase test_mobile_choice_overflow:
+    run Start("test_mobile_choice_overflow_fixture") until screen "choice" timeout 4.0
+    screenshot "mobile_choice_overflow_important"
+    pause 2.0
+    screenshot "mobile_choice_overflow_initial"
+    scroll id "choice_scroll" amount 8
+    pause 0.5
+    screenshot "mobile_choice_overflow_scrolled"
+    click "第七项：放下旧日的王冠，与所有盟友共同建立新的议会秩序"
+    pause until screen "say" timeout 4.0
+    assert eval (_test_mobile_choice_overflow_seventh_selected)
+
+
+testcase test_desktop_choice_sanity:
+    run Start("test_desktop_choice_sanity_fixture") until screen "choice" timeout 4.0
+    pause 2.0
+    click "保留王廷法统"
+    pause until screen "say" timeout 4.0
+    assert eval (_test_desktop_choice_first_selected)
+
+
+label test_mobile_choice_overflow_fixture:
+    $ _test_mobile_choice_overflow_seventh_selected = False
+    $ mark_important_choice()
+
+    menu:
+        "第一项：接受摄政之位，以王廷法统维持北境来之不易的和平|权力 +10 盟友信任 -5":
+            return
+        "第二项：公开父亲遇害的全部证据，让贵族与教会共同接受审判|声望 +10 阴谋 -5":
+            return
+        "第三项：率领边境军团继续南下，彻底结束诸侯割据造成的战乱|权力 +15 忠诚 -10":
+            return
+        "第四项：兑现对自由城邦的承诺，承认港口与商路的自治权利|财富 +10 王廷关系 -5":
+            return
+        "第五项：邀请暗百合进入议会，以秘密情报守护脆弱的新秩序|阴谋 +10 教会关系 -5":
+            return
+        "第六项：将兵权交还各地领主，用公开盟约约束下一任统治者|忠诚 +10 权力 -10":
+            return
+        "第七项：放下旧日的王冠，与所有盟友共同建立新的议会秩序|全体关系 +10 历史将记住这一刻":
+            $ _test_mobile_choice_overflow_seventh_selected = True
+            "第七个分支已执行。"
+
+    return
+
+
+label test_desktop_choice_sanity_fixture:
+    $ _test_desktop_choice_first_selected = False
+
+    menu:
+        "保留王廷法统|权力 +5":
+            $ _test_desktop_choice_first_selected = True
+            "桌面选项分支已执行。"
+        "交还边境兵权|忠诚 +5":
+            return
+        "公开全部证据|声望 +5":
+            return
+
+    return
+
+
+################################################################################
 ## 3.9.2 regression: every formal chapter entry must initialize a blank run once
 ################################################################################
 
