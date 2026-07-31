@@ -272,6 +272,8 @@ label after_load:
     ## ================================================================
     $ hide_all_chars()
 
+    $ renpy.block_rollback()
+
     return
 
 

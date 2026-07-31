@@ -155,6 +155,9 @@ testsuite test_new_run_bootstrap:
         run Start("test_new_run_after_load_driver") until screen "chapter_title" timeout 4.0
         assert eval (_new_run_bootstrap_done)
         assert eval (inventory_items == [("synthetic_loaded_item", 7)])
+        assert eval (_after_load_rollback_limit_before > 0)
+        assert eval (_after_load_rollback_limit_after == 0)
+        assert eval (_after_load_rollback_block_after > _after_load_rollback_block_before)
         assert not screen "difficulty_select"
         assert not screen "name_input_screen"
         assert eval ("_call_show_chapter_1" in renpy.get_return_stack())
@@ -163,7 +166,12 @@ testsuite test_new_run_bootstrap:
 label test_new_run_after_load_driver:
     $ _new_run_bootstrap_done = False
     $ inventory_items = [("synthetic_loaded_item", 7)]
+    $ renpy.checkpoint()
+    $ _after_load_rollback_limit_before = renpy.game.log.rollback_limit
+    $ _after_load_rollback_block_before = renpy.game.log.rollback_block
     call after_load from _call_after_load_bootstrap_test
+    $ _after_load_rollback_limit_after = renpy.game.log.rollback_limit
+    $ _after_load_rollback_block_after = renpy.game.log.rollback_block
     jump chapter3_start
 
 
