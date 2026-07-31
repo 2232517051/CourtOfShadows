@@ -444,8 +444,9 @@ label test_accessibility_render_fixture:
 
 testsuite test_new_run_bootstrap:
     before testcase:
-        if not screen "main_menu":
-            run MainMenu(confirm=False)
+        ## 全新 persistent 下 testcase hook 可能早于主菜单首帧；无论当前
+        ## context 在哪里，都发出回主菜单动作并等待 screen 真正出现。
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
 
         $ _test.timeout = 4.0
         $ _test.bootstrap_persistent_snapshot = {"privacy_agreed": persistent.privacy_agreed, "tutorial_seen": persistent.tutorial_seen, "ng_plus_unlocked": persistent.ng_plus_unlocked, "ng_plus_bonus_power": persistent.ng_plus_bonus_power, "ng_plus_bonus_wealth": persistent.ng_plus_bonus_wealth, "ng_plus_bonus_intrigue": persistent.ng_plus_bonus_intrigue, "difficulty": persistent.difficulty}
@@ -458,8 +459,7 @@ testsuite test_new_run_bootstrap:
         $ persistent.difficulty = "normal"
 
     after testcase:
-        if not screen "main_menu":
-            run MainMenu(confirm=False)
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
         $ persistent.privacy_agreed = _test.bootstrap_persistent_snapshot["privacy_agreed"]
         $ persistent.tutorial_seen = _test.bootstrap_persistent_snapshot["tutorial_seen"]
         $ persistent.ng_plus_unlocked = _test.bootstrap_persistent_snapshot["ng_plus_unlocked"]
@@ -513,7 +513,9 @@ testsuite test_new_run_bootstrap:
         assert eval (inventory_items == _bootstrap_inventory_before_second_call)
 
     testcase after_load_protects_existing_run:
-        run Start("test_new_run_after_load_driver") until screen "chapter_title" timeout 4.0
+        $ _test.after_load_driver_started = False
+        run Start("test_new_run_after_load_driver")
+        pause until eval (_test.after_load_driver_started and "_call_show_chapter_1" in renpy.get_return_stack() and renpy.get_screen("chapter_title") is not None) timeout 4.0
         assert eval (_new_run_bootstrap_done)
         assert eval (inventory_items == [("synthetic_loaded_item", 7)])
         assert eval (_after_load_rollback_limit_before > 0)
@@ -525,6 +527,7 @@ testsuite test_new_run_bootstrap:
 
 
 label test_new_run_after_load_driver:
+    $ _test.after_load_driver_started = True
     $ _new_run_bootstrap_done = False
     $ inventory_items = [("synthetic_loaded_item", 7)]
     $ renpy.checkpoint()
