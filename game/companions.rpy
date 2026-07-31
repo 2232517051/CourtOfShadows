@@ -578,6 +578,8 @@ screen companions_screen():
                                             $ _ucdata = companion_data[_ucid]
                                             $ _uc_avail = is_companion_available(_ucid)
                                             $ _uc_rel = getattr(store, _ucdata["rel_var"], 0)
+                                            $ _uc_recruit_chapter = _ucdata["recruit_chapter"]
+                                            $ _uc_loyalty_req = _ucdata["loyalty_req"]
 
                                             frame:
                                                 xfill True
@@ -591,9 +593,9 @@ screen companions_screen():
                                                     if not _uc_avail:
                                                         $ _uc_ch_ok = _get_current_chapter_num() >= _ucdata["recruit_chapter"]
                                                         if not _uc_ch_ok:
-                                                            text "需要： 第[_ucdata[recruit_chapter]]章" size 10 color "#4a4030"
+                                                            text "需要： 第[_uc_recruit_chapter]章" size 10 color "#4a4030"
                                                         else:
-                                                            text "好感度： [_uc_rel]/[_ucdata[loyalty_req]]" size 10 color "#4a4030"
+                                                            text "好感度： [_uc_rel]/[_uc_loyalty_req]" size 10 color "#4a4030"
                                                     else:
                                                         textbutton "招募":
                                                             text_size 12
@@ -937,18 +939,23 @@ label try_recruit_companion(comp_id=""):
     $ _tr_data = companion_data.get(comp_id, None)
     if _tr_data is None:
         return
+    $ _tr_name = _tr_data["name"]
+    $ _tr_title = _tr_data["title"]
+    $ _tr_loyalty_req = _tr_data["loyalty_req"]
+    $ _tr_skill_name = _tr_data["skill"][0]
+    $ _tr_skill_desc = _tr_data["skill"][2]
 
     if comp_id in recruited_companions:
-        "[_tr_data[name]]已经是你的同伴了。"
+        "[_tr_name]已经是你的同伴了。"
         return
 
     if not is_companion_available(comp_id):
         $ _tr_rel = getattr(store, _tr_data["rel_var"], 0)
-        "你还没有赢得[_tr_data[name]]足够的信任（好感度 [_tr_rel]/[_tr_data[loyalty_req]]）。"
+        "你还没有赢得[_tr_name]足够的信任（好感度 [_tr_rel]/[_tr_loyalty_req]）。"
         return
 
     $ recruit_companion(comp_id)
-    "[_tr_data[name]]加入了你的队伍！"
-    "[_tr_data[name]] —— [_tr_data[title]]"
-    "特殊技能：「[_tr_data[skill][0]]」—— [_tr_data[skill][2]]"
+    "[_tr_name]加入了你的队伍！"
+    "[_tr_name] —— [_tr_title]"
+    "特殊技能：「[_tr_skill_name]」—— [_tr_skill_desc]"
     return

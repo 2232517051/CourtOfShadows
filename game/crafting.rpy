@@ -417,6 +417,8 @@ screen crafting_screen():
                         $ _sel_rate = get_success_rate(selected_recipe)
                         $ _sel_skill = get_crafting_skill()
                         $ _sel_skill_ok = _sel_skill >= _sel["skill_req"]
+                        $ _sel_skill_req = _sel["skill_req"]
+                        $ _sel_result_qty = _sel["result_qty"]
 
                         viewport:
                             xfill True
@@ -487,9 +489,9 @@ screen crafting_screen():
                                             spacing 2
                                             text "技能需求" size 12 color "#8a7e60"
                                             if _sel_skill_ok:
-                                                text "[_sel[skill_req]] (当前 [_sel_skill])" size 14 color "#2ecc71"
+                                                text "[_sel_skill_req] (当前 [_sel_skill])" size 14 color "#2ecc71"
                                             else:
-                                                text "[_sel[skill_req]] (当前 [_sel_skill])" size 14 color "#e67e22"
+                                                text "[_sel_skill_req] (当前 [_sel_skill])" size 14 color "#e67e22"
 
                                         vbox:
                                             spacing 2
@@ -505,7 +507,7 @@ screen crafting_screen():
                                         vbox:
                                             spacing 2
                                             text "产出" size 12 color "#8a7e60"
-                                            text "x[_sel[result_qty]]" size 14 color "#d4a942" bold True
+                                            text "x[_sel_result_qty]" size 14 color "#d4a942" bold True
 
                                     ## 成功率进度条
                                     bar:

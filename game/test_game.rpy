@@ -234,6 +234,26 @@ testcase test_desktop_choice_sanity:
     assert eval (_test_desktop_choice_first_selected)
 
 
+## 配方详情曾因嵌套字典插值在打开时崩溃。
+testcase test_crafting_detail_render:
+    run Start("test_crafting_detail_render_fixture") until screen "crafting_screen" timeout 4.0
+    pause 0.3
+    assert eval (get_success_rate("health_potion") == 88)
+    click "治疗药水"
+    pause 0.3
+    assert eval (renpy.get_screen_variable("selected_recipe", screen="crafting_screen") == "health_potion")
+    run Hide("crafting_screen")
+
+
+label test_crafting_detail_render_fixture:
+    $ intrigue = 60
+    $ crafting_skill_bonus = 0
+    $ inventory_items = [("medicinal_herbs", 8), ("waterskin", 4)]
+    show screen crafting_screen
+    $ ui.interact()
+    return
+
+
 label test_mobile_choice_overflow_fixture:
     $ _test_mobile_choice_overflow_seventh_selected = False
     $ mark_important_choice()
