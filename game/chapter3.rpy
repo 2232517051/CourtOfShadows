@@ -2908,7 +2908,8 @@ label ch3_dark_lily_hq:
 
     $ poison_evidence = True
     $ father_death_known = True
-    $ true_killer_known = True
+    $ father_poisoned_known = True
+    $ father_poison_method_known = True
 
     hide lily_master_img
     $ hide_all_chars("player_char_img")
@@ -2952,6 +2953,8 @@ label ch3_dark_lily_hq:
     $ hide_all_chars("lily_master_img")
     show lily_master_img at left with dissolve
     lily_master "毒药从他手里递出去——这一条线索我们查到了。"
+
+    $ father_poison_executor_known = True
 
     lily_master "至于他是被谁收买、又是谁让他闭嘴的——王后？费雷恩？还是某个我们尚不知晓的人？这正是我们没有直接证据的部分。"
 
@@ -6054,7 +6057,7 @@ label ch3_end:
     ## 章节结束统计
     call show_chapter_summary("第三章", "暗百合") from _call_show_chapter_summary_1
 
-    if true_killer_known:
+    if father_poison_executor_known:
         $ unlock_achievement("truth_seeker")
     if secret_passage_found:
         $ unlock_achievement("secret_passage")

@@ -47,6 +47,47 @@ testcase test_walkthrough:
     click
 
 
+## 3.9.2 critical regression: finale routes must always expose a valid choice,
+## and legacy chapter-three truth state must not imply chapter-four knowledge.
+testcase test_critical_finale_routes:
+    $ _full_lily_faith = get_finale_route_availability(faith=80, difficulty="hard", lily_full_member=True, rel_queen=20, rel_baron=20)
+    $ _full_lily_holy_hidden = not _full_lily_faith["holy_guardian"]
+    $ _full_lily_fall_visible = _full_lily_faith["fall"]
+    $ _full_lily_has_route = any(_full_lily_faith.values())
+    assert eval (_full_lily_holy_hidden)
+    assert eval (_full_lily_fall_visible)
+    assert eval (_full_lily_has_route)
+
+    $ _partial_truth = get_finale_route_availability(difficulty="hard", rel_queen=20, rel_baron=20, father_poison_method_known=True, father_poison_executor_known=True, testament_original_obtained=True)
+    $ _partial_truth_hidden = not _partial_truth["truth"]
+    $ _partial_truth_has_route = any(_partial_truth.values())
+    assert eval (_partial_truth_hidden)
+    assert eval (_partial_truth_has_route)
+
+    $ _complete_truth = get_finale_route_availability(difficulty="hard", rel_queen=20, rel_baron=20, father_murder_mastermind_known=True, testament_original_obtained=True)
+    $ _complete_truth_visible = _complete_truth["truth"]
+    $ _complete_truth_has_route = any(_complete_truth.values())
+    assert eval (_complete_truth_visible)
+    assert eval (_complete_truth_has_route)
+
+    $ _independent_faith = get_finale_route_availability(faith=80, difficulty="hard", lily_full_member=False, rel_queen=20, rel_baron=20)
+    $ _independent_faith_visible = _independent_faith["holy_guardian"]
+    $ _independent_fall_hidden = not _independent_faith["fall"]
+    $ _independent_faith_has_route = any(_independent_faith.values())
+    assert eval (_independent_faith_visible)
+    assert eval (_independent_fall_hidden)
+    assert eval (_independent_faith_has_route)
+
+    $ _chapter_three_legacy_is_not_mastermind = not legacy_true_implies_mastermind(True, ch3_dark_lily_visited=True)
+    $ _prince_ally_legacy_is_mastermind = legacy_true_implies_mastermind(True, prince_ally=True)
+    $ _pending_prince_legacy_is_mastermind = legacy_true_implies_mastermind(True, prince_answer_pending=True)
+    $ _logged_prince_legacy_is_mastermind = legacy_true_implies_mastermind(True, decisions=[("第五章", "战前答复王子，结成同盟", "")])
+    assert eval (_chapter_three_legacy_is_not_mastermind)
+    assert eval (_prince_ally_legacy_is_mastermind)
+    assert eval (_pending_prince_legacy_is_mastermind)
+    assert eval (_logged_prince_legacy_is_mastermind)
+
+
 ################################################################################
 ## 2. 测试用快速通关标签 — 验证各结局不会崩溃
 ################################################################################
@@ -141,7 +182,7 @@ label test_ending_truth:
     $ rel_baron = 20
     $ rel_captain = 60
     $ rel_queen = 50
-    $ true_killer_known = True
+    $ father_murder_mastermind_known = True
     $ father_letters_found = True
     $ poison_evidence = True
     $ ending_type = "truth"
@@ -181,7 +222,7 @@ label test_systems:
     $ intrigue = 30
     $ faith = 30
     $ loyalty = 30
-    $ true_killer_known = False
+    $ father_murder_mastermind_known = False
     $ _results = check_ending_reachability()
     $ _reachable = [r[0] for r in _results if r[2]]
     if "iron_lord" not in _reachable:

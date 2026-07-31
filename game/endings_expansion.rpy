@@ -1068,7 +1068,7 @@ label ending_truth_epilogue:
     ## 即"做满了真相该做的所有事 + 老管家深度认同"才触发, 表达"父亲终于可以告别"
     if (not truth_declined_regency
             and father_poisoned_known
-            and true_killer_known
+            and father_murder_mastermind_known
             and father_letters_found
             and rel_aldric >= 60):
         jump ending_father_son_epilogue

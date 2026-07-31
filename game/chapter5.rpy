@@ -1262,7 +1262,7 @@ label ch5_counsel_all:
             hide aldric_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            if true_killer_known:
+            if father_murder_mastermind_known:
                 player "奥尔德里克……父亲的事，我们都心知肚明了。明天之后，他也该瞑目了。"
                 hide player_char_img
                 $ hide_all_chars("aldric_img")
@@ -2201,60 +2201,34 @@ label ch5_final_choice:
 
     "这些人——奥尔德里克、雷恩、艾琳娜——还有城堡外那些等待你命令的士兵和百姓。"
 
-    ## 根据积累的属性，筛选最突出的路线（只显示最高的1-2条专属路线 + 真相 + 保底）
-    ## 避免所有路线同时出现显得杂乱
-    ## 2026-05-26 洋溢之后批次反馈: 困难模式 60 属性百分百过检定 → 改用 difficulty.rpy
-    ## 的 get_ending_threshold(), 让 hard=72/无保底、normal=65/55、easy=55/45 真正生效
-    ## （批31 草图A: python 块前移, 供下面幕僚盘点与 menu 共用可见性变量）
+    ## 统一路线判定同时供幕僚盘点与 menu 使用，避免门槛和身份抑制分叉。
     python:
-        _ending_stats = [
-            ("power", power, "iron_lord"),
-            ("intrigue", intrigue, "shadow_king"),
-            ("faith", faith, "holy_guardian"),
-            ("loyalty", loyalty, "peoples_lord"),
-        ]
-        _ending_stats.sort(key=lambda x: x[1], reverse=True)
-        _primary_th = get_ending_threshold("primary")
-        _fallback_th = get_ending_threshold("fallback")
-        _top_endings = set()
-        for _i, (_sname, _sval, _eid) in enumerate(_ending_stats):
-            if _sval >= _primary_th and _i < 2:
-                _top_endings.add(_eid)
-        ## 没有任何属性达 primary，且当前难度允许保底 → 取最高的那条
-        if not _top_endings and _fallback_th is not None and _ending_stats[0][1] >= _fallback_th:
-            _top_endings.add(_ending_stats[0][2])
-
-        ## 2026-05-27 实装 vassal/fall 兜底结局
-        _vassal_available = rel_queen >= (30 if _primary_th >= 70 else 0)
-        _resist_available = rel_baron >= (30 if _primary_th >= 70 else 0)
-        _truth_available = true_killer_known and testament_original_obtained
-        _borgia_available = (deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence)
-        # 南渡(出海)结局: 亲走过南境五线之一才知道那条路 (谓词沿用全项目既有写法)。
-        # 有意与 _fall_only 共存 —— 弃局正是败局玩家的生路。
-        _sea_available = southern_outcome not in ("none", "delegated")
-        _any_main = bool(_top_endings) or _truth_available or _borgia_available
-        _fall_only = not (_any_main or _vassal_available or _resist_available)
+        _finale_routes = get_current_finale_route_availability()
+        _truth_available = _finale_routes["truth"]
+        _vassal_available = _finale_routes["vassal"]
+        _resist_available = _finale_routes["resist"]
+        _sea_available = _finale_routes["sea"]
 
     ## ── 批31 草图A: 幕僚盘点 — 每条去向的实际含义, 与 menu 可见性同门控, 不判优劣 ──
-    if "iron_lord" in _top_endings:
+    if _finale_routes["iron_lord"]:
         $ hide_all_chars("captain_img")
         show captain_img at left with dissolve
         captain "要打，兵是现成的。但打就是同时接两路——王后军三千在南官道，男爵联军两千五在北边。"
         hide captain_img
 
-    if "shadow_king" in _top_endings:
+    if _finale_routes["shadow_king"]:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
         elena "两边的粮道、信使、军饷册，我们都摸得到。您要是想让他们自己咬自己——线都埋好了。"
         hide elena_img
 
-    if "holy_guardian" in _top_endings:
+    if _finale_routes["holy_guardian"]:
         $ hide_all_chars("bishop_img")
         show bishop_img at left with dissolve
         bishop "教会随时可以出面调停。以圣母之名叫停一场仗——教会做得到，也做过。"
         hide bishop_img
 
-    if "peoples_lord" in _top_endings:
+    if _finale_routes["peoples_lord"]:
         $ hide_all_chars("aldric_img")
         show aldric_img at left with dissolve
         aldric "存粮、水井、城墙，都点验过了。真要闭门不出，艾登堡守得住——只是外面的胜负，就与我们无关了。"
@@ -2287,7 +2261,7 @@ label ch5_final_choice:
     $ mark_important_choice()
     $ play_sound("audio/sfx/heartbeat.ogg")
     menu:
-        "以铁和血终结战争——用武力征服一切|全军出击，同时迎战两路大军 → 铁腕领主" if "iron_lord" in _top_endings:
+        "以铁和血终结战争——用武力征服一切|全军出击，同时迎战两路大军 → 铁腕领主" if _finale_routes["iron_lord"]:
             $ log_decision("第五章", "选择以铁血手段终结战争")
             $ ending_type = "iron_lord"
             player "这个世界只尊重力量。既然和平无法用嘴巴说出来，那就用剑来实现。"
@@ -2301,7 +2275,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_iron
             jump ending_iron_lord
 
-        "让双方互相消耗，坐收渔利——暗中操控全局|按兵不动，让王后与男爵先斗，你在暗处收网 → 影中之王" if "shadow_king" in _top_endings:
+        "让双方互相消耗，坐收渔利——暗中操控全局|按兵不动，让王后与男爵先斗，你在暗处收网 → 影中之王" if _finale_routes["shadow_king"]:
             $ log_decision("第五章", "选择在暗影中操控一切")
             $ ending_type = "shadow_king"
             hide captain_img
@@ -2318,7 +2292,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_shadow
             jump ending_shadow_king
 
-        "借教会之力，以信仰终止战争|请教会出面调停，以圣母之名逼双方停战 → 圣光守护" if "holy_guardian" in _top_endings and not lily_full_member:
+        "借教会之力，以信仰终止战争|请教会出面调停，以圣母之名逼双方停战 → 圣光守护" if _finale_routes["holy_guardian"]:
             $ log_decision("第五章", "选择以信仰之光化解争端")
             $ ending_type = "holy_guardian"
             hide elena_img
@@ -2335,7 +2309,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_holy
             jump ending_holy_guardian
 
-        "保护子民——固守艾登堡，拒绝战争|不出城一步，只守不攻，保住城里每一个人 → 人民领主" if "peoples_lord" in _top_endings:
+        "保护子民——固守艾登堡，拒绝战争|不出城一步，只守不攻，保住城里每一个人 → 人民领主" if _finale_routes["peoples_lord"]:
             $ log_decision("第五章", "选择守护人民的幸福")
             $ ending_type = "peoples_lord"
             hide bishop_img
@@ -2352,7 +2326,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_peoples
             jump ending_peoples_lord
 
-        "公布先王遗诏真相——让正义重见天日|当众公开遗诏，与王后正面对质 → 真相大白" if true_killer_known and testament_original_obtained:
+        "公布先王遗诏真相——让正义重见天日|当众公开遗诏，与王后正面对质 → 真相大白" if _finale_routes["truth"]:
             $ log_decision("第五章", "选择揭露全部真相")
             $ ending_type = "truth"
             hide aldric_img
@@ -2366,7 +2340,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_truth
             jump ending_truth
 
-        "用毒药清理一切——以母亲的方式收尾|不动刀兵，用「暮色之露」逐一清场 → 毒药公爵" if deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence:
+        "用毒药清理一切——以母亲的方式收尾|不动刀兵，用「暮色之露」逐一清场 → 毒药公爵" if _finale_routes["borgia"]:
             $ log_decision("第五章", "选择以毒药逐一清理敌人")
             $ ending_type = "borgia"
             hide aldric_img
@@ -2381,7 +2355,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_borgia
             jump ending_borgia
 
-        "效忠王后，换取艾登堡安全|签城下之盟——保人保地，交出自主 → 附庸领主" if _vassal_available:
+        "效忠王后，换取艾登堡安全|签城下之盟——保人保地，交出自主 → 附庸领主" if _finale_routes["vassal"]:
             $ ending_type = "vassal"
             $ log_decision("第五章", "选择效忠王后, 艾登堡降为附庸")
             $ hide_all_chars("player_char_img")
@@ -2392,7 +2366,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_pragmatic
             jump ending_vassal
 
-        "放下一切，向南走——不守城，不打仗，不做领主了|翻两道山到南边海港城登船，把战争和艾登堡留在身后 → 南渡" if _sea_available:
+        "放下一切，向南走——不守城，不打仗，不做领主了|翻两道山到南边海港城登船，把战争和艾登堡留在身后 → 南渡" if _finale_routes["sea"]:
             $ ending_type = "sea"
             $ log_decision("第五章", "弃局南渡, 出海离开")
             player "……"
@@ -2404,7 +2378,7 @@ label ch5_final_choice:
             ## 不走 ending_decision_pause: 那段是死守前夜语境(城墙夜巡/摸绳结备战), 与弃局相悖
             jump ending_sea
 
-        "加入男爵联军，对抗王后暴政|与男爵会师，正面迎战王后军（风险较高）→ 铁腕领主" if _resist_available:
+        "加入男爵联军，对抗王后暴政|与男爵会师，正面迎战王后军（风险较高）→ 铁腕领主" if _finale_routes["resist"]:
             $ ending_type = "iron_lord"
             $ resist_route = True
             $ log_decision("第五章", "选择加入男爵联军反抗")
@@ -2414,7 +2388,7 @@ label ch5_final_choice:
             call ending_decision_pause from _call_decision_pause_resist
             jump ending_iron_lord
 
-        "什么都做不了，等命运来到艾登堡的城门下|不设防，不谈判 → 艾登堡陷落" if _fall_only:
+        "什么都做不了，等命运来到艾登堡的城门下|不设防，不谈判 → 艾登堡陷落" if _finale_routes["fall"]:
             $ ending_type = "fall"
             $ log_decision("第五章", "无路可走, 静候艾登堡陷落")
             $ hide_all_chars("player_char_img")

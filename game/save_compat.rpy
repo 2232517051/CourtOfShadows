@@ -25,6 +25,25 @@ init python:
             persistent.chapters_completed = set()
         persistent.chapters_completed.add("southern")
 
+    def legacy_true_implies_mastermind(
+            legacy_true_killer_known,
+            prince_ally=False,
+            prince_answer_pending=False,
+            ch3_dark_lily_visited=False,
+            decisions=None):
+        """旧 true flag 只有带可靠第四/五章来源时才能升级为幕后主使认知。"""
+        if not legacy_true_killer_known:
+            return False
+        if prince_ally or prince_answer_pending:
+            return True
+        for decision in decisions or ():
+            if (len(decision) >= 2
+                    and decision[0] == "第五章"
+                    and decision[1] == "战前答复王子，结成同盟"):
+                return True
+        ## ch3_dark_lily_visited 特意不构成幕后主使来源。
+        return False
+
 
 ################################################################################
 ## 1. after_load 标签 — 旧存档加载后初始化缺失的变量
@@ -73,6 +92,14 @@ label after_load:
     python:
         _ch = persistent.chapters_completed if persistent.chapters_completed else set()
 
+        ## 3.9.2 将父亲遇害证据拆成三层；先补缺失字段，再按可信度递增迁移。
+        if not hasattr(store, "father_poison_method_known"):
+            father_poison_method_known = False
+        if not hasattr(store, "father_poison_executor_known"):
+            father_poison_executor_known = False
+        if not hasattr(store, "father_murder_mastermind_known"):
+            father_murder_mastermind_known = False
+
         ## 推断章节进度（兼容缺少 chapters_completed 的极老存档）
         ## save_compat 的职责就是兜底老存档 —— 任何裸变量访问都可能 NameError
         _past_ch2 = (
@@ -103,6 +130,27 @@ label after_load:
         ## 父亲被毒杀（条件：调查过商人Karl，已有 poison_evidence）
         if _past_ch2 and (getattr(store, "father_death_known", False) or getattr(store, "poison_evidence", False)):
             father_poisoned_known = True
+
+        ## ---- 父亲遇害证据链迁移（保守、幂等） ----
+        if (getattr(store, "poison_evidence", False)
+                or getattr(store, "father_poisoned_known", False)):
+            father_poison_method_known = True
+
+        _legacy_true = getattr(store, "true_killer_known", False)
+        _hq_disclosure_complete = (
+            getattr(store, "dark_lily_joined", False)
+            or getattr(store, "dark_lily_destroyed", False)
+        )
+        if _legacy_true and _hq_disclosure_complete:
+            father_poison_executor_known = True
+
+        if legacy_true_implies_mastermind(
+                _legacy_true,
+                prince_ally=getattr(store, "prince_ally", False),
+                prince_answer_pending=getattr(store, "prince_answer_pending", False),
+                ch3_dark_lily_visited=getattr(store, "ch3_dark_lily_visited", False),
+                decisions=getattr(store, "_decisions", ())):
+            father_murder_mastermind_known = True
 
         ## ---- 第三章主线揭示（父亲日记解读，必经剧情） ----
         if _past_ch3:
@@ -292,6 +340,9 @@ init 999 python:
             ## 第三章剧情标记
             "dark_lily_joined": False,
             "dark_lily_destroyed": False,
+            "father_poison_method_known": False,
+            "father_poison_executor_known": False,
+            "father_murder_mastermind_known": False,
             "true_killer_known": False,
             "father_letters_found": False,
             "ch3_dark_lily_visited": False,

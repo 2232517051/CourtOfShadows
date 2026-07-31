@@ -11,57 +11,47 @@
 
 init python:
 
-    ## 结局需求配置：(结局id, 名称, 需求描述, 检查函数)
+    ## 结局需求配置；实际可见性统一由 difficulty.rpy 的终章判定提供。
     _ending_requirements = {
         "iron_lord": {
             "name": "铁腕领主",
             "icon": "剑",
             "color": "#e74c3c",
             "desc": "以武力征服一切",
-            "requirement": "权力 >= 60",
-            "check": lambda: store.power >= 60,
+            "requirement": "终章属性排名与当前难度门槛",
             "stat": "power",
-            "threshold": 60,
         },
         "shadow_king": {
             "name": "影中之王",
             "icon": "刃",
             "color": "#7f8c8d",
             "desc": "在暗影中操控全局",
-            "requirement": "谋略 >= 60",
-            "check": lambda: store.intrigue >= 60,
+            "requirement": "终章属性排名与当前难度门槛",
             "stat": "intrigue",
-            "threshold": 60,
         },
         "holy_guardian": {
             "name": "圣光守护",
             "icon": "十",
             "color": "#9b59b6",
             "desc": "以信仰之力化解战争",
-            "requirement": "信仰 >= 60",
-            "check": lambda: store.faith >= 60,
+            "requirement": "终章属性排名、难度门槛且非暗百合正式成员",
             "stat": "faith",
-            "threshold": 60,
         },
         "peoples_lord": {
             "name": "人民领主",
             "icon": "心",
             "color": "#3498db",
             "desc": "守护百姓的幸福",
-            "requirement": "忠诚 >= 60",
-            "check": lambda: store.loyalty >= 60,
+            "requirement": "终章属性排名与当前难度门槛",
             "stat": "loyalty",
-            "threshold": 60,
         },
         "truth": {
             "name": "真相大白",
             "icon": "日",
             "color": "#f39c12",
             "desc": "揭露全部真相（最佳结局）",
-            "requirement": "发现真凶 (true_killer_known = True)",
-            "check": lambda: store.true_killer_known,
+            "requirement": "确认谋害父亲的幕后主使 + 持有遗诏原件",
             "stat": None,
-            "threshold": None,
         },
     }
 
@@ -71,26 +61,26 @@ init python:
         返回格式: list of (结局id, 名称, 是否可达, 差距描述)
         """
         results = []
+        routes = get_current_finale_route_availability()
+        primary_threshold = get_ending_threshold("primary")
 
         for end_id, info in _ending_requirements.items():
-            reachable = info["check"]()
+            reachable = routes[end_id]
 
             if reachable:
                 gap_desc = "已满足条件"
+            elif end_id == "truth":
+                missing = []
+                if not store.father_murder_mastermind_known:
+                    missing.append("幕后主使确认")
+                if not store.testament_original_obtained:
+                    missing.append("遗诏原件")
+                gap_desc = "还缺：" + "、".join(missing)
+            elif end_id == "holy_guardian" and store.lily_full_member:
+                gap_desc = "暗百合正式成员身份与教会调停冲突"
             else:
-                if info["stat"]:
-                    ## 数值型条件：计算差距
-                    current_val = getattr(store, info["stat"], 0)
-                    needed = info["threshold"] - current_val
-                    stat_names = {
-                        "power": "权力", "wealth": "财富", "faith": "信仰",
-                        "loyalty": "忠诚", "reputation": "声望", "intrigue": "谋略"
-                    }
-                    stat_label = stat_names.get(info["stat"], info["stat"])
-                    gap_desc = "还需 %s +%d（当前 %d / 需要 %d）" % (stat_label, needed, current_val, info["threshold"])
-                else:
-                    ## 布尔型条件（真相结局）
-                    gap_desc = "需要在第三章发现父亲死因真相"
+                current_val = getattr(store, info["stat"], 0)
+                gap_desc = "当前 %d；未进入统一终章可见路线（主要门槛 %d）" % (current_val, primary_threshold)
 
             results.append((end_id, info["name"], reachable, gap_desc))
 
@@ -241,11 +231,11 @@ screen balance_debug():
                 ## ──────────────────────────────────────
                 text "【剧情标记】" size 18 color "#d4a942" font "msyh.ttf"
 
-                grid 3 5:
+                grid 3 6:
                     spacing 4
                     xalign 0.5
 
-                    for _flag_name, _flag_label in [("father_death_known", "知晓死因"), ("secret_passage_found", "发现密道"), ("spy_network", "间谍网络"), ("alliance_baron", "男爵同盟"), ("alliance_church", "教会同盟"), ("merchant_deal", "商人合作"), ("assassination_survived", "刺杀幸存"), ("dark_lily_joined", "加入暗百合"), ("dark_lily_destroyed", "摧毁暗百合"), ("true_killer_known", "发现真凶"), ("father_letters_found", "密信收集"), ("poison_evidence", "毒药证据"), ("queen_trust", "王后信任"), ("prince_ally", "王子盟友"), ("elena_romance", "艾琳娜恋情")]:
+                    for _flag_name, _flag_label in [("father_death_known", "知晓死因"), ("secret_passage_found", "发现密道"), ("spy_network", "间谍网络"), ("alliance_baron", "男爵同盟"), ("alliance_church", "教会同盟"), ("merchant_deal", "商人合作"), ("assassination_survived", "刺杀幸存"), ("dark_lily_joined", "加入暗百合"), ("dark_lily_destroyed", "摧毁暗百合"), ("father_poison_method_known", "确认毒法"), ("father_poison_executor_known", "确认递毒者"), ("father_murder_mastermind_known", "确认幕后主使"), ("father_letters_found", "密信收集"), ("poison_evidence", "毒药证据"), ("queen_trust", "王后信任"), ("prince_ally", "王子盟友"), ("elena_romance", "艾琳娜恋情")]:
                         $ _fv = getattr(store, _flag_name, False)
                         $ _f_icon = ">" if _fv else "×"
                         $ _f_color = "#2ecc71" if _fv else "#e74c3c60"
@@ -268,6 +258,8 @@ screen balance_debug():
                                     text_color "#d4a942"
                                     text_hover_color "#ffd866"
                                     action [ToggleVariable(_flag_name), Function(renpy.restart_interaction)]
+
+                    null
 
                 null height 4
                 add Solid("#d4a94230") xsize 1.0 ysize 1

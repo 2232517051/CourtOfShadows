@@ -2063,6 +2063,7 @@ label ch4_garden:
                 prince "你父亲发现了母后篡改先王遗诏的证据。母后命教会的人除掉了他。"
                 prince "具体是谁动的手，我不知道。但下令的人是我的母亲。"
                 $ testament_forged_known = True
+                $ father_murder_mastermind_known = True
                 $ true_killer_known = True
                 $ hide_all_chars()
                 "你闭上眼睛。尽管你已经有了心理准备，但亲耳听到这个真相，依然像一把刀。"
@@ -2070,6 +2071,7 @@ label ch4_garden:
             else:
                 prince "你应该已经知道了——遗诏的事，还有你父亲的死因。"
                 prince "下令的人，是我的母亲。这一点我可以亲口证实。"
+                $ father_murder_mastermind_known = True
                 $ true_killer_known = True
                 "从王子口中听到这句话，你心中的最后一丝疑虑也消散了。"
             hide prince_img
@@ -3547,7 +3549,7 @@ label ch4_end:
     "但这些现在都不重要了。"
 
     ## ── 主教马修斯：遗诏证据交接 ──
-    if true_killer_known:
+    if father_murder_mastermind_known:
         "你刚踏进城门，就看到一个意想不到的人在等着你。"
 
         $ hide_all_chars("bishop_img")

@@ -35,6 +35,89 @@ init 1 python:
         cfg = _ending_threshold_config.get(diff, _ending_threshold_config["normal"])
         return cfg.get(kind)
 
+    def get_finale_route_availability(
+            power=0, intrigue=0, faith=0, loyalty=0,
+            difficulty="normal", lily_full_member=False,
+            rel_queen=0, rel_baron=0,
+            father_poison_method_known=False,
+            father_poison_executor_known=False,
+            father_murder_mastermind_known=False,
+            testament_original_obtained=False,
+            deep_mother_herb="", poison_evidence=False,
+            southern_outcome="none"):
+        """纯函数：返回终章每条路线最终是否可见。"""
+        cfg = _ending_threshold_config.get(difficulty or "normal", _ending_threshold_config["normal"])
+        primary_threshold = cfg["primary"]
+        fallback_threshold = cfg["fallback"]
+
+        ranked = [
+            (power, "iron_lord"),
+            (intrigue, "shadow_king"),
+            (faith, "holy_guardian"),
+            (loyalty, "peoples_lord"),
+        ]
+        ranked.sort(key=lambda item: item[0], reverse=True)
+
+        routes = {
+            "iron_lord": False,
+            "shadow_king": False,
+            "holy_guardian": False,
+            "peoples_lord": False,
+            "truth": False,
+            "borgia": False,
+            "vassal": False,
+            "resist": False,
+            "sea": False,
+            "fall": False,
+        }
+
+        for index, (value, route_id) in enumerate(ranked):
+            if index < 2 and value >= primary_threshold:
+                routes[route_id] = True
+
+        if not any(routes[route_id] for _, route_id in ranked):
+            if fallback_threshold is not None and ranked[0][0] >= fallback_threshold:
+                routes[ranked[0][1]] = True
+
+        ## 正式加入暗百合与教会调停身份冲突；必须在 fall 判定前抑制。
+        if lily_full_member:
+            routes["holy_guardian"] = False
+
+        ## 方法与直接递毒者是证据链中间态，不能替代幕后主使确认。
+        routes["truth"] = bool(father_murder_mastermind_known and testament_original_obtained)
+        routes["borgia"] = bool(deep_mother_herb == "poison" and intrigue >= 70 and poison_evidence)
+        hard_rel_threshold = 30 if primary_threshold >= 70 else 0
+        routes["vassal"] = rel_queen >= hard_rel_threshold
+        routes["resist"] = rel_baron >= hard_rel_threshold
+        routes["sea"] = southern_outcome not in ("none", "delegated")
+
+        non_sea_core = (
+            "iron_lord", "shadow_king", "holy_guardian", "peoples_lord",
+            "truth", "borgia", "vassal", "resist",
+        )
+        routes["fall"] = not any(routes[route_id] for route_id in non_sea_core)
+        return routes
+
+    def get_current_finale_route_availability():
+        """用当前存档状态调用统一终章路线判定。"""
+        return get_finale_route_availability(
+            power=getattr(store, "power", 0),
+            intrigue=getattr(store, "intrigue", 0),
+            faith=getattr(store, "faith", 0),
+            loyalty=getattr(store, "loyalty", 0),
+            difficulty=persistent.difficulty or "normal",
+            lily_full_member=getattr(store, "lily_full_member", False),
+            rel_queen=getattr(store, "rel_queen", 0),
+            rel_baron=getattr(store, "rel_baron", 0),
+            father_poison_method_known=getattr(store, "father_poison_method_known", False),
+            father_poison_executor_known=getattr(store, "father_poison_executor_known", False),
+            father_murder_mastermind_known=getattr(store, "father_murder_mastermind_known", False),
+            testament_original_obtained=getattr(store, "testament_original_obtained", False),
+            deep_mother_herb=getattr(store, "deep_mother_herb", ""),
+            poison_evidence=getattr(store, "poison_evidence", False),
+            southern_outcome=getattr(store, "southern_outcome", "none"),
+        )
+
     ## 铁腕会战阈值难度修正 (批31收尾轮): 模拟显示最优策略下完胜率 ~95% (normal),
     ## hard +4 → 结盟玩家完胜~74% / 无盟友最优~38%完胜60%惨胜, 战败只惩罚无盟友乱打。
     ## easy -2 保体验档爽感。sim: Tools/sim_batch31_balance.py

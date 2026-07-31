@@ -419,7 +419,7 @@ label ch4_exp_explore_market:
 
             narrator "「都是打听先王遗诏的人。」"
 
-            if true_killer_known:
+            if testament_forged_known:
                 "先王遗诏——你心中一动。如果王后篡改了遗诏， 那被灭口就完全说得通了。"
 
             narrator "「还有——大主教马修斯最近来王都了。那老头一般不轻易出主教座堂。他来了， 肯定有大事。」"
@@ -452,7 +452,7 @@ label ch4_exp_explore_market:
 
             narrator "「都是些打听先王遗诏的人。」"
 
-            if true_killer_known:
+            if testament_forged_known:
                 "先王遗诏——你心中一动。如果王后篡改了遗诏，那被灭口就完全说得通了。"
 
             narrator "「还有——大主教马修斯最近来王都了。那老头一般不轻易离开主教座堂。他来了，肯定有大事。」"

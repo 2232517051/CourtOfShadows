@@ -1193,7 +1193,7 @@ label ch5_exp_last_night:
 
     elena "所以——不管你怎么选，我都会在你身边。不是因为义务，是因为我们有同样的敌人。"
 
-    if true_killer_known:
+    if father_poison_method_known:
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
@@ -1891,7 +1891,7 @@ label ch5_exp_eve_of_battle:
 
     "但你比谁都清楚——王后的承诺和她的毒药一样不可信。"
 
-    if true_killer_known:
+    if father_murder_mastermind_known:
         "而且——这个女人毒杀了你的父亲。无论她许诺什么，你都不会忘记这一点。"
 
     menu:
@@ -2357,7 +2357,7 @@ label ch5_exp_eve_of_battle:
         "你闭上眼，在心中默念了一句祷词。念完，按在剑柄上的手松开了。"
     if loyalty >= 50:
         "你望向窗外。城堡里灯火通明——你的人民没有一个人逃跑。他们选择留下来，和你一起面对风暴。"
-    if true_killer_known:
+    if testament_original_obtained:
         "你打开密室，最后一次审视了那份遗诏。这张薄薄的羊皮纸上，写着足以颠覆一切的真相。也许明天——真相就是你最锋利的武器。"
 
     "你吹灭了蜡烛。"

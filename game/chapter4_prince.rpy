@@ -327,6 +327,7 @@ label ch5_prince_letter:
 
     "触目惊心。"
 
+    $ father_murder_mastermind_known = True
     $ true_killer_known = True
 
     menu:
