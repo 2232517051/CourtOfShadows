@@ -18,9 +18,13 @@ label start:
     jump chapter1_start
 
 label chapter1_start:
+    call new_run_bootstrap from _call_new_run_bootstrap_chapter1
 
     ## 二周目: 章节入口自动存档(带档开始的数据源), 见 replay.rpy
     $ auto_chapter_save("chapter1")
+
+    ## 记录章节初始属性
+    $ snapshot_chapter_start()
 
     ## ============================================================
     ## 第一章：新主登基

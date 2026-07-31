@@ -136,6 +136,8 @@ label southern_arc_standalone:
         reputation = 50
         intrigue = 45
 
+    call new_run_bootstrap from _call_new_run_bootstrap_southern_standalone
+
     call southern_arc from _call_southern_arc_standalone
     jump southern_dlc_complete
 

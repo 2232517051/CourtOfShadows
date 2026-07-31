@@ -3,6 +3,7 @@
 ## ============================================================
 
 label chapter3_start:
+    call new_run_bootstrap from _call_new_run_bootstrap_chapter3
 
     ## 安全重置：防止上一章过场动画的 _dismiss_pause 泄漏
     $ _dismiss_pause = True

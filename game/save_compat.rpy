@@ -53,6 +53,8 @@ init python:
 ################################################################################
 
 label after_load:
+    $ _new_run_bootstrap_done = True
+
     ## 初始化新版本添加的 persistent 变量（旧存档可能缺少）
     if not hasattr(persistent, 'collectibles_found') or persistent.collectibles_found is None:
         $ persistent.collectibles_found = set()

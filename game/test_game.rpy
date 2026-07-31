@@ -11,16 +11,13 @@
 
 ## 主测试：快速走通游戏，验证不会崩溃
 testcase test_walkthrough:
-    ## 跳过教程和难度选择
-    click
-    pause 0.5
-    click
-    pause 0.5
-    click
-    pause 0.5
-
-    ## 输入名字（使用默认名）
-    type "测试领主\n"
+    ## 从主菜单稳定启动，并完成一次性开局设置
+    $ persistent.privacy_agreed = True
+    $ persistent.tutorial_seen = True
+    run Start() until screen "difficulty_select" timeout 4.0
+    click "确认"
+    pause until screen "name_input_screen" timeout 4.0
+    click "使用默认"
     pause 0.5
 
     ## 连续点击推进剧情，直到遇到选择
@@ -88,6 +85,86 @@ testcase test_critical_finale_routes:
     assert eval (_pending_prince_legacy_is_mastermind)
     assert eval (_logged_prince_legacy_is_mastermind)
     assert eval (_logged_prince_refusal_is_mastermind)
+
+
+################################################################################
+## 3.9.2 regression: every formal chapter entry must initialize a blank run once
+################################################################################
+
+testsuite test_new_run_bootstrap:
+    before testcase:
+        if not screen "main_menu":
+            run MainMenu(confirm=False)
+
+        $ _test.timeout = 4.0
+        $ persistent.privacy_agreed = True
+        $ persistent.tutorial_seen = True
+        $ persistent.ng_plus_unlocked = False
+        $ persistent.ng_plus_bonus_power = 0
+        $ persistent.ng_plus_bonus_wealth = 0
+        $ persistent.ng_plus_bonus_intrigue = 0
+        $ persistent.difficulty = "normal"
+
+    after testcase:
+        if not screen "main_menu":
+            run MainMenu(confirm=False)
+
+    testcase blank_formal_entries_require_setup:
+        parameter (entry_label, bootstrap_return) = [
+            ("prologue", "_call_new_run_bootstrap_prologue"),
+            ("chapter1_start", "_call_new_run_bootstrap_chapter1"),
+            ("chapter2_start", "_call_new_run_bootstrap_chapter2"),
+            ("chapter3_start", "_call_new_run_bootstrap_chapter3"),
+            ("chapter4_start", "_call_new_run_bootstrap_chapter4"),
+            ("chapter5_start", "_call_new_run_bootstrap_chapter5"),
+            ("southern_arc_standalone", "_call_new_run_bootstrap_southern_standalone"),
+        ]
+
+        run Start(entry_label) until screen "difficulty_select" timeout 4.0
+        assert screen "difficulty_select"
+        assert eval (bootstrap_return in renpy.get_return_stack())
+
+    testcase setup_is_complete_and_idempotent:
+        $ persistent.ng_plus_unlocked = True
+        $ persistent.ng_plus_bonus_power = 5
+        $ persistent.ng_plus_bonus_wealth = 7
+        $ persistent.ng_plus_bonus_intrigue = 4
+
+        run Start("southern_arc_standalone") until screen "difficulty_select" timeout 4.0
+        click "简单"
+        click "确认"
+        pause until screen "name_input_screen" timeout 4.0
+        click "使用默认"
+        pause until screen "chapter_title" timeout 4.0
+
+        assert eval (persistent.difficulty == "easy")
+        assert eval (bool(player_name.strip()))
+        assert eval (get_inventory() == {"iron_sword": 1, "leather_armor": 1, "health_potion": 2, "bandage": 2})
+        assert eval ((power, wealth, faith, loyalty, reputation, intrigue) == (55, 57, 45, 50, 50, 49))
+        assert eval (_new_run_bootstrap_done)
+        assert eval ("_call_show_chapter_southern" in renpy.get_return_stack())
+
+        $ _bootstrap_stats_before_second_call = (power, wealth, faith, loyalty, reputation, intrigue)
+        $ _bootstrap_inventory_before_second_call = list(inventory_items)
+        run Call("new_run_bootstrap")
+        pause 0.1
+        assert eval ((power, wealth, faith, loyalty, reputation, intrigue) == _bootstrap_stats_before_second_call)
+        assert eval (inventory_items == _bootstrap_inventory_before_second_call)
+
+    testcase after_load_protects_existing_run:
+        run Start("test_new_run_after_load_driver") until screen "chapter_title" timeout 4.0
+        assert eval (_new_run_bootstrap_done)
+        assert eval (inventory_items == [("synthetic_loaded_item", 7)])
+        assert not screen "difficulty_select"
+        assert not screen "name_input_screen"
+        assert eval ("_call_show_chapter_1" in renpy.get_return_stack())
+
+
+label test_new_run_after_load_driver:
+    $ _new_run_bootstrap_done = False
+    $ inventory_items = [("synthetic_loaded_item", 7)]
+    call after_load from _call_after_load_bootstrap_test
+    jump chapter3_start
 
 
 ################################################################################
