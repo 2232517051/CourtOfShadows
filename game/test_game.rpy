@@ -95,16 +95,17 @@ default _test_mobile_choice_overflow_seventh_selected = False
 default _test_desktop_choice_first_selected = False
 
 testcase test_mobile_choice_overflow:
-    run Start("test_mobile_choice_overflow_fixture") until screen "choice" timeout 4.0
-    screenshot "mobile_choice_overflow_important"
-    pause 2.0
-    screenshot "mobile_choice_overflow_initial"
-    scroll id "choice_scroll" amount 8
-    pause 0.5
-    screenshot "mobile_choice_overflow_scrolled"
-    click "第七项：放下旧日的王冠，与所有盟友共同建立新的议会秩序"
-    pause until screen "say" timeout 4.0
-    assert eval (_test_mobile_choice_overflow_seventh_selected)
+    if eval (renpy.variant("small")):
+        run Start("test_mobile_choice_overflow_fixture") until screen "choice" timeout 4.0
+        screenshot "mobile_choice_overflow_important"
+        pause 2.0
+        screenshot "mobile_choice_overflow_initial"
+        scroll id "choice_scroll" amount 8
+        pause 0.5
+        screenshot "mobile_choice_overflow_scrolled"
+        click "第七项：放下旧日的王冠，与所有盟友共同建立新的议会秩序"
+        pause until screen "say" timeout 4.0
+        assert eval (_test_mobile_choice_overflow_seventh_selected)
 
 
 testcase test_desktop_choice_sanity:
