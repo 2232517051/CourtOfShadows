@@ -82,10 +82,12 @@ testcase test_critical_finale_routes:
     $ _prince_ally_legacy_is_mastermind = legacy_true_implies_mastermind(True, prince_ally=True)
     $ _pending_prince_legacy_is_mastermind = legacy_true_implies_mastermind(True, prince_answer_pending=True)
     $ _logged_prince_legacy_is_mastermind = legacy_true_implies_mastermind(True, decisions=[("第五章", "战前答复王子，结成同盟", "")])
+    $ _logged_prince_refusal_is_mastermind = legacy_true_implies_mastermind(True, decisions=[("第五章", "战前回绝王子", "")])
     assert eval (_chapter_three_legacy_is_not_mastermind)
     assert eval (_prince_ally_legacy_is_mastermind)
     assert eval (_pending_prince_legacy_is_mastermind)
     assert eval (_logged_prince_legacy_is_mastermind)
+    assert eval (_logged_prince_refusal_is_mastermind)
 
 
 ################################################################################

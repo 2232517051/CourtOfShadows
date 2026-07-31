@@ -39,7 +39,10 @@ init python:
         for decision in decisions or ():
             if (len(decision) >= 2
                     and decision[0] == "第五章"
-                    and decision[1] == "战前答复王子，结成同盟"):
+                    and decision[1] in (
+                        "战前答复王子，结成同盟",
+                        "战前回绝王子",
+                    )):
                 return True
         ## ch3_dark_lily_visited 特意不构成幕后主使来源。
         return False
