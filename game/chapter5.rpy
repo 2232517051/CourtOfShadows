@@ -1363,11 +1363,11 @@ label ch5_counsel_all:
 
     menu:
         "问他对这一仗最担心什么":
-            player "两军对垒——这次比西境那场更难打。你最担心什么？"
+            player "你打过北境之战——这次比那回更难吧。你最担心什么？"
             hide player_char_img
             $ hide_all_chars("captain_img")
             show captain_img at left with dissolve
-            captain "西境那年我们只有一个方向要守。这次我们既要防北墙，也要防内鬼。"
+            captain "北境那年只有一个方向要守。这次我们既要防北墙，也要防内鬼。"
             captain "我训练士兵时总说一句话——"
             captain "「活着回来比当英雄更重要。」"
             captain "领主大人，如果开战的话，请不要亲自冲在最前面。"
@@ -5064,7 +5064,7 @@ label ending_truth:
 
     queen "我改了遗诏。我接过了这个烂摊子。"
 
-    queen "然后呢？北方蛮族击退，三个公爵瓦解。边境二十年没有战火——国库也从空虚到充盈。"
+    queen "然后呢？北方蛮族击退，三个公爵瓦解。二十年了，没让一个蛮兵踏过山隘——国库也从空虚到充盈。"
 
     queen "这些——是谁做到的？"
 

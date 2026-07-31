@@ -1132,9 +1132,9 @@ label interlude_ch4_ch5_council:
     show captain_img at left with dissolve
     captain "说实话？不知道。"
 
-    captain "但我见过比这更绝望的仗。在西境战役的时候，我们被十倍的敌人围了三个月。"
+    captain "但我见过比这更绝望的。北境之战，蛮族三万人压过来，我们死撑了四十天。"
 
-    captain "最后活下来的人只有原来的三分之一。但我们活下来了。"
+    captain "最后站着的不到三分之一。但我们撑下来了。"
 
     captain "活下来的关键不是兵力，不是城墙。是领头的人——让所有人相信，天亮之后还有明天。"
 

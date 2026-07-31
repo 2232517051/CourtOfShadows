@@ -283,7 +283,7 @@ label npc_captain_war_story:
 
     hide player_char_img
     show captain_img at left with dissolve
-    captain "北境之战。领主大人，您那时候还没出生。"
+    captain "北境之战。领主大人，您那时候还在襁褓里。"
 
     "雷恩终于喝了一口酒，但脸上的表情比酒更苦。"
 
