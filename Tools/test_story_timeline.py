@@ -94,6 +94,29 @@ class FatherSonAssetTests(unittest.TestCase):
         self.assertLess(departure_anchor, final_empty)
         self.assertLess(final_empty, final_black)
 
+    def test_father_son_render_regression_executes_production_atl(self) -> None:
+        test_game = read_game_file("test_game.rpy")
+        ending_source = read_game_file("endings_expansion.rpy")
+
+        self.assertIn("testcase test_father_son_cg_render:", test_game)
+        self.assertIn(
+            'run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0',
+            test_game,
+        )
+        self.assertIn("pause 2.2", test_game)
+        self.assertIn("label test_father_son_cg_atl_smoke_fixture:", test_game)
+        self.assertIn(
+            "scene cg_father_son_empty as father_son_cg at father_son_slow_push",
+            test_game,
+        )
+        for parameter in (
+            "linear 20.0 zoom 1.025",
+            "linear 0.18 matrixcolor BrightnessMatrix(0.018)",
+            "linear 0.28 matrixcolor BrightnessMatrix(-0.008)",
+            "linear 0.22 matrixcolor BrightnessMatrix(0.0)",
+        ):
+            self.assertIn(parameter, ending_source)
+
 
 class MysteryTimelineTests(unittest.TestCase):
     def test_tunnel_anchor_does_not_reuse_numbered_second_day(self) -> None:

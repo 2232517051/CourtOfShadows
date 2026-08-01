@@ -284,6 +284,11 @@ testcase test_desktop_choice_sanity:
 
 testcase test_father_son_cg_render:
     $ _test.timeout = 4.0
+    run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0
+    pause 2.2
+    click
+    pause until screen "main_menu" timeout 4.0
+
     run Start("test_father_son_cg_render_fixture") until screen "say" timeout 4.0
     pause 1.0
     screenshot "father_son_empty"
@@ -379,6 +384,15 @@ label test_father_son_cg_render_fixture:
     "父亲显形测试画面。"
     show cg_father_son_empty as father_son_cg with dissolve
     "父亲消失后的空椅测试画面。"
+    scene black
+    $ quick_menu = True
+    return
+
+
+label test_father_son_cg_atl_smoke_fixture:
+    $ quick_menu = False
+    scene cg_father_son_empty as father_son_cg at father_son_slow_push
+    "父子 CG ATL 烛光测试画面。"
     scene black
     $ quick_menu = True
     return
