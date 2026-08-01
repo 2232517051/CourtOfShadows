@@ -188,6 +188,56 @@ testsuite test_ending_catalog:
         assert eval (_ending_routes[ending_id])
 
 
+################################################################################
+## 3.10 regression: balance report copy must describe real battle outcomes.
+################################################################################
+
+testsuite test_balance_ending_report:
+    before testcase:
+        $ _test.balance_report_store_names = ("power", "intrigue", "faith", "loyalty", "wealth", "rel_baron", "rel_queen", "lily_full_member", "father_poison_method_known", "father_poison_executor_known", "father_murder_mastermind_known", "testament_original_obtained", "deep_mother_herb", "poison_evidence", "southern_outcome", "alliance_baron", "prince_ally", "rel_captain", "ch5_pay_advance_pension", "marriage_route", "iron_thorn_controlled", "baron_supply_intel")
+        $ _test.balance_report_store_snapshot = {name: getattr(store, name) for name in _test.balance_report_store_names}
+        $ _test.balance_report_persistent_snapshot = {"difficulty": persistent.difficulty}
+        $ _test.balance_report_defaults = {"power": 0, "intrigue": 0, "faith": 0, "loyalty": 0, "wealth": 0, "rel_baron": -1, "rel_queen": -1, "lily_full_member": False, "father_poison_method_known": False, "father_poison_executor_known": False, "father_murder_mastermind_known": False, "testament_original_obtained": False, "deep_mother_herb": "", "poison_evidence": False, "southern_outcome": "none", "alliance_baron": False, "prince_ally": False, "rel_captain": 0, "ch5_pay_advance_pension": False, "marriage_route": False, "iron_thorn_controlled": False, "baron_supply_intel": False}
+        $ [setattr(store, name, value) for name, value in _test.balance_report_defaults.items()]
+
+    after testcase:
+        $ [setattr(store, name, value) for name, value in _test.balance_report_store_snapshot.items()]
+        $ persistent.difficulty = _test.balance_report_persistent_snapshot["difficulty"]
+        assert eval (all(getattr(store, name) == value for name, value in _test.balance_report_store_snapshot.items()))
+        assert eval (persistent.difficulty == _test.balance_report_persistent_snapshot["difficulty"])
+        $ renpy.save_persistent()
+
+    testcase normal_direct_iron_report_includes_win_and_loss:
+        $ persistent.difficulty = "normal"
+        $ power = 55
+        $ _balance_report = {row[0]: row for row in check_ending_reachability()}
+        assert eval (_balance_report["iron_lord"][2])
+        assert eval (_balance_report["fall"][2])
+        assert eval (_balance_report["iron_lord"][3] == "已满足条件")
+        assert eval (_balance_report["fall"][3] == "已满足条件")
+        assert eval (_ending_requirements["iron_lord"]["requirement"] == "权力路线可选，或铁腕会战存在胜利路径")
+        assert eval (_ending_requirements["fall"]["desc"] == "未能守住艾登堡（失败结局）")
+        assert eval (_ending_requirements["fall"]["requirement"] == "没有其他核心路线可选，或铁腕会战存在战败路径")
+
+    testcase supported_hard_resistance_report_has_no_loss_path:
+        $ persistent.difficulty = "hard"
+        $ rel_baron = 30
+        $ alliance_baron = True
+        $ baron_supply_intel = True
+        $ _balance_report = {row[0]: row for row in check_ending_reachability()}
+        assert eval (_balance_report["iron_lord"][2])
+        assert eval (not _balance_report["fall"][2])
+        assert eval (_balance_report["fall"][3] == "仍有其他核心路线可选；铁腕会战当前没有战败路径")
+
+    testcase unsupported_hard_resistance_report_has_no_win_path:
+        $ persistent.difficulty = "hard"
+        $ rel_baron = 30
+        $ _balance_report = {row[0]: row for row in check_ending_reachability()}
+        assert eval (not _balance_report["iron_lord"][2])
+        assert eval (_balance_report["fall"][2])
+        assert eval (_balance_report["iron_lord"][3] == "铁腕会战当前没有胜利路径")
+
+
 testsuite test_resistance_battle_transition:
     before testcase:
         $ _test.resistance_difficulty_snapshot = persistent.difficulty

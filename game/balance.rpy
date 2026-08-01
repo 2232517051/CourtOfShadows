@@ -18,7 +18,7 @@ init python:
             "icon": "剑",
             "color": "#e74c3c",
             "desc": "以武力征服一切",
-            "requirement": "终章属性排名与当前难度门槛",
+            "requirement": "权力路线可选，或铁腕会战存在胜利路径",
             "stat": "power",
         },
         "shadow_king": {
@@ -73,8 +73,8 @@ init python:
             "name": "艾登堡陷落",
             "icon": "灰",
             "color": "#3d3a36",
-            "desc": "什么都没做的代价（失败结局）",
-            "requirement": "没有其他核心路线可选",
+            "desc": "未能守住艾登堡（失败结局）",
+            "requirement": "没有其他核心路线可选，或铁腕会战存在战败路径",
             "stat": None,
         },
         "sea": {
@@ -94,9 +94,9 @@ init python:
         """
         results = []
         routes = get_current_finale_route_availability()
-        endings = get_finale_ending_availability(
-            routes, get_current_resistance_battle_outcomes()
-        )
+        battle_outcomes = get_current_resistance_battle_outcomes()
+        endings = get_finale_ending_availability(routes, battle_outcomes)
+        battle_route_visible = bool(routes.get("iron_lord") or routes.get("resist"))
         primary_threshold = get_ending_threshold("primary")
 
         for end_id, info in _ending_requirements.items():
@@ -104,6 +104,8 @@ init python:
 
             if reachable:
                 gap_desc = "已满足条件"
+            elif end_id == "iron_lord" and battle_route_visible and not battle_outcomes.get("iron_lord"):
+                gap_desc = "铁腕会战当前没有胜利路径"
             elif end_id == "truth":
                 missing = []
                 if not store.father_murder_mastermind_known:
@@ -124,7 +126,10 @@ init python:
                 relation_threshold = 30 if primary_threshold >= 70 else 0
                 gap_desc = "王后关系需达到 %d" % relation_threshold
             elif end_id == "fall":
-                gap_desc = "仍有其他核心路线可选"
+                if battle_route_visible and not battle_outcomes.get("fall"):
+                    gap_desc = "仍有其他核心路线可选；铁腕会战当前没有战败路径"
+                else:
+                    gap_desc = "仍有其他核心路线可选"
             elif end_id == "sea":
                 gap_desc = "南境路线未形成可离境结果"
             elif end_id == "holy_guardian" and store.lily_full_member:
