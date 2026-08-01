@@ -98,17 +98,23 @@ init 1 python:
         routes["fall"] = not any(routes[route_id] for route_id in non_sea_core)
         return routes
 
-    def get_finale_ending_availability(routes):
-        """Map visible finale routes to the nine persistent ending ids."""
+    def get_finale_ending_availability(routes, resistance_outcomes=None):
+        """Map visible routes to persistent outcomes the player can actually reach."""
+        resistance_outcomes = resistance_outcomes or {}
+        resistance_visible = bool(routes.get("resist"))
         return {
-            "iron_lord": bool(routes.get("iron_lord") or routes.get("resist")),
+            "iron_lord": bool(routes.get("iron_lord") or (
+                resistance_visible and resistance_outcomes.get("iron_lord")
+            )),
             "shadow_king": bool(routes.get("shadow_king")),
             "holy_guardian": bool(routes.get("holy_guardian")),
             "peoples_lord": bool(routes.get("peoples_lord")),
             "truth": bool(routes.get("truth")),
             "borgia": bool(routes.get("borgia")),
             "vassal": bool(routes.get("vassal")),
-            "fall": bool(routes.get("fall")),
+            "fall": bool(routes.get("fall") or (
+                resistance_visible and resistance_outcomes.get("fall")
+            )),
             "sea": bool(routes.get("sea")),
         }
 
@@ -130,6 +136,25 @@ init 1 python:
             deep_mother_herb=getattr(store, "deep_mother_herb", ""),
             poison_evidence=getattr(store, "poison_evidence", False),
             southern_outcome=getattr(store, "southern_outcome", "none"),
+        )
+
+    def get_current_resistance_battle_outcomes():
+        """Evaluate resistance outcomes from the current save without mutating it."""
+        return get_resistance_battle_outcomes(
+            power=getattr(store, "power", 0),
+            intrigue=getattr(store, "intrigue", 0),
+            faith=getattr(store, "faith", 0),
+            loyalty=getattr(store, "loyalty", 0),
+            wealth=getattr(store, "wealth", 0),
+            difficulty=persistent.difficulty or "normal",
+            alliance_baron=getattr(store, "alliance_baron", False),
+            rel_baron=getattr(store, "rel_baron", 0),
+            prince_ally=getattr(store, "prince_ally", False),
+            rel_captain=getattr(store, "rel_captain", 0),
+            ch5_pay_advance_pension=getattr(store, "ch5_pay_advance_pension", False),
+            marriage_route=getattr(store, "marriage_route", False),
+            iron_thorn_controlled=getattr(store, "iron_thorn_controlled", False),
+            baron_supply_intel=getattr(store, "baron_supply_intel", False),
         )
 
     ## 铁腕会战阈值难度修正 (批31收尾轮): 模拟显示最优策略下完胜率 ~95% (normal),
@@ -165,6 +190,152 @@ init 1 python:
         elif current_val >= 40:
             return max(1, int(raw_delta * 0.7))
         return raw_delta
+
+    def _difficulty_adjusted_stat_value(current, delta, difficulty):
+        """Pure equivalent of one change_stat call at a specified difficulty."""
+        cfg = _difficulty_config.get(difficulty or "normal", _difficulty_config["normal"])
+        if delta > 0:
+            adjusted = int(delta * cfg["positive"])
+        elif delta < 0:
+            adjusted = int(delta * cfg["negative"])
+        else:
+            adjusted = 0
+
+        if adjusted == 0 and delta != 0:
+            adjusted = 1 if delta > 0 else -1
+        adjusted = _diminishing_returns(current, adjusted)
+        return max(0, min(100, current + adjusted))
+
+    def get_resistance_battle_outcomes(
+            power=0, intrigue=0, faith=0, loyalty=0, wealth=0,
+            difficulty="normal", alliance_baron=False, rel_baron=0,
+            prince_ally=False, rel_captain=0,
+            ch5_pay_advance_pension=False, marriage_route=False,
+            iron_thorn_controlled=False, baron_supply_intel=False):
+        """Purely enumerate win/loss outcomes of the chapter-five resistance battle."""
+        difficulty = difficulty or "normal"
+        score = (
+            max(0, power - 30) // 4
+            + max(0, intrigue - 30) // 6
+            + max(0, loyalty - 30) // 8
+        )
+        if alliance_baron:
+            score += 10
+        elif rel_baron > 0:
+            score += 4
+        if prince_ally:
+            score += 5
+        if rel_captain >= 60:
+            score += 3
+        if ch5_pay_advance_pension:
+            score += 3
+        if marriage_route:
+            score += 5
+        if iron_thorn_controlled:
+            score += 3
+
+        ## ending_iron_lord grants this before the plan menu, after base score.
+        if power >= 70:
+            power = _difficulty_adjusted_stat_value(power, 3, difficulty)
+
+        plans = []
+        if faith >= 60:
+            plans.append((
+                power,
+                intrigue,
+                _difficulty_adjusted_stat_value(faith, 5, difficulty),
+                _difficulty_adjusted_stat_value(loyalty, 3, difficulty),
+                wealth,
+                score + 4,
+            ))
+
+        plans.append((
+            power,
+            _difficulty_adjusted_stat_value(intrigue, 5, difficulty),
+            faith,
+            _difficulty_adjusted_stat_value(loyalty, -4, difficulty),
+            wealth,
+            score + 6 + (3 if baron_supply_intel else 0),
+        ))
+
+        if wealth >= 40:
+            plans.append((
+                power,
+                _difficulty_adjusted_stat_value(intrigue, 3, difficulty),
+                faith,
+                loyalty,
+                _difficulty_adjusted_stat_value(wealth, -10, difficulty),
+                score + 6,
+            ))
+
+        if power >= 55:
+            plans.append((
+                _difficulty_adjusted_stat_value(power, 3, difficulty),
+                _difficulty_adjusted_stat_value(intrigue, 3, difficulty),
+                faith,
+                loyalty,
+                wealth,
+                score + 8,
+            ))
+
+        outcomes = {"iron_lord": False, "fall": False}
+        grind_threshold = 12 + _war_threshold_mod.get(difficulty, 0)
+
+        for plan_power, plan_intrigue, plan_faith, plan_loyalty, plan_wealth, plan_score in plans:
+            skirmishes = [
+                (
+                    _difficulty_adjusted_stat_value(plan_power, 5, difficulty),
+                    plan_intrigue,
+                    plan_loyalty,
+                    plan_score,
+                ),
+                (
+                    _difficulty_adjusted_stat_value(plan_power, 2, difficulty),
+                    _difficulty_adjusted_stat_value(plan_intrigue, 3, difficulty),
+                    plan_loyalty,
+                    plan_score + 3,
+                ),
+            ]
+
+            for skirmish_power, skirmish_intrigue, skirmish_loyalty, skirmish_score in skirmishes:
+                villages = []
+                if skirmish_loyalty >= 70:
+                    villages.append((
+                        _difficulty_adjusted_stat_value(skirmish_power, -6, difficulty),
+                        skirmish_intrigue,
+                        _difficulty_adjusted_stat_value(skirmish_loyalty, 5, difficulty),
+                        skirmish_score,
+                    ))
+                villages.extend([
+                    (
+                        _difficulty_adjusted_stat_value(skirmish_power, -1, difficulty),
+                        skirmish_intrigue,
+                        _difficulty_adjusted_stat_value(skirmish_loyalty, 3, difficulty),
+                        skirmish_score - 3,
+                    ),
+                    (
+                        _difficulty_adjusted_stat_value(skirmish_power, 2, difficulty),
+                        skirmish_intrigue,
+                        _difficulty_adjusted_stat_value(skirmish_loyalty, -5, difficulty),
+                        skirmish_score,
+                    ),
+                ])
+
+                for final_power, final_intrigue, final_loyalty, final_score in villages:
+                    prepared = (
+                        final_power >= 60
+                        or final_intrigue >= 55
+                        or (final_intrigue >= 45 and final_loyalty >= 50)
+                    )
+                    if prepared or final_score >= grind_threshold:
+                        outcomes["iron_lord"] = True
+                    else:
+                        outcomes["fall"] = True
+
+                    if outcomes["iron_lord"] and outcomes["fall"]:
+                        return outcomes
+
+        return outcomes
 
     ## 覆写 change_stat 和 change_rel，加入难度倍率
     _original_change_stat = change_stat

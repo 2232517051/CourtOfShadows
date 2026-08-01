@@ -114,6 +114,41 @@ testsuite test_ending_catalog:
         $ _catalog_matches = set(_ending_requirements.keys()) == set(_ending_keys)
         assert eval (_catalog_matches)
 
+    testcase ending_availability_is_an_exact_nine_key_outcome_map:
+        parameter (route_kwargs, resistance_kwargs, expected_endings) = [
+            (
+                {"difficulty": "hard", "power": 72},
+                None,
+                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": False, "sea": False},
+            ),
+            (
+                {"difficulty": "hard", "rel_baron": 30},
+                {"difficulty": "hard", "rel_baron": 30},
+                {"iron_lord": False, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
+            ),
+            (
+                {"difficulty": "hard", "rel_baron": 30},
+                {"difficulty": "hard", "rel_baron": 30, "alliance_baron": True, "baron_supply_intel": True},
+                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": False, "sea": False},
+            ),
+            (
+                {"difficulty": "hard", "rel_baron": 30},
+                {"difficulty": "hard", "rel_baron": 30, "baron_supply_intel": True},
+                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
+            ),
+            (
+                {"difficulty": "hard", "southern_outcome": "free"},
+                None,
+                {"iron_lord": False, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": True},
+            ),
+        ]
+
+        $ _exact_routes = get_finale_route_availability(**route_kwargs)
+        $ _resistance_outcomes = None if resistance_kwargs is None else get_resistance_battle_outcomes(**resistance_kwargs)
+        $ _exact_endings = get_finale_ending_availability(_exact_routes, _resistance_outcomes)
+        assert eval (_exact_endings == expected_endings)
+        assert eval (set(_exact_endings.keys()) == set(_ending_keys))
+
     testcase primary_routes_use_configured_thresholds:
         parameter (difficulty_name, stat_name, ending_id) = [
             ("easy", "power", "iron_lord"),
@@ -142,11 +177,49 @@ testsuite test_ending_catalog:
             ({"difficulty": "hard", "rel_queen": 30}, "vassal"),
             ({"difficulty": "hard"}, "fall"),
             ({"difficulty": "hard", "southern_outcome": "free"}, "sea"),
-            ({"difficulty": "hard", "rel_baron": 30}, "iron_lord"),
         ]
 
         $ _ending_routes = get_finale_ending_availability(get_finale_route_availability(**route_kwargs))
         assert eval (_ending_routes[ending_id])
+
+
+testsuite test_resistance_battle_transition:
+    before testcase:
+        $ _test.resistance_difficulty_snapshot = persistent.difficulty
+
+    after testcase:
+        if not screen "main_menu":
+            run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ persistent.difficulty = _test.resistance_difficulty_snapshot
+        $ renpy.save_persistent()
+
+    testcase low_score_hard_resistance_reaches_grind_failure:
+        $ _test.timeout = 30.0
+        run Start("test_resistance_battle_loss_fixture") until screen "say" timeout 4.0
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        click "截断补给线——让他们饿三天再打"
+        pause 0.5
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        click "亲自率领前锋出击"
+        pause 0.5
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        click "记住这一切，继续前进"
+        pause 0.5
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        assert eval (not _iron_prepared)
+        assert eval (iron_war_score < 12 + get_war_threshold_mod())
+        click "硬拼——你没有更好的选择了"
+        pause 0.5
+        advance
+        advance
+        advance
+        assert eval (renpy.get_filename_line()[0].endswith("chapter5.rpy") and 3345 <= renpy.get_filename_line()[1] < 3400)
+        advance until eval (ending_type == "fall") timeout 10.0
+        assert eval (ending_type == "fall")
 
 
 ################################################################################
@@ -398,6 +471,26 @@ label test_father_son_cg_atl_smoke_fixture:
     return
 
 
+label test_resistance_battle_loss_fixture:
+    $ persistent.difficulty = "hard"
+    $ power = 0
+    $ intrigue = 0
+    $ faith = 0
+    $ loyalty = 0
+    $ wealth = 0
+    $ rel_baron = 30
+    $ rel_captain = 0
+    $ alliance_baron = False
+    $ prince_ally = False
+    $ ch5_pay_advance_pension = False
+    $ marriage_route = False
+    $ iron_thorn_controlled = False
+    $ baron_supply_intel = False
+    $ resist_route = True
+    $ iron_battle_outcome = "decisive"
+    jump ending_iron_lord
+
+
 ################################################################################
 ## 3.9.2 regression: accessibility controls must drive Ren'Py preferences.
 ################################################################################
@@ -578,7 +671,7 @@ label test_accessibility_render_fixture:
 
 testsuite test_new_run_bootstrap:
     before testcase:
-        ## 全新 persistent 下 testcase hook 可能早于主菜单首帧；无论当前
+        ## 全新 persistent 下 testcase hook 可能早于主菜单首次画面；无论当前
         ## context 在哪里，都发出回主菜单动作并等待 screen 真正出现。
         run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
 

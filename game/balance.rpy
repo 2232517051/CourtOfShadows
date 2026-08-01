@@ -94,7 +94,9 @@ init python:
         """
         results = []
         routes = get_current_finale_route_availability()
-        endings = get_finale_ending_availability(routes)
+        endings = get_finale_ending_availability(
+            routes, get_current_resistance_battle_outcomes()
+        )
         primary_threshold = get_ending_threshold("primary")
 
         for end_id, info in _ending_requirements.items():
