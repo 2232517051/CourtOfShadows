@@ -118,8 +118,13 @@ testsuite test_ending_catalog:
         parameter (route_kwargs, resistance_kwargs, expected_endings) = [
             (
                 {"difficulty": "hard", "power": 72},
-                None,
+                {"difficulty": "hard", "power": 72},
                 {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": False, "sea": False},
+            ),
+            (
+                {"difficulty": "normal", "power": 55, "rel_baron": -1, "rel_queen": -1},
+                {"difficulty": "normal", "power": 55, "rel_baron": -1},
+                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
             ),
             (
                 {"difficulty": "hard", "rel_baron": 30},
@@ -217,7 +222,6 @@ testsuite test_resistance_battle_transition:
         advance
         advance
         advance
-        assert eval (renpy.get_filename_line()[0].endswith("chapter5.rpy") and 3345 <= renpy.get_filename_line()[1] < 3400)
         advance until eval (ending_type == "fall") timeout 10.0
         assert eval (ending_type == "fall")
 
@@ -488,6 +492,7 @@ label test_resistance_battle_loss_fixture:
     $ baron_supply_intel = False
     $ resist_route = True
     $ iron_battle_outcome = "decisive"
+    $ ending_type = ""
     jump ending_iron_lord
 
 

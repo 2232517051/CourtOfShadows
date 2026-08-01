@@ -101,10 +101,10 @@ init 1 python:
     def get_finale_ending_availability(routes, resistance_outcomes=None):
         """Map visible routes to persistent outcomes the player can actually reach."""
         resistance_outcomes = resistance_outcomes or {}
-        resistance_visible = bool(routes.get("resist"))
+        battle_route_visible = bool(routes.get("iron_lord") or routes.get("resist"))
         return {
             "iron_lord": bool(routes.get("iron_lord") or (
-                resistance_visible and resistance_outcomes.get("iron_lord")
+                battle_route_visible and resistance_outcomes.get("iron_lord")
             )),
             "shadow_king": bool(routes.get("shadow_king")),
             "holy_guardian": bool(routes.get("holy_guardian")),
@@ -113,7 +113,7 @@ init 1 python:
             "borgia": bool(routes.get("borgia")),
             "vassal": bool(routes.get("vassal")),
             "fall": bool(routes.get("fall") or (
-                resistance_visible and resistance_outcomes.get("fall")
+                battle_route_visible and resistance_outcomes.get("fall")
             )),
             "sea": bool(routes.get("sea")),
         }
