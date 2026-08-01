@@ -34,10 +34,7 @@ label chapter5_start:
     ## 章节深化：逃兵的故事
     call ch5_deep_deserter from _call_ch5_ddeserter
 
-    ## 治理系统：建设 / 丰收祭（如果达标）
-    call gov_building(5) from _call_gov_build5
-    if governance_prosperity >= 60:
-        call gov_festival from _call_gov_fest5
+    ## 终章只保留十天内能完成的战时准备；季度建设与丰收祭不再从本章触发。
 
     ## 治理报告
     call gov_report(5) from _call_gov_rep5
@@ -2336,7 +2333,7 @@ label ch5_final_choice:
             player "这个王国建立在一个谎言之上。是时候让真相大白了。"
             player "我的父亲为此付出了生命。我不能让他白死。"
             $ hide_all_chars()
-            "你从怀中取出那份尘封多年的遗诏复本，在阳光下展开。"
+            "你从怀中取出先王遗诏的原本，在阳光下展开。"
             "纸上的字迹已经发黄了。压了这些年，今天该摊开了。"
             call ending_decision_pause from _call_decision_pause_truth
             jump ending_truth
@@ -5369,11 +5366,11 @@ label ending_truth:
         "他在加冕典礼上说的第一句话是——"
         "「这个王国不会再建立在谎言之上。」"
 
-        "他随即下令重铸国玺。王历自这一年起重新计数——格里菲斯朝的两百七十三年，到此为止。"
+        "他随即下令重铸国玺。王历自这一年起重新计数——格里菲斯朝的两百九十三年，到此为止。"
     else:
         "在领主们的推举下，一个摄政委员会被建立起来，暂时治理国家。"
 
-        "委员会的第一项决议是重铸国玺、重启王历——格里菲斯朝的两百七十三年，到此为止。"
+        "委员会的第一项决议是重铸国玺、重启王历——格里菲斯朝的两百九十三年，到此为止。"
 
     "而你，作为揭露真相的人，被封为公爵——王国除国王外最高的爵位。"
 

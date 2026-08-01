@@ -50,7 +50,7 @@
 - Consumes: existing Ren'Py labels and the canonical will date `王历二百七十三年` in `game/chapter3.rpy`.
 - Produces: `Tools/test_story_timeline.py`, a standalone zero-dependency regression gate invoked with Python.
 
-- [ ] **Step 1: Add the failing source-level regression test**
+- [x] **Step 1: Add the failing source-level regression test**
 
 Create `Tools/test_story_timeline.py` with the following content:
 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 2: Run the new test and verify RED**
+- [x] **Step 2: Run the new test and verify RED**
 
 Run:
 
@@ -144,7 +144,7 @@ python Tools/test_story_timeline.py -v
 
 Expected: six tests run; the countdown, day anchor, prince document, testament, calendar, and father-son tests fail on the currently known strings/calls.
 
-- [ ] **Step 3: Remove non-war activities from `chapter5_start`**
+- [x] **Step 3: Remove non-war activities from `chapter5_start`**
 
 Replace the construction/festival block with:
 
@@ -157,7 +157,7 @@ Replace the construction/festival block with:
 
 Do not delete `gov_building` or `gov_festival`, and do not change any `built_*` flag.
 
-- [ ] **Step 4: Apply the minimal Chapter 3–5 text corrections**
+- [x] **Step 4: Apply the minimal Chapter 3–5 text corrections**
 
 Use these replacement lines:
 
@@ -185,7 +185,7 @@ and:
         "委员会的第一项决议是重铸国玺、重启王历——格里菲斯朝的两百九十三年，到此为止。"
 ```
 
-- [ ] **Step 5: Align the expanded truth and father-son epilogues**
+- [x] **Step 5: Align the expanded truth and father-son epilogues**
 
 Use the truth header:
 
@@ -220,7 +220,7 @@ In `ending_father_son_epilogue`, replace the false decade/childhood claims with 
 
 Use “五年” for the later missing-corner sentence and the ending card. Do not add a new time jump.
 
-- [ ] **Step 6: Record the canon rule**
+- [x] **Step 6: Record the canon rule**
 
 Append this entry to `CANON.md` under “已修 canon 错误历史”:
 
@@ -228,7 +228,7 @@ Append this entry to `CANON.md` under “已修 canon 错误历史”:
 > **3.10 时间线审计 2026-08-01**：终章不再触发季度建设与丰收祭，只保留十日战备；父亲于 1347 年主线开场前去世，因此王子文件与“父与子”尾声不得把他的死或主角童年错写成十年、二十年前；真相线旧王历由遗诏的二百七十三年顺延二十年至二百九十三年，重启后五年尾声使用“新王历五年”。
 ```
 
-- [ ] **Step 7: Run the timeline regression and narrative gates; verify GREEN**
+- [x] **Step 7: Run the timeline regression and narrative gates; verify GREEN**
 
 Run:
 
@@ -243,7 +243,7 @@ rg -n -B 1 "show .* at left" game/chapter3.rpy game/chapter4_prince.rpy game/cha
 
 Expected: timeline test passes 6/6; missing portraits and narration overlap report 0; no newly added `show ... at left` lacks the required predecessor. AI/canon scanners may retain their documented baseline samples, but none may point to a newly changed line.
 
-- [ ] **Step 8: Commit the timeline repair**
+- [x] **Step 8: Commit the timeline repair**
 
 ```powershell
 git add Tools/test_story_timeline.py game/chapter3.rpy game/chapter4_prince.rpy game/chapter5.rpy game/endings_expansion.rpy CANON.md

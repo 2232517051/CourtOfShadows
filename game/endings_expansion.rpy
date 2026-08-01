@@ -536,7 +536,7 @@ label ending_truth_epilogue:
     scene black with fade
 
     centered "{size=+10}五年后{/size}"
-    centered "{size=+6}王历二十七年·春{/size}"
+    centered "{size=+6}新王历五年·春{/size}"
 
     pause 1.0
 
@@ -3551,7 +3551,7 @@ label ending_father_son_epilogue:
     "你看着父亲的书桌。墨水瓶旁有一只干枯的鹅毛笔，笔尖朝下搁着，像是主人刚放下一样。"
 
     "旁边一块镇纸，铜面磨得发亮。"
-    "十多年了。你一直没有动过这些东西。"
+    "父亲去世以后，你一直没有动过这些东西。"
 
     "风从窗缝钻了进来。蜡烛火苗猛跳了一下。"
 
@@ -3571,7 +3571,7 @@ label ending_father_son_epilogue:
     "卡尔。"
 
     "他坐在他的旧椅子上，就像从前那样——一只手撑着头，微微侧着身子。"
-    "好像他只是在等你来敲门，就像十年前的每一个傍晚一样。"
+    "你少年时常见他这样坐着，等你敲门。"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
@@ -3603,10 +3603,10 @@ label ending_father_son_epilogue:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "……十年了。"
+    player "……五年了。"
 
     $ hide_all_chars()
-    "\"是啊。十年了。\""
+    "\"是啊。五年了。\""
 
     "他长长地叹了一口气，像是释然。"
 
@@ -3647,13 +3647,11 @@ label ending_father_son_epilogue:
     player "什么？"
 
     $ hide_all_chars()
-    "\"没有看着你长大。\""
+    "\"没能看到你接过艾登堡。\""
 
-    "\"没有看到你第一次骑马。没有看到你第一次举起剑。\""
+    "\"没能在你第一次独自坐上领主席时，告诉你别慌。\""
 
-    "\"没有在你害怕的时候——告诉你「不用怕，父亲在」。\""
-
-    "\"没有在你成功的时候——拍着你的肩膀说「好样的」。\""
+    "\"也没能在今天拍着你的肩膀，说一句做得好。\""
 
     "\"这些……都是我亏欠你的。\""
 
@@ -3730,7 +3728,7 @@ label ending_father_son_epilogue:
 
     "但你知道——有什么东西不一样了。"
 
-    "你心里那个缺了十年的角落——被填满了。"
+    "父亲走了五年。直到现在，你才听见那句「我为你骄傲」。"
 
     "你在书桌前坐了很久。"
 
@@ -3769,7 +3767,7 @@ label ending_father_son_epilogue:
 
     centered "{size=+8}隐藏结局：父与子{/size}"
     centered "「我的孩子。我为你骄傲。」"
-    centered "「这句话，迟到了十年。」"
+    centered "「这句话，迟到了五年。」"
     centered "「关上那扇门——不是忘记。」"
     centered "「是终于学会了放手。」"
 

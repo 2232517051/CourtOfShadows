@@ -2146,7 +2146,7 @@ label ch3_tunnel_exploration:
     scene bg study with dissolve
     $ unlock_gallery("bg_study")
 
-    "第二天傍晚，你决定彻底探索壁炉后的密道系统。"
+    "次日傍晚，你决定把壁炉后的密道彻底查一遍。"
 
     "你带上了短剑、火把、绳索和一壶水。"
 
