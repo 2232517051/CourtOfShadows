@@ -53,6 +53,38 @@ init python:
             "requirement": "确认谋害父亲的幕后主使 + 持有遗诏原件",
             "stat": None,
         },
+        "borgia": {
+            "name": "毒药公爵",
+            "icon": "毒",
+            "color": "#5d2e8c",
+            "desc": "成为母亲故事里那个王后（坏结局）",
+            "requirement": "母亲的毒药教诲 + 谋略 70 + 暮色之露证据",
+            "stat": None,
+        },
+        "vassal": {
+            "name": "附庸领主",
+            "icon": "盾",
+            "color": "#8a7e60",
+            "desc": "保住城堡，失去自主（妥协结局）",
+            "requirement": "王后关系达到当前难度门槛",
+            "stat": None,
+        },
+        "fall": {
+            "name": "艾登堡陷落",
+            "icon": "灰",
+            "color": "#3d3a36",
+            "desc": "什么都没做的代价（失败结局）",
+            "requirement": "没有其他核心路线可选",
+            "stat": None,
+        },
+        "sea": {
+            "name": "南渡",
+            "icon": "帆",
+            "color": "#4a7c8a",
+            "desc": "放下一切，向南走",
+            "requirement": "南境路线形成可离境结果",
+            "stat": None,
+        },
     }
 
     def check_ending_reachability():
@@ -62,10 +94,11 @@ init python:
         """
         results = []
         routes = get_current_finale_route_availability()
+        endings = get_finale_ending_availability(routes)
         primary_threshold = get_ending_threshold("primary")
 
         for end_id, info in _ending_requirements.items():
-            reachable = routes[end_id]
+            reachable = endings[end_id]
 
             if reachable:
                 gap_desc = "已满足条件"
@@ -76,6 +109,22 @@ init python:
                 if not store.testament_original_obtained:
                     missing.append("遗诏原件")
                 gap_desc = "还缺：" + "、".join(missing)
+            elif end_id == "borgia":
+                missing = []
+                if store.deep_mother_herb != "poison":
+                    missing.append("母亲的毒药教诲")
+                if store.intrigue < 70:
+                    missing.append("谋略 70")
+                if not store.poison_evidence:
+                    missing.append("暮色之露证据")
+                gap_desc = "还缺：" + "、".join(missing)
+            elif end_id == "vassal":
+                relation_threshold = 30 if primary_threshold >= 70 else 0
+                gap_desc = "王后关系需达到 %d" % relation_threshold
+            elif end_id == "fall":
+                gap_desc = "仍有其他核心路线可选"
+            elif end_id == "sea":
+                gap_desc = "南境路线未形成可离境结果"
             elif end_id == "holy_guardian" and store.lily_full_member:
                 gap_desc = "暗百合正式成员身份与教会调停冲突"
             else:

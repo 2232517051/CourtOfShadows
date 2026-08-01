@@ -98,6 +98,20 @@ init 1 python:
         routes["fall"] = not any(routes[route_id] for route_id in non_sea_core)
         return routes
 
+    def get_finale_ending_availability(routes):
+        """Map visible finale routes to the nine persistent ending ids."""
+        return {
+            "iron_lord": bool(routes.get("iron_lord") or routes.get("resist")),
+            "shadow_king": bool(routes.get("shadow_king")),
+            "holy_guardian": bool(routes.get("holy_guardian")),
+            "peoples_lord": bool(routes.get("peoples_lord")),
+            "truth": bool(routes.get("truth")),
+            "borgia": bool(routes.get("borgia")),
+            "vassal": bool(routes.get("vassal")),
+            "fall": bool(routes.get("fall")),
+            "sea": bool(routes.get("sea")),
+        }
+
     def get_current_finale_route_availability():
         """用当前存档状态调用统一终章路线判定。"""
         return get_finale_route_availability(

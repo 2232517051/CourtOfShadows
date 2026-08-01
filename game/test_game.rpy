@@ -106,6 +106,50 @@ testcase test_critical_finale_routes:
 
 
 ################################################################################
+## 3.10 regression: developer ending catalog must match all nine real endings.
+################################################################################
+
+testsuite test_ending_catalog:
+    testcase catalog_matches_persistent_ending_keys:
+        $ _catalog_matches = set(_ending_requirements.keys()) == set(_ending_keys)
+        assert eval (_catalog_matches)
+
+    testcase primary_routes_use_configured_thresholds:
+        parameter (difficulty_name, stat_name, ending_id) = [
+            ("easy", "power", "iron_lord"),
+            ("easy", "intrigue", "shadow_king"),
+            ("easy", "faith", "holy_guardian"),
+            ("easy", "loyalty", "peoples_lord"),
+            ("normal", "power", "iron_lord"),
+            ("normal", "intrigue", "shadow_king"),
+            ("normal", "faith", "holy_guardian"),
+            ("normal", "loyalty", "peoples_lord"),
+            ("hard", "power", "iron_lord"),
+            ("hard", "intrigue", "shadow_king"),
+            ("hard", "faith", "holy_guardian"),
+            ("hard", "loyalty", "peoples_lord"),
+        ]
+
+        $ _threshold = _ending_threshold_config[difficulty_name]["primary"]
+        $ _route_kwargs = {"difficulty": difficulty_name, stat_name: _threshold}
+        $ _ending_routes = get_finale_ending_availability(get_finale_route_availability(**_route_kwargs))
+        assert eval (_ending_routes[ending_id])
+
+    testcase special_routes_map_to_real_endings:
+        parameter (route_kwargs, ending_id) = [
+            ({"difficulty": "hard", "father_murder_mastermind_known": True, "testament_original_obtained": True}, "truth"),
+            ({"difficulty": "hard", "intrigue": 70, "deep_mother_herb": "poison", "poison_evidence": True}, "borgia"),
+            ({"difficulty": "hard", "rel_queen": 30}, "vassal"),
+            ({"difficulty": "hard"}, "fall"),
+            ({"difficulty": "hard", "southern_outcome": "free"}, "sea"),
+            ({"difficulty": "hard", "rel_baron": 30}, "iron_lord"),
+        ]
+
+        $ _ending_routes = get_finale_ending_availability(get_finale_route_availability(**route_kwargs))
+        assert eval (_ending_routes[ending_id])
+
+
+################################################################################
 ## 3.9.2 save compatibility: legacy HQ executor knowledge needs exact provenance.
 ################################################################################
 
@@ -654,10 +698,37 @@ label test_ending_truth:
     $ rel_captain = 60
     $ rel_queen = 50
     $ father_murder_mastermind_known = True
+    $ testament_original_obtained = True
     $ father_letters_found = True
     $ poison_evidence = True
     $ ending_type = "truth"
     jump ending_truth
+
+label test_ending_borgia:
+    $ player_name = "测试·毒药"
+    $ intrigue = 70
+    $ deep_mother_herb = "poison"
+    $ poison_evidence = True
+    $ ending_type = "borgia"
+    jump ending_borgia
+
+label test_ending_vassal:
+    $ player_name = "测试·附庸"
+    $ rel_queen = 30
+    $ ending_type = "vassal"
+    jump ending_vassal
+
+label test_ending_fall:
+    $ player_name = "测试·陷落"
+    $ ending_type = "fall"
+    jump ending_fall
+
+label test_ending_sea:
+    $ player_name = "测试·南渡"
+    $ southern_outcome = "free"
+    $ corsair_romance = False
+    $ ending_type = "sea"
+    jump ending_sea
 
 
 ################################################################################
@@ -689,7 +760,7 @@ label test_systems:
         "错误：clamp_stats 负值钳制异常！期望 power=0，实际=[power]"
 
     ## 测试结局可达性分析
-    $ power = 80
+    $ power = get_ending_threshold("primary")
     $ intrigue = 30
     $ faith = 30
     $ loyalty = 30

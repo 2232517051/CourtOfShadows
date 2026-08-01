@@ -265,7 +265,7 @@ git commit -m "fix: align finale timeline and evidence text"
 - Consumes: `get_finale_route_availability(...) -> dict[str, bool]`, `_ending_threshold_config`, and `_ending_keys`.
 - Produces: `get_finale_ending_availability(routes: dict[str, bool]) -> dict[str, bool]` with exactly the nine persistent ending keys.
 
-- [ ] **Step 1: Add a failing Ren'Py nine-ending testsuite**
+- [x] **Step 1: Add a failing Ren'Py nine-ending testsuite**
 
 Add this suite after `test_critical_finale_routes` in `game/test_game.rpy`:
 
@@ -314,7 +314,7 @@ testsuite test_ending_catalog:
         assert eval (_ending_routes[ending_id])
 ```
 
-- [ ] **Step 2: Run the new testsuite and verify RED**
+- [x] **Step 2: Run the new testsuite and verify RED**
 
 Run:
 
@@ -324,7 +324,7 @@ Run:
 
 Expected: catalog assertion reports only five registered endings, and later cases cannot call the not-yet-defined `get_finale_ending_availability`.
 
-- [ ] **Step 3: Add the pure route-to-ending mapping in `difficulty.rpy`**
+- [x] **Step 3: Add the pure route-to-ending mapping in `difficulty.rpy`**
 
 Add immediately after `get_finale_route_availability`:
 
@@ -344,7 +344,7 @@ Add immediately after `get_finale_route_availability`:
         }
 ```
 
-- [ ] **Step 4: Expand `_ending_requirements` and use the ending mapping**
+- [x] **Step 4: Expand `_ending_requirements` and use the ending mapping**
 
 Add `borgia`, `vassal`, `fall`, and `sea` entries to `game/balance.rpy`, each with `stat: None`, using the same names/colors/icons already defined in `_ending_info`. Then change the start of `check_ending_reachability` to:
 
@@ -381,7 +381,7 @@ Handle non-stat gaps before the generic stat branch:
 
 Keep the existing truth, holy-guardian, and generic primary-stat descriptions.
 
-- [ ] **Step 5: Complete the nine quick ending fixtures and remove fixed-threshold assumptions**
+- [x] **Step 5: Complete the nine quick ending fixtures and remove fixed-threshold assumptions**
 
 In `test_ending_truth`, add:
 
@@ -427,7 +427,7 @@ In `test_systems`, replace the fixed power setup with:
 
 Keep the other three primary stats below the active primary threshold before checking that iron is reachable and shadow is not.
 
-- [ ] **Step 6: Run focused ending tests; verify GREEN**
+- [x] **Step 6: Run focused ending tests; verify GREEN**
 
 Run:
 
@@ -439,7 +439,7 @@ Run:
 
 Expected: all 19 catalog cases pass (1 catalog + 12 primary + 6 special), critical finale regression passes, and lint reports no errors.
 
-- [ ] **Step 7: Commit the nine-ending catalog**
+- [x] **Step 7: Commit the nine-ending catalog**
 
 ```powershell
 git add game/difficulty.rpy game/balance.rpy game/test_game.rpy
