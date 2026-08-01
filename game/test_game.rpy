@@ -410,6 +410,9 @@ testcase test_desktop_choice_sanity:
 
 
 testcase test_father_son_cg_render:
+    $ renpy.set_physical_size((config.screen_width, config.screen_height))
+    pause 0.3
+    assert eval (renpy.get_physical_size() == (config.screen_width, config.screen_height))
     $ _test.timeout = 4.0
     run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0
     pause 2.2

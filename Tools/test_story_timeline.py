@@ -55,6 +55,9 @@ class FatherSonAssetTests(unittest.TestCase):
         )
         self.assertEqual({match.group(1) for match in matches if match}, expected_nodes)
         self.assertEqual(len({match.group(2) for match in matches if match}), 1)
+        for path in baselines:
+            with Image.open(path) as image:
+                self.assertEqual(image.size, (1280, 720))
 
     def test_father_son_cg_pair_meets_release_contract(self) -> None:
         assets = (
@@ -117,6 +120,10 @@ class FatherSonAssetTests(unittest.TestCase):
         ending_source = read_game_file("endings_expansion.rpy")
 
         self.assertIn("testcase test_father_son_cg_render:", test_game)
+        self.assertIn(
+            "renpy.set_physical_size((config.screen_width, config.screen_height))",
+            test_game,
+        )
         self.assertIn(
             'run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0',
             test_game,
