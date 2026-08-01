@@ -489,7 +489,7 @@ python Tools/test_release_regressions.py
 
 Expected: no new hit on a changed narrative line; missing portraits, narration overlap, and release regressions report zero violations.
 
-- [ ] **Step 4: Review the implementation against the approved spec**
+- [x] **Step 4: Review the implementation against the approved spec**
 
 Invoke the `code-review` skill with fixed point `2dca340`. Check especially:
 
@@ -501,7 +501,7 @@ Invoke the `code-review` skill with fixed point `2dca340`. Check especially:
 
 Expected: no P0/P1/P2 finding remains. Fix any in-scope finding with a failing regression first, rerun the focused gate, and commit the repair.
 
-- [ ] **Step 5: Verify clean handoff state**
+- [x] **Step 5: Verify clean handoff state**
 
 ```powershell
 git status --short
