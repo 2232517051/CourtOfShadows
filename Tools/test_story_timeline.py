@@ -4,6 +4,8 @@ import re
 import unittest
 from pathlib import Path
 
+from PIL import Image
+
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
@@ -33,6 +35,23 @@ class FinaleCountdownTests(unittest.TestCase):
         self.assertNotIn("call gov_festival", chapter_start)
         for choice in ("立即派出更多斥候", "加强城防", "先确保百姓安全"):
             self.assertIn(choice, war_clouds)
+
+
+class FatherSonAssetTests(unittest.TestCase):
+    def test_father_son_cg_pair_meets_release_contract(self) -> None:
+        assets = (
+            GAME / "images" / "cg_father_son_empty.webp",
+            GAME / "images" / "cg_father_son.webp",
+        )
+
+        for asset in assets:
+            self.assertTrue(asset.is_file(), f"missing father-son CG: {asset.name}")
+            with Image.open(asset) as image:
+                self.assertEqual(image.format, "WEBP")
+                self.assertEqual(image.size, (1280, 720))
+
+        self.assertLessEqual(sum(asset.stat().st_size for asset in assets), 1024 * 1024)
+        self.assertFalse(any((GAME / "video").glob("*father_son*")))
 
 
 class MysteryTimelineTests(unittest.TestCase):
