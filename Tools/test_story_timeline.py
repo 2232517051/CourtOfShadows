@@ -26,6 +26,23 @@ def label_body(name: str, label: str) -> str:
     return match.group(1)
 
 
+def testcase_body(name: str) -> str:
+    text = read_game_file("test_game.rpy")
+    match = re.search(
+        rf"(?m)^testcase {re.escape(name)}(?:\([^\n]*\))?:[ \t]*$",
+        text,
+    )
+    if match is None:
+        raise AssertionError(f"testcase {name!r} not found in test_game.rpy")
+
+    body_lines = []
+    for line in text[match.end() :].splitlines():
+        if line.strip() and not line[0].isspace():
+            break
+        body_lines.append(line)
+    return "\n".join(body_lines)
+
+
 class FinaleCountdownTests(unittest.TestCase):
     def test_chapter_five_uses_existing_ten_day_preparations(self) -> None:
         chapter_start = label_body("chapter5.rpy", "chapter5_start")
@@ -117,13 +134,34 @@ class FatherSonAssetTests(unittest.TestCase):
 
     def test_father_son_render_regression_executes_production_atl(self) -> None:
         test_game = read_game_file("test_game.rpy")
+        render_testcase = testcase_body("test_father_son_cg_render")
         ending_source = read_game_file("endings_expansion.rpy")
 
         self.assertIn("testcase test_father_son_cg_render:", test_game)
-        self.assertIn(
-            "renpy.set_physical_size((config.screen_width, config.screen_height))",
-            test_game,
+        executable_lines = [
+            line.strip()
+            for line in render_testcase.splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
+        normalization = (
+            "$ renpy.set_physical_size((config.screen_width, config.screen_height))"
         )
+        physical_size_assertion = (
+            "assert eval (renpy.get_physical_size() == "
+            "(config.screen_width, config.screen_height))"
+        )
+        first_fixture = next(
+            (
+                index
+                for index, line in enumerate(executable_lines)
+                if line.startswith("run Start(")
+            ),
+            None,
+        )
+        self.assertIsNotNone(first_fixture, "father-son render testcase has no fixture")
+        for command in (normalization, physical_size_assertion):
+            self.assertIn(command, executable_lines)
+            self.assertLess(executable_lines.index(command), first_fixture)
         self.assertIn(
             'run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0',
             test_game,
