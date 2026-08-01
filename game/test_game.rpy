@@ -373,7 +373,7 @@ label test_desktop_choice_sanity_fixture:
 
 label test_father_son_cg_render_fixture:
     $ quick_menu = False
-    scene cg_father_son_empty as father_son_cg at father_son_slow_push
+    scene cg_father_son_empty as father_son_cg
     "空椅测试画面。"
     show cg_father_son as father_son_cg with dissolve
     "父亲显形测试画面。"
