@@ -50,7 +50,7 @@
 - Consumes: three existing local reference images; built-in `imagegen` output.
 - Produces: two 1280×720 WebP files named `cg_father_son.webp` and `cg_father_son_empty.webp`, together no larger than 1 MiB.
 
-- [ ] **Step 1: Write the failing asset-contract test**
+- [x] **Step 1: Write the failing asset-contract test**
 
 Add the Pillow import near the other imports in `Tools/test_story_timeline.py`:
 
@@ -78,7 +78,7 @@ class FatherSonAssetTests(unittest.TestCase):
         self.assertFalse(any((GAME / "video").glob("*father_son*")))
 ```
 
-- [ ] **Step 2: Run the test and verify RED**
+- [x] **Step 2: Run the test and verify RED**
 
 Run:
 
@@ -88,7 +88,7 @@ python -m unittest Tools.test_story_timeline.FatherSonAssetTests -v
 
 Expected: FAIL with `missing father-son CG: cg_father_son_empty.webp`; the failure must be caused by absent assets, not an import or path error.
 
-- [ ] **Step 3: Generate the manifested father frame with built-in imagegen**
+- [x] **Step 3: Generate the manifested father frame with built-in imagegen**
 
 Inspect the three references with `view_image`, then call built-in `imagegen` in generate mode with all three paths marked as references and this exact brief:
 
@@ -110,7 +110,7 @@ Inspect the result with `view_image`. Reject it if the face is unrecognizable, t
 C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\tmp\imagegen\cg_father_son-source.png
 ```
 
-- [ ] **Step 4: Generate the matched empty-chair frame as an edit**
+- [x] **Step 4: Generate the matched empty-chair frame as an edit**
 
 Load the selected manifested source with `view_image`, then call built-in `imagegen` in edit mode with this exact brief:
 
@@ -129,7 +129,7 @@ Inspect the two sources side by side. The camera, desk edge, chair, and light so
 C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\tmp\imagegen\cg_father_son-empty-source.png
 ```
 
-- [ ] **Step 5: Convert both accepted sources to release WebP files**
+- [x] **Step 5: Convert both accepted sources to release WebP files**
 
 Run from the project root:
 
@@ -141,7 +141,7 @@ ffmpeg -hide_banner -loglevel error -y -i (Join-Path $stagingRoot 'cg_father_son
 
 If the combined size still exceeds 1 MiB, rerun both commands with `-quality 80`; do not change the 1280×720 output size.
 
-- [ ] **Step 6: Verify GREEN and inspect the final WebPs**
+- [x] **Step 6: Verify GREEN and inspect the final WebPs**
 
 Run:
 
@@ -151,7 +151,7 @@ python -m unittest Tools.test_story_timeline.FatherSonAssetTests -v
 
 Expected: 1 test passes. Then inspect both final WebPs with `view_image` at original detail and confirm the cross-fade pair still aligns after crop and compression.
 
-- [ ] **Step 7: Commit the asset unit**
+- [x] **Step 7: Commit the asset unit**
 
 ```powershell
 git add Tools/test_story_timeline.py game/images/cg_father_son.webp game/images/cg_father_son_empty.webp
@@ -176,7 +176,7 @@ git commit -m "feat: add father son ending cg pair"
 - Consumes: `cg_father_son.webp` and `cg_father_son_empty.webp` from Task 1; existing `play_music`, `play_sound`, and `unlock_gallery` helpers.
 - Produces: Ren'Py image names `cg_father_son` and `cg_father_son_empty`, ATL transform `father_son_slow_push`, gallery key `cg_father_son`, and focused testsuite `test_father_son_cg_render`.
 
-- [ ] **Step 1: Write the failing source-wiring tests**
+- [x] **Step 1: Write the failing source-wiring tests**
 
 Add these methods to `FatherSonAssetTests` in `Tools/test_story_timeline.py`:
 
@@ -223,7 +223,7 @@ Add these methods to `FatherSonAssetTests` in `Tools/test_story_timeline.py`:
         self.assertLess(final_empty, final_black)
 ```
 
-- [ ] **Step 2: Add the failing Ren'Py render fixture**
+- [x] **Step 2: Add the failing Ren'Py render fixture**
 
 Add this testcase after `test_desktop_choice_sanity` in `game/test_game.rpy`:
 
@@ -261,7 +261,7 @@ label test_father_son_cg_render_fixture:
     return
 ```
 
-- [ ] **Step 3: Run both tests and verify RED**
+- [x] **Step 3: Run both tests and verify RED**
 
 Run Python first:
 
@@ -344,7 +344,7 @@ if ($statusLine.Line -notmatch 'FAILED') { throw "Expected RED status, got: $($s
 
 Expected: the fresh status line reports `FAILED` because `father_son_slow_push` and the explicit image definitions do not exist. Only the PID launched above is stopped.
 
-- [ ] **Step 4: Add the image definitions and gallery item**
+- [x] **Step 4: Add the image definitions and gallery item**
 
 Add beside the other ending CG definitions in `game/images_def.rpy`:
 
@@ -359,7 +359,7 @@ Add after the nine ending CG rows in `game/gallery.rpy`:
         ("cg_father_son", "烛下告别"),
 ```
 
-- [ ] **Step 5: Add the local slow-push and candle-light transform**
+- [x] **Step 5: Add the local slow-push and candle-light transform**
 
 Add immediately before `label ending_father_son_epilogue` in `game/endings_expansion.rpy`:
 
@@ -379,7 +379,7 @@ transform father_son_slow_push:
         repeat
 ```
 
-- [ ] **Step 6: Stage the hidden-ending music, reveal, and departure**
+- [x] **Step 6: Stage the hidden-ending music, reveal, and departure**
 
 At the start of `ending_father_son_epilogue`, play the existing long-form cue:
 
@@ -413,7 +413,7 @@ Immediately after `"他的身影越来越淡。像是晨雾在阳光下慢慢消
 
 Do not alter any dialogue, narration, conditions, or return statements around these insertions. Both replacements use the stable alias `father_son_cg` and omit a new `at` clause, so Ren'Py carries the running transform state across the cross-fades. This keeps the matched CGs at the same zoom without applying the transform to `player_char_img`; the existing final `scene black with fade` clears the alias normally.
 
-- [ ] **Step 7: Run focused tests and verify GREEN**
+- [x] **Step 7: Run focused tests and verify GREEN**
 
 Run:
 
@@ -459,7 +459,7 @@ if ($statusLine.Line -notmatch 'PASSED') { throw "Expected GREEN status, got: $(
 
 Expected: the fresh status line reports `PASSED`, and Ren'Py creates one revision-tagged PNG baseline for each of the empty, manifested, and departed nodes under `tests/screenshots/`. All three baselines show the same camera and props; only the father changes. Only the PID launched above is stopped.
 
-- [ ] **Step 8: Run lint and commit the presentation wiring**
+- [x] **Step 8: Run lint and commit the presentation wiring**
 
 ```powershell
 $projectRoot = (Get-Location).Path
@@ -501,7 +501,7 @@ Expected: lint exits 0; existing unreachable-test notices are allowed, new error
 - Consumes: the two asset files, Ren'Py wiring, Python regression tests, render fixture, and repository release gates.
 - Produces: a clean branch with passing evidence, restored persistent files, visual review notes, and an asset-impact audit.
 
-- [ ] **Step 1: Verify the pre-run persistent snapshot before the full Ren'Py run**
+- [x] **Step 1: Verify the pre-run persistent snapshot before the full Ren'Py run**
 
 Reload the manifest created before Task 2's first Ren'Py launch and verify that every required backup still exists. Do not replace it with a later snapshot, because it is the baseline for all focused, lint, and full-suite launches in this implementation:
 
@@ -522,7 +522,7 @@ $records | Select-Object Path, ExistsBefore, Hash, Backup | Format-Table -AutoSi
 
 Expected: exactly three baseline records are shown, and each originally present file has a readable backup.
 
-- [ ] **Step 2: Run the full Python suite and release scanners**
+- [x] **Step 2: Run the full Python suite and release scanners**
 
 ```powershell
 python -m unittest discover -s Tools -p "test_*.py" -v
@@ -536,7 +536,7 @@ python prepare_release.py
 
 Expected: all Python tests pass; canon, missing portraits, narration overlap, and release regressions report zero violations; no new AI-smell hit appears on a changed narrative line; font preparation reports zero missing glyphs.
 
-- [ ] **Step 3: Run the full Ren'Py suite with an isolated savedir**
+- [x] **Step 3: Run the full Ren'Py suite with an isolated savedir**
 
 Start the test process hidden and persist its PID, start time, project root, and savedir so later polling commands do not depend on shell-local variables:
 
@@ -623,7 +623,7 @@ New-Item -ItemType Directory -Path $lintSaveDir -Force | Out-Null
 
 Expected: lint exits 0 with no new error.
 
-- [ ] **Step 4: Compare and restore persistent files if Ren'Py synchronized them**
+- [x] **Step 4: Compare and restore persistent files if Ren'Py synchronized them**
 
 Reload the exact manifest verified in Step 1 and originally written before Task 2's first Ren'Py launch, compare all candidates, and restore only the worktree-local persistent file if required:
 
@@ -690,7 +690,7 @@ if ($appDataChanges.Count -gt 0) {
 
 Expected: AppData files report `UNCHANGED`. A changed worktree-local file is first preserved as `persistent-worktree.after`, then restored to its original presence and SHA-256. Do not run Ren'Py again after this step.
 
-- [ ] **Step 5: Perform the visual and asset-impact review**
+- [x] **Step 5: Perform the visual and asset-impact review**
 
 Inspect both final WebPs with `view_image` at original detail and inspect the three screenshots produced by `test_father_son_cg_render`. Confirm:
 
@@ -706,7 +706,7 @@ Inspect both final WebPs with `view_image` at original detail and inspect the th
 - Animation added: Ren'Py ATL only; no binary video.
 - Package growth from the two shipping CGs is at most 1 MiB; test baselines are excluded from the game package.
 
-- [ ] **Step 6: Review the implementation against the approved spec**
+- [x] **Step 6: Review the implementation against the approved spec**
 
 Diff from the fixed point and inspect every requirement:
 
@@ -719,7 +719,7 @@ git diff 2d65763...HEAD -- Tools/test_story_timeline.py game/images_def.rpy game
 
 Expected: no unresolved P0/P1/P2 finding; no dialogue, trigger, ending id, or unrelated asset changed.
 
-- [ ] **Step 7: Mark the plan complete, commit the evidence state, and verify cleanliness**
+- [x] **Step 7: Mark the plan complete, commit the evidence state, and verify cleanliness**
 
 After every earlier checkbox has real evidence, mark them complete in this plan and run:
 
