@@ -621,7 +621,8 @@ testsuite test_accessibility_render:
         $ renpy.restart_interaction()
         if screen "preferences":
             click "« 返回"
-            pause until screen "main_menu" timeout 4.0
+            pause until screen "say" timeout 4.0
+            run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
 
     testcase small_touch_dialogue_and_seven_long_choices_render_at_150_percent:
         if eval (renpy.variant("small")):
