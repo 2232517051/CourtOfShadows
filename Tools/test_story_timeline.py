@@ -38,6 +38,24 @@ class FinaleCountdownTests(unittest.TestCase):
 
 
 class FatherSonAssetTests(unittest.TestCase):
+    def test_father_son_render_baselines_are_revision_tagged(self) -> None:
+        screenshot_dir = ROOT / "tests" / "screenshots"
+        baselines = sorted(screenshot_dir.glob("father_son_*"))
+        expected_nodes = {"empty", "manifested", "departed"}
+        revision_pattern = re.compile(
+            r"^father_son_(empty|manifested|departed)@([0-9a-f]+)\.png$"
+        )
+
+        self.assertEqual(len(baselines), 3)
+        matches = [revision_pattern.fullmatch(path.name) for path in baselines]
+        self.assertTrue(
+            all(matches),
+            f"father-son baselines must be revision-tagged PNGs: "
+            f"{[path.name for path in baselines]}",
+        )
+        self.assertEqual({match.group(1) for match in matches if match}, expected_nodes)
+        self.assertEqual(len({match.group(2) for match in matches if match}), 1)
+
     def test_father_son_cg_pair_meets_release_contract(self) -> None:
         assets = (
             GAME / "images" / "cg_father_son_empty.webp",
