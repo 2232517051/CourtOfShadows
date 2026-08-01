@@ -50,6 +50,7 @@ init python:
         ("cg_end_vassal", "鹰旗低垂"),
         ("cg_end_fall", "烬中金鹰"),
         ("cg_end_sea", "船尾斗篷"),
+        ("cg_father_son", "烛下告别"),
         ## ── 孤儿资产接线批(2026-07-30) ──
         ("bg_castle_kitchen", "炉火深厨"),
         ("bg_poor_district", "暮色穷巷"),

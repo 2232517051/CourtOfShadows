@@ -3517,7 +3517,23 @@ label ending_peoples_epilogue:
 ## The Father and Son Hidden Ending
 ## ============================================================
 
+transform father_son_slow_push:
+    xalign 0.5
+    yalign 0.5
+    zoom 1.0
+    parallel:
+        linear 20.0 zoom 1.025
+    parallel:
+        matrixcolor BrightnessMatrix(0.0)
+        pause 1.8
+        linear 0.18 matrixcolor BrightnessMatrix(0.018)
+        linear 0.28 matrixcolor BrightnessMatrix(-0.008)
+        linear 0.22 matrixcolor BrightnessMatrix(0.0)
+        repeat
+
 label ending_father_son_epilogue:
+
+    $ play_music("audio/music/grief.ogg", fadein=2.0)
 
     scene black with fade
 
@@ -3526,7 +3542,7 @@ label ending_father_son_epilogue:
 
     pause 1.5
 
-    scene bg study_night with dissolve
+    scene cg_father_son_empty as father_son_cg at father_son_slow_push with dissolve
 
     "深夜。"
 
@@ -3558,6 +3574,10 @@ label ending_father_son_epilogue:
     "然后——"
 
     "你看到了。"
+
+    $ play_sound("audio/sfx/heartbeat.ogg")
+    show cg_father_son as father_son_cg with Dissolve(1.5)
+    $ unlock_gallery("cg_father_son")
 
     "书桌对面的那把旧椅子上——坐着一个人。"
 
@@ -3706,6 +3726,8 @@ label ending_father_son_epilogue:
     "\"照顾好艾登堡。照顾好——你爱的人。\""
 
     "他的身影越来越淡。像是晨雾在阳光下慢慢消散。"
+
+    show cg_father_son_empty as father_son_cg with Dissolve(2.0)
 
     "\"我的孩子。我为你骄傲。\""
 

@@ -53,6 +53,47 @@ class FatherSonAssetTests(unittest.TestCase):
         self.assertLessEqual(sum(asset.stat().st_size for asset in assets), 1024 * 1024)
         self.assertFalse(any((GAME / "video").glob("*father_son*")))
 
+    def test_father_son_cgs_are_defined_and_registered(self) -> None:
+        image_defs = read_game_file("images_def.rpy")
+        gallery = read_game_file("gallery.rpy")
+
+        self.assertIn(
+            'image cg_father_son_empty = Transform("images/cg_father_son_empty.webp", size=(1280, 720), fit="cover")',
+            image_defs,
+        )
+        self.assertIn(
+            'image cg_father_son = Transform("images/cg_father_son.webp", size=(1280, 720), fit="cover")',
+            image_defs,
+        )
+        self.assertIn('("cg_father_son", "烛下告别")', gallery)
+
+    def test_father_son_epilogue_stages_manifestation_and_departure(self) -> None:
+        epilogue = label_body("endings_expansion.rpy", "ending_father_son_epilogue")
+        reveal_anchor = epilogue.index('"你看到了。"')
+        departure_anchor = epilogue.index('"他的身影越来越淡。像是晨雾在阳光下慢慢消散。"')
+        first_empty = epilogue.index(
+            "scene cg_father_son_empty as father_son_cg at father_son_slow_push with dissolve"
+        )
+        manifested = epilogue.index(
+            "show cg_father_son as father_son_cg with Dissolve(1.5)"
+        )
+        final_empty = epilogue.rindex(
+            "show cg_father_son_empty as father_son_cg with Dissolve(2.0)"
+        )
+        final_black = epilogue.rindex("scene black with fade")
+        music = epilogue.index('$ play_music("audio/music/grief.ogg", fadein=2.0)')
+        heartbeat = epilogue.index('$ play_sound("audio/sfx/heartbeat.ogg")')
+        gallery_unlock = epilogue.index('$ unlock_gallery("cg_father_son")')
+
+        self.assertIn("transform father_son_slow_push:", read_game_file("endings_expansion.rpy"))
+        self.assertLess(music, first_empty)
+        self.assertLess(first_empty, reveal_anchor)
+        self.assertLess(reveal_anchor, heartbeat)
+        self.assertLess(heartbeat, manifested)
+        self.assertLess(manifested, gallery_unlock)
+        self.assertLess(departure_anchor, final_empty)
+        self.assertLess(final_empty, final_black)
+
 
 class MysteryTimelineTests(unittest.TestCase):
     def test_tunnel_anchor_does_not_reuse_numbered_second_day(self) -> None:

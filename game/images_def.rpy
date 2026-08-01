@@ -78,6 +78,8 @@ image cg_end_borgia = Transform("images/cg_end_borgia.webp", size=(1280, 720), f
 image cg_end_vassal = Transform("images/cg_end_vassal.webp", size=(1280, 720), fit="cover")
 image cg_end_fall = Transform("images/cg_end_fall.webp", size=(1280, 720), fit="cover")
 image cg_end_sea = Transform("images/cg_end_sea.webp", size=(1280, 720), fit="cover")
+image cg_father_son_empty = Transform("images/cg_father_son_empty.webp", size=(1280, 720), fit="cover")
+image cg_father_son = Transform("images/cg_father_son.webp", size=(1280, 720), fit="cover")
 image bg player_room = Transform("images/bg_castle_bedchamber.webp", size=(1280, 720), fit="cover")
 image bg marketplace = Transform("images/bg_market.webp", size=(1280, 720), fit="cover")
 image bg church = Transform("images/bg_church_interior.webp", size=(1280, 720), fit="cover")
