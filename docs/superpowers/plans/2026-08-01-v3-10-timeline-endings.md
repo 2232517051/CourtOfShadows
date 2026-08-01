@@ -460,7 +460,7 @@ git commit -m "test: cover all nine finale endings"
 - Consumes: the two task commits and every repository gate listed below.
 - Produces: a clean branch with passing evidence and no unresolved review findings.
 
-- [ ] **Step 1: Run all Python regression tests**
+- [x] **Step 1: Run all Python regression tests**
 
 ```powershell
 python -m unittest discover -s Tools -p "test_*.py" -v
@@ -468,7 +468,7 @@ python -m unittest discover -s Tools -p "test_*.py" -v
 
 Expected: all discovered Python tests pass, including six timeline regressions and the existing release classifier tests.
 
-- [ ] **Step 2: Run the full Ren'Py test suite and lint**
+- [x] **Step 2: Run the full Ren'Py test suite and lint**
 
 ```powershell
 ..\renpy.exe . test --hide-execution all
@@ -477,7 +477,7 @@ Expected: all discovered Python tests pass, including six timeline regressions a
 
 Expected: every desktop testcase passes and lint reports zero errors.
 
-- [ ] **Step 3: Run narrative/release scanners**
+- [x] **Step 3: Run narrative/release scanners**
 
 ```powershell
 python Tools/scan_ai_smell.py

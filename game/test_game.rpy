@@ -268,6 +268,8 @@ testcase test_mobile_choice_overflow:
         click "第七项：放下旧日的王冠，与所有盟友共同建立新的议会秩序"
         pause until screen "say" timeout 4.0
         assert eval (_test_mobile_choice_overflow_seventh_selected)
+        click
+        pause until screen "main_menu" timeout 4.0
 
 
 testcase test_desktop_choice_sanity:
@@ -276,6 +278,8 @@ testcase test_desktop_choice_sanity:
     click "保留王廷法统"
     pause until screen "say" timeout 4.0
     assert eval (_test_desktop_choice_first_selected)
+    click
+    pause until screen "main_menu" timeout 4.0
 
 
 ## 配方详情曾因嵌套字典插值在打开时崩溃。
@@ -286,7 +290,17 @@ testcase test_crafting_detail_render:
     click "治疗药水"
     pause 0.3
     assert eval (renpy.get_screen_variable("selected_recipe", screen="crafting_screen") == "health_potion")
-    run Hide("crafting_screen")
+    click "结束锻造测试"
+    pause until screen "main_menu" timeout 4.0
+
+
+screen test_crafting_detail_exit():
+    zorder 1000
+
+    textbutton "结束锻造测试":
+        xalign 1.0
+        yalign 1.0
+        action Return(True)
 
 
 label test_crafting_detail_render_fixture:
@@ -294,7 +308,10 @@ label test_crafting_detail_render_fixture:
     $ crafting_skill_bonus = 0
     $ inventory_items = [("medicinal_herbs", 8), ("waterskin", 4)]
     show screen crafting_screen
+    show screen test_crafting_detail_exit
     $ ui.interact()
+    hide screen test_crafting_detail_exit
+    hide screen crafting_screen
     return
 
 
@@ -359,6 +376,12 @@ testsuite test_accessibility_settings:
         $ preferences.high_contrast = _test_accessibility_original_high_contrast
         $ renpy.save_persistent()
         $ renpy.restart_interaction()
+        if screen "accessibility_settings":
+            click "« 返回"
+            pause until screen "main_menu" timeout 4.0
+        if screen "preferences":
+            click "« 返回"
+            pause until screen "main_menu" timeout 4.0
 
     testcase branded_size_buttons_set_exact_native_factors:
         run ShowMenu("accessibility_settings") until screen "accessibility_settings" timeout 4.0
@@ -401,6 +424,9 @@ testsuite test_accessibility_render:
         $ preferences.text_cps = _test_accessibility_original_text_cps
         $ renpy.save_persistent()
         $ renpy.restart_interaction()
+        if screen "preferences":
+            click "« 返回"
+            pause until screen "main_menu" timeout 4.0
 
     testcase small_touch_dialogue_and_seven_long_choices_render_at_150_percent:
         if eval (renpy.variant("small")):
