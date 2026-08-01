@@ -45,9 +45,14 @@ Ren'Py 8.5.2 编译每个 `.rpy` 时，会按顺序读取项目根 `old-game` �
 
 - 当前 56 个 `game/**/*.rpy` 必须在 `old-game` 中有同相对路径的 `.rpyc`，且不得多出陈旧脚本。
 - 每个文件必须是 RPYC2，slot 1 必须能解压，并能由标准库 `pickletools` 完整扫描到 `STOP`。
-- 两个真实旧档所需的 generation 必须仍在对应脚本中。
+- 守卫用 `pickletools` 模拟基础栈操作；遇到 `STACK_GLOBAL`、`REDUCE`、`NEWOBJ` 时只放入不透明哨兵，绝不导入、构造或调用二进制指定的对象。
+- 必需的 generation 必须实际出现在对应脚本节点的 `Node.name_version` 中，不能只是在任意整数操作码中偶然出现。
+- `Tools/old_game_required_nodes.py` 只保存节点 ID 与来源哈希，不含序列化玩家状态。它精确覆盖曾在 fresh 3.9.2 中加载失败的 `7-1-LT1.save` 所引用的 129 个节点，包括 pickle 中不显式保存、由 `IntegerSlot` 默认恢复为 `0` 的 serial-zero 节点。
+- 回归测试会受控改写一个 serial-zero 节点，同时保留同一 generation 的其他节点，证明旧的“只查 generation”方式会假绿，而精确节点检查会失败。
 
 任何新增、删除或重命名 `.rpy` 都会使守卫失败，提醒发布者先更新 `old-game`。
+
+静态节点检查不是旧档兼容性的最终证明。旧存档的 rollback 日志可能引用已删除节点；Ren'Py 可以丢弃部分无法解析的旧回滚项，不能把“日志里出现过”一律当成加载硬依赖。例如受支持的 3.9 `7-8-LT1.save` 有 6 个旧回滚节点不在当前 `prologue.rpyc` 中，但真实加载仍可完成。因此三份受支持旧档都必须再过带锚点的运行时冒烟。
 
 ## 后续发布流程
 
@@ -57,11 +62,16 @@ Ren'Py 8.5.2 编译每个 `.rpy` 时，会按顺序读取项目根 `old-game` �
 2. 正常修改并完成全套测试。
 3. 用官方 `launcher update_old_game` 刷新兼容基线。
 4. 运行 `python -B -m unittest Tools.test_old_game_compat -v`。
-5. 用仍在支持范围内的真实旧档做隔离自动加载冒烟。
+5. 对以下三份旧档逐一做隔离自动加载冒烟；不得把真实 `.save` 提交进仓库：
+   - `7-1-LT1.save`，SHA256 `9AEBCE6B73C2F20C3E668F2B45C58AA0FB75EA56813F59C7D5948E0BEF68867C`
+   - `7-8-LT1.save`，SHA256 `317E71C7B6814242A568065404A3D4EC990C8DEBA8ADE82EB5854B620447B350`
+   - `auto_ch-southern-LT1.save`，SHA256 `0F7C82FB2F40250D1A8F66B3176025D3D5C0B92B0B3EBD81914F4991A06CA024`
+
+   每份旧档使用全新 savedir 和副本，通过 `RENPY_AUTO_LOAD` 加载；临时测试探针必须在 `after_load` 回调链中写出唯一 marker。门禁同时要求 marker 存在、日志无 `traceback`/`incompatible`、原始旧档哈希不变，并在结束后恢复及复核所有受保护 persistent。只看到窗口或 `Interface start` 不能算通过。
 6. 提交更新后的 `old-game`；继续禁止提交 `game/*.rpyc`、缓存、存档、日志和测试截图。
 
 Ren'Py 默认构建规则将项目根 `old-game/` 分类为 `None`，不会放进 Windows 或 Android 玩家包。它是仓库内的编译输入，不是发行载荷；正式候选包仍需检查一次，确认包内没有 `old-game/`。
 
 ## 资产影响
 
-本改动只增加 Ren'Py 技术兼容数据和测试，不改变玩家可见内容。无需新增或替换美术、音乐、音效、动画或 UI 资产；按默认构建规则，发行包大小增量应为 0 bytes。
+本改动只增加 Ren'Py 技术兼容数据、Python 守卫和说明文档，不改变玩家可见内容。无需新增或替换美术、音乐、音效、动画或 UI 资产。`old-game/` 与 `**.py` 有明确排除规则，但说明文档可能被当前默认分类收进玩家包，因此不能预先声称发行包增量为 0；Windows 与 Android 候选包完成后必须测量实际差分。
