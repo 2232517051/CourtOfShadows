@@ -109,13 +109,22 @@ class FatherSonAssetTests(unittest.TestCase):
             "scene cg_father_son_empty as father_son_cg at father_son_slow_push",
             test_game,
         )
-        for parameter in (
-            "linear 20.0 zoom 1.025",
-            "linear 0.18 matrixcolor BrightnessMatrix(0.018)",
-            "linear 0.28 matrixcolor BrightnessMatrix(-0.008)",
-            "linear 0.22 matrixcolor BrightnessMatrix(0.0)",
-        ):
-            self.assertIn(parameter, ending_source)
+        self.assertIn(
+            """transform father_son_slow_push:
+    xalign 0.5
+    yalign 0.5
+    zoom 1.0
+    parallel:
+        linear 20.0 zoom 1.025
+    parallel:
+        matrixcolor BrightnessMatrix(0.0)
+        pause 1.8
+        linear 0.18 matrixcolor BrightnessMatrix(0.018)
+        linear 0.28 matrixcolor BrightnessMatrix(-0.008)
+        linear 0.22 matrixcolor BrightnessMatrix(0.0)
+        repeat""",
+            ending_source,
+        )
 
 
 class MysteryTimelineTests(unittest.TestCase):
