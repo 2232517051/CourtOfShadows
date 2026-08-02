@@ -556,13 +556,13 @@ label test_resistance_battle_loss_fixture:
 ## 3.9.2 release metadata: render the production About and privacy screens,
 ## exercise their real dismiss actions, and leave persistent consent unchanged.
 testsuite test_release_metadata_render:
-    before testsuite:
+    setup:
         $ _test.timeout = 4.0
         $ _test.release_metadata_persistent_snapshot = {"privacy_agreed": persistent.privacy_agreed}
         $ _test.release_metadata_quick_menu_snapshot = quick_menu
         $ persistent.privacy_agreed = True
 
-    after testsuite:
+    teardown:
         $ persistent.privacy_agreed = _test.release_metadata_persistent_snapshot["privacy_agreed"]
         $ quick_menu = _test.release_metadata_quick_menu_snapshot
         $ renpy.save_persistent()
