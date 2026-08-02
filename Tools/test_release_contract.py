@@ -44,6 +44,37 @@ APPROVED_ENGLISH_STATS = (
     "Intrigue",
 )
 
+FIVE_ENDING_CLAIM = re.compile(
+    r"(?:五|5)\s*(?:个|种)?\s*"
+    r"(?:独特|截然不同|完全不同(?:的)?|不同(?:的)?)?\s*结局|"
+    r"\b(?:five|5)\s+(?:(?:distinct|unique|different|main|total)\s+)?endings\b",
+    re.IGNORECASE,
+)
+ENGLISH_NG_PLUS_UNLOCKS_CONTENT = re.compile(
+    r"\bNew Game\+\s+"
+    r"(?:(?!\b(?:does\s+not|doesn't|will\s+not|won't|never)\b)[^.\n]){0,48}?"
+    r"\bunlocks?\s+"
+    r"(?:(?!\b(?:no|not|without)\b)[A-Za-z-]+\s+){0,5}content\b",
+    re.IGNORECASE,
+)
+KNOWN_READ_ONLY_CONTAINER_CALLS = {
+    "all",
+    "any",
+    "bool",
+    "dict",
+    "frozenset",
+    "len",
+    "list",
+    "max",
+    "min",
+    "repr",
+    "set",
+    "sorted",
+    "str",
+    "sum",
+    "tuple",
+}
+
 
 def read_text(relative_path: str) -> str:
     return (ROOT / relative_path).read_text(encoding="utf-8")
@@ -207,6 +238,28 @@ def _subscript_key_domain(
     return None
 
 
+def validate_container_does_not_escape(tree: ast.AST, name: str) -> None:
+    """Reject aliases and calls that could mutate a guarded container off-tree."""
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Assign, ast.AnnAssign)):
+            value = node.value
+            if isinstance(value, ast.Name) and value.id == name:
+                raise AssertionError(f"{name} escapes through an alias assignment")
+        elif isinstance(node, ast.Call):
+            direct_arguments = [*node.args, *(keyword.value for keyword in node.keywords)]
+            if not any(
+                isinstance(argument, ast.Name) and argument.id == name
+                for argument in direct_arguments
+            ):
+                continue
+            if (
+                isinstance(node.func, ast.Name)
+                and node.func.id in KNOWN_READ_ONLY_CONTAINER_CALLS
+            ):
+                continue
+            raise AssertionError(f"{name} is passed to an unknown call")
+
+
 def validate_mapping_mutations(
     tree: ast.AST,
     name: str,
@@ -283,6 +336,7 @@ def validate_mapping_mutations(
                 update_keys.add(keyword.arg)
             if not update_keys <= allowed_keys:
                 raise AssertionError(f"{name}.update adds unknown keys: {update_keys - allowed_keys}")
+    validate_container_does_not_escape(tree, name)
 
 
 def validate_sequence_is_literal_only(tree: ast.AST, name: str) -> None:
@@ -311,8 +365,17 @@ def validate_sequence_is_literal_only(tree: ast.AST, name: str) -> None:
                     and target.value.id == name
                 ):
                     raise AssertionError(f"{name} is changed through a subscript")
-        elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id == name:
-            raise AssertionError(f"{name} uses an augmented update")
+        elif isinstance(node, ast.AugAssign):
+            target = node.target
+            if (
+                isinstance(target, ast.Name)
+                and target.id == name
+            ) or (
+                isinstance(target, ast.Subscript)
+                and isinstance(target.value, ast.Name)
+                and target.value.id == name
+            ):
+                raise AssertionError(f"{name} uses an augmented update")
         elif isinstance(node, ast.Delete):
             for target in node.targets:
                 if (
@@ -332,6 +395,7 @@ def validate_sequence_is_literal_only(tree: ast.AST, name: str) -> None:
             and node.func.attr in mutators
         ):
             raise AssertionError(f"{name}.{node.func.attr} mutates the catalog")
+    validate_container_does_not_escape(tree, name)
 
 
 def renpy_screen(source: str, name: str) -> str:
@@ -460,6 +524,8 @@ class EndingCatalogGuardTests(unittest.TestCase):
             "routes = {'iron_lord': False}\nroutes.clear()",
             "routes = {'iron_lord': False}\ndel routes['iron_lord']",
             "routes = {'iron_lord': False}\ndel routes",
+            "routes = {'iron_lord': False}\nalias = routes",
+            "routes = {'iron_lord': False}\nconsume(routes)",
         )
         for source in fixtures:
             with self.subTest(source=source):
@@ -475,7 +541,9 @@ class EndingCatalogGuardTests(unittest.TestCase):
             "routes = {'iron_lord': False, 'resist': False}\n"
             "routes['iron_lord'] = True\n"
             "routes['resist'] = True\n"
-            "routes.update({'iron_lord': False})"
+            "routes.update({'iron_lord': False})\n"
+            "routes.get('iron_lord')\n"
+            "len(routes)"
         )
         validate_mapping_mutations(tree, "routes", {"iron_lord", "resist"})
 
@@ -485,11 +553,52 @@ class EndingCatalogGuardTests(unittest.TestCase):
             "_ending_keys = ['iron_lord']\n_ending_keys.sort()",
             "_ending_keys = ['iron_lord']\ndel _ending_keys[0]",
             "_ending_keys = ['iron_lord']\ndel _ending_keys",
+            "_ending_keys = ['iron_lord']\nalias = _ending_keys",
+            "_ending_keys = ['iron_lord']\nconsume(_ending_keys)",
+            "_ending_keys = ['iron_lord']\n_ending_keys[0] += '_changed'",
         )
         for source in fixtures:
             with self.subTest(source=source):
                 with self.assertRaises(AssertionError):
                     validate_sequence_is_literal_only(ast.parse(source), "_ending_keys")
+
+        validate_sequence_is_literal_only(
+            ast.parse("_ending_keys = ['iron_lord']\nlen(_ending_keys)"),
+            "_ending_keys",
+        )
+
+
+class ReleaseCopyGuardTests(unittest.TestCase):
+    def test_five_ending_claim_variants_are_detected(self) -> None:
+        for claim in (
+            "五个结局",
+            "五种结局",
+            "五结局",
+            "5结局",
+            "five endings",
+            "5 endings",
+            "5 unique endings",
+        ):
+            with self.subTest(claim=claim):
+                self.assertRegex(claim, FIVE_ENDING_CLAIM)
+
+    def test_english_ng_plus_new_content_variants_are_detected(self) -> None:
+        for claim in (
+            "New Game+ unlocks new content",
+            "New Game+ unlocks additional story content",
+            "New Game+ mode unlocks brand-new bonus story content",
+            "New Game+ will unlock extra narrative content",
+        ):
+            with self.subTest(claim=claim):
+                self.assertRegex(claim, ENGLISH_NG_PLUS_UNLOCKS_CONTENT)
+
+        for denial in (
+            "New Game+ does not unlock separate story content",
+            "New Game+ will not unlock additional content",
+            "New Game+ unlocks no additional story content",
+        ):
+            with self.subTest(denial=denial):
+                self.assertNotRegex(denial, ENGLISH_NG_PLUS_UNLOCKS_CONTENT)
 
 
 class PlayerFacingCopyContractTests(unittest.TestCase):
@@ -626,19 +735,13 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             r"(?:change|changes|rewrite|rewrites|shape|shapes) history\b",
             re.IGNORECASE,
         )
-        five_endings = re.compile(
-            r"(?:五|5)\s*个?\s*(?:独特|截然不同|不同|distinct|unique)?\s*结局|"
-            r"\bfive\s+(?:distinct\s+|unique\s+)?endings\b",
-            re.IGNORECASE,
-        )
-
         for subject, source in self.current_copy.items():
             with self.subTest(subject=subject):
                 for phrase in stale_exact:
                     self.assertNotIn(phrase.casefold(), source.casefold())
                 self.assertNotRegex(source, rewrite_history)
                 for line in source.splitlines():
-                    if not five_endings.search(line):
+                    if not FIVE_ENDING_CLAIM.search(line):
                         continue
                     partial_preview = (
                         "部分" in line and "预览" in line
@@ -710,7 +813,7 @@ class NewGamePlusContractTests(unittest.TestCase):
         )
         self.assertNotRegex(
             english_store,
-            re.compile(r"New Game\+ unlocks (?:additional|new) content", re.IGNORECASE),
+            ENGLISH_NG_PLUS_UNLOCKS_CONTENT,
         )
 
 
