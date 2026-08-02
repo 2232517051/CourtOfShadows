@@ -43,6 +43,39 @@ def testcase_body(name: str) -> str:
     return "\n".join(body_lines)
 
 
+def stops_music(source: str) -> bool:
+    if re.search(
+        r"(?m)^\s*(?:stop\s+music\b|(?:\$\s*)?(?:stop_music|stop_bgm)\s*\()",
+        source,
+    ):
+        return True
+
+    api_stops = re.finditer(
+        r"(?m)^\s*(?:\$\s*)?renpy\.music\.stop\s*\(([^)]*)\)", source
+    )
+    for match in api_stops:
+        arguments = match.group(1)
+        named_channel = re.search(
+            r"\bchannel\s*=\s*([\"'])([^\"']+)\1", arguments
+        )
+        if named_channel:
+            if named_channel.group(2) == "music":
+                return True
+            continue
+
+        positional_channel = re.match(r"\s*([\"'])([^\"']+)\1", arguments)
+        if positional_channel:
+            if positional_channel.group(2) == "music":
+                return True
+            continue
+
+        # renpy.music.stop() defaults to the music channel. Treat dynamic
+        # channel expressions conservatively because they cannot prove safety.
+        return True
+
+    return False
+
+
 class FinaleCountdownTests(unittest.TestCase):
     def test_chapter_five_uses_existing_ten_day_preparations(self) -> None:
         chapter_start = label_body("chapter5.rpy", "chapter5_start")
@@ -52,6 +85,67 @@ class FinaleCountdownTests(unittest.TestCase):
         self.assertNotIn("call gov_festival", chapter_start)
         for choice in ("立即派出更多斥候", "加强城防", "先确保百姓安全"):
             self.assertIn(choice, war_clouds)
+
+
+class ChapterMusicContinuityTests(unittest.TestCase):
+    def test_chapter_three_opening_has_bgm_after_the_cinematic(self) -> None:
+        cinematic = label_body("cinematics.rpy", "cinematic_chapter3")
+        chapter_start = label_body("chapter3.rpy", "chapter3_start")
+
+        cinematic_track = 'play music "audio/music/conspiracy.ogg"'
+        track_start = cinematic.index(cinematic_track)
+        cinematic_keeps_music = not stops_music(cinematic[track_start:])
+
+        after_cinematic = chapter_start.split(
+            "call cinematic_chapter3 from _call_cinematic_ch3", 1
+        )[1]
+        before_first_line = after_cinematic.split('"暗杀事件后的第三天。"', 1)[0]
+        chapter_restarts_music = bool(
+            re.search(r"(?m)^\s*(?:play music|\$ play_music\()", before_first_line)
+        )
+
+        self.assertTrue(
+            cinematic_keeps_music or chapter_restarts_music,
+            "chapter 3 stops the cinematic BGM and enters its opening dialogue in silence",
+        )
+
+    def test_chapter_three_skip_path_preserves_music(self) -> None:
+        cinematics = read_game_file("cinematics.rpy")
+        chapter_three = label_body("cinematics.rpy", "cinematic_chapter3")
+        skip_handler = re.search(
+            r"(?ms)^    def skip_cinematic\(\):\s*\n(.*?)(?=^    def |^default )",
+            cinematics,
+        )
+
+        self.assertLess(
+            chapter_three.index('play music "audio/music/conspiracy.ogg"'),
+            chapter_three.index("show screen cin_overlay"),
+            "the skip control becomes interactive before chapter 3 starts its BGM",
+        )
+        self.assertIsNotNone(skip_handler)
+        self.assertFalse(
+            stops_music(skip_handler.group(1)),
+            "skipping a cinematic stops the BGM before the chapter opening",
+        )
+
+    def test_music_stop_detector_understands_default_and_explicit_channels(self) -> None:
+        for stopping_call in (
+            "stop music fadeout 2.0",
+            "$ stop_music(fadeout=2.0)",
+            "$ stop_bgm()",
+            "renpy.music.stop()",
+            "renpy.music.stop(fadeout=2.0)",
+            'renpy.music.stop("music")',
+            'renpy.music.stop(channel="music")',
+        ):
+            self.assertTrue(stops_music(stopping_call), stopping_call)
+
+        for other_channel in (
+            'renpy.music.stop("voice")',
+            'renpy.music.stop(channel="sound")',
+            'renpy.music.stop(fadeout=0.5, channel="voice")',
+        ):
+            self.assertFalse(stops_music(other_channel), other_channel)
 
 
 class FatherSonAssetTests(unittest.TestCase):
