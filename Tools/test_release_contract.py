@@ -540,15 +540,14 @@ def renpy_label(source: str, name: str) -> str:
 
 def assert_no_main_ending_progress_mutation(source: str, subject: str) -> None:
     code = executable_source(source)
-    mutation = re.search(
-        r"""\b(?:persistent\.)?endings_seen\s*(?:=|\.\s*(?:add|update|clear|"""
-        r"""pop|remove|discard|setdefault)\s*\()|"""
-        r"""\b(?:record|unlock|mark|complete)_ending\s*\(""",
+    reference = re.search(
+        r"""\b(?:persistent\.)?endings_seen\b|"""
+        r"""\b(?:record|unlock|mark|complete)_ending\b""",
         code,
     )
-    if mutation is not None:
+    if reference is not None:
         raise AssertionError(
-            f"{subject} must not mutate main ending progress: {mutation.group(0)}"
+            f"{subject} must not reference main ending progress: {reference.group(0)}"
         )
 
 
@@ -685,8 +684,8 @@ class EndingCatalogGuardTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             assert_father_son_is_not_a_main_ending(
                 'label ending_father_son_epilogue:\n'
-                '    $ ending_key = "father_son"\n'
-                '    $ record_ending(ending_key)\n'
+                '    $ seen = persistent.endings_seen\n'
+                '    $ seen.add("father_son")\n'
             )
 
     def test_southern_outcome_guard_rejects_main_ending_progress_write(self) -> None:
@@ -701,7 +700,8 @@ class EndingCatalogGuardTests(unittest.TestCase):
             '        ("vassal", "", "", "", ""),\n'
             "    ]\n"
             "    def unrelated_southern_code():\n"
-            "        persistent.endings_seen.add('iron_lord')\n"
+            "        seen = persistent.endings_seen\n"
+            "        seen.add('free')\n"
         )
         with self.assertRaises(AssertionError):
             assert_southern_outcome_contract(source)
