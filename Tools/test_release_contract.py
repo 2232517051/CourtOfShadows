@@ -274,6 +274,8 @@ def _init_python_blocks(source: str) -> list[tuple[int, int, ast.Module]]:
     for start, line in enumerate(executable_lines):
         if line.startswith((" ", "\t")):
             continue
+        if re.match(r"^init\s+offset\s*=", line):
+            raise AssertionError("init offset is forbidden in build configuration")
         if init_python.fullmatch(line) is None:
             continue
         if line != "init python:":
@@ -373,6 +375,10 @@ _DYNAMIC_CALL = re.compile(
     r"\b(?:getattr|setattr|delattr|globals|locals|vars|exec|eval|__import__)\s*\("
 )
 _BUILD_WORD = re.compile(r"\bbuild\b")
+_STORE_ALIAS_IMPORT = re.compile(
+    r"(?m)^[ \t]*(?:import[ \t]+renpy\s*\.\s*store|"
+    r"from[ \t]+renpy[ \t]+import[ \t]+store)[ \t]+as[ \t]+([A-Za-z_]\w*)\b"
+)
 
 
 def _balanced_call_source(source: str, masked: str, start: int) -> str:
@@ -391,9 +397,14 @@ def _balanced_call_source(source: str, masked: str, start: int) -> str:
 def _build_reference_lines(source: str) -> list[int]:
     """Find executable references to Ren'Py's global build object."""
     masked = executable_source(source)
+    reference_patterns = [_GLOBAL_BUILD_NAME, _RENPY_STORE_BUILD]
+    reference_patterns.extend(
+        re.compile(rf"\b{re.escape(match.group(1))}\s*\.\s*build\b")
+        for match in _STORE_ALIAS_IMPORT.finditer(masked)
+    )
     lines = {
         masked.count("\n", 0, match.start()) + 1
-        for pattern in (_GLOBAL_BUILD_NAME, _RENPY_STORE_BUILD)
+        for pattern in reference_patterns
         for match in pattern.finditer(masked)
     }
     for match in _DYNAMIC_CALL.finditer(masked):
@@ -1591,6 +1602,10 @@ class PackagingParserGuardTests(unittest.TestCase):
             '''init 10 python:
     build.documentation("README.txt")
 ''',
+            '''init offset = 10
+init python:
+    build.documentation("README.txt")
+''',
             '''init python:
     build.documentation("README.txt")
 init python:
@@ -1612,6 +1627,12 @@ init python:
             "game/short_store_rogue.py": "store.build.classify('game/**', None)\n",
             "game/global_rogue.rpy": "define packaging = build\n",
             "game/import_rogue.py": "from renpy.store import build\n",
+            "game/store_alias_rogue.py": '''import renpy.store as runtime_store
+runtime_store.build.classify("game/**", None)
+''',
+            "game/from_store_alias_rogue.py": '''from renpy import store as runtime_store
+runtime_store.build.classify("game/**", None)
+''',
             "game/unrelated.py": '''taxonomy.classify("family")
 getattr(taxonomy, "classify")
 other.build.classify("not-renpy-build")
@@ -1628,6 +1649,8 @@ decoy = "build.classify('string.png', None)"
                 "game/short_store_rogue.py",
                 "game/global_rogue.rpy",
                 "game/import_rogue.py",
+                "game/store_alias_rogue.py",
+                "game/from_store_alias_rogue.py",
             },
         )
 
