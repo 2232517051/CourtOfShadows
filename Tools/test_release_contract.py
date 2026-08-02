@@ -142,6 +142,18 @@ RENPY_EARLY_INPUT_RULES = (
     ("android-*.png", "android"),
     ("android-*.jpg", "android"),
 )
+ALLOWED_INIT_BUILD_FIELDS = {
+    "android_package",
+    "android_permissions",
+    "android_target_api",
+    "ios_bundle_identifier",
+    "ios_bundle_name",
+    "executable_name",
+    "mac_architectures",
+    "google_play_key",
+    "google_play_salt",
+}
+ALLOWED_DEFINE_BUILD_FIELDS = {"name", "android_landscape", "ios_landscape"}
 STALE_RELEASE_PHRASES = (
     "v3.2",
     "v3.1",
@@ -250,29 +262,22 @@ def executable_assignment_value(source: str, left_hand_side: str) -> str | None:
     return source[match.end() : line_end].strip()
 
 
-def _init_python_blocks(source: str) -> list[tuple[int, int, int, ast.Module]]:
-    """Return init-python bodies in Ren'Py execution order."""
-    blocks: list[tuple[int, int, int, ast.Module]] = []
+def _init_python_blocks(source: str) -> list[tuple[int, int, ast.Module]]:
+    """Return real top-level init-python bodies without interpreting Ren'Py."""
+    blocks: list[tuple[int, int, ast.Module]] = []
     lines = source.splitlines()
     executable_lines = executable_source(source).splitlines()
     if len(executable_lines) != len(lines):
         raise AssertionError("executable-source masking changed the line count")
-    init_python = re.compile(
-        r"^init(?:\s+(-?\d+))?\s+python(?:\s+in\s+\w+)?:\s*$"
-    )
-    init_offset_line = re.compile(r"^init\s+offset\s*=\s*(-?\d+)\s*$")
-    init_offset = 0
+    init_python = re.compile(r"^init(?:\s+-?\d+)?\s+python(?:\s+in\s+\w+)?:\s*$")
 
     for start, line in enumerate(executable_lines):
         if line.startswith((" ", "\t")):
             continue
-        offset_match = init_offset_line.fullmatch(line)
-        if offset_match is not None:
-            init_offset = int(offset_match.group(1))
+        if init_python.fullmatch(line) is None:
             continue
-        match = init_python.fullmatch(line)
-        if match is None:
-            continue
+        if line != "init python:":
+            raise AssertionError("build configuration must use exact 'init python:'")
         body: list[str] = []
         end = start + 1
         for original, candidate in zip(
@@ -284,14 +289,11 @@ def _init_python_blocks(source: str) -> list[tuple[int, int, int, ast.Module]]:
             end += 1
         if not body:
             continue
-        priority = int(match.group(1) or 0) + init_offset
         wrapper = ast.parse("if True:\n" + "\n".join(body)).body[0]
         if not isinstance(wrapper, ast.If):
             raise AssertionError("init-python wrapper did not parse as a suite")
-        blocks.append(
-            (priority, start, end, ast.Module(body=wrapper.body, type_ignores=[]))
-        )
-    return sorted(blocks, key=lambda block: (block[0], block[1]))
+        blocks.append((start, end, ast.Module(body=wrapper.body, type_ignores=[])))
+    return blocks
 
 
 def _is_build_contract_attribute(node: ast.AST) -> bool:
@@ -299,189 +301,14 @@ def _is_build_contract_attribute(node: ast.AST) -> bool:
         isinstance(node, ast.Attribute)
         and isinstance(node.value, ast.Name)
         and node.value.id == "build"
-        and node.attr in {"classify", "documentation", "clear"}
+        and node.attr in {"classify", "documentation"}
     )
-
-
-_CODE_EXECUTION_NAMES = {
-    "__import__",
-    "eval",
-    "exec",
-}
-_REFLECTION_NAMES = {"delattr", "getattr", "setattr"}
-_NAMESPACE_NAMES = {"globals", "locals", "vars"}
-_BUILD_EVIDENCE = re.compile(r"\bbuild\b")
-
-
-def _is_build_object_reference(node: ast.AST) -> bool:
-    if isinstance(node, ast.Name):
-        return node.id == "build"
-    if isinstance(node, ast.Attribute):
-        return node.attr == "build"
-    if isinstance(node, ast.Subscript):
-        return (
-            isinstance(node.slice, ast.Constant)
-            and node.slice.value == "build"
-            and isinstance(node.value, ast.Call)
-            and isinstance(node.value.func, ast.Name)
-            and node.value.func.id in _NAMESPACE_NAMES
-        )
-    return (
-        isinstance(node, ast.Call)
-        and isinstance(node.func, ast.Name)
-        and node.func.id == "getattr"
-        and len(node.args) >= 2
-        and isinstance(node.args[1], ast.Constant)
-        and node.args[1].value == "build"
-    )
-
-
-def _call_has_literal_build_evidence(call: ast.Call) -> bool:
-    values = [*call.args, *(keyword.value for keyword in call.keywords)]
-    return any(
-        isinstance(node, ast.Constant)
-        and isinstance(node.value, str)
-        and _BUILD_EVIDENCE.search(node.value)
-        for value in values
-        for node in ast.walk(value)
-    )
-
-
-def _is_build_import(node: ast.AST) -> bool:
-    if isinstance(node, ast.Import):
-        return any(
-            alias.name == "build" or alias.name.endswith(".build")
-            for alias in node.names
-        )
-    if isinstance(node, ast.ImportFrom):
-        return (
-            node.module == "build"
-            or bool(node.module and node.module.endswith(".build"))
-            or any(alias.name == "build" for alias in node.names)
-        )
-    return False
-
-
-def _argument_runtime_expressions(arguments: ast.arguments) -> list[ast.expr]:
-    positional = [*arguments.posonlyargs, *arguments.args, *arguments.kwonlyargs]
-    annotations = [argument.annotation for argument in positional]
-    if arguments.vararg is not None:
-        annotations.append(arguments.vararg.annotation)
-    if arguments.kwarg is not None:
-        annotations.append(arguments.kwarg.annotation)
-    return [
-        *arguments.defaults,
-        *(default for default in arguments.kw_defaults if default is not None),
-        *(annotation for annotation in annotations if annotation is not None),
-    ]
-
-
-def _function_definition_runtime_expressions(
-    function: ast.FunctionDef | ast.AsyncFunctionDef,
-) -> list[ast.expr]:
-    expressions = [
-        *function.decorator_list,
-        *_argument_runtime_expressions(function.args),
-    ]
-    if function.returns is not None:
-        expressions.append(function.returns)
-    return expressions
-
-
-def _is_dynamic_build_contract_reference(node: ast.AST) -> bool:
-    if _is_build_contract_attribute(node):
-        return True
-    if not isinstance(node, ast.Name) and _is_build_object_reference(node):
-        return True
-    if _is_build_import(node):
-        return True
-    if (
-        isinstance(node, ast.Attribute)
-        and node.attr in {"classify", "documentation", "clear"}
-        and _is_build_object_reference(node.value)
-    ):
-        return True
-    if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
-        return False
-    if (
-        node.func.id in _REFLECTION_NAMES
-        and bool(node.args)
-        and _is_build_object_reference(node.args[0])
-    ):
-        return True
-    return (
-        node.func.id in _CODE_EXECUTION_NAMES
-        and _call_has_literal_build_evidence(node)
-    )
-
-
-def _function_contains_build_contract(function: ast.AST) -> bool:
-    for node in ast.walk(function):
-        if _is_dynamic_build_contract_reference(node):
-            return True
-        if (
-            isinstance(node, (ast.Assign, ast.AnnAssign))
-            and isinstance(node.value, ast.Name)
-            and node.value.id == "build"
-        ):
-            return True
-    return False
-
-
-def _active_statement_contains_dynamic_build(
-    node: ast.AST,
-    dynamic_callable_names: set[str],
-    code_execution_names: set[str],
-) -> bool:
-    """Find build construction while leaving function/lambda bodies inert."""
-    pending = [node]
-    while pending:
-        current = pending.pop()
-        if current is not node and isinstance(
-            current, (ast.FunctionDef, ast.AsyncFunctionDef)
-        ):
-            pending.extend(_function_definition_runtime_expressions(current))
-            continue
-        if current is not node and isinstance(current, ast.Lambda):
-            pending.extend(_argument_runtime_expressions(current.args))
-            continue
-        if _is_dynamic_build_contract_reference(current):
-            return True
-        if isinstance(current, ast.Call) and isinstance(current.func, ast.Lambda):
-            pending.append(current.func.body)
-        if (
-            isinstance(current, (ast.Assign, ast.AnnAssign))
-            and isinstance(current.value, ast.Name)
-            and current.value.id == "build"
-        ):
-            return True
-        if (
-            isinstance(current, ast.Name)
-            and current.id in dynamic_callable_names
-        ):
-            return True
-        if (
-            isinstance(current, ast.Call)
-            and isinstance(current.func, ast.Name)
-            and current.func.id
-            in dynamic_callable_names | {"classify", "documentation", "clear"}
-        ):
-            return True
-        if (
-            isinstance(current, ast.Call)
-            and isinstance(current.func, ast.Name)
-            and current.func.id in code_execution_names
-            and _call_has_literal_build_evidence(current)
-        ):
-            return True
-        pending.extend(ast.iter_child_nodes(current))
-    return False
 
 
 def _literal_build_call(call: ast.Call) -> tuple[str, tuple[object, ...]]:
+    if not _is_build_contract_attribute(call.func):
+        raise AssertionError("only direct build.classify/documentation calls are allowed")
     name = call.func.attr
-    if name == "clear":
-        raise AssertionError("build.clear() is forbidden by the release contract")
     if call.keywords:
         raise AssertionError("active build calls must not use keyword arguments")
     try:
@@ -503,167 +330,146 @@ def _literal_build_call(call: ast.Call) -> tuple[str, tuple[object, ...]]:
 
 
 def active_literal_build_calls(source: str) -> list[tuple[str, tuple[object, ...]]]:
-    """Return active direct literal build calls, failing closed on dynamics."""
+    """Validate the strict options grammar and return its ordered build calls."""
     blocks = _init_python_blocks(source)
-    helper_names = {
-        statement.name
-        for _, _, _, tree in blocks
-        for statement in ast.walk(tree)
-        if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef))
-        and _function_contains_build_contract(statement)
-    }
+    if len(blocks) != 1:
+        raise AssertionError("options must contain exactly one real init-python block")
+    outside_violations = options_build_contract_scope_violations(source)
+    if outside_violations:
+        raise AssertionError("; ".join(outside_violations))
+
+    _, _, tree = blocks[0]
     calls: list[tuple[str, tuple[object, ...]]] = []
-    callable_aliases: set[str] = set()
-    code_execution_aliases = set(_CODE_EXECUTION_NAMES)
-
-    def assignment_names(statement: ast.stmt) -> set[str]:
-        if isinstance(statement, ast.Assign):
-            targets = statement.targets
-        elif isinstance(statement, ast.AnnAssign):
-            targets = [statement.target]
-        else:
-            return set()
-        return {
-            target.id
-            for target in targets
-            if isinstance(target, ast.Name)
-        }
-
-    def process(statements: list[ast.stmt]) -> None:
-        for statement in statements:
-            if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                dynamic_names = helper_names | callable_aliases
-                if any(
-                    _active_statement_contains_dynamic_build(
-                        expression, dynamic_names, code_execution_aliases
-                    )
-                    for expression in _function_definition_runtime_expressions(statement)
-                ):
-                    raise AssertionError(
-                        "active dynamic build construction in a function definition "
-                        "is unsupported"
-                    )
-                continue
-            if isinstance(statement, ast.If):
-                if isinstance(statement.test, ast.Constant) and isinstance(
-                    statement.test.value, bool
-                ):
-                    process(statement.body if statement.test.value else statement.orelse)
-                    continue
-                if _active_statement_contains_dynamic_build(
-                    statement,
-                    helper_names | callable_aliases,
-                    code_execution_aliases,
-                ):
-                    raise AssertionError(
-                        "build classification inside an unknown condition is unsupported"
-                    )
-                continue
-            if isinstance(statement, (ast.Assign, ast.AnnAssign)):
-                targets = assignment_names(statement)
-                value = statement.value
-                dynamic_names = helper_names | callable_aliases
-                if (
-                    isinstance(value, ast.Name)
-                    and value.id in code_execution_aliases
-                ):
-                    if not targets:
-                        raise AssertionError(
-                            "dynamic code execution uses an unsupported assignment target"
-                        )
-                    code_execution_aliases.update(targets)
-                    callable_aliases.difference_update(targets)
-                    continue
-                code_execution_aliases.difference_update(targets)
-                if (
-                    isinstance(value, ast.Name)
-                    and value.id in dynamic_names
-                ) or (
-                    isinstance(value, ast.Lambda)
-                    and _active_statement_contains_dynamic_build(
-                        value.body, dynamic_names, code_execution_aliases
-                    )
-                ):
-                    if isinstance(value, ast.Lambda) and any(
-                        _active_statement_contains_dynamic_build(
-                            expression, dynamic_names, code_execution_aliases
-                        )
-                        for expression in _argument_runtime_expressions(value.args)
-                    ):
-                        raise AssertionError(
-                            "active dynamic build construction in lambda defaults "
-                            "is unsupported"
-                        )
-                    if not targets:
-                        raise AssertionError(
-                            "dynamic build helper uses an unsupported assignment target"
-                        )
-                    callable_aliases.update(targets)
-                    continue
-                callable_aliases.difference_update(targets)
-            if isinstance(statement, ast.Expr) and isinstance(
-                statement.value, ast.Call
-            ):
-                call = statement.value
-                if _is_build_contract_attribute(call.func):
-                    calls.append(_literal_build_call(call))
-                    continue
-            if _active_statement_contains_dynamic_build(
-                statement,
-                helper_names | callable_aliases,
-                code_execution_aliases,
-            ):
-                raise AssertionError(
-                    "active dynamic build classification construction is unsupported"
-                )
-
-    for _, _, _, tree in blocks:
-        process(tree.body)
-
+    assigned_fields: set[str] = set()
+    for statement in tree.body:
+        if isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Call):
+            calls.append(_literal_build_call(statement.value))
+            continue
+        if not isinstance(statement, ast.Assign) or len(statement.targets) != 1:
+            raise AssertionError("init-python build statements must be top-level calls or assignments")
+        target = statement.targets[0]
+        if not (
+            isinstance(target, ast.Attribute)
+            and isinstance(target.value, ast.Name)
+            and target.value.id == "build"
+            and target.attr in ALLOWED_INIT_BUILD_FIELDS
+        ):
+            raise AssertionError("unsupported init-python build assignment target")
+        if target.attr in assigned_fields:
+            raise AssertionError(f"duplicate build.{target.attr} assignment")
+        try:
+            ast.literal_eval(statement.value)
+        except (ValueError, TypeError) as exc:
+            raise AssertionError(f"build.{target.attr} must use a literal value") from exc
+        assigned_fields.add(target.attr)
     return calls
 
 
-_BUILD_CONTRACT_REFERENCE = re.compile(
-    r"\bbuild\s*\.\s*(?:classify|documentation|clear)\b|"
-    r"\bgetattr\s*\(\s*build\b|"
-    r"\b[A-Za-z_]\w*\s*=\s*(?:(?:[A-Za-z_]\w*)\s*\.\s*)*build\b"
-    r"(?!\s*\.\s*(?:classify|documentation|clear)\b)|"
-    r"\bfrom\s+(?:[A-Za-z_]\w*\.)*build\s+import\b|"
-    r"\b(?:from\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s+)?"
-    r"import\s+(?:[A-Za-z_]\w*\.)*build\b"
+_GLOBAL_BUILD_NAME = re.compile(r"(?<![\w.])build\b")
+_RENPY_STORE_BUILD = re.compile(
+    r"\b(?:renpy\s*\.\s*)?store\s*\.\s*build\b"
 )
+_DYNAMIC_CALL = re.compile(
+    r"\b(?:getattr|setattr|delattr|globals|locals|vars|exec|eval|__import__)\s*\("
+)
+_BUILD_WORD = re.compile(r"\bbuild\b")
+
+
+def _balanced_call_source(source: str, masked: str, start: int) -> str:
+    opening = masked.find("(", start)
+    depth = 0
+    for index in range(opening, len(masked)):
+        if masked[index] == "(":
+            depth += 1
+        elif masked[index] == ")":
+            depth -= 1
+            if depth == 0:
+                return source[start : index + 1]
+    return source[start : start + 512]
+
+
+def _build_reference_lines(source: str) -> list[int]:
+    """Find executable references to Ren'Py's global build object."""
+    masked = executable_source(source)
+    lines = {
+        masked.count("\n", 0, match.start()) + 1
+        for pattern in (_GLOBAL_BUILD_NAME, _RENPY_STORE_BUILD)
+        for match in pattern.finditer(masked)
+    }
+    for match in _DYNAMIC_CALL.finditer(masked):
+        line_end = source.find("\n", match.start())
+        one_line = source[match.start() : line_end if line_end >= 0 else len(source)]
+        candidates = (one_line, _balanced_call_source(source, masked, match.start()))
+        for candidate in candidates:
+            try:
+                tree = ast.parse(candidate.strip(), mode="eval")
+            except SyntaxError:
+                continue
+            if any(
+                isinstance(node, ast.Constant)
+                and isinstance(node.value, str)
+                and _BUILD_WORD.search(node.value)
+                for node in ast.walk(tree)
+            ):
+                lines.add(masked.count("\n", 0, match.start()) + 1)
+                break
+    return sorted(lines)
 
 
 def external_build_contract_violations(
     sources: dict[str, str],
 ) -> dict[str, str]:
-    """Return active build-contract construction outside game/options.rpy."""
+    """Return global Ren'Py build references outside game/options.rpy."""
     violations: dict[str, str] = {}
     for path, source in sources.items():
         if path.replace("\\", "/") == "game/options.rpy":
             continue
-        executable = executable_source(source)
-        reference = _BUILD_CONTRACT_REFERENCE.search(executable)
-        if reference is not None:
-            violations[path] = f"build contract reference: {reference.group(0)!r}"
+        lines = _build_reference_lines(source)
+        if lines:
+            violations[path] = f"Ren'Py build reference on line {lines[0]}"
     return violations
 
 
 def options_build_contract_scope_violations(source: str) -> list[str]:
-    """Return build references outside real init-python blocks in options."""
-    allowed_lines = {
-        line
-        for _, start, end, _ in _init_python_blocks(source)
-        for line in range(start, end)
-    }
+    """Validate build syntax outside the one strict init-python block."""
+    try:
+        blocks = _init_python_blocks(source)
+    except (AssertionError, SyntaxError) as exc:
+        return [str(exc)]
+    if len(blocks) != 1:
+        return ["options must contain exactly one real init-python block"]
+    start, end, _ = blocks[0]
+    lines = source.splitlines()
+    masked_lines = executable_source(source).splitlines()
+    scan_lines = list(lines)
     violations: list[str] = []
-    executable = executable_source(source)
-    for match in _BUILD_CONTRACT_REFERENCE.finditer(executable):
-        index = executable.count("\n", 0, match.start())
-        if index in allowed_lines:
+    defined_fields: set[str] = set()
+    define_build = re.compile(r"^define\s+build\.([A-Za-z_]\w*)\s*=")
+    for index, (line, masked_line) in enumerate(zip(lines, masked_lines)):
+        if start <= index < end:
+            scan_lines[index] = ""
             continue
-        normalized = re.sub(r"\s+", "", match.group(0))
-        violations.append(f"line {index + 1}: {normalized}")
+        match = define_build.match(masked_line)
+        if match is None:
+            continue
+        field = match.group(1)
+        scan_lines[index] = ""
+        if field not in ALLOWED_DEFINE_BUILD_FIELDS:
+            violations.append(f"line {index + 1}: unsupported define build.{field}")
+            continue
+        if field in defined_fields:
+            violations.append(f"line {index + 1}: duplicate define build.{field}")
+            continue
+        try:
+            ast.literal_eval(line.split("=", 1)[1].strip())
+        except (SyntaxError, ValueError, TypeError):
+            violations.append(f"line {index + 1}: define build.{field} must be literal")
+            continue
+        defined_fields.add(field)
+    violations.extend(
+        f"line {line}: build is only allowed in the strict options block"
+        for line in _build_reference_lines("\n".join(scan_lines))
+    )
     return violations
 
 
@@ -838,6 +644,10 @@ def exclusion_order_violations(
                 violations.append(f"{required} appears after {pattern}")
                 break
     return violations
+
+
+def missing_project_files(paths: tuple[str, ...]) -> list[str]:
+    return [path for path in paths if not (ROOT / path).is_file()]
 
 
 def assigned_literal(source: str, name: str):
@@ -1723,6 +1533,104 @@ class NewGamePlusContractTests(unittest.TestCase):
 
 
 class PackagingParserGuardTests(unittest.TestCase):
+    def test_strict_config_rejects_ambiguous_build_syntax(self) -> None:
+        fixtures = (
+            '''init python:
+    if False:
+        build.classify("decoy.png", None)
+''',
+            '''init python:
+    def helper():
+        build.classify("decoy.png", None)
+''',
+            '''init python:
+    build.base_patterns.clear()
+''',
+            '''init python:
+    build.clear()
+''',
+            '''init python:
+    build.remove("game/**")
+''',
+            '''init python:
+    first, second = build, object()
+''',
+            '''init python:
+    helper = lambda: build.classify("decoy.png", None)
+''',
+            '''init python:
+    import build
+''',
+            '''init python:
+    exec("build.classify('decoy.png', None)")
+''',
+            '''init python:
+    eval("build.classify")
+''',
+            '''init python:
+    __import__("build")
+''',
+            '''init python:
+    getattr(build, "classify")("decoy.png", None)
+''',
+            '''init python:
+    alias = build.classify
+''',
+            '''init python:
+    build.android_package = build.ios_bundle_identifier = "duplicate"
+''',
+            '''init python:
+    build.base_patterns = []
+''',
+            '''init python:
+    build.android_package = runtime_value
+''',
+            '''init python:
+    build.classify(runtime_pattern, None)
+''',
+            '''init 10 python:
+    build.documentation("README.txt")
+''',
+            '''init python:
+    build.documentation("README.txt")
+init python:
+    build.documentation("SECOND.txt")
+''',
+        )
+        for source in fixtures:
+            with self.subTest(source=source):
+                with self.assertRaises(AssertionError):
+                    active_literal_build_calls(source)
+
+    def test_external_scanner_rejects_build_evidence_without_other_build_false_positive(
+        self,
+    ) -> None:
+        sources = {
+            "game/exec_rogue.py": 'exec("build.classify(\\"game/**\\", None)")\n',
+            "game/reflection_rogue.rpy": 'define rogue = getattr(renpy.store, "build")\n',
+            "game/store_rogue.rpym": "x = renpy.store.build\n",
+            "game/short_store_rogue.py": "store.build.classify('game/**', None)\n",
+            "game/global_rogue.rpy": "define packaging = build\n",
+            "game/import_rogue.py": "from renpy.store import build\n",
+            "game/unrelated.py": '''taxonomy.classify("family")
+getattr(taxonomy, "classify")
+other.build.classify("not-renpy-build")
+decoy = "build.classify('string.png', None)"
+# exec("build.clear()")
+''',
+        }
+        self.assertEqual(
+            set(external_build_contract_violations(sources)),
+            {
+                "game/exec_rogue.py",
+                "game/reflection_rogue.rpy",
+                "game/store_rogue.rpym",
+                "game/short_store_rogue.py",
+                "game/global_rogue.rpy",
+                "game/import_rogue.py",
+            },
+        )
+
     def test_outer_triple_quoted_strings_cannot_create_init_blocks(self) -> None:
         decoy_rules = "\n".join(
             f"    build.classify({pattern!r}, None)"
@@ -1748,234 +1656,45 @@ class PackagingParserGuardTests(unittest.TestCase):
                     [("documentation", ("REAL.txt",))],
                 )
 
-    def test_comments_and_strings_do_not_create_build_calls(self) -> None:
-        source = '''init python:
-    # build.classify("comment.png", None)
-    reference = "build.classify('string.png', None)"
-    build.documentation("README.txt")
-'''
-        self.assertEqual(
-            active_literal_build_calls(source),
-            [("documentation", ("README.txt",))],
-        )
-
-    def test_build_clear_and_computed_getattr_fail_closed(self) -> None:
-        fixtures = (
-            '''init python:
-    build.clear()
-''',
-            '''init python:
-    method = "class" + "ify"
-    getattr(build, method)("dynamic.png", None)
-''',
-        )
-        for source in fixtures:
-            with self.subTest(source=source):
-                with self.assertRaises(AssertionError):
-                    active_literal_build_calls(source)
-
-    def test_unrelated_classify_attributes_are_ignored(self) -> None:
-        source = '''init python:
-    taxonomy.classify("family")
-    getter = getattr(taxonomy, "classify")
-    getter("genus")
-    exec("harmless_value = 1")
-    eval("1 + 1")
-    def read_taxonomy():
-        return getattr(taxonomy, "classify")
-    read_taxonomy()
-    build.documentation("REAL.txt")
-'''
-        self.assertEqual(
-            active_literal_build_calls(source),
-            [("documentation", ("REAL.txt",))],
-        )
-
-    def test_active_build_contract_is_confined_to_options(self) -> None:
-        sources = {
-            "game/options.rpy": '''init python:
-    build.documentation("README.txt")
-''',
-            "game/rogue.rpy": '''init -100 python:
-    build.classify("game/images/ui/", None)
-''',
-            "game/define_rogue.rpy": '''define rogue_rule = build.classify(
-    "game/images/ui/", None)
-''',
-            "game/alias_rogue.rpy": '''define packaging = build
-define classify = getattr(packaging, "classify")
-''',
-            "game/import_rogue.rpym": '''from renpy.store import build as packaging
-''',
-            "game/string_decoy.rpy": '''define note = """
-init -200 python:
-    build.clear()
-"""
-''',
-        }
-        violations = external_build_contract_violations(sources)
-        self.assertEqual(
-            set(violations),
-            {
-                "game/rogue.rpy",
-                "game/define_rogue.rpy",
-                "game/alias_rogue.rpy",
-                "game/import_rogue.rpym",
-            },
-        )
-
-    def test_options_rejects_contract_calls_outside_real_init_blocks(self) -> None:
-        source = '''define rogue_rule = build.classify("game/**", "all")
-define reflective_rule = getattr(
-    build,
-    "classify")("game/images/**", "all")
-define packaging = build
-from renpy.store import build as packaging_import
-define decoy = """
-build.clear()
-"""
+    def test_strict_options_grammar_accepts_direct_literals_and_allowed_fields(self) -> None:
+        source = '''define build.name = "Game"
+define build.android_landscape = True
+define build.ios_landscape = True
 init python:
+    # build.classify("comment.png", None)
+    build.classify("exclude.png", None)
+    build.documentation("README.txt")
+    build.android_package = "example.game"
+    build.android_permissions = []
+    build.android_target_api = 36
+    build.ios_bundle_identifier = "example.game"
+    build.ios_bundle_name = "Game"
+    build.executable_name = "Game"
+    build.mac_architectures = "universal"
+    build.google_play_key = None
+    build.google_play_salt = None
+'''
+        self.assertEqual(
+            active_literal_build_calls(source),
+            [
+                ("classify", ("exclude.png", None)),
+                ("documentation", ("README.txt",)),
+            ],
+        )
+
+    def test_options_outer_build_defines_are_strict(self) -> None:
+        fixtures = (
+            'define build.unknown = 1\n',
+            'define build.name = runtime_name\n',
+            'define rogue = build.classify("game/**", "all")\n',
+            'define rogue = exec("build.clear()")\n',
+        )
+        for prefix in fixtures:
+            source = prefix + '''init python:
     build.documentation("README.txt")
 '''
-        self.assertEqual(
-            options_build_contract_scope_violations(source),
-            [
-                "line 1: build.classify",
-                "line 2: getattr(build",
-                "line 5: packaging=build",
-                "line 6: fromrenpy.storeimportbuild",
-            ],
-        )
-
-    def test_uncalled_helpers_and_disabled_branches_do_not_create_rules(self) -> None:
-        source = '''init python:
-    def add_decoy_rule():
-        build.classify("helper.png", None)
-    unused_runner = add_decoy_rule
-    unused_lambda = lambda: build.classify("unused-lambda.png", None)
-    if False:
-        build.classify("disabled.png", None)
-        disabled_runner = add_decoy_rule
-        disabled_runner()
-    if True:
-        build.classify("true-branch.png", None)
-    build.classify("active.png", None)
-'''
-        self.assertEqual(
-            active_literal_build_calls(source),
-            [
-                ("classify", ("true-branch.png", None)),
-                ("classify", ("active.png", None)),
-            ],
-        )
-
-    def test_active_dynamic_build_construction_fails_closed(self) -> None:
-        fixtures = (
-            '''init python:
-    payload = "variable.png"
-    build.classify(payload, None)
-''',
-            '''init python:
-    classify = build.classify
-    classify("alias.png", None)
-''',
-            '''init python:
-    build_alias = build
-    build_alias.classify("object-alias.png", None)
-''',
-            '''init python:
-    def add_rules():
-        build.classify("helper.png", None)
-    add_rules()
-''',
-            '''init python:
-    def add_aliased_rules():
-        build_alias = build
-        build_alias.classify("helper-alias.png", None)
-    add_aliased_rules()
-''',
-            '''init python:
-    def add_rules_through_alias():
-        build.classify("helper-chain.png", None)
-    runner = add_rules_through_alias
-    chained_runner = runner
-    chained_runner()
-''',
-            '''init python:
-    runner = lambda: build.classify("lambda-alias.png", None)
-    chained_runner = runner
-    chained_runner()
-''',
-            '''init python:
-    exec("build.classify('exec.png', None)")
-''',
-            '''init python:
-    evaluator = eval
-    evaluator("build.classify")
-''',
-            '''init python:
-    renpy.store.build.classify("object-chain.png", None)
-''',
-            '''init python:
-    def default_rule(pattern=build.clear()):
-        pass
-''',
-            '''init python:
-    @renpy.store.build.classify("decorator.png", None)
-    def decorated_rule():
-        pass
-''',
-            '''init python:
-    (lambda: build.classify("immediate-lambda.png", None))()
-''',
-            '''init python:
-    globals()["build"].classify("globals.png", None)
-''',
-            '''init python:
-    from renpy.store import build as packaging
-    packaging.classify("import-alias.png", None)
-''',
-            '''init python:
-    if runtime_condition:
-        build.classify("conditional.png", None)
-''',
-            '''init python:
-    for pattern in patterns:
-        build.classify(pattern, None)
-''',
-            '''init python:
-    try:
-        build.classify("try.png", None)
-    except Exception:
-        pass
-''',
-        )
-        for source in fixtures:
-            with self.subTest(source=source):
-                with self.assertRaises(AssertionError):
-                    active_literal_build_calls(source)
-
-    def test_init_priority_controls_call_order_before_source_order(self) -> None:
-        source = '''init offset = 20
-init -10 python:
-    build.classify("effective-ten-first.png", None)
-
-init offset = -20
-init 10 python:
-    build.classify("effective-minus-ten.png", "all")
-
-init offset = 0
-init 10 python:
-    build.classify("effective-ten-second.png", None)
-'''
-        self.assertEqual(
-            active_literal_build_calls(source),
-            [
-                ("classify", ("effective-minus-ten.png", "all")),
-                ("classify", ("effective-ten-first.png", None)),
-                ("classify", ("effective-ten-second.png", None)),
-            ],
-        )
+            with self.subTest(prefix=prefix):
+                self.assertTrue(options_build_contract_scope_violations(source))
 
     def test_order_guard_rejects_an_inclusion_before_its_exclusion(self) -> None:
         cases = (
@@ -2082,7 +1801,7 @@ class PackagingClassificationContractTests(unittest.TestCase):
         sources = {
             path.relative_to(ROOT).as_posix(): path.read_text(encoding="utf-8")
             for path in GAME.rglob("*")
-            if path.suffix in {".rpy", ".rpym"}
+            if path.suffix in {".rpy", ".rpym", ".py"}
         }
         self.assertEqual(external_build_contract_violations(sources), {})
 
@@ -2123,10 +1842,7 @@ class PackagingClassificationContractTests(unittest.TestCase):
 
     def test_audited_dynamic_ui_paths_remain_included(self) -> None:
         self.assertEqual(len(PROTECTED_DYNAMIC_UI_PATHS), 22)
-        missing = [
-            path for path in PROTECTED_DYNAMIC_UI_PATHS if not (ROOT / path).is_file()
-        ]
-        self.assertEqual(missing, [])
+        self.assertEqual(missing_project_files(PROTECTED_DYNAMIC_UI_PATHS), [])
         violations = {}
         for path in PROTECTED_DYNAMIC_UI_PATHS:
             classification = first_literal_classification(self.rules, path)
@@ -2138,10 +1854,7 @@ class PackagingClassificationContractTests(unittest.TestCase):
         self.assertTrue(
             set(PROTECTED_ANDROID_BUILD_INPUTS).isdisjoint(APPROVED_PACKAGE_EXCLUSIONS)
         )
-        missing = [
-            path for path in PROTECTED_ANDROID_BUILD_INPUTS if not (ROOT / path).is_file()
-        ]
-        self.assertEqual(missing, [])
+        self.assertEqual(missing_project_files(PROTECTED_ANDROID_BUILD_INPUTS), [])
         violations = {}
         for path in PROTECTED_ANDROID_BUILD_INPUTS:
             self.assertEqual(
