@@ -122,6 +122,20 @@ def executable_source(source: str) -> str:
     return "".join(result)
 
 
+def executable_assignment_value(source: str, left_hand_side: str) -> str | None:
+    """Return one assignment value only when its left-hand side is executable."""
+    match = re.search(
+        rf"(?m)^{re.escape(left_hand_side)}\s*=",
+        executable_source(source),
+    )
+    if match is None:
+        return None
+    line_end = source.find("\n", match.end())
+    if line_end < 0:
+        line_end = len(source)
+    return source[match.end() : line_end].strip()
+
+
 def assigned_literal(source: str, name: str):
     """Return a Python literal assigned to *name* inside a Ren'Py source file."""
     code = executable_source(source)
@@ -475,25 +489,41 @@ class VersionAndAndroidContractTests(unittest.TestCase):
         cls.android = json.loads(read_text("android.json"))
 
     def test_config_and_android_versions_match_392(self) -> None:
-        config_version = re.search(
-            r'(?m)^define config\.version\s*=\s*"([^"]+)"', self.options
+        config_version = executable_assignment_value(
+            self.options, "define config.version"
         )
         self.assertIsNotNone(config_version)
-        self.assertEqual(config_version.group(1), APPROVED_VERSION)
+        self.assertEqual(config_version, f'"{APPROVED_VERSION}"')
         self.assertEqual(self.android["version"], APPROVED_VERSION)
 
-    def test_android_package_and_api_agree_with_build_source(self) -> None:
-        source_package = re.search(
-            r'(?m)^\s*build\.android_package\s*=\s*"([^"]+)"', self.options
+    def test_version_and_android_contract_reject_multiline_string_decoys(self) -> None:
+        self.options = (
+            'reference = """\n'
+            'define config.version = "3.9.2"\n'
+            '    build.android_package = "com.xiaoyiai.courtofshadows"\n'
+            '    build.android_target_api = 36\n'
+            '"""\n'
+            'define config.version = "0.0.0"\n'
+            '    build.android_package = "example.wrong"\n'
+            '    build.android_target_api = 1\n'
         )
-        source_api = re.search(
-            r"(?m)^\s*build\.android_target_api\s*=\s*(\d+)", self.options
+        with self.assertRaises(AssertionError):
+            self.test_config_and_android_versions_match_392()
+        with self.assertRaises(AssertionError):
+            self.test_android_package_and_api_agree_with_build_source()
+
+    def test_android_package_and_api_agree_with_build_source(self) -> None:
+        source_package = executable_assignment_value(
+            self.options, "    build.android_package"
+        )
+        source_api = executable_assignment_value(
+            self.options, "    build.android_target_api"
         )
         self.assertIsNotNone(source_package)
         self.assertIsNotNone(source_api)
-        self.assertEqual(source_package.group(1), APPROVED_ANDROID_PACKAGE)
+        self.assertEqual(source_package, f'"{APPROVED_ANDROID_PACKAGE}"')
         self.assertEqual(self.android["package"], APPROVED_ANDROID_PACKAGE)
-        self.assertEqual(int(source_api.group(1)), APPROVED_ANDROID_API)
+        self.assertEqual(int(source_api), APPROVED_ANDROID_API)
         self.assertEqual(self.android["target_version"], APPROVED_ANDROID_API)
         self.assertEqual(self.android["orientation"], "sensorLandscape")
         self.assertIn("define build.android_landscape = True", self.options)
