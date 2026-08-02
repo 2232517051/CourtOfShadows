@@ -80,9 +80,52 @@ def read_text(relative_path: str) -> str:
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
+def executable_source(source: str) -> str:
+    """Blank comments and string bodies while preserving source offsets."""
+    result = list(source)
+    index = 0
+    quote = ""
+    while index < len(source):
+        if quote:
+            if source.startswith(quote, index):
+                for cursor in range(index, index + len(quote)):
+                    result[cursor] = " "
+                index += len(quote)
+                quote = ""
+            elif source[index] == "\\":
+                result[index] = " "
+                if index + 1 < len(source) and source[index + 1] != "\n":
+                    result[index + 1] = " "
+                index += 2
+            else:
+                if source[index] != "\n":
+                    result[index] = " "
+                index += 1
+            continue
+
+        if source[index] == "#":
+            while index < len(source) and source[index] != "\n":
+                result[index] = " "
+                index += 1
+            continue
+        if source[index] in {'"', "'"}:
+            quote = (
+                source[index] * 3
+                if source.startswith(source[index] * 3, index)
+                else source[index]
+            )
+            for cursor in range(index, index + len(quote)):
+                result[cursor] = " "
+            index += len(quote)
+            continue
+        index += 1
+    return "".join(result)
+
+
 def assigned_literal(source: str, name: str):
     """Return a Python literal assigned to *name* inside a Ren'Py source file."""
-    match = re.search(rf"(?m)^\s*{re.escape(name)}\s*=\s*", source)
+    code = executable_source(source)
+    match = re.search(rf"(?m)^\s*{re.escape(name)}\s*=\s*", code)
     if match is None:
         raise AssertionError(f"assignment for {name!r} not found")
 
@@ -504,6 +547,15 @@ class EndingCatalogContractTests(unittest.TestCase):
 
 
 class EndingCatalogGuardTests(unittest.TestCase):
+    def test_literal_reader_ignores_assignments_inside_multiline_strings(self) -> None:
+        source = (
+            'reference = """legacy catalog:\n'
+            'target = ["stale"]\n'
+            '"""\n'
+            'target = ["approved"]\n'
+        )
+        self.assertEqual(assigned_literal(source, "target"), ["approved"])
+
     def test_literal_map_keys_reject_non_strings_and_unpacking(self) -> None:
         for expression in ('{"iron_lord": False, 1: False}', '{"iron_lord": False, **extra}'):
             dictionary = ast.parse(expression, mode="eval").body
