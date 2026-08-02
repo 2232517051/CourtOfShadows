@@ -482,6 +482,15 @@ def assert_contains_all(
     case.assertEqual(missing, [], f"{subject} is missing approved facts: {missing}")
 
 
+def assert_father_son_is_not_a_main_ending(source: str) -> None:
+    if re.search(
+        r"""(?:persistent\.)?endings_seen\.(?:add|update)\([^)\n]*["']father_son["']|"""
+        r"""(?:record|unlock)_ending\(\s*["']father_son["']\s*\)""",
+        source,
+    ):
+        raise AssertionError("Father/Son must remain outside main ending progress")
+
+
 class VersionAndAndroidContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -575,6 +584,13 @@ class EndingCatalogContractTests(unittest.TestCase):
             dynamic_domains={"route_id": ranked_route_keys},
         )
 
+    def test_father_son_hidden_epilogue_stays_outside_main_ending_progress(self) -> None:
+        chapter_five = read_text("game/chapter5.rpy")
+        expansion = read_text("game/endings_expansion.rpy")
+        self.assertIn("label ending_father_son_epilogue:", expansion)
+        self.assertIn("jump ending_father_son_epilogue", expansion)
+        assert_father_son_is_not_a_main_ending(chapter_five + expansion)
+
 
 class EndingCatalogGuardTests(unittest.TestCase):
     def test_literal_reader_ignores_assignments_inside_multiline_strings(self) -> None:
@@ -585,6 +601,10 @@ class EndingCatalogGuardTests(unittest.TestCase):
             'target = ["approved"]\n'
         )
         self.assertEqual(assigned_literal(source, "target"), ["approved"])
+
+    def test_father_son_guard_rejects_record_ending_registration(self) -> None:
+        with self.assertRaises(AssertionError):
+            assert_father_son_is_not_a_main_ending('record_ending("father_son")')
 
     def test_literal_map_keys_reject_non_strings_and_unpacking(self) -> None:
         for expression in ('{"iron_lord": False, 1: False}', '{"iron_lord": False, **extra}'):
