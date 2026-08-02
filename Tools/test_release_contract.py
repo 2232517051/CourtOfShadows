@@ -44,6 +44,16 @@ APPROVED_ENGLISH_STATS = (
     "Intrigue",
 )
 APPROVED_SOUTHERN_OUTCOME_KEYS = ("free", "ruler", "fall", "outwit", "vassal")
+STALE_RELEASE_PHRASES = (
+    "v3.2",
+    "v3.1",
+    "版本：3.1",
+    "即将登陆 TapTap · Steam",
+    "New Game+ 二周目解锁新内容",
+    "New Game+ unlocks additional content",
+    "隐藏结局",
+    "hidden ending",
+)
 
 FIVE_ENDING_CLAIM = re.compile(
     r"(?:五|5)\s*(?:个|种)?\s*"
@@ -513,6 +523,12 @@ def assert_southern_outcome_contract(source: str) -> None:
         raise AssertionError("Southern outcomes must expose the current-run outcome")
 
 
+def assert_no_stale_release_phrases(source: str) -> None:
+    for phrase in STALE_RELEASE_PHRASES:
+        if phrase.casefold() in source.casefold():
+            raise AssertionError(f"stale release phrase remains: {phrase}")
+
+
 class VersionAndAndroidContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -742,6 +758,10 @@ class ReleaseCopyGuardTests(unittest.TestCase):
             with self.subTest(denial=denial):
                 self.assertNotRegex(denial, ENGLISH_NG_PLUS_UNLOCKS_CONTENT)
 
+    def test_bare_v31_is_a_stale_release_phrase(self) -> None:
+        with self.assertRaises(AssertionError):
+            assert_no_stale_release_phrases("Current release: v3.1")
+
 
 class PlayerFacingCopyContractTests(unittest.TestCase):
     @classmethod
@@ -862,15 +882,6 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             self.assertRegex(english_store, rf"(?i)\b{stat}\b")
 
     def test_current_copy_contains_no_stale_release_claims(self) -> None:
-        stale_exact = (
-            "v3.2",
-            "版本：3.1",
-            "即将登陆 TapTap · Steam",
-            "New Game+ 二周目解锁新内容",
-            "New Game+ unlocks additional content",
-            "隐藏结局",
-            "hidden ending",
-        )
         rewrite_history = re.compile(
             r"每(?:一)?个选择都将改写历史|"
             r"\bevery (?:choice|decision) (?:will )?"
@@ -879,8 +890,7 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
         )
         for subject, source in self.current_copy.items():
             with self.subTest(subject=subject):
-                for phrase in stale_exact:
-                    self.assertNotIn(phrase.casefold(), source.casefold())
+                assert_no_stale_release_phrases(source)
                 self.assertNotRegex(source, rewrite_history)
                 for line in source.splitlines():
                     if not FIVE_ENDING_CLAIM.search(line):
