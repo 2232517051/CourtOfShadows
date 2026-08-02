@@ -47,6 +47,92 @@ APPROVED_ENGLISH_STATS = (
     "Intrigue",
 )
 APPROVED_SOUTHERN_OUTCOME_KEYS = ("free", "ruler", "fall", "outwit", "vassal")
+APPROVED_PACKAGE_EXCLUSIONS = (
+    "game/test_game.rpyc",
+    "game/audio/music/*_alt.mp3",
+    "game/audio/music/test3.wav",
+    "game/audio/narration/test_guy.mp3",
+    "game/audio/narration/voice_test/**",
+    "game/images/hd/**",
+    "game/images/backup_sd/**",
+    "game/images/webp_backup/**",
+    "store_assets/**",
+    "tests/**",
+    "docs/**",
+    "Tools/**",
+    "_speaker_report.txt",
+    "_ui_wiring_review.png",
+    "all_chars.txt",
+    "bgm_suno_progress.json",
+    "CANON.md",
+    "CHANGELOG.txt",
+    "CHANGELOG_v3.0.md",
+    "CLAUDE.md",
+    "combat_ui_mockup.png",
+    "cover_horizontal.png",
+    "cover_vertical.png",
+    "crisis_check_proposal.md",
+    "DESCRIPTION.txt",
+    "DEVELOPER_NOTE.txt",
+    "first_meet_report.txt",
+    "FORBIDDEN_PHRASES.md",
+    "game_icon_256.jpg",
+    "game_icon_256.png",
+    "logo.png",
+    "logo_gold.png",
+    "long_dialogue.txt",
+    "missing_portraits_A.txt",
+    "missing_portraits_B.txt",
+    "missing_portraits_full.json",
+    "promo_horizontal.png",
+    "promo_vertical.png",
+    "sfx_elevenlabs_progress.json",
+    "STYLE.md",
+    "taptap_promo.png",
+    "TapTap_v3.5.1_hotfix.md",
+    "TapTap_v3.5_更新公告.md",
+    "TapTap_v3.6_更新公告.md",
+    "TapTap_v3.7_更新公告.md",
+    "TapTap_v3.8_更新公告.md",
+    "TapTap_v3.9_更新公告.md",
+    "TapTap_回归声明.md",
+    "ui_icons_progress.json",
+    "voice_mapping.json",
+    "wallpaper_library.png",
+    "事件时间线审计报告.md",
+)
+# Protected by the 2026-07-31 release audit. These paths were present in the
+# prior APK but have no reliable direct .rpy filename references.
+PROTECTED_DYNAMIC_UI_PATHS = (
+    "game/images/ui/panel_frame.png",
+    "game/images/ui/box_confirm.png",
+    "game/images/ui/lock_slot_square.png",
+    "game/images/ui/box_slot.png",
+    "game/images/ui/lock_slot_wide.png",
+    "game/images/ui/box_choice.png",
+    "game/images/ui/card_slot.png",
+    "game/images/ui/box_namebox.png",
+    "game/images/ui/progress_track.png",
+    "game/images/ui/box_choice_hover.png",
+    "game/images/ui/box_textbox.png",
+    "game/images/ui/divider_gold.png",
+    "game/images/ui/progress_fill.png",
+    "game/images/ui/ctl_check_on.png",
+    "game/images/ui/ctl_radio_on.png",
+    "game/images/ui/ico_harp.png",
+    "game/images/ui/ctl_radio_off.png",
+    "game/images/ui/ctl_check_off.png",
+    "game/images/ui/box_notify.png",
+    "game/images/ui/ui_gallery.png",
+    "game/images/ui/ctl_scroll_thumb.png",
+    "game/images/ui/ctl_scroll_track.png",
+)
+PROTECTED_ANDROID_BUILD_INPUTS = (
+    "android-icon.png",
+    "android-icon_background.png",
+    "android-icon_foreground.png",
+    "android-presplash.png",
+)
 STALE_RELEASE_PHRASES = (
     "v3.2",
     "v3.1",
@@ -153,6 +239,150 @@ def executable_assignment_value(source: str, left_hand_side: str) -> str | None:
     if line_end < 0:
         line_end = len(source)
     return source[match.end() : line_end].strip()
+
+
+def active_literal_build_calls(source: str) -> list[tuple[str, tuple[object, ...]]]:
+    """Return direct literal ``build`` calls from top-level init-python bodies."""
+    calls: list[tuple[str, tuple[object, ...]]] = []
+    lines = source.splitlines()
+    init_python = re.compile(
+        r"^init(?:\s+-?\d+)?\s+python(?:\s+in\s+\w+)?:\s*$"
+    )
+
+    for start, line in enumerate(lines):
+        if line.startswith((" ", "\t")) or init_python.fullmatch(line) is None:
+            continue
+        body: list[str] = []
+        for candidate in lines[start + 1 :]:
+            if candidate and not candidate.startswith((" ", "\t")):
+                break
+            body.append(candidate)
+        if not body:
+            continue
+
+        tree = ast.parse(textwrap.dedent("\n".join(body)))
+        for statement in tree.body:
+            if not isinstance(statement, ast.Expr) or not isinstance(
+                statement.value, ast.Call
+            ):
+                continue
+            call = statement.value
+            if (
+                not isinstance(call.func, ast.Attribute)
+                or not isinstance(call.func.value, ast.Name)
+                or call.func.value.id != "build"
+                or call.func.attr not in {"classify", "documentation"}
+                or call.keywords
+            ):
+                continue
+            try:
+                arguments = tuple(ast.literal_eval(argument) for argument in call.args)
+            except (ValueError, TypeError):
+                continue
+            calls.append((call.func.attr, arguments))
+
+    return calls
+
+
+def literal_classification_rules(
+    calls: list[tuple[str, tuple[object, ...]]],
+) -> list[tuple[str, str | None]]:
+    """Return direct literal classify rules with supported Ren'Py targets."""
+    rules: list[tuple[str, str | None]] = []
+    for name, arguments in calls:
+        if (
+            name != "classify"
+            or len(arguments) != 2
+            or not isinstance(arguments[0], str)
+            or (arguments[1] is not None and not isinstance(arguments[1], str))
+        ):
+            continue
+        rules.append((arguments[0], arguments[1]))
+    return rules
+
+
+def renpy_pattern_matches(path: str, pattern: str) -> bool:
+    """Match one Ren'Py build pattern using the launcher's glob semantics."""
+    regex = ""
+    cursor = 0
+    while cursor < len(pattern):
+        if pattern.startswith("**", cursor):
+            regex += ".*"
+            cursor += 2
+        elif pattern[cursor] == "*":
+            regex += "[^/]*/?"
+            cursor += 1
+        elif pattern[cursor] == "[":
+            end = pattern.find("]", cursor + 1)
+            if end < 0:
+                regex += re.escape(pattern[cursor])
+                cursor += 1
+            else:
+                regex += pattern[cursor : end + 1]
+                cursor = end + 1
+        else:
+            regex += re.escape(pattern[cursor])
+            cursor += 1
+    compiled = re.compile(regex + "$", re.IGNORECASE)
+    return compiled.match(path) is not None or compiled.match("/" + path) is not None
+
+
+def first_literal_classification(
+    rules: list[tuple[str, str | None]], path: str
+) -> tuple[str, str | None] | None:
+    """Return the first source rule affecting *path*, preserving None targets."""
+    for pattern, target in rules:
+        if renpy_pattern_matches(path, pattern):
+            return pattern, target
+    return None
+
+
+def exclusion_probe_paths(pattern: str) -> tuple[str, ...]:
+    if pattern in {
+        "game/images/hd/**",
+        "game/images/backup_sd/**",
+        "game/images/webp_backup/**",
+    }:
+        directory = pattern.removesuffix("**")
+        return tuple(
+            directory + "probe" + extension
+            for extension in (".png", ".webp", ".jpg")
+        )
+    if pattern == "game/audio/narration/voice_test/**":
+        return (
+            "game/audio/narration/voice_test/probe.mp3",
+            "game/audio/narration/voice_test/probe.ogg",
+        )
+    if pattern == "game/audio/music/*_alt.mp3":
+        return ("game/audio/music/probe_alt.mp3",)
+    if pattern.endswith("/**"):
+        return (pattern.removesuffix("**") + "probe.txt",)
+    return (pattern,)
+
+
+def exclusion_order_violations(
+    rules: list[tuple[str, str | None]],
+    required_patterns: tuple[str, ...],
+) -> list[str]:
+    """Report approved exclusions shadowed by an earlier inclusion rule."""
+    violations: list[str] = []
+    for required in required_patterns:
+        positions = [
+            index
+            for index, rule in enumerate(rules)
+            if rule == (required, None)
+        ]
+        if len(positions) != 1:
+            continue
+        exclusion_index = positions[0]
+        probes = exclusion_probe_paths(required)
+        for pattern, target in rules[:exclusion_index]:
+            if target is None:
+                continue
+            if any(renpy_pattern_matches(probe, pattern) for probe in probes):
+                violations.append(f"{required} appears after {pattern}")
+                break
+    return violations
 
 
 def assigned_literal(source: str, name: str):
@@ -1035,6 +1265,179 @@ class NewGamePlusContractTests(unittest.TestCase):
             english_store,
             ENGLISH_NG_PLUS_UNLOCKS_CONTENT,
         )
+
+
+class PackagingParserGuardTests(unittest.TestCase):
+    def test_comments_and_strings_do_not_create_build_calls(self) -> None:
+        source = '''init python:
+    # build.classify("comment.png", None)
+    reference = "build.classify('string.png', None)"
+    build.documentation("README.txt")
+'''
+        self.assertEqual(
+            active_literal_build_calls(source),
+            [("documentation", ("README.txt",))],
+        )
+
+    def test_uncalled_helpers_and_disabled_branches_do_not_create_rules(self) -> None:
+        source = '''init python:
+    def add_decoy_rule():
+        build.classify("helper.png", None)
+    if False:
+        build.classify("disabled.png", None)
+    build.classify("active.png", None)
+'''
+        self.assertEqual(
+            active_literal_build_calls(source),
+            [("classify", ("active.png", None))],
+        )
+
+    def test_variable_arguments_and_helper_aliases_do_not_satisfy_literal_rules(self) -> None:
+        source = '''init python:
+    payload = "variable.png"
+    build.classify(payload, None)
+    classify = build.classify
+    classify("alias.png", None)
+    build.classify("literal.png", None)
+'''
+        self.assertEqual(
+            active_literal_build_calls(source),
+            [("classify", ("literal.png", None))],
+        )
+
+    def test_order_guard_rejects_an_inclusion_before_its_exclusion(self) -> None:
+        cases = (
+            ("game/test_game.rpyc", "game/**.rpyc"),
+            ("game/audio/music/*_alt.mp3", "game/**.mp3"),
+            ("game/images/hd/**", "game/**.png"),
+            ("logo.png", "**"),
+        )
+        for exclusion, inclusion in cases:
+            with self.subTest(exclusion=exclusion, inclusion=inclusion):
+                reversed_source = f'''init python:
+    build.classify("{inclusion}", "all")
+    build.classify("{exclusion}", None)
+'''
+                reversed_rules = literal_classification_rules(
+                    active_literal_build_calls(reversed_source)
+                )
+                self.assertEqual(
+                    exclusion_order_violations(reversed_rules, (exclusion,)),
+                    [f"{exclusion} appears after {inclusion}"],
+                )
+
+                correct_source = f'''init python:
+    build.classify("{exclusion}", None)
+    build.classify("{inclusion}", "all")
+'''
+                correct_rules = literal_classification_rules(
+                    active_literal_build_calls(correct_source)
+                )
+                self.assertEqual(
+                    exclusion_order_violations(correct_rules, (exclusion,)),
+                    [],
+                )
+
+    def test_first_match_guard_detects_protected_path_exclusions(self) -> None:
+        source = '''init python:
+    build.classify("game/images/**", None)
+    build.classify("old-game/**", None)
+    build.classify("README.txt", None)
+    build.classify("android-**", None)
+'''
+        rules = literal_classification_rules(active_literal_build_calls(source))
+        expected = {
+            PROTECTED_DYNAMIC_UI_PATHS[0]: ("game/images/**", None),
+            "old-game/script.rpyc": ("old-game/**", None),
+            "README.txt": ("README.txt", None),
+            PROTECTED_ANDROID_BUILD_INPUTS[0]: ("android-**", None),
+        }
+        for path, classification in expected.items():
+            with self.subTest(path=path):
+                self.assertEqual(
+                    first_literal_classification(rules, path),
+                    classification,
+                )
+
+
+class PackagingClassificationContractTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.calls = active_literal_build_calls(read_text("game/options.rpy"))
+        cls.rules = literal_classification_rules(cls.calls)
+
+    def test_approved_release_payload_has_one_direct_exclusion_rule_each(self) -> None:
+        counts = {
+            pattern: self.rules.count((pattern, None))
+            for pattern in APPROVED_PACKAGE_EXCLUSIONS
+        }
+        violations = {
+            pattern: count
+            for pattern, count in counts.items()
+            if count != 1
+        }
+        self.assertEqual(
+            violations,
+            {},
+            f"approved release exclusions need one direct rule each: {violations}",
+        )
+
+    def test_release_exclusions_precede_matching_inclusion_rules(self) -> None:
+        self.assertEqual(
+            exclusion_order_violations(self.rules, APPROVED_PACKAGE_EXCLUSIONS),
+            [],
+        )
+
+    def test_readme_is_directly_classified_for_windows_and_as_documentation(self) -> None:
+        readme_rules = [rule for rule in self.rules if rule[0] == "README.txt"]
+        self.assertEqual(readme_rules, [("README.txt", "windows")])
+        documentation_calls = [
+            arguments
+            for name, arguments in self.calls
+            if name == "documentation" and arguments == ("README.txt",)
+        ]
+        self.assertEqual(documentation_calls, [("README.txt",)])
+        self.assertEqual(
+            first_literal_classification(self.rules, "README.txt"),
+            ("README.txt", "windows"),
+        )
+
+    def test_old_game_compiler_inputs_are_not_excluded_by_source_rules(self) -> None:
+        violations = {}
+        for compiled in OLD_GAME.rglob("*.rpyc"):
+            relative = compiled.relative_to(ROOT).as_posix()
+            classification = first_literal_classification(self.rules, relative)
+            if classification is not None and classification[1] is None:
+                violations[relative] = classification[0]
+        self.assertEqual(violations, {})
+
+    def test_audited_dynamic_ui_paths_remain_included(self) -> None:
+        self.assertEqual(len(PROTECTED_DYNAMIC_UI_PATHS), 22)
+        missing = [
+            path for path in PROTECTED_DYNAMIC_UI_PATHS if not (ROOT / path).is_file()
+        ]
+        self.assertEqual(missing, [])
+        violations = {}
+        for path in PROTECTED_DYNAMIC_UI_PATHS:
+            classification = first_literal_classification(self.rules, path)
+            if classification is not None and classification[1] is None:
+                violations[path] = classification[0]
+        self.assertEqual(violations, {})
+
+    def test_android_icon_and_presplash_inputs_remain_available(self) -> None:
+        self.assertTrue(
+            set(PROTECTED_ANDROID_BUILD_INPUTS).isdisjoint(APPROVED_PACKAGE_EXCLUSIONS)
+        )
+        missing = [
+            path for path in PROTECTED_ANDROID_BUILD_INPUTS if not (ROOT / path).is_file()
+        ]
+        self.assertEqual(missing, [])
+        violations = {}
+        for path in PROTECTED_ANDROID_BUILD_INPUTS:
+            classification = first_literal_classification(self.rules, path)
+            if classification is not None and classification[1] is None:
+                violations[path] = classification[0]
+        self.assertEqual(violations, {})
 
 
 class OldGameSourceContractTests(unittest.TestCase):
