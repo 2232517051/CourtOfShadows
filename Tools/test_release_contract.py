@@ -43,6 +43,7 @@ APPROVED_ENGLISH_STATS = (
     "Reputation",
     "Intrigue",
 )
+APPROVED_SOUTHERN_OUTCOME_KEYS = ("free", "ruler", "fall", "outwit", "vassal")
 
 FIVE_ENDING_CLAIM = re.compile(
     r"(?:五|5)\s*(?:个|种)?\s*"
@@ -491,6 +492,27 @@ def assert_father_son_is_not_a_main_ending(source: str) -> None:
         raise AssertionError("Father/Son must remain outside main ending progress")
 
 
+def assert_southern_outcome_contract(source: str) -> None:
+    ending_info = assigned_literal(source, "_southern_ending_info")
+    keys = tuple(row[0] for row in ending_info)
+    if keys != APPROVED_SOUTHERN_OUTCOME_KEYS:
+        raise AssertionError(f"unexpected Southern outcome catalog: {keys}")
+    finish = python_function(source, "southern_finish")
+    finish_source = ast.unparse(finish)
+    if not re.search(
+        r"persistent\.southern_endings_seen\.add\(ending_key\)",
+        finish_source,
+    ):
+        raise AssertionError("Southern outcomes must use their own persistence set")
+    if re.search(
+        r"persistent\.endings_seen(?:\.(?:add|update)|\s*=)",
+        finish_source,
+    ):
+        raise AssertionError("Southern outcomes must not write main ending progress")
+    if "store.southern_outcome = ending_key" not in finish_source:
+        raise AssertionError("Southern outcomes must expose the current-run outcome")
+
+
 class VersionAndAndroidContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -591,6 +613,10 @@ class EndingCatalogContractTests(unittest.TestCase):
         self.assertIn("jump ending_father_son_epilogue", expansion)
         assert_father_son_is_not_a_main_ending(chapter_five + expansion)
 
+    def test_southern_outcomes_use_a_separate_five_key_catalog_and_progress_set(self) -> None:
+        southern = read_text("game/southern_expansion.rpy")
+        assert_southern_outcome_contract(southern)
+
 
 class EndingCatalogGuardTests(unittest.TestCase):
     def test_literal_reader_ignores_assignments_inside_multiline_strings(self) -> None:
@@ -605,6 +631,20 @@ class EndingCatalogGuardTests(unittest.TestCase):
     def test_father_son_guard_rejects_record_ending_registration(self) -> None:
         with self.assertRaises(AssertionError):
             assert_father_son_is_not_a_main_ending('record_ending("father_son")')
+
+    def test_southern_outcome_guard_rejects_main_ending_progress_write(self) -> None:
+        source = (
+            "init python:\n"
+            "    def southern_finish(ending_key, achievement):\n"
+            "        persistent.endings_seen.add(ending_key)\n"
+            "    _southern_ending_info = [\n"
+            '        ("free", "", "", "", ""), ("ruler", "", "", "", ""),\n'
+            '        ("fall", "", "", "", ""), ("outwit", "", "", "", ""),\n'
+            '        ("vassal", "", "", "", ""),\n'
+            "    ]\n"
+        )
+        with self.assertRaises(AssertionError):
+            assert_southern_outcome_contract(source)
 
     def test_literal_map_keys_reject_non_strings_and_unpacking(self) -> None:
         for expression in ('{"iron_lord": False, 1: False}', '{"iron_lord": False, **extra}'):
