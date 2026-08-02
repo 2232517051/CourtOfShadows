@@ -91,7 +91,12 @@ def assigned_literal(source: str, name: str):
             elif char == stack[-1]:
                 stack.pop()
                 if not stack:
-                    return ast.literal_eval(source[index : cursor + 1])
+                    try:
+                        return ast.literal_eval(source[index : cursor + 1])
+                    except (SyntaxError, ValueError) as exc:
+                        raise AssertionError(
+                            f"assignment for {name!r} is not a closed literal"
+                        ) from exc
             cursor += 1
         raise AssertionError(f"literal assigned to {name!r} is unterminated")
 
@@ -99,7 +104,10 @@ def assigned_literal(source: str, name: str):
     end = source.find(quote, index + len(quote))
     if end < 0:
         raise AssertionError(f"string assigned to {name!r} is unterminated")
-    return ast.literal_eval(source[index : end + len(quote)])
+    try:
+        return ast.literal_eval(source[index : end + len(quote)])
+    except (SyntaxError, ValueError) as exc:
+        raise AssertionError(f"assignment for {name!r} is not a string literal") from exc
 
 
 def python_function(source: str, name: str) -> ast.FunctionDef:
@@ -117,16 +125,25 @@ def python_function(source: str, name: str) -> ast.FunctionDef:
     return function
 
 
+def literal_dict_keys(dictionary: ast.Dict, subject: str) -> set[str]:
+    keys: list[str] = []
+    for key in dictionary.keys:
+        if key is None:
+            raise AssertionError(f"{subject} must not use dictionary unpacking")
+        if not isinstance(key, ast.Constant) or not isinstance(key.value, str):
+            raise AssertionError(f"{subject} contains a non-string key")
+        keys.append(key.value)
+    if len(keys) != len(set(keys)):
+        raise AssertionError(f"{subject} contains a duplicate key")
+    return set(keys)
+
+
 def assigned_dict_keys(function: ast.FunctionDef, name: str) -> set[str]:
     for node in ast.walk(function):
         if not isinstance(node, ast.Assign) or not isinstance(node.value, ast.Dict):
             continue
         if any(isinstance(target, ast.Name) and target.id == name for target in node.targets):
-            return {
-                key.value
-                for key in node.value.keys
-                if isinstance(key, ast.Constant) and isinstance(key.value, str)
-            }
+            return literal_dict_keys(node.value, name)
     raise AssertionError(f"dictionary assignment for {name!r} not found")
 
 
@@ -138,11 +155,149 @@ def returned_dict_keys(function: ast.FunctionDef) -> set[str]:
     ]
     if len(returns) != 1:
         raise AssertionError(f"expected one literal dictionary return, found {len(returns)}")
-    return {
-        key.value
-        for key in returns[0].keys
-        if isinstance(key, ast.Constant) and isinstance(key.value, str)
-    }
+    return literal_dict_keys(returns[0], f"return value of {function.name}")
+
+
+def init_python_tree_containing(source: str, marker: str) -> ast.Module:
+    """Parse the indented ``init python`` block that contains *marker*."""
+    lines = source.splitlines()
+    for start, line in enumerate(lines):
+        if line.strip() != "init python:" or line.startswith((" ", "\t")):
+            continue
+        body: list[str] = []
+        for candidate in lines[start + 1 :]:
+            if candidate and not candidate.startswith((" ", "\t")):
+                break
+            body.append(candidate)
+        block = "\n".join(body)
+        if marker in block:
+            return ast.parse(textwrap.dedent(block))
+    raise AssertionError(f"init python block containing {marker!r} not found")
+
+
+def _named_assignment(tree: ast.AST, name: str) -> ast.Assign:
+    assignments = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == name for target in node.targets)
+    ]
+    if len(assignments) != 1:
+        raise AssertionError(f"expected one assignment to {name!r}, found {len(assignments)}")
+    return assignments[0]
+
+
+def _subscript_key_domain(
+    key: ast.expr,
+    dynamic_domains: dict[str, set[str]],
+) -> set[str] | None:
+    if isinstance(key, ast.Constant) and isinstance(key.value, str):
+        return {key.value}
+    if isinstance(key, ast.Name):
+        return dynamic_domains.get(key.id)
+    if (
+        isinstance(key, ast.Subscript)
+        and isinstance(key.value, ast.Subscript)
+        and isinstance(key.value.value, ast.Name)
+        and key.value.value.id == "ranked"
+        and isinstance(key.slice, ast.Constant)
+        and key.slice.value == 1
+    ):
+        return dynamic_domains.get("route_id")
+    return None
+
+
+def validate_mapping_mutations(
+    tree: ast.AST,
+    name: str,
+    allowed_keys: set[str],
+    dynamic_domains: dict[str, set[str]] | None = None,
+) -> None:
+    """Reject map growth that cannot be proven to target an existing key."""
+    dynamic_domains = dynamic_domains or {}
+    initial = _named_assignment(tree, name)
+    if not isinstance(initial.value, ast.Dict):
+        raise AssertionError(f"initial {name!r} assignment is not a dictionary")
+    initial_keys = literal_dict_keys(initial.value, name)
+    if not initial_keys <= allowed_keys:
+        raise AssertionError(f"{name} initializes unknown keys: {initial_keys - allowed_keys}")
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == name and node is not initial:
+                    raise AssertionError(f"{name} is reassigned after its literal definition")
+                if not (
+                    isinstance(target, ast.Subscript)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == name
+                ):
+                    continue
+                domain = _subscript_key_domain(target.slice, dynamic_domains)
+                if domain is None:
+                    raise AssertionError(f"{name} uses an unknown subscript assignment")
+                if not domain <= allowed_keys:
+                    raise AssertionError(f"{name} assigns unknown keys: {domain - allowed_keys}")
+        elif isinstance(node, ast.AugAssign):
+            target = node.target
+            if (
+                isinstance(target, ast.Name)
+                and target.id == name
+            ) or (
+                isinstance(target, ast.Subscript)
+                and isinstance(target.value, ast.Name)
+                and target.value.id == name
+            ):
+                raise AssertionError(f"{name} uses an unchecked augmented update")
+        elif (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == name
+            and node.func.attr == "update"
+        ):
+            if len(node.args) > 1:
+                raise AssertionError(f"{name}.update has too many arguments")
+            update_keys: set[str] = set()
+            if node.args:
+                if not isinstance(node.args[0], ast.Dict):
+                    raise AssertionError(f"{name}.update uses an unknown mapping")
+                update_keys.update(literal_dict_keys(node.args[0], f"{name}.update"))
+            for keyword in node.keywords:
+                if keyword.arg is None:
+                    raise AssertionError(f"{name}.update uses dictionary unpacking")
+                update_keys.add(keyword.arg)
+            if not update_keys <= allowed_keys:
+                raise AssertionError(f"{name}.update adds unknown keys: {update_keys - allowed_keys}")
+
+
+def validate_sequence_is_literal_only(tree: ast.AST, name: str) -> None:
+    """Reject mutations that could make a literal catalog drift at runtime."""
+    initial = _named_assignment(tree, name)
+    if not isinstance(initial.value, (ast.List, ast.Tuple)):
+        raise AssertionError(f"initial {name!r} assignment is not a sequence")
+    mutators = {"append", "extend", "insert", "remove", "pop", "clear"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == name and node is not initial:
+                    raise AssertionError(f"{name} is reassigned after its literal definition")
+                if (
+                    isinstance(target, ast.Subscript)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == name
+                ):
+                    raise AssertionError(f"{name} is changed through a subscript")
+        elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id == name:
+            raise AssertionError(f"{name} uses an augmented update")
+        elif (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == name
+            and node.func.attr in mutators
+        ):
+            raise AssertionError(f"{name}.{node.func.attr} mutates the catalog")
 
 
 def renpy_screen(source: str, name: str) -> str:
@@ -216,8 +371,22 @@ class EndingCatalogContractTests(unittest.TestCase):
 
         catalog = assigned_literal(effects, "_ending_keys")
         info_keys = set(assigned_literal(effects, "_ending_info"))
+        effects_tree = init_python_tree_containing(effects, "_ending_info")
         route_function = python_function(difficulty, "get_finale_route_availability")
         route_keys = assigned_dict_keys(route_function, "routes")
+        ranked = _named_assignment(route_function, "ranked").value
+        if not isinstance(ranked, ast.List):
+            raise AssertionError("ranked ending routes must be a literal list")
+        ranked_route_keys = {
+            item.elts[1].value
+            for item in ranked.elts
+            if isinstance(item, ast.Tuple)
+            and len(item.elts) == 2
+            and isinstance(item.elts[1], ast.Constant)
+            and isinstance(item.elts[1].value, str)
+        }
+        self.assertEqual(len(ranked_route_keys), len(ranked.elts))
+        self.assertTrue(ranked_route_keys <= approved)
         ending_function = python_function(difficulty, "get_finale_ending_availability")
         availability_keys = returned_dict_keys(ending_function)
 
@@ -226,6 +395,49 @@ class EndingCatalogContractTests(unittest.TestCase):
         self.assertEqual(route_keys - {"resist"}, approved)
         self.assertEqual(route_keys - approved, {"resist"})
         self.assertEqual(availability_keys, approved)
+        validate_mapping_mutations(effects_tree, "_ending_info", approved)
+        validate_sequence_is_literal_only(effects_tree, "_ending_keys")
+        validate_mapping_mutations(
+            route_function,
+            "routes",
+            approved | {"resist"},
+            dynamic_domains={"route_id": ranked_route_keys},
+        )
+
+
+class EndingCatalogGuardTests(unittest.TestCase):
+    def test_literal_map_keys_reject_non_strings_and_unpacking(self) -> None:
+        for expression in ('{"iron_lord": False, 1: False}', '{"iron_lord": False, **extra}'):
+            dictionary = ast.parse(expression, mode="eval").body
+            self.assertIsInstance(dictionary, ast.Dict)
+            with self.subTest(expression=expression):
+                with self.assertRaises(AssertionError):
+                    literal_dict_keys(dictionary, "fixture")
+
+    def test_map_mutations_reject_unknown_subscripts_and_updates(self) -> None:
+        fixtures = (
+            "routes = {'iron_lord': False}\nroutes[unknown] = True",
+            "routes = {'iron_lord': False}\nroutes['tenth'] = True",
+            "routes = {'iron_lord': False}\nroutes.update(extra)",
+            "routes = {'iron_lord': False}\nroutes.update({'tenth': True})",
+        )
+        for source in fixtures:
+            with self.subTest(source=source):
+                with self.assertRaises(AssertionError):
+                    validate_mapping_mutations(
+                        ast.parse(source),
+                        "routes",
+                        {"iron_lord", "resist"},
+                    )
+
+    def test_map_mutations_allow_value_changes_for_existing_keys(self) -> None:
+        tree = ast.parse(
+            "routes = {'iron_lord': False, 'resist': False}\n"
+            "routes['iron_lord'] = True\n"
+            "routes['resist'] = True\n"
+            "routes.update({'iron_lord': False})"
+        )
+        validate_mapping_mutations(tree, "routes", {"iron_lord", "resist"})
 
 
 class PlayerFacingCopyContractTests(unittest.TestCase):
@@ -256,17 +468,40 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
         assert_contains_all(
             self,
             self.about,
-            ("五章", "九个主线结局", "隐藏尾声", *APPROVED_CHINESE_STATS),
+            ("艾登堡", "继承", "领主", "父亲", "五章", "九个主线结局", "隐藏尾声"),
             "About",
+        )
+        self.assertRegex(
+            self.about,
+            re.compile(r"(?:死因|死亡|遇害|骤逝).{0,24}(?:疑案|疑云|真相|谜)", re.DOTALL),
         )
         self.assertIn("v3.9.2", self.about)
 
-    def test_privacy_and_rating_copy_match_the_current_build(self) -> None:
+    def test_privacy_copy_matches_the_current_build(self) -> None:
         self.assertIn("版本：3.9.2", self.privacy)
         self.assertIn("更新日期：2026年8月", self.privacy)
-        self.assertNotIn("TapTap", self.rating)
-        self.assertNotIn('textbutton "去评分"', self.rating)
-        self.assertRegex(self.rating, r'textbutton "(?:关闭|知道了|下次再说)"')
+
+    def test_rating_copy_is_platform_neutral_and_close_only(self) -> None:
+        self.assertIn("平台", self.rating)
+        for platform_name in (
+            "TapTap",
+            "Steam",
+            "好游快爆",
+            "Google Play",
+            "GooglePlay",
+            "App Store",
+        ):
+            self.assertNotIn(platform_name.casefold(), self.rating.casefold())
+
+        labels = re.findall(r'(?m)^\s*textbutton "([^"]+)":', self.rating)
+        actions = re.findall(r"(?m)^\s*action\s+(.+)$", self.rating)
+        self.assertTrue(labels)
+        self.assertEqual(len(actions), len(labels))
+        for label in labels:
+            self.assertNotRegex(label, r"(?:去|前往|打开|跳转|留下).*(?:评分|评价|商店)")
+        for action in actions:
+            self.assertIn('Hide("rating_popup")', action)
+            self.assertNotRegex(action, r"\b(?:OpenURL|Jump|Call|Show)\s*\(")
 
     def test_pv_is_a_partial_preview_with_factual_platforms(self) -> None:
         self.assertIn("部分结局预览", self.pv)
@@ -334,6 +569,12 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             "隐藏结局",
             "hidden ending",
         )
+        rewrite_history = re.compile(
+            r"每(?:一)?个选择都将改写历史|"
+            r"\bevery (?:choice|decision) (?:will )?"
+            r"(?:change|changes|rewrite|rewrites|shape|shapes) history\b",
+            re.IGNORECASE,
+        )
         five_endings = re.compile(
             r"(?:五|5)\s*个?\s*(?:独特|截然不同|不同|distinct|unique)?\s*结局|"
             r"\bfive\s+(?:distinct\s+|unique\s+)?endings\b",
@@ -344,6 +585,7 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             with self.subTest(subject=subject):
                 for phrase in stale_exact:
                     self.assertNotIn(phrase.casefold(), source.casefold())
+                self.assertNotRegex(source, rewrite_history)
                 for line in source.splitlines():
                     if not five_endings.search(line):
                         continue
@@ -390,7 +632,6 @@ class NewGamePlusContractTests(unittest.TestCase):
 
     def test_current_ng_plus_copy_names_inherited_values_not_new_story(self) -> None:
         sources = {
-            "About": assigned_literal(read_text("game/options.rpy"), "define gui.about"),
             "Description": read_text("DESCRIPTION.txt"),
             "Developer note": read_text("DEVELOPER_NOTE.txt"),
             "Chinese store listing": read_text("store_assets/taptap_description.txt").split(
