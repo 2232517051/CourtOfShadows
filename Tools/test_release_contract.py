@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import ast
+import functools
 import json
 import os
 import re
@@ -133,6 +134,14 @@ PROTECTED_ANDROID_BUILD_INPUTS = (
     "android-icon_foreground.png",
     "android-presplash.png",
 )
+# Ren'Py 8.5.2 early base rules relevant to source-input protection. The
+# built-in old-game rule omits compatibility bytecode from archives; it does
+# not authorize a project rule that hides the compiler inputs themselves.
+RENPY_EARLY_INPUT_RULES = (
+    ("old-game/", None),
+    ("android-*.png", "android"),
+    ("android-*.jpg", "android"),
+)
 STALE_RELEASE_PHRASES = (
     "v3.2",
     "v3.1",
@@ -241,16 +250,25 @@ def executable_assignment_value(source: str, left_hand_side: str) -> str | None:
     return source[match.end() : line_end].strip()
 
 
-def active_literal_build_calls(source: str) -> list[tuple[str, tuple[object, ...]]]:
-    """Return direct literal ``build`` calls from top-level init-python bodies."""
-    calls: list[tuple[str, tuple[object, ...]]] = []
+def _init_python_blocks(source: str) -> list[tuple[int, int, ast.Module]]:
+    """Return init-python bodies in Ren'Py execution order."""
+    blocks: list[tuple[int, int, ast.Module]] = []
     lines = source.splitlines()
     init_python = re.compile(
-        r"^init(?:\s+-?\d+)?\s+python(?:\s+in\s+\w+)?:\s*$"
+        r"^init(?:\s+(-?\d+))?\s+python(?:\s+in\s+\w+)?:\s*$"
     )
+    init_offset_line = re.compile(r"^init\s+offset\s*=\s*(-?\d+)\s*$")
+    init_offset = 0
 
     for start, line in enumerate(lines):
-        if line.startswith((" ", "\t")) or init_python.fullmatch(line) is None:
+        if line.startswith((" ", "\t")):
+            continue
+        offset_match = init_offset_line.fullmatch(line)
+        if offset_match is not None:
+            init_offset = int(offset_match.group(1))
+            continue
+        match = init_python.fullmatch(line)
+        if match is None:
             continue
         body: list[str] = []
         for candidate in lines[start + 1 :]:
@@ -259,27 +277,130 @@ def active_literal_build_calls(source: str) -> list[tuple[str, tuple[object, ...
             body.append(candidate)
         if not body:
             continue
+        priority = int(match.group(1) or 0) + init_offset
+        blocks.append(
+            (priority, start, ast.parse(textwrap.dedent("\n".join(body))))
+        )
+    return sorted(blocks, key=lambda block: (block[0], block[1]))
 
-        tree = ast.parse(textwrap.dedent("\n".join(body)))
-        for statement in tree.body:
-            if not isinstance(statement, ast.Expr) or not isinstance(
+
+def _is_build_contract_attribute(node: ast.AST) -> bool:
+    return (
+        isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == "build"
+        and node.attr in {"classify", "documentation"}
+    )
+
+
+def _is_dynamic_build_contract_reference(node: ast.AST) -> bool:
+    if isinstance(node, ast.Attribute) and node.attr in {
+        "classify",
+        "documentation",
+    }:
+        return True
+    return (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "getattr"
+        and len(node.args) >= 2
+        and isinstance(node.args[1], ast.Constant)
+        and node.args[1].value in {"classify", "documentation"}
+    )
+
+
+def _function_contains_build_contract(function: ast.AST) -> bool:
+    return any(
+        _is_dynamic_build_contract_reference(node) for node in ast.walk(function)
+    )
+
+
+def _active_statement_contains_dynamic_build(
+    node: ast.AST, helper_names: set[str]
+) -> bool:
+    """Find build construction while leaving function/lambda bodies inert."""
+    pending = [node]
+    while pending:
+        current = pending.pop()
+        if current is not node and isinstance(
+            current, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
+        ):
+            continue
+        if _is_dynamic_build_contract_reference(current):
+            return True
+        if (
+            isinstance(current, ast.Call)
+            and isinstance(current.func, ast.Name)
+            and current.func.id in helper_names | {"classify", "documentation"}
+        ):
+            return True
+        pending.extend(ast.iter_child_nodes(current))
+    return False
+
+
+def _literal_build_call(call: ast.Call) -> tuple[str, tuple[object, ...]]:
+    if call.keywords:
+        raise AssertionError("active build calls must not use keyword arguments")
+    try:
+        arguments = tuple(ast.literal_eval(argument) for argument in call.args)
+    except (ValueError, TypeError) as exc:
+        raise AssertionError("active build calls must use literal arguments") from exc
+
+    name = call.func.attr
+    if name == "classify":
+        valid = (
+            len(arguments) == 2
+            and isinstance(arguments[0], str)
+            and (arguments[1] is None or isinstance(arguments[1], str))
+        )
+    else:
+        valid = len(arguments) == 1 and isinstance(arguments[0], str)
+    if not valid:
+        raise AssertionError(f"unsupported active build.{name} call: {arguments!r}")
+    return name, arguments
+
+
+def active_literal_build_calls(source: str) -> list[tuple[str, tuple[object, ...]]]:
+    """Return active direct literal build calls, failing closed on dynamics."""
+    blocks = _init_python_blocks(source)
+    helper_names = {
+        statement.name
+        for _, _, tree in blocks
+        for statement in ast.walk(tree)
+        if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and _function_contains_build_contract(statement)
+    }
+    calls: list[tuple[str, tuple[object, ...]]] = []
+
+    def process(statements: list[ast.stmt]) -> None:
+        for statement in statements:
+            if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if isinstance(statement, ast.If):
+                if isinstance(statement.test, ast.Constant) and isinstance(
+                    statement.test.value, bool
+                ):
+                    process(statement.body if statement.test.value else statement.orelse)
+                    continue
+                if _active_statement_contains_dynamic_build(statement, helper_names):
+                    raise AssertionError(
+                        "build classification inside an unknown condition is unsupported"
+                    )
+                continue
+            if isinstance(statement, ast.Expr) and isinstance(
                 statement.value, ast.Call
             ):
-                continue
-            call = statement.value
-            if (
-                not isinstance(call.func, ast.Attribute)
-                or not isinstance(call.func.value, ast.Name)
-                or call.func.value.id != "build"
-                or call.func.attr not in {"classify", "documentation"}
-                or call.keywords
-            ):
-                continue
-            try:
-                arguments = tuple(ast.literal_eval(argument) for argument in call.args)
-            except (ValueError, TypeError):
-                continue
-            calls.append((call.func.attr, arguments))
+                call = statement.value
+                if _is_build_contract_attribute(call.func):
+                    calls.append(_literal_build_call(call))
+                    continue
+            if _active_statement_contains_dynamic_build(statement, helper_names):
+                raise AssertionError(
+                    "active dynamic build classification construction is unsupported"
+                )
+
+    for _, _, tree in blocks:
+        process(tree.body)
 
     return calls
 
@@ -329,35 +450,107 @@ def renpy_pattern_matches(path: str, pattern: str) -> bool:
 
 def first_literal_classification(
     rules: list[tuple[str, str | None]], path: str
+) -> tuple[str, str | None]:
+    """Classify a file while modeling ancestor-directory traversal and pruning."""
+    parts = path.strip("/").split("/")
+    for length in range(1, len(parts)):
+        directory = "/".join(parts[:length]) + "/"
+        classification = _first_literal_rule_for_entry(rules, directory, is_dir=True)
+        if classification is not None and classification[1] is None:
+            return classification
+
+    classification = _first_literal_rule_for_entry(rules, path, is_dir=False)
+    if classification is not None:
+        return classification
+    return "**", "all"
+
+
+def _first_literal_rule_for_entry(
+    rules: list[tuple[str, str | None]], path: str, *, is_dir: bool
 ) -> tuple[str, str | None] | None:
-    """Return the first source rule affecting *path*, preserving None targets."""
+    bare_path = path.rstrip("/")
+    match_names = (bare_path + "/", bare_path) if is_dir else (path,)
     for pattern, target in rules:
-        if renpy_pattern_matches(path, pattern):
-            return pattern, target
+        if not any(renpy_pattern_matches(name, pattern) for name in match_names):
+            continue
+        if target is None and is_dir:
+            directory_prefix = pattern.rstrip("*")
+            if pattern != directory_prefix and any(
+                renpy_pattern_matches(name, directory_prefix)
+                for name in match_names
+            ):
+                continue
+        return pattern, target
     return None
 
 
+@functools.lru_cache(maxsize=1)
+def current_repository_files() -> tuple[str, ...]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode:
+        raise AssertionError(
+            "could not enumerate current repository files: "
+            + result.stderr.decode("utf-8", errors="replace")
+        )
+    return tuple(
+        sorted(
+            path.replace("\\", "/")
+            for path in result.stdout.decode("utf-8", errors="strict").split("\0")
+            if path
+        )
+    )
+
+
 def exclusion_probe_paths(pattern: str) -> tuple[str, ...]:
+    probes: set[str] = {
+        path
+        for path in current_repository_files()
+        if renpy_pattern_matches(path, pattern)
+    }
     if pattern in {
         "game/images/hd/**",
         "game/images/backup_sd/**",
         "game/images/webp_backup/**",
     }:
         directory = pattern.removesuffix("**")
-        return tuple(
+        probes.update(
             directory + "probe" + extension
             for extension in (".png", ".webp", ".jpg")
         )
-    if pattern == "game/audio/narration/voice_test/**":
-        return (
-            "game/audio/narration/voice_test/probe.mp3",
-            "game/audio/narration/voice_test/probe.ogg",
+    elif pattern == "game/audio/narration/voice_test/**":
+        probes.update(
+            {
+                "game/audio/narration/voice_test/probe.mp3",
+                "game/audio/narration/voice_test/probe.ogg",
+                "game/audio/narration/voice_test/probe.wav",
+            }
         )
-    if pattern == "game/audio/music/*_alt.mp3":
-        return ("game/audio/music/probe_alt.mp3",)
-    if pattern.endswith("/**"):
-        return (pattern.removesuffix("**") + "probe.txt",)
-    return (pattern,)
+    elif pattern == "game/audio/music/*_alt.mp3":
+        probes.add("game/audio/music/probe_alt.mp3")
+    elif pattern.endswith("/**"):
+        directory = pattern.removesuffix("**")
+        probes.update(
+            directory + "probe" + extension
+            for extension in (
+                ".txt",
+                ".md",
+                ".rpyc",
+                ".png",
+                ".webp",
+                ".jpg",
+                ".ogg",
+                ".mp3",
+                ".wav",
+            )
+        )
+    else:
+        probes.add(pattern)
+    return tuple(sorted(probes))
 
 
 def exclusion_order_violations(
@@ -1285,30 +1478,92 @@ class PackagingParserGuardTests(unittest.TestCase):
         build.classify("helper.png", None)
     if False:
         build.classify("disabled.png", None)
+    if True:
+        build.classify("true-branch.png", None)
     build.classify("active.png", None)
 '''
         self.assertEqual(
             active_literal_build_calls(source),
-            [("classify", ("active.png", None))],
+            [
+                ("classify", ("true-branch.png", None)),
+                ("classify", ("active.png", None)),
+            ],
         )
 
-    def test_variable_arguments_and_helper_aliases_do_not_satisfy_literal_rules(self) -> None:
-        source = '''init python:
+    def test_active_dynamic_build_construction_fails_closed(self) -> None:
+        fixtures = (
+            '''init python:
     payload = "variable.png"
     build.classify(payload, None)
+''',
+            '''init python:
     classify = build.classify
     classify("alias.png", None)
-    build.classify("literal.png", None)
+''',
+            '''init python:
+    build_alias = build
+    build_alias.classify("object-alias.png", None)
+''',
+            '''init python:
+    def add_rules():
+        build.classify("helper.png", None)
+    add_rules()
+''',
+            '''init python:
+    def add_aliased_rules():
+        build_alias.classify("helper-alias.png", None)
+    add_aliased_rules()
+''',
+            '''init python:
+    if runtime_condition:
+        build.classify("conditional.png", None)
+''',
+            '''init python:
+    for pattern in patterns:
+        build.classify(pattern, None)
+''',
+            '''init python:
+    try:
+        build.classify("try.png", None)
+    except Exception:
+        pass
+''',
+        )
+        for source in fixtures:
+            with self.subTest(source=source):
+                with self.assertRaises(AssertionError):
+                    active_literal_build_calls(source)
+
+    def test_init_priority_controls_call_order_before_source_order(self) -> None:
+        source = '''init offset = 20
+init -10 python:
+    build.classify("effective-ten-first.png", None)
+
+init offset = -20
+init 10 python:
+    build.classify("effective-minus-ten.png", "all")
+
+init offset = 0
+init 10 python:
+    build.classify("effective-ten-second.png", None)
 '''
         self.assertEqual(
             active_literal_build_calls(source),
-            [("classify", ("literal.png", None))],
+            [
+                ("classify", ("effective-minus-ten.png", "all")),
+                ("classify", ("effective-ten-first.png", None)),
+                ("classify", ("effective-ten-second.png", None)),
+            ],
         )
 
     def test_order_guard_rejects_an_inclusion_before_its_exclusion(self) -> None:
         cases = (
             ("game/test_game.rpyc", "game/**.rpyc"),
             ("game/audio/music/*_alt.mp3", "game/**.mp3"),
+            (
+                "game/audio/music/*_alt.mp3",
+                "game/audio/music/battle_prepare_alt.mp3",
+            ),
             ("game/images/hd/**", "game/**.png"),
             ("logo.png", "**"),
         )
@@ -1340,15 +1595,15 @@ class PackagingParserGuardTests(unittest.TestCase):
 
     def test_first_match_guard_detects_protected_path_exclusions(self) -> None:
         source = '''init python:
-    build.classify("game/images/**", None)
-    build.classify("old-game/**", None)
+    build.classify("game/images/ui/", None)
+    build.classify("old-game/", None)
     build.classify("README.txt", None)
     build.classify("android-**", None)
 '''
         rules = literal_classification_rules(active_literal_build_calls(source))
         expected = {
-            PROTECTED_DYNAMIC_UI_PATHS[0]: ("game/images/**", None),
-            "old-game/script.rpyc": ("old-game/**", None),
+            PROTECTED_DYNAMIC_UI_PATHS[0]: ("game/images/ui/", None),
+            "old-game/script.rpyc": ("old-game/", None),
             "README.txt": ("README.txt", None),
             PROTECTED_ANDROID_BUILD_INPUTS[0]: ("android-**", None),
         }
@@ -1358,6 +1613,24 @@ class PackagingParserGuardTests(unittest.TestCase):
                     first_literal_classification(rules, path),
                     classification,
                 )
+
+    def test_windows_only_ui_classification_is_not_all_platform(self) -> None:
+        source = '''init python:
+    build.classify("game/images/**", "windows")
+'''
+        rules = literal_classification_rules(active_literal_build_calls(source))
+        classification = first_literal_classification(
+            rules, PROTECTED_DYNAMIC_UI_PATHS[0]
+        )
+        violations = {
+            PROTECTED_DYNAMIC_UI_PATHS[0]: classification
+            for _ in (0,)
+            if classification is None or classification[1] != "all"
+        }
+        self.assertEqual(
+            violations,
+            {PROTECTED_DYNAMIC_UI_PATHS[0]: ("game/images/**", "windows")},
+        )
 
 
 class PackagingClassificationContractTests(unittest.TestCase):
@@ -1403,11 +1676,17 @@ class PackagingClassificationContractTests(unittest.TestCase):
         )
 
     def test_old_game_compiler_inputs_are_not_excluded_by_source_rules(self) -> None:
+        self.assertEqual(
+            first_literal_classification(
+                list(RENPY_EARLY_INPUT_RULES), "old-game/script.rpyc"
+            ),
+            ("old-game/", None),
+        )
         violations = {}
         for compiled in OLD_GAME.rglob("*.rpyc"):
             relative = compiled.relative_to(ROOT).as_posix()
             classification = first_literal_classification(self.rules, relative)
-            if classification is not None and classification[1] is None:
+            if classification[1] is None:
                 violations[relative] = classification[0]
         self.assertEqual(violations, {})
 
@@ -1420,8 +1699,8 @@ class PackagingClassificationContractTests(unittest.TestCase):
         violations = {}
         for path in PROTECTED_DYNAMIC_UI_PATHS:
             classification = first_literal_classification(self.rules, path)
-            if classification is not None and classification[1] is None:
-                violations[path] = classification[0]
+            if classification[1] != "all":
+                violations[path] = classification
         self.assertEqual(violations, {})
 
     def test_android_icon_and_presplash_inputs_remain_available(self) -> None:
@@ -1434,8 +1713,12 @@ class PackagingClassificationContractTests(unittest.TestCase):
         self.assertEqual(missing, [])
         violations = {}
         for path in PROTECTED_ANDROID_BUILD_INPUTS:
+            self.assertEqual(
+                first_literal_classification(list(RENPY_EARLY_INPUT_RULES), path),
+                ("android-*.png", "android"),
+            )
             classification = first_literal_classification(self.rules, path)
-            if classification is not None and classification[1] is None:
+            if classification[1] is None:
                 violations[path] = classification[0]
         self.assertEqual(violations, {})
 
