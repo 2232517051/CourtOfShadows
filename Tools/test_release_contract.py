@@ -15,6 +15,7 @@ import tempfile
 import textwrap
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1487,6 +1488,157 @@ class TrailerPathContractTests(unittest.TestCase):
         self.assertEqual(
             Path(trailer["OUT"]).resolve(),
             ROOT / "store_assets" / "trailer_v392.mp4",
+        )
+
+    def test_build_passes_separate_safe_anchors_to_the_final_card(self) -> None:
+        trailer = runpy.run_path(
+            str(ROOT / "Tools" / "make_trailer.py"),
+            run_name="trailer_final_card_wiring_probe",
+        )
+        build_globals = trailer["build"].__globals__
+        card_calls = []
+
+        def record_card(lines, subtitle, index, **kwargs):
+            card_calls.append((lines, subtitle, index, kwargs))
+            return f"card-{index}.png"
+
+        with tempfile.TemporaryDirectory() as temp_dir, mock.patch.dict(
+            build_globals,
+            {
+                "WORK": temp_dir,
+                "OUT": str(Path(temp_dir) / "trailer.mp4"),
+                "assert_glyph_coverage": lambda: None,
+                "compose_logo": lambda: "logo.png",
+                "compose_portraits": lambda: "portraits.png",
+                "compose_tideport": lambda: "tideport.png",
+                "compose_cover": lambda: "cover.png",
+                "make_card": record_card,
+            },
+        ), mock.patch.object(build_globals["subprocess"], "run") as ffmpeg:
+            trailer["build"]()
+
+        final_calls = [call for call in card_calls if call[2] == 5]
+        self.assertEqual(len(final_calls), 1)
+        self.assertEqual(
+            final_calls[0][3],
+            {
+                "y_top": trailer["FINAL_CARD_MAIN_Y_TOP"],
+                "big_size": 60,
+                "subtitle_y": trailer["FINAL_CARD_SUBTITLE_Y"],
+            },
+        )
+
+        segment_commands = [
+            call.args[0] for call in ffmpeg.call_args_list[:7]
+        ]
+        self.assertEqual(len(segment_commands), 7)
+        durations = (4.5, 6.0, 6.0, 6.0, 6.0, 6.0, 8.5)
+        for index, (command, duration) in enumerate(
+            zip(segment_commands, durations)
+        ):
+            with self.subTest(segment=index):
+                self.assertEqual(command.count("-loop"), 0 if index == 0 else 1)
+                self.assertEqual(
+                    command[command.index("-frames:v") + 1],
+                    str(int(duration * trailer["FPS"])),
+                )
+                self.assertEqual(
+                    command[command.index("-threads") + 1], "8"
+                )
+
+        final_command = ffmpeg.call_args_list[7].args[0]
+        self.assertEqual(
+            final_command[final_command.index("-threads") + 1], "8"
+        )
+
+    def test_final_card_layout_guard_rejects_each_unsafe_edge(self) -> None:
+        trailer = runpy.run_path(
+            str(ROOT / "Tools" / "make_trailer.py"),
+            run_name="trailer_final_card_guard_probe",
+        )
+        guard = trailer["validate_final_card_layout"]
+
+        guard(main_top=889, main_bottom=948, subtitle_top=969, subtitle_bottom=1006)
+        for unsafe, message in (
+            (
+                dict(
+                    main_top=883,
+                    main_bottom=948,
+                    subtitle_top=969,
+                    subtitle_bottom=1006,
+                ),
+                "wordmark",
+            ),
+            (
+                dict(
+                    main_top=889,
+                    main_bottom=954,
+                    subtitle_top=969,
+                    subtitle_bottom=1006,
+                ),
+                "gap",
+            ),
+            (
+                dict(
+                    main_top=889,
+                    main_bottom=948,
+                    subtitle_top=969,
+                    subtitle_bottom=1009,
+                ),
+                "bottom",
+            ),
+        ):
+            with self.subTest(message=message), self.assertRaisesRegex(
+                ValueError, message
+            ):
+                guard(**unsafe)
+
+    def test_make_card_runs_the_final_layout_guard(self) -> None:
+        trailer = runpy.run_path(
+            str(ROOT / "Tools" / "make_trailer.py"),
+            run_name="trailer_make_card_guard_probe",
+        )
+        make_card = trailer["make_card"]
+        make_card_globals = make_card.__globals__
+        image_font = make_card_globals["ImageFont"]
+        fonts = {
+            60: image_font.load_default(size=60),
+            34: image_font.load_default(size=34),
+        }
+        guard = mock.Mock()
+
+        with tempfile.TemporaryDirectory() as temp_dir, mock.patch.dict(
+            make_card_globals,
+            {"WORK": temp_dir, "validate_final_card_layout": guard},
+        ), mock.patch.object(
+            image_font,
+            "truetype",
+            side_effect=lambda _path, size, index=0: fonts[size],
+        ):
+            make_card(
+                ["A"],
+                "B",
+                5,
+                y_top=trailer["FINAL_CARD_MAIN_Y_TOP"],
+                big_size=60,
+                subtitle_y=trailer["FINAL_CARD_SUBTITLE_Y"],
+            )
+
+        main_box = fonts[60].getbbox("A")
+        subtitle_box = fonts[34].getbbox("B")
+        guard.assert_called_once_with(
+            main_top=(
+                trailer["FINAL_CARD_MAIN_Y_TOP"] + main_box[1] - 2
+            ),
+            main_bottom=(
+                trailer["FINAL_CARD_MAIN_Y_TOP"] + main_box[3] + 3
+            ),
+            subtitle_top=(
+                trailer["FINAL_CARD_SUBTITLE_Y"] + subtitle_box[1]
+            ),
+            subtitle_bottom=(
+                trailer["FINAL_CARD_SUBTITLE_Y"] + subtitle_box[3]
+            ),
         )
 
 
