@@ -4,7 +4,7 @@
 成片是"预告片"语言, 不含任何引擎 UI/对话框/菜单画面。
 
 用法: python make_trailer.py [--cards-only]   (字卡文案在 CARDS 里, copywriter 交付后替换)
-输出: <PROJ>/store_assets/trailer_v351.mp4  (1080p30, H.264+AAC)
+输出: <PROJ>/store_assets/trailer_v392.mp4  (1080p30, H.264+AAC)
 """
 import os
 import subprocess
@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 PROJ = r"E:/Projects/renpy-8.5.2-sdk/CourtOfShadows"
 WORK = os.path.join(os.environ.get("TEMP", "."), "cos_trailer_work")
-OUT = os.path.join(PROJ, "store_assets", "trailer_v351.mp4")
+OUT = os.path.join(PROJ, "store_assets", "trailer_v392.mp4")
 ## 字体必须用系统全量 msyh.ttc, **不能用 game/msyh.ttf** —— 后者被 prepare_release.py
 ## 子集化到只含游戏正文出现过的字。宣传文案的用字不在游戏语料里("豺"就中招了,
 ## 与 CLAUDE.md 记的"栀子缺字"同类)。预告片不进游戏包, 没有任何理由用子集。
@@ -31,7 +31,7 @@ CARDS = [
     ## 卡3 终稿: 用户在 5 版重写中亲自选定 C2("满盘皆输")。
     (["每句话都是筹码，说错一句满盘皆输"], None),
     (["盐路已断，南下潮汐港"], None),
-    (["五条南境线，八重命途"], None),
+    (["五条南境线，九重命途"], None),
     (["落子无悔，权谋不眠"], "权谋之庭 · TapTap 即刻入局"),
 ]
 

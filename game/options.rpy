@@ -6,22 +6,12 @@ define config.version = "3.9.2"
 define gui.show_name = True
 define gui.about = _p("""
 {b}权谋之庭 - Court of Shadows{/b}
-一款中世纪宫廷权谋视觉小说。
 
-你是新任艾登堡领主，在贵族、教会与王权的夹缝中求生。
-你的每一个选择都将影响权力的天平。
+父亲骤逝后，你继承艾登堡，成为这里的新领主。他的死因仍是一桩疑案，而贵族、教会与王权已经各自登门。
 
-{b}特色：{/b}
-· 五章完整剧情，35万字，约8-10小时游戏时长
-· 六维属性系统 + 角色好感度
-· 多条故事分支，五个独特结局 + 隐藏结局
-· 章间过渡、NPC深度支线、治理系统
-· 画廊、音乐室、成就、章节选择、收藏品
-· 隐藏成就与New Game+
-· 油画风格美术，暗黑皇家金主题UI
+全篇共五章，包含九个主线结局与一个隐藏尾声。你的选择会关上一些道路，也会打开另一些道路。
 
-{b}制作：{/b}
-v3.2 — 剧情修正 & Bug修复版
+{b}版本：{/b}v3.9.2
 
 基于 Ren'Py 引擎制作
 """)
@@ -82,7 +72,7 @@ init python:
     ## ── Android 配置 ──
     build.android_package = "com.xiaoyiai.courtofshadows"
     build.android_permissions = []
-    build.android_target_api = 33
+    build.android_target_api = 36
 
     ## ── iOS 配置 ──
     build.ios_bundle_identifier = "com.xiaoyiai.courtofshadows"
