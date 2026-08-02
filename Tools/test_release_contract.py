@@ -134,13 +134,18 @@ def executable_source(source: str) -> str:
 
 
 def executable_assignment_value(source: str, left_hand_side: str) -> str | None:
-    """Return one assignment value only when its left-hand side is executable."""
-    match = re.search(
+    """Return the value of the one executable assignment for a release field."""
+    matches = list(re.finditer(
         rf"(?m)^{re.escape(left_hand_side)}\s*=",
         executable_source(source),
-    )
-    if match is None:
+    ))
+    if not matches:
         return None
+    if len(matches) != 1:
+        raise AssertionError(
+            f"{left_hand_side} must have exactly one executable assignment"
+        )
+    match = matches[0]
     line_end = source.find("\n", match.end())
     if line_end < 0:
         line_end = len(source)
@@ -494,12 +499,8 @@ def assert_contains_all(
 
 
 def assert_father_son_is_not_a_main_ending(source: str) -> None:
-    if re.search(
-        r"""(?:persistent\.)?endings_seen\.(?:add|update)\([^)\n]*["']father_son["']|"""
-        r"""(?:record|unlock)_ending\(\s*["']father_son["']\s*\)""",
-        source,
-    ):
-        raise AssertionError("Father/Son must remain outside main ending progress")
+    block = renpy_label(source, "ending_father_son_epilogue")
+    assert_no_main_ending_progress_mutation(block, "Father/Son epilogue")
 
 
 def assert_southern_outcome_contract(source: str) -> None:
@@ -521,6 +522,34 @@ def assert_southern_outcome_contract(source: str) -> None:
         raise AssertionError("Southern outcomes must not write main ending progress")
     if "store.southern_outcome = ending_key" not in finish_source:
         raise AssertionError("Southern outcomes must expose the current-run outcome")
+    assert_no_main_ending_progress_mutation(
+        source,
+        "Southern expansion",
+    )
+
+
+def renpy_label(source: str, name: str) -> str:
+    match = re.search(
+        rf"(?ms)^label {re.escape(name)}:.*?(?=^label |\Z)",
+        source,
+    )
+    if match is None:
+        raise AssertionError(f"label {name!r} not found")
+    return match.group(0)
+
+
+def assert_no_main_ending_progress_mutation(source: str, subject: str) -> None:
+    code = executable_source(source)
+    mutation = re.search(
+        r"""\b(?:persistent\.)?endings_seen\s*(?:=|\.\s*(?:add|update|clear|"""
+        r"""pop|remove|discard|setdefault)\s*\()|"""
+        r"""\b(?:record|unlock|mark|complete)_ending\s*\(""",
+        code,
+    )
+    if mutation is not None:
+        raise AssertionError(
+            f"{subject} must not mutate main ending progress: {mutation.group(0)}"
+        )
 
 
 def assert_no_stale_release_phrases(source: str) -> None:
@@ -544,20 +573,28 @@ class VersionAndAndroidContractTests(unittest.TestCase):
         self.assertEqual(self.android["version"], APPROVED_VERSION)
 
     def test_version_and_android_contract_reject_multiline_string_decoys(self) -> None:
-        self.options = (
+        fixture = (
             'reference = """\n'
             'define config.version = "3.9.2"\n'
             '    build.android_package = "com.xiaoyiai.courtofshadows"\n'
             '    build.android_target_api = 36\n'
             '"""\n'
+            'define config.version = "3.9.2"\n'
+            '    build.android_package = "com.xiaoyiai.courtofshadows"\n'
+            '    build.android_target_api = 36\n'
             'define config.version = "0.0.0"\n'
             '    build.android_package = "example.wrong"\n'
             '    build.android_target_api = 1\n'
         )
-        with self.assertRaises(AssertionError):
-            self.test_config_and_android_versions_match_392()
-        with self.assertRaises(AssertionError):
-            self.test_android_package_and_api_agree_with_build_source()
+        original_options = self.options
+        self.options = fixture
+        try:
+            with self.assertRaises(AssertionError):
+                self.test_config_and_android_versions_match_392()
+            with self.assertRaises(AssertionError):
+                self.test_android_package_and_api_agree_with_build_source()
+        finally:
+            self.options = original_options
 
     def test_android_package_and_api_agree_with_build_source(self) -> None:
         source_package = executable_assignment_value(
@@ -646,18 +683,25 @@ class EndingCatalogGuardTests(unittest.TestCase):
 
     def test_father_son_guard_rejects_record_ending_registration(self) -> None:
         with self.assertRaises(AssertionError):
-            assert_father_son_is_not_a_main_ending('record_ending("father_son")')
+            assert_father_son_is_not_a_main_ending(
+                'label ending_father_son_epilogue:\n'
+                '    $ ending_key = "father_son"\n'
+                '    $ record_ending(ending_key)\n'
+            )
 
     def test_southern_outcome_guard_rejects_main_ending_progress_write(self) -> None:
         source = (
             "init python:\n"
             "    def southern_finish(ending_key, achievement):\n"
-            "        persistent.endings_seen.add(ending_key)\n"
+            "        persistent.southern_endings_seen.add(ending_key)\n"
+            "        store.southern_outcome = ending_key\n"
             "    _southern_ending_info = [\n"
             '        ("free", "", "", "", ""), ("ruler", "", "", "", ""),\n'
             '        ("fall", "", "", "", ""), ("outwit", "", "", "", ""),\n'
             '        ("vassal", "", "", "", ""),\n'
             "    ]\n"
+            "    def unrelated_southern_code():\n"
+            "        persistent.endings_seen.add('iron_lord')\n"
         )
         with self.assertRaises(AssertionError):
             assert_southern_outcome_contract(source)
