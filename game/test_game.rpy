@@ -579,6 +579,8 @@ testsuite test_release_metadata_render:
 
     testcase production_privacy_policy_renders_and_accept_returns_to_main_menu:
         run Start("test_release_metadata_privacy_fixture") until screen "privacy_policy_screen" timeout 4.0
+        $ persistent.privacy_agreed = False
+        assert eval (not persistent.privacy_agreed)
         pause 2.0
         screenshot "release_metadata_privacy"
         scroll amount 20 pos (0.6, 0.45)
