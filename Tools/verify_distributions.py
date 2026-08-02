@@ -6,15 +6,19 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import hashlib
+import io
 import os
 from pathlib import Path, PurePosixPath
+import pickletools
 import re
 import shutil
 import stat
+import struct
 import subprocess
 import sys
 from typing import Callable, Iterable, Mapping
 import zipfile
+import zlib
 
 try:
     from test_release_contract import (
@@ -49,11 +53,89 @@ REQUIRED_WINDOWS_PATHS = {
     "README.txt",
 }
 # Fixed Ren'Py 8.5.2 / Court of Shadows 3.9.2 runtime contract. Engine upgrades
-# must deliberately refresh both values from a reviewed distribution.
+# must deliberately refresh the runtime, common-cache, and source-map constants.
 EXPECTED_WINDOWS_RUNTIME_COUNT = 1377
 EXPECTED_WINDOWS_RUNTIME_FINGERPRINT = (
-    "b3abb988b8c8f4bdc43c4243b25a65100200e0dcea012cdb3bc666d524446cc8"
+    "cebc3d5c093063219dd1d40da28790a2f8bd12dc6777592f6fdb1f51b01b4dab"
 )
+RPYC_MAGIC = b"_2025-07-06"
+RPYC2_HEADER = b"RENPY RPC2"
+MD5_DIGEST_SIZE = 16
+RPYC2_TABLE_SIZE = 3 * 12
+RPYC2_DATA_START = len(RPYC2_HEADER) + RPYC2_TABLE_SIZE
+MAX_COMPILED_COMMON_BYTES = 4 * 1024 * 1024
+ACTIVE_NAME_VERSION_WINDOW = 6_000
+# These counts and path hashes were measured from two independent 3.9.2 builds.
+# They make the narrow time-field normalization below fail closed if Ren'Py's
+# common AST shape or source mapping changes.
+EXPECTED_ACTIVE_COMMON_PATHS_SHA256 = (
+    "26ed1b5ad47dfc9670ebc5fac3d7e30fc3e1b26637372c3169b5bcaaca0afb80"
+)
+EXPECTED_COMPILED_COMMON_COUNT = 86
+EXPECTED_CURRENT_RPC2_COUNT = 76
+EXPECTED_ACTIVE_COMMON_COUNT = 66
+EXPECTED_ACTIVE_NAME_VERSION_COUNT = 223
+EXPECTED_CORE_NAME_SERIAL_COUNT = 199
+EXPECTED_MODULE_NAME_SERIAL_COUNT = 23
+EXPECTED_STANDARD_SCREEN_SERIAL_COUNT = 832
+EXPECTED_DEVELOPER_SCREEN_SERIAL_COUNT = 206
+EXPECTED_CURRENT_SOURCE_KINDS = {
+    "rpy": 57,
+    "ren_py": 4,
+    "rpym": 15,
+}
+STRICT_LEGACY_COMMON = {
+    "renpy/common/_layout/grouped_navigation.rpymc": (
+        1930,
+        0x8F7CC503,
+        "e1a802979db293f498e48a8f70457b6926af82e7d4216014c903a79c57283546",
+    ),
+    "renpy/common/_layout/imagemap_common.rpymc": (
+        2532,
+        0x5B34D789,
+        "37b1e5e78f32f565753a1091a825036e532a4b423aa11fad9ae7cc79a25a06f6",
+    ),
+    "renpy/common/_layout/imagemap_load_save.rpymc": (
+        2616,
+        0xC8EE6E6D,
+        "fed6c7be2d26da3a5b18fb6f02afe87c495a7499f368d7c79f5bf9c9df3e35bc",
+    ),
+    "renpy/common/_layout/imagemap_main_menu.rpymc": (
+        1924,
+        0x07D5194C,
+        "8fd09d94019a003bd17222ded34fead4efa8574f24d6b6a9afaadc805cc8de03",
+    ),
+    "renpy/common/_layout/imagemap_navigation.rpymc": (
+        868,
+        0xBDA8FBE3,
+        "dde0402ee3661dabc0a65cff161f1d4d45728e1c98467fd58fc9c3ed2d0213df",
+    ),
+    "renpy/common/_layout/imagemap_preferences.rpymc": (
+        1437,
+        0xEE6C2A12,
+        "3828deb4048ddbcd2fbc8018cf076c6208654566d50ce143117e46a8b2409e6d",
+    ),
+    "renpy/common/_layout/imagemap_yesno_prompt.rpymc": (
+        1592,
+        0xC528C787,
+        "a9b5868582db226cf726f05689d1da96db8184cd812121bad59f9fbb50e8e8e0",
+    ),
+    "renpy/common/_layout/screen_joystick_preferences.rpymc": (
+        1290,
+        0x496C65A8,
+        "36cb1a9b348fa4452f338114df9e77850fe7d41ab6d5887379ce0e974b0e3fa8",
+    ),
+    "renpy/common/_layout/scrolling_load_save.rpymc": (
+        2189,
+        0xD58F1DA6,
+        "7735108182301226b18415327c80104b8d8af39d199c243cd1f28b4a25fa53e3",
+    ),
+    "renpy/common/_layout/two_column_preferences.rpymc": (
+        1038,
+        0x06D7B862,
+        "a7bf2ae79ac83ef3e56cf6fa825f5db6c216e9251a78020053561690cb3f6f72",
+    ),
+}
 WINDOWS_INVALID_COMPONENT_CHARS = frozenset('<>:"|?*')
 WINDOWS_RESERVED_BASENAMES = frozenset(
     {"con", "prn", "aux", "nul"}
@@ -91,6 +173,34 @@ class ArchiveMember:
     file_size: int
     crc32: int
     is_directory: bool
+
+
+@dataclass(frozen=True)
+class CompiledCommonRecord:
+    """A reviewed semantic fingerprint for one common compiled cache."""
+
+    kind: str
+    digest: str
+
+
+@dataclass(frozen=True)
+class _KeyedInteger:
+    operation_index: int
+    key: str
+    value: int
+
+
+@dataclass(frozen=True)
+class _ParsedCompiledPickle:
+    raw: bytes
+    operations: tuple[tuple[object, object, int], ...]
+    keyed_integers: tuple[_KeyedInteger, ...]
+
+
+@dataclass(frozen=True)
+class _ParsedRpc2Common:
+    source_md5: bytes
+    parsed_pickle: _ParsedCompiledPickle
 
 
 ArchiveMemberInput = ArchiveMember | tuple[str, bool]
@@ -304,12 +414,520 @@ def _is_windows_runtime_path(relative: str) -> bool:
     )
 
 
+def _is_compiled_common(relative: str) -> bool:
+    folded = relative.casefold()
+    return folded.startswith("renpy/common/") and folded.endswith(
+        (".rpyc", ".rpymc")
+    )
+
+
+def _decompress_compiled_slot(payload: bytes, member_name: str, slot: int) -> bytes:
+    decompressor = zlib.decompressobj()
+    try:
+        result = decompressor.decompress(payload, MAX_COMPILED_COMMON_BYTES + 1)
+        if len(result) > MAX_COMPILED_COMMON_BYTES or decompressor.unconsumed_tail:
+            raise VerificationError(
+                f"compiled common slot exceeds the decompression limit: {member_name} slot {slot}"
+            )
+        result += decompressor.flush(MAX_COMPILED_COMMON_BYTES + 1 - len(result))
+    except zlib.error as exc:
+        raise VerificationError(
+            f"compiled common slot is not valid zlib data: {member_name} slot {slot}: {exc}"
+        ) from exc
+    if (
+        len(result) > MAX_COMPILED_COMMON_BYTES
+        or not decompressor.eof
+        or decompressor.unused_data
+        or decompressor.unconsumed_tail
+    ):
+        raise VerificationError(
+            f"compiled common slot has trailing, truncated, or oversized zlib data: {member_name} slot {slot}"
+        )
+    return result
+
+
+def _inspect_compiled_pickle(raw: bytes, member_name: str) -> _ParsedCompiledPickle:
+    try:
+        # dis() performs pickle stack and memo validation without constructing
+        # or importing any object from the untrusted pickle.
+        pickletools.dis(raw, out=io.StringIO())
+        operations = tuple(pickletools.genops(raw))
+    except Exception as exc:
+        raise VerificationError(
+            f"compiled common slot is not a valid static pickle: {member_name}: {exc}"
+        ) from exc
+    if (
+        not operations
+        or operations[-1][0].name != "STOP"
+        or operations[-1][2] + 1 != len(raw)
+    ):
+        raise VerificationError(
+            f"compiled common pickle does not end exactly at STOP: {member_name}"
+        )
+
+    string_operations = {
+        "SHORT_BINUNICODE",
+        "BINUNICODE",
+        "BINUNICODE8",
+        "UNICODE",
+        "SHORT_BINSTRING",
+        "BINSTRING",
+        "STRING",
+    }
+    get_operations = {"BINGET", "LONG_BINGET", "GET"}
+    put_operations = {"BINPUT", "LONG_BINPUT", "PUT"}
+    integer_operations = {
+        "BININT",
+        "BININT1",
+        "BININT2",
+        "LONG",
+        "LONG1",
+        "LONG4",
+        "INT",
+    }
+    identifier_keys = {"name_version", "name_serial", "serial"}
+    unknown = object()
+    memo: dict[int, object] = {}
+    top: object = unknown
+    candidate_key: str | None = None
+    keyed_integers: list[_KeyedInteger] = []
+
+    for operation_index, (operation, argument, _position) in enumerate(operations):
+        name = operation.name
+        if name in string_operations:
+            top = argument
+            candidate_key = argument if argument in identifier_keys else None
+        elif name in get_operations:
+            top = memo.get(int(argument), unknown)
+            candidate_key = top if top in identifier_keys else None
+        elif name == "MEMOIZE":
+            memo[len(memo)] = top
+        elif name in put_operations:
+            memo[int(argument)] = top
+        elif name in integer_operations and candidate_key is not None:
+            keyed_integers.append(
+                _KeyedInteger(operation_index, candidate_key, int(argument))
+            )
+            top = unknown
+            candidate_key = None
+        else:
+            top = unknown
+            candidate_key = None
+
+    return _ParsedCompiledPickle(raw, operations, tuple(keyed_integers))
+
+
+def _parse_rpc2_common(payload: bytes, member_name: str) -> _ParsedRpc2Common:
+    minimum_size = RPYC2_DATA_START + 2 + MD5_DIGEST_SIZE
+    if len(payload) < minimum_size or not payload.startswith(RPYC2_HEADER):
+        raise VerificationError(f"compiled common member is not RPC2: {member_name}")
+
+    try:
+        table = tuple(
+            struct.unpack_from("<III", payload, len(RPYC2_HEADER) + index * 12)
+            for index in range(3)
+        )
+    except struct.error as exc:
+        raise VerificationError(
+            f"compiled common RPC2 table is truncated: {member_name}"
+        ) from exc
+
+    slot_1, slot_2, terminator = table
+    trailer_size = MD5_DIGEST_SIZE
+    valid_layout = (
+        slot_1[0] == 1
+        and slot_1[1] == RPYC2_DATA_START
+        and slot_1[2] > 0
+        and slot_2[0] == 2
+        and slot_2[1] == slot_1[1] + slot_1[2]
+        and slot_2[2] > 0
+        and terminator == (0, 0, 0)
+        and slot_2[1] + slot_2[2] + trailer_size == len(payload)
+    )
+    if not valid_layout:
+        raise VerificationError(
+            f"compiled common RPC2 slots are not contiguous [1, 2, 0]: {member_name}"
+        )
+
+    raw_slots = []
+    for slot, start, length in (slot_1, slot_2):
+        raw_slots.append(
+            _decompress_compiled_slot(
+                payload[start : start + length], member_name, slot
+            )
+        )
+    if raw_slots[0] != raw_slots[1]:
+        raise VerificationError(
+            f"compiled common RPC2 slots disagree after decompression: {member_name}"
+        )
+    parsed_pickle = _inspect_compiled_pickle(raw_slots[0], member_name)
+    return _ParsedRpc2Common(payload[-trailer_size:], parsed_pickle)
+
+
+def _compiled_source_candidates(relative: str) -> tuple[tuple[str, str], ...]:
+    if relative.casefold().endswith(".rpymc"):
+        return ((relative[:-1], "rpym"),)
+    return (
+        (relative[:-1], "rpy"),
+        (relative[:-5] + "_ren.py", "ren_py"),
+    )
+
+
+def _path_set_sha256(paths: Iterable[str]) -> str:
+    payload = "".join(path + "\n" for path in sorted(paths)).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _is_developer_common(relative: str) -> bool:
+    return relative.casefold().startswith("renpy/common/_developer/")
+
+
+def _is_module_common(relative: str) -> bool:
+    folded = relative.casefold()
+    return folded.startswith(("renpy/common/_developer/", "renpy/common/_layout/"))
+
+
+def _canonical_compiled_pickle_digest(
+    relative: str,
+    parsed: _ParsedRpc2Common,
+    *,
+    active_name_version: int | None,
+    screen_serial_minima: Mapping[str, int],
+    module_name_serial_minimum: int | None,
+) -> str:
+    keyed = parsed.parsed_pickle.keyed_integers
+    normalized: dict[int, bytes] = {}
+    screen_group = "developer" if _is_developer_common(relative) else "standard"
+
+    for record_index, record in enumerate(keyed):
+        operation = parsed.parsed_pickle.operations[record.operation_index][0]
+        token: str | None = None
+        if record.key == "name_version" and record.value == active_name_version:
+            token = f"name_version|{operation.name}|active"
+        elif (
+            record.key == "name_serial"
+            and active_name_version is not None
+            and record_index > 0
+            and keyed[record_index - 1].key == "name_version"
+            and keyed[record_index - 1].value == active_name_version
+            and _is_module_common(relative)
+        ):
+            # Module caches shift this generated serial block between otherwise
+            # identical builds; retain every within-block offset and duplicate.
+            if module_name_serial_minimum is None:
+                raise VerificationError(
+                    f"compiled common module name serial has no normalization base: {relative}"
+                )
+            token = (
+                f"name_serial|{operation.name}|"
+                f"{record.value - module_name_serial_minimum}"
+            )
+        elif record.key == "serial":
+            minimum = screen_serial_minima.get(screen_group)
+            if minimum is None:
+                raise VerificationError(
+                    f"compiled common screen serial has no {screen_group} base: {relative}"
+                )
+            token = f"serial|{operation.name}|{record.value - minimum}"
+        if token is not None:
+            normalized[record.operation_index] = token.encode("ascii")
+
+    digest = hashlib.sha256()
+    digest.update(relative.encode("utf-8"))
+    digest.update(b"\0RPC2\0")
+    digest.update(parsed.source_md5)
+    for operation_index, (_operation, _argument, position) in enumerate(
+        parsed.parsed_pickle.operations
+    ):
+        next_position = (
+            parsed.parsed_pickle.operations[operation_index + 1][2]
+            if operation_index + 1 < len(parsed.parsed_pickle.operations)
+            else len(parsed.parsed_pickle.raw)
+        )
+        replacement = normalized.get(operation_index)
+        if replacement is None:
+            piece = parsed.parsed_pickle.raw[position:next_position]
+            digest.update(b"R")
+            digest.update(len(piece).to_bytes(8, "big"))
+            digest.update(piece)
+        else:
+            digest.update(b"N")
+            digest.update(len(replacement).to_bytes(4, "big"))
+            digest.update(replacement)
+    return digest.hexdigest()
+
+
+def inspect_compiled_common_contract(
+    path: Path,
+    members: Iterable[ArchiveMember] | None = None,
+    *,
+    require_release_contract: bool = True,
+) -> dict[str, CompiledCommonRecord]:
+    """Validate and semantically fingerprint Windows common bytecode caches."""
+    path = Path(path)
+    verified_members = list(members) if members is not None else inspect_archive(path)
+    prefix = WINDOWS_ROOT + "/"
+    compiled_paths = sorted(
+        member.name[len(prefix) :]
+        for member in verified_members
+        if not member.is_directory
+        and member.name.startswith(prefix)
+        and _is_compiled_common(member.name[len(prefix) :])
+    )
+    if not compiled_paths:
+        return {}
+    if require_release_contract and len(compiled_paths) != EXPECTED_COMPILED_COMMON_COUNT:
+        raise VerificationError(
+            "compiled common path count changed: "
+            f"{len(compiled_paths)}/{EXPECTED_COMPILED_COMMON_COUNT}"
+        )
+    if require_release_contract and not set(STRICT_LEGACY_COMMON).issubset(
+        compiled_paths
+    ):
+        missing = sorted(set(STRICT_LEGACY_COMMON) - set(compiled_paths))
+        raise VerificationError(
+            f"strict legacy common paths are missing: {', '.join(missing)}"
+        )
+
+    try:
+        with zipfile.ZipFile(path) as archive:
+            info_by_relative = {
+                info.orig_filename[len(prefix) :]: info
+                for info in archive.infolist()
+                if not info.is_dir() and info.orig_filename.startswith(prefix)
+            }
+            parsed: dict[str, _ParsedRpc2Common] = {}
+            records: dict[str, CompiledCommonRecord] = {}
+            source_kinds: dict[str, int] = {"rpy": 0, "ren_py": 0, "rpym": 0}
+
+            for relative in compiled_paths:
+                info = info_by_relative.get(relative)
+                if info is None:
+                    raise VerificationError(
+                        f"compiled common member disappeared during inspection: {relative}"
+                    )
+                if info.file_size > MAX_COMPILED_COMMON_BYTES:
+                    raise VerificationError(
+                        f"compiled common member exceeds the size limit: {relative}"
+                    )
+                payload = archive.read(info)
+                legacy = STRICT_LEGACY_COMMON.get(relative)
+                if legacy is not None:
+                    expected_size, expected_crc, expected_sha256 = legacy
+                    actual_sha256 = hashlib.sha256(payload).hexdigest()
+                    if (
+                        info.file_size != expected_size
+                        or info.CRC != expected_crc
+                        or actual_sha256 != expected_sha256
+                    ):
+                        raise VerificationError(
+                            f"strict legacy common cache changed: {relative}"
+                        )
+                    records[relative] = CompiledCommonRecord(
+                        "compiled-common-legacy",
+                        f"{info.file_size}:{info.CRC:08x}:{actual_sha256}",
+                    )
+                    continue
+
+                candidates = [
+                    (source, source_kind)
+                    for source, source_kind in _compiled_source_candidates(relative)
+                    if source in info_by_relative
+                ]
+                if len(candidates) != 1:
+                    raise VerificationError(
+                        "compiled common source mapping is not unique: "
+                        f"{relative} -> {[source for source, _kind in candidates]}"
+                    )
+                source, source_kind = candidates[0]
+                parsed_common = _parse_rpc2_common(payload, relative)
+                source_payload = archive.read(info_by_relative[source])
+                # MD5 is part of Ren'Py's on-disk RPC2 format, not a security
+                # primitive used by this verifier.
+                expected_source_md5 = hashlib.md5(
+                    source_payload + RPYC_MAGIC, usedforsecurity=False
+                ).digest()
+                if parsed_common.source_md5 != expected_source_md5:
+                    raise VerificationError(
+                        f"compiled common source MD5 does not match {source}: {relative}"
+                    )
+                source_kinds[source_kind] += 1
+                parsed[relative] = parsed_common
+
+            if require_release_contract:
+                if len(parsed) != EXPECTED_CURRENT_RPC2_COUNT:
+                    raise VerificationError(
+                        "current RPC2 common count changed: "
+                        f"{len(parsed)}/{EXPECTED_CURRENT_RPC2_COUNT}"
+                    )
+                if source_kinds != EXPECTED_CURRENT_SOURCE_KINDS:
+                    raise VerificationError(
+                        f"compiled common source-kind mapping changed: {source_kinds}"
+                    )
+
+            screen_serials: dict[str, list[int]] = {
+                "standard": [],
+                "developer": [],
+            }
+            for relative, parsed_common in sorted(parsed.items()):
+                group = "developer" if _is_developer_common(relative) else "standard"
+                screen_serials[group].extend(
+                    record.value
+                    for record in parsed_common.parsed_pickle.keyed_integers
+                    if record.key == "serial"
+                )
+            standard_serials = screen_serials["standard"]
+            all_screen_serials = standard_serials + screen_serials["developer"]
+            if parsed and not standard_serials:
+                raise VerificationError(
+                    "compiled common contract has no standard screen serial base"
+                )
+            if len(all_screen_serials) != len(set(all_screen_serials)):
+                raise VerificationError(
+                    "compiled common screen serials are not globally unique"
+                )
+            if require_release_contract:
+                if (
+                    len(screen_serials["standard"])
+                    != EXPECTED_STANDARD_SCREEN_SERIAL_COUNT
+                    or len(screen_serials["developer"])
+                    != EXPECTED_DEVELOPER_SCREEN_SERIAL_COUNT
+                ):
+                    raise VerificationError(
+                        "compiled common screen-serial counts changed: "
+                        f"standard={len(screen_serials['standard'])} "
+                        f"developer={len(screen_serials['developer'])}"
+                    )
+                ordered_standard = sorted(screen_serials["standard"])
+                if ordered_standard != list(
+                    range(ordered_standard[0], ordered_standard[-1] + 1)
+                ):
+                    raise VerificationError(
+                        "standard compiled common screen serials are no longer contiguous"
+                    )
+
+            screen_serial_minima = {
+                group: min(values)
+                for group, values in screen_serials.items()
+                if values
+            }
+            # renpy.sl2.slast seeds serial with int(time.time() * 1_000_000),
+            # while Script.assign_names derives name_version from the same run's
+            # centisecond clock. Only the one nearby version per file is active.
+            name_version_base = (
+                (min(standard_serials) // 10_000) & 0x7FFFFFFF
+                if standard_serials
+                else None
+            )
+            active_versions: dict[str, int] = {}
+            for relative, parsed_common in sorted(parsed.items()):
+                candidates = {
+                    record.value
+                    for record in parsed_common.parsed_pickle.keyed_integers
+                    if record.key == "name_version"
+                    and name_version_base is not None
+                    and 0
+                    <= ((record.value - name_version_base) & 0x7FFFFFFF)
+                    < ACTIVE_NAME_VERSION_WINDOW
+                }
+                if len(candidates) > 1:
+                    raise VerificationError(
+                        f"compiled common has multiple active name versions: {relative}"
+                    )
+                if candidates:
+                    active_versions[relative] = next(iter(candidates))
+
+            active_name_version_count = 0
+            core_name_serials: list[int] = []
+            module_name_serials: list[int] = []
+            for relative, parsed_common in sorted(parsed.items()):
+                keyed = parsed_common.parsed_pickle.keyed_integers
+                active_version = active_versions.get(relative)
+                for index, record in enumerate(keyed):
+                    if record.key == "name_version" and record.value == active_version:
+                        active_name_version_count += 1
+                    if record.key != "name_serial":
+                        continue
+                    if index == 0 or keyed[index - 1].key != "name_version":
+                        raise VerificationError(
+                            f"compiled common name_serial is not paired with name_version: {relative}"
+                        )
+                    if keyed[index - 1].value != active_version:
+                        continue
+                    target = (
+                        module_name_serials
+                        if _is_module_common(relative)
+                        else core_name_serials
+                    )
+                    target.append(record.value)
+
+            if require_release_contract:
+                active_paths_sha256 = _path_set_sha256(active_versions)
+                if (
+                    len(active_versions) != EXPECTED_ACTIVE_COMMON_COUNT
+                    or active_paths_sha256 != EXPECTED_ACTIVE_COMMON_PATHS_SHA256
+                ):
+                    raise VerificationError(
+                        "active compiled common path set changed: "
+                        f"files={len(active_versions)}/{EXPECTED_ACTIVE_COMMON_COUNT} "
+                        f"sha256={active_paths_sha256}"
+                    )
+                if active_name_version_count != EXPECTED_ACTIVE_NAME_VERSION_COUNT:
+                    raise VerificationError(
+                        "active common name_version count changed: "
+                        f"{active_name_version_count}/{EXPECTED_ACTIVE_NAME_VERSION_COUNT}"
+                    )
+                if (
+                    len(core_name_serials) != EXPECTED_CORE_NAME_SERIAL_COUNT
+                    or set(core_name_serials)
+                    != set(range(1, EXPECTED_CORE_NAME_SERIAL_COUNT + 1))
+                ):
+                    raise VerificationError(
+                        "core common active name_serial sequence changed"
+                    )
+                if (
+                    len(module_name_serials) != EXPECTED_MODULE_NAME_SERIAL_COUNT
+                    or len(set(module_name_serials))
+                    != EXPECTED_MODULE_NAME_SERIAL_COUNT
+                    or max(module_name_serials) - min(module_name_serials) + 1
+                    != EXPECTED_MODULE_NAME_SERIAL_COUNT
+                ):
+                    raise VerificationError(
+                        "module common active name_serial sequence changed"
+                    )
+
+            module_name_serial_minimum = (
+                min(module_name_serials) if module_name_serials else None
+            )
+            for relative, parsed_common in sorted(parsed.items()):
+                records[relative] = CompiledCommonRecord(
+                    "compiled-common-rpc2",
+                    _canonical_compiled_pickle_digest(
+                        relative,
+                        parsed_common,
+                        active_name_version=active_versions.get(relative),
+                        screen_serial_minima=screen_serial_minima,
+                        module_name_serial_minimum=module_name_serial_minimum,
+                    ),
+                )
+            return records
+    except VerificationError:
+        raise
+    except (OSError, RuntimeError, zipfile.BadZipFile, zipfile.LargeZipFile) as exc:
+        raise VerificationError(
+            f"cannot inspect compiled common contract in {path}: {exc}"
+        ) from exc
+
+
 def windows_runtime_fingerprint(
     members: Iterable[ArchiveMember],
+    compiled_common_contract: Mapping[str, CompiledCommonRecord] | None = None,
 ) -> tuple[int, str]:
-    """Hash the complete verified Windows runtime path/size/CRC inventory."""
+    """Hash the Windows runtime inventory with reviewed RPC2 normalization."""
     prefix = WINDOWS_ROOT + "/"
-    records: list[tuple[str, int, int]] = []
+    records: list[tuple[str, str, str]] = []
+    contract = compiled_common_contract or {}
+    observed_compiled: set[str] = set()
     for member in members:
         if not isinstance(member, ArchiveMember):
             raise VerificationError(
@@ -323,15 +941,33 @@ def windows_runtime_fingerprint(
             )
         relative = member.name[len(prefix) :]
         if _is_windows_runtime_path(relative):
-            records.append((relative, member.file_size, member.crc32))
+            if _is_compiled_common(relative):
+                observed_compiled.add(relative)
+                compiled = contract.get(relative)
+                if compiled is None:
+                    raise VerificationError(
+                        f"compiled common contract is missing: {relative}"
+                    )
+                records.append((relative, compiled.kind, compiled.digest))
+            else:
+                records.append(
+                    (relative, str(member.file_size), f"{member.crc32:08x}")
+                )
+
+    unexpected_contract = set(contract) - observed_compiled
+    if unexpected_contract:
+        raise VerificationError(
+            "compiled common contract contains absent paths: "
+            + ", ".join(sorted(unexpected_contract))
+        )
 
     digest = hashlib.sha256()
-    for relative, file_size, crc32 in sorted(records):
+    for relative, size_or_kind, crc_or_digest in sorted(records):
         digest.update(relative.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(str(file_size).encode("ascii"))
+        digest.update(size_or_kind.encode("ascii"))
         digest.update(b"\0")
-        digest.update(f"{crc32:08x}".encode("ascii"))
+        digest.update(crc_or_digest.encode("ascii"))
         digest.update(b"\n")
     return len(records), digest.hexdigest()
 
@@ -339,6 +975,7 @@ def windows_runtime_fingerprint(
 def validate_windows_runtime(
     members: Iterable[ArchiveMember],
     *,
+    compiled_common_contract: Mapping[str, CompiledCommonRecord] | None = None,
     expected_count: int | None = None,
     expected_digest: str | None = None,
 ) -> list[str]:
@@ -349,7 +986,9 @@ def validate_windows_runtime(
         expected_digest = EXPECTED_WINDOWS_RUNTIME_FINGERPRINT
 
     try:
-        actual_count, actual_digest = windows_runtime_fingerprint(members)
+        actual_count, actual_digest = windows_runtime_fingerprint(
+            members, compiled_common_contract
+        )
     except VerificationError as exc:
         return [f"CONTENT windows: cannot fingerprint Windows runtime: {exc}"]
     if actual_count == expected_count and actual_digest == expected_digest:
@@ -923,6 +1562,15 @@ def verify_release(
         except VerificationError as exc:
             errors.append(f"ARCHIVE {label}: {exc}")
 
+    windows_compiled_contract: dict[str, CompiledCommonRecord] | None = None
+    if "Windows" in inventories:
+        try:
+            windows_compiled_contract = inspect_compiled_common_contract(
+                windows, inventories["Windows"]
+            )
+        except VerificationError as exc:
+            errors.append(f"ARCHIVE Windows compiled common: {exc}")
+
     windows_payload: set[str] | None = None
     android_payload: set[str] | None = None
     android_policy_payload: set[str] | None = None
@@ -995,8 +1643,13 @@ def verify_release(
                 f"android_paths={len(android_paths)}"
             )
 
-    if windows_payload is not None:
-        errors.extend(validate_windows_runtime(inventories["Windows"]))
+    if windows_payload is not None and windows_compiled_contract is not None:
+        errors.extend(
+            validate_windows_runtime(
+                inventories["Windows"],
+                compiled_common_contract=windows_compiled_contract,
+            )
+        )
         errors.extend(
             validate_payload(
                 windows_payload,

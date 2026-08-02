@@ -6,13 +6,16 @@ import hashlib
 import io
 import os
 from pathlib import Path
+import pickle
 import stat
+import struct
 import subprocess
 import tempfile
 import unittest
 from unittest import mock
 import warnings
 import zipfile
+import zlib
 
 import verify_distributions as verifier
 from test_release_contract import (
@@ -36,6 +39,7 @@ ALLOWED_UNPREFIXED_ANDROID_ASSETS = {
     "assets/dexopt/baseline.profm",
     "assets/private.mp3",
 }
+RPYC_MAGIC = b"_2025-07-06"
 
 
 BADGING = f"""package: name='{APPROVED_ANDROID_PACKAGE}' versionCode='{CURRENT_CODE}' versionName='{APPROVED_VERSION}' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36'
@@ -115,33 +119,70 @@ def _write_zip_with_unix_type(
                 archive.writestr(name, content)
 
 
-def _expected_runtime_fingerprint(path: Path) -> tuple[int, str]:
-    prefix = WINDOWS_ROOT + "/"
-    records: list[tuple[str, int, int]] = []
-    with zipfile.ZipFile(path) as archive:
-        bad_member = archive.testzip()
-        if bad_member is not None:
-            raise AssertionError(f"test fixture CRC failed: {bad_member}")
-        for info in archive.infolist():
-            if info.is_dir() or not info.orig_filename.startswith(prefix):
-                continue
-            relative = info.orig_filename[len(prefix) :]
-            if (
-                relative in {"CourtOfShadows.exe", "CourtOfShadows.py"}
-                or relative.startswith("renpy/")
-                or relative.startswith("lib/")
-            ):
-                records.append((relative, info.file_size, info.CRC))
+def _rpc2_from_pickles(
+    source: bytes, slot_1_pickle: bytes, slot_2_pickle: bytes | None = None
+) -> bytes:
+    slot_2_pickle = slot_1_pickle if slot_2_pickle is None else slot_2_pickle
+    compressed_1 = zlib.compress(slot_1_pickle, 3)
+    compressed_2 = zlib.compress(slot_2_pickle, 3)
+    header_size = len(b"RENPY RPC2") + 3 * 12
+    slot_1_start = header_size
+    slot_2_start = slot_1_start + len(compressed_1)
+    header = b"".join(
+        (
+            b"RENPY RPC2",
+            struct.pack("<III", 1, slot_1_start, len(compressed_1)),
+            struct.pack("<III", 2, slot_2_start, len(compressed_2)),
+            struct.pack("<III", 0, 0, 0),
+        )
+    )
+    trailer = hashlib.md5(source + RPYC_MAGIC).digest()
+    return header + compressed_1 + compressed_2 + trailer
 
-    digest = hashlib.sha256()
-    for relative, file_size, crc32 in sorted(records):
-        digest.update(relative.encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(str(file_size).encode("ascii"))
-        digest.update(b"\0")
-        digest.update(f"{crc32:08x}".encode("ascii"))
-        digest.update(b"\n")
-    return len(records), digest.hexdigest()
+
+def _rpc2_common(
+    source: bytes,
+    *,
+    name_version: int = 325_472_330,
+    name_serial: int = 16,
+    screen_serial: int = 1_785_666_150_901_563,
+    line: int = 24,
+    name_serials: tuple[int, ...] | None = None,
+    screen_serials: tuple[int, ...] | None = None,
+    slot_2_line: int | None = None,
+) -> bytes:
+    node_serials = (name_serial,) if name_serials is None else name_serials
+    sl_serials = (screen_serial,) if screen_serials is None else screen_serials
+
+    def make_pickle(linenumber: int) -> bytes:
+        return pickle.dumps(
+            {
+                "nodes": [
+                    {
+                        "name_version": name_version,
+                        "name_serial": serial,
+                    }
+                    for serial in node_serials
+                ],
+                "screens": [
+                    {"serial": serial, "linenumber": linenumber}
+                    for serial in sl_serials
+                ],
+            },
+            protocol=4,
+        )
+
+    slot_1 = make_pickle(line)
+    slot_2 = make_pickle(line if slot_2_line is None else slot_2_line)
+    return _rpc2_from_pickles(source, slot_1, slot_2)
+
+
+def _expected_runtime_fingerprint(path: Path) -> tuple[int, str]:
+    members = verifier.inspect_archive(path)
+    compiled_contract = verifier.inspect_compiled_common_contract(
+        path, members, require_release_contract=False
+    )
+    return verifier.windows_runtime_fingerprint(members, compiled_contract)
 
 
 class FakeAndroidRunner:
@@ -525,34 +566,50 @@ class ArchiveIntegrityTests(VerifierTestCase):
 class WindowsRuntimeFingerprintTests(VerifierTestCase):
     @staticmethod
     def _entries() -> dict[str, bytes]:
+        common_source = b"# synthetic Ren'Py common source\n"
         return {
             f"{WINDOWS_ROOT}/CourtOfShadows.exe": b"launcher-exe",
             f"{WINDOWS_ROOT}/CourtOfShadows.py": b"launcher-python",
             f"{WINDOWS_ROOT}/renpy/__init__.py": b"init-module",
             f"{WINDOWS_ROOT}/renpy/error.py": b"error-module",
+            f"{WINDOWS_ROOT}/renpy/common/00console.rpy": common_source,
+            f"{WINDOWS_ROOT}/renpy/common/00console.rpyc": _rpc2_common(
+                common_source
+            ),
             f"{WINDOWS_ROOT}/lib/python3.12/os.py": b"stdlib-module",
             f"{WINDOWS_ROOT}/game/script.rpyc": b"not-runtime",
         }
 
+    def _validate_runtime_archive(
+        self, path: Path, expected_count: int, expected_digest: str
+    ) -> list[str]:
+        try:
+            members = verifier.inspect_archive(path)
+            compiled_contract = verifier.inspect_compiled_common_contract(
+                path, members, require_release_contract=False
+            )
+        except verifier.VerificationError as exc:
+            return [f"compiled common contract: {exc}"]
+        return verifier.validate_windows_runtime(
+            members,
+            compiled_common_contract=compiled_contract,
+            expected_count=expected_count,
+            expected_digest=expected_digest,
+        )
+
     def test_complete_runtime_fingerprint_passes(self) -> None:
-        inspect_archive = self.function("inspect_archive")
-        validate_runtime = self.function("validate_windows_runtime")
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "complete.zip"
             _write_zip_entries(path, self._entries())
             expected_count, expected_digest = _expected_runtime_fingerprint(path)
             self.assertEqual(
-                validate_runtime(
-                    inspect_archive(path),
-                    expected_count=expected_count,
-                    expected_digest=expected_digest,
+                self._validate_runtime_archive(
+                    path, expected_count, expected_digest
                 ),
                 [],
             )
 
     def test_runtime_fingerprint_rejects_missing_module(self) -> None:
-        inspect_archive = self.function("inspect_archive")
-        validate_runtime = self.function("validate_windows_runtime")
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "runtime.zip"
             entries = self._entries()
@@ -560,16 +617,12 @@ class WindowsRuntimeFingerprintTests(VerifierTestCase):
             expected_count, expected_digest = _expected_runtime_fingerprint(path)
             del entries[f"{WINDOWS_ROOT}/renpy/error.py"]
             _write_zip_entries(path, entries)
-            errors = validate_runtime(
-                inspect_archive(path),
-                expected_count=expected_count,
-                expected_digest=expected_digest,
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
             )
             self.assertIn("runtime fingerprint", "\n".join(errors).lower())
 
     def test_runtime_fingerprint_rejects_extra_runtime_file(self) -> None:
-        inspect_archive = self.function("inspect_archive")
-        validate_runtime = self.function("validate_windows_runtime")
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "runtime.zip"
             base_entries = self._entries()
@@ -585,18 +638,14 @@ class WindowsRuntimeFingerprintTests(VerifierTestCase):
                     changed = dict(base_entries)
                     changed[f"{WINDOWS_ROOT}/{junk_path}"] = b"junk"
                     _write_zip_entries(path, changed)
-                    errors = validate_runtime(
-                        inspect_archive(path),
-                        expected_count=expected_count,
-                        expected_digest=expected_digest,
+                    errors = self._validate_runtime_archive(
+                        path, expected_count, expected_digest
                     )
                     self.assertIn(
                         "runtime fingerprint", "\n".join(errors).lower()
                     )
 
     def test_runtime_fingerprint_rejects_changed_size_or_crc(self) -> None:
-        inspect_archive = self.function("inspect_archive")
-        validate_runtime = self.function("validate_windows_runtime")
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "runtime.zip"
             base_entries = self._entries()
@@ -612,14 +661,299 @@ class WindowsRuntimeFingerprintTests(VerifierTestCase):
                     changed = dict(base_entries)
                     changed[error_path] = content
                     _write_zip_entries(path, changed)
-                    errors = validate_runtime(
-                        inspect_archive(path),
-                        expected_count=expected_count,
-                        expected_digest=expected_digest,
+                    errors = self._validate_runtime_archive(
+                        path, expected_count, expected_digest
                     )
                     self.assertIn(
                         "runtime fingerprint", "\n".join(errors).lower()
                     )
+
+    def test_runtime_fingerprint_normalizes_compiler_time_identifiers(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+            changed = dict(base_entries)
+            common_source = changed[
+                f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+            ]
+            changed[f"{WINDOWS_ROOT}/renpy/common/00console.rpyc"] = (
+                _rpc2_common(
+                    common_source,
+                    name_version=325_572_330,
+                    screen_serial=1_785_667_150_901_563,
+                )
+            )
+            _write_zip_entries(path, changed)
+            self.assertEqual(
+                self._validate_runtime_archive(
+                    path, expected_count, expected_digest
+                ),
+                [],
+            )
+
+    def test_runtime_fingerprint_rejects_compiled_common_body_change(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+            changed = dict(base_entries)
+            common_source = changed[
+                f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+            ]
+            changed[f"{WINDOWS_ROOT}/renpy/common/00console.rpyc"] = (
+                _rpc2_common(common_source, line=25)
+            )
+            _write_zip_entries(path, changed)
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
+            )
+            self.assertIn("runtime fingerprint", "\n".join(errors).lower())
+
+    def test_runtime_fingerprint_rejects_compiled_common_source_md5_change(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+            changed = dict(base_entries)
+            different_source = b"# different synthetic common source\n"
+            changed[f"{WINDOWS_ROOT}/renpy/common/00console.rpyc"] = (
+                _rpc2_common(different_source)
+            )
+            _write_zip_entries(path, changed)
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
+            )
+            self.assertIn("source md5", "\n".join(errors).lower())
+
+    def test_compiled_common_contract_rejects_malformed_rpc2(self) -> None:
+        source_path = f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+        compiled_path = source_path + "c"
+        error = self.error_type()
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            source = base_entries[source_path]
+            valid = base_entries[compiled_path]
+
+            bad_header = b"BROKEN RPC2" + valid[len(b"RENPY RPC2") :]
+            bad_table = bytearray(valid)
+            slot_2, slot_2_start, slot_2_length = struct.unpack_from(
+                "<III", bad_table, len(b"RENPY RPC2") + 12
+            )
+            struct.pack_into(
+                "<III",
+                bad_table,
+                len(b"RENPY RPC2") + 12,
+                slot_2,
+                slot_2_start + 1,
+                slot_2_length,
+            )
+            bad_zlib = bytearray(valid)
+            bad_zlib[len(b"RENPY RPC2") + 3 * 12] ^= 0xFF
+            trailing_pickle = pickle.dumps({"value": 1}, protocol=4) + b"junk"
+            malformed = {
+                "header": bad_header,
+                "slot table": bytes(bad_table),
+                "zlib": bytes(bad_zlib),
+                "slot disagreement": _rpc2_common(source, slot_2_line=25),
+                "pickle trailing bytes": _rpc2_from_pickles(
+                    source, trailing_pickle
+                ),
+            }
+            for label, payload in malformed.items():
+                with self.subTest(label=label):
+                    changed = dict(base_entries)
+                    changed[compiled_path] = payload
+                    _write_zip_entries(path, changed)
+                    members = verifier.inspect_archive(path)
+                    with self.assertRaises(error):
+                        verifier.inspect_compiled_common_contract(
+                            path, members, require_release_contract=False
+                        )
+
+    def test_compiled_common_contract_requires_one_source(self) -> None:
+        source_path = f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+        error = self.error_type()
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            variants = {
+                "missing": {
+                    name: payload
+                    for name, payload in base_entries.items()
+                    if name != source_path
+                },
+                "ambiguous": {
+                    **base_entries,
+                    f"{WINDOWS_ROOT}/renpy/common/00console_ren.py": (
+                        base_entries[source_path]
+                    ),
+                },
+            }
+            for label, entries in variants.items():
+                with self.subTest(label=label):
+                    _write_zip_entries(path, entries)
+                    members = verifier.inspect_archive(path)
+                    with self.assertRaises(error):
+                        verifier.inspect_compiled_common_contract(
+                            path, members, require_release_contract=False
+                        )
+
+    def test_runtime_fingerprint_keeps_core_name_serial_strict(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+            source_path = f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+            changed = dict(base_entries)
+            changed[source_path + "c"] = _rpc2_common(
+                changed[source_path], name_serial=17
+            )
+            _write_zip_entries(path, changed)
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
+            )
+            self.assertIn("runtime fingerprint", "\n".join(errors).lower())
+
+    def test_runtime_fingerprint_preserves_screen_serial_offsets(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            source_path = f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+            compiled_path = source_path + "c"
+            base_entries = self._entries()
+            source = base_entries[source_path]
+            base_entries[compiled_path] = _rpc2_common(
+                source,
+                screen_serials=(
+                    1_785_666_150_901_563,
+                    1_785_666_150_901_565,
+                ),
+            )
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+
+            shifted = dict(base_entries)
+            shifted[compiled_path] = _rpc2_common(
+                source,
+                name_version=325_572_330,
+                screen_serials=(
+                    1_785_667_150_901_563,
+                    1_785_667_150_901_565,
+                ),
+            )
+            _write_zip_entries(path, shifted)
+            self.assertEqual(
+                self._validate_runtime_archive(
+                    path, expected_count, expected_digest
+                ),
+                [],
+            )
+
+            shifted[compiled_path] = _rpc2_common(
+                source,
+                name_version=325_572_330,
+                screen_serials=(
+                    1_785_667_150_901_563,
+                    1_785_667_150_901_566,
+                ),
+            )
+            _write_zip_entries(path, shifted)
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
+            )
+            self.assertIn("runtime fingerprint", "\n".join(errors).lower())
+
+    def test_compiled_common_contract_allows_screen_serial_bucket_crossing(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            source_path = f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+            compiled_path = source_path + "c"
+            entries = self._entries()
+            entries[compiled_path] = _rpc2_common(
+                entries[source_path],
+                screen_serials=(
+                    1_785_666_150_909_998,
+                    1_785_666_150_910_001,
+                ),
+            )
+            _write_zip_entries(path, entries)
+            members = verifier.inspect_archive(path)
+            contract = verifier.inspect_compiled_common_contract(
+                path, members, require_release_contract=False
+            )
+            self.assertIn("renpy/common/00console.rpyc", contract)
+
+    def test_runtime_fingerprint_preserves_module_name_serial_offsets(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            module_source_path = (
+                f"{WINDOWS_ROOT}/renpy/common/_developer/example.rpym"
+            )
+            module_compiled_path = module_source_path + "c"
+            module_source = b"# synthetic developer module\n"
+            base_entries[module_source_path] = module_source
+            base_entries[module_compiled_path] = _rpc2_common(
+                module_source,
+                name_serials=(1607, 1608, 1610),
+                screen_serial=1_785_666_150_906_811,
+            )
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+
+            shifted = dict(base_entries)
+            shifted[module_compiled_path] = _rpc2_common(
+                module_source,
+                name_serials=(1707, 1708, 1710),
+                screen_serial=1_785_666_150_906_811,
+            )
+            _write_zip_entries(path, shifted)
+            self.assertEqual(
+                self._validate_runtime_archive(
+                    path, expected_count, expected_digest
+                ),
+                [],
+            )
+
+            shifted[module_compiled_path] = _rpc2_common(
+                module_source,
+                name_serials=(1707, 1709, 1710),
+                screen_serial=1_785_666_150_906_811,
+            )
+            _write_zip_entries(path, shifted)
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
+            )
+            self.assertIn("runtime fingerprint", "\n".join(errors).lower())
+
+    def test_runtime_fingerprint_rejects_same_count_common_rename(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.zip"
+            base_entries = self._entries()
+            _write_zip_entries(path, base_entries)
+            expected_count, expected_digest = _expected_runtime_fingerprint(path)
+            source_path = f"{WINDOWS_ROOT}/renpy/common/00console.rpy"
+            compiled_path = source_path + "c"
+            changed = dict(base_entries)
+            source = changed.pop(source_path)
+            compiled = changed.pop(compiled_path)
+            renamed_source = f"{WINDOWS_ROOT}/renpy/common/00renamed.rpy"
+            changed[renamed_source] = source
+            changed[renamed_source + "c"] = compiled
+            _write_zip_entries(path, changed)
+            errors = self._validate_runtime_archive(
+                path, expected_count, expected_digest
+            )
+            self.assertIn("runtime fingerprint", "\n".join(errors).lower())
 
 class PayloadPolicyTests(VerifierTestCase):
     def test_every_approved_exclusion_category_is_detected(self) -> None:
