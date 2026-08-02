@@ -12,7 +12,7 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-PROJ = r"E:/Projects/renpy-8.5.2-sdk/CourtOfShadows"
+PROJ = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 WORK = os.path.join(os.environ.get("TEMP", "."), "cos_trailer_work")
 OUT = os.path.join(PROJ, "store_assets", "trailer_v392.mp4")
 ## 字体必须用系统全量 msyh.ttc, **不能用 game/msyh.ttf** —— 后者被 prepare_release.py

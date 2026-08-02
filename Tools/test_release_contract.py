@@ -5,9 +5,12 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import re
+import runpy
 import subprocess
 import sys
+import tempfile
 import textwrap
 import unittest
 from pathlib import Path
@@ -958,6 +961,27 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             if (match := playtime.search(source)) is not None
         }
         self.assertEqual(violations, {})
+
+
+class TrailerPathContractTests(unittest.TestCase):
+    def test_default_trailer_paths_stay_in_checkout_from_any_cwd(self) -> None:
+        script = ROOT / "Tools" / "make_trailer.py"
+        original_cwd = Path.cwd()
+
+        with tempfile.TemporaryDirectory() as unrelated_cwd:
+            try:
+                os.chdir(unrelated_cwd)
+                trailer = runpy.run_path(
+                    str(script), run_name="trailer_path_contract_probe"
+                )
+            finally:
+                os.chdir(original_cwd)
+
+        self.assertEqual(Path(trailer["PROJ"]).resolve(), ROOT)
+        self.assertEqual(
+            Path(trailer["OUT"]).resolve(),
+            ROOT / "store_assets" / "trailer_v392.mp4",
+        )
 
 
 class NewGamePlusContractTests(unittest.TestCase):
