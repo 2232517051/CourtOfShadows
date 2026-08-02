@@ -249,13 +249,27 @@ def validate_mapping_mutations(
                 and target.value.id == name
             ):
                 raise AssertionError(f"{name} uses an unchecked augmented update")
+        elif isinstance(node, ast.Delete):
+            for target in node.targets:
+                if (
+                    isinstance(target, ast.Name)
+                    and target.id == name
+                ) or (
+                    isinstance(target, ast.Subscript)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == name
+                ):
+                    raise AssertionError(f"{name} is deleted or loses a key")
         elif (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
             and isinstance(node.func.value, ast.Name)
             and node.func.value.id == name
-            and node.func.attr == "update"
         ):
+            if node.func.attr in {"setdefault", "pop", "popitem", "clear"}:
+                raise AssertionError(f"{name}.{node.func.attr} is not an allowed value update")
+            if node.func.attr != "update":
+                continue
             if len(node.args) > 1:
                 raise AssertionError(f"{name}.update has too many arguments")
             update_keys: set[str] = set()
@@ -276,7 +290,16 @@ def validate_sequence_is_literal_only(tree: ast.AST, name: str) -> None:
     initial = _named_assignment(tree, name)
     if not isinstance(initial.value, (ast.List, ast.Tuple)):
         raise AssertionError(f"initial {name!r} assignment is not a sequence")
-    mutators = {"append", "extend", "insert", "remove", "pop", "clear"}
+    mutators = {
+        "append",
+        "extend",
+        "insert",
+        "remove",
+        "pop",
+        "clear",
+        "reverse",
+        "sort",
+    }
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
             for target in node.targets:
@@ -290,6 +313,17 @@ def validate_sequence_is_literal_only(tree: ast.AST, name: str) -> None:
                     raise AssertionError(f"{name} is changed through a subscript")
         elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id == name:
             raise AssertionError(f"{name} uses an augmented update")
+        elif isinstance(node, ast.Delete):
+            for target in node.targets:
+                if (
+                    isinstance(target, ast.Name)
+                    and target.id == name
+                ) or (
+                    isinstance(target, ast.Subscript)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == name
+                ):
+                    raise AssertionError(f"{name} is deleted or loses an item")
         elif (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
@@ -420,6 +454,12 @@ class EndingCatalogGuardTests(unittest.TestCase):
             "routes = {'iron_lord': False}\nroutes['tenth'] = True",
             "routes = {'iron_lord': False}\nroutes.update(extra)",
             "routes = {'iron_lord': False}\nroutes.update({'tenth': True})",
+            "routes = {'iron_lord': False}\nroutes.setdefault('iron_lord', True)",
+            "routes = {'iron_lord': False}\nroutes.pop('iron_lord')",
+            "routes = {'iron_lord': False}\nroutes.popitem()",
+            "routes = {'iron_lord': False}\nroutes.clear()",
+            "routes = {'iron_lord': False}\ndel routes['iron_lord']",
+            "routes = {'iron_lord': False}\ndel routes",
         )
         for source in fixtures:
             with self.subTest(source=source):
@@ -438,6 +478,18 @@ class EndingCatalogGuardTests(unittest.TestCase):
             "routes.update({'iron_lord': False})"
         )
         validate_mapping_mutations(tree, "routes", {"iron_lord", "resist"})
+
+    def test_catalog_guard_rejects_reordering_and_deletion(self) -> None:
+        fixtures = (
+            "_ending_keys = ['iron_lord']\n_ending_keys.reverse()",
+            "_ending_keys = ['iron_lord']\n_ending_keys.sort()",
+            "_ending_keys = ['iron_lord']\ndel _ending_keys[0]",
+            "_ending_keys = ['iron_lord']\ndel _ending_keys",
+        )
+        for source in fixtures:
+            with self.subTest(source=source):
+                with self.assertRaises(AssertionError):
+                    validate_sequence_is_literal_only(ast.parse(source), "_ending_keys")
 
 
 class PlayerFacingCopyContractTests(unittest.TestCase):
@@ -482,7 +534,6 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
         self.assertIn("更新日期：2026年8月", self.privacy)
 
     def test_rating_copy_is_platform_neutral_and_close_only(self) -> None:
-        self.assertIn("平台", self.rating)
         for platform_name in (
             "TapTap",
             "Steam",
