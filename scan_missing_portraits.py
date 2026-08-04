@@ -16,6 +16,19 @@ import json
 GAME_DIR = os.path.join(os.path.dirname(__file__), "game")
 IMAGES_DIR = os.path.join(GAME_DIR, "images")
 
+SHOW_IMG_RE = re.compile(r"\bshow\s+(\w+_img)\b")
+
+
+def find_unregistered_shows(lines, registered):
+    bad = []
+    for line_number, line in enumerate(lines, 1):
+        if line.lstrip().startswith("#"):
+            continue
+        for tag in SHOW_IMG_RE.findall(line):
+            if tag not in registered:
+                bad.append((line_number, tag))
+    return bad
+
 # ------------------------------------------------------------------
 # Character definitions
 # ------------------------------------------------------------------
@@ -407,12 +420,10 @@ def check_char_img_registry():
     for fname in sorted(os.listdir(GAME_DIR)):
         if not fname.endswith(".rpy"):
             continue
-        for i, line in enumerate(open(os.path.join(GAME_DIR, fname), encoding="utf-8"), 1):
-            if line.strip().startswith("#"):
-                continue
-            for tag in re.findall(r"show (\w+_img)", line):
-                if tag not in registered:
-                    bad.append((fname, i, tag))
+        path = os.path.join(GAME_DIR, fname)
+        with open(path, encoding="utf-8") as source:
+            for line_number, tag in find_unregistered_shows(source, registered):
+                bad.append((fname, line_number, tag))
     if bad:
         print()
         print("!! 未注册进 CHAR_IMG_TAGS 却被 show 的立绘 (hide_all_chars 清不掉, 会残留):")

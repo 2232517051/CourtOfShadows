@@ -710,6 +710,7 @@ label ch5_factions_move:
             $ baron_supply_intel = True
 
     "送走了男爵的密使后，你以为这一天的访客到头了。"
+    hide baron_envoy_img with dissolve
 
     ## ── 批32: ch4「试探——我需要考虑」的答复在此兑现, 王子不再无声消失 ──
     if prince_answer_pending and not prince_ally and not prince_betrayed:
@@ -763,8 +764,7 @@ label ch5_factions_move:
 
     "一个小女孩跑到城墙下面，仰着头对你喊——"
 
-    $ hide_all_chars("blacksmith_wife_img")
-    show blacksmith_wife_img at left with dissolve
+    $ hide_all_chars()
     little_girl "大人！大人！你会保护我们吗？"
 
     $ hide_all_chars("player_char_img")
@@ -772,8 +772,6 @@ label ch5_factions_move:
     player "会的。"
 
     $ hide_all_chars()
-    $ hide_all_chars("blacksmith_wife_img")
-    show blacksmith_wife_img at left with dissolve
     little_girl "拉钩？"
 
     "你忍不住笑了。"
@@ -4075,10 +4073,11 @@ label ch5_negotiate_after_clash:
 
     "双方代表连寒暄都省了——开口就是旧账。"
 
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
+    queen_rep "叛军必须无条件投降！这是王室的底线！"
     $ hide_all_chars("noble_werner_img")
     show noble_werner_img at left with dissolve
-    queen_rep "叛军必须无条件投降！这是王室的底线！"
-
     baron_rep "投降？王后先交出篡改遗诏的证据！"
 
     "眼看谈判就要破裂——"
@@ -4183,10 +4182,11 @@ label ch5_negotiate_after_clash:
 
     "然后——"
 
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
+    queen_rep "……王后陛下可以接受这些条件。但第四条需要修改——"
     $ hide_all_chars("noble_werner_img")
     show noble_werner_img at left with dissolve
-    queen_rep "……王后陛下可以接受这些条件。但第四条需要修改——"
-
     baron_rep "男爵阁下原则上同意。但需要在第三条中加入——"
 
     "又一轮讨价还价。但这次，方向已经明确了——和平。"
@@ -5721,6 +5721,7 @@ label ending_borgia:
         elena "我不能跟一个会下毒的人睡在同一张床上。"
 
         "她那天夜里离开了艾登堡。没有告诉你她去哪。"
+        hide elena_img with dissolve
 
         "你没有阻拦。你也没有派人去找。"
 
