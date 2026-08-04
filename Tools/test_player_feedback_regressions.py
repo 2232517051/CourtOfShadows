@@ -43,10 +43,33 @@ def label_body_from_text(text: str, label: str, source_name: str = "source") -> 
 
 
 def source_without_comments(lines: list[str]) -> str:
-    """Return live source text while excluding comment-only lines."""
-    return "\n".join(
-        line for line in lines if not line.lstrip().startswith("#")
-    )
+    """Return live source text without comments outside quoted strings."""
+    live_lines: list[str] = []
+    for line in lines:
+        quote: str | None = None
+        escaped = False
+        comment_at: int | None = None
+        for index, char in enumerate(line):
+            if escaped:
+                escaped = False
+                continue
+            if quote is not None and char == "\\":
+                escaped = True
+                continue
+            if char in ("\"", "'"):
+                if quote is None:
+                    quote = char
+                elif quote == char:
+                    quote = None
+                continue
+            if char == "#" and quote is None:
+                comment_at = index
+                break
+
+        live_line = line if comment_at is None else line[:comment_at].rstrip()
+        if live_line.strip() or not line.strip():
+            live_lines.append(live_line)
+    return "\n".join(live_lines)
 
 
 def call_targets(lines: list[str]) -> list[str]:
@@ -64,18 +87,28 @@ def call_targets(lines: list[str]) -> list[str]:
 
 SELENE_CHARACTER_DIALOGUE_RE = re.compile(r"(?m)^\s*corsair\s+[\"']")
 SELENE_DIRECT_REUNION_RE = re.compile(
-    r"(?m)^(?![^\n]*(?:(?:商人|水手|船员|旅人|有人)[^。；\n]{0,4}"
-    r"(?:说|称|提到|听到)|听说|据说|传闻|消息))[^\n]*"
-    r"(?:赛琳(?:本人)?|她)[^。；\n]{0,20}"
+    r"(?m)(?:^|[。！？!?；])"
+    r"(?![^。！？!?；\n]*(?:(?:商人|水手|船员|旅人|有人)"
+    r"[^。！？!?；\n]{0,4}(?:说|称|提到|听到|告诉)|听说|据说|传闻|消息)"
+    r"[^。！？!?；\n]*(?:赛琳|她|你))"
+    r"[^。！？!?；\n]*"
+    r"(?:"
+    r"(?:赛琳(?:本人)?|她)[^。！？!?；\n]{0,20}"
     r"(?:来到|走进|走到|站在|出现|抵达|回到|驶入|登上|"
     r"(?:与|和)你(?:相见|重逢|跳舞|同行)|牵住你|挽住你|拥抱你|吻你)"
-    r"|你[^。；\n]{0,8}(?:与|和)(?:赛琳|她)[^。；\n]{0,8}"
-    r"(?:相见|重逢|跳舞|同行|拥抱)",
+    r"|你[^。！？!?；\n]{0,8}(?:与|和)(?:赛琳|她)[^。！？!?；\n]{0,8}"
+    r"(?:相见|重逢|跳舞|同行|拥抱)"
+    r"|你[^。！？!?；\n]{0,12}(?:见到|看见|遇见|碰见|迎到|等到)了?"
+    r"(?:赛琳|她))",
 )
 SELENE_DIRECT_DELIVERY_RE = re.compile(
     r"(?:赛琳(?:本人)?|她)[^，。；\n]{0,8}"
     r"(?:送来|捎来|寄来|带来|递来|送到|捎到|寄到|带到|递到)"
-    r"[^，。；\n]{0,8}(?:信|口信|字条|包裹|消息)",
+    r"[^，。；\n]{0,8}(?:信|口信|字条|包裹|消息)"
+    r"|你[^，。；\n]{0,12}(?:收到|接到|拿到|读到|拆开)"
+    r"[^，。；\n]{0,12}(?:赛琳(?:本人)?|她)(?:亲手)?"
+    r"(?:的(?:来信|信|口信|字条|包裹)|"
+    r"(?:写|寄|捎|送)来(?:的)?(?:来信|信|口信|字条|包裹)|来信)",
 )
 
 
@@ -195,6 +228,35 @@ def load_portrait_scanner():
 
 
 class SourceParsingContractTests(unittest.TestCase):
+    def test_source_without_comments_strips_inline_comments_but_preserves_hashes_in_strings(self) -> None:
+        lines = [
+            "    # whole-line comment",
+            "    $ _review_probe = True  # stripped marker",
+            "    $ compact = 1# stripped without space",
+            '    "double # stays"  # stripped tail',
+            "    'single # stays'  # stripped tail",
+            r'    player "escaped \"quote # stays\""  # stripped tail',
+            r"    player 'escaped \'quote # stays\''  # stripped tail",
+            '    $ color = "#fff"  # stripped palette note',
+            "    $ label = \"apostrophe ' and hash # stay\"  # comment \" quote",
+        ]
+
+        self.assertEqual(
+            source_without_comments(lines),
+            "\n".join(
+                [
+                    "    $ _review_probe = True",
+                    "    $ compact = 1",
+                    '    "double # stays"',
+                    "    'single # stays'",
+                    r'    player "escaped \"quote # stays\""',
+                    r"    player 'escaped \'quote # stays\''",
+                    '    $ color = "#fff"',
+                    "    $ label = \"apostrophe ' and hash # stay\"",
+                ]
+            ),
+        )
+
     def test_label_body_stops_before_next_top_level_section_comment(self) -> None:
         people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
 
@@ -232,6 +294,40 @@ class SourceParsingContractTests(unittest.TestCase):
         self.assertIsNone(
             SELENE_DIRECT_REUNION_RE.search("商人说她回到潮汐港继续航海。")
         )
+
+    def test_selene_recipient_first_direct_letter_is_not_indirect_news(self) -> None:
+        self.assertIsNotNone(
+            SELENE_DIRECT_DELIVERY_RE.search("你收到一封赛琳的来信。")
+        )
+
+        for legal_indirect_news in (
+            "你收到商人的来信，信里说赛琳仍在南方航海。",
+            "商人说他收到过赛琳的来信。",
+        ):
+            with self.subTest(legal_indirect_news=legal_indirect_news):
+                self.assertIsNone(
+                    SELENE_DIRECT_DELIVERY_RE.search(legal_indirect_news)
+                )
+
+    def test_selene_protagonist_first_pronominal_meeting_is_not_indirect_news(self) -> None:
+        self.assertIsNotNone(
+            SELENE_DIRECT_REUNION_RE.search("你在广场见到了她。")
+        )
+        self.assertIsNotNone(
+            SELENE_DIRECT_REUNION_RE.search(
+                "商人说完消息。她随后来到广场，与你跳舞。"
+            )
+        )
+
+        for legal_indirect_news in (
+            "商人告诉你，他在潮汐港见到了她。",
+            "有人说他在南方见到过赛琳。",
+            "你听说他见到了她。",
+        ):
+            with self.subTest(legal_indirect_news=legal_indirect_news):
+                self.assertIsNone(
+                    SELENE_DIRECT_REUNION_RE.search(legal_indirect_news)
+                )
 
     def test_direct_branches_stop_before_outer_cleanup_and_later_chain(self) -> None:
         lines = [
@@ -934,8 +1030,73 @@ class PeopleExpansionContractTests(unittest.TestCase):
 
     def test_festival_chronology_ends_on_the_second_day_for_every_household(self) -> None:
         people = self.people_lines()
+        household_start = find_source_line(
+            people, "## —— 第二幕半：留在身边的人 ——"
+        )
         household_end = find_source_line(people, "## —— 第三幕：治理之道 ——")
         final_act = find_source_line(people, "## —— 第五幕：晚年与远讯 ——")
+        direct = self.household_branches()
+        self.assertEqual(
+            [condition for condition, _ in direct],
+            [
+                "if elena_romance:",
+                "elif marriage_route:",
+                "elif corsair_romance:",
+                "else:",
+            ],
+        )
+
+        marriage_lines = direct[1][1]
+        marriage_nested = direct_source_branches(
+            marriage_lines,
+            1,
+            len(marriage_lines),
+            source_indent(marriage_lines[0]) + 4,
+        )
+        self.assertEqual(
+            [condition for condition, _ in marriage_nested],
+            ["if marriage_warm:", "else:"],
+        )
+
+        corsair_lines = direct[2][1]
+        corsair_nested = direct_source_branches(
+            corsair_lines,
+            1,
+            len(corsair_lines),
+            source_indent(corsair_lines[0]) + 4,
+        )
+        self.assertEqual(
+            [condition for condition, _ in corsair_nested],
+            ['if southern_outcome == "fall":', "else:"],
+        )
+
+        early_day_jump = re.compile(
+            r"(?:第二天|第二日|次日|翌日|隔天|次晨|翌晨|一夜(?:之后|过去|过后))"
+        )
+        household_variants = (
+            ("Elena", direct[0][1]),
+            ("Ingrid full branch", direct[1][1]),
+            ("Ingrid warm", marriage_nested[0][1]),
+            ("Ingrid cold", marriage_nested[1][1]),
+            ("Corsair full branch", direct[2][1]),
+            ("Corsair fall", corsair_nested[0][1]),
+            ("Corsair non-fall", corsair_nested[1][1]),
+            ("no partner", direct[3][1]),
+        )
+        for variant, branch in household_variants:
+            with self.subTest(variant=variant):
+                self.assertNotRegex(source_without_comments(branch), early_day_jump)
+
+        household_source = source_without_comments(
+            people[household_start:household_end]
+        )
+        self.assertNotRegex(household_source, early_day_jump)
+
+        second_day_line = (
+            '"丰收节的第二天。一支来自南方克恩伯爵领的代表团抵达了艾登堡。"'
+        )
+        second_day_start = find_source_line(people, second_day_line)
+        self.assertGreater(second_day_start, household_end)
         second_day_source = "\n".join(people[household_end:final_act])
 
         self.assertEqual(second_day_source.count("丰收节的第二天"), 1)
