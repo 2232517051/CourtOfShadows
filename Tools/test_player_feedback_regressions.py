@@ -86,30 +86,69 @@ def call_targets(lines: list[str]) -> list[str]:
 
 
 SELENE_CHARACTER_DIALOGUE_RE = re.compile(r"(?m)^\s*corsair\s+[\"']")
-SELENE_DIRECT_REUNION_RE = re.compile(
-    r"(?m)(?:^|[。！？!?；])"
-    r"(?![^。！？!?；\n]*(?:(?:商人|水手|船员|旅人|有人)"
-    r"[^。！？!?；\n]{0,4}(?:说|称|提到|听到|告诉)|听说|据说|传闻|消息)"
-    r"[^。！？!?；\n]*(?:赛琳|她|你))"
-    r"[^。！？!?；\n]*"
-    r"(?:"
-    r"(?:赛琳(?:本人)?|她)[^。！？!?；\n]{0,20}"
-    r"(?:来到|走进|走到|站在|出现|抵达|回到|驶入|登上|"
-    r"(?:与|和)你(?:相见|重逢|跳舞|同行)|牵住你|挽住你|拥抱你|吻你)"
-    r"|你[^。！？!?；\n]{0,8}(?:与|和)(?:赛琳|她)[^。！？!?；\n]{0,8}"
-    r"(?:相见|重逢|跳舞|同行|拥抱)"
-    r"|你[^。！？!?；\n]{0,12}(?:见到|看见|遇见|碰见|迎到|等到)了?"
-    r"(?:赛琳|她))",
-)
-SELENE_DIRECT_DELIVERY_RE = re.compile(
-    r"(?:赛琳(?:本人)?|她)[^，。；\n]{0,8}"
-    r"(?:送来|捎来|寄来|带来|递来|送到|捎到|寄到|带到|递到)"
-    r"[^，。；\n]{0,8}(?:信|口信|字条|包裹|消息)"
-    r"|你[^，。；\n]{0,12}(?:收到|接到|拿到|读到|拆开)"
-    r"[^，。；\n]{0,12}(?:赛琳(?:本人)?|她)(?:亲手)?"
+_SELENE_ACTOR = r"(?:赛琳|她)(?:本人)?(?!本人|的)"
+_SELENE_LETTER_AUTHORSHIP = (
+    r"(?:赛琳|她)(?:本人)?(?:亲手)?"
     r"(?:的(?:来信|信|口信|字条|包裹)|"
-    r"(?:写|寄|捎|送)来(?:的)?(?:来信|信|口信|字条|包裹)|来信)",
+    r"(?:写|寄|捎|送)来(?:的)?(?:来信|信|口信|字条|包裹)|来信)"
 )
+_SELENE_TEXT_SEGMENT_RE = re.compile(r"[^。！？!?；;\n]+")
+_SELENE_REPORT_CUE_RE = re.compile(
+    r"(?:(?:商人|水手|船员|旅人|有人)[^，,。！？!?；;\n]{0,4}"
+    r"(?:说|称|提到|听到|告诉)|听说|据说|传闻|消息)"
+)
+_SELENE_DIRECT_REUNION_PATTERNS = (
+    re.compile(
+        rf"(?P<selene>{_SELENE_ACTOR})[^。！？!?；;\n]{{0,20}}"
+        r"(?P<action>来到|走进|走到|站在|出现|抵达|回到|驶入|登上|"
+        r"(?:与|和)你(?:相见|重逢|跳舞|同行)|牵住你|挽住你|拥抱你|吻你)"
+    ),
+    re.compile(
+        rf"你[^。！？!?；;\n]{{0,8}}(?:与|和)(?P<selene>{_SELENE_ACTOR})"
+        r"[^。！？!?；;\n]{0,8}(?P<action>相见|重逢|跳舞|同行|拥抱)"
+    ),
+    re.compile(
+        rf"你[^。！？!?；;\n]{{0,12}}"
+        r"(?P<action>见到|看见|遇见|碰见|迎到|等到)了?"
+        rf"(?P<selene>{_SELENE_ACTOR})"
+    ),
+)
+_SELENE_DIRECT_DELIVERY_PATTERNS = (
+    re.compile(
+        rf"(?P<selene>{_SELENE_ACTOR})[^，,。！？!?；;\n]{{0,8}}"
+        r"(?P<action>送来|捎来|寄来|带来|递来|送到|捎到|寄到|带到|递到)"
+        r"[^，,。！？!?；;\n]{0,8}(?:信|口信|字条|包裹|消息)"
+    ),
+    re.compile(
+        r"你[^，,。！？!?；;\n]{0,12}"
+        r"(?P<action>收到|接到|拿到|读到|拆开)"
+        rf"[^，,。！？!?；;\n]{{0,12}}"
+        rf"(?P<selene>{_SELENE_LETTER_AUTHORSHIP})"
+    ),
+)
+
+
+def _has_unreported_selene_contact(
+    text: str, patterns: tuple[re.Pattern[str], ...]
+) -> bool:
+    """Return whether a sentence segment contains Selene's direct action."""
+    for segment_match in _SELENE_TEXT_SEGMENT_RE.finditer(text):
+        segment = segment_match.group(0)
+        report_cues = tuple(_SELENE_REPORT_CUE_RE.finditer(segment))
+        for pattern in patterns:
+            for contact in pattern.finditer(segment):
+                selene_start = contact.start("selene")
+                if not any(report.start() < selene_start for report in report_cues):
+                    return True
+    return False
+
+
+def has_selene_direct_reunion(text: str) -> bool:
+    return _has_unreported_selene_contact(text, _SELENE_DIRECT_REUNION_PATTERNS)
+
+
+def has_selene_direct_delivery(text: str) -> bool:
+    return _has_unreported_selene_contact(text, _SELENE_DIRECT_DELIVERY_PATTERNS)
 
 
 def ending_section(name: str, label: str) -> str:
@@ -286,35 +325,27 @@ class SourceParsingContractTests(unittest.TestCase):
             with self.subTest(direct_dialogue=direct_dialogue):
                 self.assertIsNotNone(SELENE_CHARACTER_DIALOGUE_RE.search(direct_dialogue))
 
-        self.assertIsNotNone(
-            SELENE_DIRECT_REUNION_RE.search("她来到广场，与你跳舞。")
-        )
-        self.assertIsNotNone(SELENE_DIRECT_REUNION_RE.search("赛琳和你重逢。"))
-        self.assertIsNotNone(SELENE_DIRECT_DELIVERY_RE.search("她捎来信。"))
-        self.assertIsNone(
-            SELENE_DIRECT_REUNION_RE.search("商人说她回到潮汐港继续航海。")
-        )
+        self.assertTrue(has_selene_direct_reunion("她来到广场，与你跳舞。"))
+        self.assertTrue(has_selene_direct_reunion("赛琳和你重逢。"))
+        self.assertTrue(has_selene_direct_delivery("她捎来信。"))
+        self.assertTrue(has_selene_direct_reunion("她听完消息后来到广场。"))
+        self.assertTrue(has_selene_direct_delivery("她听完消息后捎来信。"))
+        self.assertFalse(has_selene_direct_reunion("商人说她回到潮汐港继续航海。"))
 
     def test_selene_recipient_first_direct_letter_is_not_indirect_news(self) -> None:
-        self.assertIsNotNone(
-            SELENE_DIRECT_DELIVERY_RE.search("你收到一封赛琳的来信。")
-        )
+        self.assertTrue(has_selene_direct_delivery("你收到一封赛琳的来信。"))
 
         for legal_indirect_news in (
             "你收到商人的来信，信里说赛琳仍在南方航海。",
             "商人说他收到过赛琳的来信。",
         ):
             with self.subTest(legal_indirect_news=legal_indirect_news):
-                self.assertIsNone(
-                    SELENE_DIRECT_DELIVERY_RE.search(legal_indirect_news)
-                )
+                self.assertFalse(has_selene_direct_delivery(legal_indirect_news))
 
     def test_selene_protagonist_first_pronominal_meeting_is_not_indirect_news(self) -> None:
-        self.assertIsNotNone(
-            SELENE_DIRECT_REUNION_RE.search("你在广场见到了她。")
-        )
-        self.assertIsNotNone(
-            SELENE_DIRECT_REUNION_RE.search(
+        self.assertTrue(has_selene_direct_reunion("你在广场见到了她。"))
+        self.assertTrue(
+            has_selene_direct_reunion(
                 "商人说完消息。她随后来到广场，与你跳舞。"
             )
         )
@@ -325,8 +356,23 @@ class SourceParsingContractTests(unittest.TestCase):
             "你听说他见到了她。",
         ):
             with self.subTest(legal_indirect_news=legal_indirect_news):
-                self.assertIsNone(
-                    SELENE_DIRECT_REUNION_RE.search(legal_indirect_news)
+                self.assertFalse(has_selene_direct_reunion(legal_indirect_news))
+
+    def test_selene_possessive_people_and_objects_are_not_direct_contact(self) -> None:
+        for legal_possessive_reference in (
+            "你在广场见到了她的船员。",
+            "她的船员捎来消息。",
+            "你收到赛琳的船员寄来的信。",
+            "你在码头看见了赛琳的旧船。",
+            "她本人的船员捎来消息。",
+            "你在码头看见了赛琳本人的旧船。",
+        ):
+            with self.subTest(legal_possessive_reference=legal_possessive_reference):
+                self.assertFalse(
+                    has_selene_direct_reunion(legal_possessive_reference)
+                )
+                self.assertFalse(
+                    has_selene_direct_delivery(legal_possessive_reference)
                 )
 
     def test_direct_branches_stop_before_outer_cleanup_and_later_chain(self) -> None:
@@ -1002,8 +1048,8 @@ class PeopleExpansionContractTests(unittest.TestCase):
             corsair_source,
             rf"(?m)^\s*show\s+{re.escape(corsair_tag)}\b",
         )
-        self.assertIsNone(SELENE_DIRECT_REUNION_RE.search(corsair_source))
-        self.assertIsNone(SELENE_DIRECT_DELIVERY_RE.search(corsair_source))
+        self.assertFalse(has_selene_direct_reunion(corsair_source))
+        self.assertFalse(has_selene_direct_delivery(corsair_source))
 
         for legal_indirect_news in (
             "商人说她仍在南方航海。",
@@ -1012,8 +1058,8 @@ class PeopleExpansionContractTests(unittest.TestCase):
             "商人捎来关于她的消息。",
         ):
             with self.subTest(legal_indirect_news=legal_indirect_news):
-                self.assertIsNone(SELENE_DIRECT_REUNION_RE.search(legal_indirect_news))
-                self.assertIsNone(SELENE_DIRECT_DELIVERY_RE.search(legal_indirect_news))
+                self.assertFalse(has_selene_direct_reunion(legal_indirect_news))
+                self.assertFalse(has_selene_direct_delivery(legal_indirect_news))
 
     def test_delegation_uses_known_lord_title_without_unexplained_ranks(self) -> None:
         lines = self.people_lines()
