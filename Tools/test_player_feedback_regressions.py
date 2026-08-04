@@ -14,15 +14,17 @@ def read_game_file(name: str) -> str:
     return (GAME / name).read_text(encoding="utf-8")
 
 
-def character_image_tag(name: str) -> str:
-    characters = read_game_file("characters.rpy")
+def character_image_tag(name: str, source_name: str = "characters.rpy") -> str:
+    characters = read_game_file(source_name)
     match = re.search(
         rf'^define {re.escape(name)} = Character\([^\n]*image="(\w+)"\)',
         characters,
         re.MULTILINE,
     )
     if match is None:
-        raise AssertionError(f"character image binding for {name!r} not found")
+        raise AssertionError(
+            f"character image binding for {name!r} not found in {source_name}"
+        )
     return f"{match.group(1)}_img"
 
 
@@ -64,26 +66,46 @@ def source_block(lines: list[str], start: int) -> tuple[list[str], int]:
 def direct_source_branches(
     lines: list[str], start: int, end: int, indent: int
 ) -> list[tuple[str, list[str]]]:
-    """Return direct if/elif/else branches at one source indentation."""
-    branch_starts = [
-        index
-        for index in range(start, end)
-        if source_indent(lines[index]) == indent
-        and re.fullmatch(r"(?:if|elif) .+:|else:", lines[index].strip())
-    ]
-    return [
+    """Return one direct if/elif/else chain with indentation-scoped bodies."""
+    first = next(
         (
-            lines[branch_start].strip(),
-            lines[
-                branch_start : (
-                    branch_starts[offset + 1]
-                    if offset + 1 < len(branch_starts)
-                    else end
-                )
-            ],
+            index
+            for index in range(start, end)
+            if source_indent(lines[index]) == indent
+            and re.fullmatch(r"if .+:", lines[index].strip())
+        ),
+        None,
+    )
+    if first is None:
+        return []
+
+    branches: list[tuple[str, list[str]]] = []
+    branch_start = first
+    while branch_start < end:
+        branch_end = end
+        next_sibling: int | None = None
+        for index in range(branch_start + 1, end):
+            stripped = lines[index].strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            line_indent = source_indent(lines[index])
+            if line_indent < indent:
+                branch_end = index
+                break
+            if line_indent == indent:
+                branch_end = index
+                if re.fullmatch(r"elif .+:|else:", stripped):
+                    next_sibling = index
+                break
+
+        branches.append(
+            (lines[branch_start].strip(), lines[branch_start:branch_end])
         )
-        for offset, branch_start in enumerate(branch_starts)
-    ]
+        if next_sibling is None:
+            break
+        branch_start = next_sibling
+
+    return branches
 
 
 def find_source_line(lines: list[str], exact: str) -> int:
@@ -130,6 +152,49 @@ def load_portrait_scanner():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+class SourceParsingContractTests(unittest.TestCase):
+    def test_direct_branches_stop_before_outer_cleanup_and_later_chain(self) -> None:
+        lines = [
+            "    if marriage_route:",
+            "        if marriage_warm:",
+            '            "warm home event"',
+            "        else:",
+            '            "cold home event"',
+            "        hide ingrid_img",
+            "    elif corsair_romance:",
+            '        "corsair event"',
+        ]
+
+        nested = direct_source_branches(lines, 1, len(lines), 8)
+
+        self.assertEqual(
+            [condition for condition, _ in nested],
+            ["if marriage_warm:", "else:"],
+        )
+        self.assertEqual(
+            [line.strip() for line in nested[-1][1] if line.strip()],
+            ["else:", '"cold home event"'],
+        )
+
+    def test_direct_branches_stop_at_outer_dedent_without_cleanup(self) -> None:
+        lines = [
+            "    if marriage_route:",
+            "        if marriage_warm:",
+            '            "warm home event"',
+            "        else:",
+            '            "cold home event"',
+            "    elif corsair_romance:",
+            '        "corsair event"',
+        ]
+
+        nested = direct_source_branches(lines, 1, len(lines), 8)
+
+        self.assertEqual(
+            [line.strip() for line in nested[-1][1] if line.strip()],
+            ["else:", '"cold home event"'],
+        )
 
 
 class PortraitContractTests(unittest.TestCase):
@@ -494,7 +559,7 @@ class PeopleExpansionContractTests(unittest.TestCase):
         end = find_source_line(lines, "## —— 第三幕：治理之道 ——")
         return direct_source_branches(lines, start + 1, end, 4)
 
-    def test_expansion_conditions_material_outcomes_and_construction(self) -> None:
+    def test_expansion_material_conditions_have_direct_scoped_bodies(self) -> None:
         lines = self.people_lines()
         first_act_end = find_source_line(lines, "## —— 第二幕：奥尔德里克的告别 ——")
         opening = lines[:first_act_end]
@@ -508,16 +573,39 @@ class PeopleExpansionContractTests(unittest.TestCase):
         self.assertLess(granary_start, school_start)
         self.assertLess(school_start, clinic_start)
 
-        wealth_block = opening[wealth_start:granary_start]
-        self.assertIn("else:", [line.strip() for line in wealth_block])
-        self.assertIn("远称不上富庶", "\n".join(wealth_block))
-        self.assertIn("公仓门上挂着公开的收支牌", opening_source)
-        self.assertIn("新公仓一直没能建成", opening_source)
-        self.assertIn("学堂", opening_source)
-        self.assertIn("诊所新馆", opening_source)
+        wealth = direct_source_branches(opening, wealth_start, granary_start, 4)
+        granary = direct_source_branches(opening, granary_start, school_start, 4)
+        school = direct_source_branches(opening, school_start, clinic_start, 4)
+        clinic = direct_source_branches(opening, clinic_start, first_act_end, 4)
+
+        self.assertEqual([condition for condition, _ in wealth], ["if wealth >= 60:", "else:"])
+        self.assertIn("领库也终于有余钱", "\n".join(wealth[0][1]))
+        self.assertNotIn("远称不上富庶", "\n".join(wealth[0][1]))
+        self.assertIn("远称不上富庶", "\n".join(wealth[1][1]))
+        self.assertNotIn("领库也终于有余钱", "\n".join(wealth[1][1]))
+
+        self.assertEqual([condition for condition, _ in granary], ["if built_granary:", "else:"])
+        self.assertIn("公仓门上挂着公开的收支牌", "\n".join(granary[0][1]))
+        self.assertNotIn("新公仓一直没能建成", "\n".join(granary[0][1]))
+        self.assertIn("新公仓一直没能建成", "\n".join(granary[1][1]))
+        self.assertNotIn("公仓门上挂着公开的收支牌", "\n".join(granary[1][1]))
+
+        self.assertEqual([condition for condition, _ in school], ["if built_school:"])
+        school_source = "\n".join(school[0][1])
+        self.assertIn("学堂", school_source)
+        self.assertNotIn("诊所", school_source)
+        self.assertNotIn("公仓", school_source)
+
+        self.assertEqual([condition for condition, _ in clinic], ["if built_clinic:"])
+        clinic_source = "\n".join(clinic[0][1])
+        self.assertIn("诊所新馆", clinic_source)
+        self.assertNotIn("学堂", clinic_source)
+        self.assertNotIn("公仓", clinic_source)
+
+        self.assertNotIn('"第二天', opening_source)
         self.assertNotIn("整个王国最富庶、最和平的领地", opening_source)
 
-    def test_expansion_consumes_household_states_as_one_direct_chain(self) -> None:
+    def test_expansion_households_advance_as_distinct_festival_or_home_events(self) -> None:
         direct = self.household_branches()
         self.assertEqual(
             [condition for condition, _ in direct],
@@ -528,9 +616,38 @@ class PeopleExpansionContractTests(unittest.TestCase):
                 "else:",
             ],
         )
+
         for condition, branch in direct:
-            with self.subTest(scene_clear=condition):
-                self.assertEqual(branch[1].strip(), "$ hide_all_chars()")
+            for index, line in enumerate(branch):
+                if not line.strip().startswith("scene "):
+                    continue
+                previous = index - 1
+                while previous >= 0 and (
+                    not branch[previous].strip()
+                    or branch[previous].lstrip().startswith("#")
+                ):
+                    previous -= 1
+                with self.subTest(scene_clear=condition, scene=line.strip()):
+                    self.assertGreaterEqual(previous, 0)
+                    self.assertRegex(
+                        branch[previous].strip(), r"^\$ hide_all_chars\([^)]*\)$"
+                    )
+
+        elena_lines = direct[0][1]
+        elena_nested = direct_source_branches(
+            elena_lines,
+            1,
+            len(elena_lines),
+            source_indent(elena_lines[0]) + 4,
+        )
+        self.assertEqual(
+            [condition for condition, _ in elena_nested],
+            ["if rel_elena >= 50:", "else:"],
+        )
+        first_elena_nested = elena_lines.index(elena_nested[0][1][0])
+        self.assertIn("苹果木牌", "\n".join(elena_lines[:first_elena_nested]))
+        self.assertIn("牵住你的手", "\n".join(elena_nested[0][1]))
+        self.assertIn("独自走向舞圈", "\n".join(elena_nested[1][1]))
 
         marriage_lines = direct[1][1]
         marriage_nested = direct_source_branches(
@@ -547,9 +664,15 @@ class PeopleExpansionContractTests(unittest.TestCase):
         marriage_preamble = "\n".join(marriage_lines[:first_nested])
         self.assertIn("妻子", marriage_preamble)
         self.assertRegex(marriage_preamble, r"家|家庭")
-        for _, outcome in marriage_nested:
-            outcome_source = "\n".join(outcome)
-            self.assertRegex(outcome_source, r"书房|餐桌|晚饭|丰收节")
+        warm_source = "\n".join(marriage_nested[0][1])
+        cold_source = "\n".join(marriage_nested[1][1])
+        self.assertIn("挽着你的手", warm_source)
+        self.assertIn("两双沾了泥的鞋", warm_source)
+        self.assertNotIn("长桌两端", warm_source)
+        self.assertIn("一前一后", cold_source)
+        self.assertIn("长桌两端", cold_source)
+        self.assertNotIn("挽着你的手", cold_source)
+        self.assertNotIn("hide ingrid_img", cold_source)
 
         household_source = "\n".join(
             line for _, branch in direct for line in branch
@@ -560,8 +683,14 @@ class PeopleExpansionContractTests(unittest.TestCase):
         self.assertNotRegex(
             household_source, r"你们的孩子|你们的儿女|生下|生了|继承人"
         )
+        self.assertNotRegex(
+            household_source,
+            r"盐价表|共用的书桌|绳头|绳结|南边来的商人|水渠|面粉",
+        )
+        self.assertIn("门房一家", "\n".join(direct[3][1]))
+        self.assertIn("独自上楼", "\n".join(direct[3][1]))
 
-    def test_corsair_household_uses_only_keepsake_and_indirect_news(self) -> None:
+    def test_corsair_household_has_state_specific_event_without_direct_contact(self) -> None:
         corsair_lines = self.household_branches()[2][1]
         nested = direct_source_branches(
             corsair_lines,
@@ -575,48 +704,67 @@ class PeopleExpansionContractTests(unittest.TestCase):
         )
         fall_source = "\n".join(nested[0][1])
         surviving_source = "\n".join(nested[1][1])
-        self.assertIn("空着", fall_source)
-        self.assertIn("没有捎来一个字", fall_source)
-        self.assertIn("绳结", surviving_source)
-        self.assertIn("商人", surviving_source)
-        self.assertIn("没捎过话", surviving_source)
+        self.assertIn("第一段结束前", fall_source)
+        self.assertIn("从侧巷回了城堡", fall_source)
+        self.assertNotIn("把曲子听完", fall_source)
+        self.assertIn("把曲子听完", surviving_source)
+        self.assertIn("杯沿", surviving_source)
+        self.assertNotIn("从侧巷回了城堡", surviving_source)
 
         corsair_source = "\n".join(corsair_lines)
-        self.assertNotIn("信", corsair_source)
-        self.assertNotIn("赛琳托", corsair_source)
-        self.assertNotIn("她托", corsair_source)
-        self.assertNotIn("带话", corsair_source)
-        self.assertNotIn("驶进艾登堡", corsair_source)
-        self.assertNotIn("show corsair_img", corsair_source)
+        corsair_tag = character_image_tag("corsair", "southern_expansion.rpy")
+        self.assertEqual(corsair_source.count("赛琳"), 1)
+        self.assertIn("你在副歌里想起赛琳", corsair_source)
+        self.assertNotRegex(corsair_source, r"(?m)^\s*corsair\s+\"")
+        self.assertNotRegex(
+            corsair_source,
+            rf"(?m)^\s*show\s+{re.escape(corsair_tag)}\b",
+        )
+        self.assertNotRegex(
+            corsair_source,
+            r"(?:捎|带|寄|递|转交).{0,8}(?:信件|书信|口信|话|一个字|字条|包裹)",
+        )
+        self.assertNotRegex(
+            corsair_source,
+            r"(?:信件|书信|口信|字条|包裹).{0,8}(?:捎|带|寄|递|转交)",
+        )
+        self.assertNotRegex(
+            corsair_source,
+            r"赛琳(?:本人)?(?:来到|走进|走到|站在|出现|抵达|回到|驶入|登上)",
+        )
 
-    def test_people_route_does_not_invent_a_duchy(self) -> None:
-        people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
-        self.assertNotIn("公爵大人", people)
-        self.assertNotIn("公爵头衔", people)
+    def test_delegation_uses_known_lord_title_without_unexplained_ranks(self) -> None:
+        lines = self.people_lines()
+        start = find_source_line(lines, "## —— 第三幕：治理之道 ——")
+        end = find_source_line(lines, "## —— 第四幕：黄昏漫步 ——")
+        delegation = "\n".join(lines[start:end])
 
-    def test_national_change_has_exact_resistance_and_retry_beats(self) -> None:
+        self.assertIn("领主大人，克恩伯爵派我们来向您请教治理之道", delegation)
+        self.assertIn("多谢领主大人赐教", delegation)
+        self.assertNotRegex(delegation, r"大公|公爵|侯爵|子爵|男爵")
+
+    def test_national_change_identifies_coalition_content_charge_and_retry(self) -> None:
         people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
-        self.assertIn(
-            "第一份改革案送进王都议会时，被贵族以『动摇旧律』为由否决。",
-            people,
-        )
-        self.assertIn("第二份删掉了一半条文，仍没能通过。", people)
-        self.assertIn("有人因此入狱", people)
-        self.assertIn("又把同样的问题重新提出", people)
-        self.assertIn(
-            "艾登堡没有替整个王国作答。它只是证明了一件事：领民不下跪，税收照样能进仓；账目公开，领主也不必失去威信。",
-            people,
-        )
-        self.assertIn("有的地方照搬艾登堡的办法", people)
-        self.assertIn("因为豪强阻挠而失败", people)
-        self.assertIn("并非出自某一个人的命令", people)
-        self.assertIn(
-            "艾登堡只在史册边缘留下一个较早的例子：变化曾经在一小块土地上发生过，因此后来的人知道，它可以再发生。",
-            people,
-        )
+        for marker in (
+            "城镇行会",
+            "村社推举的代表",
+            "愿意公开账目的小领主",
+            "公开地租与税款去向",
+            "列席地方议事",
+            "被控『煽动抗税』",
+            "把提案拆成两份",
+            "先接受了公开账目",
+            "撤下公示牌",
+            "驳回卷宗",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, people)
+
+        self.assertNotIn("艾登堡没有替整个王国作答", people)
+        self.assertNotIn("艾登堡只在史册边缘留下一个较早的例子", people)
         self.assertNotIn("几十个领地的代表坐在一张桌上，一条条把旧律改了", people)
 
-    def test_posthumous_tail_changes_subject_and_has_no_protagonist_actions(self) -> None:
+    def test_posthumous_tail_contains_no_protagonist_second_person_reference(self) -> None:
         people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
         self.assertNotIn("transform father_son_slow_push", people)
         death_line = '"你是在一个平凡的春日清晨走的。"'
@@ -624,10 +772,53 @@ class PeopleExpansionContractTests(unittest.TestCase):
         after_death = people.split(death_line, 1)[1]
 
         self.assertNotIn('player "', after_death)
-        self.assertNotRegex(after_death, r'(?m)^\s*"你')
-        for subject in ("村社", "继任者", "史家", "王后", "男爵", "弗雷德里克", "暗百合", "雷恩"):
+        self.assertNotRegex(after_death, r"[你您]")
+        for subject in ("村社", "地方议会", "史家", "王后", "男爵", "弗雷德里克", "暗百合", "雷恩"):
             with self.subTest(subject=subject):
                 self.assertIn(subject, after_death)
+
+    def test_posthumous_tail_consumes_each_surviving_state_directly(self) -> None:
+        lines = self.people_lines()
+        queen_start = find_source_line(lines, "if queen_trust:")
+        baron_start = find_source_line(lines, "if baron_peace_path:")
+        prince_start = find_source_line(lines, "if prince_ally:")
+        lily_start = find_source_line(lines, "if dark_lily_joined:")
+        rayn_start = find_source_line(
+            lines,
+            '"雷恩把守军改成了小规模常备队与村社轮值并存。有人嫌村社轮值遇警时集结太慢，他只说，百姓需要的是能回家种地的兵，不是另一支只听一个人命令的私军。"',
+        )
+
+        queen = direct_source_branches(lines, queen_start, baron_start, 4)
+        baron = direct_source_branches(lines, baron_start, prince_start, 4)
+        prince = direct_source_branches(lines, prince_start, lily_start, 4)
+        lily = direct_source_branches(lines, lily_start, rayn_start, 4)
+
+        self.assertEqual(
+            [condition for condition, _ in queen], ["if queen_trust:", "else:"]
+        )
+        self.assertIn("退出议会", "\n".join(queen[0][1]))
+        self.assertIn("拒绝了最初几轮让步", "\n".join(queen[1][1]))
+
+        self.assertEqual(
+            [condition for condition, _ in baron],
+            ["if baron_peace_path:", "else:"],
+        )
+        self.assertIn("地方议会代表", "\n".join(baron[0][1]))
+        self.assertIn("组织过抵抗", "\n".join(baron[1][1]))
+
+        self.assertEqual(
+            [condition for condition, _ in prince], ["if prince_ally:", "else:"]
+        )
+        self.assertIn("化名去了南方教书", "\n".join(prince[0][1]))
+        self.assertIn("流亡海外", "\n".join(prince[1][1]))
+
+        self.assertEqual(
+            [condition for condition, _ in lily],
+            ["if dark_lily_joined:", "elif dark_lily_destroyed:", "else:"],
+        )
+        self.assertIn("公开监察员", "\n".join(lily[0][1]))
+        self.assertIn("早已覆灭", "\n".join(lily[1][1]))
+        self.assertIn("没有在一夜间消失", "\n".join(lily[2][1]))
 
 
 if __name__ == "__main__":
