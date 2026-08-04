@@ -76,6 +76,37 @@ FORBIDDEN_ACTIVE_TOKENS = (
     "STYLE.md",
     "FORBIDDEN_PHRASES.md",
 )
+ACTIVE_ENTRYPOINTS = (
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CANON.md",
+    "docs/writing-style/INDEX.md",
+    "docs/writing-style/guidance.md",
+)
+ALLOWED_ACTIVE_SOURCES = {
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CANON.md",
+    "docs/writing-style/INDEX.md",
+    "docs/writing-style/guidance.md",
+    "docs/writing-style/scene-card-template.md",
+}
+ACTIVE_SOURCE_DIRECTIVE = re.compile(
+    r"(?:\bread\b|\bload\b|\u8bfb\u53d6|\u52a0\u8f7d)\s+"
+    r"(?:only\s+)?(?P<source>[^\s,;\u3001\uFF0C\uFF1B\u3002]+)",
+    re.IGNORECASE,
+)
+EXTERNAL_SOURCE = re.compile(
+    r"https?://[^\s)>\]}]+|"
+    r"[A-Za-z]:[\\/]+[^\s)>\]}]+|"
+    r"(?<![\w.])\.\.[\\/]+[^\s)>\]}]+|"
+    r"(?<!\S)\\{2,}[^\s)>\]}]+",
+    re.IGNORECASE,
+)
+PROJECT_SOURCE_PATH = re.compile(
+    r"(?:[A-Za-z0-9_.-]+[\\/])+[A-Za-z0-9_.-]+\.(?:md|txt|rpy|json)",
+    re.IGNORECASE,
+)
 STYLE_ALLOWED_ENTRIES = {
     "INDEX.md",
     "scene-card-template.md",
@@ -143,6 +174,83 @@ def _relative(path: Path, root: Path) -> str:
         return path.relative_to(root).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def _normalized_source(raw_source: str) -> str:
+    markdown_link = re.fullmatch(r"\[[^]]*\]\(([^)]+)\)", raw_source)
+    if markdown_link:
+        raw_source = markdown_link.group(1)
+    source = raw_source.strip("`'\"(<[{>)]}.,;:")
+    source = re.sub(r"[\\/]+", "/", source)
+    source = re.sub(r":\d+(?:-\d+)?$", "", source)
+    return source.casefold()
+
+
+def _looks_like_source(source: str) -> bool:
+    return bool(
+        "/" in source
+        or "\\" in source
+        or re.search(r"\.(?:md|txt|rpy|json)\b", source, re.IGNORECASE)
+    )
+
+
+def _source_is_allowed(source: str, approved_sources: set[str]) -> bool:
+    if source in {value.casefold() for value in ALLOWED_ACTIVE_SOURCES}:
+        return True
+    if source in approved_sources:
+        return True
+    if re.fullmatch(r"game/[^/]+\.rpy", source):
+        return True
+    if re.fullmatch(r"[^/]+\.rpy", source):
+        return True
+    if re.fullmatch(r"memory/reference_[^/]+\.md", source):
+        return True
+    return False
+
+
+def _active_source_errors(
+    active_name: str,
+    text: str,
+    approved_sources: set[str],
+) -> list[str]:
+    findings: list[str] = []
+    rejected: set[str] = set()
+    for match in EXTERNAL_SOURCE.finditer(text):
+        source = _normalized_source(match.group(0))
+        if source not in rejected:
+            rejected.add(source)
+            findings.append(
+                f"{active_name}: unapproved active source {match.group(0)!r}"
+            )
+    for match in PROJECT_SOURCE_PATH.finditer(text):
+        raw_source = match.group(0)
+        source = _normalized_source(raw_source)
+        is_style_source = any(
+            marker in source
+            for marker in ("writing", "style", "corpus", "sample")
+        )
+        if (
+            is_style_source
+            and source not in rejected
+            and not _source_is_allowed(source, approved_sources)
+        ):
+            rejected.add(source)
+            findings.append(
+                f"{active_name}: unapproved active source {raw_source!r}"
+            )
+    for match in ACTIVE_SOURCE_DIRECTIVE.finditer(text):
+        raw_source = match.group("source")
+        source = _normalized_source(raw_source)
+        if (
+            _looks_like_source(raw_source)
+            and source not in rejected
+            and not _source_is_allowed(source, approved_sources)
+        ):
+            rejected.add(source)
+            findings.append(
+                f"{active_name}: unapproved active source {raw_source!r}"
+            )
+    return findings
 
 
 def _front_matter(
@@ -354,27 +462,47 @@ def _parse_blind_rounds(
 ) -> list[BlindRound]:
     rounds: list[BlindRound] = []
     seen: set[str] = set()
+    previous_round_number: int | None = None
+    all_rows_valid = True
     for cells in _table_rows(
         path, BLIND_HEADERS, root, errors, strict_file=True
     ):
         record = dict(zip(BLIND_HEADERS, cells))
         round_id = record["round_id"]
-        if not re.fullmatch(r"BT-[0-9]{3}", round_id) or round_id in seen:
+        row_valid = True
+        round_match = re.fullmatch(r"BT-([0-9]{3})", round_id)
+        if round_match is None or round_id in seen:
             errors.append(f"{_relative(path, root)}: invalid round_id {round_id}")
+            row_valid = False
+        elif (
+            previous_round_number is not None
+            and int(round_match.group(1)) <= previous_round_number
+        ):
+            errors.append(
+                f"{_relative(path, root)}: round numbers must increase "
+                "in append order "
+                f"({round_id} follows BT-{previous_round_number:03d})"
+            )
+            row_valid = False
+        if round_match is not None:
+            previous_round_number = int(round_match.group(1))
         seen.add(round_id)
         if record["scene_type"] not in SCENE_TYPES:
             errors.append(
                 f"{_relative(path, root)}: invalid scene_type "
                 f"{record['scene_type']}"
             )
+            row_valid = False
         if record["library_position"] not in {"A", "B", "C"}:
             errors.append(
                 f"{_relative(path, root)}: invalid library_position"
             )
+            row_valid = False
         method = record["selection_method"]
         primary = record["primary_position"]
         if method not in SELECTION_METHODS:
             errors.append(f"{_relative(path, root)}: invalid selection_method")
+            row_valid = False
         if method in {"single", "mixed_with_primary"} and primary not in {
             "A",
             "B",
@@ -383,25 +511,31 @@ def _parse_blind_rounds(
             errors.append(
                 f"{_relative(path, root)}: eligible round needs a primary_position"
             )
+            row_valid = False
         if method in {"mixed_without_primary", "rejected_all"} and primary != "-":
             errors.append(
                 f"{_relative(path, root)}: ineligible round primary must be -"
             )
+            row_valid = False
         if record["library_new_failure"] not in {"yes", "no"}:
             errors.append(
                 f"{_relative(path, root)}: library_new_failure must be yes or no"
             )
-        rounds.append(
-            BlindRound(
-                round_id=round_id,
-                scene_type=record["scene_type"],
-                library_position=record["library_position"],
-                selection_method=method,
-                primary_position=primary,
-                library_new_failure=record["library_new_failure"],
+            row_valid = False
+        if row_valid:
+            rounds.append(
+                BlindRound(
+                    round_id=round_id,
+                    scene_type=record["scene_type"],
+                    library_position=record["library_position"],
+                    selection_method=method,
+                    primary_position=primary,
+                    library_new_failure=record["library_new_failure"],
+                )
             )
-        )
-    return rounds
+        else:
+            all_rows_valid = False
+    return rounds if all_rows_valid else []
 
 
 def _derived_stage(samples: list[Sample], rounds: list[BlindRound]) -> str:
@@ -436,6 +570,7 @@ def validate_project(root: Path = ROOT) -> list[str]:
         style / "failure-reasons.md",
         style / "guidance.md",
         style / "validation-log.md",
+        approved / ".gitkeep",
         root / "docs" / "archive" / "writing-style-legacy" / "STYLE.md",
         root
         / "docs"
@@ -457,7 +592,16 @@ def validate_project(root: Path = ROOT) -> list[str]:
         errors.append("docs/writing-style/approved: required directory is missing")
     else:
         for entry in sorted(approved.iterdir()):
-            if entry.is_file() and entry.name == ".gitkeep":
+            if entry.name == ".gitkeep":
+                if (
+                    not entry.is_file()
+                    or entry.is_symlink()
+                    or entry.stat().st_size != 0
+                ):
+                    errors.append(
+                        "docs/writing-style/approved/.gitkeep must be an "
+                        "empty regular file"
+                    )
                 continue
             if entry.is_file() and entry.suffix == ".md":
                 continue
@@ -468,13 +612,19 @@ def validate_project(root: Path = ROOT) -> list[str]:
     for legacy_name in ("STYLE.md", "FORBIDDEN_PHRASES.md"):
         if (root / legacy_name).exists():
             errors.append(f"{legacy_name}: legacy writing source remains active")
-    for active_name in (
-        "AGENTS.md",
-        "CLAUDE.md",
-        "CANON.md",
-        "docs/writing-style/INDEX.md",
-        "docs/writing-style/guidance.md",
-    ):
+    approved_sources = (
+        {
+            value.casefold()
+            for path in approved.glob("*.md")
+            for value in (
+                f"docs/writing-style/approved/{path.name}",
+                f"approved/{path.name}",
+            )
+        }
+        if approved.is_dir()
+        else set()
+    )
+    for active_name in ACTIVE_ENTRYPOINTS:
         path = root / active_name
         if not path.is_file():
             continue
@@ -484,6 +634,7 @@ def validate_project(root: Path = ROOT) -> list[str]:
             and INDEX_REFERENCE not in text
         ):
             errors.append(f"{active_name}: missing {INDEX_REFERENCE}")
+        errors.extend(_active_source_errors(active_name, text, approved_sources))
         for token in FORBIDDEN_ACTIVE_TOKENS:
             if token.casefold() in text.casefold():
                 errors.append(f"{active_name}: forbidden active source {token}")

@@ -17,6 +17,13 @@ SCENES = (
     "failure_compromise",
     "ending_epilogue",
 )
+ACTIVE_ENTRYPOINTS = (
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CANON.md",
+    "docs/writing-style/INDEX.md",
+    "docs/writing-style/guidance.md",
+)
 
 
 class WritingStyleTestCase(unittest.TestCase):
@@ -25,6 +32,7 @@ class WritingStyleTestCase(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.style = self.root / "docs" / "writing-style"
         (self.style / "approved").mkdir(parents=True)
+        self.write("docs/writing-style/approved/.gitkeep", "")
         archive = self.root / "docs" / "archive" / "writing-style-legacy"
         archive.mkdir(parents=True)
         (archive / "STYLE.md").write_text("legacy style\n", encoding="utf-8")
@@ -214,6 +222,16 @@ class ApprovedSampleGuardTests(WritingStyleTestCase):
             "\n".join(validator.validate_project(self.root)),
         )
 
+    def test_gitkeep_must_be_an_empty_regular_file(self) -> None:
+        self.write(
+            "docs/writing-style/approved/.gitkeep",
+            "A rejected draft must not be hidden in the marker.\n",
+        )
+        self.assertIn(
+            ".gitkeep must be an empty regular file",
+            "\n".join(validator.validate_project(self.root)),
+        )
+
     def test_unexpected_top_level_style_file_is_rejected(self) -> None:
         self.write(
             "docs/writing-style/rejected-draft.md",
@@ -226,6 +244,46 @@ class ApprovedSampleGuardTests(WritingStyleTestCase):
 
 
 class ActiveSourceContractTests(WritingStyleTestCase):
+    def test_every_active_entrypoint_rejects_unapproved_source_locations(
+        self,
+    ) -> None:
+        source_variants = (
+            "Read D:/OtherGame/corpus.txt",
+            "rEaD d:/othergame/CORPUS.TXT",
+            r"Read D:\OtherGame\corpus.txt",
+            r"Read D:\\OtherGame\\corpus.txt",
+            "Read https://example.invalid/style/corpus.txt",
+            "Read ../OtherGame/corpus.txt",
+            r"Read ..\OtherGame\corpus.txt",
+            "Read docs/other-project/style-corpus.md",
+            "Style source: docs/other-project/style-corpus.md",
+        )
+        for active_name in ACTIVE_ENTRYPOINTS:
+            path = self.root / active_name
+            original = path.read_text(encoding="utf-8")
+            for source in source_variants:
+                with self.subTest(active_name=active_name, source=source):
+                    path.write_text(
+                        f"{original.rstrip()}\n{source}\n",
+                        encoding="utf-8",
+                    )
+                    report = "\n".join(validator.validate_project(self.root))
+                    self.assertIn(
+                        f"{active_name}: unapproved active source",
+                        report,
+                    )
+            path.write_text(original, encoding="utf-8")
+
+    def test_canon_fact_provenance_remains_allowed(self) -> None:
+        canon = self.root / "CANON.md"
+        canon.write_text(
+            canon.read_text(encoding="utf-8")
+            + "\nFact provenance: game/chapter1.rpy:55 and "
+            "memory/reference_cos_hidden_ending.md.\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(validator.validate_project(self.root), [])
+
     def test_active_entrypoint_cannot_reference_legacy_archive(self) -> None:
         index = self.style / "INDEX.md"
         index.write_text(
@@ -287,6 +345,27 @@ class MaturityContractTests(WritingStyleTestCase):
         )
         self.set_stage("mature")
         self.assertEqual(validator.validate_project(self.root), [])
+
+    def test_reordered_blind_rounds_fail_and_cannot_grant_maturity(self) -> None:
+        sample_number = 1
+        for _ in range(2):
+            for scene_type in SCENES:
+                self.add_sample(f"COS-{sample_number:03d}", scene_type)
+                sample_number += 1
+        self.set_blind_rounds(
+            [
+                "| BT-003 | power_bargain | A | single | A | no |",
+                "| BT-001 | mystery_reveal | C | mixed_with_primary | C | no |",
+                "| BT-002 | ending_epilogue | B | single | A | no |",
+            ]
+        )
+        self.set_stage("mature")
+        report = "\n".join(validator.validate_project(self.root))
+        self.assertIn("round numbers must increase in append order", report)
+        self.assertIn(
+            "declared maturity_stage mature does not match forming",
+            report,
+        )
 
 
 class LogContractTests(WritingStyleTestCase):
