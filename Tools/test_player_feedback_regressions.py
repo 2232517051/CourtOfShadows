@@ -29,14 +29,54 @@ def character_image_tag(name: str, source_name: str = "characters.rpy") -> str:
 
 
 def label_body(name: str, label: str) -> str:
-    text = read_game_file(name)
+    return label_body_from_text(read_game_file(name), label, source_name=name)
+
+
+def label_body_from_text(text: str, label: str, source_name: str = "source") -> str:
     match = re.search(
-        rf"(?ms)^label {re.escape(label)}(?:\([^\n]*\))?:\s*\n(.*?)(?=^[^ \t\r\n#]|\Z)",
+        rf"(?ms)^label {re.escape(label)}(?:\([^\n]*\))?:\s*\n(.*?)(?=^[^ \t\r\n]|\Z)",
         text,
     )
     if match is None:
-        raise AssertionError(f"label {label!r} not found in {name}")
+        raise AssertionError(f"label {label!r} not found in {source_name}")
     return match.group(1)
+
+
+def source_without_comments(lines: list[str]) -> str:
+    """Return live source text while excluding comment-only lines."""
+    return "\n".join(
+        line for line in lines if not line.lstrip().startswith("#")
+    )
+
+
+def call_targets(lines: list[str]) -> list[str]:
+    """Return Ren'Py call targets in source order, ignoring optional from labels."""
+    targets: list[str] = []
+    for line in lines:
+        match = re.fullmatch(
+            r"call (?P<target>[A-Za-z_]\w*)(?: from [A-Za-z_]\w*)?",
+            line.strip(),
+        )
+        if match is not None:
+            targets.append(match.group("target"))
+    return targets
+
+
+SELENE_CHARACTER_DIALOGUE_RE = re.compile(r"(?m)^\s*corsair\s+[\"']")
+SELENE_DIRECT_REUNION_RE = re.compile(
+    r"(?m)^(?![^\n]*(?:(?:商人|水手|船员|旅人|有人)[^。；\n]{0,4}"
+    r"(?:说|称|提到|听到)|听说|据说|传闻|消息))[^\n]*"
+    r"(?:赛琳(?:本人)?|她)[^。；\n]{0,20}"
+    r"(?:来到|走进|走到|站在|出现|抵达|回到|驶入|登上|"
+    r"(?:与|和)你(?:相见|重逢|跳舞|同行)|牵住你|挽住你|拥抱你|吻你)"
+    r"|你[^。；\n]{0,8}(?:与|和)(?:赛琳|她)[^。；\n]{0,8}"
+    r"(?:相见|重逢|跳舞|同行|拥抱)",
+)
+SELENE_DIRECT_DELIVERY_RE = re.compile(
+    r"(?:赛琳(?:本人)?|她)[^，。；\n]{0,8}"
+    r"(?:送来|捎来|寄来|带来|递来|送到|捎到|寄到|带到|递到)"
+    r"[^，。；\n]{0,8}(?:信|口信|字条|包裹|消息)",
+)
 
 
 def ending_section(name: str, label: str) -> str:
@@ -155,6 +195,44 @@ def load_portrait_scanner():
 
 
 class SourceParsingContractTests(unittest.TestCase):
+    def test_label_body_stops_before_next_top_level_section_comment(self) -> None:
+        people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
+
+        self.assertNotIn("## 隐藏结局：父与子", people)
+        self.assertNotIn("transform father_son_slow_push", people)
+
+    def test_label_body_stops_at_each_real_top_level_boundary(self) -> None:
+        fixtures = {
+            "section comment": (
+                'label target:\n    "inside"\n\n## next section\n    "leaked"\n'
+            ),
+            "transform": (
+                'label target:\n    "inside"\n\ntransform next_transform:\n    alpha 1.0\n'
+            ),
+            "label": 'label target:\n    "inside"\n\nlabel next_label:\n    "leaked"\n',
+        }
+
+        for boundary, source in fixtures.items():
+            with self.subTest(boundary=boundary):
+                body = label_body_from_text(source, "target")
+                self.assertIn('"inside"', body)
+                self.assertNotIn("next", body)
+                self.assertNotIn("leaked", body)
+
+    def test_selene_contact_patterns_reject_direct_contact_in_both_quote_styles(self) -> None:
+        for direct_dialogue in ('    corsair "我回来了。"', "    corsair '我回来了。'"):
+            with self.subTest(direct_dialogue=direct_dialogue):
+                self.assertIsNotNone(SELENE_CHARACTER_DIALOGUE_RE.search(direct_dialogue))
+
+        self.assertIsNotNone(
+            SELENE_DIRECT_REUNION_RE.search("她来到广场，与你跳舞。")
+        )
+        self.assertIsNotNone(SELENE_DIRECT_REUNION_RE.search("赛琳和你重逢。"))
+        self.assertIsNotNone(SELENE_DIRECT_DELIVERY_RE.search("她捎来信。"))
+        self.assertIsNone(
+            SELENE_DIRECT_REUNION_RE.search("商人说她回到潮汐港继续航海。")
+        )
+
     def test_direct_branches_stop_before_outer_cleanup_and_later_chain(self) -> None:
         lines = [
             "    if marriage_route:",
@@ -448,6 +526,107 @@ class EndingTimelineContractTests(unittest.TestCase):
         self.assertNotIn("三百七十二", iron)
 
 
+class EndingRouteContractTests(unittest.TestCase):
+    ENDING_TYPES = (
+        "truth",
+        "iron_lord",
+        "shadow_king",
+        "holy_guardian",
+        "peoples_lord",
+        "borgia",
+        "vassal",
+        "fall",
+        "sea",
+        "future_nonsea",
+    )
+
+    def route_lines(self) -> list[str]:
+        game_ending = label_body("chapter5.rpy", "game_ending").splitlines()
+        start = find_source_line(game_ending, "## 播放详细尾声")
+        end = find_source_line(
+            game_ending,
+            "## 终局结算（批31: 属性面板/图鉴计数下移至全部尾声之后, 不再打断叙事收束）",
+        )
+        return game_ending[start:end]
+
+    def test_real_game_ending_routes_each_fate_sequence_once(self) -> None:
+        route = self.route_lines()
+        people_start = find_source_line(route, 'if ending_type == "peoples_lord":')
+        people_block, people_end = source_block(route, people_start)
+        post_start = find_source_line(
+            route, 'if ending_type not in ("sea", "peoples_lord"):'
+        )
+        post_block, post_end = source_block(route, post_start)
+
+        self.assertLess(people_start, people_end)
+        self.assertLess(people_end, post_start)
+        self.assertLess(post_start, post_end)
+        self.assertEqual(call_targets(people_block), ["ending_side_characters_fate"])
+        self.assertEqual(
+            [line.strip() for line in people_block if line.strip()],
+            [
+                'if ending_type == "peoples_lord":',
+                "call ending_side_characters_fate from _call_ending_side_chars_before_people",
+                '$ play_music("audio/music/ending_triumph.ogg", fadein=1.5)',
+            ],
+        )
+        self.assertEqual(
+            call_targets(route[people_end:post_start]), ["ending_epilogue_router"]
+        )
+        self.assertEqual(call_targets(post_block), ["ending_side_characters_fate"])
+        self.assertEqual(
+            call_targets(route),
+            [
+                "ending_side_characters_fate",
+                "ending_epilogue_router",
+                "ending_side_characters_fate",
+            ],
+        )
+
+        actual_plans: dict[str, list[str]] = {}
+        for ending_type in self.ENDING_TYPES:
+            plan: list[str] = []
+            if ending_type == "peoples_lord":
+                plan.extend(call_targets(people_block))
+            plan.extend(call_targets(route[people_end:post_start]))
+            if ending_type not in ("sea", "peoples_lord"):
+                plan.extend(call_targets(post_block))
+            actual_plans[ending_type] = plan
+
+        for ending_type, plan in actual_plans.items():
+            with self.subTest(ending_type=ending_type):
+                expected = (
+                    ["ending_side_characters_fate", "ending_epilogue_router"]
+                    if ending_type == "peoples_lord"
+                    else ["ending_epilogue_router"]
+                    if ending_type == "sea"
+                    else ["ending_epilogue_router", "ending_side_characters_fate"]
+                )
+                self.assertEqual(plan, expected)
+                self.assertEqual(plan.count("ending_epilogue_router"), 1)
+                self.assertEqual(
+                    plan.count("ending_side_characters_fate"),
+                    0 if ending_type == "sea" else 1,
+                )
+
+    def test_side_character_content_remains_available_to_the_router(self) -> None:
+        fates = label_body("endings_expansion.rpy", "ending_side_characters_fate")
+        router = label_body("endings_expansion.rpy", "ending_epilogue_router").splitlines()
+        people_start = find_source_line(router, 'elif ending_type == "peoples_lord":')
+        people_block, _ = source_block(router, people_start)
+
+        self.assertEqual(
+            [line.strip() for line in people_block if line.strip()],
+            ['elif ending_type == "peoples_lord":', "jump ending_peoples_epilogue"],
+        )
+        self.assertIn("马库斯的归宿", fates)
+        self.assertIn("卡尔的归宿", fates)
+        self.assertIn("if marcus_returned:", fates)
+        self.assertIn('"战后第三个月, 你收到一封没有落款的信。"', fates)
+        self.assertIn("if karl_returned:", fates)
+        self.assertIn('"你确实抽空去过一次温特菲尔德村。"', fates)
+
+
 class PeopleCoreContractTests(unittest.TestCase):
     def people_label_lines(self) -> list[str]:
         return label_body("chapter5.rpy", "ending_peoples_lord").splitlines()
@@ -579,25 +758,33 @@ class PeopleExpansionContractTests(unittest.TestCase):
         clinic = direct_source_branches(opening, clinic_start, first_act_end, 4)
 
         self.assertEqual([condition for condition, _ in wealth], ["if wealth >= 60:", "else:"])
-        self.assertIn("领库也终于有余钱", "\n".join(wealth[0][1]))
-        self.assertNotIn("远称不上富庶", "\n".join(wealth[0][1]))
-        self.assertIn("远称不上富庶", "\n".join(wealth[1][1]))
-        self.assertNotIn("领库也终于有余钱", "\n".join(wealth[1][1]))
+        self.assertIn("领库也终于有余钱", source_without_comments(wealth[0][1]))
+        self.assertNotIn("远称不上富庶", source_without_comments(wealth[0][1]))
+        self.assertIn("远称不上富庶", source_without_comments(wealth[1][1]))
+        self.assertNotIn("领库也终于有余钱", source_without_comments(wealth[1][1]))
 
         self.assertEqual([condition for condition, _ in granary], ["if built_granary:", "else:"])
-        self.assertIn("公仓门上挂着公开的收支牌", "\n".join(granary[0][1]))
-        self.assertNotIn("新公仓一直没能建成", "\n".join(granary[0][1]))
-        self.assertIn("新公仓一直没能建成", "\n".join(granary[1][1]))
-        self.assertNotIn("公仓门上挂着公开的收支牌", "\n".join(granary[1][1]))
+        self.assertIn(
+            "公仓门上挂着公开的收支牌", source_without_comments(granary[0][1])
+        )
+        self.assertNotIn(
+            "新公仓一直没能建成", source_without_comments(granary[0][1])
+        )
+        self.assertIn(
+            "新公仓一直没能建成", source_without_comments(granary[1][1])
+        )
+        self.assertNotIn(
+            "公仓门上挂着公开的收支牌", source_without_comments(granary[1][1])
+        )
 
         self.assertEqual([condition for condition, _ in school], ["if built_school:"])
-        school_source = "\n".join(school[0][1])
+        school_source = source_without_comments(school[0][1])
         self.assertIn("学堂", school_source)
         self.assertNotIn("诊所", school_source)
         self.assertNotIn("公仓", school_source)
 
         self.assertEqual([condition for condition, _ in clinic], ["if built_clinic:"])
-        clinic_source = "\n".join(clinic[0][1])
+        clinic_source = source_without_comments(clinic[0][1])
         self.assertIn("诊所新馆", clinic_source)
         self.assertNotIn("学堂", clinic_source)
         self.assertNotIn("公仓", clinic_source)
@@ -713,25 +900,24 @@ class PeopleExpansionContractTests(unittest.TestCase):
 
         corsair_source = "\n".join(corsair_lines)
         corsair_tag = character_image_tag("corsair", "southern_expansion.rpy")
-        self.assertEqual(corsair_source.count("赛琳"), 1)
         self.assertIn("你在副歌里想起赛琳", corsair_source)
-        self.assertNotRegex(corsair_source, r"(?m)^\s*corsair\s+\"")
+        self.assertIsNone(SELENE_CHARACTER_DIALOGUE_RE.search(corsair_source))
         self.assertNotRegex(
             corsair_source,
             rf"(?m)^\s*show\s+{re.escape(corsair_tag)}\b",
         )
-        self.assertNotRegex(
-            corsair_source,
-            r"(?:捎|带|寄|递|转交).{0,8}(?:信件|书信|口信|话|一个字|字条|包裹)",
-        )
-        self.assertNotRegex(
-            corsair_source,
-            r"(?:信件|书信|口信|字条|包裹).{0,8}(?:捎|带|寄|递|转交)",
-        )
-        self.assertNotRegex(
-            corsair_source,
-            r"赛琳(?:本人)?(?:来到|走进|走到|站在|出现|抵达|回到|驶入|登上)",
-        )
+        self.assertIsNone(SELENE_DIRECT_REUNION_RE.search(corsair_source))
+        self.assertIsNone(SELENE_DIRECT_DELIVERY_RE.search(corsair_source))
+
+        for legal_indirect_news in (
+            "商人说她仍在南方航海。",
+            "商人说她回到潮汐港继续航海。",
+            "有人从潮汐港听到赛琳还活着的传闻。",
+            "商人捎来关于她的消息。",
+        ):
+            with self.subTest(legal_indirect_news=legal_indirect_news):
+                self.assertIsNone(SELENE_DIRECT_REUNION_RE.search(legal_indirect_news))
+                self.assertIsNone(SELENE_DIRECT_DELIVERY_RE.search(legal_indirect_news))
 
     def test_delegation_uses_known_lord_title_without_unexplained_ranks(self) -> None:
         lines = self.people_lines()
@@ -742,6 +928,29 @@ class PeopleExpansionContractTests(unittest.TestCase):
         self.assertIn("领主大人，克恩伯爵派我们来向您请教治理之道", delegation)
         self.assertIn("多谢领主大人赐教", delegation)
         self.assertNotRegex(delegation, r"大公|公爵|侯爵|子爵|男爵")
+        self.assertNotRegex(
+            delegation, r"(?:大公|公爵|侯爵|伯爵|子爵|男爵)大人"
+        )
+
+    def test_festival_chronology_ends_on_the_second_day_for_every_household(self) -> None:
+        people = self.people_lines()
+        household_end = find_source_line(people, "## —— 第三幕：治理之道 ——")
+        final_act = find_source_line(people, "## —— 第五幕：晚年与远讯 ——")
+        second_day_source = "\n".join(people[household_end:final_act])
+
+        self.assertEqual(second_day_source.count("丰收节的第二天"), 1)
+        self.assertRegex(
+            second_day_source,
+            r"第二天黄昏[^\n]*为期两天的丰收节[^\n]*尾声",
+        )
+
+    def test_reform_and_dark_lily_copy_uses_concrete_natural_actions(self) -> None:
+        people = "\n".join(self.people_lines())
+
+        self.assertNotIn("列席权仍被拖延", people)
+        self.assertIn("村社代表列席议事的提案仍被搁置", people)
+        self.assertNotIn("接受同一种去处", people)
+        self.assertIn("不愿公开的人可以离开，不再参与监察", people)
 
     def test_national_change_identifies_coalition_content_charge_and_retry(self) -> None:
         people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
@@ -771,7 +980,7 @@ class PeopleExpansionContractTests(unittest.TestCase):
         self.assertEqual(people.count(death_line), 1)
         after_death = people.split(death_line, 1)[1]
 
-        self.assertNotIn('player "', after_death)
+        self.assertNotRegex(after_death, r"(?m)^\s*player\s+[\"']")
         self.assertNotRegex(after_death, r"[你您]")
         for subject in ("村社", "地方议会", "史家", "王后", "男爵", "弗雷德里克", "暗百合", "雷恩"):
             with self.subTest(subject=subject):

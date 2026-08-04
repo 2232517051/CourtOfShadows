@@ -6443,13 +6443,16 @@ label game_ending:
         "你的故事在这里画上了句号。"
 
     ## 播放详细尾声
+    if ending_type == "peoples_lord":
+        call ending_side_characters_fate from _call_ending_side_chars_before_people
+        $ play_music("audio/music/ending_triumph.ogg", fadein=1.5)
     call ending_epilogue_router from _call_ending_epilogue_router
 
     ## 老朋友的归宿 (2026-05-17 dccdfrsx 反馈新增)
-    ## 在结局个人尾声播完后给马库斯/卡尔一个 closure
+    ## 通常在个人尾声后给马库斯/卡尔一个 closure；人民领主因个人尾声写到去世，已提前播放
     ## 南渡结局跳过命运表: 人已出海, 整张表以"你在艾登堡打听/收信"为叙事支点,
     ## 留守者的交代由 ending_sea_epilogue 从船上视角给
-    if ending_type != "sea":
+    if ending_type not in ("sea", "peoples_lord"):
         call ending_side_characters_fate from _call_ending_side_chars
 
     ## 终局结算（批31: 属性面板/图鉴计数下移至全部尾声之后, 不再打断叙事收束）
