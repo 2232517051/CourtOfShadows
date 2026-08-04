@@ -57,20 +57,21 @@ def find_source_line(lines: list[str], exact: str) -> int:
     return matches[0]
 
 
-def menu_outcomes(lines: list[str], menu_start: int) -> tuple[list[tuple[str, list[str]]], int]:
+def menu_outcomes(
+    lines: list[str], menu_start: int
+) -> tuple[list[tuple[str, str | None, list[str]]], int]:
     """Parse only direct choice blocks belonging to one Ren'Py menu."""
     menu_indent = source_indent(lines[menu_start])
     _, menu_end = source_block(lines, menu_start)
-    outcomes: list[tuple[str, list[str]]] = []
+    outcomes: list[tuple[str, str | None, list[str]]] = []
     for index in range(menu_start + 1, menu_end):
         stripped = lines[index].strip()
-        if (
-            source_indent(lines[index]) == menu_indent + 4
-            and stripped.startswith('"')
-            and stripped.endswith('":')
-        ):
+        match = re.fullmatch(r'"(?P<choice>.+)"(?: if (?P<condition>.+))?:', stripped)
+        if source_indent(lines[index]) == menu_indent + 4 and match is not None:
             outcome_block, _ = source_block(lines, index)
-            outcomes.append((stripped[1:-2], outcome_block))
+            outcomes.append(
+                (match.group("choice"), match.group("condition"), outcome_block)
+            )
     return outcomes, menu_end
 
 
@@ -172,7 +173,7 @@ class MarriageContractTests(unittest.TestCase):
         outcomes, menu_end = menu_outcomes(palace_lines, menu_start)
         self.assertLess(menu_end, meeting_end)
         self.assertEqual(
-            [choice for choice, _ in outcomes],
+            [choice for choice, _, _ in outcomes],
             [
                 "接受婚约，把它当成纯粹的盟约",
                 "接受婚约，也愿意认识英格丽",
@@ -198,7 +199,7 @@ class MarriageContractTests(unittest.TestCase):
             ],
         ]
         self.assertEqual(
-            [state_assignments(outcome) for _, outcome in outcomes], expected_states
+            [state_assignments(outcome) for _, _, outcome in outcomes], expected_states
         )
 
         post_menu_lines = palace_lines[menu_end:meeting_end]
@@ -227,20 +228,10 @@ class MarriageContractTests(unittest.TestCase):
             ],
         )
 
-        legacy_state = {"marriage_route": True}
-        if "marriage_proposal_open" not in legacy_state:
-            legacy_state["marriage_proposal_open"] = False
-        self.assertEqual(
-            legacy_state,
-            {"marriage_route": True, "marriage_proposal_open": False},
-        )
-
         palace_lines = label_body("chapter4.rpy", "ch4_palace").splitlines()
-        self.assertIsNotNone(
-            find_source_line(palace_lines, "if marriage_proposal_open or marriage_route:")
-        )
+        find_source_line(palace_lines, "if marriage_proposal_open or marriage_route:")
 
-    def test_declining_marriage_reopens_only_the_non_corsair_elena_acceptance(self) -> None:
+    def test_declining_marriage_closes_the_proposal_state(self) -> None:
         palace_lines = label_body("chapter4.rpy", "ch4_palace").splitlines()
         decline_start = find_source_line(palace_lines, '"到此为止，结束联姻商谈":')
         decline_block, _ = source_block(palace_lines, decline_start)
@@ -253,33 +244,37 @@ class MarriageContractTests(unittest.TestCase):
             ],
         )
 
+    def test_elena_confession_menu_has_directly_guarded_outcomes(self) -> None:
         elena_lines = label_body("chapter4.rpy", "ch4_elena").splitlines()
+        guard_start = find_source_line(elena_lines, "if rel_elena >= 30:")
+        _, guard_end = source_block(elena_lines, guard_start)
+        guard_indent = source_indent(elena_lines[guard_start])
+        menu_starts = [
+            index
+            for index in range(guard_start + 1, guard_end)
+            if source_indent(elena_lines[index]) == guard_indent + 4
+            and elena_lines[index].strip() == "menu:"
+        ]
+        self.assertEqual(len(menu_starts), 1)
+        outcomes, menu_end = menu_outcomes(elena_lines, menu_starts[0])
+        self.assertEqual(menu_end, guard_end)
         self.assertEqual(
-            elena_lines[
-                find_source_line(
-                    elena_lines,
-                    '"握住她的手" if not marriage_route and not corsair_romance:',
-                )
-            ].strip(),
-            '"握住她的手" if not marriage_route and not corsair_romance:',
+            [(choice, condition) for choice, condition, _ in outcomes],
+            [
+                ("握住她的手", "not marriage_route and not corsair_romance"),
+                ("沉默片刻，把目光移向远处的天际线", "not marriage_route and corsair_romance"),
+                ("告诉她，你已经接受了与英格丽的婚约", "marriage_route"),
+                ("感谢她的付出，但保持距离", "not marriage_route"),
+            ],
         )
-        self.assertEqual(
-            elena_lines[
-                find_source_line(
-                    elena_lines,
-                    '"沉默片刻，把目光移向远处的天际线" if not marriage_route and corsair_romance:',
-                )
-            ].strip(),
-            '"沉默片刻，把目光移向远处的天际线" if not marriage_route and corsair_romance:',
+        marriage_body = outcomes[2][2]
+        self.assertIn(
+            'player "艾琳娜，我已经接受了北境的婚约。英格丽和议会的人都在等我履行它。"',
+            [line.strip() for line in marriage_body],
         )
-        self.assertEqual(
-            elena_lines[
-                find_source_line(
-                    elena_lines,
-                    '"告诉她，你已经接受了与英格丽的婚约" if marriage_route:',
-                )
-            ].strip(),
-            '"告诉她，你已经接受了与英格丽的婚约" if marriage_route:',
+        self.assertIn(
+            'player "我不能一面让她承担这份盟约，一面又向你伸手。那对你们两个人都不公平。"',
+            [line.strip() for line in marriage_body],
         )
 
 
