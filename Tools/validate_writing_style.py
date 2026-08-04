@@ -87,24 +87,22 @@ ALLOWED_ACTIVE_SOURCES = {
     "AGENTS.md",
     "CLAUDE.md",
     "CANON.md",
+    "INDEX.md",
+    "failure-reasons.md",
+    "guidance.md",
+    "scene-card-template.md",
+    "validation-log.md",
     "docs/writing-style/INDEX.md",
     "docs/writing-style/guidance.md",
     "docs/writing-style/scene-card-template.md",
 }
-ACTIVE_SOURCE_DIRECTIVE = re.compile(
-    r"(?:\bread\b|\bload\b|\u8bfb\u53d6|\u52a0\u8f7d)\s+"
-    r"(?:only\s+)?(?P<source>[^\s,;\u3001\uFF0C\uFF1B\u3002]+)",
-    re.IGNORECASE,
-)
-EXTERNAL_SOURCE = re.compile(
+SOURCE_PATH_TOKEN = re.compile(
     r"https?://[^\s)>\]}]+|"
     r"[A-Za-z]:[\\/]+[^\s)>\]}]+|"
     r"(?<![\w.])\.\.[\\/]+[^\s)>\]}]+|"
-    r"(?<!\S)\\{2,}[^\s)>\]}]+",
-    re.IGNORECASE,
-)
-PROJECT_SOURCE_PATH = re.compile(
-    r"(?:[A-Za-z0-9_.-]+[\\/])+[A-Za-z0-9_.-]+\.(?:md|txt|rpy|json)",
+    r"(?<!\S)\\{2,}[^\s)>\]}]+|"
+    r"(?:[A-Za-z0-9_.-]+[\\/])*"
+    r"[A-Za-z0-9_.-]+\.(?:md|txt|rpy|json)",
     re.IGNORECASE,
 )
 STYLE_ALLOWED_ENTRIES = {
@@ -186,14 +184,6 @@ def _normalized_source(raw_source: str) -> str:
     return source.casefold()
 
 
-def _looks_like_source(source: str) -> bool:
-    return bool(
-        "/" in source
-        or "\\" in source
-        or re.search(r"\.(?:md|txt|rpy|json)\b", source, re.IGNORECASE)
-    )
-
-
 def _source_is_allowed(source: str, approved_sources: set[str]) -> bool:
     if source in {value.casefold() for value in ALLOWED_ACTIVE_SOURCES}:
         return True
@@ -203,7 +193,9 @@ def _source_is_allowed(source: str, approved_sources: set[str]) -> bool:
         return True
     if re.fullmatch(r"[^/]+\.rpy", source):
         return True
-    if re.fullmatch(r"memory/reference_[^/]+\.md", source):
+    if re.fullmatch(r"memory/(?:feedback|reference)_[^/]+\.md", source):
+        return True
+    if re.fullmatch(r"reference_[^/]+\.md", source):
         return True
     return False
 
@@ -215,35 +207,11 @@ def _active_source_errors(
 ) -> list[str]:
     findings: list[str] = []
     rejected: set[str] = set()
-    for match in EXTERNAL_SOURCE.finditer(text):
-        source = _normalized_source(match.group(0))
-        if source not in rejected:
-            rejected.add(source)
-            findings.append(
-                f"{active_name}: unapproved active source {match.group(0)!r}"
-            )
-    for match in PROJECT_SOURCE_PATH.finditer(text):
+    for match in SOURCE_PATH_TOKEN.finditer(text):
         raw_source = match.group(0)
         source = _normalized_source(raw_source)
-        is_style_source = any(
-            marker in source
-            for marker in ("writing", "style", "corpus", "sample")
-        )
         if (
-            is_style_source
-            and source not in rejected
-            and not _source_is_allowed(source, approved_sources)
-        ):
-            rejected.add(source)
-            findings.append(
-                f"{active_name}: unapproved active source {raw_source!r}"
-            )
-    for match in ACTIVE_SOURCE_DIRECTIVE.finditer(text):
-        raw_source = match.group("source")
-        source = _normalized_source(raw_source)
-        if (
-            _looks_like_source(raw_source)
-            and source not in rejected
+            source not in rejected
             and not _source_is_allowed(source, approved_sources)
         ):
             rejected.add(source)
@@ -464,9 +432,12 @@ def _parse_blind_rounds(
     seen: set[str] = set()
     previous_round_number: int | None = None
     all_rows_valid = True
-    for cells in _table_rows(
+    error_count_before_table = len(errors)
+    table_rows = _table_rows(
         path, BLIND_HEADERS, root, errors, strict_file=True
-    ):
+    )
+    table_is_valid = len(errors) == error_count_before_table
+    for cells in table_rows:
         record = dict(zip(BLIND_HEADERS, cells))
         round_id = record["round_id"]
         row_valid = True
@@ -535,7 +506,7 @@ def _parse_blind_rounds(
             )
         else:
             all_rows_valid = False
-    return rounds if all_rows_valid else []
+    return rounds if all_rows_valid and table_is_valid else []
 
 
 def _derived_stage(samples: list[Sample], rounds: list[BlindRound]) -> str:

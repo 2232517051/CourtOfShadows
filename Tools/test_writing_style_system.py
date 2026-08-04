@@ -257,6 +257,9 @@ class ActiveSourceContractTests(WritingStyleTestCase):
             r"Read ..\OtherGame\corpus.txt",
             "Read docs/other-project/style-corpus.md",
             "Style source: docs/other-project/style-corpus.md",
+            "Use docs/other-project/prose.md before drafting.",
+            "Style source: docs/other-project/prose.md",
+            "Consult [reference](docs/other-project/prose.md)",
         )
         for active_name in ACTIVE_ENTRYPOINTS:
             path = self.root / active_name
@@ -362,6 +365,28 @@ class MaturityContractTests(WritingStyleTestCase):
         self.set_stage("mature")
         report = "\n".join(validator.validate_project(self.root))
         self.assertIn("round numbers must increase in append order", report)
+        self.assertIn(
+            "declared maturity_stage mature does not match forming",
+            report,
+        )
+
+    def test_malformed_blind_row_invalidates_all_maturity_evidence(self) -> None:
+        sample_number = 1
+        for _ in range(2):
+            for scene_type in SCENES:
+                self.add_sample(f"COS-{sample_number:03d}", scene_type)
+                sample_number += 1
+        self.set_blind_rounds(
+            [
+                "| BT-001 | power_bargain | A | single | A | no |",
+                "| malformed | row |",
+                "| BT-002 | mystery_reveal | C | mixed_with_primary | C | no |",
+                "| BT-003 | ending_epilogue | B | single | A | no |",
+            ]
+        )
+        self.set_stage("mature")
+        report = "\n".join(validator.validate_project(self.root))
+        self.assertIn("expected 6 columns", report)
         self.assertIn(
             "declared maturity_stage mature does not match forming",
             report,
