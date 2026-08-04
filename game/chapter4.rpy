@@ -901,7 +901,7 @@ label ch4_palace:
     $ set_mood("normal")
 
     ## ── 政治联姻线「盟约」· 王都会面 ──
-    if marriage_route:
+    if marriage_proposal_open or marriage_route:
         scene bg royal_palace with dissolve
         "觐见之前，你先见了另一个人。"
 
@@ -927,25 +927,41 @@ label ch4_palace:
         show player_char_img at left with dissolve
 
         menu:
-            "把它当成纯粹的盟约，各取所需":
+            "接受婚约，把它当成纯粹的盟约":
+                $ marriage_route = True
                 $ marriage_warm = False
-                $ log_decision("第四章", "联姻——纯粹的政治盟约")
-                player "那我们就把话挑明。我出兵和粮，议会给我北境的忠诚。婚约是封口的火漆，不是感情。"
+                $ marriage_proposal_open = False
+                $ log_decision("第四章", "接受联姻——纯粹的政治盟约")
+                player "那就把话挑明。我出兵和粮，议会给我北境的支持。婚约是封住盟书的火漆，不是感情。"
                 hide player_char_img
                 $ hide_all_chars("ingrid_img")
                 show ingrid_img at left with dissolve
-                ingrid "痛快。我喜欢不绕弯的人。"
+                ingrid "好。你不拿空话哄我，我也不会拿温情骗你。"
 
-            "盟约可以谈，但我想先认识你这个人":
+            "接受婚约，也愿意认识英格丽":
+                $ marriage_route = True
                 $ marriage_warm = True
+                $ marriage_proposal_open = False
                 $ log_decision("第四章", "联姻——愿意认识英格丽本人")
                 $ change_stat("intrigue", 2)
-                player "盟约我答应。但既然要共度一生，我想知道我娶的是个什么样的人，而不只是一纸条款。"
+                player "盟约我接受。可既然要共度一生，我想知道我娶的是怎样的人，不只是一纸条款。"
                 $ hide_all_chars("ingrid_img")
                 show ingrid_img at left with dissolve
-                "英格丽愣了一下。她大概没料到这句。"
-                ingrid "……北边的男人不问这个。他们只问嫁妆和兵力。"
-                ingrid "你要是真想知道，那就慢慢看。我不是一封信能写完的人。"
+                "英格丽看了你一会儿。使馆窗外的车轮声从石路上碾过去。"
+                ingrid "北边来谈婚事的人，通常先问嫁妆和兵。你是第一个先问我的。"
+                ingrid "我不是一封信能写完的人。你若真有耐心，就慢慢看。"
+
+            "到此为止，结束联姻商谈":
+                $ marriage_route = False
+                $ marriage_warm = False
+                $ marriage_proposal_open = False
+                $ log_decision("第四章", "结束与北疆议会的联姻商谈")
+                player "盟约可以另谈，婚约到此为止。我不能在没选定之前，就让两家把一生当成已经成交的货物。"
+                hide player_char_img
+                $ hide_all_chars("ingrid_img")
+                show ingrid_img at left with dissolve
+                ingrid "这答复会让母亲发火。可它至少是你的答复。"
+                ingrid "我会原话带回去。盐路的事，以后照旧在桌上谈。"
 
         $ hide_all_chars()
 
@@ -2627,7 +2643,21 @@ label ch4_elena:
                 "她走了几步，没回头。晚风灌进来的时候，你听见她说了句什么，很短，被风吹散了大半。"
                 "你没追上去问。"
 
-            "感谢她的付出，但保持距离":
+            "告诉她，你已经接受了与英格丽的婚约" if marriage_route:
+                $ log_decision("第四章", "婉拒艾琳娜——已经接受北境婚约")
+                hide elena_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "艾琳娜，我已经接受了北境的婚约。英格丽和议会的人都在等我履行它。"
+                player "我不能一面让她承担这份盟约，一面又向你伸手。那对你们两个人都不公平。"
+                hide player_char_img
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                "艾琳娜低头看了看自己放在膝上的手。"
+                elena "我明白了。至少这一次，不是别人替你选了沉默。"
+                $ change_rel("rel_elena", 10)
+
+            "感谢她的付出，但保持距离" if not marriage_route:
                 $ log_decision("第四章", "与艾琳娜保持距离")
                 $ change_rel("rel_elena", 10)
                 hide elena_img

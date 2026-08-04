@@ -250,7 +250,8 @@ default griffin_known = False             # "影子法官"格里芬=杀父实际
 default elena_romance = False
 ## 政治联姻线「盟约」(玩家反馈: 联姻路线缺失/特色剧情线需求, batch22+成就党批)
 ## 与 Elena 恋爱线互斥: 走联姻则 ch4 暮色告白不再可选
-default marriage_route = False        # 接受希尔达伯爵夫人的联姻提议(ch3 入口)
+default marriage_route = False        # 已接受与英格丽的正式婚约(ch4 确认)
+default marriage_proposal_open = False # 希尔达的联姻提议仍在商谈，尚未成为正式婚约
 default ch3_marriage_delayed = False  # 联姻提议选了「先拖着」(ch4 王都希尔达二次来信收回提议)
 default resist_route = False          # 终章选「加入男爵联军」(铁腕结局的反抗变体文本)
 default marriage_warm = False         # ch4 会面子选择: 是否让政治盟约升温为真伙伴

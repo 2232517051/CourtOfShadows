@@ -91,5 +91,45 @@ class PortraitContractTests(unittest.TestCase):
         self.assertRegex(chapter, r'她那天夜里离开了艾登堡。没有告诉你她去哪。"\s*\n\s*hide elena_img')
 
 
+class MarriageContractTests(unittest.TestCase):
+    def test_chapter_three_opens_talks_without_accepting_marriage(self) -> None:
+        chapter = read_game_file("chapter3.rpy")
+        choice = chapter.split('"回信，愿意谈这桩联姻":', 1)[1].split('"婉拒，我另有打算":', 1)[0]
+        self.assertIn("$ marriage_proposal_open = True", choice)
+        self.assertNotIn("$ marriage_route = True", choice)
+        self.assertIn("同意会面商谈联姻", choice)
+
+    def test_chapter_four_requires_explicit_acceptance_or_exit(self) -> None:
+        palace = label_body("chapter4.rpy", "ch4_palace")
+        self.assertIn("if marriage_proposal_open or marriage_route:", palace)
+        for choice in (
+            "接受婚约，把它当成纯粹的盟约",
+            "接受婚约，也愿意认识英格丽",
+            "到此为止，结束联姻商谈",
+        ):
+            self.assertIn(choice, palace)
+        political = palace.split('"接受婚约，把它当成纯粹的盟约":', 1)[1].split('"接受婚约，也愿意认识英格丽":', 1)[0]
+        warm = palace.split('"接受婚约，也愿意认识英格丽":', 1)[1].split('"到此为止，结束联姻商谈":', 1)[0]
+        decline = palace.split('"到此为止，结束联姻商谈":', 1)[1].split("$ hide_all_chars()", 1)[0]
+        self.assertIn("$ marriage_route = True", political)
+        self.assertIn("$ marriage_warm = False", political)
+        self.assertIn("$ marriage_route = True", warm)
+        self.assertIn("$ marriage_warm = True", warm)
+        self.assertIn("$ marriage_route = False", decline)
+        self.assertIn("$ marriage_warm = False", decline)
+        for result in (political, warm, decline):
+            self.assertIn("$ marriage_proposal_open = False", result)
+
+    def test_new_proposal_state_is_save_compatible(self) -> None:
+        self.assertIn("default marriage_proposal_open = False", read_game_file("characters.rpy"))
+        self.assertIn('"marriage_proposal_open": False', read_game_file("save_compat.rpy"))
+
+    def test_elena_scene_names_the_accepted_engagement(self) -> None:
+        chapter = read_game_file("chapter4.rpy")
+        self.assertIn('"告诉她，你已经接受了与英格丽的婚约" if marriage_route:', chapter)
+        self.assertIn("我已经接受了北境的婚约", chapter)
+        self.assertIn('"感谢她的付出，但保持距离" if not marriage_route:', chapter)
+
+
 if __name__ == "__main__":
     unittest.main()

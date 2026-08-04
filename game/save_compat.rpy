@@ -385,6 +385,7 @@ init 999 python:
             "prince_ally": False,
             "prince_betrayed": False,
             "elena_romance": False,
+            "marriage_proposal_open": False,
             "court_faction": "",
 
             ## 第五章/结局标记
