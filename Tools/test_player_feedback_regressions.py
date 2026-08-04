@@ -359,13 +359,38 @@ class EndingTimelineContractTests(unittest.TestCase):
 
 
 class PeopleCoreContractTests(unittest.TestCase):
+    def people_label_lines(self) -> list[str]:
+        return label_body("chapter5.rpy", "ending_peoples_lord").splitlines()
+
     def people_core_lines(self) -> list[str]:
-        people = label_body("chapter5.rpy", "ending_peoples_lord").splitlines()
+        people = self.people_label_lines()
         start = find_source_line(people, '"战后第五年。"')
         end = find_source_line(people, '$ unlock_achievement("peoples_lord")')
         return people[start:end]
 
+    def direct_branches(
+        self, lines: list[str], start: int, end: int, indent: int
+    ) -> list[tuple[str, list[str]]]:
+        branch_starts = [
+            index
+            for index in range(start, end)
+            if source_indent(lines[index]) == indent
+            and re.fullmatch(r"(?:if|elif) .+:|else:", lines[index].strip())
+        ]
+        branches: list[tuple[str, list[str]]] = []
+        for offset, branch_start in enumerate(branch_starts):
+            branch_end = (
+                branch_starts[offset + 1]
+                if offset + 1 < len(branch_starts)
+                else end
+            )
+            branches.append(
+                (lines[branch_start].strip(), lines[branch_start:branch_end])
+            )
+        return branches
+
     def test_core_people_ending_consumes_resources_and_buildings(self) -> None:
+        people = self.people_label_lines()
         core = self.people_core_lines()
         wealth_start = find_source_line(core, "if wealth >= 60:")
         school_start = find_source_line(core, "if built_school:")
@@ -383,28 +408,76 @@ class PeopleCoreContractTests(unittest.TestCase):
         self.assertNotIn("公仓", "\n".join(school_block))
         self.assertIn("公仓", "\n".join(granary_block))
         self.assertNotIn("学堂", "\n".join(granary_block))
-        self.assertNotIn("不需要担心战争、饥荒和压迫", "\n".join(core))
+        people_source = "\n".join(people)
+        anchor = find_source_line(people, '"战后第五年。"')
+        pre_anchor_source = "\n".join(people[:anchor])
+        self.assertNotRegex(
+            pre_anchor_source,
+            r"(?:最繁忙的贸易中心|最繁荣的城镇|修建了新的房屋、道路和水渠)",
+        )
+        for unconditional_claim in (
+            "地区最繁忙的贸易中心",
+            "北方最繁荣的城镇",
+            "修建了新的房屋、道路和水渠",
+            "不需要担心战争、饥荒和压迫",
+        ):
+            with self.subTest(unconditional_claim=unconditional_claim):
+                self.assertNotIn(unconditional_claim, people_source)
 
     def test_core_people_ending_consumes_every_companion_in_order(self) -> None:
         core = self.people_core_lines()
-        order = [
-            find_source_line(core, "if elena_romance:"),
-            find_source_line(core, "elif marriage_route:"),
-            find_source_line(core, "if marriage_warm:"),
-            find_source_line(core, "elif corsair_romance:"),
-        ]
-        self.assertEqual(order, sorted(order))
-
+        companions_start = find_source_line(core, "if elena_romance:")
         closing_start = find_source_line(
             core, '"人民领主的故事后来越传越远，也越传越不像原样。"'
         )
-        companions = core[order[0]:closing_start]
+        companions = core[companions_start:closing_start]
+        direct = self.direct_branches(
+            core, companions_start, closing_start, source_indent(core[companions_start])
+        )
+        self.assertEqual(
+            [condition for condition, _ in direct],
+            [
+                "if elena_romance:",
+                "elif marriage_route:",
+                "elif corsair_romance:",
+                "else:",
+            ],
+        )
+
         companion_source = "\n".join(companions)
         self.assertIn("英格丽", companion_source)
         self.assertIn("妻子", companion_source)
         self.assertIn("赛琳", companion_source)
-        self.assertIn('if southern_outcome == "fall":', companion_source)
-        self.assertIn("else:", [line.strip() for line in companions])
+
+        marriage_lines = direct[1][1]
+        marriage_nested = self.direct_branches(
+            marriage_lines, 1, len(marriage_lines), source_indent(marriage_lines[0]) + 4
+        )
+        self.assertEqual(
+            [condition for condition, _ in marriage_nested],
+            ["if marriage_warm:", "else:"],
+        )
+
+        corsair_lines = direct[2][1]
+        corsair_nested = self.direct_branches(
+            corsair_lines, 1, len(corsair_lines), source_indent(corsair_lines[0]) + 4
+        )
+        self.assertEqual(
+            [condition for condition, _ in corsair_nested],
+            ['if southern_outcome == "fall":', "else:"],
+        )
+        fall_source = "\n".join(corsair_nested[0][1])
+        surviving_source = "\n".join(corsair_nested[1][1])
+        self.assertIn("空处", fall_source)
+        self.assertIn("没有捎来一个字", fall_source)
+        self.assertIn("绳结", surviving_source)
+        self.assertIn("商人", surviving_source)
+        self.assertIn("没捎过话", surviving_source)
+        self.assertNotIn("show corsair_img", "\n".join(corsair_lines))
+        for direct_contact in ("一封", "信上", "回信", "驶进艾登堡"):
+            with self.subTest(direct_contact=direct_contact):
+                self.assertNotIn(direct_contact, fall_source)
+                self.assertNotIn(direct_contact, surviving_source)
 
 
 if __name__ == "__main__":
