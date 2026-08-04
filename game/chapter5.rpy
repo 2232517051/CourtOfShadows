@@ -710,7 +710,7 @@ label ch5_factions_move:
             $ baron_supply_intel = True
 
     "送走了男爵的密使后，你以为这一天的访客到头了。"
-    hide baron_envoy_img with dissolve
+    hide servant_generic_img with dissolve
 
     ## ── 批32: ch4「试探——我需要考虑」的答复在此兑现, 王子不再无声消失 ──
     if prince_answer_pending and not prince_ally and not prince_betrayed:

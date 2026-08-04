@@ -14,6 +14,18 @@ def read_game_file(name: str) -> str:
     return (GAME / name).read_text(encoding="utf-8")
 
 
+def character_image_tag(name: str) -> str:
+    characters = read_game_file("characters.rpy")
+    match = re.search(
+        rf'^define {re.escape(name)} = Character\([^\n]*image="(\w+)"\)',
+        characters,
+        re.MULTILINE,
+    )
+    if match is None:
+        raise AssertionError(f"character image binding for {name!r} not found")
+    return f"{match.group(1)}_img"
+
+
 def label_body(name: str, label: str) -> str:
     text = read_game_file(name)
     match = re.search(
@@ -70,7 +82,12 @@ class PortraitContractTests(unittest.TestCase):
 
     def test_departing_characters_clear_before_following_narration(self) -> None:
         chapter = read_game_file("chapter5.rpy")
-        self.assertRegex(chapter, r'送走了男爵的密使后，你以为这一天的访客到头了。"\s*\n\s*hide baron_envoy_img')
+        baron_envoy_tag = character_image_tag("baron_envoy")
+        self.assertRegex(chapter, rf'(?s)show {re.escape(baron_envoy_tag)}[^\n]*\n\s*baron_envoy ')
+        self.assertRegex(
+            chapter,
+            rf'送走了男爵的密使后，你以为这一天的访客到头了。"\s*\n\s*hide {re.escape(baron_envoy_tag)}',
+        )
         self.assertRegex(chapter, r'她那天夜里离开了艾登堡。没有告诉你她去哪。"\s*\n\s*hide elena_img')
 
 
