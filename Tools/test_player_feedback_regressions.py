@@ -278,5 +278,26 @@ class MarriageContractTests(unittest.TestCase):
         )
 
 
+class EndingTimelineContractTests(unittest.TestCase):
+    def test_core_endings_do_not_jump_to_ten_years(self) -> None:
+        self.assertNotIn('"十年后。"', read_game_file("chapter5.rpy"))
+
+    def test_people_core_does_not_jump_centuries_before_epilogue(self) -> None:
+        people = label_body("chapter5.rpy", "ending_peoples_lord")
+        self.assertNotIn("几百年后", people)
+
+    def test_side_character_fates_are_framed_as_retrospective(self) -> None:
+        fates = label_body("endings_expansion.rpy", "ending_side_characters_fate")
+        self.assertIn("— 回望战后旧事 —", fates)
+        self.assertNotIn("— 一年之后 —", fates)
+
+    def test_iron_memorial_consumes_actual_battle_outcome(self) -> None:
+        iron = label_body("endings_expansion.rpy", "ending_iron_epilogue")
+        self.assertIn('if iron_battle_outcome == "pyrrhic":', iron)
+        self.assertIn("两百多人", iron)
+        self.assertIn("七十多人", iron)
+        self.assertNotIn("三百七十二", iron)
+
+
 if __name__ == "__main__":
     unittest.main()

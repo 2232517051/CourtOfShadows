@@ -3204,7 +3204,7 @@ label ending_iron_lord:
     scene bg great_hall with dissolve
     $ unlock_gallery("bg_great_hall")
 
-    "十年后。"
+    "战后第五年。"
 
     "你坐在大厅的领主之位上，听取幕僚们的汇报。"
 
@@ -3730,7 +3730,7 @@ label ending_shadow_king:
     hide aldric_img with dissolve
 
     $ hide_all_chars()
-    "十年后。"
+    "战后第五年。"
 
     "你坐在书房里，面前是一份份密报。"
 
@@ -4236,7 +4236,7 @@ label ch5_negotiate_after_clash:
     scene bg church_interior with dissolve
     $ unlock_gallery("bg_church_interior")
 
-    "十年后。"
+    "战后第五年。"
 
     "你站在新建成的大教堂里，阳光透过巨大的玫瑰窗照进来。"
 
@@ -4719,7 +4719,7 @@ label ending_peoples_lord:
     hide aldric_img with dissolve
 
     $ hide_all_chars()
-    "十年后。"
+    "战后第五年。"
 
     "艾登堡已经不再是一个领地——它是一个小小的国度。"
 
@@ -4763,9 +4763,9 @@ label ending_peoples_lord:
 
     "人民领主的故事，成为了这片土地上最动人的传说。"
 
-    "几百年后，当人们谈起那场战争时，他们不记得谁赢了、谁输了——"
+    "后来的人谈起那场战争，未必还记得谁在王都占了上风。"
 
-    "他们只记得，有一个领主，在所有人都想着争权夺利的时候，选择了保护自己的百姓。"
+    "但艾登堡的人记得，有一个领主在众人争夺王座时，先守住了自己的百姓。"
 
     $ unlock_achievement("peoples_lord")
     $ persistent.endings_seen.add("peoples_lord")

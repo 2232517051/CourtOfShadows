@@ -1376,9 +1376,12 @@ label ending_iron_epilogue:
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "三百七十二人。"
-
-    player "三百七十二条命。"
+    if iron_battle_outcome == "pyrrhic":
+        player "两百多人。"
+        player "两百多条命。"
+    else:
+        player "七十多人。"
+        player "七十多条命。"
 
     player "换来了和平。但——"
 
@@ -3815,13 +3818,12 @@ label ending_side_characters_fate:
 
     if _fate_mood == "light":
         play music "audio/music/dawn.ogg" fadein 3.0
-        centered "{size=+4}— 后来 —{/size}"
     elif _fate_mood == "neutral":
         play music "audio/music/grief.ogg" fadein 3.0
-        centered "{size=+4}— 一年之后 —{/size}"
     else:
         play music "audio/music/sad.ogg" fadein 3.0
-        centered "{size=+4}— 再后来 —{/size}"
+
+    centered "{size=+4}— 回望战后旧事 —{/size}"
 
     pause 2.0
 
