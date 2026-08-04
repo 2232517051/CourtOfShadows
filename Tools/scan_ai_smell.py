@@ -1,10 +1,12 @@
 """
-扫描 CoS 全部 .rpy 文件的台词 / 旁白, 输出可疑 AI 味行.
+扫描 CoS 全部 .rpy 文件的台词 / 旁白，输出历史启发式命中。
+
+这份报告含有大量误报，只用于诊断，不是文风通过门槛。
 
 用法:
     cd CourtOfShadows
-    python Tools/scan_ai_smell.py                  # 扫所有 game/*.rpy
-    python Tools/scan_ai_smell.py game/chapter1.rpy # 扫单个文件
+    python Tools/scan_ai_smell.py
+    python Tools/scan_ai_smell.py game/chapter1.rpy
 
 输出: 文件:行号 [模式名] 原文 (前 120 字)
 """
@@ -16,7 +18,7 @@ import glob
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-# ============ AI 味自动检测模式 (按 FORBIDDEN_PHRASES.md A/B/C/D/E 编号) ============
+# Historical heuristic patterns retained for optional diagnostics.
 PATTERNS = [
     # ── A. 句式层 ──
     # A1 排比 3 段同结构
@@ -86,7 +88,7 @@ PATTERNS = [
     (r'(一个|一种)[一-龥]{2,8}(正在|开始)[一-龥]{2}', 'D10 客服腔预告'),
     # D11 抽象升华尾 "...的象征 / 意味 / 启示 / 缩影 / 印记"
     (r'[一-龥]{2,8}的(象征|意味|启示|觉悟|印记|缩影|本质|写照)[。"\n!?]', 'D11 抽象升华尾'),
-    # D12 反转 "不是 X, 而是 Y" (CLAUDE.md #2 完整匹配)
+    # D12 historical reversal pattern
     (r'不是[一-龥]{1,20}[,，][\s]?而是[一-龥]', 'D12 反转"不是X,而是Y"'),
     (r'不是[一-龥]{1,20}—+[一-龥]{0,8}而是', 'D12 反转"不是X—而是Y"'),
 ]
@@ -168,8 +170,9 @@ def main():
         total += len(hits)
 
     print()
-    print(f'=== 共 {total} 处可疑 AI 味 (含误报, 人工再确认) ===')
-    print('对照 FORBIDDEN_PHRASES.md 修. 改不动的加注释 // ai-smell-ok: <理由>')
+    print(f'=== 共 {total} 处历史启发式命中（含误报）===')
+    print('以上结果不作为文风通过门槛。')
+    print('文风以 docs/writing-style/INDEX.md 中经用户确认的正例为准。')
 
 
 if __name__ == '__main__':

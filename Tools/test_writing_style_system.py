@@ -332,5 +332,21 @@ class LogContractTests(WritingStyleTestCase):
         self.assertIn("empty approved guidance", report)
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class LiveProjectWritingStyleContractTests(unittest.TestCase):
+    def test_real_project_structure_passes(self) -> None:
+        self.assertEqual(validator.validate_project(ROOT), [])
+
+    def test_historical_scanner_is_explicitly_non_blocking(self) -> None:
+        scanner = (ROOT / "Tools" / "scan_ai_smell.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("不作为文风通过门槛", scanner)
+        self.assertIn("docs/writing-style/INDEX.md", scanner)
+        self.assertNotIn("对照 FORBIDDEN_PHRASES.md 修", scanner)
+
+
 if __name__ == "__main__":
     unittest.main()
