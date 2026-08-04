@@ -4721,47 +4721,63 @@ label ending_peoples_lord:
     $ hide_all_chars()
     "战后第五年。"
 
-    "艾登堡已经不再是一个领地——它是一个小小的国度。"
+    if wealth >= 60:
+        "艾登堡的集市比战前更大。商队肯在这里过夜，因为路上有人巡守，账目也不用靠塞钱才能办完。"
+    else:
+        "艾登堡没有变成传闻里的富庶之地。税收仍紧，冬天仍要计算每一袋粮；但战火没有再烧进村子，欠收的人家也不必卖掉土地。"
 
-    "你制定的法律保护每一个人——无论贫富贵贱。"
+    if built_school:
+        "城里的学堂还开着。铁匠和佃农的孩子挤在同一排长凳上，先学会写自己的名字。"
+    else:
+        "学堂还只是一张压在书房里的图纸。识字的修士每旬来两次，在教堂侧屋教孩子们认字。"
 
-    "城里有了学堂——铁匠的孩子也能读书识字了。"
+    if built_granary:
+        "公仓熬过了两个歉收年。领民记得那两次开仓，也记得账册上每一袋粮的去处。"
+    else:
+        "新公仓始终没能动工。每到收获季，村社只得把旧仓逐间修补，再共同留出过冬的粮。"
 
-    "你修建的道路连接了周围所有的村庄和城镇。"
-
-    "在你的治下，人们不需要担心战争、饥荒和压迫。"
+    "这里仍有争吵、欠债和没修完的路。可人们愿意留下，因为他们知道自己的话能进大厅，自己的命不会被随手拿去填一场战争。"
 
     if elena_romance:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "你放弃了一切野心，却得到了最珍贵的东西。"
+        elena "他们又在广场上等你。东村和西村为了水渠吵了半个月。"
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "是什么？"
-        hide player_char_img
+        player "那就让两边都来。今天把账和地界摊开。"
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "人心。"
-        "你看着窗外繁忙的集市，听着孩子们的笑声。"
-        "你笑了一下。"
-        hide elena_img
-        $ hide_all_chars("elena_img")
-        show elena_img at left with dissolve
-        elena "后悔吗？"
-        hide elena_img
-        $ hide_all_chars("player_char_img")
-        show player_char_img at left with dissolve
-        player "从来没有。"
-        "她靠在你的肩上，微笑着看着这片你们共同守护的土地。"
+        "艾琳娜把一沓卷宗递给你，另一只手自然地搭上你的肩。五年里，她没有再替谁藏起自己的名字。"
+        elena "我陪你。免得他们吵到天黑。"
         hide elena_img with dissolve
+    elif marriage_route:
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        if marriage_warm:
+            "英格丽把北境寄来的盐价表摊在你们共用的书桌上。纸角压着她今早从花园剪下的一枝石南。"
+            ingrid "母亲说盐路今年能再放宽一成。她还说，你上次寄去的苹果酒太甜。"
+            "她说到最后一句时笑了。五年前写在盟书上的婚姻没有变成传说，却成了你们每天一起核账、争论和吃晚饭的生活。"
+        else:
+            "英格丽仍是你的妻子，也是北境议会与艾登堡之间最稳固的联络人。你们各有房间，各管一摞公文，在正式场合从不让对方难堪。"
+            ingrid "北境的盐车明早到。我会去验货。南边来的请愿归你。"
+            "晚饭仍摆在同一张长桌上。你们偶尔同时回来，便互相点头，各自在账册旁坐下。"
+        hide ingrid_img with dissolve
+    elif corsair_romance:
+        $ hide_all_chars()
+        if southern_outcome == "fall":
+            "书房抽屉里留着一块空处。那截渡鸦号的旧绳头原先放在那里，卖掉潮汐港后便不见了。"
+            "五年里，赛琳没有捎来一个字。南边的商人偶尔提起一条换了涂装的旧船，你从不托他们追问。"
+        else:
+            "书房窗边压着一封从南境辗转而来的信。信纸有海盐留下的白痕，封口系着赛琳惯用的绳结。"
+            "信上只有两行：『北边冷不冷？我这里风大。还活着就回信。——赛琳』"
+            "你把回信交给下一支南下商队。你们之间隔着陆路和海，渡鸦号从未驶进艾登堡。"
     else:
         $ hide_all_chars()
-        "你站在城楼上，看着脚下这座繁荣的城镇。"
-        "孩子们在街道上奔跑嬉戏，商人们在集市上讨价还价，农民们在田间劳作。"
-        "你选择的「胜利」是守护。"
+        "你独自站在城楼上。大厅里有人等着议水渠，厨房里有人为明天的面包争一袋面粉。"
+        "这里没有替你预备好的家庭。你守住的是一座由许多普通家庭组成的城。"
 
-    "人民领主的故事，成为了这片土地上最动人的传说。"
+    "人民领主的故事后来越传越远，也越传越不像原样。"
 
     "后来的人谈起那场战争，未必还记得谁在王都占了上风。"
 

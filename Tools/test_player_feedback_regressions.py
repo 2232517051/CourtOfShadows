@@ -358,5 +358,54 @@ class EndingTimelineContractTests(unittest.TestCase):
         self.assertNotIn("三百七十二", iron)
 
 
+class PeopleCoreContractTests(unittest.TestCase):
+    def people_core_lines(self) -> list[str]:
+        people = label_body("chapter5.rpy", "ending_peoples_lord").splitlines()
+        start = find_source_line(people, '"战后第五年。"')
+        end = find_source_line(people, '$ unlock_achievement("peoples_lord")')
+        return people[start:end]
+
+    def test_core_people_ending_consumes_resources_and_buildings(self) -> None:
+        core = self.people_core_lines()
+        wealth_start = find_source_line(core, "if wealth >= 60:")
+        school_start = find_source_line(core, "if built_school:")
+        granary_start = find_source_line(core, "if built_granary:")
+        companions_start = find_source_line(core, "if elena_romance:")
+
+        wealth_block = core[wealth_start:school_start]
+        school_block = core[school_start:granary_start]
+        granary_block = core[granary_start:companions_start]
+
+        self.assertIn("else:", [line.strip() for line in wealth_block])
+        self.assertIn("else:", [line.strip() for line in school_block])
+        self.assertIn("else:", [line.strip() for line in granary_block])
+        self.assertIn("学堂", "\n".join(school_block))
+        self.assertNotIn("公仓", "\n".join(school_block))
+        self.assertIn("公仓", "\n".join(granary_block))
+        self.assertNotIn("学堂", "\n".join(granary_block))
+        self.assertNotIn("不需要担心战争、饥荒和压迫", "\n".join(core))
+
+    def test_core_people_ending_consumes_every_companion_in_order(self) -> None:
+        core = self.people_core_lines()
+        order = [
+            find_source_line(core, "if elena_romance:"),
+            find_source_line(core, "elif marriage_route:"),
+            find_source_line(core, "if marriage_warm:"),
+            find_source_line(core, "elif corsair_romance:"),
+        ]
+        self.assertEqual(order, sorted(order))
+
+        closing_start = find_source_line(
+            core, '"人民领主的故事后来越传越远，也越传越不像原样。"'
+        )
+        companions = core[order[0]:closing_start]
+        companion_source = "\n".join(companions)
+        self.assertIn("英格丽", companion_source)
+        self.assertIn("妻子", companion_source)
+        self.assertIn("赛琳", companion_source)
+        self.assertIn('if southern_outcome == "fall":', companion_source)
+        self.assertIn("else:", [line.strip() for line in companions])
+
+
 if __name__ == "__main__":
     unittest.main()
