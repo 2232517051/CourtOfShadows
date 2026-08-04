@@ -1964,12 +1964,23 @@ class PackagingClassificationContractTests(unittest.TestCase):
         self.assertNotIn("FORBIDDEN_PHRASES.md", APPROVED_PACKAGE_EXCLUSIONS)
         self.assertNotIn(("STYLE.md", None), self.rules)
         self.assertNotIn(("FORBIDDEN_PHRASES.md", None), self.rules)
+        docs_exclusion_index = self.rules.index(("docs/**", None))
+        game_inclusion_indices = [
+            index
+            for index, (pattern, platform) in enumerate(self.rules)
+            if pattern.startswith("game/") and platform is not None
+        ]
+        self.assertTrue(game_inclusion_indices)
+        self.assertTrue(
+            all(docs_exclusion_index < index for index in game_inclusion_indices)
+        )
         self.assertEqual(
             missing_project_files(ARCHIVED_LEGACY_WRITING_GUIDES),
             [],
         )
         for path in ARCHIVED_LEGACY_WRITING_GUIDES:
             with self.subTest(path=path):
+                self.assertNotIn((path, None), self.rules)
                 self.assertEqual(
                     first_literal_classification(self.rules, path),
                     ("docs/**", None),
