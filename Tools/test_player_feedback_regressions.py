@@ -72,6 +72,15 @@ def source_without_comments(lines: list[str]) -> str:
     return "\n".join(live_lines)
 
 
+def live_source_lines(lines: list[str]) -> tuple[str, ...]:
+    """Return nonblank executable lines after quote-aware comment removal."""
+    return tuple(
+        line.rstrip()
+        for line in source_without_comments(lines).splitlines()
+        if line.strip()
+    )
+
+
 def call_targets(lines: list[str]) -> list[str]:
     """Return Ren'Py call targets in source order, ignoring optional from labels."""
     targets: list[str] = []
@@ -1018,6 +1027,30 @@ class PeopleExpansionContractTests(unittest.TestCase):
         )
         self.assertIn("门房一家", "\n".join(direct[3][1]))
         self.assertIn("独自上楼", "\n".join(direct[3][1]))
+
+    def test_corsair_household_live_source_matches_canonical_snapshot(self) -> None:
+        corsair_lines = self.household_branches()[2][1]
+        actual_live_lines = live_source_lines(corsair_lines)
+        canonical_live_lines = (
+            "    elif corsair_romance:",
+            "        $ hide_all_chars()",
+            "        scene bg village with dissolve",
+            "        $ hide_all_chars()",
+            '        "广场边，一队外乡乐师奏起潮汐港的旧曲。你在副歌里想起赛琳，却没有上前打听曲子的来处。"',
+            '        if southern_outcome == "fall":',
+            '            "第一段结束前，你放下没喝完的苹果酒，从侧巷回了城堡。"',
+            '            "门廊的灯还亮着。你让门房关上外门，自己上楼；那支曲子没有跟进来。"',
+            "        else:",
+            '            "你站在人群外把曲子听完。乐师漏掉换拍时，你用杯沿轻轻补了三下。"',
+            '            "最后一个音落下，你把空杯放进木盘，跟着散场的人群走回城堡。"',
+        )
+
+        self.assertSequenceEqual(
+            actual_live_lines,
+            canonical_live_lines,
+            "Corsair live-source mismatch: first sequence is actual; "
+            "second is canonical expected",
+        )
 
     def test_corsair_household_has_state_specific_event_without_direct_contact(self) -> None:
         corsair_lines = self.household_branches()[2][1]
