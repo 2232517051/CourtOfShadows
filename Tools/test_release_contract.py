@@ -62,6 +62,7 @@ APPROVED_PACKAGE_EXCLUSIONS = (
     "tests/**",
     "docs/**",
     "Tools/**",
+    "AGENTS.md",
     "_speaker_report.txt",
     "_ui_wiring_review.png",
     "all_chars.txt",
@@ -77,7 +78,6 @@ APPROVED_PACKAGE_EXCLUSIONS = (
     "DESCRIPTION.txt",
     "DEVELOPER_NOTE.txt",
     "first_meet_report.txt",
-    "FORBIDDEN_PHRASES.md",
     "game_icon_256.jpg",
     "game_icon_256.png",
     "logo.png",
@@ -89,7 +89,6 @@ APPROVED_PACKAGE_EXCLUSIONS = (
     "promo_horizontal.png",
     "promo_vertical.png",
     "sfx_elevenlabs_progress.json",
-    "STYLE.md",
     "taptap_promo.png",
     "TapTap_v3.5.1_hotfix.md",
     "TapTap_v3.5_更新公告.md",
@@ -102,6 +101,10 @@ APPROVED_PACKAGE_EXCLUSIONS = (
     "voice_mapping.json",
     "wallpaper_library.png",
     "事件时间线审计报告.md",
+)
+ARCHIVED_LEGACY_WRITING_GUIDES = (
+    "docs/archive/writing-style-legacy/STYLE.md",
+    "docs/archive/writing-style-legacy/FORBIDDEN_PHRASES.md",
 )
 # Protected by the 2026-07-31 release audit. These paths were present in the
 # prior APK but have no reliable direct .rpy filename references.
@@ -1954,6 +1957,23 @@ class PackagingClassificationContractTests(unittest.TestCase):
         cls.options = read_text("game/options.rpy")
         cls.calls = active_literal_build_calls(cls.options)
         cls.rules = literal_classification_rules(cls.calls)
+
+    def test_writing_style_docs_follow_current_package_contract(self) -> None:
+        self.assertIn("AGENTS.md", APPROVED_PACKAGE_EXCLUSIONS)
+        self.assertNotIn("STYLE.md", APPROVED_PACKAGE_EXCLUSIONS)
+        self.assertNotIn("FORBIDDEN_PHRASES.md", APPROVED_PACKAGE_EXCLUSIONS)
+        self.assertNotIn(("STYLE.md", None), self.rules)
+        self.assertNotIn(("FORBIDDEN_PHRASES.md", None), self.rules)
+        self.assertEqual(
+            missing_project_files(ARCHIVED_LEGACY_WRITING_GUIDES),
+            [],
+        )
+        for path in ARCHIVED_LEGACY_WRITING_GUIDES:
+            with self.subTest(path=path):
+                self.assertEqual(
+                    first_literal_classification(self.rules, path),
+                    ("docs/**", None),
+                )
 
     def test_approved_release_payload_has_one_direct_exclusion_rule_each(self) -> None:
         counts = {
