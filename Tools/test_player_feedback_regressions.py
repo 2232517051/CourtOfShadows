@@ -37,6 +37,17 @@ def label_body(name: str, label: str) -> str:
     return match.group(1)
 
 
+def ending_section(name: str, label: str) -> str:
+    text = read_game_file(name)
+    match = re.search(
+        rf"(?ms)^label {re.escape(label)}:\s*\n(.*?)(?=^label ending_|\Z)",
+        text,
+    )
+    if match is None:
+        raise AssertionError(f"ending section {label!r} not found in {name}")
+    return match.group(1)
+
+
 def source_indent(line: str) -> int:
     return len(line) - len(line.lstrip(" "))
 
@@ -279,16 +290,64 @@ class MarriageContractTests(unittest.TestCase):
 
 
 class EndingTimelineContractTests(unittest.TestCase):
-    def test_core_endings_do_not_jump_to_ten_years(self) -> None:
-        self.assertNotIn('"十年后。"', read_game_file("chapter5.rpy"))
+    def test_each_core_ending_uses_the_five_year_anchor(self) -> None:
+        for label in (
+            "ending_iron_lord",
+            "ending_shadow_king",
+            "ending_holy_guardian",
+            "ending_peoples_lord",
+        ):
+            with self.subTest(label=label):
+                section = ending_section("chapter5.rpy", label)
+                self.assertIn('"战后第五年。"', section)
+                self.assertNotIn('"十年后。"', section)
 
-    def test_people_core_does_not_jump_centuries_before_epilogue(self) -> None:
-        people = label_body("chapter5.rpy", "ending_peoples_lord")
+    def test_people_core_uses_the_non_year_retrospective(self) -> None:
+        people = ending_section("chapter5.rpy", "ending_peoples_lord")
+        self.assertIn(
+            '"后来的人谈起那场战争，未必还记得谁在王都占了上风。"',
+            people,
+        )
+        self.assertIn(
+            '"但艾登堡的人记得，有一个领主在众人争夺王座时，先守住了自己的百姓。"',
+            people,
+        )
         self.assertNotIn("几百年后", people)
 
-    def test_side_character_fates_are_framed_as_retrospective(self) -> None:
+    def test_side_character_fates_keep_mood_music_before_retrospective(self) -> None:
         fates = label_body("endings_expansion.rpy", "ending_side_characters_fate")
-        self.assertIn("— 回望战后旧事 —", fates)
+        lines = fates.splitlines()
+        light_start = next(
+            index
+            for index, line in enumerate(lines)
+            if line.strip() == 'if _fate_mood == "light":'
+        )
+        light_block, light_end = source_block(lines, light_start)
+        neutral_block, neutral_end = source_block(lines, light_end)
+        dark_block, dark_end = source_block(lines, neutral_end)
+
+        self.assertEqual(
+            [line.strip() for line in light_block if line.strip()],
+            [
+                'if _fate_mood == "light":',
+                'play music "audio/music/dawn.ogg" fadein 3.0',
+            ],
+        )
+        self.assertEqual(
+            [line.strip() for line in neutral_block if line.strip()],
+            [
+                'elif _fate_mood == "neutral":',
+                'play music "audio/music/grief.ogg" fadein 3.0',
+            ],
+        )
+        self.assertEqual(
+            [line.strip() for line in dark_block if line.strip()],
+            ["else:", 'play music "audio/music/sad.ogg" fadein 3.0'],
+        )
+
+        heading = 'centered "{size=+4}— 回望战后旧事 —{/size}"'
+        self.assertEqual(lines[dark_end].strip(), heading)
+        self.assertEqual(sum(line.strip() == heading for line in lines), 1)
         self.assertNotIn("— 一年之后 —", fates)
 
     def test_iron_memorial_consumes_actual_battle_outcome(self) -> None:
