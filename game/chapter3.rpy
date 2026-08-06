@@ -22,6 +22,7 @@ label chapter3_start:
 
     ## 章节过场动画
     call cinematic_chapter3 from _call_cinematic_ch3
+    $ set_mood("mystery", fadein=2.0)
 
     "暗杀事件后的第三天。"
 
