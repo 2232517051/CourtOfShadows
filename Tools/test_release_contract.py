@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Source-level contract for the uploadable Court of Shadows 3.9.2 release."""
+"""Source-level contract for the uploadable Court of Shadows 3.10 release."""
 
 from __future__ import annotations
 
@@ -22,10 +22,10 @@ ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
 OLD_GAME = ROOT / "old-game"
 
-APPROVED_VERSION = "3.9.2"
+APPROVED_VERSION = "3.10"
 APPROVED_ANDROID_PACKAGE = "com.xiaoyiai.courtofshadows"
 APPROVED_ANDROID_API = 36
-MINIMUM_ANDROID_NUMERIC_VERSION = 1_785_596_475
+APPROVED_ANDROID_NUMERIC_VERSION = 2_000_000_000
 EXPECTED_OLD_GAME_SCRIPT_COUNT = 56
 
 APPROVED_ENDING_KEYS = (
@@ -96,6 +96,7 @@ APPROVED_PACKAGE_EXCLUSIONS = (
     "TapTap_v3.7_更新公告.md",
     "TapTap_v3.8_更新公告.md",
     "TapTap_v3.9_更新公告.md",
+    "TapTap_v3.10_更新公告.md",
     "TapTap_回归声明.md",
     "ui_icons_progress.json",
     "voice_mapping.json",
@@ -1066,7 +1067,8 @@ def assert_no_main_ending_progress_mutation(source: str, subject: str) -> None:
 
 def assert_no_stale_release_phrases(source: str) -> None:
     for phrase in STALE_RELEASE_PHRASES:
-        if phrase.casefold() in source.casefold():
+        suffix = r"(?!\d)" if phrase[-1].isdigit() else ""
+        if re.search(re.escape(phrase) + suffix, source, re.IGNORECASE):
             raise AssertionError(f"stale release phrase remains: {phrase}")
 
 
@@ -1076,7 +1078,7 @@ class VersionAndAndroidContractTests(unittest.TestCase):
         cls.options = read_text("game/options.rpy")
         cls.android = json.loads(read_text("android.json"))
 
-    def test_config_and_android_versions_match_392(self) -> None:
+    def test_config_and_android_versions_match_310(self) -> None:
         config_version = executable_assignment_value(
             self.options, "define config.version"
         )
@@ -1087,11 +1089,11 @@ class VersionAndAndroidContractTests(unittest.TestCase):
     def test_version_and_android_contract_reject_multiline_string_decoys(self) -> None:
         fixture = (
             'reference = """\n'
-            'define config.version = "3.9.2"\n'
+            'define config.version = "3.10"\n'
             '    build.android_package = "com.xiaoyiai.courtofshadows"\n'
             '    build.android_target_api = 36\n'
             '"""\n'
-            'define config.version = "3.9.2"\n'
+            'define config.version = "3.10"\n'
             '    build.android_package = "com.xiaoyiai.courtofshadows"\n'
             '    build.android_target_api = 36\n'
             'define config.version = "0.0.0"\n'
@@ -1102,7 +1104,7 @@ class VersionAndAndroidContractTests(unittest.TestCase):
         self.options = fixture
         try:
             with self.assertRaises(AssertionError):
-                self.test_config_and_android_versions_match_392()
+                self.test_config_and_android_versions_match_310()
             with self.assertRaises(AssertionError):
                 self.test_android_package_and_api_agree_with_build_source()
         finally:
@@ -1124,9 +1126,9 @@ class VersionAndAndroidContractTests(unittest.TestCase):
         self.assertEqual(self.android["orientation"], "sensorLandscape")
         self.assertIn("define build.android_landscape = True", self.options)
 
-    def test_android_numeric_version_meets_verified_floor(self) -> None:
-        self.assertGreaterEqual(
-            self.android["numeric_version"], MINIMUM_ANDROID_NUMERIC_VERSION
+    def test_android_numeric_version_matches_approved_release(self) -> None:
+        self.assertEqual(
+            self.android["numeric_version"], APPROVED_ANDROID_NUMERIC_VERSION
         )
 
 
@@ -1318,6 +1320,7 @@ class ReleaseCopyGuardTests(unittest.TestCase):
     def test_bare_v31_is_a_stale_release_phrase(self) -> None:
         with self.assertRaises(AssertionError):
             assert_no_stale_release_phrases("Current release: v3.1")
+        assert_no_stale_release_phrases("Current release: v3.10")
 
 
 class PlayerFacingCopyContractTests(unittest.TestCase):
@@ -1355,10 +1358,10 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             self.about,
             re.compile(r"(?:死因|死亡|遇害|骤逝).{0,24}(?:疑案|疑云|真相|谜)", re.DOTALL),
         )
-        self.assertIn("v3.9.2", self.about)
+        self.assertIn(f"v{APPROVED_VERSION}", self.about)
 
     def test_privacy_copy_matches_the_current_build(self) -> None:
-        self.assertIn("版本：3.9.2", self.privacy)
+        self.assertIn(f"版本：{APPROVED_VERSION}", self.privacy)
         self.assertIn("更新日期：2026年8月", self.privacy)
 
     def test_rating_copy_is_platform_neutral_and_close_only(self) -> None:
@@ -1395,6 +1398,7 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             ("Windows", "CourtOfShadows.exe", "五章", "九个主线结局", "隐藏尾声"),
             "README",
         )
+        self.assertIn(f"Windows 版 v{APPROVED_VERSION}", self.readme)
         for internal_phrase in ("下载 Ren'Py SDK", "项目结构", "后续开发计划"):
             self.assertNotIn(internal_phrase, self.readme)
 

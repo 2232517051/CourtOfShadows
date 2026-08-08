@@ -17,8 +17,8 @@ import warnings
 import zipfile
 import zlib
 
-import verify_distributions as verifier
-from test_release_contract import (
+from Tools import verify_distributions as verifier
+from Tools.test_release_contract import (
     APPROVED_ANDROID_API,
     APPROVED_ANDROID_PACKAGE,
     APPROVED_PACKAGE_EXCLUSIONS,
@@ -28,9 +28,9 @@ from test_release_contract import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WINDOWS_ROOT = "CourtOfShadows-3.9.2-win"
-CURRENT_CODE = 1_785_596_475
-PREVIOUS_CODE = 1_785_386_554
+WINDOWS_ROOT = "CourtOfShadows-3.10-win"
+CURRENT_CODE = 2_000_000_000
+PREVIOUS_CODE = 1_785_682_834
 CERTIFICATE = "5fcb5758461427026b13ecf987e86ad11e13170dc60386d42e4c2f20a93b3708"
 ALLOWED_UNPREFIXED_ANDROID_ASSETS = {
     "assets/android-downloading.jpg",
@@ -48,7 +48,7 @@ targetSdkVersion:'{APPROVED_ANDROID_API}'
 application-label:'权谋之庭'
 """
 
-PREVIOUS_BADGING = f"""package: name='{APPROVED_ANDROID_PACKAGE}' versionCode='{PREVIOUS_CODE}' versionName='3.9.1' platformBuildVersionCode='36'
+PREVIOUS_BADGING = f"""package: name='{APPROVED_ANDROID_PACKAGE}' versionCode='{PREVIOUS_CODE}' versionName='3.9.2' platformBuildVersionCode='36'
 sdkVersion:'21'
 targetSdkVersion:'{APPROVED_ANDROID_API}'
 """

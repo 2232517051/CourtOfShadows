@@ -1,6 +1,6 @@
 权谋之庭 - Court of Shadows
 =============================
-Windows 版 v3.9.2
+Windows 版 v3.10
 
 【运行游戏】
 

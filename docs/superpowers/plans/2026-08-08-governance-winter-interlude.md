@@ -627,6 +627,7 @@ if ($LASTEXITCODE -ne 0) { throw '3.10 metadata baseline commit failed.' }
 $allowedPackageBaselineDiff = @(
   'Tools/Run-RenPySuite.ps1', 'Tools/test_governance_winter_interlude.py', 'game/test_game.rpy',
   'tests/fixtures/winter_asset_baseline.json',
+  'docs/superpowers/plans/2026-08-08-governance-winter-interlude.md',
   'game/options.rpy', 'game/effects.rpy', 'game/msyh.ttf', 'android.json', 'README.txt',
   'Tools/test_release_contract.py', 'Tools/test_verify_distributions.py', 'Tools/verify_distributions.py',
   'tests/screenshots/release_metadata_about.png', 'tests/screenshots/release_metadata_about_license.png',
