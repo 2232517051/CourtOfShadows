@@ -709,6 +709,7 @@ label ch5_factions_move:
             "他说话时眼神闪烁——你知道他在撒谎。这证实了你之前得到的情报——男爵军的后勤确实是弱点。"
             $ baron_supply_intel = True
 
+    hide servant_generic_img with dissolve
     "送走了男爵的密使后，你以为这一天的访客到头了。"
 
     ## ── 批32: ch4「试探——我需要考虑」的答复在此兑现, 王子不再无声消失 ──
@@ -763,8 +764,7 @@ label ch5_factions_move:
 
     "一个小女孩跑到城墙下面，仰着头对你喊——"
 
-    $ hide_all_chars("blacksmith_wife_img")
-    show blacksmith_wife_img at left with dissolve
+    $ hide_all_chars()
     little_girl "大人！大人！你会保护我们吗？"
 
     $ hide_all_chars("player_char_img")
@@ -772,8 +772,6 @@ label ch5_factions_move:
     player "会的。"
 
     $ hide_all_chars()
-    $ hide_all_chars("blacksmith_wife_img")
-    show blacksmith_wife_img at left with dissolve
     little_girl "拉钩？"
 
     "你忍不住笑了。"
@@ -3206,7 +3204,7 @@ label ending_iron_lord:
     scene bg great_hall with dissolve
     $ unlock_gallery("bg_great_hall")
 
-    "十年后。"
+    "战后第五年。"
 
     "你坐在大厅的领主之位上，听取幕僚们的汇报。"
 
@@ -3732,7 +3730,7 @@ label ending_shadow_king:
     hide aldric_img with dissolve
 
     $ hide_all_chars()
-    "十年后。"
+    "战后第五年。"
 
     "你坐在书房里，面前是一份份密报。"
 
@@ -4075,10 +4073,11 @@ label ch5_negotiate_after_clash:
 
     "双方代表连寒暄都省了——开口就是旧账。"
 
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
+    queen_rep "叛军必须无条件投降！这是王室的底线！"
     $ hide_all_chars("noble_werner_img")
     show noble_werner_img at left with dissolve
-    queen_rep "叛军必须无条件投降！这是王室的底线！"
-
     baron_rep "投降？王后先交出篡改遗诏的证据！"
 
     "眼看谈判就要破裂——"
@@ -4183,12 +4182,14 @@ label ch5_negotiate_after_clash:
 
     "然后——"
 
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
+    queen_rep "……王后陛下可以接受这些条件。但第四条需要修改——"
     $ hide_all_chars("noble_werner_img")
     show noble_werner_img at left with dissolve
-    queen_rep "……王后陛下可以接受这些条件。但第四条需要修改——"
-
     baron_rep "男爵阁下原则上同意。但需要在第三条中加入——"
 
+    $ hide_all_chars()
     "又一轮讨价还价。但这次，方向已经明确了——和平。"
 
     "每一天，你都在各方之间穿梭斡旋。"
@@ -4236,7 +4237,7 @@ label ch5_negotiate_after_clash:
     scene bg church_interior with dissolve
     $ unlock_gallery("bg_church_interior")
 
-    "十年后。"
+    "战后第五年。"
 
     "你站在新建成的大教堂里，阳光透过巨大的玫瑰窗照进来。"
 
@@ -4659,113 +4660,125 @@ label ending_peoples_lord:
     hide aldric_img with dissolve
 
     $ hide_all_chars()
-    "你击退了每一支试图劫掠你领地的军队——无论他们举着谁的旗帜。"
+    "没有人签署过停战的文书。刀剑不是被收回鞘中的，而是从手指间滑落的。旷野上的营火一夜比一夜少，那些还能行走的人向各自以为安全的方向散去，留下车辙、血迹和再也不会有人来取的旗杆。你站在城墙上看着最后几缕炊烟从远处的林线后消失，风里已经闻不到铁锈的味道。这场仗没有被谁赢下——它只是像一盏耗尽了油的灯，自己灭了。"
 
-    "在你的城墙之下，有被你收留的王后军逃兵，也有男爵联军的伤兵。"
+    "你下令打开城门。先进来的是王后军的散兵，铠甲歪在身上，兵器早就丢了；后面跟着男爵联军的伤员，被同伴架着，一瘸一拐地走过你修补了无数次的吊桥。没有人查验他们的旗帜，没有人问他们为谁而战。城中支起几口大锅，把所剩不多的粮食煮成稀粥，一碗一碗递到每一双伸过来的手里。谷仓的门板上用炭笔划着存粮的刻度，你看见那道黑线已经低得快要碰到底了。广场的角落铺满了干草，躺下的人不分敌我，挤在同一片屋檐下闭上眼睛。"
 
-    "在这里，没有阵营之分——只有需要保护的人。"
+    "城墙完整地立着，但城墙以外的一切都付出了代价。南面的麦田被反复践踏，泥里搅着断裂的麦秆与蹄印，今年的收成已经不必再去想。靠近外墙的几排民宅只剩下焦黑的框架，石基上还趴着没烧尽的横梁。教堂后面的空地上并排放着用旧布盖住的遗体，等着你为他们选一块安葬的地方。你环顾这座你守住的城，它伤痕累累，沉默地等着你告诉它接下来该怎么办。"
 
     $ play_music("audio/music/hope.ogg", fadein=3.0)
     scene black with dissolve
 
-    "战争最终结束。没人赢——所有人都打不动了。"
-
-    "当和平降临时，人们发现——整个北方只有一个领地没有被战火摧毁。"
-
-    "艾登堡。"
-
     scene bg castle_exterior with dissolve
     $ unlock_gallery("bg_castle_exterior")
 
-    "流民涌入你的领地。商人在你的城堡下安家。你的集市成为了地区最繁忙的贸易中心。"
+    "战后的人沿着还走得通的路来到艾登堡。有人带着农具，有人只带着孩子。旧营房很快住满，城堡的马厩也腾出一半。"
 
-    "你用收容难民时建立的分配系统来管理越来越多的人口。"
+    "各村先清点还能耕的田和空屋。流民按手艺登记，缺人的村子当天便来招工；匠人先补屋顶，再修道路。粮食按户领，领过的人当场在账上按印。"
 
-    "你把空闲的土地分给了失去家园的农民，让他们重新开始生活。"
-
-    "你组织匠人修建了新的房屋、道路和水渠。"
-
-    "慢慢地，艾登堡从一个小小的领地，变成了北方最繁荣的城镇。"
-
-    "人们不叫你领主。他们叫你「父亲」。"
+    "几名商人在城墙下租了空屋，卖盐、布和木料。集市重新开张了，领粮的队伍却没有立刻消失。"
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
-    aldric "领主大人，今天又有一批新的移民到来了。"
-
-    aldric "他们来自南方——听说了您的仁德，不远千里而来。"
+    aldric "城外又到了些人。旧营房已经住满了。"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "安排住处和工作。每个人都要有事做——闲着会出问题。"
+    player "先登记。能做活的记下手艺；带伤的、带孩子的，今晚先住进马厩。"
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "是。另外——城中的长老们想为您立一座铜像。"
+    aldric "马厩挤一挤，今晚住得下。明天呢？"
 
     hide aldric_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
-    player "不需要。把那些钱用来修桥。"
+    player "明早让各村的管事过来。缺短工的，当面说清工钱和住处，愿意去的自己挑。"
+
+    player "今夜先让他们有地方睡。桥和集市的账，明天再算。"
 
     hide player_char_img
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
-    aldric "……是。"
+    aldric "是。我去叫人铺草垫。"
 
     hide aldric_img with dissolve
 
     $ hide_all_chars()
-    "十年后。"
+    "战后第五年。"
 
-    "艾登堡已经不再是一个领地——它是一个小小的国度。"
+    if wealth >= 60:
+        "集市比战前大了一圈。商队肯在这里过夜：路上有人巡守，进城交多少税，木牌上写得清清楚楚。"
+    else:
+        "艾登堡仍不富裕。冬天要逐袋数粮，桥坏了也只能先修一半；歉收的村子仍有人欠租，账房得挨户核对。"
 
-    "你制定的法律保护每一个人——无论贫富贵贱。"
+    if built_school:
+        "学堂一直开着。铁匠和佃农的孩子挤在同一排长凳上，先学会写自己的名字，再学会看懂家里的欠租单。"
+    else:
+        "学堂仍是书房里一张没有动工的图纸。识字的修士每旬来两次，在教堂侧屋教孩子们认字。"
 
-    "城里有了学堂——铁匠的孩子也能读书识字了。"
+    if built_granary:
+        "公仓在歉收时开过两次。谁领了粮、仓里还剩多少，都写在门外的账牌上。"
+    else:
+        "新公仓始终没有动工。每到收获季，各村只得修补旧仓，再把过冬的粮分别封存。"
 
-    "你修建的道路连接了周围所有的村庄和城镇。"
-
-    "在你的治下，人们不需要担心战争、饥荒和压迫。"
+    "这里照样有人欠债，有人为水渠和田界吵到天黑，也有修了几年还没修完的路。征粮和修路的数目会贴在广场上，村子有异议，便派人到大厅来争。"
 
     if elena_romance:
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "你放弃了一切野心，却得到了最珍贵的东西。"
+        "艾琳娜抱着两本卷宗进来。最上面那本夹着东村和西村各自画的渠线。"
+        elena "两边的管事都到了。一个要讲地界，一个要讲旧例。你先听谁的？"
         hide elena_img
         $ hide_all_chars("player_char_img")
         show player_char_img at left with dissolve
-        player "是什么？"
-        hide player_char_img
+        player "都听。让他们当着彼此的面说。"
         $ hide_all_chars("elena_img")
         show elena_img at left with dissolve
-        elena "人心。"
-        "你看着窗外繁忙的集市，听着孩子们的笑声。"
-        "你笑了一下。"
-        hide elena_img
-        $ hide_all_chars("elena_img")
-        show elena_img at left with dissolve
-        elena "后悔吗？"
-        hide elena_img
-        $ hide_all_chars("player_char_img")
-        show player_char_img at left with dissolve
-        player "从来没有。"
-        "她靠在你的肩上，微笑着看着这片你们共同守护的土地。"
+        "她把卷宗分给你一本，又用脚把空椅子勾到你身边。"
+        elena "那就一起听。你漏掉的，我来记。"
         hide elena_img with dissolve
+    elif marriage_route:
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        "婚后，英格丽住进艾登堡，随员和北境的公文也占了东侧一排房间。"
+        if marriage_warm:
+            "英格丽把北境来信压在你的汤碗旁，自己先坐下吃饭。"
+            ingrid "盐车明早到。议会的人午后到。他们若同时进门，你替我挡一边。"
+            hide ingrid_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你挑。"
+            hide player_char_img
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            ingrid "我去验盐车。议会的人归你。"
+            "她把另一只杯子推到你手边，又拿起汤匙。门外有人催你去大厅，她让人回话：领主在吃饭。"
+        else:
+            "英格丽的房门挂着北境来的厚披风。她有自己的房间和职责，仍替北境议会办事。"
+            ingrid "盐车明早到，我会去验货。南边来的请愿归你。"
+            "你点头，她收起文书。晚饭仍摆在同一张长桌上，只是你们习惯坐在两端，各自看各自的账。"
+        hide ingrid_img with dissolve
+    elif corsair_romance:
+        $ hide_all_chars()
+        if southern_outcome == "fall":
+            "书房抽屉里留着一块空处。那截渡鸦号的旧绳头原先放在那里，卖掉潮汐港后便不见了。"
+            "五年里，赛琳没有捎来一个字。南边的商人偶尔提起一条换了涂装的旧船，你从不托他们追问。"
+        else:
+            "书房窗边压着那截渡鸦号的旧绳头。死结还在，绳尾被你摸得起了毛。"
+            "南边来的商人有时提到赛琳的渡鸦号。有人说旗还挂着，有人只记得在远洋见过那道黑船身。"
+            "她没捎过话，你也没有托人问。商队离开后，你把绳结放回窗边。"
     else:
         $ hide_all_chars()
-        "你站在城楼上，看着脚下这座繁荣的城镇。"
-        "孩子们在街道上奔跑嬉戏，商人们在集市上讨价还价，农民们在田间劳作。"
-        "你选择的「胜利」是守护。"
+        "你回到城堡时，门房一家正在厨房门口分一块节饼。值夜的书记抱着睡着的孩子来换班。"
+        "他们见你经过便要起身。你摆手让他们继续，独自上了楼。"
 
-    "人民领主的故事，成为了这片土地上最动人的传说。"
+    "广场上又有人为水渠拍了桌子。"
 
-    "几百年后，当人们谈起那场战争时，他们不记得谁赢了、谁输了——"
-
-    "他们只记得，有一个领主，在所有人都想着争权夺利的时候，选择了保护自己的百姓。"
+    "五年前的旗帜早已收进库房。大厅的桌上，摊开的仍是欠租、修桥和水渠。"
 
     $ unlock_achievement("peoples_lord")
     $ persistent.endings_seen.add("peoples_lord")
@@ -5564,6 +5577,22 @@ label truth_humble_epilogue:
 
         $ hide_all_chars()
         "她笑了。这笑容里没有花园里的算计，没有王都里的伪装——只有春风。"
+    elif marriage_route:
+        $ hide_all_chars("ingrid_img")
+        show ingrid_img at left with dissolve
+        if marriage_warm:
+            "你走出议事厅时，英格丽已在廊下等着。她没有问你为什么拒绝——她从不问自己已经看懂的事。"
+
+            ingrid "我让人备了马。北路驿站的换马点标在行程单上了，走快些还赶得上盐路配额的末班文书。"
+
+            "你接过那张对折的纸，上面是她惯常工整的笔迹。她把'回家'这件事变成了一份可执行的行程表，而你忽然觉得这两个字第一次落到了实处。"
+        else:
+            "英格丽在走廊另一端停了一步。消息在宫廷里传得总比你预想的快，她显然已经知道你的决定。"
+
+            ingrid "既然你不留在王都，北疆的秋粮调度我先行处理。回艾登堡之后把相关文书转我便是。"
+
+            hide ingrid_img with dissolve
+            "她点了一下头——像是确认某条附加条款的执行方式——然后先你一步向马厩的方向走去。你们的终点相同，但她从不觉得有同行的必要。"
     else:
         hide captain_img
         $ hide_all_chars()
@@ -5721,10 +5750,33 @@ label ending_borgia:
         elena "我不能跟一个会下毒的人睡在同一张床上。"
 
         "她那天夜里离开了艾登堡。没有告诉你她去哪。"
+        hide elena_img with dissolve
 
         "你没有阻拦。你也没有派人去找。"
 
         $ change_rel("rel_elena", -50)
+    elif marriage_route:
+        if marriage_warm:
+            $ hide_all_chars("ingrid_img")
+            show ingrid_img at left with dissolve
+            "英格丽没有递辞呈，也没有悄然消失。某个深夜她推开书房的门，把你案头的通商账册翻到你亲手标注过的那几页——采购渠道的反常更换，与每一位死者时间线吻合的支出。"
+
+            ingrid "我嫁到艾登堡的时候，知道自己嫁给的是一个政治家。这没有关系。但账目不说谎，而你现在做的事，已经越过了我能替你背书的那条线。"
+
+            "她将希尔达家的徽章从披风上摘下来，搁在桌面上。"
+
+            ingrid "北疆的盐路协议我照旧执行——那是我对母亲领民的承诺，不是对你的。但从今往后，你在这张桌上签的东西，我不再联署。"
+
+            hide ingrid_img with dissolve
+            "她离开时没有回头。此后你们仍住在同一座城堡，仍在对外公函上共用纹章。但你清楚，这桩婚姻里最后一个肯当面告诉你'你错了'的人，已经不会再开口了。"
+        else:
+            "英格丽从不过问你锁柜里的东西，正如你从不拆她寄往北疆的密函。但她替艾登堡管着粮秣和通商账目——账目不会说谎。"
+
+            "第三位政敌暴毙之后，一封简短的信函送到了你的案头。封蜡用的是希尔达夫人的家徽，而非你们共有的纹章。"
+
+            "「北疆与艾登堡的盐路协议照旧有效。我需回北境处理秋防事务，归期另行知会。」"
+
+            "她没有指控你，也没有假装看不见。她只是用自己最熟练的方式——条约与距离——在你们之间重新划定了边界。此后文书上仍有她的签押，餐桌对面却再也没有她的位子。"
     else:
         "艾琳娜没有说破。她只是从那个月起，把每一份要她经手的情报都留了一份底。"
 
@@ -6182,6 +6234,20 @@ label ending_sea:
 
     "信放在书桌正中。他每天天不亮就来这里。"
 
+    if marriage_route:
+        if marriage_warm:
+            "你从怀中取出另一张折好的短笺。纸上只有寥寥数语，没有印戒，没有家徽，只有你反复斟酌后留下的几句私话——那些你在婚后短短的时日里从未说出口、却在此刻不得不落笔的东西。你沿走廊走向英格丽的房间，脚步比方才经过书房时更轻，仿佛连靴底与石板的摩擦都可能惊碎某种你尚未准备好面对的东西。"
+
+            "她的门缝下没有透出烛光。你将短笺搁在门槛旁——不是塞进门下，而是立在她推门便会低头看见的位置——然后把手指在木门表面停了一息。门板另一侧传来极细微的、均匀的呼吸声，或许只是你的想象。你知道天亮之后她会弯腰拾起这张纸，会认出你的字迹，会站在晨光里把那几行字读完。她不会哭，至少不会当着任何人的面；但她会久久地站在那里，把纸折回原来的样子，收进只有她自己知道的地方。"
+
+            "你收回手，在黑暗中最后看了那扇安静的门一眼。"
+        else:
+            "你在给奥尔德里克的信末多加了一段，请他将印戒与未决公文一并转交英格丽过目。她是盟约中的妻子，也是眼下唯一看得懂北疆粮账的人。"
+
+            "你没有另给她写信。你们之间的一切从头到尾都写在条约里，而你此刻正在单方面将它撕毁。任何告别的措辞放在这个前提下都只剩虚伪。"
+
+            "她迟早会知道。信使总比流言先一步抵达北疆。届时她会愤怒，会清算利弊，然后做出一个对她的领民最有利的决定。你从不怀疑这一点。"
+
     "你回卧房。旧斗篷，一袋银币，匕首。没带金鹰徽章，没带领主佩剑。"
 
     "行囊轻得像出门打猎。"
@@ -6217,7 +6283,7 @@ label ending_sea:
     $ unlock_gallery("bg_south_port")
     "港城的轮廓在暮色里浮出来。灯火亮起的时候，像碎金洒在水面。"
 
-    if corsair_romance:
+    if corsair_romance and not marriage_route:
         $ play_music("audio/music/southern_corsair.ogg", fadein=2.0)
         scene bg tideport_harbor with dissolve
 
@@ -6405,7 +6471,7 @@ label game_ending:
         "以信仰之光驱散战争的阴霾。你的名字将在教堂的颂歌中永远传唱。"
     elif ending_type == "peoples_lord":
         centered "{size=+8}结局：人民领主{/size}"
-        "放弃权力的巅峰，守护最平凡的幸福。人民的爱戴，是最崇高的王冠。"
+        "你没有坐上王座。五年后，艾登堡仍要收租、修桥、分水，也仍允许村民来大厅争这些事。"
     elif ending_type == "truth":
         centered "{size=+8}结局：真相大白{/size}"
         "正义也许会迟到，但永远不会缺席。真相是最锋利的剑。"
@@ -6426,13 +6492,16 @@ label game_ending:
         "你的故事在这里画上了句号。"
 
     ## 播放详细尾声
+    if ending_type == "peoples_lord":
+        call ending_side_characters_fate from _call_ending_side_chars_before_people
+        $ play_music("audio/music/ending_triumph.ogg", fadein=1.5)
     call ending_epilogue_router from _call_ending_epilogue_router
 
     ## 老朋友的归宿 (2026-05-17 dccdfrsx 反馈新增)
-    ## 在结局个人尾声播完后给马库斯/卡尔一个 closure
+    ## 通常在个人尾声后给马库斯/卡尔一个 closure；人民领主因个人尾声写到去世，已提前播放
     ## 南渡结局跳过命运表: 人已出海, 整张表以"你在艾登堡打听/收信"为叙事支点,
     ## 留守者的交代由 ending_sea_epilogue 从船上视角给
-    if ending_type != "sea":
+    if ending_type not in ("sea", "peoples_lord"):
         call ending_side_characters_fate from _call_ending_side_chars
 
     ## 终局结算（批31: 属性面板/图鉴计数下移至全部尾声之后, 不再打断叙事收束）

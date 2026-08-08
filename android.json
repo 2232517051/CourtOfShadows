@@ -8,15 +8,15 @@
     "include_sqlite": false,
     "layout": null,
     "name": "\u6743\u8c0b\u4e4b\u5ead",
-    "numeric_version": 109,
+    "numeric_version": 1785596475,
     "orientation": "sensorLandscape",
     "package": "com.xiaoyiai.courtofshadows",
     "permissions": [],
     "source": false,
     "store": "none",
-    "target_version": 33,
+    "target_version": 36,
     "update_always": true,
     "update_icons": true,
     "update_keystores": true,
-    "version": "1.0.9"
+    "version": "3.9.2"
 }

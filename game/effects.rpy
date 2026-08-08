@@ -529,7 +529,7 @@ screen privacy_policy_screen():
                     text "本游戏适合12岁及以上用户。游戏包含中世纪宫廷题材的虚构剧情。" size 14 color "#c0b8a8"
 
                     null height 4
-                    text "版本：3.1 | 更新日期：2026年3月 | 开发者：FFire的工作室" size 12 color "#6a5e48"
+                    text "版本：3.9.2 | 更新日期：2026年8月 | 开发者：FFire的工作室" size 12 color "#6a5e48"
 
             null height 8
             add Solid("#d4a94230") xsize 500 ysize 1 xalign 0.5
@@ -681,7 +681,7 @@ screen tutorial_overlay():
 
 
 ################################################################################
-## 7. TapTap 评分引导 (通关后)
+## 7. 评分引导 (通关后)
 ################################################################################
 
 default persistent.rating_asked = False
@@ -719,39 +719,25 @@ screen rating_popup():
 
             add Solid("#d4a94230") xsize 300 ysize 1 xalign 0.5
 
-            text "如果你喜欢《权谋之庭》":
+            text "如果你愿意，可以在获取本游戏的平台留下评价。":
                 size 18
                 color "#e0d8c8"
                 xalign 0.5
 
-            text "请在 TapTap 给我们一个好评":
-                size 16
-                color "#8a7e60"
-                xalign 0.5
-
-            text "你的支持是我们最大的动力！":
+            text "此处不会打开网页或商店。":
                 size 16
                 color "#8a7e60"
                 xalign 0.5
 
             null height 10
 
-            hbox:
+            textbutton "关闭":
                 xalign 0.5
-                spacing 20
-
-                textbutton "去评分":
-                    text_size 20
-                    text_color "#d4a942"
-                    text_hover_color "#ffd866"
-                    text_font "msyh.ttf"
-                    action [SetField(persistent, "rating_asked", True), Hide("rating_popup")]
-
-                textbutton "下次再说":
-                    text_size 18
-                    text_color "#6a5e48"
-                    text_hover_color "#8a7e60"
-                    action Hide("rating_popup")
+                text_size 20
+                text_color "#d4a942"
+                text_hover_color "#ffd866"
+                text_font "msyh.ttf"
+                action [SetField(persistent, "rating_asked", True), Hide("rating_popup")]
 
 
 ################################################################################

@@ -4,7 +4,7 @@
 成片是"预告片"语言, 不含任何引擎 UI/对话框/菜单画面。
 
 用法: python make_trailer.py [--cards-only]   (字卡文案在 CARDS 里, copywriter 交付后替换)
-输出: <PROJ>/store_assets/trailer_v351.mp4  (1080p30, H.264+AAC)
+输出: <PROJ>/store_assets/trailer_v392.mp4  (1080p30, H.264+AAC)
 """
 import os
 import subprocess
@@ -12,15 +12,22 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-PROJ = r"E:/Projects/renpy-8.5.2-sdk/CourtOfShadows"
+PROJ = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 WORK = os.path.join(os.environ.get("TEMP", "."), "cos_trailer_work")
-OUT = os.path.join(PROJ, "store_assets", "trailer_v351.mp4")
+OUT = os.path.join(PROJ, "store_assets", "trailer_v392.mp4")
 ## 字体必须用系统全量 msyh.ttc, **不能用 game/msyh.ttf** —— 后者被 prepare_release.py
 ## 子集化到只含游戏正文出现过的字。宣传文案的用字不在游戏语料里("豺"就中招了,
 ## 与 CLAUDE.md 记的"栀子缺字"同类)。预告片不进游戏包, 没有任何理由用子集。
 FONT = r"C:/Windows/Fonts/msyh.ttc"
 W, H, FPS = 1920, 1080, 30
 XFADE = 0.7
+# Keep the final slogan below the cover wordmark while anchoring the CTA above
+# mobile-player chrome and common edge cropping.
+FINAL_CARD_MAIN_Y_TOP = 875
+FINAL_CARD_SUBTITLE_Y = 962
+FINAL_CARD_WORDMARK_SAFE_TOP = 884
+FINAL_CARD_MIN_COPY_GAP = 16
+FINAL_CARD_BOTTOM_SAFE_MARGIN = 72
 
 ## 字卡 v2: 用户点名解除文风约束("直接用 opus-4.6 自己的能力"), 本版是无戒律产出。
 ## 主会话只做了事实核对与 A/B 选稿: 2B"意外"不合 canon(官方说法是病故)、4B"旧债"无出处、
@@ -31,7 +38,7 @@ CARDS = [
     ## 卡3 终稿: 用户在 5 版重写中亲自选定 C2("满盘皆输")。
     (["每句话都是筹码，说错一句满盘皆输"], None),
     (["盐路已断，南下潮汐港"], None),
-    (["五条南境线，八重命途"], None),
+    (["五条南境线，九重命途"], None),
     (["落子无悔，权谋不眠"], "权谋之庭 · TapTap 即刻入局"),
 ]
 
@@ -40,7 +47,18 @@ def img(p):
     return os.path.join(PROJ, p)
 
 
-def make_card(lines, sub, idx, y_top=None, big_size=None):
+def validate_final_card_layout(
+    *, main_top, main_bottom, subtitle_top, subtitle_bottom
+):
+    if main_top < FINAL_CARD_WORDMARK_SAFE_TOP:
+        raise ValueError("final card wordmark safe area violated")
+    if subtitle_top - main_bottom < FINAL_CARD_MIN_COPY_GAP:
+        raise ValueError("final card copy gap is too small")
+    if H - subtitle_bottom < FINAL_CARD_BOTTOM_SAFE_MARGIN:
+        raise ValueError("final card bottom safe area violated")
+
+
+def make_card(lines, sub, idx, y_top=None, big_size=None, subtitle_y=None):
     """1920x1080 透明字卡: 大字底部居中 + 羽化暗带(任何底图上可读) + 可选小字。"""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
@@ -60,18 +78,38 @@ def make_card(lines, sub, idx, y_top=None, big_size=None):
     ImageDraw.Draw(band).rectangle([0, y - 36, W, y - 36 + band_h], fill=(5, 4, 10, 120))
     band = band.filter(ImageFilter.GaussianBlur(22))
     im.alpha_composite(band)
+    first_main_top = None
+    last_main_bottom = None
     for ln in lines:
         wpx = d.textlength(ln, font=big)
         x = (W - wpx) / 2
+        main_box = d.textbbox((x, y), ln, font=big)
+        if first_main_top is None:
+            first_main_top = main_box[1] - 2
         ## 描边阴影保证任何底图上可读
         for dx, dy in ((2, 2), (-2, 2), (2, -2), (-2, -2), (0, 3)):
             d.text((x + dx, y + dy), ln, font=big, fill=(10, 8, 18, 230))
         d.text((x, y), ln, font=big, fill=(232, 214, 160, 255))
+        last_main_bottom = main_box[3] + 3
         y += 96
     if sub:
         wpx = d.textlength(sub, font=small)
-        d.line([(W / 2 - 140, y + 26), (W / 2 + 140, y + 26)], fill=(212, 169, 66, 180), width=2)
-        d.text(((W - wpx) / 2, y + 48), sub, font=small, fill=(200, 184, 144, 255))
+        sub_y = subtitle_y if subtitle_y is not None else y + 48
+        sub_box = d.textbbox(((W - wpx) / 2, sub_y), sub, font=small)
+        if subtitle_y is not None:
+            validate_final_card_layout(
+                main_top=first_main_top,
+                main_bottom=last_main_bottom,
+                subtitle_top=sub_box[1],
+                subtitle_bottom=sub_box[3],
+            )
+        divider_y = (
+            round((last_main_bottom + sub_box[1]) / 2)
+            if subtitle_y is not None
+            else y + 26
+        )
+        d.line([(W / 2 - 140, divider_y), (W / 2 + 140, divider_y)], fill=(212, 169, 66, 180), width=2)
+        d.text(((W - wpx) / 2, sub_y), sub, font=small, fill=(200, 184, 144, 255))
     p = os.path.join(WORK, "card%d.png" % idx)
     im.save(p)
     return p
@@ -183,17 +221,29 @@ def build():
             zexpr = "zoompan=z=1.12:x='(iw-iw/zoom)*on/%d':y='ih/2-(ih/zoom/2)'" % frames
         zexpr += ":d=%d:s=%dx%d:fps=%d" % (frames, W, H, FPS)
         vf = "[0]scale=2880:1620:force_original_aspect_ratio=increase,crop=2880:1620,%s[b]" % zexpr
-        inputs = ["-loop", "1", "-t", str(dur), "-i", src]
+        # Feed zoompan one background frame. Looping that input would make its
+        # `d=frames` output repeat once per demuxed frame, inflating a short
+        # shot into hundreds of seconds.
+        inputs = ["-i", src]
         if card is not None:
-            ckw = {"y_top": 890, "big_size": 60} if i == len(shots) - 1 else {}
+            ckw = {
+                "y_top": FINAL_CARD_MAIN_Y_TOP,
+                "big_size": 60,
+                "subtitle_y": FINAL_CARD_SUBTITLE_Y,
+            } if i == len(shots) - 1 else {}
             cpng = make_card(CARDS[card][0], CARDS[card][1], card, **ckw)
-            inputs += ["-loop", "1", "-t", str(dur), "-i", cpng]
+            inputs += [
+                "-loop", "1", "-framerate", str(FPS),
+                "-t", str(dur), "-i", cpng,
+            ]
             vf += ";[1]format=rgba,fade=in:st=0.7:d=0.7:alpha=1,fade=out:st=%.2f:d=0.7:alpha=1[c];[b][c]overlay=format=auto[v]" % (dur - 1.4)
         else:
             vf += ";[b]copy[v]"
         seg = os.path.join(WORK, "seg%d.mp4" % i)
-        subprocess.run(["ffmpeg", "-y", *inputs, "-filter_complex", vf, "-map", "[v]",
-                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", seg],
+        subprocess.run(["ffmpeg", "-y", "-filter_complex_threads", "4", *inputs,
+                        "-filter_complex", vf, "-map", "[v]",
+                        "-frames:v", str(frames), "-c:v", "libx264", "-threads", "8",
+                        "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", seg],
                        check=True, capture_output=True)
         segs.append((seg, dur))
 
@@ -211,11 +261,13 @@ def build():
     ## 配乐: 主题曲, 尾部 2.5s 淡出
     music = img("game/audio/music/main_theme.ogg")
     fc += "[%s]copy[vout]" % prev
-    subprocess.run(["ffmpeg", "-y", *inputs, "-i", music, "-filter_complex", fc,
+    subprocess.run(["ffmpeg", "-y", "-filter_complex_threads", "4", *inputs,
+                    "-i", music, "-filter_complex", fc,
                     "-map", "[vout]", "-map", "%d:a" % len(segs),
                     "-af", "afade=out:st=%.2f:d=2.5,volume=0.9" % (total - 2.5),
                     "-t", "%.2f" % total,
-                    "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p",
+                    "-c:v", "libx264", "-threads", "8", "-preset", "medium",
+                    "-crf", "19", "-pix_fmt", "yuv420p",
                     "-c:a", "aac", "-b:a", "192k", OUT], check=True, capture_output=True)
     print("OK ->", OUT, "总时长 %.1fs" % total)
 

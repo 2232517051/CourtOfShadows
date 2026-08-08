@@ -277,13 +277,17 @@ label pv_play:
     stop music fadeout 2.0
 
     ## 核心问题
-    show expression Text("{color=#ffd866}{size=40}你将如何书写自己的命运？{/size}{/color}", outlines=[(3, "#000000", 0, 0)]) at pv_text_fade(0.3) as pvt11
+    show expression Text("{color=#ffd866}{size=40}选定一条路，也要承担它的代价。{/size}{/color}", outlines=[(3, "#000000", 0, 0)]) at pv_text_fade(0.3) as pvt11
     pause 3.0
 
     scene black with dissolve
     pause 0.5
 
-    ## 五个结局预告
+    ## 部分结局预览
+    show expression Text("{color=#c8b890}{size=18}部分结局预览{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_fade(0.0) as pve0
+    pause 1.5
+    hide pve0 with dissolve
+
     show expression Text("{color=#ff6b6b}{size=24}铁腕领主 — 以铁与血铸就和平{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_text_rise(0.0) as pve1
     pause 1.5
     hide pve1 with dissolve
@@ -329,12 +333,12 @@ label pv_play:
     pause 3.0
 
     ## Tagline
-    show expression Text("{color=#e0d8c8}{size=24}{font=msyh.ttf}五个结局  九位角色  无数种命运{/font}{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_pos_tagline as pvtagline
+    show expression Text("{color=#e0d8c8}{size=24}{font=msyh.ttf}九条路 · 九种代价{/font}{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_pos_tagline as pvtagline
 
     pause 3.0
 
     ## 平台信息
-    show expression Text("{color=#c8b890}{size=18}{font=msyh.ttf}即将登陆 TapTap · Steam{/font}{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_pos_platform as pvplatform
+    show expression Text("{color=#c8b890}{size=18}{font=msyh.ttf}PC · Android{/font}{/size}{/color}", outlines=[(2, "#000000", 0, 0)]) at pv_pos_platform as pvplatform
 
     pause 4.0
 

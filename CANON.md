@@ -1,7 +1,7 @@
 # Court of Shadows — Canon 事实表
 
 写新剧情 / 改老剧情前先看。每次玩家抓到一个新 canon 错误，就在这里加一行。
-配合 `FORBIDDEN_PHRASES.md` 一起用。
+本文件只裁决事实与连续性；项目文风入口见 docs/writing-style/INDEX.md。
 
 ---
 

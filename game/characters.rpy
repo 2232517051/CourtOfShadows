@@ -93,9 +93,9 @@ define vanguard = Character("先锋官", color="#556677", image="soldier_generic
 define carlos = Character("卡洛斯", color="#6a5a4a", image="soldier_generic")
 define servant_common = Character("仆人", color="#a9a9a9", image="servant_generic")
 define veteran = Character("老兵", color="#6a5a4a", image="soldier_generic")
-define little_girl = Character("小女孩", color="#e8d0b8", image="blacksmith_wife")
+define little_girl = Character("小女孩", color="#e8d0b8")
 define old_man = Character("老人", color="#8b7355", image="farmer_rep")
-define queen_rep = Character("王后方代表", color="#9370db", image="noble_werner")
+define queen_rep = Character("王后方代表", color="#9370db", image="queen_envoy")
 define baron_rep = Character("男爵方代表", color="#2f4f4f", image="noble_werner")
 define young_man = Character("少年", color="#a89878", image="servant_generic")
 define enemy_general = Character("敌将", color="#8b0000", image="soldier_generic")
@@ -250,7 +250,8 @@ default griffin_known = False             # "影子法官"格里芬=杀父实际
 default elena_romance = False
 ## 政治联姻线「盟约」(玩家反馈: 联姻路线缺失/特色剧情线需求, batch22+成就党批)
 ## 与 Elena 恋爱线互斥: 走联姻则 ch4 暮色告白不再可选
-default marriage_route = False        # 接受希尔达伯爵夫人的联姻提议(ch3 入口)
+default marriage_route = False        # 已接受与英格丽的正式婚约(ch4 确认)
+default marriage_proposal_open = False # 希尔达的联姻提议仍在商谈，尚未成为正式婚约
 default ch3_marriage_delayed = False  # 联姻提议选了「先拖着」(ch4 王都希尔达二次来信收回提议)
 default resist_route = False          # 终章选「加入男爵联军」(铁腕结局的反抗变体文本)
 default marriage_warm = False         # ch4 会面子选择: 是否让政治盟约升温为真伙伴

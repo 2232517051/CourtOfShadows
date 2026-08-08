@@ -6,27 +6,26 @@
 权谋之庭 - Court of Shadows
 
 【短描述 / Short Description】(80字以内)
-中世纪宫廷权谋视觉小说，五章剧情五个结局，你的每个选择都将改写历史。
+父亲骤逝，你继承艾登堡并追查死因。五章宫廷权谋故事，通往九个主线结局与一个隐藏尾声。
 
 -------------------------------------
 【完整描述 / Full Description】
 -------------------------------------
 
-你是新任艾登堡领主，踏入一场贵族、教会与王权交织的权力漩涡。
+父亲骤逝后，你从王都赶回故乡，继承艾登堡。葬礼尚未结束，领地的债务、边境的敌军和父亲死因的疑案已经一同摆在你面前。
 
-在这款中世纪宫廷权谋视觉小说中，你将面对尔虞我诈的政治博弈、危机四伏的宫廷阴谋，以及难以抉择的道德困境。每一次对话、每一个决定，都将牵动六维属性与角色好感，最终将你引向五个截然不同的结局。
+贵族要求你履行旧约，教会等待你的表态，王权则要确认新领主是否忠诚。你可以借助其中一方，也可以拒绝他们。每次决定都会关闭一些道路，也会打开另一些道路；无法选择的选项，往往源自你此前的取舍。
 
-核心特色：
-- 5章完整剧情，约3-4小时沉浸式体验
-- 5个独特结局，多条故事分支深度探索
-- 六维属性系统 + 角色好感度动态变化
-- 23+游戏系统：画廊、音乐室、成就、章节选择、前情提要、路线图等
-- 隐藏成就与收藏品等待发掘
-- New Game+ 二周目解锁新内容
-- 油画风格美术，暗黑皇家金主题UI
-- 触屏深度优化，为移动端量身打造
+核心内容：
+- 五章完整故事
+- 九个主线结局与一个隐藏尾声
+- 南境故事设有五个独立结果
+- 权力、财富、信仰、忠诚、声望、谋略六项属性
+- 角色关系、领地治理、战斗、制作与随机事件
+- 画廊、音乐室、成就、章节选择、收藏品与决策日志
+- PC 与 Android 均支持横屏游玩
 
-权力的游戏已经开始，你准备好了吗？
+通关后开启 New Game+，新周目会继承上次结算时20%的权力、财富和谋略。故事选择从头开始，未走过的道路仍需重新争取。
 
 【标签 / Tags】
 视觉小说, 剧情, 选择, 权谋, 中世纪, 单机, 策略
@@ -43,27 +42,25 @@
 Court of Shadows
 
 【Short Description】
-A medieval court intrigue visual novel. Navigate politics, forge alliances, and shape your destiny across 5 chapters and 5 unique endings.
+After your father's sudden death, inherit Aidenburgh and investigate what killed him. Your decisions open some roads and close others across five chapters.
 
 【Full Description】
 
-You are the newly appointed Lord of Aidenburgh, thrust into a deadly web of noble ambition, religious fervor, and royal machination.
+Your father dies without warning. You return from the royal capital to inherit Aidenburgh, only to find his debts, a threatened border, and unanswered questions about his death waiting for you.
 
-Court of Shadows is a medieval court intrigue visual novel where every choice carries weight. Navigate treacherous political alliances, uncover palace conspiracies, and confront impossible moral dilemmas as you fight to survive — and perhaps to rule.
+The nobles expect old promises to be honored. The Church wants a declaration of faith. The Crown wants proof of the new lord's loyalty. You may accept their help or refuse their terms. Each decision opens some roads and closes others, and an opportunity denied in one chapter may decide what remains available later.
 
 KEY FEATURES:
 
-- 5 Full Chapters of branching narrative with 3-4 hours of gameplay
-- 5 Distinct Endings shaped by your decisions throughout the story
-- Six-Dimensional Stat System tracking your political influence, military strength, faith, wealth, intelligence, and charisma
-- Dynamic Relationship System where character affinity shifts based on your choices
-- 23+ Game Systems including gallery, music room, achievements, chapter select, story recap, route map, and more
-- Hidden Achievements & Collectibles reward thorough exploration
-- New Game+ unlocks additional content on subsequent playthroughs
-- Oil Painting Art Style with a dark royal gold UI theme
-- Touch-Optimized for mobile with full desktop support
+- Five complete chapters of branching court intrigue
+- Nine main endings and one hidden epilogue
+- The Southern storyline has five separate outcomes
+- Six tracked values: Power, Wealth, Faith, Loyalty, Reputation, and Intrigue
+- Character relationships, domain management, combat, crafting, and random events
+- Gallery, music room, achievements, chapter select, collectibles, and a decision log
+- Landscape support on PC and Android
 
-The game of power has begun. Will you rise to the throne, or fall to the shadows?
+After finishing the story, New Game+ carries over 20% of your final Power, Wealth, and Intrigue. Story decisions begin again and must be earned on the new route.
 
 【Tags】
 Visual Novel, Story Rich, Choices Matter, Medieval, Intrigue, Strategy, Singleplayer, Multiple Endings

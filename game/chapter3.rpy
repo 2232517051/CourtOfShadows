@@ -6098,15 +6098,17 @@ label ch3_end:
     show player_char_img at left with dissolve
 
     menu:
-        "回信，愿意谈这桩联姻":
-            $ marriage_route = True
-            $ log_decision("第三章", "接受希尔达伯爵夫人的联姻提议")
+        "回信，答应在王都会面":
+            $ marriage_proposal_open = True
+            $ marriage_route = False
+            $ marriage_warm = False
+            $ log_decision("第三章", "同意会面商谈联姻")
             $ change_stat("intrigue", 3)
-            player "回信给伯爵夫人。就说——这个冬天，艾登堡和北疆议会站在一起。"
+            player "回信吧。我会去王都。婚事，等我见过英格丽再说。"
             hide player_char_img
             $ hide_all_chars("aldric_img")
             show aldric_img at left with dissolve
-            aldric "我这就安排。开春前，议会的人会再来。"
+            aldric "是。原话就这么写。"
 
         "婉拒，我另有打算":
             $ log_decision("第三章", "婉拒联姻提议")

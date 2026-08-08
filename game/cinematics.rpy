@@ -380,7 +380,7 @@ label cinematic_chapter3:
 
     hide screen cin_overlay
     scene black with dissolve
-    stop music fadeout 2.0
+    ## 章初还有多段承接场景；让阴谋主题延续，避免正文长时间静默。
 
     $ _cin_skip = False
     $ _dismiss_pause = True

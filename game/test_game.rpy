@@ -410,6 +410,9 @@ testcase test_desktop_choice_sanity:
 
 
 testcase test_father_son_cg_render:
+    $ renpy.set_physical_size((config.screen_width, config.screen_height))
+    pause 0.3
+    assert eval (renpy.get_physical_size() == (config.screen_width, config.screen_height))
     $ _test.timeout = 4.0
     run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0
     pause 2.2
@@ -550,6 +553,54 @@ label test_resistance_battle_loss_fixture:
 ## 3.9.2 regression: accessibility controls must drive Ren'Py preferences.
 ################################################################################
 
+## 3.9.2 release metadata: render the production About and privacy screens,
+## exercise their real dismiss actions, and leave persistent consent unchanged.
+testsuite test_release_metadata_render:
+    setup:
+        $ _test.timeout = 4.0
+        $ _test.release_metadata_persistent_snapshot = {"privacy_agreed": persistent.privacy_agreed}
+        $ _test.release_metadata_quick_menu_snapshot = quick_menu
+        $ persistent.privacy_agreed = True
+
+    teardown:
+        $ persistent.privacy_agreed = _test.release_metadata_persistent_snapshot["privacy_agreed"]
+        $ quick_menu = _test.release_metadata_quick_menu_snapshot
+        $ renpy.save_persistent()
+        assert eval (persistent.privacy_agreed == _test.release_metadata_persistent_snapshot["privacy_agreed"])
+        assert eval (quick_menu == _test.release_metadata_quick_menu_snapshot)
+
+    testcase production_about_renders_and_returns_to_main_menu:
+        run ShowMenu("about") until screen "about" timeout 4.0
+        pause 0.5
+        screenshot "release_metadata_about"
+        scroll amount 20 pos (0.7, 0.6)
+        pause 0.5
+        screenshot "release_metadata_about_license"
+        click "« 返回"
+        pause until screen "main_menu" timeout 4.0
+        assert eval (renpy.get_screen("about") is None)
+
+    testcase production_privacy_policy_renders_and_accept_returns_to_main_menu:
+        $ quick_menu = False
+        assert eval (not quick_menu)
+        run Start("test_release_metadata_privacy_fixture") until screen "privacy_policy_screen" timeout 4.0
+        pause 2.0
+        screenshot "release_metadata_privacy"
+        scroll amount 20 pos (0.6, 0.45)
+        pause 0.5
+        screenshot "release_metadata_privacy_version"
+        $ persistent.privacy_agreed = False
+        assert eval (not persistent.privacy_agreed)
+        click "同意并继续"
+        pause until screen "main_menu" timeout 4.0
+        assert eval (persistent.privacy_agreed)
+        assert eval (renpy.get_screen("privacy_policy_screen") is None)
+
+
+label test_release_metadata_privacy_fixture:
+    call screen privacy_policy_screen
+    return
+
 default _test_accessibility_original_font_size = 1.0
 default _test_accessibility_original_high_contrast = False
 default _test_accessibility_original_text_cps = 0
@@ -618,7 +669,8 @@ testsuite test_accessibility_render:
         $ renpy.restart_interaction()
         if screen "preferences":
             click "« 返回"
-            pause until screen "main_menu" timeout 4.0
+            pause until screen "say" timeout 4.0
+            run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
 
     testcase small_touch_dialogue_and_seven_long_choices_render_at_150_percent:
         if eval (renpy.variant("small")):

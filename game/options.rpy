@@ -6,22 +6,12 @@ define config.version = "3.9.2"
 define gui.show_name = True
 define gui.about = _p("""
 {b}权谋之庭 - Court of Shadows{/b}
-一款中世纪宫廷权谋视觉小说。
 
-你是新任艾登堡领主，在贵族、教会与王权的夹缝中求生。
-你的每一个选择都将影响权力的天平。
+父亲骤逝后，你继承艾登堡，成为这里的新领主。他的死因仍是一桩疑案，而贵族、教会与王权已经各自登门。
 
-{b}特色：{/b}
-· 五章完整剧情，35万字，约8-10小时游戏时长
-· 六维属性系统 + 角色好感度
-· 多条故事分支，五个独特结局 + 隐藏结局
-· 章间过渡、NPC深度支线、治理系统
-· 画廊、音乐室、成就、章节选择、收藏品
-· 隐藏成就与New Game+
-· 油画风格美术，暗黑皇家金主题UI
+全篇共五章，包含九个主线结局与一个隐藏尾声。你的选择会关上一些道路，也会打开另一些道路。
 
-{b}制作：{/b}
-v3.2 — 剧情修正 & Bug修复版
+{b}版本：{/b}v3.9.2
 
 基于 Ren'Py 引擎制作
 """)
@@ -65,6 +55,59 @@ init python:
     build.classify('**.psd', None)
     build.classify('**.py', None)
 
+    ## Release packaging only; source files stay in the repository.
+    build.classify('game/test_game.rpyc', None)
+    build.classify('game/audio/music/*_alt.mp3', None)
+    build.classify('game/audio/music/test3.wav', None)
+    build.classify('game/audio/narration/test_guy.mp3', None)
+    build.classify('game/audio/narration/voice_test/**', None)
+    build.classify('game/images/hd/**', None)
+    build.classify('game/images/backup_sd/**', None)
+    build.classify('game/images/webp_backup/**', None)
+    build.classify('store_assets/**', None)
+    build.classify('tests/**', None)
+    build.classify('docs/**', None)
+    build.classify('Tools/**', None)
+    build.classify('AGENTS.md', None)
+    build.classify('_speaker_report.txt', None)
+    build.classify('_ui_wiring_review.png', None)
+    build.classify('all_chars.txt', None)
+    build.classify('bgm_suno_progress.json', None)
+    build.classify('CANON.md', None)
+    build.classify('CHANGELOG.txt', None)
+    build.classify('CHANGELOG_v3.0.md', None)
+    build.classify('CLAUDE.md', None)
+    build.classify('combat_ui_mockup.png', None)
+    build.classify('cover_horizontal.png', None)
+    build.classify('cover_vertical.png', None)
+    build.classify('crisis_check_proposal.md', None)
+    build.classify('DESCRIPTION.txt', None)
+    build.classify('DEVELOPER_NOTE.txt', None)
+    build.classify('first_meet_report.txt', None)
+    build.classify('game_icon_256.jpg', None)
+    build.classify('game_icon_256.png', None)
+    build.classify('logo.png', None)
+    build.classify('logo_gold.png', None)
+    build.classify('long_dialogue.txt', None)
+    build.classify('missing_portraits_A.txt', None)
+    build.classify('missing_portraits_B.txt', None)
+    build.classify('missing_portraits_full.json', None)
+    build.classify('promo_horizontal.png', None)
+    build.classify('promo_vertical.png', None)
+    build.classify('sfx_elevenlabs_progress.json', None)
+    build.classify('taptap_promo.png', None)
+    build.classify('TapTap_v3.5.1_hotfix.md', None)
+    build.classify('TapTap_v3.5_更新公告.md', None)
+    build.classify('TapTap_v3.6_更新公告.md', None)
+    build.classify('TapTap_v3.7_更新公告.md', None)
+    build.classify('TapTap_v3.8_更新公告.md', None)
+    build.classify('TapTap_v3.9_更新公告.md', None)
+    build.classify('TapTap_回归声明.md', None)
+    build.classify('ui_icons_progress.json', None)
+    build.classify('voice_mapping.json', None)
+    build.classify('wallpaper_library.png', None)
+    build.classify('事件时间线审计报告.md', None)
+
     ## 按平台分类打包
     build.classify('game/**.rpyc', 'all')
     build.classify('game/**.png', 'all')
@@ -77,12 +120,13 @@ init python:
     build.classify('game/**.ico', 'windows')
     build.classify('game/**.icns', 'mac')
 
+    build.classify('README.txt', 'windows')
     build.documentation('README.txt')
 
     ## ── Android 配置 ──
     build.android_package = "com.xiaoyiai.courtofshadows"
     build.android_permissions = []
-    build.android_target_api = 33
+    build.android_target_api = 36
 
     ## ── iOS 配置 ──
     build.ios_bundle_identifier = "com.xiaoyiai.courtofshadows"

@@ -26,6 +26,56 @@ def label_body(name: str, label: str) -> str:
     return match.group(1)
 
 
+def testcase_body(name: str) -> str:
+    text = read_game_file("test_game.rpy")
+    match = re.search(
+        rf"(?m)^testcase {re.escape(name)}(?:\([^\n]*\))?:[ \t]*$",
+        text,
+    )
+    if match is None:
+        raise AssertionError(f"testcase {name!r} not found in test_game.rpy")
+
+    body_lines = []
+    for line in text[match.end() :].splitlines():
+        if line.strip() and not line[0].isspace():
+            break
+        body_lines.append(line)
+    return "\n".join(body_lines)
+
+
+def stops_music(source: str) -> bool:
+    if re.search(
+        r"(?m)^\s*(?:stop\s+music\b|(?:\$\s*)?(?:stop_music|stop_bgm)\s*\()",
+        source,
+    ):
+        return True
+
+    api_stops = re.finditer(
+        r"(?m)^\s*(?:\$\s*)?renpy\.music\.stop\s*\(([^)]*)\)", source
+    )
+    for match in api_stops:
+        arguments = match.group(1)
+        named_channel = re.search(
+            r"\bchannel\s*=\s*([\"'])([^\"']+)\1", arguments
+        )
+        if named_channel:
+            if named_channel.group(2) == "music":
+                return True
+            continue
+
+        positional_channel = re.match(r"\s*([\"'])([^\"']+)\1", arguments)
+        if positional_channel:
+            if positional_channel.group(2) == "music":
+                return True
+            continue
+
+        # renpy.music.stop() defaults to the music channel. Treat dynamic
+        # channel expressions conservatively because they cannot prove safety.
+        return True
+
+    return False
+
+
 class FinaleCountdownTests(unittest.TestCase):
     def test_chapter_five_uses_existing_ten_day_preparations(self) -> None:
         chapter_start = label_body("chapter5.rpy", "chapter5_start")
@@ -35,6 +85,67 @@ class FinaleCountdownTests(unittest.TestCase):
         self.assertNotIn("call gov_festival", chapter_start)
         for choice in ("立即派出更多斥候", "加强城防", "先确保百姓安全"):
             self.assertIn(choice, war_clouds)
+
+
+class ChapterMusicContinuityTests(unittest.TestCase):
+    def test_chapter_three_opening_has_bgm_after_the_cinematic(self) -> None:
+        cinematic = label_body("cinematics.rpy", "cinematic_chapter3")
+        chapter_start = label_body("chapter3.rpy", "chapter3_start")
+
+        cinematic_track = 'play music "audio/music/conspiracy.ogg"'
+        track_start = cinematic.index(cinematic_track)
+        cinematic_keeps_music = not stops_music(cinematic[track_start:])
+
+        after_cinematic = chapter_start.split(
+            "call cinematic_chapter3 from _call_cinematic_ch3", 1
+        )[1]
+        before_first_line = after_cinematic.split('"暗杀事件后的第三天。"', 1)[0]
+        chapter_restarts_music = bool(
+            re.search(r"(?m)^\s*(?:play music|\$ play_music\()", before_first_line)
+        )
+
+        self.assertTrue(
+            cinematic_keeps_music or chapter_restarts_music,
+            "chapter 3 stops the cinematic BGM and enters its opening dialogue in silence",
+        )
+
+    def test_chapter_three_skip_path_preserves_music(self) -> None:
+        cinematics = read_game_file("cinematics.rpy")
+        chapter_three = label_body("cinematics.rpy", "cinematic_chapter3")
+        skip_handler = re.search(
+            r"(?ms)^    def skip_cinematic\(\):\s*\n(.*?)(?=^    def |^default )",
+            cinematics,
+        )
+
+        self.assertLess(
+            chapter_three.index('play music "audio/music/conspiracy.ogg"'),
+            chapter_three.index("show screen cin_overlay"),
+            "the skip control becomes interactive before chapter 3 starts its BGM",
+        )
+        self.assertIsNotNone(skip_handler)
+        self.assertFalse(
+            stops_music(skip_handler.group(1)),
+            "skipping a cinematic stops the BGM before the chapter opening",
+        )
+
+    def test_music_stop_detector_understands_default_and_explicit_channels(self) -> None:
+        for stopping_call in (
+            "stop music fadeout 2.0",
+            "$ stop_music(fadeout=2.0)",
+            "$ stop_bgm()",
+            "renpy.music.stop()",
+            "renpy.music.stop(fadeout=2.0)",
+            'renpy.music.stop("music")',
+            'renpy.music.stop(channel="music")',
+        ):
+            self.assertTrue(stops_music(stopping_call), stopping_call)
+
+        for other_channel in (
+            'renpy.music.stop("voice")',
+            'renpy.music.stop(channel="sound")',
+            'renpy.music.stop(fadeout=0.5, channel="voice")',
+        ):
+            self.assertFalse(stops_music(other_channel), other_channel)
 
 
 class FatherSonAssetTests(unittest.TestCase):
@@ -55,6 +166,9 @@ class FatherSonAssetTests(unittest.TestCase):
         )
         self.assertEqual({match.group(1) for match in matches if match}, expected_nodes)
         self.assertEqual(len({match.group(2) for match in matches if match}), 1)
+        for path in baselines:
+            with Image.open(path) as image:
+                self.assertEqual(image.size, (1280, 720))
 
     def test_father_son_cg_pair_meets_release_contract(self) -> None:
         assets = (
@@ -114,9 +228,34 @@ class FatherSonAssetTests(unittest.TestCase):
 
     def test_father_son_render_regression_executes_production_atl(self) -> None:
         test_game = read_game_file("test_game.rpy")
+        render_testcase = testcase_body("test_father_son_cg_render")
         ending_source = read_game_file("endings_expansion.rpy")
 
         self.assertIn("testcase test_father_son_cg_render:", test_game)
+        executable_lines = [
+            line.strip()
+            for line in render_testcase.splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
+        normalization = (
+            "$ renpy.set_physical_size((config.screen_width, config.screen_height))"
+        )
+        physical_size_assertion = (
+            "assert eval (renpy.get_physical_size() == "
+            "(config.screen_width, config.screen_height))"
+        )
+        first_fixture = next(
+            (
+                index
+                for index, line in enumerate(executable_lines)
+                if line.startswith("run Start(")
+            ),
+            None,
+        )
+        self.assertIsNotNone(first_fixture, "father-son render testcase has no fixture")
+        for command in (normalization, physical_size_assertion):
+            self.assertIn(command, executable_lines)
+            self.assertLess(executable_lines.index(command), first_fixture)
         self.assertIn(
             'run Start("test_father_son_cg_atl_smoke_fixture") until screen "say" timeout 4.0',
             test_game,

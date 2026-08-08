@@ -74,7 +74,7 @@ define broker = Character("掮客费舍尔", color="#8a8a8a", image="noble_werne
 define ship_boy = Character("少年水手", color="#a89878", image="ship_boy")
 ## 第一幕港口初探配角(复用现有立绘，语义贴合)
 define old_salt = Character("老船工", color="#7a6a5a", image="old_salt")
-define tax_man = Character("公会税吏", color="#8a7a4a", image="soldier_generic")
+define tax_man = Character("公会税吏", color="#8a7a4a", image="tax_collector")
 define fishmonger = Character("鱼贩阿姆", color="#8a8a6a", image="old_woman")
 define fisher_wife = Character("船员之妻", color="#c4a882", image="blacksmith_wife")
 define harbor_master = Character("港务官", color="#9a8a6a", image="harbor_master")
@@ -86,7 +86,7 @@ define sea_dog = Character("老汉斯", color="#5a6a7a", image="sea_dog")
 define chen_captain = Character("陈船老大", color="#6a5a4a", image="chen_captain")
 define xiao_liu = Character("学徒小六", color="#a89878", image="stable_boy")
 define inn_keeper = Character("客栈老板", color="#8a8a7a", image="servant_generic")
-define guild_clerk = Character("公会账房", color="#9a8a6a", image="merchant_karl")
+define guild_clerk = Character("公会账房", color="#9a8a6a", image="merchant_guild")
 define dissenter = Character("动摇的船主", color="#6a6a5a", image="soldier_generic")
 ## 第三幕王廷特使 / 主帅
 define envoy_royal = Character("王廷特使", color="#7a5a5a", image="soldier_generic")
@@ -397,11 +397,11 @@ label southern_explore_dock:
     $ port_insight += 1
     "码头上，一队挂着金锚徽记的人围住了一条刚靠岸的渔船。"
 
-    $ hide_all_chars("soldier_generic_img")
-    show soldier_generic_img at right with dissolve
+    $ hide_all_chars("tax_collector_img")
+    show tax_collector_img at right with dissolve
     tax_man "两成。渔获抽两成，按公会的规矩。船和人，都登记。"
 
-    $ hide_all_chars("farmer_rep_img", "soldier_generic_img")
+    $ hide_all_chars("tax_collector_img")
     show old_salt_img at left with dissolve
     old_salt "两成？我一船鱼刨去本钱剩不下几个铜板。我打了四十年鱼，从没人管我登不登记！"
 
@@ -414,7 +414,7 @@ label southern_explore_dock:
             $ dock_stand = "people"
             $ change_stat("reputation", 4)
             $ change_rel("rel_corsair", 3)
-            $ hide_all_chars("player_char_img", "soldier_generic_img")
+            $ hide_all_chars("player_char_img", "tax_collector_img")
             show player_char_img at left with dissolve
 
             player "两成的税，立在哪条律上？拿出来我看看。"
@@ -437,8 +437,8 @@ label southern_explore_dock:
             $ dock_stand = "money"
             $ change_stat("wealth", -3)
             $ change_stat("reputation", 2)
-            $ hide_all_chars("soldier_generic_img")
-            show soldier_generic_img at right with dissolve
+            $ hide_all_chars("tax_collector_img")
+            show tax_collector_img at right with dissolve
 
             "你不动声色，把一小袋银币塞进税吏手里。"
 
@@ -2383,16 +2383,16 @@ label si_insider:
     scene bg tideport_harbor with dissolve
     "公会不是铁板一块。你找上一个对维斯帕新规矩早有怨言的老账房，请他喝了顿酒。"
 
-    $ hide_all_chars("merchant_karl_img")
-    show merchant_karl_img at right with dissolve
+    $ hide_all_chars("merchant_guild_img")
+    show merchant_guild_img at right with dissolve
     guild_clerk "费舍尔那人？嘿，邪门。他来公会，不走大执事的门子——直接见维斯帕上头的几位老爷。"
 
     $ hide_all_chars("player_char_img", "corsair_img", "ship_boy_img", "dockhand_img")
     show player_char_img at left with dissolve
     player "维斯帕上头？公会还有人压得过大执事？"
 
-    $ hide_all_chars("merchant_karl_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
-    show merchant_karl_img at right with dissolve
+    $ hide_all_chars("merchant_guild_img", "player_char_img", "player_young_img", "player_teen_img", "player_child_img", "aldric_img", "guild_master_img", "old_salt_img", "sea_dog_img", "chen_captain_img", "blacksmith_wife_img")
+    show merchant_guild_img at right with dissolve
     guild_clerk "明面上没有。可那回费舍尔一来，几位老爷关起门嘀咕了半宿，第二天就定了拿海雀号开刀。维斯帕自个儿，未必清楚上头收了谁的话。"
 
     "你心里一凉。费舍尔背后那只手，能越过维斯帕，直接拨动公会高层。这局，比你想的还深。"
