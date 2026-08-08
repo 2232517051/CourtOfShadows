@@ -341,6 +341,66 @@ init python:
         "_iron_prepared",
         "ch3_lily_alliance_independent",
     )
+    _TEST_WINTER_EXPECTED_OUTCOMES = {
+        ("trade", "preserve"): {
+            "benefit": "trade_preserved_seed",
+            "beneficiary": "farmers_and_trade_route",
+            "burden": "trade_repayment_and_tight_rations",
+            "bearer": "treasury_and_townspeople",
+            "action": "audited_purchase_contracts",
+            "followup": "trade_preserve_recovery",
+        },
+        ("trade", "feed_now"): {
+            "benefit": "trade_immediate_relief",
+            "beneficiary": "town_relief_recipients",
+            "burden": "trade_seed_shortfall",
+            "bearer": "treasury_and_farmers",
+            "action": "market_grain_distribution",
+            "followup": "trade_feed_recovery",
+        },
+        ("ration", "preserve"): {
+            "benefit": "ration_preserved_seed",
+            "beneficiary": "smallholders_and_farmers",
+            "burden": "ration_hunger_and_reserve_pressure",
+            "bearer": "garrison_and_townspeople",
+            "action": "published_ration_ledgers",
+            "followup": "ration_preserve_recovery",
+        },
+        ("ration", "feed_now"): {
+            "benefit": "ration_broad_relief",
+            "beneficiary": "town_relief_recipients",
+            "burden": "ration_reserve_and_seed_loss",
+            "bearer": "garrison_and_farmers",
+            "action": "open_granary_distribution",
+            "followup": "ration_feed_recovery",
+        },
+        ("requisition", "preserve"): {
+            "benefit": "requisition_preserved_seed",
+            "beneficiary": "smallholders_and_farmers",
+            "burden": "requisition_compensation_debt",
+            "bearer": "estates_and_lordship",
+            "action": "sealed_compensation_vouchers",
+            "followup": "requisition_preserve_recovery",
+        },
+        ("requisition", "feed_now"): {
+            "benefit": "requisition_immediate_relief",
+            "beneficiary": "broad_relief_recipients",
+            "burden": "requisition_debt_and_seed_shortfall",
+            "bearer": "estates_lordship_and_farmers",
+            "action": "requisition_wagons_and_vouchers",
+            "followup": "requisition_feed_recovery",
+        },
+    }
+    _TEST_WINTER_VISIBLE_SEMANTICS = {
+        "omitted": {
+            "market": "【结构占位·低可信报告·粮市账本】抬价与运输成本并存；信息未现场核实。",
+            "village": "【结构占位·低可信报告·村庄种粮】藏粮可能用于春播；信息未现场核实。",
+            "granary": "【结构占位·低可信报告·城堡粮仓】受潮与旧账可能高估库存；信息未现场核实。",
+            "route": "【结构占位·低可信报告·北方商路】冰雪与运输损耗可能拖慢到货；信息未现场核实。",
+        },
+        "shared_cause": "【结构占位·共同原因】多项因素共同造成缺口；不存在单一责任方，也没有单一措施能够解决全部缺口。",
+        "delegate": "【结构占位·委托结果】neutral_delegate；不声明任何政策收益，也不替你作出政策决定。",
+    }
 
     def _test_winter_project_default_names(store_name):
         names = set()
@@ -376,6 +436,53 @@ init python:
         if not getattr(_test, "winter_trace_enabled", False):
             return
         _test.winter_labels.append(name)
+        investigation_labels = {
+            "winter_investigate_market": "market",
+            "winter_investigate_village": "village",
+            "winter_investigate_granary": "granary",
+            "winter_investigate_route": "route",
+        }
+        if name in investigation_labels:
+            _test.winter_investigation_visits.append(
+                (investigation_labels[name], visit_order)
+            )
+            _test.winter_investigation_scenes.append(
+                (
+                    investigation_labels[name],
+                    visit_order,
+                    tuple(renpy.get_attributes("bg", layer="master") or ()),
+                )
+            )
+        if name == "winter_crisis_escalates":
+            _test.winter_crisis_hits += 1
+        if name == "winter_resolve_outcome":
+            _test.winter_resolve_hits += 1
+        if name == "winter_consequence":
+            _test.winter_consequence_hits += 1
+            _test.winter_result = {
+                "contract": dict(outcome),
+                "mitigation": mitigation,
+                "immediate_inputs": immediate_inputs,
+                "saved": (
+                    winter_interlude_status,
+                    tuple(winter_investigations),
+                    winter_policy,
+                    winter_seed_priority,
+                ),
+            }
+        if name == "winter_interlude_cleanup":
+            _test.winter_cleanup_hits += 1
+        if name == "chapter2_start":
+            _test.winter_chapter2_invariance = _test_winter_capture_invariance()
+            _test.winter_chapter2_return_stack = tuple(renpy.get_return_stack())
+        if name in (
+                "winter_market_and_council",
+                "winter_investigation_menu",
+                "winter_crisis_escalates",
+                "winter_choose_policy",
+                "winter_consequence",
+                "winter_interlude_cleanup"):
+            _test.winter_audio_entries.append((name, _test_winter_track("music")))
         if name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2"):
             _test.winter_pad_snapshots[name] = (
                 gov_merchant_outcome,
@@ -388,6 +495,16 @@ init python:
         _test.winter_trace_enabled = True
         _test.winter_labels = []
         _test.winter_pad_snapshots = {}
+        _test.winter_investigation_visits = []
+        _test.winter_investigation_scenes = []
+        _test.winter_crisis_hits = 0
+        _test.winter_resolve_hits = 0
+        _test.winter_consequence_hits = 0
+        _test.winter_cleanup_hits = 0
+        _test.winter_result = None
+        _test.winter_audio_entries = []
+        _test.winter_chapter2_invariance = None
+        _test.winter_chapter2_return_stack = None
         if _test_winter_trace_label not in config.label_callbacks:
             config.label_callbacks.append(_test_winter_trace_label)
 
@@ -421,6 +538,134 @@ init python:
             and getattr(focus.widget, "action", None) is not None
         ]
         return len(matches) == 1
+
+    def _test_winter_visible_choice_keys():
+        texts = [
+            focus.widget._tts_all(True)
+            for focus in renpy.display.focus.focus_list
+            if focus.x is not None
+            and isinstance(getattr(focus.widget, "action", None), renpy.ui.ChoiceReturn)
+        ]
+        choices = (
+            ("market", "粮市账本"),
+            ("village", "村庄种粮"),
+            ("granary", "城堡粮仓"),
+            ("route", "北方商路"),
+            ("trade", "高价购粮并担保商路"),
+            ("ration", "开仓配给并公开账目"),
+            ("requisition", "征用大户余粮并开具补偿凭据"),
+            ("preserve", "保留春播种粮"),
+            ("feed_now", "先让更多人熬过眼前的冬天"),
+        )
+        return tuple(
+            key
+            for key, choice_text in choices
+            if any(choice_text in text for text in texts)
+        )
+
+    def _test_winter_expected_mitigation(policy, seed_priority, investigations, immediate_inputs):
+        if type(immediate_inputs) is not tuple or len(immediate_inputs) != 7:
+            return None
+        canonical = normalize_winter_investigations(investigations)
+        if not canonical:
+            return None
+        if "market" in canonical and policy == "trade":
+            return "market_trade"
+        if "granary" in canonical and policy == "ration":
+            return "granary_ration"
+        if "village" in canonical and seed_priority == "preserve":
+            return "village_preserve"
+        if "route" in canonical and seed_priority == "feed_now":
+            return "route_feed_now"
+        merchant, southern, granary, decree, soft_wealth, soft_loyalty, soft_power = immediate_inputs
+        if merchant == "regulated" and policy == "trade":
+            return "merchant_regulated_trade"
+        if southern in ("ruler", "fall") and policy == "trade":
+            return "southern_trade_terms"
+        if granary and policy == "ration":
+            return "existing_granary_ration"
+        if decree == "治安" and policy == "trade":
+            return "decree_security_trade"
+        if decree in ("民生", "建设") and policy == "ration":
+            return "decree_civic_ration"
+        if decree == "军事" and policy == "requisition":
+            return "decree_military_requisition"
+        if soft_wealth >= 60 and policy == "trade":
+            return "wealth_trade"
+        if soft_loyalty >= 60 and policy == "ration":
+            return "loyalty_ration"
+        if soft_power >= 60 and policy == "requisition":
+            return "power_requisition"
+        return None
+
+    def _test_winter_capture_invariance():
+        store_names = tuple(
+            name
+            for name in _test_winter_project_default_names("store")
+            if name not in _WINTER_ALLOWED_STORE_DEFAULT_WRITES
+        )
+        persistent_names = _test_winter_project_default_names("store.persistent")
+        routes = get_current_finale_route_availability()
+        battle = get_current_resistance_battle_outcomes()
+        endings = get_finale_ending_availability(routes, battle)
+        assert set(endings) == set(_ending_keys)
+        resistance_inputs = (
+            power,
+            intrigue,
+            faith,
+            loyalty,
+            wealth,
+            persistent.difficulty or "normal",
+            alliance_baron,
+            rel_baron,
+            prince_ally,
+            rel_captain,
+            ch5_pay_advance_pension,
+            marriage_route,
+            iron_thorn_controlled,
+            baron_supply_intel,
+        )
+        transient_names = (
+            "first",
+            "second",
+            "visit_order",
+            "policy",
+            "seed_priority",
+            "outcome",
+            "mitigation",
+            "immediate_inputs",
+        )
+        return {
+            "store": {
+                name: _test_winter_freeze(getattr(store, name))
+                for name in store_names
+            },
+            "persistent": {
+                name: (
+                    hasattr(persistent, name),
+                    _test_winter_freeze(getattr(persistent, name, None)),
+                )
+                for name in persistent_names
+            },
+            "optional": {
+                name: (
+                    hasattr(store, name),
+                    _test_winter_freeze(getattr(store, name, None)),
+                )
+                for name in _WINTER_NONDEFAULT_FORBIDDEN_STATE
+            },
+            "transients": {
+                name: (
+                    hasattr(store, name),
+                    _test_winter_freeze(getattr(store, name, None)),
+                )
+                for name in transient_names
+            },
+            "routes": _test_winter_freeze(routes),
+            "resistance_inputs": _test_winter_freeze(resistance_inputs),
+            "battle": _test_winter_freeze(battle),
+            "endings": _test_winter_freeze(endings),
+        }
 
 
 testsuite test_winter_interlude_state:
@@ -538,7 +783,8 @@ testsuite test_winter_interlude_state:
 
     testcase four_investigations_only_mitigate_their_named_cost:
         $ _winter_pairs = (("market", "village"), ("market", "granary"), ("market", "route"), ("village", "granary"), ("village", "route"), ("granary", "route"))
-        $ _winter_observed = {(pair, policy, seed): select_winter_mitigation(policy, seed, pair, {}) for pair in _winter_pairs for policy in WINTER_POLICIES for seed in WINTER_SEED_PRIORITIES}
+        $ _winter_neutral_inputs = ("", "delegated", False, "", 0, 0, 0)
+        $ _winter_observed = {(pair, policy, seed): select_winter_mitigation(policy, seed, pair, _winter_neutral_inputs) for pair in _winter_pairs for policy in WINTER_POLICIES for seed in WINTER_SEED_PRIORITIES}
         python:
             _winter_expected = {
                 (("market", "village"), "trade", "preserve"): "market_trade",
@@ -722,6 +968,284 @@ testsuite test_winter_interlude_ending_invariance:
         assert eval (get_resistance_battle_outcomes(**battle_kwargs) == _winter_battle_before)
 
 
+testsuite test_winter_interlude_route_matrix:
+    before testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test.winter_route_original = (first_decree, southern_outcome, built_granary, famine_prevented, gov_merchant_outcome, wealth, loyalty, power, _new_run_bootstrap_done, winter_interlude_status, tuple(winter_investigations), winter_policy, winter_seed_priority, list(governance_events_seen))
+        $ _test_winter_begin_trace()
+
+    after testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_end_trace()
+        $ first_decree, southern_outcome, built_granary, famine_prevented, gov_merchant_outcome, wealth, loyalty, power, _new_run_bootstrap_done, winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority, _winter_events = _test.winter_route_original
+        $ governance_events_seen[:] = _winter_events
+        $ clear_weather()
+        $ hide_all_chars()
+        $ renpy.music.stop(channel="music")
+        $ renpy.music.stop(channel="sound")
+
+    testcase thirty_six_real_routes_cover_all_orders_results_and_cleanup:
+        parameter (investigation_pair, policy_name, seed_name) = [
+            (pair, policy, seed)
+            for pair in (("market", "village"), ("market", "granary"), ("market", "route"), ("village", "granary"), ("village", "route"), ("granary", "route"))
+            for policy in ("trade", "ration", "requisition")
+            for seed in ("preserve", "feed_now")
+        ]
+
+        assert eval (renpy.has_label("winter_market_and_council"))
+        $ _test.winter_pairs = (("market", "village"), ("market", "granary"), ("market", "route"), ("village", "granary"), ("village", "route"), ("granary", "route"))
+        $ _test.winter_route_number = _test.winter_pairs.index(investigation_pair) * 6 + WINTER_POLICIES.index(policy_name) * 2 + WINTER_SEED_PRIORITIES.index(seed_name)
+        $ _test.winter_first = investigation_pair[_test.winter_route_number % 2]
+        $ _test.winter_second = investigation_pair[1 - (_test.winter_route_number % 2)]
+        $ _test.winter_selected_pair = investigation_pair
+        $ first_decree = ("治安", "民生", "建设", "军事", "")[_test.winter_route_number % 5]
+        $ southern_outcome = ("delegated", "ruler", "fall", "free")[_test.winter_route_number % 4]
+        $ built_granary = (_test.winter_route_number % 3 == 0)
+        $ famine_prevented = False
+        $ gov_merchant_outcome = "regulated" if _test.winter_route_number % 4 == 0 else ""
+        $ wealth, loyalty, power = (59 + (_test.winter_route_number % 2), 59 + ((_test.winter_route_number + 1) % 2), 60 if _test.winter_route_number % 3 == 0 else 59)
+        $ _new_run_bootstrap_done = True
+        $ _test.winter_expected_inputs = (gov_merchant_outcome, southern_outcome, built_granary, first_decree, wealth, loyalty, power)
+        $ _test.winter_invariance = _test_winter_capture_invariance()
+        $ _history_list[:] = []
+
+        run Start("test_winter_route_matrix_driver") until screen "say" timeout 6.0
+        advance until screen "choice" timeout 6.0
+        pause until eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER)) timeout 4.0
+        pause until eval (_test_winter_track("music") is not None and _test_winter_track("music").endswith("audio/music/market_bustle.ogg")) timeout 4.0
+        assert eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER))
+        assert eval (_test_winter_track("music").endswith("audio/music/market_bustle.ogg"))
+        if eval (_test.winter_first == "market"):
+            pause until eval (_test_winter_choice_ready("粮市账本")) timeout 4.0
+            click "粮市账本"
+        elif eval (_test.winter_first == "village"):
+            pause until eval (_test_winter_choice_ready("村庄种粮")) timeout 4.0
+            click "村庄种粮"
+        elif eval (_test.winter_first == "granary"):
+            pause until eval (_test_winter_choice_ready("城堡粮仓")) timeout 4.0
+            click "城堡粮仓"
+        else:
+            pause until eval (_test_winter_choice_ready("北方商路")) timeout 4.0
+            click "北方商路"
+
+        advance until screen "choice" timeout 6.0
+        pause until eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER) - {_test.winter_first}) timeout 4.0
+        assert eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER) - {_test.winter_first})
+        if eval (_test.winter_second == "market"):
+            pause until eval (_test_winter_choice_ready("粮市账本")) timeout 4.0
+            click "粮市账本"
+        elif eval (_test.winter_second == "village"):
+            pause until eval (_test_winter_choice_ready("村庄种粮")) timeout 4.0
+            click "村庄种粮"
+        elif eval (_test.winter_second == "granary"):
+            pause until eval (_test_winter_choice_ready("城堡粮仓")) timeout 4.0
+            click "城堡粮仓"
+        else:
+            pause until eval (_test_winter_choice_ready("北方商路")) timeout 4.0
+            click "北方商路"
+
+        advance until screen "choice" timeout 10.0
+        pause until eval (set(_test_winter_visible_choice_keys()) == set(WINTER_POLICIES)) timeout 4.0
+        pause until eval (_test_winter_track("music") is not None and _test_winter_track("music").endswith("audio/music/tension.ogg")) timeout 4.0
+        assert eval (set(_test_winter_visible_choice_keys()) == set(WINTER_POLICIES))
+        assert eval (_test_winter_track("music").endswith("audio/music/tension.ogg"))
+        if eval (policy_name == "trade"):
+            pause until eval (_test_winter_choice_ready("高价购粮并担保商路")) timeout 4.0
+            click "高价购粮并担保商路"
+        elif eval (policy_name == "ration"):
+            pause until eval (_test_winter_choice_ready("开仓配给并公开账目")) timeout 4.0
+            click "开仓配给并公开账目"
+        else:
+            pause until eval (_test_winter_choice_ready("征用大户余粮并开具补偿凭据")) timeout 4.0
+            click "征用大户余粮并开具补偿凭据"
+
+        advance until screen "choice" timeout 6.0
+        pause until eval (set(_test_winter_visible_choice_keys()) == set(WINTER_SEED_PRIORITIES)) timeout 4.0
+        assert eval (set(_test_winter_visible_choice_keys()) == set(WINTER_SEED_PRIORITIES))
+        if eval (seed_name == "preserve"):
+            pause until eval (_test_winter_choice_ready("保留春播种粮")) timeout 4.0
+            click "保留春播种粮"
+        else:
+            pause until eval (_test_winter_choice_ready("先让更多人熬过眼前的冬天")) timeout 4.0
+            click "先让更多人熬过眼前的冬天"
+
+        advance until screen "say" timeout 6.0
+        pause until eval (_test_winter_track("music") is not None and _test_winter_track("music").endswith("audio/music/castle_calm.ogg")) timeout 4.0
+        assert eval (_test_winter_track("music").endswith("audio/music/castle_calm.ogg"))
+        advance until eval ("chapter2_start" in _test.winter_labels) timeout 16.0
+        $ _test.winter_omitted = tuple(key for key in WINTER_INVESTIGATION_ORDER if key not in (_test.winter_first, _test.winter_second))
+        $ _test.winter_expected_visits = [(_test.winter_first, "first"), (_test.winter_second, "second")] + [(key, "omitted") for key in _test.winter_omitted]
+        assert eval (_test.winter_investigation_visits == _test.winter_expected_visits)
+        assert eval ({key for key, _kind in _test.winter_investigation_visits} == set(WINTER_INVESTIGATION_ORDER))
+        assert eval (len(_test.winter_investigation_visits) == 4 and len(_test.winter_omitted) == 2)
+        assert eval (len([entry for entry in _test.winter_investigation_scenes if entry[1] == "omitted"]) == 2)
+        assert eval (all(attributes == ("council_hall",) for _key, order, attributes in _test.winter_investigation_scenes if order == "omitted"))
+        assert eval ((_test.winter_crisis_hits, _test.winter_resolve_hits, _test.winter_consequence_hits, _test.winter_cleanup_hits) == (1, 1, 1, 1))
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("completed", investigation_pair, policy_name, seed_name))
+        assert eval (_test.winter_result["saved"] == ("completed", investigation_pair, policy_name, seed_name))
+        assert eval (set(_test.winter_result["contract"]) == {"benefit", "beneficiary", "burden", "bearer", "action", "followup"})
+        assert eval (all(isinstance(value, str) and value for value in _test.winter_result["contract"].values()))
+        assert eval (all(_test.winter_result["contract"][key] for key in ("beneficiary", "bearer", "action", "followup")))
+        assert eval (_test.winter_result["contract"] == _TEST_WINTER_EXPECTED_OUTCOMES[(policy_name, seed_name)])
+        assert eval (WINTER_OUTCOME_CONTRACTS[(policy_name, seed_name)] == _TEST_WINTER_EXPECTED_OUTCOMES[(policy_name, seed_name)])
+        assert eval (_test.winter_result["mitigation"] == _test_winter_expected_mitigation(policy_name, seed_name, investigation_pair, _test.winter_expected_inputs))
+        assert eval (type(_test.winter_result["immediate_inputs"]) is tuple and len(_test.winter_result["immediate_inputs"]) == 7)
+        assert eval (_test.winter_result["immediate_inputs"] == _test.winter_expected_inputs)
+        $ _test.winter_history = "\n".join(str(getattr(entry, "what", "")) for entry in _history_list)
+        assert eval (all(_test.winter_history.count("{#winter_selected_" + key + "}") == (1 if key in _test.winter_selected_pair else 0) for key in WINTER_INVESTIGATION_ORDER))
+        assert eval (all(_test.winter_history.count("{#winter_omitted_" + key + "}") == (1 if key in _test.winter_omitted else 0) for key in WINTER_INVESTIGATION_ORDER))
+        assert eval (_test.winter_history.count("{#winter_shared_cause}") == 1)
+        assert eval (all(_test.winter_history.count(_TEST_WINTER_VISIBLE_SEMANTICS["omitted"][key]) == (1 if key in _test.winter_omitted else 0) for key in WINTER_INVESTIGATION_ORDER))
+        assert eval (_test.winter_history.count(_TEST_WINTER_VISIBLE_SEMANTICS["shared_cause"]) == 1)
+        assert eval (_test.winter_history.count("粮价：高｜库存：不足｜民情：不安") == 3)
+        $ _test.winter_audio_map = dict(_test.winter_audio_entries)
+        assert eval (_test.winter_audio_map["winter_crisis_escalates"].endswith("audio/music/market_bustle.ogg"))
+        assert eval (_test.winter_audio_map["winter_consequence"].endswith("audio/music/tension.ogg"))
+        assert eval (governance_events_seen.count("winter_interlude") == 1 and governance_events_seen.count("famine_crisis") == 1)
+        assert eval (_test.winter_chapter2_return_stack == ())
+        assert eval (_test.winter_chapter2_invariance["transients"] == _test.winter_invariance["transients"])
+        assert eval (_test.winter_chapter2_invariance == _test.winter_invariance)
+        assert eval (get_weather() is None and renpy.get_screen("weather_snow") is None)
+        assert eval (_test_winter_track("music") is None and _test_winter_track("sound") is None)
+        assert eval (not set(renpy.get_showing_tags(layer="master")).intersection(CHAR_IMG_TAGS))
+
+    testcase active_brief_reaches_real_first_menu_and_remains_internal:
+        assert eval (renpy.has_label("winter_interlude_brief"))
+        $ _new_run_bootstrap_done = True
+        run Start("test_winter_brief_driver") until screen "say" timeout 6.0
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("亲自主持")) timeout 4.0
+        pause until eval (_test_winter_track("music") is not None and _test_winter_track("music").endswith("audio/music/winter_wind.ogg")) timeout 4.0
+        assert eval (_test_winter_track("music").endswith("audio/music/winter_wind.ogg"))
+        click "亲自主持"
+        advance until screen "choice" timeout 8.0
+        pause until eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER)) timeout 4.0
+        pause until eval (_test_winter_track("music") is not None and _test_winter_track("music").endswith("audio/music/market_bustle.ogg")) timeout 4.0
+        assert eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER))
+        assert eval (winter_interlude_status == "active" and winter_investigations == () and winter_policy == "" and winter_seed_priority == "neutral")
+        assert eval ("winter_market_and_council" in _test.winter_labels and "winter_investigation_menu" in _test.winter_labels)
+        assert eval (_test_winter_track("music").endswith("audio/music/market_bustle.ogg"))
+        assert eval ("chapter2_start" not in _test.winter_labels)
+        assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
+
+    testcase delegation_is_neutral_and_preserves_all_forbidden_state:
+        assert eval (renpy.has_label("winter_interlude_brief"))
+        $ first_decree, southern_outcome, built_granary = "建设", "ruler", True
+        $ famine_prevented, gov_merchant_outcome = False, "regulated"
+        $ wealth, loyalty, power = 70, 71, 72
+        $ _new_run_bootstrap_done = True
+        $ _test.winter_invariance = _test_winter_capture_invariance()
+        $ _history_list[:] = []
+        run Start("test_winter_brief_driver") until screen "say" timeout 6.0
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("交给奥尔德里克")) timeout 4.0
+        click "交给奥尔德里克"
+        advance until eval ("chapter2_start" in _test.winter_labels) timeout 12.0
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("delegated", (), "delegated", "neutral"))
+        assert eval (_test.winter_result is None)
+        assert eval ((_test.winter_crisis_hits, _test.winter_resolve_hits, _test.winter_consequence_hits, _test.winter_cleanup_hits) == (0, 0, 0, 1))
+        $ _test.winter_history = "\n".join(str(getattr(entry, "what", "")) for entry in _history_list)
+        assert eval (_test.winter_history.count(_TEST_WINTER_VISIBLE_SEMANTICS["delegate"]) == 1)
+        assert eval (_test.winter_history.count(_TEST_WINTER_VISIBLE_SEMANTICS["shared_cause"]) == 0)
+        assert eval (_test.winter_chapter2_invariance["transients"] == _test.winter_invariance["transients"])
+        assert eval (_test.winter_chapter2_invariance == _test.winter_invariance)
+        assert eval (_test.winter_chapter2_return_stack == ())
+        assert eval (get_weather() is None and _test_winter_track("music") is None and _test_winter_track("sound") is None)
+
+
+testsuite test_winter_interlude_mid_save:
+    before testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test.winter_mid_original = (first_decree, southern_outcome, built_granary, famine_prevented, gov_merchant_outcome, wealth, loyalty, power, _new_run_bootstrap_done, winter_interlude_status, tuple(winter_investigations), winter_policy, winter_seed_priority, list(governance_events_seen))
+        $ _test_winter_begin_trace()
+        $ renpy.unlink_save("winter-task7-second-menu")
+        $ renpy.unlink_save("winter-task7-seed-menu")
+
+    after testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_end_trace()
+        $ renpy.unlink_save("winter-task7-second-menu")
+        $ renpy.unlink_save("winter-task7-seed-menu")
+        $ first_decree, southern_outcome, built_granary, famine_prevented, gov_merchant_outcome, wealth, loyalty, power, _new_run_bootstrap_done, winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority, _winter_events = _test.winter_mid_original
+        $ governance_events_seen[:] = _winter_events
+        $ clear_weather()
+        $ hide_all_chars()
+        $ renpy.music.stop(channel="music")
+        $ renpy.music.stop(channel="sound")
+
+    testcase first_label_local_survives_real_second_menu_save:
+        assert eval (renpy.has_label("winter_choose_second_investigation"))
+        $ first_decree, southern_outcome, built_granary = "", "free", False
+        $ famine_prevented, gov_merchant_outcome = False, ""
+        $ wealth, loyalty, power = 55, 56, 57
+        $ _new_run_bootstrap_done = True
+        $ _test.winter_invariance = _test_winter_capture_invariance()
+        run Start("test_winter_route_matrix_driver") until screen "say" timeout 6.0
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("北方商路")) timeout 4.0
+        click "北方商路"
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("粮市账本")) timeout 4.0
+        assert eval (first == "route" and (winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("active", (), "", "neutral"))
+        $ renpy.save("winter-task7-second-menu", extra_json={"task7_stage": "second-menu"})
+        assert eval (renpy.can_load("winter-task7-second-menu"))
+        assert eval (renpy.slot_json("winter-task7-second-menu").get("task7_stage") == "second-menu")
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        run FileLoad("winter-task7-second-menu", confirm=False, slot=True) until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("粮市账本")) timeout 4.0
+        assert eval (renpy.slot_json("winter-task7-second-menu").get("task7_stage") == "second-menu")
+        assert eval (first == "route" and (winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("active", (), "", "neutral"))
+        click "粮市账本"
+        advance until screen "choice" timeout 10.0
+        pause until eval (_test_winter_choice_ready("高价购粮并担保商路")) timeout 4.0
+        click "高价购粮并担保商路"
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("保留春播种粮")) timeout 4.0
+        click "保留春播种粮"
+        advance until eval ("chapter2_start" in _test.winter_labels) timeout 16.0
+        assert eval (_test.winter_result["saved"] == ("completed", ("market", "route"), "trade", "preserve"))
+        assert eval ((_test.winter_resolve_hits, _test.winter_consequence_hits, _test.winter_cleanup_hits) == (1, 1, 1))
+        assert eval (_test.winter_chapter2_return_stack == ())
+        assert eval (_test.winter_chapter2_invariance["transients"] == _test.winter_invariance["transients"])
+        assert eval (_test.winter_chapter2_invariance == _test.winter_invariance)
+
+    testcase policy_label_local_survives_real_seed_menu_save:
+        assert eval (renpy.has_label("winter_choose_seed_priority"))
+        $ first_decree, southern_outcome, built_granary = "军事", "delegated", False
+        $ famine_prevented, gov_merchant_outcome = False, ""
+        $ wealth, loyalty, power = 58, 59, 60
+        $ _new_run_bootstrap_done = True
+        $ _test.winter_invariance = _test_winter_capture_invariance()
+        run Start("test_winter_route_matrix_driver") until screen "say" timeout 6.0
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("粮市账本")) timeout 4.0
+        click "粮市账本"
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("村庄种粮")) timeout 4.0
+        click "村庄种粮"
+        advance until screen "choice" timeout 10.0
+        pause until eval (_test_winter_choice_ready("征用大户余粮并开具补偿凭据")) timeout 4.0
+        click "征用大户余粮并开具补偿凭据"
+        advance until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("先让更多人熬过眼前的冬天")) timeout 4.0
+        assert eval (policy == "requisition" and (winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("active", ("market", "village"), "", "neutral"))
+        $ renpy.save("winter-task7-seed-menu", extra_json={"task7_stage": "seed-menu"})
+        assert eval (renpy.can_load("winter-task7-seed-menu"))
+        assert eval (renpy.slot_json("winter-task7-seed-menu").get("task7_stage") == "seed-menu")
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        run FileLoad("winter-task7-seed-menu", confirm=False, slot=True) until screen "choice" timeout 6.0
+        pause until eval (_test_winter_choice_ready("先让更多人熬过眼前的冬天")) timeout 4.0
+        assert eval (renpy.slot_json("winter-task7-seed-menu").get("task7_stage") == "seed-menu")
+        assert eval (policy == "requisition" and (winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("active", ("market", "village"), "", "neutral"))
+        click "先让更多人熬过眼前的冬天"
+        advance until eval ("chapter2_start" in _test.winter_labels) timeout 16.0
+        assert eval (_test.winter_result["saved"] == ("completed", ("market", "village"), "requisition", "feed_now"))
+        assert eval ((_test.winter_resolve_hits, _test.winter_consequence_hits, _test.winter_cleanup_hits) == (1, 1, 1))
+        assert eval (_test.winter_chapter2_return_stack == ())
+        assert eval (_test.winter_chapter2_invariance["transients"] == _test.winter_invariance["transients"])
+        assert eval (_test.winter_chapter2_invariance == _test.winter_invariance)
+
+
 testsuite test_winter_interlude_continuations:
     before testcase:
         run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
@@ -827,12 +1351,12 @@ testsuite test_winter_interlude_routing:
         $ _test.choice_text = "交给奥尔德里克"
         pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
         click "交给奥尔德里克"
-        pause until eval ("chapter2_start" in _test.winter_labels) timeout 6.0
+        advance until eval ("chapter2_start" in _test.winter_labels) timeout 8.0
         assert eval (winter_interlude_status == "delegated")
         assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
         assert eval (_test_winter_track("sound") is None)
 
-    testcase active_choice_is_internal_only_and_cannot_flow_into_chapter2:
+    testcase active_choice_reaches_real_investigation_and_remains_internal:
         assert eval (renpy.has_label("winter_interlude_start"))
         $ _test.winter_route_state = ("unseen", (), "", "neutral")
         run Start("test_winter_routing_driver") until screen "say" timeout 6.0
@@ -840,13 +1364,14 @@ testsuite test_winter_interlude_routing:
         $ _test.choice_text = "亲自主持"
         pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
         click "亲自主持"
-        pause until screen "say" timeout 4.0
-        assert eval (winter_interlude_status == "active")
-        advance until eval ("chapter2_start" in _test.winter_labels) timeout 6.0
-        assert eval (winter_interlude_status == "delegated")
-        assert eval (get_winter_context(outside=True).status == "delegated")
+        advance until screen "choice" timeout 8.0
+        pause until eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER)) timeout 4.0
+        assert eval (set(_test_winter_visible_choice_keys()) == set(WINTER_INVESTIGATION_ORDER))
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("active", (), "", "neutral"))
+        assert eval (get_winter_context(outside=False).status == "active")
+        assert eval ("winter_market_and_council" in _test.winter_labels and "winter_investigation_menu" in _test.winter_labels)
+        assert eval ("chapter2_start" not in _test.winter_labels)
         assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
-        assert eval (_test_winter_track("sound") is None)
 
     testcase completed_and_delegated_reentries_reach_both_production_anchors_without_pads:
         parameter entry_state = ["completed", "delegated"]
@@ -1084,6 +1609,26 @@ label test_winter_chapter_select_mainline_driver:
     $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
     $ persistent._skip_next_chapter_autosave = False
     jump winter_interlude_start
+
+
+label test_winter_route_matrix_driver:
+    $ winter_interlude_status = "active"
+    $ winter_investigations = ()
+    $ winter_policy = ""
+    $ winter_seed_priority = "neutral"
+    $ governance_events_seen[:] = []
+    call winter_market_and_council from _call_test_winter_route_matrix
+    jump winter_interlude_exit
+
+
+label test_winter_brief_driver:
+    $ winter_interlude_status = "unseen"
+    $ winter_investigations = ()
+    $ winter_policy = ""
+    $ winter_seed_priority = "neutral"
+    $ governance_events_seen[:] = []
+    call winter_interlude_brief from _call_test_winter_brief
+    jump winter_interlude_exit
 
 
 ## END TASK 3 WINTER STATE SUITES

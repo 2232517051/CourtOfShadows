@@ -1356,7 +1356,7 @@ python -m unittest Tools.test_governance_winter_interlude -v
 if ($LASTEXITCODE -ne 0) { throw 'Winter structural source contracts failed.' }
 foreach ($suite in @('test_winter_interlude_state','test_winter_interlude_routing','test_winter_interlude_ending_invariance','test_winter_interlude_route_matrix','test_winter_interlude_mid_save')) {
   $suiteSaveDir = Join-Path 'C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\work' ("renpy-winter-$suite-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss-ffff'))
-  & Tools/Run-RenPySuite.ps1 -ProjectRoot (Get-Location).Path -Suite $suite -SaveDir $suiteSaveDir -Expect PASSED
+  & Tools/Run-RenPySuite.ps1 -ProjectRoot (Get-Location).Path -Suite $suite -SaveDir $suiteSaveDir -Mode Suite -Expect PASSED -TimeoutSeconds 300
   if ($LASTEXITCODE -ne 0) { throw "Winter structural wrapper failed: $suite" }
 }
 ~~~
@@ -1389,7 +1389,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Winter story-graph commit failed.' }
 - Modify: game/msyh.ttf only through prepare_release.py after text is final
 - Create: docs/development/winter-interlude-content-ledger.md
 - Modify: Tools/scan_nested_quotes.py
-- Modify: Tools/test_governance_winter_interlude.py
+- Modify: Tools/test_governance_winter_interlude.py, including coordinated migration of those six expectations
+- Modify: game/test_game.rpy only for coordinated migration of the six approved player-visible semantic expectations
 
 **Interfaces:**
 
@@ -1450,6 +1451,8 @@ Use apply_patch to replace only the structural draft dialogue. Preserve:
 
 Codex must correct only objective canon or Ren'Py integration errors; any material prose rewrite returns to a fresh Opus batch.
 
+Task 7's six player-visible semantic expectations are a coordinated test-owned interface: four omitted-report sentences, one shared-cause sentence, and one neutral-delegation sentence. A Task 8 final-prose change may update them only after the matching fresh scene-specific claude-opus-4-6 raw output has been shown to and approved by the user. In the same atomic commit, update game/governance_winter_interlude.rpy and the independent expectations in Tools/test_governance_winter_interlude.py and game/test_game.rpy. Never derive either test expectation from production text and never replace the visible checks with hidden-marker-only assertions. Preserve all six opposite-semantic mutation cases and real _history verification, then rerun the focused source contract and the production route matrix including delegation. Without explicit user approval, none of the six production sentences or their two test-owned expectations may change.
+
 - [ ] **Step 5: Enforce path-length and reuse ratios from actual target text**
 
 Extend Tools/test_governance_winter_interlude.py with a parser that computes visible quoted Chinese characters for:
@@ -1484,6 +1487,9 @@ python Tools/scan_nested_quotes.py
 if ($LASTEXITCODE -ne 0) { throw 'Nested-quote scan found an issue in the interlude.' }
 python -m unittest Tools.test_governance_winter_interlude -v
 if ($LASTEXITCODE -ne 0) { throw 'Interlude narrative contracts failed.' }
+$task8RouteSaveDir = Join-Path ([System.IO.Path]::GetTempPath()) ("renpy-task8-route-{0}" -f [guid]::NewGuid().ToString("N"))
+& Tools/Run-RenPySuite.ps1 -ProjectRoot (Get-Location).Path -SaveDir $task8RouteSaveDir -Mode Suite -Suite test_winter_interlude_route_matrix -Expect PASSED -TimeoutSeconds 300
+if ($LASTEXITCODE -ne 0) { throw 'Task 8 production route/delegation contract failed.' }
 ~~~
 
 Expected: canon and structural gates pass; the new module's portrait findings and its overlap total are zero. Existing findings elsewhere in the project are not misreported as new. AI-smell results are manually reviewed only for repeated local templates introduced by this batch.
@@ -1503,7 +1509,7 @@ Expected: the first run may exit 1 and regenerate game/msyh.ttf; the second must
 - [ ] **Step 8: Commit the approved interlude prose**
 
 ~~~powershell
-git add game/governance_winter_interlude.rpy game/msyh.ttf docs/development/winter-interlude-content-ledger.md Tools/scan_nested_quotes.py Tools/test_governance_winter_interlude.py
+git add game/governance_winter_interlude.rpy game/msyh.ttf docs/development/winter-interlude-content-ledger.md Tools/scan_nested_quotes.py Tools/test_governance_winter_interlude.py game/test_game.rpy
 git diff --cached --check
 if ($LASTEXITCODE -ne 0) { throw 'Interlude-prose index failed whitespace validation.' }
 git commit -m "feat: write the first winter interlude"

@@ -4,6 +4,7 @@ import io
 import json
 import pickle
 import re
+import shlex
 import subprocess
 import textwrap
 import unittest
@@ -23,6 +24,13 @@ FIXTURE_DIR = ROOT / "tests" / "fixtures" / "winter_legacy"
 MANIFEST = FIXTURE_DIR / "manifest.json"
 ASSET_BASELINE = ROOT / "tests" / "fixtures" / "winter_asset_baseline.json"
 WINTER_MODULE = ROOT / "game" / "governance_winter_interlude.rpy"
+TRACKED_PLAN = (
+    ROOT
+    / "docs"
+    / "superpowers"
+    / "plans"
+    / "2026-08-08-governance-winter-interlude.md"
+)
 GOVERNANCE = ROOT / "game" / "governance.rpy"
 DIFFICULTY = ROOT / "game" / "difficulty.rpy"
 SAVE_COMPAT = ROOT / "game" / "save_compat.rpy"
@@ -44,6 +52,35 @@ WINTER_NONDEFAULT_FORBIDDEN_STATE = {
     "_iron_prepared",
     "ch3_lily_alliance_independent",
 }
+TASK7_VISIBLE_SEMANTIC_CONTRACT = {
+    "winter_investigate_market": (
+        "【结构占位·低可信报告·粮市账本】"
+        "抬价与运输成本并存；信息未现场核实。"
+    ),
+    "winter_investigate_village": (
+        "【结构占位·低可信报告·村庄种粮】"
+        "藏粮可能用于春播；信息未现场核实。"
+    ),
+    "winter_investigate_granary": (
+        "【结构占位·低可信报告·城堡粮仓】"
+        "受潮与旧账可能高估库存；信息未现场核实。"
+    ),
+    "winter_investigate_route": (
+        "【结构占位·低可信报告·北方商路】"
+        "冰雪与运输损耗可能拖慢到货；信息未现场核实。"
+    ),
+    "winter_crisis_escalates": (
+        "【结构占位·共同原因】多项因素共同造成缺口；"
+        "不存在单一责任方，也没有单一措施能够解决全部缺口。"
+    ),
+    "winter_interlude_delegate": (
+        "【结构占位·委托结果】neutral_delegate；"
+        "不声明任何政策收益，也不替你作出政策决定。"
+    ),
+}
+TASK8_VISIBLE_SEMANTIC_MIGRATION_CONTRACT = """
+Task 7's six player-visible semantic expectations are a coordinated test-owned interface: four omitted-report sentences, one shared-cause sentence, and one neutral-delegation sentence. A Task 8 final-prose change may update them only after the matching fresh scene-specific claude-opus-4-6 raw output has been shown to and approved by the user. In the same atomic commit, update game/governance_winter_interlude.rpy and the independent expectations in Tools/test_governance_winter_interlude.py and game/test_game.rpy. Never derive either test expectation from production text and never replace the visible checks with hidden-marker-only assertions. Preserve all six opposite-semantic mutation cases and real _history verification, then rerun the focused source contract and the production route matrix including delegation. Without explicit user approval, none of the six production sentences or their two test-owned expectations may change.
+""".strip()
 
 
 def _label_body(source: str, label: str) -> str:
@@ -54,6 +91,367 @@ def _label_body(source: str, label: str) -> str:
     if match is None:
         raise AssertionError(f"label {label!r} not found")
     return match.group(1)
+
+
+def _active_markdown(source: str) -> str:
+    active = re.sub(r"<!--.*?-->", "", source, flags=re.DOTALL)
+    if "<!--" in active or "-->" in active:
+        raise AssertionError("unbalanced Markdown HTML comment")
+    return active
+
+
+def _task_plan_section(
+    plan: str,
+    task_heading: str,
+    next_heading: str,
+) -> str:
+    active = _active_markdown(plan)
+    if active.count(task_heading) != 1 or active.count(next_heading) != 1:
+        raise AssertionError("task headings must be active exactly once")
+    return active.split(task_heading, 1)[1].split(next_heading, 1)[0]
+
+
+def _comment_task_plan_body(
+    plan: str,
+    task_heading: str,
+    next_heading: str,
+) -> str:
+    before, remainder = plan.split(task_heading, 1)
+    body, after = remainder.split(next_heading, 1)
+    return (
+        before
+        + task_heading
+        + "\n<!--\n"
+        + body
+        + "\n-->\n"
+        + next_heading
+        + after
+    )
+
+
+def _task_plan_git_add_paths(task_section: str) -> tuple[str, ...]:
+    active = _active_markdown(task_section)
+    commands = [
+        line.strip()
+        for line in active.splitlines()
+        if line.strip().startswith("git add ")
+    ]
+    if len(commands) != 1:
+        raise AssertionError("task must contain exactly one git add command")
+    tokens = shlex.split(commands[0], posix=True)
+    if tokens[:2] != ["git", "add"]:
+        raise AssertionError("invalid git add command")
+    return tuple(tokens[2:])
+
+
+def _task_plan_suite_command(
+    task_section: str,
+    suite: str,
+) -> tuple[dict[str, str], str | None, str | None]:
+    active = _active_markdown(task_section)
+    lines = [line.strip() for line in active.splitlines() if line.strip()]
+    command_indexes = [
+        index
+        for index, line in enumerate(lines)
+        if line.startswith("& Tools/Run-RenPySuite.ps1 ")
+    ]
+    matches = []
+    for command_index in command_indexes:
+        command = lines[command_index]
+        tokens = shlex.split(command, posix=True)
+        if "-Suite" not in tokens:
+            continue
+        suite_index = tokens.index("-Suite")
+        if suite_index + 1 < len(tokens) and tokens[suite_index + 1] == suite:
+            matches.append((command_index, tokens))
+    if len(matches) != 1:
+        raise AssertionError(f"expected one suite command for {suite!r}")
+    command_index, tokens = matches[0]
+    if tokens[:2] != ["&", "Tools/Run-RenPySuite.ps1"]:
+        raise AssertionError("invalid Ren'Py suite command")
+    options = {}
+    index = 2
+    while index < len(tokens):
+        option = tokens[index]
+        if not option.startswith("-") or index + 1 >= len(tokens):
+            raise AssertionError(f"invalid suite option sequence: {option!r}")
+        if option in options:
+            raise AssertionError(f"duplicate suite option: {option}")
+        options[option] = tokens[index + 1]
+        index += 2
+    previous_line = lines[command_index - 1] if command_index else None
+    next_line = (
+        lines[command_index + 1]
+        if command_index + 1 < len(lines)
+        else None
+    )
+    return options, previous_line, next_line
+
+
+def _powershell_brace_delta(line: str) -> int:
+    quote = None
+    escaped = False
+    delta = 0
+    for character in line:
+        if escaped:
+            escaped = False
+            continue
+        if character == "`":
+            escaped = True
+            continue
+        if quote is not None:
+            if character == quote:
+                quote = None
+            continue
+        if character in {"'", '"'}:
+            quote = character
+        elif character == "{":
+            delta += 1
+        elif character == "}":
+            delta -= 1
+    return delta
+
+
+def _task_plan_foreach_block(
+    task_section: str,
+) -> tuple[tuple[str, ...], tuple[str, ...], str]:
+    active = _active_markdown(task_section)
+    lines = active.splitlines()
+    header_pattern = re.compile(
+        r"^foreach \(\$suite in @\(([^\n)]*)\)\) \{$"
+    )
+    matches = [
+        (index, match)
+        for index, line in enumerate(lines)
+        if (match := header_pattern.fullmatch(line)) is not None
+    ]
+    if len(matches) != 1:
+        raise AssertionError("expected one active Task 7 suite foreach")
+    header_index, header_match = matches[0]
+    parts = tuple(
+        part.strip() for part in header_match.group(1).split(",")
+    )
+    if not parts or any(
+        re.fullmatch(r"'[A-Za-z0-9_]+'", part) is None
+        for part in parts
+    ):
+        raise AssertionError("Task 7 suite list is not exact literals")
+    if _powershell_brace_delta(lines[header_index]) != 1:
+        raise AssertionError("Task 7 foreach header must open one brace")
+
+    depth = 1
+    body_lines = []
+    closing_index = None
+    for index in range(header_index + 1, len(lines)):
+        line = lines[index]
+        next_depth = depth + _powershell_brace_delta(line)
+        if next_depth < 0:
+            raise AssertionError("Task 7 foreach braces are unbalanced")
+        if next_depth == 0:
+            if line.strip() != "}":
+                raise AssertionError(
+                    "Task 7 foreach closing brace must stand alone"
+                )
+            closing_index = index
+            break
+        body_lines.append(line)
+        depth = next_depth
+    if closing_index is None:
+        raise AssertionError("Task 7 foreach is not closed")
+
+    suites = tuple(part[1:-1] for part in parts)
+    statements = tuple(
+        line.strip() for line in body_lines if line.strip()
+    )
+    block = "\n".join(lines[header_index : closing_index + 1])
+    return suites, statements, block
+
+
+def _task_plan_foreach_suites(task_section: str) -> tuple[str, ...]:
+    suites, _statements, _block = _task_plan_foreach_block(task_section)
+    return suites
+
+
+def _validate_task7_suite_save_assignment(line: str) -> None:
+    match = re.fullmatch(
+        r"\$suiteSaveDir = Join-Path "
+        r"(?P<base>'(?:[^']|'')+'|"
+        r"\(\[System\.IO\.Path\]::GetTempPath\(\)\)) "
+        r"(?P<leaf>.+)",
+        line,
+    )
+    if match is None:
+        raise AssertionError(
+            "Task 7 must assign a joined external suite save directory"
+        )
+    leaf = match.group("leaf")
+    safe_format = (
+        r'\("[A-Za-z0-9._-]*\$suite(?![A-Za-z0-9_])'
+        r'[A-Za-z0-9._-]*'
+        r'\{0\}[A-Za-z0-9._-]*" -f '
+    )
+    timestamp_leaf = (
+        safe_format
+        + r"\(Get-Date -Format 'yyyyMMdd-HHmmss-ffff'\)\)"
+    )
+    guid_leaf = (
+        safe_format
+        + r"\[guid\]::NewGuid\(\)\.ToString\((?:'N'|\"N\")\)\)"
+    )
+    if not (
+        re.fullmatch(timestamp_leaf, leaf)
+        or re.fullmatch(guid_leaf, leaf)
+    ):
+        raise AssertionError(
+            "Task 7 save leaf must canonically use $suite and time/GUID"
+        )
+
+    base = match.group("base")
+    if base == "([System.IO.Path]::GetTempPath())":
+        return
+    raw_base_path = Path(base[1:-1].replace("''", "'"))
+    if not raw_base_path.is_absolute():
+        raise AssertionError("Task 7 save directory base must be absolute")
+    base_path = raw_base_path.resolve()
+    try:
+        base_path.relative_to(ROOT.resolve())
+    except ValueError:
+        return
+    raise AssertionError("Task 7 save directory must be external to project")
+
+
+def _validate_suite_options(
+    options: dict[str, str],
+    *,
+    suite: str,
+    save_dir: str,
+) -> None:
+    expected_names = {
+        "-ProjectRoot",
+        "-Suite",
+        "-SaveDir",
+        "-Mode",
+        "-Expect",
+        "-TimeoutSeconds",
+    }
+    if set(options) != expected_names:
+        raise AssertionError("suite command option names are not exact")
+    expected_values = {
+        "-ProjectRoot": "(Get-Location).Path",
+        "-Suite": suite,
+        "-SaveDir": save_dir,
+        "-Mode": "Suite",
+        "-Expect": "PASSED",
+    }
+    for option, expected in expected_values.items():
+        if options[option] != expected:
+            raise AssertionError(
+                f"unexpected value for {option}: {options[option]!r}"
+            )
+    try:
+        timeout = int(options["-TimeoutSeconds"])
+    except ValueError as error:
+        raise AssertionError("suite timeout must be an integer") from error
+    if timeout < 300:
+        raise AssertionError("suite timeout must be at least 300 seconds")
+
+
+def _validate_task7_route_plan(
+    task_section: str,
+) -> tuple[tuple[str, ...], dict[str, str], tuple[str, ...], str]:
+    expected_suites = (
+        "test_winter_interlude_state",
+        "test_winter_interlude_routing",
+        "test_winter_interlude_ending_invariance",
+        "test_winter_interlude_route_matrix",
+        "test_winter_interlude_mid_save",
+    )
+    suites, statements, block = _task_plan_foreach_block(task_section)
+    if suites != expected_suites:
+        raise AssertionError("Task 7 suite list is not exact")
+    if suites.count("test_winter_interlude_route_matrix") != 1:
+        raise AssertionError("Task 7 route suite must occur exactly once")
+    if len(statements) != 3:
+        raise AssertionError(
+            "Task 7 foreach must contain exactly three statements"
+        )
+    active_lines = [
+        line.strip()
+        for line in _active_markdown(task_section).splitlines()
+        if line.strip()
+    ]
+    runner_lines = [
+        line
+        for line in active_lines
+        if line.startswith("& Tools/Run-RenPySuite.ps1 ")
+    ]
+    save_assignments = [
+        line
+        for line in active_lines
+        if line.startswith("$suiteSaveDir =")
+    ]
+    if len(runner_lines) != 1 or len(save_assignments) != 1:
+        raise AssertionError(
+            "Task 7 runner and save assignment must exist only in foreach"
+        )
+    assignment, _command, guard = statements
+    if save_assignments[0] != assignment or runner_lines[0] != _command:
+        raise AssertionError(
+            "Task 7 runner and save assignment must be inside foreach"
+        )
+    _validate_task7_suite_save_assignment(assignment)
+    options, previous_line, next_line = _task_plan_suite_command(
+        "\n".join(statements),
+        "$suite",
+    )
+    _validate_suite_options(
+        options,
+        suite="$suite",
+        save_dir="$suiteSaveDir",
+    )
+    expected_guard = (
+        'if ($LASTEXITCODE -ne 0) '
+        '{ throw "Winter structural wrapper failed: $suite" }'
+    )
+    if previous_line != assignment or next_line != guard:
+        raise AssertionError(
+            "Task 7 assignment, command, and guard must be immediate"
+        )
+    if guard != expected_guard:
+        raise AssertionError("Task 7 wrapper exit guard is not exact")
+    return suites, options, statements, block
+
+
+def _validate_task8_route_plan(
+    task_section: str,
+) -> dict[str, str]:
+    options, previous_line, next_line = _task_plan_suite_command(
+        task_section,
+        "test_winter_interlude_route_matrix",
+    )
+    _validate_suite_options(
+        options,
+        suite="test_winter_interlude_route_matrix",
+        save_dir="$task8RouteSaveDir",
+    )
+    save_assignment = (
+        "$task8RouteSaveDir = Join-Path "
+        "([System.IO.Path]::GetTempPath()) "
+        '("renpy-task8-route-{0}" -f '
+        '[guid]::NewGuid().ToString("N"))'
+    )
+    guard = (
+        "if ($LASTEXITCODE -ne 0) "
+        "{ throw 'Task 8 production route/delegation "
+        "contract failed.' }"
+    )
+    if task_section.count(save_assignment) != 1:
+        raise AssertionError("Task 8 unique save assignment is not exact")
+    if previous_line != save_assignment:
+        raise AssertionError("Task 8 save assignment must be immediate")
+    if task_section.count(guard) != 1 or next_line != guard:
+        raise AssertionError("Task 8 exit guard must be immediate and exact")
+    return options
 
 
 def _executable_lines(source: str) -> list[str]:
@@ -188,6 +586,428 @@ def _is_approved_task5_label_fragment(label: str | None, tree: ast.Module) -> bo
     )
 
 
+_TASK7_LABEL_PYTHON = {
+    "winter_interlude_brief": ('winter_interlude_status = "active"',),
+    "winter_market_and_council": ('set_weather("snow")',),
+    "winter_omitted_reports": (
+        "winter_investigations = normalize_winter_investigations((first, second))",
+    ),
+    "winter_resolve_outcome": (
+        "immediate_inputs = (gov_merchant_outcome, southern_outcome, built_granary, first_decree, wealth, loyalty, power)",
+        "mitigation = select_winter_mitigation(policy, seed_priority, winter_investigations, immediate_inputs)",
+    ),
+}
+_TASK7_LABEL_AST = {
+    label: {
+        ast.dump(ast.parse(fragment), include_attributes=False)
+        for fragment in fragments
+    }
+    for label, fragments in _TASK7_LABEL_PYTHON.items()
+}
+
+
+def _is_approved_task7_label_fragment(label: str | None, tree: ast.Module) -> bool:
+    return (
+        label in _TASK7_LABEL_AST
+        and ast.dump(tree, include_attributes=False) in _TASK7_LABEL_AST[label]
+    )
+
+
+def _task7_eval_ast(source: str) -> str:
+    return ast.dump(ast.parse(source, mode="eval"), include_attributes=False)
+
+
+def _task7_call_ast(arguments: str) -> str:
+    return _task7_eval_ast("_task7_call(" + arguments + ")")
+
+
+def _task7_interpolation_expressions(text: str) -> tuple[str, ...]:
+    """Extract balanced Ren'Py interpolation expressions from decoded say text."""
+    expressions = []
+    index = 0
+    while index < len(text):
+        if text[index] != "[":
+            index += 1
+            continue
+        depth = 1
+        cursor = index + 1
+        quote = None
+        escaped = False
+        while cursor < len(text) and depth:
+            character = text[cursor]
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif quote is not None:
+                if character == quote:
+                    quote = None
+            elif character in ("'", '"'):
+                quote = character
+            elif character == "[":
+                depth += 1
+            elif character == "]":
+                depth -= 1
+            cursor += 1
+        if depth:
+            return tuple(expressions + ["<unbalanced>"])
+        expressions.append(text[index + 1 : cursor - 1])
+        index = cursor
+    return tuple(expressions)
+
+
+def _task7_control_signature(body: str) -> tuple:
+    """Return every Python-bearing Task 7 Ren'Py control operation in order."""
+    signature = []
+    for raw_line in body.splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if stripped.startswith("$"):
+            try:
+                tree = ast.parse(stripped[1:].strip())
+                signature.append(("python", ast.dump(tree, include_attributes=False)))
+            except SyntaxError:
+                signature.append(("invalid_python", stripped))
+            continue
+        conditional = re.fullmatch(r"(if|elif)\s+(.+):", stripped)
+        if conditional:
+            try:
+                signature.append(
+                    (conditional.group(1), _task7_eval_ast(conditional.group(2)))
+                )
+            except SyntaxError:
+                signature.append(("invalid_condition", stripped))
+            continue
+        if stripped == "else:":
+            signature.append(("else",))
+            continue
+        if stripped == "menu:":
+            signature.append(("menu",))
+            continue
+        choice = re.fullmatch(
+            r'''((["']).*\2)(?:\s+if\s+(.+))?:''', stripped
+        )
+        if choice:
+            try:
+                choice_text = ast.literal_eval(choice.group(1))
+            except (SyntaxError, ValueError):
+                signature.append(("invalid_choice_text", stripped))
+                continue
+            for expression in _task7_interpolation_expressions(choice_text):
+                try:
+                    signature.append(("interpolation", _task7_eval_ast(expression)))
+                except SyntaxError:
+                    signature.append(("invalid_interpolation", expression))
+            condition = choice.group(3)
+            if condition is None:
+                signature.append(("choice", None))
+            else:
+                try:
+                    signature.append(("choice", _task7_eval_ast(condition)))
+                except SyntaxError:
+                    signature.append(("invalid_choice", stripped))
+            continue
+        call = re.fullmatch(
+            r"call\s+([A-Za-z_][A-Za-z0-9_]*)"
+            r"(?:\((.*)\))?"
+            r"(?:\s+from\s+([A-Za-z_][A-Za-z0-9_]*))?",
+            stripped,
+        )
+        if call:
+            arguments = call.group(2)
+            try:
+                argument_ast = None if arguments is None else _task7_call_ast(arguments)
+            except SyntaxError:
+                argument_ast = "<invalid>"
+            signature.append(("call", call.group(1), argument_ast, call.group(3)))
+            continue
+        if stripped.startswith("call "):
+            signature.append(("invalid_call", stripped))
+            continue
+        jump = re.fullmatch(r"jump\s+([A-Za-z_][A-Za-z0-9_]*)", stripped)
+        if jump:
+            signature.append(("jump", jump.group(1)))
+            continue
+        if stripped.startswith("jump "):
+            signature.append(("invalid_jump", stripped))
+            continue
+        if stripped == "return":
+            signature.append(("return",))
+            continue
+        if re.match(r"(?:while|for|python)\b", stripped):
+            signature.append(("unapproved_control", stripped))
+            continue
+        if re.match(r'^["\'].*["\']$', stripped):
+            try:
+                dialogue = ast.literal_eval(stripped)
+            except (SyntaxError, ValueError):
+                signature.append(("invalid_dialogue", stripped))
+                continue
+            for expression in _task7_interpolation_expressions(dialogue):
+                try:
+                    signature.append(("interpolation", _task7_eval_ast(expression)))
+                except SyntaxError:
+                    signature.append(("invalid_interpolation", expression))
+            continue
+        if re.match(r"^(?:scene|show|hide|play|stop|with|window)\b", stripped):
+            signature.append(("presentation", stripped))
+            continue
+        signature.append(("unapproved_statement", stripped))
+    return tuple(signature)
+
+
+_TASK7_CONTROL_TEMPLATES = {
+    "winter_interlude_start": '''
+$ _winter_interlude_blank_entry = not _new_run_bootstrap_done
+call new_run_bootstrap from _call_new_run_bootstrap_winter_interlude
+if _winter_interlude_blank_entry:
+    $ first_decree = ""
+    $ southern_outcome = "delegated"
+    $ built_granary = False
+    $ famine_prevented = False
+    $ gov_merchant_outcome = ""
+    $ governance_events_seen[:] = [event for event in governance_events_seen if event not in WINTER_LEGACY_EVENTS]
+$ _winter_entry_context = get_winter_context(outside=False)
+if _winter_entry_context.status in ("completed", "legacy") or winter_interlude_status == "delegated":
+    jump winter_interlude_exit
+if _winter_entry_context.status != "unseen":
+    $ apply_winter_delegation()
+    jump winter_interlude_exit
+$ auto_chapter_save("winter_interlude")
+call winter_interlude_brief from _call_winter_interlude_brief
+jump winter_interlude_exit
+''',
+    "winter_interlude_brief": '''
+scene bg study
+play music "audio/music/winter_wind.ogg" fadeout 1.0 fadein 1.0 if_changed
+menu:
+    "active":
+        $ winter_interlude_status = "active"
+        call winter_market_and_council from _call_winter_market_and_council
+    "delegate":
+        call winter_interlude_delegate from _call_winter_interlude_delegate
+return
+''',
+    "winter_interlude_delegate": '''
+$ apply_winter_delegation()
+return
+''',
+    "winter_market_and_council": '''
+$ set_weather("snow")
+scene bg market
+play music "audio/music/market_bustle.ogg" fadeout 1.0 fadein 1.0 if_changed
+scene bg council_hall
+call winter_investigation_menu from _call_winter_investigation_menu
+return
+''',
+    "winter_investigation_menu": '''
+menu:
+    "market":
+        call winter_investigate_market("first") from _call_winter_first_market
+        call winter_choose_second_investigation("market") from _call_winter_second_after_market
+    "village":
+        call winter_investigate_village("first") from _call_winter_first_village
+        call winter_choose_second_investigation("village") from _call_winter_second_after_village
+    "granary":
+        call winter_investigate_granary("first") from _call_winter_first_granary
+        call winter_choose_second_investigation("granary") from _call_winter_second_after_granary
+    "route":
+        call winter_investigate_route("first") from _call_winter_first_route
+        call winter_choose_second_investigation("route") from _call_winter_second_after_route
+return
+''',
+    "winter_choose_second_investigation": '''
+if first == "market":
+    menu:
+        "village":
+            call winter_investigate_village("second") from _call_winter_second_village_after_market
+            call winter_omitted_reports(first, "village") from _call_winter_omitted_market_village
+        "granary":
+            call winter_investigate_granary("second") from _call_winter_second_granary_after_market
+            call winter_omitted_reports(first, "granary") from _call_winter_omitted_market_granary
+        "route":
+            call winter_investigate_route("second") from _call_winter_second_route_after_market
+            call winter_omitted_reports(first, "route") from _call_winter_omitted_market_route
+elif first == "village":
+    menu:
+        "market":
+            call winter_investigate_market("second") from _call_winter_second_market_after_village
+            call winter_omitted_reports(first, "market") from _call_winter_omitted_village_market
+        "granary":
+            call winter_investigate_granary("second") from _call_winter_second_granary_after_village
+            call winter_omitted_reports(first, "granary") from _call_winter_omitted_village_granary
+        "route":
+            call winter_investigate_route("second") from _call_winter_second_route_after_village
+            call winter_omitted_reports(first, "route") from _call_winter_omitted_village_route
+elif first == "granary":
+    menu:
+        "market":
+            call winter_investigate_market("second") from _call_winter_second_market_after_granary
+            call winter_omitted_reports(first, "market") from _call_winter_omitted_granary_market
+        "village":
+            call winter_investigate_village("second") from _call_winter_second_village_after_granary
+            call winter_omitted_reports(first, "village") from _call_winter_omitted_granary_village
+        "route":
+            call winter_investigate_route("second") from _call_winter_second_route_after_granary
+            call winter_omitted_reports(first, "route") from _call_winter_omitted_granary_route
+elif first == "route":
+    menu:
+        "market":
+            call winter_investigate_market("second") from _call_winter_second_market_after_route
+            call winter_omitted_reports(first, "market") from _call_winter_omitted_route_market
+        "village":
+            call winter_investigate_village("second") from _call_winter_second_village_after_route
+            call winter_omitted_reports(first, "village") from _call_winter_omitted_route_village
+        "granary":
+            call winter_investigate_granary("second") from _call_winter_second_granary_after_route
+            call winter_omitted_reports(first, "granary") from _call_winter_omitted_route_granary
+else:
+    call winter_interlude_delegate from _call_winter_invalid_first_delegate
+return
+''',
+    "winter_investigate_market": '''
+if visit_order == "omitted":
+else:
+scene bg market
+"selected [visit_order]"
+return
+''',
+    "winter_investigate_village": '''
+if visit_order == "omitted":
+else:
+scene bg village
+"selected [visit_order]"
+return
+''',
+    "winter_investigate_granary": '''
+if visit_order == "omitted":
+else:
+scene bg study
+"selected [visit_order]"
+return
+''',
+    "winter_investigate_route": '''
+if visit_order == "omitted":
+else:
+scene bg study
+"selected [visit_order]"
+return
+''',
+    "winter_omitted_reports": '''
+scene bg council_hall
+$ winter_investigations = normalize_winter_investigations((first, second))
+if not winter_investigations:
+    call winter_interlude_delegate from _call_winter_invalid_pair_delegate
+    return
+if "market" not in winter_investigations:
+    call winter_investigate_market("omitted") from _call_winter_omitted_market
+if "village" not in winter_investigations:
+    call winter_investigate_village("omitted") from _call_winter_omitted_village
+if "granary" not in winter_investigations:
+    call winter_investigate_granary("omitted") from _call_winter_omitted_granary
+if "route" not in winter_investigations:
+    call winter_investigate_route("omitted") from _call_winter_omitted_route
+call winter_crisis_escalates from _call_winter_crisis_escalates
+return
+''',
+    "winter_crisis_escalates": '''
+scene bg great_hall
+play music "audio/music/tension.ogg" fadeout 1.0 fadein 1.0 if_changed
+call winter_choose_policy from _call_winter_choose_policy
+return
+''',
+    "winter_choose_policy": '''
+menu:
+    "trade":
+        call winter_choose_seed_priority("trade") from _call_winter_seed_trade
+    "ration":
+        call winter_choose_seed_priority("ration") from _call_winter_seed_ration
+    "requisition":
+        call winter_choose_seed_priority("requisition") from _call_winter_seed_requisition
+return
+''',
+    "winter_choose_seed_priority": '''
+menu:
+    "preserve":
+        call winter_resolve_outcome(policy, "preserve") from _call_winter_resolve_preserve
+    "feed_now":
+        call winter_resolve_outcome(policy, "feed_now") from _call_winter_resolve_feed_now
+return
+''',
+    "winter_resolve_outcome": '''
+if not finalize_winter_interlude(policy, seed_priority, winter_investigations):
+    call winter_interlude_delegate from _call_winter_invalid_result_delegate
+    return
+$ immediate_inputs = (gov_merchant_outcome, southern_outcome, built_granary, first_decree, wealth, loyalty, power)
+$ mitigation = select_winter_mitigation(policy, seed_priority, winter_investigations, immediate_inputs)
+call winter_consequence(WINTER_OUTCOME_CONTRACTS[(policy, seed_priority)], mitigation, immediate_inputs) from _call_winter_consequence
+return
+''',
+    "winter_consequence": '''
+scene bg great_hall
+play music "audio/music/castle_calm.ogg" fadeout 1.0 fadein 1.0 if_changed
+"[outcome['benefit']]"
+"[outcome['beneficiary']]"
+"[outcome['burden']]"
+"[outcome['bearer']]"
+"[outcome['action']]"
+"[outcome['followup']]"
+if winter_policy == "trade" and immediate_inputs[1] not in ("", "delegated"):
+    "[immediate_inputs[1]]"
+if mitigation is not None:
+    "[mitigation]"
+else:
+return
+''',
+    "winter_interlude_exit": '''
+call winter_interlude_cleanup from _call_winter_cleanup_exit
+jump chapter2_start
+''',
+    "winter_interlude_cleanup": '''
+$ clear_weather()
+$ renpy.music.stop(channel="sound", fadeout=0.0)
+$ hide_all_chars()
+if stop_temporary_music:
+    $ stop_music(fadeout=0.0)
+return
+''',
+}
+_TASK7_CONTROL_SIGNATURES = {
+    label: _task7_control_signature(template)
+    for label, template in _TASK7_CONTROL_TEMPLATES.items()
+}
+
+
+def _task7_control_contract_violations(module_source: str) -> list[str]:
+    violations = []
+    for label, expected in _TASK7_CONTROL_SIGNATURES.items():
+        try:
+            actual = _task7_control_signature(_label_body(module_source, label))
+        except AssertionError:
+            violations.append(f"missing Task 7 control label: {label}")
+            continue
+        if actual != expected:
+            violations.append(f"Task 7 control contract mismatch: {label}")
+    return violations
+
+
+def _task7_visible_semantic_contract_violations(
+    module_source: str,
+) -> list[str]:
+    """Check test-owned, player-visible Task 7 structural semantics."""
+    violations = []
+    for label, expected_text in TASK7_VISIBLE_SEMANTIC_CONTRACT.items():
+        try:
+            body = _label_body(module_source, label)
+        except AssertionError:
+            violations.append(f"missing Task 7 semantic label: {label}")
+            continue
+        if body.count(expected_text) != 1:
+            violations.append(f"Task 7 visible semantic mismatch: {label}")
+    return violations
+
+
 def _attribute_path(node: ast.AST) -> str | None:
     names = []
     while isinstance(node, ast.Attribute):
@@ -255,6 +1075,7 @@ class _WinterWriteVisitor(ast.NodeVisitor):
         "len",
         "namedtuple",
         "tuple",
+        "type",
     }
 
     def __init__(self, defined_functions: set[str]):
@@ -509,6 +1330,7 @@ def _winter_module_write_violations(
 
     trees = []
     task5_fragment_counts = {}
+    task7_fragment_counts = {}
     for label, fragment in _renpy_python_fragments_with_labels(module_source):
         try:
             tree = ast.parse(fragment)
@@ -520,6 +1342,12 @@ def _winter_module_write_violations(
             task5_fragment_counts[key] = task5_fragment_counts.get(key, 0) + 1
             if task5_fragment_counts[key] > 1:
                 violations.append(f"duplicate approved Task 5 label fragment: {label}")
+            continue
+        if _is_approved_task7_label_fragment(label, tree):
+            key = (label, ast.dump(tree, include_attributes=False))
+            task7_fragment_counts[key] = task7_fragment_counts.get(key, 0) + 1
+            if task7_fragment_counts[key] > 1:
+                violations.append(f"duplicate approved Task 7 label fragment: {label}")
             continue
         trees.append(tree)
     defined_functions = {
@@ -536,6 +1364,9 @@ def _winter_module_write_violations(
         marker_appends += visitor.marker_appends
     if marker_appends > 1:
         violations.append("more than one governance marker append")
+    if "label winter_interlude_brief:" in module_source:
+        violations.extend(_task7_control_contract_violations(module_source))
+        violations.extend(_task7_visible_semantic_contract_violations(module_source))
     return violations
 
 
@@ -1018,10 +1849,10 @@ class WinterRoutingContractTests(unittest.TestCase):
         def active_branch_violations(candidate_source: str) -> list[str]:
             try:
                 candidate_lines = _label_body(
-                    candidate_source, "winter_interlude_start"
+                    candidate_source, "winter_interlude_brief"
                 ).splitlines()
             except AssertionError:
-                return ["winter_interlude_start"]
+                return ["winter_interlude_brief"]
             required_lines = (
                 "    menu:",
                 '        "亲自主持":',
@@ -1325,6 +2156,852 @@ class WinterChapterSelectContractTests(unittest.TestCase):
             chapter_screen.index("Start(ch_label)"),
         )
         self.assertNotIn('$ first_decree = ""', chapter_screen)
+
+
+class WinterStoryGraphContractTests(unittest.TestCase):
+    REQUIRED_LABELS = (
+        "winter_interlude_brief",
+        "winter_interlude_delegate",
+        "winter_market_and_council",
+        "winter_investigation_menu",
+        "winter_choose_second_investigation",
+        "winter_investigate_market",
+        "winter_investigate_village",
+        "winter_investigate_granary",
+        "winter_investigate_route",
+        "winter_omitted_reports",
+        "winter_crisis_escalates",
+        "winter_choose_policy",
+        "winter_choose_seed_priority",
+        "winter_resolve_outcome",
+        "winter_consequence",
+        "winter_interlude_cleanup",
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        cls.source = WINTER_MODULE.read_text(encoding="utf-8")
+
+    def _menu_choice_lines(self, label):
+        body = _label_body(self.source, label)
+        lines = body.splitlines()
+        menus = []
+        for index, raw_line in enumerate(lines):
+            if raw_line.strip() != "menu:":
+                continue
+            menu_indent = len(raw_line) - len(raw_line.lstrip(" "))
+            choice_indent = menu_indent + 4
+            choices = []
+            for candidate in lines[index + 1 :]:
+                if candidate.strip():
+                    indentation = len(candidate) - len(candidate.lstrip(" "))
+                    if indentation <= menu_indent:
+                        break
+                    if indentation == choice_indent and re.match(
+                        r'^\s*["\'][^"\']+["\'](?:\s+if\s+.+)?\s*:$',
+                        candidate,
+                    ):
+                        choices.append(candidate.strip())
+            menus.append(choices)
+        return menus
+
+    def _winter_kernel_namespace(self):
+        fragment = next(
+            item
+            for item in _renpy_python_fragments(self.source)
+            if "WINTER_OUTCOME_CONTRACTS" in item
+        )
+        namespace = {}
+        exec(compile(fragment, str(WINTER_MODULE), "exec"), namespace)
+        return namespace
+
+    def test_complete_story_graph_labels_exist_exactly_once(self):
+        for label in self.REQUIRED_LABELS:
+            with self.subTest(label=label):
+                self.assertEqual(
+                    len(
+                        re.findall(
+                            rf"(?m)^label\s+{re.escape(label)}(?:\([^\n]*\))?\s*:",
+                            self.source,
+                        )
+                    ),
+                    1,
+                )
+        production_labels = re.findall(
+            r"(?m)^label\s+(winter_[A-Za-z0-9_]+)(?:\([^\n]*\))?\s*:",
+            self.source,
+        )
+        expected_labels = set(self.REQUIRED_LABELS) | {
+            "winter_interlude_start",
+            "winter_interlude_exit",
+        }
+        self.assertEqual(len(production_labels), 18)
+        self.assertEqual(set(production_labels), expected_labels)
+
+    def test_investigation_and_decision_menus_have_exact_bounded_shapes(self):
+        expected = {
+            "winter_investigation_menu": [4],
+            "winter_choose_second_investigation": [3, 3, 3, 3],
+            "winter_choose_policy": [3],
+            "winter_choose_seed_priority": [2],
+        }
+        for label, counts in expected.items():
+            with self.subTest(label=label):
+                menus = self._menu_choice_lines(label)
+                self.assertEqual([len(menu) for menu in menus], counts)
+                self.assertTrue(all(len(menu) <= 4 for menu in menus))
+
+        for label in ("winter_choose_policy", "winter_choose_seed_priority"):
+            with self.subTest(unconditional_label=label):
+                self.assertTrue(
+                    all(
+                        " if " not in choice
+                        for menu in self._menu_choice_lines(label)
+                        for choice in menu
+                    )
+                )
+
+    def test_fixed_spine_uses_one_cleanup_exit(self):
+        required_edges = {
+            "winter_interlude_start": (
+                "call winter_interlude_brief",
+                "jump winter_interlude_exit",
+            ),
+            "winter_interlude_brief": (
+                "call winter_market_and_council",
+                "call winter_interlude_delegate",
+            ),
+            "winter_market_and_council": ("call winter_investigation_menu",),
+            "winter_investigation_menu": (
+                "winter_investigate_market",
+                "winter_choose_second_investigation",
+            ),
+            "winter_choose_second_investigation": (
+                "winter_omitted_reports",
+            ),
+            "winter_omitted_reports": ("call winter_crisis_escalates",),
+            "winter_crisis_escalates": ("call winter_choose_policy",),
+            "winter_choose_policy": ("winter_choose_seed_priority",),
+            "winter_choose_seed_priority": ("winter_resolve_outcome",),
+            "winter_resolve_outcome": ("winter_consequence",),
+        }
+        for label, statements in required_edges.items():
+            body = _label_body(self.source, label)
+            for statement in statements:
+                with self.subTest(label=label, statement=statement):
+                    self.assertIn(statement, body)
+
+        self.assertEqual(self.source.count("jump chapter2_start"), 1)
+        self.assertEqual(self.source.count("call winter_interlude_cleanup"), 1)
+        self.assertEqual(self.source.count("label winter_interlude_exit:"), 1)
+        self.assertEqual(self.source.count("jump winter_interlude_exit"), 3)
+        resolve_body = _label_body(self.source, "winter_resolve_outcome")
+        other_bodies = "\n".join(
+            _label_body(self.source, label)
+            for label in self.REQUIRED_LABELS
+            if label != "winter_resolve_outcome"
+        )
+        self.assertEqual(resolve_body.count("finalize_winter_interlude("), 1)
+        self.assertNotIn("finalize_winter_interlude(", other_bodies)
+
+    def test_all_task7_renpy_control_expressions_are_exact_and_guarded(self):
+        self.assertEqual(_task7_control_contract_violations(self.source), [])
+        mutation_probes = {
+            "condition_call_mutator": self.source.replace(
+                "if not finalize_winter_interlude(policy, seed_priority, winter_investigations):",
+                "if not finalize_winter_interlude(policy, seed_priority, change_stat(1)):",
+                1,
+            ),
+            "call_argument_mutator": self.source.replace(
+                'call winter_resolve_outcome(policy, "preserve") from _call_winter_resolve_preserve',
+                'call winter_resolve_outcome(change_stat(1), "preserve") from _call_winter_resolve_preserve',
+                1,
+            ),
+            "menu_visibility_mutator": self.source.replace(
+                '        "高价购粮并担保商路":',
+                '        "高价购粮并担保商路" if change_stat(1):',
+                1,
+            ),
+            "jump_expression_mutator": self.source.replace(
+                "    jump winter_interlude_exit",
+                "    jump expression change_stat(1)",
+                1,
+            ),
+            "multiline_condition_call": self.source.replace(
+                'if first == "market":',
+                'if (\n        change_stat(1)\n    ):',
+                1,
+            ),
+            "multiline_named_expression": self.source.replace(
+                'if first == "market":',
+                'if (\n        (power := 99)\n    ):',
+                1,
+            ),
+            "lambda_condition": self.source.replace(
+                'if first == "market":',
+                'if (lambda: change_stat(1))():',
+                1,
+            ),
+            "multiline_menu_visibility": self.source.replace(
+                '        "高价购粮并担保商路":',
+                '        "高价购粮并担保商路" if (\n            change_stat(1)\n        ):',
+                1,
+            ),
+            "multiline_call_argument": self.source.replace(
+                'call winter_resolve_outcome(policy, "preserve") from _call_winter_resolve_preserve',
+                'call winter_resolve_outcome(\n            change_stat(1), "preserve"\n        ) from _call_winter_resolve_preserve',
+                1,
+            ),
+            "call_expression_mutator": self.source.replace(
+                "call winter_crisis_escalates from _call_winter_crisis_escalates",
+                "call expression change_stat(1)",
+                1,
+            ),
+            "multiline_jump_expression": self.source.replace(
+                "    jump winter_interlude_exit",
+                "    jump expression (\n        change_stat(1)\n    )",
+                1,
+            ),
+            "while_condition_mutator": self.source.replace(
+                'if first == "market":',
+                'while change_stat(1):',
+                1,
+            ),
+            "show_expression_mutator": self.source.replace(
+                "label winter_interlude_brief:\n",
+                "label winter_interlude_brief:\n    show expression change_stat(1)\n",
+                1,
+            ),
+            "play_expression_mutator": self.source.replace(
+                'play music "audio/music/winter_wind.ogg" fadeout 1.0 fadein 1.0 if_changed',
+                "play expression change_stat(1)",
+                1,
+            ),
+            "with_call_mutator": self.source.replace(
+                "label winter_interlude_brief:\n",
+                "label winter_interlude_brief:\n    with change_stat(1)\n",
+                1,
+            ),
+            "dialogue_call_interpolation": self.source.replace(
+                "label winter_interlude_brief:\n",
+                'label winter_interlude_brief:\n    "[change_stat(1)]"\n',
+                1,
+            ),
+            "dialogue_named_expression": self.source.replace(
+                "label winter_interlude_brief:\n",
+                'label winter_interlude_brief:\n    "[(winter_policy := \'trade\')]"\n',
+                1,
+            ),
+            "omitted_report_visits_market": self.source.replace(
+                'label winter_investigate_market(visit_order):\n    if visit_order == "omitted":',
+                'label winter_investigate_market(visit_order):\n    scene bg market\n    if visit_order == "omitted":',
+                1,
+            ).replace(
+                "    else:\n        scene bg market\n",
+                "    else:\n",
+                1,
+            ),
+            "choice_call_interpolation": self.source.replace(
+                '        "高价购粮并担保商路":',
+                '        "高价购粮并担保商路[change_stat(1)]":',
+                1,
+            ),
+            "choice_named_expression": self.source.replace(
+                '        "高价购粮并担保商路":',
+                '        "高价购粮并担保商路[(winter_policy := \'trade\')]":',
+                1,
+            ),
+        }
+        self.assertGreaterEqual(len(mutation_probes), 10)
+        for name, candidate in mutation_probes.items():
+            with self.subTest(mutation=name):
+                self.assertNotEqual(candidate, self.source)
+                self.assertTrue(_task7_control_contract_violations(candidate))
+                store_defaults, persistent_defaults = _project_default_inventory()
+                self.assertTrue(
+                    _winter_module_write_violations(
+                        candidate, store_defaults, persistent_defaults
+                    )
+                )
+
+        positive_probes = {
+            "comment_decoy": self.source.replace(
+                "label winter_interlude_brief:\n",
+                "label winter_interlude_brief:\n    # if change_stat(1): call expression power\n",
+                1,
+            ),
+            "dialogue_hash_and_if": self.source.replace(
+                "label winter_interlude_brief:\n",
+                'label winter_interlude_brief:\n    "【结构占位】字符串 # if change_stat(1)"\n',
+                1,
+            ),
+            "dialogue_call_expression": self.source.replace(
+                "label winter_interlude_brief:\n",
+                'label winter_interlude_brief:\n    "【结构占位】call expression change_stat(1)"\n',
+                1,
+            ),
+            "choice_text_contains_if": self.source.replace(
+                '        "高价购粮并担保商路":',
+                '        "高价购粮并担保商路 if 保持可见":',
+                1,
+            ),
+        }
+        self.assertEqual(len(positive_probes), 4)
+        for name, candidate in positive_probes.items():
+            with self.subTest(positive=name):
+                self.assertNotEqual(candidate, self.source)
+                self.assertEqual(_task7_control_contract_violations(candidate), [])
+
+    def test_six_outcome_contracts_have_exact_nonempty_symbolic_slots(self):
+        contracts = self._winter_kernel_namespace()["WINTER_OUTCOME_CONTRACTS"]
+        expected_keys = {
+            (policy, seed)
+            for policy in ("trade", "ration", "requisition")
+            for seed in ("preserve", "feed_now")
+        }
+        slots = {
+            "benefit",
+            "beneficiary",
+            "burden",
+            "bearer",
+            "action",
+            "followup",
+        }
+        self.assertEqual(set(contracts), expected_keys)
+        for route, contract in contracts.items():
+            with self.subTest(route=route):
+                self.assertEqual(set(contract), slots)
+                self.assertTrue(
+                    all(
+                        isinstance(value, str) and bool(value.strip())
+                        for value in contract.values()
+                    )
+                )
+
+    def test_qualitative_lines_assets_and_semantic_markers_are_structural(self):
+        qualitative = "粮价：高｜库存：不足｜民情：不安"
+        qualitative_labels = (
+            "winter_investigation_menu",
+            "winter_choose_policy",
+            "winter_choose_seed_priority",
+        )
+        self.assertEqual(self.source.count(qualitative), 3)
+        for label in qualitative_labels:
+            with self.subTest(qualitative_label=label):
+                self.assertEqual(_label_body(self.source, label).count(qualitative), 1)
+
+        audio_contract = (
+            ("winter_interlude_brief", 'play music "audio/music/winter_wind.ogg"'),
+            ("winter_market_and_council", 'play music "audio/music/market_bustle.ogg"'),
+            ("winter_crisis_escalates", 'play music "audio/music/tension.ogg"'),
+            ("winter_consequence", 'play music "audio/music/castle_calm.ogg"'),
+        )
+        for label, statement in audio_contract:
+            with self.subTest(audio_label=label):
+                body = _label_body(self.source, label)
+                self.assertEqual(body.count(statement), 1)
+                self.assertNotIn("channel=", body)
+
+        background_contract = {
+            "winter_market_and_council": ("scene bg market", "scene bg council_hall"),
+            "winter_investigate_market": ("scene bg market",),
+            "winter_investigate_village": ("scene bg village",),
+            "winter_investigate_granary": ("scene bg study", "TEMPORARY ART MISMATCH"),
+            "winter_investigate_route": ("scene bg study",),
+            "winter_omitted_reports": ("scene bg council_hall",),
+            "winter_crisis_escalates": ("scene bg great_hall",),
+            "winter_consequence": ("scene bg great_hall",),
+        }
+        for label, statements in background_contract.items():
+            body = _label_body(self.source, label)
+            for statement in statements:
+                with self.subTest(background_label=label, statement=statement):
+                    self.assertIn(statement, body)
+        selected_scenes = {
+            "winter_investigate_market": "scene bg market",
+            "winter_investigate_village": "scene bg village",
+            "winter_investigate_granary": "scene bg study",
+            "winter_investigate_route": "scene bg study",
+        }
+        for label, scene_statement in selected_scenes.items():
+            with self.subTest(selected_scene_label=label):
+                body = _label_body(self.source, label)
+                omitted_at = body.index('if visit_order == "omitted":')
+                selected_at = body.index("else:", omitted_at)
+                scene_at = body.index(scene_statement)
+                self.assertLess(omitted_at, selected_at)
+                self.assertLess(selected_at, scene_at)
+                self.assertEqual(body.count(scene_statement), 1)
+        omitted_body = _label_body(self.source, "winter_omitted_reports")
+        self.assertLess(
+            omitted_body.index("scene bg council_hall"),
+            omitted_body.index("call winter_investigate_market"),
+        )
+        self.assertNotRegex(
+            self.source,
+            r"(?m)^\s*scene\s+bg(?:_|\s+)winter_granary\b",
+        )
+        self.assertNotRegex(self.source, r"(?i)(?:text_size|size)\s+(?:1[0-9]|2[0-4])\b")
+
+        for key in ("market", "village", "granary", "route"):
+            with self.subTest(marker=key):
+                self.assertEqual(self.source.count("{#winter_selected_" + key + "}"), 1)
+                self.assertEqual(self.source.count("{#winter_omitted_" + key + "}"), 1)
+        self.assertEqual(self.source.count("{#winter_shared_cause}"), 1)
+
+    def test_player_visible_semantics_are_independent_and_fail_closed(self):
+        self.assertEqual(
+            _task7_visible_semantic_contract_violations(self.source),
+            [],
+        )
+        opposites = {
+            "winter_investigate_market": (
+                "【结构占位·高可信定论·粮市账本】"
+                "粮商是唯一责任方；信息已经确定。"
+            ),
+            "winter_investigate_village": (
+                "【结构占位·高可信定论·村庄种粮】"
+                "农户是唯一责任方；信息已经确定。"
+            ),
+            "winter_investigate_granary": (
+                "【结构占位·高可信定论·城堡粮仓】"
+                "粮仓是唯一责任方；信息已经确定。"
+            ),
+            "winter_investigate_route": (
+                "【结构占位·高可信定论·北方商路】"
+                "商路是唯一责任方；信息已经确定。"
+            ),
+            "winter_crisis_escalates": (
+                "【结构占位·共同原因】粮商独自制造并能够解决全部缺口。"
+            ),
+            "winter_interlude_delegate": (
+                "【结构占位·委托结果】奥尔德里克替你决定配给，"
+                "并声明主动路线政策收益。"
+            ),
+        }
+        for label, opposite_text in opposites.items():
+            with self.subTest(label=label):
+                expected_text = TASK7_VISIBLE_SEMANTIC_CONTRACT[label]
+                candidate = self.source.replace(
+                    expected_text,
+                    opposite_text,
+                    1,
+                )
+                self.assertNotEqual(candidate, self.source)
+                self.assertTrue(
+                    _task7_visible_semantic_contract_violations(candidate)
+                )
+
+    def test_task8_plan_authorizes_atomic_visible_semantic_migration(self):
+        plan = TRACKED_PLAN.read_text(encoding="utf-8")
+        task8 = _task_plan_section(plan, "### Task 8:", "### Task 9:")
+        self.assertEqual(
+            task8.count(
+                "- Modify: game/test_game.rpy only for coordinated migration "
+                "of the six approved player-visible semantic expectations"
+            ),
+            1,
+        )
+        self.assertEqual(
+            task8.count(
+                "- Modify: Tools/test_governance_winter_interlude.py, "
+                "including coordinated migration of those six expectations"
+            ),
+            1,
+        )
+        self.assertEqual(
+            task8.count(TASK8_VISIBLE_SEMANTIC_MIGRATION_CONTRACT),
+            1,
+        )
+        expected_paths = (
+            "game/governance_winter_interlude.rpy",
+            "game/msyh.ttf",
+            "docs/development/winter-interlude-content-ledger.md",
+            "Tools/scan_nested_quotes.py",
+            "Tools/test_governance_winter_interlude.py",
+            "game/test_game.rpy",
+        )
+        self.assertEqual(_task_plan_git_add_paths(task8), expected_paths)
+        exact_command = "git add " + " ".join(expected_paths)
+        bad_command = exact_command.replace(
+            "game/test_game.rpy",
+            "game/test_game.rpy.bak",
+        )
+        self.assertIn("game/test_game.rpy", bad_command)
+        bad_task8 = task8.replace(exact_command, bad_command, 1)
+        self.assertNotEqual(
+            _task_plan_git_add_paths(bad_task8),
+            expected_paths,
+        )
+        commented_plan = _comment_task_plan_body(
+            plan,
+            "### Task 8:",
+            "### Task 9:",
+        )
+        commented_task8 = _task_plan_section(
+            commented_plan,
+            "### Task 8:",
+            "### Task 9:",
+        )
+        self.assertEqual(
+            commented_task8.count(TASK8_VISIBLE_SEMANTIC_MIGRATION_CONTRACT),
+            0,
+        )
+        with self.assertRaises(AssertionError):
+            _task_plan_git_add_paths(commented_task8)
+
+    def test_task7_route_commands_have_executable_timeouts(self):
+        plan = TRACKED_PLAN.read_text(encoding="utf-8")
+        task7 = _task_plan_section(plan, "### Task 7:", "### Task 8:")
+        expected_suites = (
+            "test_winter_interlude_state",
+            "test_winter_interlude_routing",
+            "test_winter_interlude_ending_invariance",
+            "test_winter_interlude_route_matrix",
+            "test_winter_interlude_mid_save",
+        )
+        suites, task7_options, statements, block = (
+            _validate_task7_route_plan(task7)
+        )
+        self.assertEqual(suites, expected_suites)
+        self.assertEqual(
+            set(task7_options),
+            {
+                "-ProjectRoot",
+                "-Suite",
+                "-SaveDir",
+                "-Mode",
+                "-Expect",
+                "-TimeoutSeconds",
+            },
+        )
+        self.assertEqual(task7_options["-ProjectRoot"], "(Get-Location).Path")
+        self.assertEqual(task7_options["-Suite"], "$suite")
+        self.assertEqual(task7_options["-SaveDir"], "$suiteSaveDir")
+        self.assertEqual(task7_options["-Mode"], "Suite")
+        self.assertEqual(task7_options["-Expect"], "PASSED")
+        self.assertGreaterEqual(
+            int(task7_options["-TimeoutSeconds"]),
+            300,
+        )
+        self.assertEqual(len(statements), 3)
+
+        removed_route_plan = plan.replace(
+            ",'test_winter_interlude_route_matrix'",
+            "",
+            1,
+        )
+        self.assertNotEqual(removed_route_plan, plan)
+        removed_route_task7 = _task_plan_section(
+            removed_route_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(removed_route_task7)
+
+        removed_guard_plan = plan.replace(
+            "  " + statements[2] + "\n",
+            "",
+            1,
+        )
+        self.assertNotEqual(removed_guard_plan, plan)
+        removed_guard_task7 = _task_plan_section(
+            removed_guard_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(removed_guard_task7)
+
+        block_lines = block.splitlines()
+        moved_block = "\n".join(
+            (block_lines[0], "}", *block_lines[1:-1])
+        )
+        moved_plan = plan.replace(block, moved_block, 1)
+        self.assertNotEqual(moved_plan, plan)
+        moved_task7 = _task_plan_section(
+            moved_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(moved_task7)
+
+        outside_command_plan = plan.replace(
+            block,
+            block + "\n" + statements[1],
+            1,
+        )
+        self.assertNotEqual(outside_command_plan, plan)
+        outside_command_task7 = _task_plan_section(
+            outside_command_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(outside_command_task7)
+
+        static_save_plan = plan.replace(
+            statements[0],
+            r"$suiteSaveDir = 'C:\static\winter-suite'",
+            1,
+        )
+        self.assertNotEqual(static_save_plan, plan)
+        static_save_task7 = _task_plan_section(
+            static_save_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(static_save_task7)
+
+        static_result_plan = plan.replace(
+            statements[0],
+            statements[0].replace(
+                '("renpy-winter-$suite-{0}" -f '
+                "(Get-Date -Format 'yyyyMMdd-HHmmss-ffff'))",
+                '("static" -f $suite, '
+                "(Get-Date -Format 'yyyyMMdd-HHmmss-ffff'))",
+                1,
+            ),
+            1,
+        )
+        self.assertNotEqual(static_result_plan, plan)
+        static_result_task7 = _task_plan_section(
+            static_result_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(static_result_task7)
+
+        wrong_suite_variable_plan = plan.replace(
+            statements[0],
+            statements[0].replace(
+                "$suite-{0}",
+                "$suiteX-{0}",
+                1,
+            ),
+            1,
+        )
+        self.assertNotEqual(wrong_suite_variable_plan, plan)
+        wrong_suite_variable_task7 = _task_plan_section(
+            wrong_suite_variable_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(wrong_suite_variable_task7)
+
+        injected_statement_plan = plan.replace(
+            statements[0],
+            statements[0] + "; Write-Host unexpected",
+            1,
+        )
+        self.assertNotEqual(injected_statement_plan, plan)
+        injected_statement_task7 = _task_plan_section(
+            injected_statement_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(injected_statement_task7)
+
+        extra_option_plan = plan.replace(
+            statements[1],
+            statements[1] + " -Variant stale",
+            1,
+        )
+        self.assertNotEqual(extra_option_plan, plan)
+        extra_option_task7 = _task_plan_section(
+            extra_option_plan,
+            "### Task 7:",
+            "### Task 8:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task7_route_plan(extra_option_task7)
+
+    def test_task8_route_command_is_executable_and_has_unique_timeout(self):
+        plan = TRACKED_PLAN.read_text(encoding="utf-8")
+        task8 = _task_plan_section(plan, "### Task 8:", "### Task 9:")
+
+        task8_options = _validate_task8_route_plan(task8)
+        self.assertEqual(
+            set(task8_options),
+            {
+                "-ProjectRoot",
+                "-SaveDir",
+                "-Mode",
+                "-Suite",
+                "-Expect",
+                "-TimeoutSeconds",
+            },
+        )
+        self.assertEqual(
+            task8_options["-ProjectRoot"],
+            "(Get-Location).Path",
+        )
+        self.assertEqual(
+            task8_options["-Suite"],
+            "test_winter_interlude_route_matrix",
+        )
+        self.assertEqual(task8_options["-SaveDir"], "$task8RouteSaveDir")
+        self.assertEqual(task8_options["-Mode"], "Suite")
+        self.assertEqual(task8_options["-Expect"], "PASSED")
+        self.assertGreaterEqual(
+            int(task8_options["-TimeoutSeconds"]),
+            300,
+        )
+        guard = (
+            "if ($LASTEXITCODE -ne 0) "
+            "{ throw 'Task 8 production route/delegation "
+            "contract failed.' }"
+        )
+        self.assertEqual(task8.count(guard), 1)
+
+        commented_plan = _comment_task_plan_body(
+            plan,
+            "### Task 8:",
+            "### Task 9:",
+        )
+        commented_task8 = _task_plan_section(
+            commented_plan,
+            "### Task 8:",
+            "### Task 9:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task8_route_plan(commented_task8)
+
+        removed_guard_plan = plan.replace(guard + "\n", "", 1)
+        self.assertNotEqual(removed_guard_plan, plan)
+        removed_guard_task8 = _task_plan_section(
+            removed_guard_plan,
+            "### Task 8:",
+            "### Task 9:",
+        )
+        with self.assertRaises(AssertionError):
+            _validate_task8_route_plan(removed_guard_task8)
+
+        wrong_project_task8 = task8.replace(
+            "-ProjectRoot (Get-Location).Path",
+            "-ProjectRoot C:/wrong-project",
+            1,
+        )
+        self.assertNotEqual(wrong_project_task8, task8)
+        with self.assertRaises(AssertionError):
+            _validate_task8_route_plan(wrong_project_task8)
+
+    def test_mitigation_selector_uses_exact_early_return_priority(self):
+        self.assertIn(
+            "if type(immediate_inputs) is not tuple or len(immediate_inputs) != 7:",
+            self.source,
+        )
+        select = self._winter_kernel_namespace()["select_winter_mitigation"]
+        neutral = ("", "delegated", False, "", 0, 0, 0)
+        tuple_subclass = type("WinterTupleSubclass", (tuple,), {})
+        cases = (
+            (
+                "investigation beats every later match",
+                ("trade", "preserve", ("market", "village"), ("regulated", "ruler", True, "治安", 80, 80, 80)),
+                "market_trade",
+            ),
+            (
+                "granary investigation precedes village seed match",
+                ("ration", "preserve", ("village", "granary"), neutral),
+                "granary_ration",
+            ),
+            (
+                "merchant state precedes southern state",
+                ("trade", "feed_now", ("village", "granary"), ("regulated", "ruler", False, "", 0, 0, 0)),
+                "merchant_regulated_trade",
+            ),
+            (
+                "southern ruler state is trade only",
+                ("trade", "feed_now", ("village", "granary"), ("", "ruler", False, "", 0, 0, 0)),
+                "southern_trade_terms",
+            ),
+            (
+                "southern fall state shares trade mitigation",
+                ("trade", "feed_now", ("village", "granary"), ("", "fall", False, "", 0, 0, 0)),
+                "southern_trade_terms",
+            ),
+            (
+                "old granary is ration only",
+                ("ration", "feed_now", ("market", "village"), ("", "delegated", True, "", 0, 0, 0)),
+                "existing_granary_ration",
+            ),
+            (
+                "decree precedes attribute",
+                ("trade", "feed_now", ("village", "granary"), ("", "delegated", False, "治安", 80, 0, 0)),
+                "decree_security_trade",
+            ),
+            (
+                "civic and construction decrees share ration mitigation",
+                ("ration", "feed_now", ("market", "village"), ("", "delegated", False, "建设", 0, 80, 0)),
+                "decree_civic_ration",
+            ),
+            (
+                "livelihood decree shares ration mitigation",
+                ("ration", "feed_now", ("market", "village"), ("", "delegated", False, "民生", 0, 0, 0)),
+                "decree_civic_ration",
+            ),
+            (
+                "military decree is requisition only",
+                ("requisition", "preserve", ("market", "granary"), ("", "delegated", False, "军事", 0, 0, 80)),
+                "decree_military_requisition",
+            ),
+            (
+                "wealth soft check",
+                ("trade", "feed_now", ("village", "granary"), ("", "free", False, "", 60, 0, 0)),
+                "wealth_trade",
+            ),
+            (
+                "loyalty soft check",
+                ("ration", "feed_now", ("market", "village"), ("", "free", False, "", 0, 60, 0)),
+                "loyalty_ration",
+            ),
+            (
+                "power soft check",
+                ("requisition", "preserve", ("market", "granary"), ("", "free", False, "", 0, 0, 60)),
+                "power_requisition",
+            ),
+            (
+                "salt-only southern outcome grants no mitigation",
+                ("trade", "feed_now", ("village", "granary"), ("", "free", False, "", 0, 0, 0)),
+                None,
+            ),
+            (
+                "wrong immediate snapshot type grants no later mitigation",
+                ("trade", "feed_now", ("market", "granary"), {}),
+                None,
+            ),
+            (
+                "seven-element list is not immutable input",
+                ("trade", "feed_now", ("market", "granary"), list(neutral)),
+                None,
+            ),
+            (
+                "tuple subclass is not the exact snapshot type",
+                ("trade", "feed_now", ("market", "granary"), tuple_subclass(neutral)),
+                None,
+            ),
+            (
+                "six-element tuple is rejected",
+                ("trade", "feed_now", ("market", "granary"), neutral[:-1]),
+                None,
+            ),
+            (
+                "eight-element tuple is rejected",
+                ("trade", "feed_now", ("market", "granary"), neutral + (0,)),
+                None,
+            ),
+        )
+        for name, arguments, expected in cases:
+            with self.subTest(case=name):
+                actual = select(*arguments)
+                self.assertEqual(actual, expected)
+                self.assertTrue(actual is None or isinstance(actual, str))
 
 
 class WinterModuleContractTests(unittest.TestCase):
@@ -1692,6 +3369,43 @@ class WinterModuleContractTests(unittest.TestCase):
                         probe_source, store_defaults, persistent_defaults
                     ),
                     f"winter source guard accepted forbidden Task 5 shape: {probe_name}",
+                )
+        self.assertEqual(sum(map(len, _TASK7_LABEL_PYTHON.values())), 5)
+        task7_negative_probes = {
+            "active_assignment_call": module_source.replace(
+                '$ winter_interlude_status = "active"',
+                "$ winter_interlude_status = change_prosperity(1)",
+                1,
+            ),
+            "weather_nested_call": module_source.replace(
+                '$ set_weather("snow")',
+                "$ set_weather(change_prosperity(1))",
+                1,
+            ),
+            "normalization_nested_call": module_source.replace(
+                "$ winter_investigations = normalize_winter_investigations((first, second))",
+                "$ winter_investigations = normalize_winter_investigations((first, change_prosperity(1)))",
+                1,
+            ),
+            "immediate_tuple_nested_call": module_source.replace(
+                "$ immediate_inputs = (gov_merchant_outcome, southern_outcome, built_granary, first_decree, wealth, loyalty, power)",
+                "$ immediate_inputs = (gov_merchant_outcome, southern_outcome, built_granary, first_decree, wealth, loyalty, change_prosperity(1))",
+                1,
+            ),
+            "selector_argument_call": module_source.replace(
+                "$ mitigation = select_winter_mitigation(policy, seed_priority, winter_investigations, immediate_inputs)",
+                "$ mitigation = select_winter_mitigation(policy, seed_priority, winter_investigations, change_prosperity(1))",
+                1,
+            ),
+        }
+        for probe_name, probe_source in task7_negative_probes.items():
+            with self.subTest(task7_negative_probe=probe_name):
+                self.assertNotEqual(probe_source, module_source)
+                self.assertTrue(
+                    _winter_module_write_violations(
+                        probe_source, store_defaults, persistent_defaults
+                    ),
+                    f"winter source guard accepted forbidden Task 7 shape: {probe_name}",
                 )
         self.assertRegex(
             module_source,
