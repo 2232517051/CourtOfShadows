@@ -208,7 +208,7 @@ git -C $featureRoot status --short
 Resolve every text conflict with apply_patch. Preserve all RC story/release changes and preserve these two master contracts:
 
 ~~~renpy
-call cinematic_chapter3 from _call_cinematic_chapter3
+call cinematic_chapter3 from _call_cinematic_ch3
 $ set_mood("mystery", fadein=2.0)
 ~~~
 
