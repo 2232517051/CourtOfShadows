@@ -460,19 +460,34 @@ class PortraitContractTests(unittest.TestCase):
 
     def test_departing_characters_clear_before_following_narration(self) -> None:
         chapter = read_game_file("chapter5.rpy")
+        chapter_lines = live_source_lines(chapter.splitlines())
         baron_envoy_tag = character_image_tag("baron_envoy")
         self.assertRegex(chapter, rf'(?s)show {re.escape(baron_envoy_tag)}[^\n]*\n\s*baron_envoy ')
-        self.assertRegex(
-            chapter,
-            rf'送走了男爵的密使后，你以为这一天的访客到头了。"\s*\n\s*hide {re.escape(baron_envoy_tag)}',
+        departure_narration = '"送走了男爵的密使后，你以为这一天的访客到头了。"'
+        departure_index = find_source_line(chapter_lines, departure_narration)
+        self.assertEqual(
+            chapter_lines[departure_index - 1].strip(),
+            f"hide {baron_envoy_tag} with dissolve",
         )
         self.assertRegex(chapter, r'她那天夜里离开了艾登堡。没有告诉你她去哪。"\s*\n\s*hide elena_img')
+
+    def test_peace_montage_clears_the_last_negotiating_representative(self) -> None:
+        chapter_lines = live_source_lines(read_game_file("chapter5.rpy").splitlines())
+        peace_montage = '"又一轮讨价还价。但这次，方向已经明确了——和平。"'
+        peace_montage_index = find_source_line(chapter_lines, peace_montage)
+        self.assertEqual(
+            chapter_lines[peace_montage_index - 1].strip(), "$ hide_all_chars()"
+        )
+        self.assertEqual(
+            chapter_lines[peace_montage_index - 2].strip(),
+            'baron_rep "男爵阁下原则上同意。但需要在第三条中加入——"',
+        )
 
 
 class MarriageContractTests(unittest.TestCase):
     def test_chapter_three_opens_talks_without_accepting_marriage(self) -> None:
         lines = label_body("chapter3.rpy", "ch3_end").splitlines()
-        choice_start = find_source_line(lines, '"回信，愿意谈这桩联姻":')
+        choice_start = find_source_line(lines, '"回信，答应在王都会面":')
         choice_block, _ = source_block(lines, choice_start)
         self.assertEqual(
             state_assignments(choice_block),
@@ -505,9 +520,9 @@ class MarriageContractTests(unittest.TestCase):
         self.assertEqual(
             [choice for choice, _, _ in outcomes],
             [
-                "接受婚约，把它当成纯粹的盟约",
-                "接受婚约，也愿意认识英格丽",
-                "到此为止，结束联姻商谈",
+                "接受婚约，除此之外不作承诺",
+                "接受婚约，问英格丽本人的打算",
+                "拒绝婚约，结束商谈",
             ],
         )
 
@@ -563,7 +578,7 @@ class MarriageContractTests(unittest.TestCase):
 
     def test_declining_marriage_closes_the_proposal_state(self) -> None:
         palace_lines = label_body("chapter4.rpy", "ch4_palace").splitlines()
-        decline_start = find_source_line(palace_lines, '"到此为止，结束联姻商谈":')
+        decline_start = find_source_line(palace_lines, '"拒绝婚约，结束商谈":')
         decline_block, _ = source_block(palace_lines, decline_start)
         self.assertEqual(
             state_assignments(decline_block),
@@ -593,19 +608,32 @@ class MarriageContractTests(unittest.TestCase):
             [
                 ("握住她的手", "not marriage_route and not corsair_romance"),
                 ("沉默片刻，把目光移向远处的天际线", "not marriage_route and corsair_romance"),
-                ("告诉她，你已经接受了与英格丽的婚约", "marriage_route"),
+                ("告诉她你已答应北境婚约", "marriage_route"),
                 ("感谢她的付出，但保持距离", "not marriage_route"),
             ],
         )
         marriage_body = outcomes[2][2]
         self.assertIn(
-            'player "艾琳娜，我已经接受了北境的婚约。英格丽和议会的人都在等我履行它。"',
+            'player "艾琳娜，我在使馆答应了英格丽。婚礼还没办，但我已经对她应下这门婚事。"',
             [line.strip() for line in marriage_body],
         )
         self.assertIn(
-            'player "我不能一面让她承担这份盟约，一面又向你伸手。那对你们两个人都不公平。"',
+            'player "既然她也答应了这桩婚事，我就不能转过身来，再接下你的心意。"',
             [line.strip() for line in marriage_body],
         )
+
+    def test_marriage_copy_preserves_ingrids_agency_and_separates_talks_from_wedding(self) -> None:
+        palace = label_body("chapter4.rpy", "ch4_palace")
+        self.assertIn("你肯来，至少说明你没有把母亲的信当成婚书。", palace)
+        self.assertIn("母亲把我送到这里，是让我自己开口。", palace)
+        self.assertIn("别因为我住进来多添一袋粮。", palace)
+        self.assertIn("这是我来听的答复。我收下。", palace)
+        self.assertIn("婚事的提议，到此为止。", palace)
+        self.assertNotIn("盟书草案留下", palace)
+        self.assertNotIn("这是我们共同的命运", palace)
+        self.assertNotIn("从现在起，你就是我的妻子", palace)
+        self.assertNotIn("$ wedding_attended = True", palace)
+        self.assertIn("婚礼还没办", label_body("chapter4.rpy", "ch4_elena"))
 
 
 class EndingTimelineContractTests(unittest.TestCase):
@@ -621,14 +649,14 @@ class EndingTimelineContractTests(unittest.TestCase):
                 self.assertIn('"战后第五年。"', section)
                 self.assertNotIn('"十年后。"', section)
 
-    def test_people_core_uses_the_non_year_retrospective(self) -> None:
+    def test_people_core_closes_without_a_second_year_jump(self) -> None:
         people = ending_section("chapter5.rpy", "ending_peoples_lord")
         self.assertIn(
-            '"后来的人谈起那场战争，未必还记得谁在王都占了上风。"',
+            '"广场上又有人为水渠拍了桌子。"',
             people,
         )
         self.assertIn(
-            '"但艾登堡的人记得，有一个领主在众人争夺王座时，先守住了自己的百姓。"',
+            '"五年前的旗帜早已收进库房。大厅的桌上，摊开的仍是欠租、修桥和水渠。"',
             people,
         )
         self.assertNotIn("几百年后", people)
@@ -823,11 +851,28 @@ class PeopleCoreContractTests(unittest.TestCase):
             with self.subTest(unconditional_claim=unconditional_claim):
                 self.assertNotIn(unconditional_claim, people_source)
 
+    def test_core_people_ending_opens_with_costs_before_recovery(self) -> None:
+        people = "\n".join(self.people_label_lines())
+        self.assertIn("城墙完整地立着，但城墙以外的一切都付出了代价。", people)
+        self.assertIn("这场仗没有被谁赢下", people)
+        self.assertIn("今夜先让他们有地方睡。桥和集市的账，明天再算。", people)
+        self.assertNotIn("整个北方只有一个领地没有被战火摧毁", people)
+        self.assertNotIn("人们叫你『父亲』", people)
+        self.assertNotIn("没有阵营之分——只有需要保护的人", people)
+        self.assertNotIn("想为您立一座铜像", people)
+        self.assertNotIn("就是你们的日子", people)
+        self.assertNotIn("补充兵员", people)
+        self.assertNotIn("来年该补多少", people)
+        self.assertIn(
+            "你没有坐上王座。五年后，艾登堡仍要收租、修桥、分水，也仍允许村民来大厅争这些事。",
+            read_game_file("chapter5.rpy"),
+        )
+
     def test_core_people_ending_consumes_every_companion_in_order(self) -> None:
         core = self.people_core_lines()
         companions_start = find_source_line(core, "if elena_romance:")
         closing_start = find_source_line(
-            core, '"人民领主的故事后来越传越远，也越传越不像原样。"'
+            core, '"广场上又有人为水渠拍了桌子。"'
         )
         companions = core[companions_start:closing_start]
         direct = direct_source_branches(
@@ -845,8 +890,11 @@ class PeopleCoreContractTests(unittest.TestCase):
 
         companion_source = "\n".join(companions)
         self.assertIn("英格丽", companion_source)
-        self.assertIn("妻子", companion_source)
+        self.assertIn("婚后", companion_source)
         self.assertIn("赛琳", companion_source)
+        self.assertIn("门房一家", companion_source)
+        self.assertNotIn("仍是你的妻子", companion_source)
+        self.assertNotIn("没有替你预备好的家庭", companion_source)
 
         marriage_lines = direct[1][1]
         marriage_nested = direct_source_branches(
@@ -1000,8 +1048,9 @@ class PeopleExpansionContractTests(unittest.TestCase):
         )
         first_nested = marriage_lines.index(marriage_nested[0][1][0])
         marriage_preamble = "\n".join(marriage_lines[:first_nested])
-        self.assertIn("妻子", marriage_preamble)
-        self.assertRegex(marriage_preamble, r"家|家庭")
+        self.assertIn("婚后五年", marriage_preamble)
+        self.assertIn("家书", marriage_preamble)
+        self.assertNotIn("以你的妻子身份", marriage_preamble)
         warm_source = "\n".join(marriage_nested[0][1])
         cold_source = "\n".join(marriage_nested[1][1])
         self.assertIn("挽着你的手", warm_source)
@@ -1191,6 +1240,30 @@ class PeopleExpansionContractTests(unittest.TestCase):
         self.assertIn("村社代表列席议事的提案仍被搁置", people)
         self.assertNotIn("接受同一种去处", people)
         self.assertIn("不愿公开的人可以离开，不再参与监察", people)
+        self.assertIn("这本账上只有总数。你们平时就凭这个收租？", people)
+        self.assertIn("往年新麦先拿去抵租。今年交完，还剩了这一袋。", people)
+        self.assertNotIn("这是我吃过的最好的面包", people)
+        for unexplained_or_modern_term in (
+            "节签",
+            "旧地租和新地租",
+            "征集签名",
+            "查账期限",
+            "刊出",
+            "补还日期",
+            "每季必须查账",
+            "临时征发",
+            "一套能带回去的办法",
+            "分工很清楚",
+        ):
+            with self.subTest(unexplained_or_modern_term=unexplained_or_modern_term):
+                self.assertNotIn(unexplained_or_modern_term, people)
+
+        self.assertRegex(people, r"各村[^。\n]*代表")
+        self.assertRegex(people, r"账房[^。\n]*(?:收支|账)[^。\n]*(?:广场|公示)")
+        self.assertNotIn("领主之位由谁接手", people)
+        self.assertNotIn("地方议会按旧章程补上空位", people)
+        self.assertIn("代表们带着旧账和旧章程守在大厅门外", people)
+        self.assertNotIn("拒绝在新税册上按印", people)
 
     def test_national_change_identifies_coalition_content_charge_and_retry(self) -> None:
         people = label_body("endings_expansion.rpy", "ending_peoples_epilogue")
@@ -1205,6 +1278,10 @@ class PeopleExpansionContractTests(unittest.TestCase):
             "先接受了公开账目",
             "撤下公示牌",
             "驳回卷宗",
+            "封口已经裂开",
+            "每封信按日期压在艾登堡的账册下面",
+            "艾登堡那一页最脏",
+            "守门人让开了门",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, people)
@@ -1246,6 +1323,8 @@ class PeopleExpansionContractTests(unittest.TestCase):
             [condition for condition, _ in queen], ["if queen_trust:", "else:"]
         )
         self.assertIn("退出议会", "\n".join(queen[0][1]))
+        self.assertIn("暗百合", "\n".join(queen[0][1]))
+        self.assertNotIn("没有再下令阻拦", "\n".join(queen[0][1]))
         self.assertIn("拒绝了最初几轮让步", "\n".join(queen[1][1]))
 
         self.assertEqual(
@@ -1268,6 +1347,300 @@ class PeopleExpansionContractTests(unittest.TestCase):
         self.assertIn("公开监察员", "\n".join(lily[0][1]))
         self.assertIn("早已覆灭", "\n".join(lily[1][1]))
         self.assertIn("没有在一夜间消失", "\n".join(lily[2][1]))
+
+
+class MissingEndingContractTests(unittest.TestCase):
+    def married_outcome(self, label: str) -> list[str]:
+        lines = label_body("chapter5.rpy", label).splitlines()
+        direct_indent = min(source_indent(line) for line in live_source_lines(lines))
+        matches = [
+            index
+            for index, line in enumerate(lines)
+            if source_indent(line) == direct_indent
+            and re.fullmatch(r"(?:if|elif) marriage_route:", line.strip())
+        ]
+        self.assertEqual(
+            len(matches),
+            1,
+            f"{label} must contain one reachable marriage_route outcome branch",
+        )
+        branch, _ = source_block(lines, matches[0])
+        return branch
+
+    def assert_substantive_ingrid_outcome(
+        self, label: str, temperature: str, branch: list[str]
+    ) -> None:
+        outcome_lines = live_source_lines(branch[1:])
+
+        self.assertTrue(
+            any(
+                re.match(r"ingrid\s+[\x22']", line.strip()) is not None
+                or (
+                    line.strip().startswith(('"', "'"))
+                    and "英格丽" in line
+                )
+                for line in outcome_lines
+            ),
+            (
+                f"{label} {temperature} marriage outcome must contain an Ingrid "
+                "dialogue or narration statement"
+            ),
+        )
+
+    def assert_ingrid_marriage_outcomes(self, label: str) -> None:
+        branch = self.married_outcome(label)
+        branch_source = source_without_comments(branch)
+
+        self.assertRegex(branch_source, r"(?:\bingrid\b|英格丽)")
+        nested = direct_source_branches(
+            branch, 1, len(branch), source_indent(branch[0]) + 4
+        )
+        self.assertEqual(
+            [condition for condition, _ in nested],
+            ["if marriage_warm:", "else:"],
+            f"{label} must structurally provide warm and cold married outcomes",
+        )
+        self.assert_substantive_ingrid_outcome(label, "warm", nested[0][1])
+        self.assert_substantive_ingrid_outcome(label, "cold", nested[1][1])
+
+    def test_people_lord_retains_rear_army_withdrawal_causality(self) -> None:
+        people = label_body("chapter5.rpy", "ending_peoples_lord")
+        lines = people.splitlines()
+        speech = find_source_line(lines, 'player "而是熬到了最后的人。"')
+        next_scene = next(
+            index
+            for index in range(speech + 1, len(lines))
+            if lines[index].strip() == "scene bg castle_exterior with dissolve"
+        )
+        post_speech_lines = lines[speech + 1 : next_scene]
+        post_speech_bridge = source_without_comments(post_speech_lines)
+        narration_paragraphs = [
+            line.strip()
+            for line in live_source_lines(post_speech_lines)
+            if re.fullmatch(r'"(?:[^"\\]|\\.)*"', line.strip())
+        ]
+
+        self.assertRegex(people, r"另一支军队.*后方出现.*迫使.*撤退")
+        self.assertNotIn("你击退了每一支试图劫掠你领地的军队", people)
+        self.assertEqual(len(narration_paragraphs), 3)
+        for replay_marker in ("第三天", "号角", "后方", "撤退"):
+            with self.subTest(replay_marker=replay_marker):
+                self.assertNotIn(replay_marker, post_speech_bridge)
+        for duplicate_or_downstream_marker in (
+            "战争结束得很难看",
+            "艾登堡守住了城门",
+            "流民",
+            "手艺",
+            "修路",
+            "集市",
+            "马厩",
+        ):
+            with self.subTest(marker=duplicate_or_downstream_marker):
+                self.assertNotIn(duplicate_or_downstream_marker, post_speech_bridge)
+
+    def test_truth_humble_epilogue_reaches_both_ingrid_marriage_outcomes(self) -> None:
+        self.assert_ingrid_marriage_outcomes("truth_humble_epilogue")
+
+    def test_borgia_ending_reaches_both_ingrid_marriage_outcomes(self) -> None:
+        self.assert_ingrid_marriage_outcomes("ending_borgia")
+
+    def test_sea_ending_reaches_both_ingrid_marriage_outcomes(self) -> None:
+        self.assert_ingrid_marriage_outcomes("ending_sea")
+
+    def test_sea_ending_prioritizes_marriage_over_corsair_reunion(self) -> None:
+        lines = label_body("chapter5.rpy", "ending_sea").splitlines()
+        guard = find_source_line(
+            lines, "if corsair_romance and not marriage_route:"
+        )
+        branches = direct_source_branches(
+            lines, guard, len(lines), source_indent(lines[guard])
+        )
+
+        self.assertEqual(
+            [condition for condition, _ in branches],
+            ["if corsair_romance and not marriage_route:", "else:"],
+        )
+
+    def test_sea_extended_epilogue_prioritizes_marriage_over_corsair_reunion(
+        self,
+    ) -> None:
+        lines = label_body("endings_expansion.rpy", "ending_sea_epilogue").splitlines()
+        direct_indent = min(source_indent(line) for line in live_source_lines(lines))
+        direct_guards = [
+            index
+            for index, line in enumerate(lines)
+            if source_indent(line) == direct_indent
+            and re.fullmatch(r"if .+:", line.strip())
+        ]
+
+        self.assertEqual(len(direct_guards), 1)
+        guard = direct_guards[0]
+        self.assertEqual(
+            lines[guard].strip(), "if corsair_romance and not marriage_route:"
+        )
+        branches = direct_source_branches(lines, guard, len(lines), direct_indent)
+        self.assertEqual(
+            [condition for condition, _ in branches],
+            ["if corsair_romance and not marriage_route:", "else:"],
+        )
+
+    def test_sea_ending_router_directly_enters_the_extended_epilogue(self) -> None:
+        lines = list(
+            live_source_lines(
+                label_body("endings_expansion.rpy", "ending_epilogue_router").splitlines()
+            )
+        )
+        direct_indent = min(source_indent(line) for line in lines)
+        sea_branch = find_source_line(lines, 'elif ending_type == "sea":')
+
+        self.assertEqual(source_indent(lines[sea_branch]), direct_indent)
+        self.assertLess(sea_branch + 1, len(lines))
+        self.assertEqual(
+            lines[sea_branch + 1].strip(), "jump ending_sea_epilogue"
+        )
+        self.assertEqual(
+            source_indent(lines[sea_branch + 1]), source_indent(lines[sea_branch]) + 4
+        )
+
+    def test_sea_warm_marriage_distinguishes_both_letters_and_the_ring(
+        self,
+    ) -> None:
+        lines = label_body("chapter5.rpy", "ending_sea").splitlines()
+        marriage_start = find_source_line(lines, "if marriage_route:")
+        departure_preamble = source_without_comments(lines[:marriage_start])
+        marriage_branch = self.married_outcome("ending_sea")
+        nested = direct_source_branches(
+            marriage_branch,
+            1,
+            len(marriage_branch),
+            source_indent(marriage_branch[0]) + 4,
+        )
+        warm_source = source_without_comments(nested[0][1])
+
+        self.assertRegex(
+            departure_preamble,
+            r"奥尔德里克[\s\S]*印戒在信封里[\s\S]*信放在书桌正中",
+        )
+        self.assertRegex(
+            warm_source,
+            r"(?:英格丽房门[\s\S]{0,240}(?:第二封信|短笺)|"
+            r"(?:第二封信|短笺)[\s\S]{0,240}(?:英格丽|房门|门缝))",
+        )
+        self.assertNotIn("把信和印戒一并交到奥尔德里克手上", warm_source)
+        self.assertIn("你", warm_source)
+        self.assertNotIn("婚姻的漫长年月", warm_source)
+        self.assertNotRegex(
+            warm_source,
+            r"(?:^|[\s，。！？——\x22'])他(?:把|将|另|吹|背|回|走|知道)",
+        )
+        for repeated_preamble_action in (
+            r"(?:封好|滴上)蜡",
+            r"(?:把|将)[^。！？\n]{0,80}(?:第一封信|给奥尔德里克的信|这封信)"
+            r"[^。！？\n]{0,30}(?:放|摆|搁)[^。！？\n]{0,20}书桌",
+            r"(?:把|将)[^。！？\n]{0,40}金鹰印戒[^。！？\n]{0,30}"
+            r"(?:裹|塞|放)[^。！？\n]{0,20}(?:信纸|信封)",
+        ):
+            with self.subTest(repeated_preamble_action=repeated_preamble_action):
+                self.assertNotRegex(warm_source, repeated_preamble_action)
+        for premature_departure_action in (
+            r"(?:收拾|背起|提起|带上)[^。！？\n]{0,20}行囊",
+            r"(?:从|穿过)[^。！？\n]{0,16}(?:侧门|后门|城门)"
+            r"[^。！？\n]{0,16}(?:离开|出去|走出|穿出)",
+        ):
+            with self.subTest(premature_departure_action=premature_departure_action):
+                self.assertNotRegex(warm_source, premature_departure_action)
+
+    def test_people_posthumous_paths_publish_accounts_exactly_once(self) -> None:
+        lines = label_body("endings_expansion.rpy", "ending_peoples_epilogue").splitlines()
+        death = find_source_line(lines, '"你是在一个平凡的春日清晨走的。"')
+        school_start = next(
+            index
+            for index in range(death + 1, len(lines))
+            if lines[index].strip() == "if built_school:"
+        )
+        next_act = next(
+            index
+            for index in range(school_start + 1, len(lines))
+            if lines[index].strip().startswith("## —— 第七幕")
+        )
+        branches = direct_source_branches(
+            lines, school_start, next_act, source_indent(lines[school_start])
+        )
+        self.assertEqual(
+            [condition for condition, _ in branches],
+            ["if built_school:", "else:"],
+        )
+
+        school_source = source_without_comments(branches[0][1])
+        church_source = source_without_comments(branches[1][1])
+        self.assertIn("学堂", school_source)
+        self.assertIn("教堂侧屋", church_source)
+
+        shared_lines = [
+            line
+            for line in lines[school_start + 1 : next_act]
+            if source_indent(line) == source_indent(lines[school_start])
+            and line.strip().startswith(('"', "'"))
+        ]
+        shared_source = source_without_comments(shared_lines)
+        self.assertRegex(shared_source, r"各村[^。\n]*代表")
+
+        def account_posting_count(source: str) -> int:
+            return sum(
+                "账房" in sentence
+                and ("收支" in sentence or "账" in sentence)
+                and ("贴" in sentence or "公示" in sentence)
+                for sentence in re.split(r"[。！？!?；;\n]", source)
+            )
+
+        for path, branch_source in (
+            ("school", school_source),
+            ("church", church_source),
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(
+                    account_posting_count(branch_source + "\n" + shared_source), 1
+                )
+
+    def test_truth_cold_marriage_clears_ingrid_before_departure(self) -> None:
+        branch = self.married_outcome("truth_humble_epilogue")
+        nested = direct_source_branches(
+            branch, 1, len(branch), source_indent(branch[0]) + 4
+        )
+        cold_lines = list(live_source_lines(nested[1][1]))
+        departure = find_source_line(
+            cold_lines,
+            '"她点了一下头——像是确认某条附加条款的执行方式——然后先你一步向马厩的方向走去。你们的终点相同，但她从不觉得有同行的必要。"',
+        )
+
+        self.assertEqual(
+            cold_lines[departure - 1].strip(), "hide ingrid_img with dissolve"
+        )
+
+    def test_borgia_marriage_portrait_matches_physical_presence(self) -> None:
+        branch = self.married_outcome("ending_borgia")
+        nested = direct_source_branches(
+            branch, 1, len(branch), source_indent(branch[0]) + 4
+        )
+        first_nested = branch.index(nested[0][1][0])
+        preamble = source_without_comments(branch[:first_nested])
+        warm_lines = list(live_source_lines(nested[0][1]))
+        cold_source = source_without_comments(nested[1][1])
+        departure = find_source_line(
+            warm_lines,
+            '"她离开时没有回头。此后你们仍住在同一座城堡，仍在对外公函上共用纹章。但你清楚，这桩婚姻里最后一个肯当面告诉你\'你错了\'的人，已经不会再开口了。"',
+        )
+
+        self.assertNotIn("show ingrid_img", preamble)
+        self.assertIn(
+            "show ingrid_img at left with dissolve",
+            [line.strip() for line in warm_lines],
+        )
+        self.assertEqual(
+            warm_lines[departure - 1].strip(), "hide ingrid_img with dissolve"
+        )
+        self.assertNotIn("show ingrid_img", cold_source)
+        self.assertNotRegex(cold_source, r"(?m)^\s*ingrid\s+[\x22']")
 
 
 if __name__ == "__main__":
