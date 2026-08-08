@@ -298,7 +298,7 @@ Expected: all gates pass, both portrait scanners report zero actionable findings
 **Files:**
 
 - Temporarily modify, then restore exactly: game/chapter2.rpy
-- Modify: game/test_game.rpy, retaining only the test-command fixture public-key guard after temporary drivers/suites are removed
+- Modify: game/test_game.rpy, retaining only the test-command fixture public-key guard, the five empirically minimal private lint-reachability roots, the official global test-process teardown, and one semantic ChoiceReturn-readiness gate for the existing resistance-transition click after temporary drivers/suites are removed
 - Create: Tools/Run-RenPySuite.ps1
 - Create: Tools/test_governance_winter_interlude.py with runner and fixture-infrastructure contracts; later tasks extend this same module
 - Create: tests/fixtures/winter_legacy/winter-legacy-merchant-inside-LT1.save
@@ -312,7 +312,7 @@ Expected: all gates pass, both portrait scanners report zero actionable findings
 **Interfaces:**
 
 - Consumes: the integrated baseline while the three old Chapter 2 calls and their generated continuation labels still exist.
-- Produces: one fail-closed Ren'Py test runner; a permanent public-key guard active only for `renpy test`; five loadable engine-native Ren'Py archives: three live old-label return stacks, one real old famine completion state at a permanent production label, and one deliberately synthetic later-Chapter-2 neutral compatibility state at that same permanent label; plus slot/key/commit/version/hash metadata and a pre-feature shipping-asset inventory.
+- Produces: one fail-closed Ren'Py test runner; a permanent public-key guard active only for `renpy test`; five private no-op reachability roots that prevent Ren'Py 8.5.2 from falsely linting top-level test declarations separated by explicit return/jump boundaries as unreachable; the official `testsuite global` teardown that makes Suite and Full test processes exit normally after their final status; one semantic readiness gate that waits for the existing resistance-transition choice action to become a real `ChoiceReturn` before its physical click; five loadable engine-native Ren'Py archives: three live old-label return stacks, one real old famine completion state at a permanent production label, and one deliberately synthetic later-Chapter-2 neutral compatibility state at that same permanent label; plus slot/key/commit/version/hash metadata and a pre-feature shipping-asset inventory.
 
 - [ ] **Step 1: Add one fail-closed Ren'Py suite runner used by every later task**
 
@@ -329,6 +329,20 @@ Create Tools/Run-RenPySuite.ps1 with required parameters ProjectRoot and SaveDir
 - accept ExtraArgs such as --overwrite-screenshots without string-built shell execution.
 
 Add source-level tests for the runner's player-save rejection, exact status counting, fixture hash fail-closed behavior, bounded-wait/recorded-PID cleanup, Suite/Full/Lint argument construction, lint --error-code enforcement, and try/finally variant cleanup. From this point onward, every Ren'Py test or lint command in this plan must use this helper or reproduce all of these checks inline; a bare renpy.exe test/lint call is not acceptable evidence.
+
+Ren'Py 8.5.2's test executor writes the final `[rpytest] Status` but does not exit on its own. Add the SDK's official lifecycle pattern to game/test_game.rpy:
+
+~~~renpy
+testsuite global:
+    teardown:
+        exit
+~~~
+
+This is permanent test-only infrastructure. The runner must still require a natural zero exit and must treat timeout/forced termination as failure; it may never accept a process merely because a PASSED line appeared before timeout. Prove both one ordinary named Suite and Full mode exit zero, leave only the recorded PID gone, and contain exactly one fresh PASSED status.
+
+The first real Full RED may expose the existing `low_score_hard_resistance_reaches_grind_failure` click racing the choice screen's 0.6-second `NullAction` guard. If and only if that exact case is the sole Full failure, add a semantic wait immediately before its existing click that requires the exact target text to resolve uniquely and its button action to be `renpy.ui.ChoiceReturn`. Do not add a fixed sleep or change the click/result. Preserve the 55/56 Full RED and final 56/56 GREEN evidence; a source contract must allow exactly this one stabilization and reject copies elsewhere.
+
+Ren'Py 8.5.2 also fails to treat top-level `Testcase` declarations as lint roots. Record a real `-Mode Lint -ExtraArgs @('--all-problems')` RED that contains only the pre-existing `game/test_game.rpy` unreachable declarations, then add the empirically minimal five private no-op label roots needed across the file's explicit return/jump-separated declaration segments. One root cannot cross those terminating AST boundaries; do not add a root per declaration. The roots make test declarations reachable to lint without changing gameplay or test behavior. Do not suppress output, filter findings, weaken `--error-code`, mutate the AST, or modify the SDK. GREEN requires Lint exit zero and no `Unreachable Statements`; keep the exact RED and GREEN evidence. A source contract must require exactly those five private roots and reject extras.
 
 - [ ] **Step 2: Add temporary jump-in anchors without duplicating continuation labels**
 
@@ -457,7 +471,7 @@ python early:
         config.save_token_keys.append("<fixture_verifying_key from manifest>")
 ~~~
 
-This test-only guard must exist before renpy.savetoken.init. It must contain only the public verification key, never the private security key, and does nothing in launcher or packaged gameplay. Add a temporary test_winter_legacy_fixture_smoke suite that loads by logical slot with renpy.load("winter-legacy-..."). It must drive each in-label save through its original choice/return stack to permanent ch2_preparation and verify both post-return saves load there directly.
+This test-only guard must exist before renpy.savetoken.init. It must contain only the public verification key, never the private security key, and does nothing in launcher or packaged gameplay. Add a temporary test_winter_legacy_fixture_smoke suite that loads by logical slot with renpy.load("winter-legacy-..."). It must drive each in-label save through its original choice and natural production return flow to permanent ch2_preparation; the smoke may not jump to the asserted destination. At arrival, inspect the real execution location and complete return stack. Verify both post-return saves load there directly with no `_call_gov_*`, `_call_re_scene_ev2`, `_call_scene_event`, temporary-driver, or temporary-anchor frame; do not trust a fixture-authored marker as proof of location.
 
 - [ ] **Step 6: Stage, hash-check, and smoke-load all five archives in a second fresh savedir**
 
@@ -469,11 +483,11 @@ $smokeSaveDir = Join-Path 'C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\
 if ($LASTEXITCODE -ne 0) { throw 'Legacy fixture smoke-load wrapper failed.' }
 ~~~
 
-Expected: no unknown-save confirmation appears, all five cases reach their expected permanent production context, and no test times out.
+Expected: no unknown-save confirmation appears, all five cases naturally reach their expected permanent production context, every asserted post-return stack is clean, and no test times out.
 
 - [ ] **Step 7: Remove every temporary source edit and commit the fixture infrastructure**
 
-Remove the smoke suite with apply_patch, but retain the test-command public-key guard. Verify chapter2.rpy is exactly back at the integrated baseline, then use a focused source test to prove game/test_game.rpy contains exactly the manifest's one public key under the test-command guard and none of the five drivers, three temporary anchors, generation suite, or smoke suite:
+Remove the smoke suite with apply_patch, but retain the test-command public-key guard, the five private lint roots, the official global teardown, and the single approved resistance-choice readiness gate. Verify chapter2.rpy is exactly back at the integrated baseline, then use a focused source test to prove game/test_game.rpy contains exactly the manifest's one public key under the test-command guard, exactly the five approved private lint-reachability roots, exactly one `testsuite global` with `teardown: exit`, exactly one semantic gate for the specified existing click, and none of the five drivers, three temporary anchors, generation suite, or smoke suite:
 
 ~~~powershell
 if (-not (Get-Variable baselineHead -ErrorAction SilentlyContinue) -or [string]::IsNullOrWhiteSpace([string]$baselineHead)) { throw 'Re-enter the exact Task 0 baselineHead evidence SHA.' }
@@ -484,7 +498,7 @@ python -m unittest Tools.test_governance_winter_interlude.WinterFixtureInfrastru
 if ($LASTEXITCODE -ne 0) { throw 'Permanent fixture-key guard or temporary-hook cleanup is incorrect.' }
 ~~~
 
-Expected: chapter2.rpy matches the recorded baseline SHA and the focused source test passes. The generated saves retain their live gov_* execution context and original _call_gov_* return labels; they do not need the temporary start labels after capture. The two post-return archives point only at ch2_preparation. The public-key guard remains test-only so later isolated suites can load the signed archives without interaction.
+Expected: chapter2.rpy matches the recorded baseline SHA and the focused source test passes. The generated saves retain their live gov_* execution context and original _call_gov_* return labels; they do not need the temporary start labels after capture. The two post-return archives point only at ch2_preparation with no unrelated return frames. The public-key guard remains test-only so later isolated suites can load the signed archives without interaction; the five no-op lint roots, single global teardown, and one exact choice-readiness gate are the only additional permanent test lifecycle changes.
 
 Verify and commit the baseline fixtures:
 
@@ -500,7 +514,7 @@ git commit -m "test: capture pre-interlude governance saves"
 if ($LASTEXITCODE -ne 0) { throw 'Fixture infrastructure commit failed.' }
 ~~~
 
-Expected: the five computed hashes exactly match manifest.json, Python remains green, chapter2.rpy has no diff, and game/test_game.rpy differs from governance-winter-baseline only by the guarded public-key test infrastructure.
+Expected: the five computed hashes exactly match manifest.json, Python remains green, Full is genuinely 56/56 green with a natural zero exit, lint is genuinely clean under `--error-code --all-problems`, chapter2.rpy has no diff, and game/test_game.rpy differs from governance-winter-baseline only by the guarded public-key infrastructure, five private lint roots, the official global test teardown, and the one approved resistance-choice readiness gate.
 
 **Asset audit:** These are test-only save and JSON fixtures outside game/ and do not enter packages. No shipping art, music, SFX, animation, UI, or package-size change.
 

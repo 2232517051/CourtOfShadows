@@ -3,7 +3,7 @@
   "renpy_version": "8.5.2",
   "savegame_suffix": "-LT1.save",
   "fixture_verifying_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExo2SI8BWrAFvbMVUXBKeQQh7qUUZla9zkj3pRpmgydQUvjYMGKooT+i5vs43/U/TRRcJ012sOh4KxcDYezLuJw==",
-  "generated_at_utc": "2026-08-08T10:32:39.841Z",
+  "generated_at_utc": "2026-08-08T11:24:47.905Z",
   "fixtures": [
     {
       "logical_slot": "winter-legacy-merchant-inside",
@@ -43,8 +43,8 @@
       "permanent_stop_label": "ch2_preparation",
       "migration_result": "Loads at ch2_preparation with famine_prevented true and famine_crisis recorded after the original _call_gov_famine2 return.",
       "signature_member": "signatures",
-      "byte_size": 101772,
-      "sha256": "984fc9b6f53e806f309d9559ecf358f76beba83d7d75590e80c7cf874ad927c8"
+      "byte_size": 101717,
+      "sha256": "d8679feb5b4da764f52130aaac9f654d0cef6bead5a7c27c1532fdd8261f9017"
     },
     {
       "logical_slot": "winter-legacy-chapter2-no-governance",

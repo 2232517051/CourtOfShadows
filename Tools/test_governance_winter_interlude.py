@@ -1,5 +1,7 @@
 import hashlib
+import io
 import json
+import pickle
 import re
 import subprocess
 import unittest
@@ -15,6 +17,74 @@ FIXTURE_DIR = ROOT / "tests" / "fixtures" / "winter_legacy"
 MANIFEST = FIXTURE_DIR / "manifest.json"
 ASSET_BASELINE = ROOT / "tests" / "fixtures" / "winter_asset_baseline.json"
 BASELINE_COMMIT = "ebb4efd2194fb31710d0331d53d0fe825eb8062c"
+
+
+class _InertSaveObject:
+    """Accept Ren'Py pickle state without importing or executing its globals."""
+
+    def __new__(cls, *args, **kwargs):
+        instance = super().__new__(cls)
+        instance.newargs = args
+        return instance
+
+    def __setstate__(self, state):
+        self.state = state
+
+    def __call__(self, *args, **kwargs):
+        return _InertSaveObject()
+
+
+class _InertSaveList(list):
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls)
+
+    def __setstate__(self, state):
+        self.state = state
+
+
+class _InertSaveDict(dict):
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls)
+
+    def __setstate__(self, state):
+        self.state = state
+
+
+class _RestrictedRenPySaveUnpickler(pickle.Unpickler):
+    """Deserialize shape only; every encoded global resolves to an inert class."""
+
+    def __init__(self, stream):
+        super().__init__(stream)
+        self._classes = {}
+
+    def find_class(self, module, name):
+        key = (module, name)
+        if key not in self._classes:
+            base = _InertSaveObject
+            if "List" in name:
+                base = _InertSaveList
+            elif "Dict" in name:
+                base = _InertSaveDict
+            self._classes[key] = type(
+                f"Inert_{len(self._classes)}",
+                (base,),
+                {"encoded_global": key},
+            )
+        return self._classes[key]
+
+    def persistent_load(self, persistent_id):
+        return ("persistent", persistent_id)
+
+
+def read_active_save_context(path: Path) -> dict:
+    """Return the final rollback context without executing save-pickle globals."""
+    with zipfile.ZipFile(path) as archive:
+        payload = archive.read("log")
+    store, rollback_log = _RestrictedRenPySaveUnpickler(io.BytesIO(payload)).load()
+    del store
+    rollback_entries = rollback_log.state["log"]
+    context = rollback_entries[-1].state["context"]
+    return context.state
 
 
 class RenPyRunnerSourceContractTests(unittest.TestCase):
@@ -163,6 +233,44 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
         for slot in ("winter-legacy-famine-success-after", "winter-legacy-chapter2-no-governance"):
             self.assertEqual(by_slot[slot]["permanent_stop_label"], "ch2_preparation")
 
+    def test_archives_have_the_required_active_return_stacks(self):
+        expected_live_stacks = {
+            "winter-legacy-merchant-inside-LT1.save": ["_call_gov_merch2"],
+            "winter-legacy-building-inside-LT1.save": ["_call_gov_build2"],
+            "winter-legacy-famine-inside-LT1.save": ["_call_gov_famine2"],
+        }
+        for filename, expected_stack in expected_live_stacks.items():
+            with self.subTest(filename=filename):
+                context = read_active_save_context(FIXTURE_DIR / filename)
+                self.assertEqual(context["return_stack"], expected_stack)
+                self.assertEqual(len(context["call_location_stack"]), 1)
+                self.assertEqual(context["abnormal_stack"], [False])
+
+        forbidden = {
+            "_call_gov_famine2",
+            "_call_re_scene_ev2",
+            "_call_scene_event",
+            "test_winter_legacy_famine_success_after_driver",
+            "test_winter_legacy_chapter2_no_governance_driver",
+        }
+        for filename in (
+            "winter-legacy-famine-success-after-LT1.save",
+            "winter-legacy-chapter2-no-governance-LT1.save",
+        ):
+            with self.subTest(filename=filename):
+                context = read_active_save_context(FIXTURE_DIR / filename)
+                self.assertEqual(context["return_stack"], [])
+                self.assertEqual(context["call_location_stack"], [])
+                self.assertEqual(context["abnormal_stack"], [])
+                self.assertTrue(
+                    forbidden.isdisjoint(
+                        context["return_stack"] + [str(item) for item in context["call_location_stack"]]
+                    )
+                )
+                current = context["current"]
+                self.assertIsInstance(current, tuple)
+                self.assertEqual(current[0], "game/chapter2.rpy")
+
     def test_test_command_guard_contains_exactly_the_manifest_public_key(self):
         self.assertTrue(self.manifest, "winter legacy manifest has not been generated")
         key = self.manifest["fixture_verifying_key"]
@@ -175,6 +283,52 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
             + re.escape('")'),
         )
         self.assertNotIn("security_keys.txt", self.test_game)
+
+    def test_test_game_diff_is_only_key_guard_global_exit_five_lint_roots_and_one_choice_gate(self):
+        baseline = subprocess.run(
+            ["git", "show", f"{BASELINE_COMMIT}:game/test_game.rpy"],
+            cwd=ROOT,
+            check=True,
+            stdout=subprocess.PIPE,
+        ).stdout.decode("utf-8")
+        key = self.manifest["fixture_verifying_key"]
+        permanent_prefix = (
+            "python early:\n"
+            '    if renpy.game.args.command == "test":\n'
+            f'        config.save_token_keys.append("{key}")\n\n\n'
+            "label _test_lint_reachability_root:\n"
+            "    if True == True:\n"
+            "        return\n\n\n"
+            "testsuite global:\n"
+            "    teardown:\n"
+            "        exit\n\n\n"
+        )
+        expected = permanent_prefix + baseline
+        roots = {
+            "testcase test_mobile_choice_overflow:\n": "_test_lint_reachability_mobile_render",
+            "testsuite test_release_metadata_render:\n": "_test_lint_reachability_release_metadata",
+            "testsuite test_accessibility_settings:\n": "_test_lint_reachability_accessibility",
+            "testsuite test_new_run_bootstrap:\n": "_test_lint_reachability_new_run",
+        }
+        for declaration, root_name in roots.items():
+            root = f"label {root_name}:\n    if True == True:\n        return\n\n\n"
+            self.assertEqual(expected.count(declaration), 1)
+            expected = expected.replace(declaration, root + declaration)
+        unstable_click = '        click "记住这一切，继续前进"\n'
+        choice_gate = (
+            '        $ _test.choice_text = "记住这一切，继续前进"\n'
+            '        pause until eval (len([f for f in renpy.display.focus.focus_list '
+            'if f.x is not None and _test.choice_text.casefold() in '
+            'f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, '
+            '"action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0\n'
+        )
+        self.assertEqual(expected.count(unstable_click), 1)
+        expected = expected.replace(unstable_click, choice_gate + unstable_click)
+        self.assertEqual(self.test_game, expected)
+        self.assertEqual(self.test_game.count("label _test_lint_reachability_"), 5)
+        self.assertEqual(self.test_game.count("testsuite global:"), 1)
+        self.assertEqual(self.test_game.count("        exit\n"), 1)
+        self.assertEqual(self.test_game.count(choice_gate), 1)
 
     def test_generation_and_smoke_hooks_are_fully_removed(self):
         forbidden = [
