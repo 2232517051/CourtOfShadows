@@ -322,5 +322,28 @@ class MysteryTimelineTests(unittest.TestCase):
             self.assertNotIn(impossible_memory, epilogue)
 
 
+class WinterInterludeTimelineTests(unittest.TestCase):
+    def test_winter_interlude_follows_the_southern_return(self) -> None:
+        chapter_one_end = label_body("script.rpy", "chapter1_end")
+        southern_call = chapter_one_end.index(
+            "call southern_arc from _call_southern_arc"
+        )
+        winter_jump = chapter_one_end.index("jump winter_interlude_start")
+        self.assertLess(southern_call, winter_jump)
+        self.assertNotIn("jump chapter2_start", chapter_one_end[southern_call:])
+
+    def test_winter_interlude_does_not_claim_the_southern_month(self) -> None:
+        winter_source = read_game_file("governance_winter_interlude.rpy")
+        for forbidden_duration in ("一个月", "四周", "三十天"):
+            with self.subTest(forbidden_duration=forbidden_duration):
+                self.assertNotIn(forbidden_duration, winter_source)
+
+    def test_cinematic_owns_the_only_chapter_two_month_card(self) -> None:
+        cinematic = label_body("cinematics.rpy", "cinematic_chapter2")
+        chapter_start = label_body("chapter2.rpy", "chapter2_start")
+        self.assertEqual(cinematic.count("一个月过去了。"), 1)
+        self.assertEqual(chapter_start.count("一个月过去了。"), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -2413,4 +2413,4 @@ label chapter1_end:
     $ southern_from_mainline = True
     call southern_arc from _call_southern_arc
 
-    jump chapter2_start
+    jump winter_interlude_start

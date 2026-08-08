@@ -300,3 +300,54 @@ init python:
         if "route" in canonical and seed_priority == "feed_now":
             return "route_feed_now"
         return None
+
+
+label winter_interlude_start:
+    $ _winter_interlude_blank_entry = not _new_run_bootstrap_done
+    call new_run_bootstrap from _call_new_run_bootstrap_winter_interlude
+
+    if _winter_interlude_blank_entry:
+        $ first_decree = ""
+        $ southern_outcome = "delegated"
+        $ built_granary = False
+        $ famine_prevented = False
+        $ gov_merchant_outcome = ""
+        $ governance_events_seen[:] = [event for event in governance_events_seen if event not in WINTER_LEGACY_EVENTS]
+
+    $ _winter_entry_context = get_winter_context(outside=False)
+    if _winter_entry_context.status in ("completed", "legacy") or winter_interlude_status == "delegated":
+        jump winter_interlude_exit
+    if _winter_entry_context.status != "unseen":
+        $ apply_winter_delegation()
+        jump winter_interlude_exit
+
+    $ auto_chapter_save("winter_interlude")
+    "结构占位：冬季治理幕间章"
+
+    menu:
+        "亲自主持":
+            $ winter_interlude_status = "active"
+            "结构占位：主动治理流程"
+            jump winter_interlude_delegate
+
+        "交给奥尔德里克":
+            jump winter_interlude_delegate
+
+
+label winter_interlude_delegate:
+    $ apply_winter_delegation()
+    jump winter_interlude_exit
+
+
+label winter_interlude_exit:
+    call winter_interlude_cleanup from _call_winter_cleanup_exit
+    jump chapter2_start
+
+
+label winter_interlude_cleanup(stop_temporary_music=True):
+    $ clear_weather()
+    $ renpy.music.stop(channel="sound", fadeout=0.0)
+    $ hide_all_chars()
+    if stop_temporary_music:
+        $ stop_music(fadeout=0.0)
+    return

@@ -3,7 +3,10 @@
 ## ============================================================
 
 label chapter2_start:
+    $ _chapter2_blank_entry = not _new_run_bootstrap_done
     call new_run_bootstrap from _call_new_run_bootstrap_chapter2
+    if _chapter2_blank_entry:
+        $ apply_winter_delegation()
 
     ## 安全重置：防止上一章过场动画的 _dismiss_pause 泄漏
     $ _dismiss_pause = True
@@ -23,8 +26,7 @@ label chapter2_start:
 
     ## 章节过场动画
     call cinematic_chapter2 from _call_cinematic_ch2
-
-    "一个月过去了。"
+    $ play_music("audio/music/castle_calm.ogg", fadein=2.0)
 
     ## 外章 · 南境: 这一个月主角人在南边(往返潮汐港), "在你的治理下度过初冬"不成立 ——
     ## 把主语换成随第一船盐提前回航看家的奥尔德里克。
@@ -67,18 +69,30 @@ label chapter2_start:
         call npc_aldric_promise from _call_npc_ap
     call npc_captain_past from _call_npc_cp2
 
-    ## 治理系统：商会谈判
-    call gov_merchant from _call_gov_merch2
-
     ## 章节深化
+label ch2_after_winter_interlude:
     call ch2_deep_church_midnight from _call_ch2_dcm
 
-    ## 治理系统：建设工程 / 饥荒危机（建设在前——粮仓建成可降低旱灾烈度）
-    call gov_building(2) from _call_gov_build2
-    call gov_famine_crisis from _call_gov_famine2
-
     ## 场景事件：本章随机抽一个 (random_events_new.rpy)
+label ch2_after_legacy_governance:
     call re_scene_event(2) from _call_re_scene_ev2
+    jump ch2_preparation
+
+## 旧档 continuation pads：只承接已在旧治理 label 内保存的返回栈。
+label _call_gov_merch2:
+    $ mark_winter_legacy()
+    call winter_interlude_cleanup(False) from _call_winter_cleanup_legacy_merchant
+    jump ch2_after_winter_interlude
+
+label _call_gov_build2:
+    $ mark_winter_legacy()
+    call winter_interlude_cleanup(False) from _call_winter_cleanup_legacy_building
+    jump ch2_after_legacy_governance
+
+label _call_gov_famine2:
+    $ mark_winter_legacy()
+    call winter_interlude_cleanup(False) from _call_winter_cleanup_legacy_famine
+    jump ch2_after_legacy_governance
 
     ## ============================================================
     ## 场景1：出发前的准备

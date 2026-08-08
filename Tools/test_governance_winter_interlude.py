@@ -14,7 +14,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RUNNER = ROOT / "Tools" / "Run-RenPySuite.ps1"
 TEST_GAME = ROOT / "game" / "test_game.rpy"
+SCRIPT = ROOT / "game" / "script.rpy"
 CHAPTER2 = ROOT / "game" / "chapter2.rpy"
+CINEMATICS = ROOT / "game" / "cinematics.rpy"
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "winter_legacy"
 MANIFEST = FIXTURE_DIR / "manifest.json"
 ASSET_BASELINE = ROOT / "tests" / "fixtures" / "winter_asset_baseline.json"
@@ -87,15 +89,28 @@ _RENPY_PYTHON_HEADER = re.compile(
 )
 
 
-def _renpy_python_fragments(module_source: str) -> list[str]:
-    """Extract Python blocks and one-line Python statements from a Ren'Py file."""
+def _renpy_python_fragments_with_labels(
+    module_source: str,
+) -> list[tuple[str | None, str]]:
+    """Extract Python fragments together with their containing Ren'Py label."""
     lines = module_source.splitlines()
     fragments = []
+    current_label = None
     index = 0
     while index < len(lines):
+        label_match = re.match(
+            r"^label\s+([A-Za-z_][A-Za-z0-9_]*)"
+            r"(?:\([^\n]*\))?\s*:\s*(?:#.*)?$",
+            lines[index],
+        )
+        if label_match:
+            current_label = label_match.group(1)
+            index += 1
+            continue
         match = _RENPY_PYTHON_HEADER.match(lines[index])
         if match:
             header_indent = len(match.group("indent"))
+            fragment_label = current_label if header_indent else None
             body = []
             index += 1
             while index < len(lines):
@@ -106,13 +121,56 @@ def _renpy_python_fragments(module_source: str) -> list[str]:
                         break
                 body.append(raw_line)
                 index += 1
-            fragments.append(textwrap.dedent("\n".join(body)))
+            fragments.append((fragment_label, textwrap.dedent("\n".join(body))))
             continue
         stripped = lines[index].lstrip()
         if stripped.startswith("$"):
-            fragments.append(stripped[1:].strip())
+            fragments.append((current_label, stripped[1:].strip()))
         index += 1
     return fragments
+
+
+def _renpy_python_fragments(module_source: str) -> list[str]:
+    """Extract Python blocks and one-line Python statements from a Ren'Py file."""
+    return [fragment for _label, fragment in _renpy_python_fragments_with_labels(module_source)]
+
+
+_TASK5_LABEL_PYTHON = {
+    "winter_interlude_start": (
+        "_winter_interlude_blank_entry = not _new_run_bootstrap_done",
+        'first_decree = ""',
+        'southern_outcome = "delegated"',
+        "built_granary = False",
+        "famine_prevented = False",
+        'gov_merchant_outcome = ""',
+        "governance_events_seen[:] = [event for event in governance_events_seen if event not in WINTER_LEGACY_EVENTS]",
+        "_winter_entry_context = get_winter_context(outside=False)",
+        "apply_winter_delegation()",
+        'auto_chapter_save("winter_interlude")',
+        'winter_interlude_status = "active"',
+    ),
+    "winter_interlude_delegate": ("apply_winter_delegation()",),
+    "winter_interlude_cleanup": (
+        "clear_weather()",
+        'renpy.music.stop(channel="sound", fadeout=0.0)',
+        "hide_all_chars()",
+        "stop_music(fadeout=0.0)",
+    ),
+}
+_TASK5_LABEL_AST = {
+    label: {
+        ast.dump(ast.parse(fragment), include_attributes=False)
+        for fragment in fragments
+    }
+    for label, fragments in _TASK5_LABEL_PYTHON.items()
+}
+
+
+def _is_approved_task5_label_fragment(label: str | None, tree: ast.Module) -> bool:
+    return (
+        label in _TASK5_LABEL_AST
+        and ast.dump(tree, include_attributes=False) in _TASK5_LABEL_AST[label]
+    )
 
 
 def _attribute_path(node: ast.AST) -> str | None:
@@ -435,11 +493,20 @@ def _winter_module_write_violations(
             violations.append(f"unapproved top-level Ren'Py statement: {stripped}")
 
     trees = []
-    for fragment in _renpy_python_fragments(module_source):
+    task5_fragment_counts = {}
+    for label, fragment in _renpy_python_fragments_with_labels(module_source):
         try:
-            trees.append(ast.parse(fragment))
+            tree = ast.parse(fragment)
         except SyntaxError as error:
             violations.append(f"Python parse failure: {error.msg}")
+            continue
+        if _is_approved_task5_label_fragment(label, tree):
+            key = (label, ast.dump(tree, include_attributes=False))
+            task5_fragment_counts[key] = task5_fragment_counts.get(key, 0) + 1
+            if task5_fragment_counts[key] > 1:
+                violations.append(f"duplicate approved Task 5 label fragment: {label}")
+            continue
+        trees.append(tree)
     defined_functions = {
         node.name
         for tree in trees
@@ -795,14 +862,23 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
             self.assertNotIn(name, chapter2)
             self.assertNotIn(name, self.test_game)
 
-    def test_chapter2_exactly_matches_recorded_baseline(self):
+    def test_recorded_baseline_contains_the_three_signed_continuations(self):
         result = subprocess.run(
-            ["git", "diff", "--exit-code", BASELINE_COMMIT, "--", "game/chapter2.rpy"],
+            ["git", "show", f"{BASELINE_COMMIT}:game/chapter2.rpy"],
             cwd=ROOT,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        self.assertEqual(result.returncode, 0, result.stdout.decode("utf-8", errors="replace"))
+        self.assertEqual(result.returncode, 0, result.stderr.decode("utf-8", errors="replace"))
+        baseline = result.stdout.decode("utf-8")
+        self.assertEqual(
+            re.findall(
+                r"(?m)^\s*call\s+gov_(?:merchant|building(?:\(2\))?|famine_crisis)"
+                r".*\sfrom\s+(_call_gov_(?:merch|build|famine)2)\s*$",
+                baseline,
+            ),
+            ["_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2"],
+        )
 
     def test_asset_baseline_is_sorted_complete_and_hash_verified(self):
         self.assertTrue(ASSET_BASELINE.is_file(), "winter asset baseline has not been generated")
@@ -837,6 +913,269 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
                 self.assertEqual(actual_hash, hashlib.sha256(package_font).hexdigest())
             else:
                 self.assertEqual(entry["sha256"].lower(), actual_hash)
+
+
+class WinterRoutingContractTests(unittest.TestCase):
+    def test_mainline_routes_southern_then_winter_then_chapter2(self):
+        chapter_one_end = _label_body(SCRIPT.read_text(encoding="utf-8"), "chapter1_end")
+        winter_source = WINTER_MODULE.read_text(encoding="utf-8")
+        winter_start = _label_body(winter_source, "winter_interlude_start")
+        executable = _executable_lines(chapter_one_end)
+        seam = [
+            '$ auto_chapter_save("southern")',
+            "$ southern_from_mainline = True",
+            "call southern_arc from _call_southern_arc",
+            "jump winter_interlude_start",
+        ]
+        positions = [executable.index(statement) for statement in seam]
+        self.assertEqual(positions, sorted(positions))
+        self.assertNotIn("jump chapter2_start", executable)
+        self.assertIn(
+            "call new_run_bootstrap from _call_new_run_bootstrap_winter_interlude",
+            winter_start,
+        )
+        self.assertIn('auto_chapter_save("winter_interlude")', winter_start)
+        self.assertEqual(winter_source.count("jump chapter2_start"), 1)
+        winter_entry_contract = [
+            "$ _winter_interlude_blank_entry = not _new_run_bootstrap_done",
+            "call new_run_bootstrap from _call_new_run_bootstrap_winter_interlude",
+            "if _winter_interlude_blank_entry:",
+            '$ first_decree = ""',
+            '$ southern_outcome = "delegated"',
+            "$ built_granary = False",
+            "$ famine_prevented = False",
+            '$ gov_merchant_outcome = ""',
+            "$ governance_events_seen[:] = [event for event in governance_events_seen if event not in WINTER_LEGACY_EVENTS]",
+            "$ _winter_entry_context = get_winter_context(outside=False)",
+            '$ auto_chapter_save("winter_interlude")',
+        ]
+
+        def entry_contract_violations(candidate_source: str) -> list[str]:
+            try:
+                candidate_body = _label_body(candidate_source, "winter_interlude_start")
+            except AssertionError:
+                return ["winter_interlude_start"]
+            candidate_lines = candidate_body.splitlines()
+            positions = []
+            missing = []
+            for statement_index, statement in enumerate(winter_entry_contract):
+                indentation = "        " if 3 <= statement_index <= 8 else "    "
+                exact_line = indentation + statement
+                matches = [
+                    line_index
+                    for line_index, line in enumerate(candidate_lines)
+                    if line == exact_line
+                ]
+                if len(matches) != 1:
+                    missing.append(statement)
+                else:
+                    positions.append(matches[0])
+            if missing:
+                return missing
+            if positions != sorted(positions):
+                return ["entry order"]
+            return []
+
+        self.assertEqual(entry_contract_violations(winter_source), [])
+        self.assertRegex(
+            winter_source,
+            r'(?m)^\s*WINTER_LEGACY_EVENTS\s*=\s*\("famine_crisis", "merchant_negotiation"\)\s*$',
+        )
+        for statement in winter_entry_contract:
+            with self.subTest(deleted_winter_entry_statement=statement):
+                mutated = winter_source.replace(statement, "", 1)
+                self.assertTrue(entry_contract_violations(mutated))
+        dedented_seed = winter_source.replace(
+            '        $ first_decree = ""',
+            '    $ first_decree = ""',
+            1,
+        )
+        self.assertTrue(entry_contract_violations(dedented_seed))
+
+        def active_branch_violations(candidate_source: str) -> list[str]:
+            try:
+                candidate_lines = _label_body(
+                    candidate_source, "winter_interlude_start"
+                ).splitlines()
+            except AssertionError:
+                return ["winter_interlude_start"]
+            required_lines = (
+                "    menu:",
+                '        "亲自主持":',
+                '            $ winter_interlude_status = "active"',
+                '        "交给奥尔德里克":',
+            )
+            positions = []
+            for exact_line in required_lines:
+                matches = [
+                    line_index
+                    for line_index, line in enumerate(candidate_lines)
+                    if line == exact_line
+                ]
+                if len(matches) != 1:
+                    return [exact_line.strip()]
+                positions.append(matches[0])
+            if positions != sorted(positions):
+                return ["active branch ownership"]
+            if candidate_source.count('$ winter_interlude_status = "active"') != 1:
+                return ["active write count"]
+            return []
+
+        self.assertEqual(active_branch_violations(winter_source), [])
+        dedented_active = winter_source.replace(
+            '            $ winter_interlude_status = "active"',
+            '        $ winter_interlude_status = "active"',
+            1,
+        )
+        self.assertTrue(active_branch_violations(dedented_active))
+        delegated_active = winter_source.replace(
+            '            $ winter_interlude_status = "active"\n',
+            "",
+            1,
+        ).replace(
+            '        "交给奥尔德里克":\n',
+            '        "交给奥尔德里克":\n'
+            '            $ winter_interlude_status = "active"\n',
+            1,
+        )
+        self.assertTrue(active_branch_violations(delegated_active))
+        chapter_two_source = CHAPTER2.read_text(encoding="utf-8")
+        chapter_blank_contract = (
+            "    $ _chapter2_blank_entry = not _new_run_bootstrap_done",
+            "    call new_run_bootstrap from _call_new_run_bootstrap_chapter2",
+            "    if _chapter2_blank_entry:",
+            "        $ apply_winter_delegation()",
+            "    $ renpy.force_autosave()",
+            '    $ auto_chapter_save("chapter2")',
+            "    $ snapshot_chapter_start()",
+        )
+
+        def chapter_blank_violations(candidate_source: str) -> list[str]:
+            try:
+                candidate_lines = _label_body(
+                    candidate_source, "chapter2_start"
+                ).splitlines()
+            except AssertionError:
+                return ["chapter2_start"]
+            positions = []
+            for exact_line in chapter_blank_contract:
+                matches = [
+                    line_index
+                    for line_index, line in enumerate(candidate_lines)
+                    if line == exact_line
+                ]
+                if len(matches) != 1:
+                    return [exact_line.strip()]
+                positions.append(matches[0])
+            if positions != sorted(positions):
+                return ["chapter2 blank order"]
+            return []
+
+        self.assertEqual(chapter_blank_violations(chapter_two_source), [])
+        dedented_chapter_delegation = chapter_two_source.replace(
+            "        $ apply_winter_delegation()",
+            "    $ apply_winter_delegation()",
+            1,
+        )
+        self.assertTrue(chapter_blank_violations(dedented_chapter_delegation))
+
+    def test_chapter2_stops_calling_three_legacy_events(self):
+        chapter_two = CHAPTER2.read_text(encoding="utf-8")
+        executable = _executable_lines(chapter_two)
+        for old_call in (
+            "call gov_merchant from _call_gov_merch2",
+            "call gov_building(2) from _call_gov_build2",
+            "call gov_famine_crisis from _call_gov_famine2",
+        ):
+            with self.subTest(old_call=old_call):
+                self.assertNotIn(old_call, executable)
+        governance = GOVERNANCE.read_text(encoding="utf-8")
+        for old_label in ("gov_merchant", "gov_building", "gov_famine_crisis"):
+            with self.subTest(old_label=old_label):
+                self.assertEqual(
+                    len(
+                        re.findall(
+                            rf"(?m)^label {re.escape(old_label)}(?:\([^\n]*\))?:\s*$",
+                            governance,
+                        )
+                    ),
+                    1,
+                )
+
+    def test_three_legacy_continuations_and_two_stable_anchors_exist_once(self):
+        chapter_two = CHAPTER2.read_text(encoding="utf-8")
+        for label in (
+            "ch2_after_winter_interlude",
+            "ch2_after_legacy_governance",
+            "_call_gov_merch2",
+            "_call_gov_build2",
+            "_call_gov_famine2",
+        ):
+            with self.subTest(label=label):
+                self.assertEqual(
+                    len(re.findall(rf"(?m)^label {re.escape(label)}:\s*$", chapter_two)),
+                    1,
+                )
+        self.assertNotRegex(
+            chapter_two,
+            r"(?m)^\s*call\s+\S+.*\sfrom\s+_call_gov_(?:merch|build|famine)2\s*$",
+        )
+
+    def test_legacy_pads_are_behind_an_unconditional_fallthrough_firewall(self):
+        chapter_two = CHAPTER2.read_text(encoding="utf-8")
+        random_call = chapter_two.index("call re_scene_event(2) from _call_re_scene_ev2")
+        firewall = chapter_two.index("jump ch2_preparation", random_call)
+        preparation = chapter_two.index("label ch2_preparation:", firewall)
+        pads = [
+            chapter_two.index(f"label {label}:", firewall, preparation)
+            for label in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")
+        ]
+        self.assertLess(random_call, firewall)
+        self.assertEqual(pads, sorted(pads))
+        expected_targets = {
+            "_call_gov_merch2": "ch2_after_winter_interlude",
+            "_call_gov_build2": "ch2_after_legacy_governance",
+            "_call_gov_famine2": "ch2_after_legacy_governance",
+        }
+        for label, target in expected_targets.items():
+            body = _label_body(chapter_two, label)
+            self.assertIn("$ mark_winter_legacy()", body)
+            self.assertRegex(body, r"call winter_interlude_cleanup\(False\) from _call_winter_cleanup_legacy_")
+            self.assertIn(f"jump {target}", body)
+            self.assertNotRegex(body, r"\b(?:call|jump)\s+gov_(?:merchant|building|famine_crisis)\b")
+            self.assertNotIn("winter_interlude_start", body)
+
+    def test_every_exit_calls_the_shared_presentation_cleanup(self):
+        winter_source = WINTER_MODULE.read_text(encoding="utf-8")
+        cleanup = _label_body(winter_source, "winter_interlude_cleanup")
+        self.assertIn("$ clear_weather()", cleanup)
+        self.assertIn("$ hide_all_chars()", cleanup)
+        self.assertIn("return", _executable_lines(cleanup))
+        self.assertNotIn("chapter2_start", cleanup)
+        chapter_two = CHAPTER2.read_text(encoding="utf-8")
+        self.assertEqual(winter_source.count("call winter_interlude_cleanup"), 1)
+        self.assertEqual(chapter_two.count("call winter_interlude_cleanup(False)"), 3)
+        exit_body = _label_body(winter_source, "winter_interlude_exit")
+        self.assertRegex(exit_body, r"call winter_interlude_cleanup from _call_winter_cleanup_exit")
+        self.assertIn("jump chapter2_start", exit_body)
+
+    def test_chapter2_restarts_music_after_cinematic(self):
+        chapter_start = _label_body(CHAPTER2.read_text(encoding="utf-8"), "chapter2_start")
+        after_cinematic = chapter_start.split(
+            "call cinematic_chapter2 from _call_cinematic_ch2", 1
+        )[1]
+        executable = _executable_lines(after_cinematic)
+        self.assertEqual(
+            executable[0],
+            '$ play_music("audio/music/castle_calm.ogg", fadein=2.0)',
+        )
+        self.assertNotIn("set_mood", executable[0])
+
+    def test_one_month_card_is_not_repeated_in_chapter2_body(self):
+        chapter_start = _label_body(CHAPTER2.read_text(encoding="utf-8"), "chapter2_start")
+        cinematic = _label_body(CINEMATICS.read_text(encoding="utf-8"), "cinematic_chapter2")
+        self.assertEqual(cinematic.count("一个月过去了。"), 1)
+        self.assertEqual(chapter_start.count("一个月过去了。"), 0)
 
 
 class WinterModuleContractTests(unittest.TestCase):
@@ -1114,6 +1453,7 @@ class WinterModuleContractTests(unittest.TestCase):
             ),
             "persistent_assignment": "init python:\n    persistent.secret = 1",
         }
+        self.assertEqual(len(mutation_probes), 37)
         for probe_name, probe_source in mutation_probes.items():
             with self.subTest(mutation_probe=probe_name):
                 self.assertTrue(
@@ -1145,6 +1485,7 @@ class WinterModuleContractTests(unittest.TestCase):
                 "                governance_events_seen.append(event)"
             ),
         }
+        self.assertEqual(len(allowed_mutation_probes), 4)
         for probe_name, probe_source in allowed_mutation_probes.items():
             with self.subTest(allowed_mutation_probe=probe_name):
                 self.assertEqual(
@@ -1152,6 +1493,56 @@ class WinterModuleContractTests(unittest.TestCase):
                         probe_source, store_defaults, persistent_defaults
                     ),
                     [],
+                )
+        task5_negative_probes = {
+            "wrong_label": module_source.replace(
+                "label winter_interlude_start:",
+                "label winter_interlude_wrong_start:",
+                1,
+            ),
+            "dynamic_autosave_slot": module_source.replace(
+                '$ auto_chapter_save("winter_interlude")',
+                "$ auto_chapter_save(_winter_slot)",
+                1,
+            ),
+            "wrong_blank_seed": module_source.replace(
+                '$ southern_outcome = "delegated"',
+                '$ southern_outcome = "free"',
+                1,
+            ),
+            "cleanup_argument": module_source.replace(
+                "$ clear_weather()",
+                '$ clear_weather("snow")',
+                1,
+            ),
+            "cleanup_dynamic_character_exception": module_source.replace(
+                "$ hide_all_chars()",
+                '$ hide_all_chars(_winter_character)',
+                1,
+            ),
+            "sound_stop_wrong_channel": module_source.replace(
+                '$ renpy.music.stop(channel="sound", fadeout=0.0)',
+                '$ renpy.music.stop(channel="music", fadeout=0.0)',
+                1,
+            ),
+            "music_stop_wrong_shape": module_source.replace(
+                "$ stop_music(fadeout=0.0)",
+                "$ stop_music()",
+                1,
+            ),
+            "unapproved_extra_store": module_source.replace(
+                "label winter_interlude_delegate:\n",
+                "label winter_interlude_delegate:\n    $ power = 99\n",
+                1,
+            ),
+        }
+        for probe_name, probe_source in task5_negative_probes.items():
+            with self.subTest(task5_negative_probe=probe_name):
+                self.assertTrue(
+                    _winter_module_write_violations(
+                        probe_source, store_defaults, persistent_defaults
+                    ),
+                    f"winter source guard accepted forbidden Task 5 shape: {probe_name}",
                 )
         self.assertRegex(
             module_source,

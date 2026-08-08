@@ -371,6 +371,47 @@ init python:
             return (type(value).__name__, value)
         raise TypeError("unsupported winter snapshot type: {}".format(type(value).__name__))
 
+    def _test_winter_trace_label(name, abnormal):
+        del abnormal
+        if not getattr(_test, "winter_trace_enabled", False):
+            return
+        _test.winter_labels.append(name)
+        if name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2"):
+            _test.winter_pad_snapshots[name] = (
+                gov_merchant_outcome,
+                built_granary,
+                famine_prevented,
+                renpy.music.get_playing(channel="music"),
+            )
+
+    def _test_winter_begin_trace():
+        _test.winter_trace_enabled = True
+        _test.winter_labels = []
+        _test.winter_pad_snapshots = {}
+        if _test_winter_trace_label not in config.label_callbacks:
+            config.label_callbacks.append(_test_winter_trace_label)
+
+    def _test_winter_end_trace():
+        _test.winter_trace_enabled = False
+        while _test_winter_trace_label in config.label_callbacks:
+            config.label_callbacks.remove(_test_winter_trace_label)
+
+    def _test_winter_track(channel="music"):
+        playing = renpy.music.get_playing(channel=channel)
+        if playing is None:
+            return None
+        return str(playing).replace("\\", "/")
+
+    def _test_winter_choice_ready(text):
+        matches = [
+            focus
+            for focus in renpy.display.focus.focus_list
+            if focus.x is not None
+            and text.casefold() in focus.widget._tts_all(True).casefold()
+            and isinstance(getattr(focus.widget, "action", None), renpy.ui.ChoiceReturn)
+        ]
+        return len(matches) == 1
+
 
 testsuite test_winter_interlude_state:
     before testcase:
@@ -671,6 +712,237 @@ testsuite test_winter_interlude_ending_invariance:
         assert eval (get_resistance_battle_outcomes(**battle_kwargs) == _winter_battle_before)
 
 
+testsuite test_winter_interlude_continuations:
+    before testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_begin_trace()
+
+    after testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_end_trace()
+        $ renpy.music.stop(channel="sound")
+
+    testcase merchant_save_returns_through_only_merchant_pad:
+        run FileLoad("winter-legacy-merchant-inside", confirm=False, slot=True) until screen "choice" timeout 4.0
+        assert eval (renpy.get_return_stack() == ["_call_gov_merch2"])
+        $ set_weather("snow")
+        $ renpy.show("aldric_img")
+        $ renpy.music.play("audio/sfx/fire_crackle.ogg", channel="sound", loop=True)
+        $ _test.choice_text = "有限合作——设立监管，允许商会经营但限制价格"
+        pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
+        click "有限合作——设立监管，允许商会经营但限制价格"
+        advance until eval ("ch2_after_winter_interlude" in _test.winter_labels) timeout 30.0
+        assert eval ([name for name in _test.winter_labels if name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")] == ["_call_gov_merch2"])
+        assert eval (winter_interlude_status == "legacy")
+        assert eval (gov_merchant_outcome == "regulated")
+        assert eval (_test.winter_pad_snapshots["_call_gov_merch2"][0] == "regulated")
+        assert eval (_test_winter_track("music") == str(_test.winter_pad_snapshots["_call_gov_merch2"][3]).replace("\\", "/"))
+        assert eval (_test_winter_track("sound") is None and get_weather() is None)
+        assert eval (not set(renpy.get_showing_tags(layer="master")).intersection(CHAR_IMG_TAGS))
+
+    testcase building_save_returns_through_only_building_pad:
+        run FileLoad("winter-legacy-building-inside", confirm=False, slot=True) until screen "choice" timeout 4.0
+        assert eval (renpy.get_return_stack() == ["_call_gov_build2"])
+        $ set_weather("snow")
+        $ renpy.show("aldric_img")
+        $ renpy.music.play("audio/sfx/fire_crackle.ogg", channel="sound", loop=True)
+        $ _test.building_before = (gov_merchant_outcome, built_granary, famine_prevented)
+        $ _test.choice_text = "暂不建设——把人手和石料留到下一季"
+        pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
+        click "暂不建设——把人手和石料留到下一季"
+        advance until eval ("ch2_after_legacy_governance" in _test.winter_labels) timeout 30.0
+        assert eval ([name for name in _test.winter_labels if name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")] == ["_call_gov_build2"])
+        assert eval (winter_interlude_status == "legacy")
+        assert eval ((gov_merchant_outcome, built_granary, famine_prevented) == _test.building_before)
+        assert eval (_test.winter_pad_snapshots["_call_gov_build2"][:3] == _test.building_before)
+        assert eval (_test_winter_track("music") == str(_test.winter_pad_snapshots["_call_gov_build2"][3]).replace("\\", "/"))
+        assert eval (_test_winter_track("sound") is None and get_weather() is None)
+        assert eval (not set(renpy.get_showing_tags(layer="master")).intersection(CHAR_IMG_TAGS))
+
+    testcase famine_save_returns_through_only_famine_pad:
+        run FileLoad("winter-legacy-famine-inside", confirm=False, slot=True) until screen "choice" timeout 4.0
+        assert eval (renpy.get_return_stack() == ["_call_gov_famine2"])
+        $ set_weather("snow")
+        $ renpy.show("aldric_img")
+        $ renpy.music.play("audio/sfx/fire_crackle.ogg", channel="sound", loop=True)
+        $ _test.choice_text = "购买粮食——花钱买平安，用金币换性命"
+        pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
+        click "购买粮食——花钱买平安，用金币换性命"
+        advance until eval ("ch2_after_legacy_governance" in _test.winter_labels) timeout 30.0
+        assert eval ([name for name in _test.winter_labels if name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")] == ["_call_gov_famine2"])
+        assert eval (winter_interlude_status == "legacy")
+        assert eval (famine_prevented)
+        assert eval (_test.winter_pad_snapshots["_call_gov_famine2"][2])
+        assert eval (_test_winter_track("music") == str(_test.winter_pad_snapshots["_call_gov_famine2"][3]).replace("\\", "/"))
+        assert eval (_test_winter_track("sound") is None and get_weather() is None)
+        assert eval (not set(renpy.get_showing_tags(layer="master")).intersection(CHAR_IMG_TAGS))
+
+
+testsuite test_winter_interlude_routing:
+    before testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_begin_trace()
+        $ renpy.unlink_save("auto_ch-winter_interlude")
+
+    after testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_end_trace()
+        $ renpy.unlink_save("auto_ch-winter_interlude")
+        $ renpy.music.stop(channel="sound")
+
+    testcase completed_delegated_active_and_invalid_reentries_never_use_pads:
+        parameter (entry_state, expected_state) = [
+            (("completed", ("market", "route"), "trade", "preserve"), "completed"),
+            (("delegated", (), "delegated", "neutral"), "delegated"),
+            (("legacy", (), "", "neutral"), "legacy"),
+            (("active", ("market",), "trade", "neutral"), "delegated"),
+            (("damaged", ("market",), "trade", "preserve"), "delegated"),
+        ]
+        assert eval (renpy.has_label("winter_interlude_start"))
+        $ _test.winter_route_state = entry_state
+        run Start("test_winter_routing_driver") until eval ("chapter2_start" in _test.winter_labels) timeout 6.0
+        assert eval (winter_interlude_status == expected_state)
+        assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
+        assert eval (not renpy.can_load("auto_ch-winter_interlude"))
+        assert eval (get_weather() is None and renpy.get_screen("weather_snow") is None)
+        assert eval (not set(renpy.get_showing_tags(layer="master")).intersection(CHAR_IMG_TAGS))
+        assert eval (_test_winter_track("sound") is None)
+
+    testcase unseen_delegate_creates_slot_and_reaches_chapter2_without_pads:
+        assert eval (renpy.has_label("winter_interlude_start"))
+        $ _test.winter_route_state = ("unseen", (), "", "neutral")
+        run Start("test_winter_routing_driver") until screen "say" timeout 6.0
+        assert eval (renpy.can_load("auto_ch-winter_interlude"))
+        advance until screen "choice" timeout 4.0
+        $ _test.choice_text = "交给奥尔德里克"
+        pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
+        click "交给奥尔德里克"
+        pause until eval ("chapter2_start" in _test.winter_labels) timeout 6.0
+        assert eval (winter_interlude_status == "delegated")
+        assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
+        assert eval (_test_winter_track("sound") is None)
+
+    testcase active_choice_is_internal_only_and_cannot_flow_into_chapter2:
+        assert eval (renpy.has_label("winter_interlude_start"))
+        $ _test.winter_route_state = ("unseen", (), "", "neutral")
+        run Start("test_winter_routing_driver") until screen "say" timeout 6.0
+        advance until screen "choice" timeout 4.0
+        $ _test.choice_text = "亲自主持"
+        pause until eval (len([f for f in renpy.display.focus.focus_list if f.x is not None and _test.choice_text.casefold() in f.widget._tts_all(True).casefold() and isinstance(getattr(f.widget, "action", None), renpy.ui.ChoiceReturn)]) == 1) timeout 4.0
+        click "亲自主持"
+        pause until screen "say" timeout 4.0
+        assert eval (winter_interlude_status == "active")
+        advance until eval ("chapter2_start" in _test.winter_labels) timeout 6.0
+        assert eval (winter_interlude_status == "delegated")
+        assert eval (get_winter_context(outside=True).status == "delegated")
+        assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
+        assert eval (_test_winter_track("sound") is None)
+
+    testcase completed_and_delegated_reentries_reach_both_production_anchors_without_pads:
+        parameter entry_state = ["completed", "delegated"]
+        $ _test.winter_route_state = (("completed", ("market", "route"), "trade", "preserve") if entry_state == "completed" else ("delegated", (), "delegated", "neutral"))
+        run Start("test_winter_routing_driver") until screen "chapter_title" timeout 6.0
+        pause until eval (_chapter_card_clickable and renpy.get_screen("chapter_title") is not None) timeout 4.0
+        keysym "K_RETURN"
+        pause until screen "story_recap" timeout 4.0
+        pause until eval (_recap_clickable and renpy.get_screen("story_recap") is not None) timeout 4.0
+        keysym "K_RETURN"
+        pause until eval (renpy.get_screen("rel_chapter_effect_summary") is not None or renpy.get_screen("cin_overlay") is not None) timeout 4.0
+        if eval (renpy.get_screen("rel_chapter_effect_summary") is not None):
+            click "继续"
+        pause until screen "cin_overlay" timeout 24.0
+        click "跳过"
+
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("这是一个机会——让其他贵族认识新的艾登堡领主。")) timeout 4.0
+        click "这是一个机会——让其他贵族认识新的艾登堡领主。"
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("暂时收好，到了王都再调查。")) timeout 4.0
+        click "暂时收好，到了王都再调查。"
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("先不声张——在弄清楚之前，不能让任何人知道这枚徽章的存在。")) timeout 4.0
+        click "先不声张——在弄清楚之前，不能让任何人知道这枚徽章的存在。"
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("你已经赎够了罪，奥尔德里克。")) timeout 4.0
+        click "你已经赎够了罪，奥尔德里克。"
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("我收下。我会像你一样，守护应该守护的东西。")) timeout 4.0
+        click "我收下。我会像你一样，守护应该守护的东西。"
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("你做了正确的事，雷恩。")) timeout 4.0
+        click "你做了正确的事，雷恩。"
+        advance until screen "choice" timeout 30.0
+        pause until eval (_test_winter_choice_ready("说实话——我也有很多疑惑")) timeout 4.0
+        click "说实话——我也有很多疑惑"
+        advance until eval ("ch2_after_legacy_governance" in _test.winter_labels) timeout 30.0
+        assert eval (winter_interlude_status == entry_state)
+        assert eval (_test.winter_labels.index("ch2_after_winter_interlude") < _test.winter_labels.index("ch2_after_legacy_governance"))
+        assert eval (not any(name in _test.winter_labels for name in ("_call_gov_merch2", "_call_gov_build2", "_call_gov_famine2")))
+
+    testcase blank_entry_runs_bootstrap_before_any_winter_write:
+        assert eval (renpy.has_label("winter_interlude_start"))
+        run Start("winter_interlude_start") until screen "difficulty_select" timeout 4.0
+        assert eval ("_call_new_run_bootstrap_winter_interlude" in renpy.get_return_stack())
+        assert eval (winter_interlude_status == "unseen")
+
+
+testsuite test_winter_interlude_audio:
+    before testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_begin_trace()
+
+    after testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test_winter_end_trace()
+        $ clear_weather()
+        $ hide_all_chars()
+        $ renpy.music.stop(channel="music")
+        $ renpy.music.stop(channel="sound")
+
+    testcase cleanup_true_stops_only_temporary_winter_music:
+        assert eval (renpy.has_label("winter_interlude_cleanup"))
+        $ _test.winter_cleanup_stop = True
+        $ _test.winter_cleanup_track = "audio/music/winter_wind.ogg"
+        run Start("test_winter_cleanup_driver") until screen "say" timeout 6.0
+        assert eval (_test_winter_track("music") is None)
+        assert eval (_test_winter_track("sound") is None)
+        assert eval (get_weather() is None and renpy.get_screen("weather_snow") is None)
+        assert eval (not set(renpy.get_showing_tags(layer="master")).intersection(CHAR_IMG_TAGS))
+
+    testcase cleanup_false_preserves_legacy_music:
+        assert eval (renpy.has_label("winter_interlude_cleanup"))
+        $ _test.winter_cleanup_stop = False
+        $ _test.winter_cleanup_track = "audio/music/castle_calm.ogg"
+        run Start("test_winter_cleanup_driver") until screen "say" timeout 6.0
+        assert eval (_test_winter_track("music").endswith("audio/music/castle_calm.ogg"))
+        assert eval (_test_winter_track("sound") is None)
+        assert eval (get_weather() is None and renpy.get_screen("weather_snow") is None)
+
+    testcase cleanup_true_stops_the_existing_music_channel:
+        assert eval (renpy.has_label("winter_interlude_cleanup"))
+        $ _test.winter_cleanup_stop = True
+        $ _test.winter_cleanup_track = "audio/music/castle_calm.ogg"
+        run Start("test_winter_cleanup_driver") until screen "say" timeout 6.0
+        assert eval (_test_winter_track("music") is None)
+        assert eval (_test_winter_track("sound") is None)
+
+    testcase chapter2_cinematic_returns_to_real_castle_calm_channel:
+        run Start("test_winter_chapter2_audio_driver") until screen "chapter_title" timeout 4.0
+        pause until eval (_chapter_card_clickable and renpy.get_screen("chapter_title") is not None) timeout 4.0
+        keysym "K_RETURN"
+        pause until screen "story_recap" timeout 4.0
+        pause until eval (_recap_clickable and renpy.get_screen("story_recap") is not None) timeout 4.0
+        keysym "K_RETURN"
+        pause until eval (renpy.get_screen("rel_chapter_effect_summary") is not None or renpy.get_screen("cin_overlay") is not None) timeout 4.0
+        if eval (renpy.get_screen("rel_chapter_effect_summary") is not None):
+            click "继续"
+        pause until screen "cin_overlay" timeout 24.0
+        click "跳过"
+        pause until eval (_test_winter_track("music") is not None and _test_winter_track("music").endswith("audio/music/castle_calm.ogg")) timeout 8.0
+        assert eval ("chapter2_start" in _test.winter_labels)
+        assert eval ("cinematic_chapter2" in _test.winter_labels)
+
+
 label test_winter_active_save_driver:
     $ winter_interlude_status = "active"
     $ winter_investigations = ("market",)
@@ -679,6 +951,36 @@ label test_winter_active_save_driver:
     $ renpy.save("winter-active-mid-save")
     "Winter active save fixture."
     return
+
+
+label test_winter_routing_driver:
+    $ _new_run_bootstrap_done = True
+    $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = _test.winter_route_state
+    $ governance_events_seen[:] = []
+    $ famine_prevented, gov_merchant_outcome = False, ""
+    $ set_weather("snow")
+    $ renpy.show("aldric_img")
+    $ play_music("audio/music/winter_wind.ogg")
+    $ renpy.music.play("audio/sfx/fire_crackle.ogg", channel="sound", loop=True)
+    jump winter_interlude_start
+
+
+label test_winter_cleanup_driver:
+    $ _new_run_bootstrap_done = True
+    $ set_weather("snow")
+    $ renpy.show("aldric_img")
+    $ play_music(_test.winter_cleanup_track)
+    $ renpy.music.play("audio/sfx/fire_crackle.ogg", channel="sound", loop=True)
+    call winter_interlude_cleanup(_test.winter_cleanup_stop) from _call_test_winter_cleanup_first
+    call winter_interlude_cleanup(_test.winter_cleanup_stop) from _call_test_winter_cleanup_second
+    "Winter cleanup runtime checkpoint."
+    return
+
+
+label test_winter_chapter2_audio_driver:
+    $ _new_run_bootstrap_done = True
+    $ apply_winter_delegation()
+    jump chapter2_start
 
 
 ## END TASK 3 WINTER STATE SUITES
