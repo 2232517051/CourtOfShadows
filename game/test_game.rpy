@@ -328,6 +328,362 @@ testsuite test_evidence_migration:
         assert not eval (father_poison_method_known)
 
 
+## BEGIN TASK 3 WINTER STATE SUITES
+init python:
+    _WINTER_ALLOWED_STORE_DEFAULT_WRITES = (
+        "governance_events_seen",
+        "winter_interlude_status",
+        "winter_investigations",
+        "winter_policy",
+        "winter_seed_priority",
+    )
+    _WINTER_NONDEFAULT_FORBIDDEN_STATE = (
+        "_iron_prepared",
+        "ch3_lily_alliance_independent",
+    )
+
+    def _test_winter_project_default_names(store_name):
+        names = set()
+        for statement in renpy.ast.default_statements:
+            if not isinstance(statement, renpy.ast.Default):
+                continue
+            filename = str(statement.filename).replace("\\", "/")
+            project_source = filename.startswith("game/") or "/game/" in filename
+            if not project_source or filename.endswith("game/test_game.rpy"):
+                continue
+            if statement.store == store_name:
+                names.add(statement.varname)
+        return tuple(sorted(names))
+
+    def _test_winter_freeze(value):
+        if isinstance(value, dict):
+            frozen_items = (
+                (_test_winter_freeze(key), _test_winter_freeze(item))
+                for key, item in value.items()
+            )
+            return (type(value).__name__, tuple(sorted(frozen_items, key=repr)))
+        if isinstance(value, (list, tuple)):
+            return (type(value).__name__, tuple(_test_winter_freeze(item) for item in value))
+        if isinstance(value, (set, frozenset)):
+            frozen_items = (_test_winter_freeze(item) for item in value)
+            return (type(value).__name__, tuple(sorted(frozen_items, key=repr)))
+        if isinstance(value, (bool, bytes, float, int, str, type(None))):
+            return (type(value).__name__, value)
+        raise TypeError("unsupported winter snapshot type: {}".format(type(value).__name__))
+
+
+testsuite test_winter_interlude_state:
+    before testcase:
+        $ assert "winter_interlude_status" in globals(), "winter state helper missing"
+        $ _test.winter_state_snapshot = (winter_interlude_status, tuple(winter_investigations), winter_policy, winter_seed_priority, list(governance_events_seen), famine_prevented, gov_merchant_outcome)
+
+    after testcase:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority, _winter_events, famine_prevented, gov_merchant_outcome = _test.winter_state_snapshot
+        $ governance_events_seen[:] = _winter_events
+
+    testcase status_precedence_matrix:
+        parameter (raw_snapshot, projection, expected_winter) = [
+            (("legacy", "trade", "preserve", ("market", "route"), True, "regulated", ("famine_crisis",)), "internal", ("legacy", ("market", "route"), "trade", "preserve")),
+            (("delegated", "trade", "preserve", ("market", "route"), True, "regulated", ("famine_crisis",)), "internal", ("delegated", (), "delegated", "neutral")),
+            (("completed", "trade", "feed_now", ("route", "market"), False, "", ()), "internal", ("completed", ("market", "route"), "trade", "feed_now")),
+            (("active", "ration", "neutral", ("village",), False, "", ("merchant_negotiation",)), "internal", ("active", ("village",), "ration", "neutral")),
+            (("active", "ration", "neutral", ("village",), False, "", ("merchant_negotiation",)), "outside", ("delegated", (), "delegated", "neutral")),
+            (("unseen", "", "neutral", (), True, "", ()), "internal", ("legacy", (), "", "neutral")),
+            (("unseen", "", "neutral", (), False, "regulated", ()), "internal", ("legacy", (), "", "neutral")),
+            (("unseen", "", "neutral", (), False, "", ("famine_crisis",)), "internal", ("legacy", (), "", "neutral")),
+            (("unseen", "", "neutral", (), False, "", ("merchant_negotiation",)), "internal", ("legacy", (), "", "neutral")),
+            (("unseen", "", "neutral", (), False, "", ()), "internal", ("unseen", (), "", "neutral")),
+            (("unseen", "", "neutral", (), False, "", ()), "outside", ("delegated", (), "delegated", "neutral")),
+            (("damaged", "trade", "preserve", ("market", "village"), True, "regulated", ("famine_crisis",)), "internal", ("delegated", (), "delegated", "neutral")),
+        ]
+
+        $ assert "resolve_winter_interlude_context" in globals(), "winter state helper missing"
+        $ _winter_context = resolve_winter_interlude_context(raw_snapshot, projection)
+        assert eval (isinstance(_winter_context, tuple))
+        assert eval ((_winter_context.status, _winter_context.investigations, _winter_context.policy, _winter_context.seed_priority) == expected_winter)
+
+    testcase delegation_is_idempotent:
+        $ governance_events_seen[:] = []
+        $ apply_winter_delegation()
+        $ apply_winter_delegation()
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("delegated", (), "delegated", "neutral"))
+        assert eval (governance_events_seen.count("winter_interlude") == 1)
+        assert eval (governance_events_seen.count("famine_crisis") == 1)
+        assert eval ("merchant_negotiation" not in governance_events_seen)
+
+    testcase finalizer_compatibility_markers_are_idempotent:
+        $ governance_events_seen[:] = []
+        $ _first_finalize = finalize_winter_interlude("trade", "preserve", ("route", "market"))
+        $ _second_finalize = finalize_winter_interlude("trade", "preserve", ("market", "route"))
+        assert eval (_first_finalize and _second_finalize)
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("completed", ("market", "route"), "trade", "preserve"))
+        assert eval (governance_events_seen.count("winter_interlude") == 1)
+        assert eval (governance_events_seen.count("famine_crisis") == 1)
+        assert eval ("merchant_negotiation" not in governance_events_seen)
+        assert eval (get_winter_context(outside=False).status == "completed")
+
+    testcase invalid_values_fall_back_to_neutral:
+        parameter (policy_name, seed_name, investigation_values) = [
+            ("invalid", "preserve", ("market", "village")),
+            ("trade", "invalid", ("market", "village")),
+            ("trade", "preserve", ()),
+            ("trade", "preserve", ("market",)),
+            ("trade", "preserve", ("market", "market")),
+            ("trade", "preserve", ("market", "village", "route")),
+            ("trade", "preserve", ("market", "unknown")),
+            ("trade", "preserve", ("market", "village", "unknown")),
+        ]
+
+        $ governance_events_seen[:] = []
+        $ _winter_valid = finalize_winter_interlude(policy_name, seed_name, investigation_values)
+        assert eval (not _winter_valid)
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("delegated", (), "delegated", "neutral"))
+        assert eval (governance_events_seen == ["winter_interlude", "famine_crisis"])
+
+    testcase invalid_completed_payload_never_reclassifies_as_legacy:
+        parameter raw_snapshot = [
+            ("completed", "invalid", "preserve", ("market", "village"), True, "regulated", ("famine_crisis", "merchant_negotiation")),
+            ("completed", "trade", "invalid", ("market", "village"), True, "regulated", ("famine_crisis", "merchant_negotiation")),
+            ("completed", "trade", "preserve", ("market", "market"), True, "regulated", ("famine_crisis", "merchant_negotiation")),
+            ("completed", "trade", "preserve", ("market", "village", "route"), True, "regulated", ("famine_crisis", "merchant_negotiation")),
+        ]
+
+        $ _winter_internal = resolve_winter_interlude_context(raw_snapshot, "internal")
+        $ _winter_outside = resolve_winter_interlude_context(raw_snapshot, "outside")
+        assert eval ((_winter_internal.status, _winter_internal.investigations, _winter_internal.policy, _winter_internal.seed_priority) == ("delegated", (), "delegated", "neutral"))
+        assert eval ((_winter_outside.status, _winter_outside.investigations, _winter_outside.policy, _winter_outside.seed_priority) == ("delegated", (), "delegated", "neutral"))
+
+    testcase twelve_orders_normalize_to_six_pairs:
+        parameter (ordered_values, expected_pair) = [
+            (("market", "village"), ("market", "village")),
+            (("village", "market"), ("market", "village")),
+            (("market", "granary"), ("market", "granary")),
+            (("granary", "market"), ("market", "granary")),
+            (("market", "route"), ("market", "route")),
+            (("route", "market"), ("market", "route")),
+            (("village", "granary"), ("village", "granary")),
+            (("granary", "village"), ("village", "granary")),
+            (("village", "route"), ("village", "route")),
+            (("route", "village"), ("village", "route")),
+            (("granary", "route"), ("granary", "route")),
+            (("route", "granary"), ("granary", "route")),
+        ]
+
+        assert eval (normalize_winter_investigations(ordered_values) == expected_pair)
+
+    testcase thirty_six_core_combinations_have_benefit_and_burden:
+        parameter (investigation_pair, policy_name, seed_name) = [
+            (pair, policy, seed)
+            for pair in (("market", "village"), ("market", "granary"), ("market", "route"), ("village", "granary"), ("village", "route"), ("granary", "route"))
+            for policy in ("trade", "ration", "requisition")
+            for seed in ("preserve", "feed_now")
+        ]
+
+        $ _winter_valid = finalize_winter_interlude(policy_name, seed_name, investigation_pair)
+        $ _winter_outcome = WINTER_OUTCOME_CONTRACTS[(policy_name, seed_name)]
+        assert eval (_winter_valid)
+        assert eval (all(_winter_outcome[key] for key in ("benefit", "burden", "followup")))
+        assert eval ((winter_policy, winter_seed_priority, winter_investigations) == (policy_name, seed_name, investigation_pair))
+
+    testcase four_investigations_only_mitigate_their_named_cost:
+        $ _winter_pairs = (("market", "village"), ("market", "granary"), ("market", "route"), ("village", "granary"), ("village", "route"), ("granary", "route"))
+        $ _winter_observed = {(pair, policy, seed): select_winter_mitigation(policy, seed, pair, {}) for pair in _winter_pairs for policy in WINTER_POLICIES for seed in WINTER_SEED_PRIORITIES}
+        python:
+            _winter_expected = {
+                (("market", "village"), "trade", "preserve"): "market_trade",
+                (("market", "village"), "trade", "feed_now"): "market_trade",
+                (("market", "village"), "ration", "preserve"): "village_preserve",
+                (("market", "village"), "requisition", "preserve"): "village_preserve",
+                (("market", "granary"), "trade", "preserve"): "market_trade",
+                (("market", "granary"), "trade", "feed_now"): "market_trade",
+                (("market", "granary"), "ration", "preserve"): "granary_ration",
+                (("market", "granary"), "ration", "feed_now"): "granary_ration",
+                (("market", "route"), "trade", "preserve"): "market_trade",
+                (("market", "route"), "trade", "feed_now"): "market_trade",
+                (("market", "route"), "ration", "feed_now"): "route_feed_now",
+                (("market", "route"), "requisition", "feed_now"): "route_feed_now",
+                (("village", "granary"), "trade", "preserve"): "village_preserve",
+                (("village", "granary"), "ration", "preserve"): "granary_ration",
+                (("village", "granary"), "ration", "feed_now"): "granary_ration",
+                (("village", "granary"), "requisition", "preserve"): "village_preserve",
+                (("village", "route"), "trade", "preserve"): "village_preserve",
+                (("village", "route"), "trade", "feed_now"): "route_feed_now",
+                (("village", "route"), "ration", "preserve"): "village_preserve",
+                (("village", "route"), "ration", "feed_now"): "route_feed_now",
+                (("village", "route"), "requisition", "preserve"): "village_preserve",
+                (("village", "route"), "requisition", "feed_now"): "route_feed_now",
+                (("granary", "route"), "trade", "feed_now"): "route_feed_now",
+                (("granary", "route"), "ration", "preserve"): "granary_ration",
+                (("granary", "route"), "ration", "feed_now"): "granary_ration",
+                (("granary", "route"), "requisition", "feed_now"): "route_feed_now",
+            }
+        assert eval ({key: value for key, value in _winter_observed.items() if value is not None} == _winter_expected)
+
+
+testsuite test_winter_interlude_legacy_migration:
+    before testcase:
+        $ _test.winter_migration_snapshot = (winter_interlude_status, tuple(winter_investigations), winter_policy, winter_seed_priority, list(governance_events_seen), famine_prevented, gov_merchant_outcome)
+
+    after testcase:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority, _winter_events, famine_prevented, gov_merchant_outcome = _test.winter_migration_snapshot
+        $ governance_events_seen[:] = _winter_events
+        $ renpy.unlink_save("winter-active-mid-save")
+
+    testcase unseen_plus_famine_success_becomes_legacy:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
+        $ famine_prevented, gov_merchant_outcome = True, ""
+        $ governance_events_seen[:] = []
+        $ migrate_winter_interlude_state()
+        assert eval (winter_interlude_status == "legacy")
+        assert eval (winter_legacy_famine_success())
+
+    testcase unseen_plus_merchant_outcome_becomes_legacy:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
+        $ famine_prevented, gov_merchant_outcome = False, "regulated"
+        $ governance_events_seen[:] = []
+        $ migrate_winter_interlude_state()
+        assert eval (winter_interlude_status == "legacy")
+        assert eval (gov_merchant_outcome == "regulated")
+
+    testcase unseen_plus_famine_marker_without_success_becomes_legacy:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
+        $ famine_prevented, gov_merchant_outcome = False, ""
+        $ governance_events_seen[:] = ["famine_crisis"]
+        $ migrate_winter_interlude_state()
+        assert eval (winter_interlude_status == "legacy")
+        assert eval (not winter_legacy_famine_success())
+
+    testcase explicit_delegated_beats_stale_legacy_markers:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "delegated", ("market", "route"), "trade", "preserve"
+        $ famine_prevented, gov_merchant_outcome = True, "regulated"
+        $ governance_events_seen[:] = ["famine_crisis", "merchant_negotiation"]
+        $ migrate_winter_interlude_state()
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("delegated", (), "delegated", "neutral"))
+        assert eval (not winter_legacy_famine_success())
+
+    testcase active_mid_interlude_survives_after_load:
+        run Start("test_winter_active_save_driver") until screen "say" timeout 4.0
+        assert eval (renpy.can_load("winter-active-mid-save"))
+        click
+        pause until screen "main_menu" timeout 4.0
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "delegated", (), "delegated", "neutral"
+        run FileLoad("winter-active-mid-save", confirm=False, slot=True) until screen "say" timeout 4.0
+        assert eval ((winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority) == ("active", ("market",), "trade", "neutral"))
+        assert eval (get_winter_context(outside=False).status == "active")
+        assert eval (get_winter_context(outside=True).status == "delegated")
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+
+    testcase no_evidence_outside_interlude_reads_as_neutral:
+        $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
+        $ famine_prevented, gov_merchant_outcome = False, ""
+        $ governance_events_seen[:] = []
+        $ migrate_winter_interlude_state()
+        assert eval (winter_interlude_status == "unseen")
+        assert eval ((get_winter_context(outside=True).status, get_winter_context(outside=True).policy, get_winter_context(outside=True).seed_priority) == ("delegated", "delegated", "neutral"))
+
+    testcase real_famine_success_after_save_loads_as_legacy:
+        run FileLoad("winter-legacy-famine-success-after", confirm=False, slot=True) until eval (winter_interlude_status == "legacy") timeout 4.0
+        assert eval (famine_prevented)
+        assert eval (winter_legacy_famine_success())
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+
+    testcase real_chapter2_no_governance_save_loads_as_neutral:
+        run FileLoad("winter-legacy-chapter2-no-governance", confirm=False, slot=True) until eval (winter_interlude_status == "unseen") timeout 4.0
+        assert eval (not famine_prevented and not gov_merchant_outcome)
+        assert eval (get_winter_context(outside=True).status == "delegated")
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+
+
+testsuite test_winter_interlude_ending_invariance:
+    testcase every_core_and_delegated_result_preserves_forbidden_state:
+        parameter (policy_name, seed_name, investigation_pair) = [
+            (policy, seed, pair)
+            for pair in (("market", "village"), ("market", "granary"), ("market", "route"), ("village", "granary"), ("village", "route"), ("granary", "route"))
+            for policy in ("trade", "ration", "requisition")
+            for seed in ("preserve", "feed_now")
+        ] + [(None, None, ())]
+
+        $ governance_events_seen[:] = []
+        $ _winter_store_default_names = tuple(name for name in _test_winter_project_default_names("store") if name not in _WINTER_ALLOWED_STORE_DEFAULT_WRITES)
+        $ _winter_persistent_default_names = _test_winter_project_default_names("store.persistent")
+        assert eval ({"path_marks_martial", "path_active_martial", "dark_lily_joined", "dark_lily_destroyed", "governance_prosperity", "ending_epilogue_seen", "iron_battle_outcome"}.issubset(set(_winter_store_default_names)))
+        assert eval ({"achievements", "endings_seen", "northern_endings_seen", "southern_endings_seen", "difficulty"}.issubset(set(_winter_persistent_default_names)))
+        $ _winter_forbidden_snapshot = {name: _test_winter_freeze(getattr(store, name)) for name in _winter_store_default_names}
+        $ _winter_persistent_snapshot = {name: (hasattr(persistent, name), _test_winter_freeze(getattr(persistent, name, None))) for name in _winter_persistent_default_names}
+        $ _winter_optional_snapshot = {name: (hasattr(store, name), _test_winter_freeze(getattr(store, name, None))) for name in _WINTER_NONDEFAULT_FORBIDDEN_STATE}
+        $ _winter_route_kwargs = {"difficulty": "hard", "power": 72, "father_murder_mastermind_known": True, "testament_original_obtained": True, "southern_outcome": "free"}
+        $ _winter_battle_kwargs = {"difficulty": "hard", "power": 72, "alliance_baron": True, "rel_baron": 30, "baron_supply_intel": True}
+        $ _winter_routes_before = get_finale_route_availability(**_winter_route_kwargs)
+        $ _winter_battle_before = get_resistance_battle_outcomes(**_winter_battle_kwargs)
+        $ _winter_endings_before = get_finale_ending_availability(_winter_routes_before, _winter_battle_before)
+        $ _winter_write_result = apply_winter_delegation() if policy_name is None else finalize_winter_interlude(policy_name, seed_name, investigation_pair)
+        $ _winter_store_changes = {name: (value, _test_winter_freeze(getattr(store, name))) for name, value in _winter_forbidden_snapshot.items() if _test_winter_freeze(getattr(store, name)) != value}
+        $ _winter_optional_changes = {name: (value, (hasattr(store, name), _test_winter_freeze(getattr(store, name, None)))) for name, value in _winter_optional_snapshot.items() if (hasattr(store, name), _test_winter_freeze(getattr(store, name, None))) != value}
+        $ _winter_persistent_changes = {name: (value, (hasattr(persistent, name), _test_winter_freeze(getattr(persistent, name, None)))) for name, value in _winter_persistent_snapshot.items() if (hasattr(persistent, name), _test_winter_freeze(getattr(persistent, name, None))) != value}
+        assert eval (_winter_store_changes == {})
+        assert eval (_winter_optional_changes == {})
+        assert eval (_winter_persistent_changes == {})
+        assert eval (get_finale_route_availability(**_winter_route_kwargs) == _winter_routes_before)
+        assert eval (get_resistance_battle_outcomes(**_winter_battle_kwargs) == _winter_battle_before)
+        assert eval (get_finale_ending_availability(get_finale_route_availability(**_winter_route_kwargs), get_resistance_battle_outcomes(**_winter_battle_kwargs)) == _winter_endings_before)
+
+    testcase easy_normal_hard_boundary_route_sets_are_identical:
+        parameter (difficulty_name, main_value) = [
+            ("easy", 54), ("easy", 55), ("easy", 56),
+            ("normal", 64), ("normal", 65), ("normal", 66),
+            ("hard", 71), ("hard", 72), ("hard", 73),
+        ]
+
+        $ _winter_route_kwargs = {"difficulty": difficulty_name, "power": main_value}
+        $ _winter_routes_before = get_finale_route_availability(**_winter_route_kwargs)
+        $ _winter_endings_before = get_finale_ending_availability(_winter_routes_before)
+        $ finalize_winter_interlude("ration", "feed_now", ("village", "granary"))
+        assert eval (get_finale_route_availability(**_winter_route_kwargs) == _winter_routes_before)
+        assert eval (get_finale_ending_availability(get_finale_route_availability(**_winter_route_kwargs)) == _winter_endings_before)
+
+    testcase truth_lily_borgia_sea_fall_sets_are_identical:
+        parameter route_kwargs = [
+            {"difficulty": "hard", "father_murder_mastermind_known": True, "testament_original_obtained": True},
+            {"difficulty": "hard", "faith": 80, "lily_full_member": True},
+            {"difficulty": "hard", "intrigue": 70, "deep_mother_herb": "poison", "poison_evidence": True},
+            {"difficulty": "hard", "southern_outcome": "free"},
+            {"difficulty": "hard"},
+        ]
+
+        $ _winter_routes_before = get_finale_route_availability(**route_kwargs)
+        $ _winter_endings_before = get_finale_ending_availability(_winter_routes_before)
+        $ finalize_winter_interlude("requisition", "preserve", ("market", "route"))
+        assert eval (get_finale_route_availability(**route_kwargs) == _winter_routes_before)
+        assert eval (get_finale_ending_availability(get_finale_route_availability(**route_kwargs)) == _winter_endings_before)
+
+    testcase resistance_battle_outcomes_are_identical:
+        parameter battle_kwargs = [
+            {"difficulty": "easy", "power": 40, "intrigue": 35, "loyalty": 35},
+            {"difficulty": "normal", "power": 55, "intrigue": 45, "loyalty": 50},
+            {"difficulty": "hard", "power": 72},
+            {"difficulty": "hard", "rel_baron": 30},
+            {"difficulty": "hard", "alliance_baron": True, "rel_baron": 30, "baron_supply_intel": True},
+            {"difficulty": "hard", "prince_ally": True, "rel_captain": 60, "ch5_pay_advance_pension": True, "marriage_route": True, "iron_thorn_controlled": True},
+        ]
+
+        $ _winter_battle_before = get_resistance_battle_outcomes(**battle_kwargs)
+        $ finalize_winter_interlude("trade", "feed_now", ("market", "granary"))
+        assert eval (get_resistance_battle_outcomes(**battle_kwargs) == _winter_battle_before)
+
+
+label test_winter_active_save_driver:
+    $ winter_interlude_status = "active"
+    $ winter_investigations = ("market",)
+    $ winter_policy = "trade"
+    $ winter_seed_priority = "neutral"
+    $ renpy.save("winter-active-mid-save")
+    "Winter active save fixture."
+    return
+
+
+## END TASK 3 WINTER STATE SUITES
+
+
 label test_evidence_migration_joined:
     call test_evidence_migration_driver(joined=True, visited=True) from _call_test_evidence_migration_joined
     "旧档递毒者迁移检查完成。"

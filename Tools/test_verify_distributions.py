@@ -1225,6 +1225,8 @@ class EndToEndAndCliTests(VerifierTestCase):
             for source in (ROOT / "game").rglob("*.rpy")
             if source.relative_to(ROOT).as_posix() != "game/test_game.rpy"
         }
+        winter_rpyc = "game/governance_winter_interlude.rpyc"
+        self.assertIn(winter_rpyc, expected_rpycs)
         protected = set(PROTECTED_DYNAMIC_UI_PATHS)
         runtime_paths = {
             "CourtOfShadows.py",
@@ -1247,6 +1249,8 @@ class EndToEndAndCliTests(VerifierTestCase):
             *ALLOWED_UNPREFIXED_ANDROID_ASSETS,
             *(_android_asset_name(path) for path in expected_rpycs | protected),
         }
+        self.assertIn(f"{WINDOWS_ROOT}/{winter_rpyc}", windows_paths)
+        self.assertIn(_android_asset_name(winter_rpyc), android_paths)
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
             windows = directory / "windows.zip"
@@ -1278,6 +1282,16 @@ class EndToEndAndCliTests(VerifierTestCase):
 
             errors = verify_synthetic()
             self.assertEqual(errors, [])
+
+            _write_zip(
+                windows,
+                windows_paths - {f"{WINDOWS_ROOT}/{winter_rpyc}"},
+            )
+            errors = verify_synthetic()
+            joined = "\n".join(errors)
+            self.assertIn("missing", joined.lower())
+            self.assertIn(winter_rpyc, joined)
+            _write_zip(windows, windows_paths)
 
             for runtime_file in ("renpy", "RenPy"):
                 with self.subTest(runtime_file=runtime_file):

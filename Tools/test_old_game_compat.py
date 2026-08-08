@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
 OLD_GAME = ROOT / "old-game"
 RPYC2_HEADER = b"RENPY RPC2"
-EXPECTED_CURRENT_SCRIPT_COUNT = 56
+EXPECTED_CURRENT_SCRIPT_COUNT = 57
 REQUIRED_GENERATIONS = {
     "script.rpyc": 1_297_438_350,
     "chapter2.rpyc": 1_297_438_144,

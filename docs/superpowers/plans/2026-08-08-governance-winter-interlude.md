@@ -774,8 +774,11 @@ Do not commit a known-red branch. Keep only Tools/test_governance_winter_interlu
 - Modify: game/save_compat.rpy
 - Modify: game/test_game.rpy
 - Modify from Task 3 RED: Tools/test_governance_winter_interlude.py
+- Modify: Tools/test_old_game_compat.py
+- Modify: Tools/test_release_contract.py
 - Modify: Tools/verify_distributions.py
 - Modify: Tools/test_verify_distributions.py
+- Update with the official launcher command: old-game/**/*.rpyc
 
 **Interfaces:**
 
@@ -804,7 +807,7 @@ default winter_seed_priority = "neutral"
 
 Do not add separate persistent debt, reserve, recovery, mitigation, outcome, or order flags.
 
-In the same production commit, change Tools/verify_distributions.py EXPECTED_RELEASE_RPYC_COUNT from 55 to 56. Preserve the historical fact in its provenance comment: the runtime-count/path-hash contract was inherited from two independent 3.9.2 builds and is then revalidated for 3.10; do not falsely claim it was measured from two independent 3.10 builds until those final artifacts exist. Extend Tools/test_verify_distributions.py so its synthetic release contains the new game/governance_winter_interlude.rpyc path and still proves an extra or missing RPYC is rejected. This change must not land before the new source file exists and must not be deferred past this GREEN commit.
+In the same production commit, change Tools/verify_distributions.py EXPECTED_RELEASE_RPYC_COUNT from 55 to 56. This is the active released game payload count; project-root `old-game/` remains a compiler input explicitly excluded from Windows and Android packages and is not part of this 56. Preserve the historical fact in its provenance comment: the runtime-count/path-hash contract was inherited from two independent 3.9.2 builds and is then revalidated for 3.10; do not falsely claim it was measured from two independent 3.10 builds until those final artifacts exist. Extend Tools/test_verify_distributions.py so its synthetic release contains the new game/governance_winter_interlude.rpyc path and still proves an extra or missing RPYC is rejected. This change must not land before the new source file exists and must not be deferred past this GREEN commit.
 
 - [ ] **Step 2: Add constants and pure normalization/result helpers**
 
@@ -882,6 +885,17 @@ Migration must call the resolver with projection="internal", never "outside", an
 - active: leave all four in-progress fields untouched so real call-stack-local saves can resume;
 - unseen without evidence: leave unseen untouched; only outside readers project it to neutral.
 
+- [ ] **Step 5b: Refresh the repository-only old-game compiler baseline**
+
+Adding a new `.rpy` makes the committed project-root `old-game/` tree incomplete even though that tree is excluded from player packages. Starting from the existing compatibility tree, never an empty directory, use the official Ren'Py launcher command:
+
+~~~powershell
+& 'E:\Projects\renpy-8.5.2-sdk\renpy.exe' 'E:\Projects\renpy-8.5.2-sdk\launcher' update_old_game (Get-Location).Path
+if ($LASTEXITCODE -ne 0) { throw 'Official old-game refresh failed.' }
+~~~
+
+Record the before/after path, size, and SHA-256 inventory. Commit the necessary generated `old-game/**/*.rpyc` changes, including the new `old-game/governance_winter_interlude.rpyc`. Change `Tools/test_old_game_compat.py::EXPECTED_CURRENT_SCRIPT_COUNT` and `Tools/test_release_contract.py::EXPECTED_OLD_GAME_SCRIPT_COUNT` from 56 to 57. Do not change the active released payload count of 56. Run both old-game compatibility suites and preserve every protected historical generation/node guard; require the old-game tree to have exactly one matching RPYC for each of the 57 current `.rpy` sources with no missing, stale, or extra path. Re-prove release classification excludes project-root `old-game/` from Windows and Android artifacts.
+
 The callback and label may both call it; the helper must remain idempotent. Do not copy its precedence ladder into save_compat.rpy, and never write the outside neutral projection back over active or unseen-no-evidence state.
 
 - [ ] **Step 6: Run the state and migration suites GREEN**
@@ -889,6 +903,8 @@ The callback and label may both call it; the helper must remain idempotent. Do n
 ~~~powershell
 python -m unittest Tools.test_governance_winter_interlude.WinterModuleContractTests -v
 if ($LASTEXITCODE -ne 0) { throw 'Winter module source contracts failed.' }
+python -m unittest Tools.test_old_game_compat Tools.test_release_contract Tools.test_verify_distributions -v
+if ($LASTEXITCODE -ne 0) { throw 'Old-game, release, or distribution contracts failed.' }
 $stateSaveDir = Join-Path 'C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\work' ("renpy-winter-state-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss-ffff'))
 $migrationSaveDir = Join-Path 'C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\work' ("renpy-winter-migration-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss-ffff'))
 & Tools/Run-RenPySuite.ps1 -ProjectRoot (Get-Location).Path -Suite test_winter_interlude_state -SaveDir $stateSaveDir -Expect PASSED
@@ -902,14 +918,14 @@ Expected: both processes have their own fresh PASSED log evidence; all state, pr
 - [ ] **Step 7: Commit the state kernel**
 
 ~~~powershell
-git add Tools/test_governance_winter_interlude.py Tools/verify_distributions.py Tools/test_verify_distributions.py game/governance_winter_interlude.rpy game/save_compat.rpy game/test_game.rpy
+git add Tools/test_governance_winter_interlude.py Tools/verify_distributions.py Tools/test_verify_distributions.py Tools/test_old_game_compat.py Tools/test_release_contract.py game/governance_winter_interlude.rpy game/save_compat.rpy game/test_game.rpy old-game
 git diff --cached --check
 if ($LASTEXITCODE -ne 0) { throw 'State-kernel index failed whitespace validation.' }
 git commit -m "feat: add winter governance state kernel"
 if ($LASTEXITCODE -ne 0) { throw 'State-kernel commit failed.' }
 ~~~
 
-**Asset audit:** No asset files. No package growth beyond scripts/compiled bytecode.
+**Asset audit:** No art, music, SFX, portrait, animation, UI, or font asset files. The refreshed project-root `old-game/` bytecode is repository-only compiler input and remains excluded from player packages. Shipping package growth is limited to the active new script/compiled bytecode and is measured later.
 
 ---
 

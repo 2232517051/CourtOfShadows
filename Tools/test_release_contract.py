@@ -26,7 +26,7 @@ APPROVED_VERSION = "3.10"
 APPROVED_ANDROID_PACKAGE = "com.xiaoyiai.courtofshadows"
 APPROVED_ANDROID_API = 36
 APPROVED_ANDROID_NUMERIC_VERSION = 2_000_000_000
-EXPECTED_OLD_GAME_SCRIPT_COUNT = 56
+EXPECTED_OLD_GAME_SCRIPT_COUNT = 57
 
 APPROVED_ENDING_KEYS = (
     "iron_lord",
@@ -2078,7 +2078,7 @@ class PackagingClassificationContractTests(unittest.TestCase):
 
 
 class OldGameSourceContractTests(unittest.TestCase):
-    def test_old_game_contains_the_exact_56_current_script_rpycs(self) -> None:
+    def test_old_game_contains_the_exact_57_current_script_rpycs(self) -> None:
         expected = {
             source.relative_to(GAME).with_suffix(".rpyc")
             for source in GAME.rglob("*.rpy")

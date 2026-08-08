@@ -1,9 +1,11 @@
+import ast
 import hashlib
 import io
 import json
 import pickle
 import re
 import subprocess
+import textwrap
 import unittest
 import zipfile
 from pathlib import Path
@@ -16,7 +18,443 @@ CHAPTER2 = ROOT / "game" / "chapter2.rpy"
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "winter_legacy"
 MANIFEST = FIXTURE_DIR / "manifest.json"
 ASSET_BASELINE = ROOT / "tests" / "fixtures" / "winter_asset_baseline.json"
+WINTER_MODULE = ROOT / "game" / "governance_winter_interlude.rpy"
+GOVERNANCE = ROOT / "game" / "governance.rpy"
+DIFFICULTY = ROOT / "game" / "difficulty.rpy"
+SAVE_COMPAT = ROOT / "game" / "save_compat.rpy"
+VERIFY_DISTRIBUTIONS = ROOT / "Tools" / "verify_distributions.py"
+TEST_VERIFY_DISTRIBUTIONS = ROOT / "Tools" / "test_verify_distributions.py"
 BASELINE_COMMIT = "ebb4efd2194fb31710d0331d53d0fe825eb8062c"
+PACKAGE_BASELINE_COMMIT = "b75a3ecc3cc59ff63665236543124b33ad2bcd9c"
+WINTER_ALLOWED_STORE_DEFAULT_WRITES = {
+    "governance_events_seen",
+    "winter_interlude_status",
+    "winter_investigations",
+    "winter_policy",
+    "winter_seed_priority",
+}
+WINTER_ASSIGNABLE_STORE_DEFAULTS = WINTER_ALLOWED_STORE_DEFAULT_WRITES - {
+    "governance_events_seen"
+}
+WINTER_NONDEFAULT_FORBIDDEN_STATE = {
+    "_iron_prepared",
+    "ch3_lily_alliance_independent",
+}
+
+
+def _label_body(source: str, label: str) -> str:
+    match = re.search(
+        rf"(?ms)^label {re.escape(label)}(?:\([^\n]*\))?:\s*\n(.*?)(?=^label |\Z)",
+        source,
+    )
+    if match is None:
+        raise AssertionError(f"label {label!r} not found")
+    return match.group(1)
+
+
+def _executable_lines(source: str) -> list[str]:
+    lines = []
+    for raw_line in source.splitlines():
+        line = raw_line.split("#", 1)[0].strip()
+        if line:
+            lines.append(line)
+    return lines
+
+
+def _project_default_inventory() -> tuple[set[str], set[str]]:
+    """Return all project-defined store and persistent top-level defaults."""
+    store_defaults = set()
+    persistent_defaults = set()
+    pattern = re.compile(
+        r"(?m)^default\s+(?:(persistent)\.)?([A-Za-z_][A-Za-z0-9_]*)\s*="
+    )
+    for path in sorted((ROOT / "game").rglob("*.rpy")):
+        if path == TEST_GAME:
+            continue
+        for namespace, name in pattern.findall(path.read_text(encoding="utf-8")):
+            if namespace:
+                persistent_defaults.add(name)
+            else:
+                store_defaults.add(name)
+    return store_defaults, persistent_defaults
+
+
+_RENPY_PYTHON_HEADER = re.compile(
+    r"^(?P<indent> *)(?P<init>init(?:\s+-?\d+)?\s+)?python"
+    r"(?P<early>\s+early)?(?P<hide>\s+hide)?"
+    r"(?P<store>\s+in\s+[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)?"
+    r"\s*:\s*(?:#.*)?$"
+)
+
+
+def _renpy_python_fragments(module_source: str) -> list[str]:
+    """Extract Python blocks and one-line Python statements from a Ren'Py file."""
+    lines = module_source.splitlines()
+    fragments = []
+    index = 0
+    while index < len(lines):
+        match = _RENPY_PYTHON_HEADER.match(lines[index])
+        if match:
+            header_indent = len(match.group("indent"))
+            body = []
+            index += 1
+            while index < len(lines):
+                raw_line = lines[index]
+                if raw_line.strip():
+                    indentation = len(raw_line) - len(raw_line.lstrip(" "))
+                    if indentation <= header_indent:
+                        break
+                body.append(raw_line)
+                index += 1
+            fragments.append(textwrap.dedent("\n".join(body)))
+            continue
+        stripped = lines[index].lstrip()
+        if stripped.startswith("$"):
+            fragments.append(stripped[1:].strip())
+        index += 1
+    return fragments
+
+
+def _attribute_path(node: ast.AST) -> str | None:
+    names = []
+    while isinstance(node, ast.Attribute):
+        names.append(node.attr)
+        node = node.value
+    if not isinstance(node, ast.Name):
+        return None
+    names.append(node.id)
+    return ".".join(reversed(names))
+
+
+def _is_approved_marker_helper(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    if node.name != "_append_winter_compatibility_markers" or len(node.body) != 1:
+        return False
+    loop = node.body[0]
+    if (
+        not isinstance(loop, ast.For)
+        or not isinstance(loop.target, ast.Name)
+        or loop.target.id != "event"
+        or not isinstance(loop.iter, (ast.Tuple, ast.List))
+        or [item.value for item in loop.iter.elts if isinstance(item, ast.Constant)]
+        != ["winter_interlude", "famine_crisis"]
+        or len(loop.iter.elts) != 2
+        or loop.orelse
+        or len(loop.body) != 1
+    ):
+        return False
+    condition = loop.body[0]
+    if (
+        not isinstance(condition, ast.If)
+        or condition.orelse
+        or len(condition.body) != 1
+        or not isinstance(condition.test, ast.Compare)
+        or not isinstance(condition.test.left, ast.Name)
+        or condition.test.left.id != "event"
+        or len(condition.test.ops) != 1
+        or not isinstance(condition.test.ops[0], ast.NotIn)
+        or len(condition.test.comparators) != 1
+        or not isinstance(condition.test.comparators[0], ast.Name)
+        or condition.test.comparators[0].id != "governance_events_seen"
+    ):
+        return False
+    expression = condition.body[0]
+    return (
+        isinstance(expression, ast.Expr)
+        and isinstance(expression.value, ast.Call)
+        and _attribute_path(expression.value.func)
+        == "governance_events_seen.append"
+        and len(expression.value.args) == 1
+        and isinstance(expression.value.args[0], ast.Name)
+        and expression.value.args[0].id == "event"
+        and not expression.value.keywords
+    )
+
+
+class _WinterWriteVisitor(ast.NodeVisitor):
+    """Fail closed on writes and calls outside the winter kernel allowlist."""
+
+    _ALLOWED_EXTERNAL_CALLS = {
+        "ValueError",
+        "WinterContext",
+        "any",
+        "bool",
+        "isinstance",
+        "len",
+        "namedtuple",
+        "tuple",
+    }
+
+    def __init__(self, defined_functions: set[str]):
+        self.defined_functions = defined_functions
+        self.function_globals = []
+        self.function_names = []
+        self.winter_context_bindings = 0
+        self.marker_appends = 0
+        self.violations = []
+
+    def _record(self, node: ast.AST, message: str) -> None:
+        self.violations.append(f"line {getattr(node, 'lineno', '?')}: {message}")
+
+    def _check_name_write(self, node: ast.Name) -> None:
+        if isinstance(node.ctx, ast.Del):
+            if not self.function_globals or node.id in self.function_globals[-1]:
+                self._record(node, f"delete {node.id}")
+            return
+        protected_bindings = (
+            self._ALLOWED_EXTERNAL_CALLS
+            | self.defined_functions
+            | {"governance_events_seen"}
+        )
+        if node.id in protected_bindings:
+            approved_context_binding = (
+                not self.function_globals
+                and node.id == "WinterContext"
+                and self.winter_context_bindings == 0
+            )
+            if approved_context_binding:
+                self.winter_context_bindings += 1
+            else:
+                self._record(node, f"callable or marker binding {node.id}")
+        if not self.function_globals:
+            allowed_constant = bool(
+                re.fullmatch(r"WINTER_[A-Z0-9_]+", node.id)
+            ) or node.id == "WinterContext"
+            if node.id not in WINTER_ASSIGNABLE_STORE_DEFAULTS and not allowed_constant:
+                self._record(node, f"store assignment {node.id}")
+        elif node.id in self.function_globals[-1] and node.id not in WINTER_ASSIGNABLE_STORE_DEFAULTS:
+            self._record(node, f"global assignment {node.id}")
+
+    def _check_implicit_name_write(self, name: str, node: ast.AST) -> None:
+        binding = ast.Name(id=name, ctx=ast.Store())
+        binding.lineno = getattr(node, "lineno", 0)
+        self._check_name_write(binding)
+
+    def visit_Name(self, node: ast.Name) -> None:
+        if isinstance(node.ctx, (ast.Store, ast.Del)):
+            self._check_name_write(node)
+
+    def visit_Attribute(self, node: ast.Attribute) -> None:
+        if isinstance(node.ctx, (ast.Store, ast.Del)):
+            path = _attribute_path(node)
+            if path not in {
+                f"store.{name}" for name in WINTER_ASSIGNABLE_STORE_DEFAULTS
+            }:
+                self._record(node, f"attribute assignment {path or '<dynamic>'}")
+        self.generic_visit(node)
+
+    def visit_Subscript(self, node: ast.Subscript) -> None:
+        if isinstance(node.ctx, (ast.Store, ast.Del)):
+            self._record(node, "subscript assignment")
+        self.generic_visit(node)
+
+    def visit_AugAssign(self, node: ast.AugAssign) -> None:
+        approved = False
+        if isinstance(node.target, ast.Name):
+            approved = node.target.id in WINTER_ASSIGNABLE_STORE_DEFAULTS and (
+                not self.function_globals
+                or node.target.id in self.function_globals[-1]
+            )
+        elif isinstance(node.target, ast.Attribute):
+            approved = _attribute_path(node.target) in {
+                f"store.{name}" for name in WINTER_ASSIGNABLE_STORE_DEFAULTS
+            }
+        if not approved:
+            self._record(node, "unapproved augmented assignment")
+        self.visit(node.target)
+        self.visit(node.value)
+
+    def visit_Global(self, node: ast.Global) -> None:
+        for name in node.names:
+            if name not in WINTER_ASSIGNABLE_STORE_DEFAULTS:
+                self._record(node, f"global declaration {name}")
+
+    def visit_ExceptHandler(self, node: ast.ExceptHandler) -> None:
+        if node.type is not None:
+            self.visit(node.type)
+        if node.name is not None:
+            self._check_implicit_name_write(node.name, node)
+        for statement in node.body:
+            self.visit(statement)
+
+    def visit_MatchAs(self, node: ast.MatchAs) -> None:
+        if node.pattern is not None:
+            self.visit(node.pattern)
+        if node.name is not None:
+            self._check_implicit_name_write(node.name, node)
+
+    def visit_MatchStar(self, node: ast.MatchStar) -> None:
+        if node.name is not None:
+            self._check_implicit_name_write(node.name, node)
+
+    def visit_MatchMapping(self, node: ast.MatchMapping) -> None:
+        for key in node.keys:
+            self.visit(key)
+        for pattern in node.patterns:
+            self.visit(pattern)
+        if node.rest is not None:
+            self._check_implicit_name_write(node.rest, node)
+
+    def _visit_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
+        if not self.function_globals and "winter" not in node.name.lower():
+            self._record(node, f"non-winter store function {node.name}")
+        elif self.function_globals:
+            binding = ast.Name(id=node.name, ctx=ast.Store())
+            binding.lineno = node.lineno
+            self._check_name_write(binding)
+        if node.name == "_append_winter_compatibility_markers" and not _is_approved_marker_helper(node):
+            self._record(node, "marker helper is not the exact idempotent AST")
+        for decorator in node.decorator_list:
+            self._record(decorator, "function decorator")
+        for expression in [*node.args.defaults, *node.args.kw_defaults]:
+            if expression is not None:
+                self.visit(expression)
+        function_arguments = [
+            *node.args.posonlyargs,
+            *node.args.args,
+            *node.args.kwonlyargs,
+        ]
+        if node.args.vararg is not None:
+            function_arguments.append(node.args.vararg)
+        if node.args.kwarg is not None:
+            function_arguments.append(node.args.kwarg)
+        protected_bindings = (
+            self._ALLOWED_EXTERNAL_CALLS
+            | self.defined_functions
+            | {"governance_events_seen"}
+        )
+        for argument in function_arguments:
+            if argument.arg in protected_bindings:
+                self._record(argument, f"callable or marker parameter {argument.arg}")
+            if argument.annotation is not None:
+                self.visit(argument.annotation)
+        if node.returns is not None:
+            self.visit(node.returns)
+        for type_parameter in getattr(node, "type_params", ()):
+            self.visit(type_parameter)
+        declared_globals = {
+            name
+            for child in ast.walk(node)
+            if isinstance(child, ast.Global)
+            for name in child.names
+        }
+        self.function_globals.append(declared_globals)
+        self.function_names.append(node.name)
+        for statement in node.body:
+            self.visit(statement)
+        self.function_names.pop()
+        self.function_globals.pop()
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        self._visit_function(node)
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+        self._visit_function(node)
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        self._record(node, f"class declaration {node.name}")
+
+    def visit_Lambda(self, node: ast.Lambda) -> None:
+        self._record(node, "lambda declaration")
+
+    def visit_Import(self, node: ast.Import) -> None:
+        self._record(node, "unapproved import")
+
+    def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+        approved = (
+            not self.function_globals
+            and node.module == "collections"
+            and len(node.names) == 1
+            and node.names[0].name == "namedtuple"
+            and node.names[0].asname is None
+        )
+        if not approved:
+            self._record(node, "unapproved import")
+
+    def visit_Call(self, node: ast.Call) -> None:
+        approved = False
+        if isinstance(node.func, ast.Name):
+            approved = (
+                node.func.id in self.defined_functions
+                or node.func.id in self._ALLOWED_EXTERNAL_CALLS
+            )
+        elif isinstance(node.func, ast.Attribute):
+            approved = (
+                _attribute_path(node.func) == "governance_events_seen.append"
+                and self.function_names
+                and self.function_names[-1]
+                == "_append_winter_compatibility_markers"
+                and len(node.args) == 1
+                and isinstance(node.args[0], ast.Name)
+                and node.args[0].id == "event"
+                and not node.keywords
+            )
+            if approved:
+                self.marker_appends += 1
+        if not approved:
+            self._record(node, "unapproved function or mutator call")
+        self.generic_visit(node)
+
+
+def _winter_module_write_violations(
+    module_source: str,
+    store_defaults: set[str],
+    persistent_defaults: set[str],
+) -> list[str]:
+    """Return state writes forbidden inside the winter kernel."""
+    del store_defaults, persistent_defaults
+    violations = []
+    allowed_defaults = {
+        "winter_interlude_status",
+        "winter_investigations",
+        "winter_policy",
+        "winter_seed_priority",
+    }
+    seen_defaults = set()
+    init_block_count = 0
+    for raw_line in module_source.splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#") or raw_line != raw_line.lstrip():
+            continue
+        default_match = re.match(
+            r"^default\s+([A-Za-z_][A-Za-z0-9_]*)\s*=", stripped
+        )
+        if default_match and default_match.group(1) in allowed_defaults:
+            name = default_match.group(1)
+            if name in seen_defaults:
+                violations.append(f"duplicate winter default: {name}")
+            seen_defaults.add(name)
+        elif re.fullmatch(r"init python:\s*(?:#.*)?", stripped):
+            init_block_count += 1
+            if init_block_count > 1:
+                violations.append("more than one init python block")
+        elif re.fullmatch(
+            r"label\s+[A-Za-z_][A-Za-z0-9_]*(?:\([^)]*\))?\s*:", stripped
+        ):
+            pass  # Label-body Python is checked from its extracted AST.
+        else:
+            violations.append(f"unapproved top-level Ren'Py statement: {stripped}")
+
+    trees = []
+    for fragment in _renpy_python_fragments(module_source):
+        try:
+            trees.append(ast.parse(fragment))
+        except SyntaxError as error:
+            violations.append(f"Python parse failure: {error.msg}")
+    defined_functions = {
+        node.name
+        for tree in trees
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    marker_appends = 0
+    for tree in trees:
+        visitor = _WinterWriteVisitor(defined_functions)
+        visitor.visit(tree)
+        violations.extend(visitor.violations)
+        marker_appends += visitor.marker_appends
+    if marker_appends > 1:
+        violations.append("more than one governance marker append")
+    return violations
 
 
 class _InertSaveObject:
@@ -284,7 +722,7 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
         )
         self.assertNotIn("security_keys.txt", self.test_game)
 
-    def test_test_game_diff_is_only_key_guard_global_exit_five_lint_roots_and_one_choice_gate(self):
+    def test_test_game_diff_allows_winter_suites_with_key_guard_global_exit_five_lint_roots_and_one_choice_gate(self):
         baseline = subprocess.run(
             ["git", "show", f"{BASELINE_COMMIT}:game/test_game.rpy"],
             cwd=ROOT,
@@ -324,7 +762,16 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
         )
         self.assertEqual(expected.count(unstable_click), 1)
         expected = expected.replace(unstable_click, choice_gate + unstable_click)
-        self.assertEqual(self.test_game, expected)
+        winter_block = re.search(
+            r"(?ms)^## BEGIN TASK 3 WINTER STATE SUITES\n.*?^## END TASK 3 WINTER STATE SUITES\n\n\n",
+            self.test_game,
+        )
+        self.assertIsNotNone(winter_block)
+        test_game_without_winter = (
+            self.test_game[: winter_block.start()]
+            + self.test_game[winter_block.end() :]
+        )
+        self.assertEqual(test_game_without_winter, expected)
         self.assertEqual(self.test_game.count("label _test_lint_reachability_"), 5)
         self.assertEqual(self.test_game.count("testsuite global:"), 1)
         self.assertEqual(self.test_game.count("        exit\n"), 1)
@@ -379,7 +826,395 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
         for entry in entries:
             path = ROOT / entry["relative_path"]
             self.assertEqual(entry["byte_size"], path.stat().st_size)
-            self.assertEqual(entry["sha256"].lower(), hashlib.sha256(path.read_bytes()).hexdigest())
+            actual_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+            if entry["relative_path"] == "game/msyh.ttf":
+                package_font = subprocess.run(
+                    ["git", "show", f"{PACKAGE_BASELINE_COMMIT}:game/msyh.ttf"],
+                    cwd=ROOT,
+                    check=True,
+                    stdout=subprocess.PIPE,
+                ).stdout
+                self.assertEqual(actual_hash, hashlib.sha256(package_font).hexdigest())
+            else:
+                self.assertEqual(entry["sha256"].lower(), actual_hash)
+
+
+class WinterModuleContractTests(unittest.TestCase):
+    def test_deep_module_and_four_defaults_exist(self):
+        self.assertTrue(
+            WINTER_MODULE.is_file(),
+            "game/governance_winter_interlude.rpy does not exist",
+        )
+        source = WINTER_MODULE.read_text(encoding="utf-8")
+        defaults = re.findall(
+            r"(?m)^default\s+(winter_[a-z_]+)\s*=\s*([^\n#]+?)\s*$", source
+        )
+        self.assertEqual(
+            defaults,
+            [
+                ("winter_interlude_status", '"unseen"'),
+                ("winter_investigations", "()"),
+                ("winter_policy", '""'),
+                ("winter_seed_priority", '"neutral"'),
+            ],
+        )
+
+    def test_state_enum_and_public_helper_signatures_exist(self):
+        self.assertTrue(
+            WINTER_MODULE.is_file(),
+            "winter state helpers are missing with governance_winter_interlude.rpy",
+        )
+        source = WINTER_MODULE.read_text(encoding="utf-8")
+        constants = {
+            "WINTER_STATUSES": '("unseen", "active", "delegated", "completed", "legacy")',
+            "WINTER_INVESTIGATION_ORDER": '("market", "village", "granary", "route")',
+            "WINTER_POLICIES": '("trade", "ration", "requisition")',
+            "WINTER_SEED_PRIORITIES": '("preserve", "feed_now")',
+            "WINTER_LEGACY_EVENTS": '("famine_crisis", "merchant_negotiation")',
+        }
+        for name, value in constants.items():
+            with self.subTest(name=name):
+                self.assertRegex(
+                    source,
+                    rf"(?m)^\s*{name}\s*=\s*{re.escape(value)}\s*$",
+                )
+        signatures = (
+            "normalize_winter_investigations(values)",
+            "resolve_winter_interlude_context(raw_snapshot, projection)",
+            "get_winter_context(outside=True)",
+            "apply_winter_delegation()",
+            "finalize_winter_interlude(policy, seed_priority, investigations)",
+            "mark_winter_legacy()",
+            "migrate_winter_interlude_state()",
+            "winter_legacy_famine_success()",
+            "select_winter_mitigation(policy, seed_priority, investigations, immediate_inputs)",
+        )
+        for signature in signatures:
+            with self.subTest(signature=signature):
+                self.assertRegex(
+                    source,
+                    rf"(?m)^\s*def\s+{re.escape(signature)}\s*:",
+                )
+        self.assertRegex(source, r"(?m)^\s*WINTER_OUTCOME_CONTRACTS\s*=\s*\{")
+        self.assertNotIn("hasattr", source)
+
+    def test_new_module_has_no_forbidden_main_state_writes(self):
+        self.assertTrue(
+            WINTER_MODULE.is_file(),
+            "winter module is missing, so forbidden writes cannot be inspected",
+        )
+        module_source = WINTER_MODULE.read_text(encoding="utf-8")
+        store_defaults, persistent_defaults = _project_default_inventory()
+        forbidden_store = (
+            store_defaults - WINTER_ALLOWED_STORE_DEFAULT_WRITES
+        ) | WINTER_NONDEFAULT_FORBIDDEN_STATE
+        required_store_examples = {
+            "path_marks_martial",
+            "path_active_martial",
+            "dark_lily_joined",
+            "dark_lily_destroyed",
+            "governance_prosperity",
+            "ending_epilogue_seen",
+            "iron_battle_outcome",
+        }
+        required_persistent_examples = {
+            "achievements",
+            "endings_seen",
+            "northern_endings_seen",
+            "southern_endings_seen",
+        }
+        self.assertTrue(required_store_examples <= forbidden_store)
+        self.assertTrue(required_persistent_examples <= persistent_defaults)
+        self.assertTrue(WINTER_NONDEFAULT_FORBIDDEN_STATE.isdisjoint(store_defaults))
+
+        test_game = TEST_GAME.read_text(encoding="utf-8")
+        winter_block = re.search(
+            r"(?ms)^## BEGIN TASK 3 WINTER STATE SUITES\n(.*?)^## END TASK 3 WINTER STATE SUITES",
+            test_game,
+        )
+        self.assertIsNotNone(winter_block)
+        runtime_contract = winter_block.group(1)
+        if "renpy.ast.default_statements" not in runtime_contract:
+            static_inventory = re.search(
+                r"(?ms)_winter_forbidden_names\s*=\s*\((.*?)\)\s*_winter_forbidden_snapshot",
+                runtime_contract,
+            )
+            declared = set()
+            if static_inventory:
+                declared = set(
+                    re.findall(r'[\"\']([A-Za-z_][A-Za-z0-9_]*)[\"\']', static_inventory.group(1))
+                )
+            missing = sorted(forbidden_store - declared)
+            self.fail(
+                "runtime forbidden snapshot is hand-maintained and omits project defaults: "
+                + ", ".join(missing)
+            )
+        allowed_match = re.search(
+            r"(?ms)_WINTER_ALLOWED_STORE_DEFAULT_WRITES\s*=\s*\((.*?)\)",
+            runtime_contract,
+        )
+        self.assertIsNotNone(allowed_match)
+        runtime_allowed = set(
+            re.findall(r'[\"\']([A-Za-z_][A-Za-z0-9_]*)[\"\']', allowed_match.group(1))
+        )
+        self.assertEqual(runtime_allowed, WINTER_ALLOWED_STORE_DEFAULT_WRITES)
+        optional_match = re.search(
+            r"(?ms)_WINTER_NONDEFAULT_FORBIDDEN_STATE\s*=\s*\((.*?)\)",
+            runtime_contract,
+        )
+        self.assertIsNotNone(optional_match)
+        runtime_optional = set(
+            re.findall(r'[\"\']([A-Za-z_][A-Za-z0-9_]*)[\"\']', optional_match.group(1))
+        )
+        self.assertEqual(runtime_optional, WINTER_NONDEFAULT_FORBIDDEN_STATE)
+        production_sources = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted((ROOT / "game").rglob("*.rpy"))
+            if path != TEST_GAME
+        )
+        for name in WINTER_NONDEFAULT_FORBIDDEN_STATE:
+            with self.subTest(nondefault_forbidden=name):
+                self.assertRegex(
+                    production_sources,
+                    rf"(?m)^\s*\$?\s*{re.escape(name)}\s*=",
+                )
+        self.assertIn("statement.store == store_name", runtime_contract)
+        self.assertIn('_test_winter_project_default_names("store")', runtime_contract)
+        self.assertIn('_test_winter_project_default_names("store.persistent")', runtime_contract)
+        self.assertIn("_test_winter_freeze", runtime_contract)
+        self.assertRegex(
+            runtime_contract,
+            r"(?ms)if isinstance\(value, \(list, tuple\)\):\s+return \(type\(value\)\.__name__,",
+        )
+        self.assertRegex(
+            runtime_contract,
+            r"(?ms)if isinstance\(value, \(set, frozenset\)\):.*?return \(type\(value\)\.__name__,",
+        )
+        self.assertRegex(
+            runtime_contract,
+            r"(?ms)if isinstance\(value, \(bool, bytes, float, int, str, type\(None\)\)\):\s+return \(type\(value\)\.__name__, value\)",
+        )
+
+        violations = _winter_module_write_violations(
+            module_source, store_defaults, persistent_defaults
+        )
+        mutation_probes = {
+            "renpy_store_assignment": "$ winter_debt = 1",
+            "top_level_approved_field_assignment": "$ winter_policy = 'trade'",
+            "label_forbidden_store_assignment": (
+                "label winter_probe:\n"
+                "    $ power = 99\n"
+                "    return"
+            ),
+            "renpy_define_store_assignment": "define winter_debt = 1",
+            "priority_default_store_assignment": "default 10 power = 99",
+            "priority_persistent_default_assignment": (
+                "default 10 persistent.southern_endings_seen = None"
+            ),
+            "priority_define_store_assignment": "define 10 power = 99",
+            "augmented_define_store_assignment": "define winter_debt += 1",
+            "label_python_store_assignment": "label probe:\n    python:\n        winter_debt = 1",
+            "init_python_store_assignment": "init python:\n    winter_debt = 1",
+            "init_python_hide_store_assignment": (
+                "init python hide:\n    store.power = 99"
+            ),
+            "init_python_named_store_assignment": (
+                "init python in mystore:\n    store.power = 99"
+            ),
+            "named_store_python_assignment": (
+                "python in mystore:\n    store.power = 99"
+            ),
+            "inline_store_assignment": "init python:\n    if True: store.power = 99",
+            "inline_persistent_assignment": (
+                "init python:\n"
+                "    if True: persistent.southern_endings_seen = None"
+            ),
+            "dynamic_store_setattr": "init python:\n    setattr(store, field_name, 1)",
+            "unapproved_state_helper": "init python:\n    change_prosperity(1)",
+            "parenthesized_state_helper": "init python:\n    (change_prosperity)(1)",
+            "shadowed_allowed_external_call": (
+                "init python:\n"
+                "    def winter_probe():\n"
+                "        len = change_prosperity\n"
+                "        len(1)"
+            ),
+            "nested_only_function_call": (
+                "init python:\n"
+                "    def winter_holder():\n"
+                "        def change_prosperity():\n"
+                "            pass\n"
+                "    change_prosperity(1)"
+            ),
+            "decorator_state_helper": (
+                "init python:\n"
+                "    @unlock_achievement\n"
+                "    def winter_probe():\n"
+                "        pass"
+            ),
+            "function_annotation_state_helper": (
+                "init python:\n"
+                "    def winter_probe(value: change_prosperity()):\n"
+                "        pass"
+            ),
+            "unapproved_container_mutator": "init python:\n    winter_debt.difference_update({1})",
+            "persistent_alias_augmented_mutation": (
+                "init python:\n"
+                "    def winter_probe():\n"
+                "        seen = persistent.southern_endings_seen\n"
+                "        seen |= {'x'}"
+            ),
+            "persistent_default_alias_augmented_mutation": (
+                "init python:\n"
+                "    def winter_probe(seen=persistent.southern_endings_seen):\n"
+                "        seen |= {'x'}"
+            ),
+            "defined_callable_rebinding": (
+                "init python:\n"
+                "    def WINTER_MUTATOR():\n"
+                "        pass\n"
+                "    WINTER_MUTATOR = change_prosperity\n"
+                "    WINTER_MUTATOR(1)"
+            ),
+            "shadowed_marker_base": (
+                "init python:\n"
+                "    def winter_probe(governance_events_seen, event):\n"
+                "        governance_events_seen.append(event)\n"
+                "    winter_probe(inventory_items, 'x')"
+            ),
+            "second_marker_append": (
+                "init python:\n"
+                "    def winter_corrupt_event(event):\n"
+                "        governance_events_seen . append(event)"
+            ),
+            "parenthesized_persistent_mutator": (
+                "init python:\n"
+                "    (persistent.southern_endings_seen.add)('x')"
+            ),
+            "unapproved_augmented_assignment": "init python:\n    power %= 2",
+            "unapproved_assignment_expression": "init python:\n    (winter_debt := 1)",
+            "unapproved_delete": "init python:\n    del power",
+            "exception_alias_store_binding": (
+                "init python:\n"
+                "    try:\n"
+                "        pass\n"
+                "    except Exception as winter_debt:\n"
+                "        pass"
+            ),
+            "match_capture_store_binding": (
+                "init python:\n"
+                "    match 1:\n"
+                "        case winter_debt:\n"
+                "            pass"
+            ),
+            "quoted_hash_before_assignment": (
+                'init python:\n    WINTER_SENTINEL = "#"; store.power = 99'
+            ),
+            "translate_python_assignment": (
+                "translate schinese python:\n    store.power = 99"
+            ),
+            "persistent_assignment": "init python:\n    persistent.secret = 1",
+        }
+        for probe_name, probe_source in mutation_probes.items():
+            with self.subTest(mutation_probe=probe_name):
+                self.assertTrue(
+                    _winter_module_write_violations(
+                        probe_source, store_defaults, persistent_defaults
+                    ),
+                    f"winter source guard accepted forbidden mutation: {probe_name}",
+                )
+        allowed_mutation_probes = {
+            "label_approved_assignment": (
+                "label winter_probe:\n"
+                "    $ winter_policy = 'trade'\n"
+                "    return"
+            ),
+            "global_approved_assignment": (
+                "init python:\n"
+                "    def approved_winter_writer():\n"
+                "        global winter_policy\n"
+                "        winter_policy = 'trade'"
+            ),
+            "explicit_store_approved_assignment": (
+                "init python:\n    store.winter_policy = 'trade'"
+            ),
+            "idempotent_marker_append": (
+                "init python:\n"
+                "    def _append_winter_compatibility_markers():\n"
+                "        for event in ('winter_interlude', 'famine_crisis'):\n"
+                "            if event not in governance_events_seen:\n"
+                "                governance_events_seen.append(event)"
+            ),
+        }
+        for probe_name, probe_source in allowed_mutation_probes.items():
+            with self.subTest(allowed_mutation_probe=probe_name):
+                self.assertEqual(
+                    _winter_module_write_violations(
+                        probe_source, store_defaults, persistent_defaults
+                    ),
+                    [],
+                )
+        self.assertRegex(
+            module_source,
+            r'(?ms)for event in \("winter_interlude", "famine_crisis"\):\s*'
+            r'if event not in governance_events_seen:\s*'
+            r'governance_events_seen\.append\(event\)',
+        )
+        self.assertEqual(module_source.count("governance_events_seen.append(event)"), 1)
+        self.assertEqual(violations, [])
+
+    def test_old_governance_label_bodies_still_exist(self):
+        current = GOVERNANCE.read_text(encoding="utf-8")
+        baseline = subprocess.run(
+            ["git", "show", f"{BASELINE_COMMIT}:game/governance.rpy"],
+            cwd=ROOT,
+            check=True,
+            stdout=subprocess.PIPE,
+        ).stdout.decode("utf-8")
+        for label in ("gov_merchant", "gov_building", "gov_famine_crisis"):
+            with self.subTest(label=label):
+                self.assertEqual(_label_body(current, label), _label_body(baseline, label))
+
+    def test_difficulty_module_never_reads_winter_state(self):
+        executable = _executable_lines(DIFFICULTY.read_text(encoding="utf-8"))
+        self.assertEqual([line for line in executable if "winter_" in line], [])
+
+    def test_fixture_key_is_public_and_enabled_only_for_test_command(self):
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        key = manifest["fixture_verifying_key"]
+        test_game = TEST_GAME.read_text(encoding="utf-8")
+        self.assertEqual(test_game.count(key), 1)
+        self.assertRegex(
+            test_game,
+            re.escape('python early:\n    if renpy.game.args.command == "test":\n')
+            + re.escape(f'        config.save_token_keys.append("{key}")'),
+        )
+        self.assertNotRegex(
+            test_game + MANIFEST.read_text(encoding="utf-8"),
+            r"(?i)BEGIN (?:EC |RSA )?PRIVATE KEY|security_keys\.txt",
+        )
+        release_contract = (ROOT / "Tools" / "test_release_contract.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"game/test_game.rpyc"', release_contract)
+
+    def test_release_rpyc_contract_accounts_for_winter_module(self):
+        self.assertTrue(
+            WINTER_MODULE.is_file(),
+            "winter module is missing from the released RPYC source set",
+        )
+        verifier = VERIFY_DISTRIBUTIONS.read_text(encoding="utf-8")
+        synthetic = TEST_VERIFY_DISTRIBUTIONS.read_text(encoding="utf-8")
+        self.assertRegex(
+            verifier, r"(?m)^EXPECTED_RELEASE_RPYC_COUNT\s*=\s*56\s*$"
+        )
+        self.assertIn("game/governance_winter_interlude.rpyc", synthetic)
+        expected_rpycs = {
+            source.relative_to(ROOT).with_suffix(".rpyc").as_posix()
+            for source in (ROOT / "game").rglob("*.rpy")
+            if source.relative_to(ROOT).as_posix() != "game/test_game.rpy"
+        }
+        self.assertEqual(len(expected_rpycs), 56)
+        self.assertIn("game/governance_winter_interlude.rpyc", expected_rpycs)
 
 
 if __name__ == "__main__":

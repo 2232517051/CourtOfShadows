@@ -42,7 +42,7 @@ except ImportError:  # Supports ``python -m Tools.verify_distributions``.
 
 ROOT = Path(__file__).resolve().parents[1]
 WINDOWS_ROOT = f"CourtOfShadows-{APPROVED_VERSION}-win"
-EXPECTED_RELEASE_RPYC_COUNT = 55
+EXPECTED_RELEASE_RPYC_COUNT = 56
 EXPECTED_ACTIVITIES = (
     "org.renpy.android.ConsentActivity",
     "org.renpy.android.PythonSDLActivity",
@@ -52,8 +52,9 @@ REQUIRED_WINDOWS_PATHS = {
     "CourtOfShadows.exe",
     "README.txt",
 }
-# Fixed Ren'Py 8.5.2 / Court of Shadows 3.9.2 runtime contract. Engine upgrades
-# must deliberately refresh the runtime, common-cache, and source-map constants.
+# The runtime count/path-hash contract is inherited from two independent 3.9.2
+# builds. The 3.10 gate revalidates it without claiming two independent 3.10
+# builds; engine upgrades must deliberately refresh these constants.
 EXPECTED_WINDOWS_RUNTIME_COUNT = 1377
 EXPECTED_WINDOWS_RUNTIME_FINGERPRINT = (
     "cebc3d5c093063219dd1d40da28790a2f8bd12dc6777592f6fdb1f51b01b4dab"

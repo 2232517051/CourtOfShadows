@@ -71,6 +71,7 @@ init python:
 
 label after_load:
     $ _new_run_bootstrap_done = True
+    $ migrate_winter_interlude_state()
 
     ## 初始化新版本添加的 persistent 变量（旧存档可能缺少）
     if not hasattr(persistent, 'collectibles_found') or persistent.collectibles_found is None:
@@ -395,6 +396,8 @@ init 999 python:
         for var_name, default_val in _store_defaults.items():
             if not hasattr(store, var_name):
                 setattr(store, var_name, default_val)
+
+        migrate_winter_interlude_state()
 
     ## 注册到 after_load 回调链中
     ## 这样即使 label after_load 之外也能确保变量完整
