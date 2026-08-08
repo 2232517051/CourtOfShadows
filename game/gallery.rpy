@@ -544,6 +544,7 @@ init python:
         ("prologue", "序章", "金鹰之子", "prologue", "学院、王都，归乡前最后的日子"),
         ("chapter1", "第一章", "新主登基", "chapter1_start", "初临领地，面对未知的挑战"),
         ("southern", "外章", "南境游记", "southern_arc_standalone", "潮汐港的火并，与一条断了的盐路"),
+        ("winter_interlude", "幕间", "第一个冬天", "winter_interlude_start", "粮价、库存与必须有人承担的缺口"),
         ("chapter2", "第二章", "领主会议", "chapter2_start", "贵族间的明争暗斗"),
         ("chapter3", "第三章", "暗百合", "chapter3_start", "神秘组织浮出水面"),
         ("chapter4", "第四章", "王都风云", "chapter4_start", "踏入更大的棋局"),
@@ -552,7 +553,7 @@ init python:
 
     ## **必须与 chapter_list 等长**: 下面 screen 里是 `for idx, (...) in enumerate(chapter_list)`
     ## 再按 idx 取图标, 少一个元素直接 IndexError 崩掉整个章节选择页。
-    chapter_icons = ["序", "I", "外", "II", "III", "IV", "V"]
+    chapter_icons = ["序", "I", "外", "幕", "II", "III", "IV", "V"]
 
 screen chapter_select():
     tag menu
@@ -575,7 +576,7 @@ screen chapter_select():
             null height 10
 
             for idx, (ch_id, ch_num, ch_name, ch_label, ch_desc) in enumerate(chapter_list):
-                $ is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1" or ch_id == "prologue"
+                $ is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1" or ch_id == "prologue" or (ch_id == "winter_interlude" and "chapter1" in persistent.chapters_completed)
 
                 frame:
                     xfill True
@@ -590,7 +591,7 @@ screen chapter_select():
                         $ ch_slot = "auto_ch-" + ch_id
                         $ has_slot = renpy.can_load(ch_slot)
                         $ blank_action = ([SetField(persistent, "_skip_next_chapter_autosave", True), Start(ch_label)]
-                                          if ch_id in ("chapter1", "chapter2", "chapter3", "chapter4", "chapter5")
+                                          if ch_id in ("chapter1", "winter_interlude", "chapter2", "chapter3", "chapter4", "chapter5")
                                           else Start(ch_label))
                         hbox:
                             xfill True

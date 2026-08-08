@@ -17,6 +17,8 @@ TEST_GAME = ROOT / "game" / "test_game.rpy"
 SCRIPT = ROOT / "game" / "script.rpy"
 CHAPTER2 = ROOT / "game" / "chapter2.rpy"
 CINEMATICS = ROOT / "game" / "cinematics.rpy"
+GALLERY = ROOT / "game" / "gallery.rpy"
+IMAGES_DEF = ROOT / "game" / "images_def.rpy"
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "winter_legacy"
 MANIFEST = FIXTURE_DIR / "manifest.json"
 ASSET_BASELINE = ROOT / "tests" / "fixtures" / "winter_asset_baseline.json"
@@ -61,6 +63,19 @@ def _executable_lines(source: str) -> list[str]:
         if line:
             lines.append(line)
     return lines
+
+
+def _literal_list_assignment(source: str, name: str) -> list:
+    match = re.search(
+        rf"(?ms)^\s*{re.escape(name)}\s*=\s*(\[[^\]]*\])",
+        source,
+    )
+    if match is None:
+        raise AssertionError(f"literal list assignment {name!r} not found")
+    value = ast.literal_eval(match.group(1))
+    if not isinstance(value, list):
+        raise AssertionError(f"{name!r} is not a literal list")
+    return value
 
 
 def _project_default_inventory() -> tuple[set[str], set[str]]:
@@ -838,6 +853,14 @@ class WinterFixtureInfrastructureTests(unittest.TestCase):
             self.test_game[: winter_block.start()]
             + self.test_game[winter_block.end() :]
         )
+        task6_bootstrap_row = (
+            '            ("winter_interlude_start", '
+            '"_call_new_run_bootstrap_winter_interlude"),\n'
+        )
+        self.assertEqual(test_game_without_winter.count(task6_bootstrap_row), 1)
+        test_game_without_winter = test_game_without_winter.replace(
+            task6_bootstrap_row, ""
+        )
         self.assertEqual(test_game_without_winter, expected)
         self.assertEqual(self.test_game.count("label _test_lint_reachability_"), 5)
         self.assertEqual(self.test_game.count("testsuite global:"), 1)
@@ -1176,6 +1199,132 @@ class WinterRoutingContractTests(unittest.TestCase):
         cinematic = _label_body(CINEMATICS.read_text(encoding="utf-8"), "cinematic_chapter2")
         self.assertEqual(cinematic.count("一个月过去了。"), 1)
         self.assertEqual(chapter_start.count("一个月过去了。"), 0)
+
+
+class WinterChapterSelectContractTests(unittest.TestCase):
+    WINTER_ROW = (
+        "winter_interlude",
+        "幕间",
+        "第一个冬天",
+        "winter_interlude_start",
+        "粮价、库存与必须有人承担的缺口",
+    )
+
+    def test_three_parallel_chapter_lists_stay_aligned(self):
+        gallery = GALLERY.read_text(encoding="utf-8")
+        images_def = IMAGES_DEF.read_text(encoding="utf-8")
+        chapter_list = _literal_list_assignment(gallery, "chapter_list")
+        chapter_icons = _literal_list_assignment(gallery, "chapter_icons")
+        ui_chapter_icons = _literal_list_assignment(images_def, "UI_CHAPTER_ICONS")
+        chapter_ids = [row[0] for row in chapter_list]
+
+        self.assertIn("winter_interlude", chapter_ids)
+        winter_index = chapter_ids.index("winter_interlude")
+        self.assertEqual(chapter_list[winter_index], self.WINTER_ROW)
+        self.assertEqual(chapter_icons[winter_index], "幕")
+        self.assertEqual(ui_chapter_icons[winter_index], "ch_winter_interlude")
+        self.assertEqual(len(chapter_list), len(chapter_icons))
+        self.assertEqual(len(chapter_list), len(ui_chapter_icons))
+        self.assertEqual(winter_index, chapter_ids.index("southern") + 1)
+        self.assertEqual(chapter_ids.index("chapter2"), winter_index + 1)
+
+    def test_winter_unlocks_from_chapter1_and_uses_text_fallback(self):
+        gallery = GALLERY.read_text(encoding="utf-8")
+        images_def = IMAGES_DEF.read_text(encoding="utf-8")
+        chapter_screen = gallery.split("screen chapter_select():", 1)[1]
+        unlock_lines = [
+            line.strip()
+            for line in chapter_screen.splitlines()
+            if line.strip().startswith("$ is_unlocked =")
+        ]
+
+        self.assertEqual(len(unlock_lines), 1)
+        actual_module = ast.parse(unlock_lines[0].removeprefix("$ "))
+        self.assertEqual(len(actual_module.body), 1)
+        actual_assignment = actual_module.body[0]
+        self.assertIsInstance(actual_assignment, ast.Assign)
+        self.assertEqual(len(actual_assignment.targets), 1)
+        self.assertIsInstance(actual_assignment.targets[0], ast.Name)
+        self.assertEqual(actual_assignment.targets[0].id, "is_unlocked")
+        expected_rhs = ast.parse(
+            'is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1" '
+            'or ch_id == "prologue" or (ch_id == "winter_interlude" and '
+            '"chapter1" in persistent.chapters_completed)'
+        ).body[0].value
+        expected_dump = ast.dump(expected_rhs, include_attributes=False)
+
+        def assert_exact_unlock(rhs):
+            self.assertEqual(ast.dump(rhs, include_attributes=False), expected_dump)
+
+        assert_exact_unlock(actual_assignment.value)
+        unparenthesized_mutation = ast.parse(
+            'is_unlocked = ch_id in persistent.chapters_completed or ch_id == "chapter1" '
+            'or ch_id == "prologue" or ch_id == "winter_interlude" '
+            'or "chapter1" in persistent.chapters_completed'
+        ).body[0].value
+        with self.assertRaises(AssertionError):
+            assert_exact_unlock(unparenthesized_mutation)
+
+        compiled_rhs = compile(
+            ast.Expression(actual_assignment.value),
+            "<chapter-select-unlock>",
+            "eval",
+        )
+        for completed, chapter_id, expected in (
+            (set(), "winter_interlude", False),
+            ({"chapter1"}, "winter_interlude", True),
+            ({"chapter1"}, "chapter2", False),
+        ):
+            persistent = type(
+                "Persistent", (), {"chapters_completed": completed}
+            )()
+            with self.subTest(completed=completed, chapter_id=chapter_id):
+                self.assertIs(
+                    eval(
+                        compiled_rhs,
+                        {"__builtins__": {}},
+                        {"ch_id": chapter_id, "persistent": persistent},
+                    ),
+                    expected,
+                )
+        self.assertFalse(
+            (ROOT / "game" / "images" / "ui" / "ch_winter_interlude.png").exists()
+        )
+        ui_icon_body = re.search(
+            r"(?ms)^    def ui_icon\(name, size=40\):\s*\n(.*?)(?=^    def |^    ## |\Z)",
+            images_def,
+        )
+        self.assertIsNotNone(ui_icon_body)
+        self.assertIn("if renpy.loadable(path):", ui_icon_body.group(1))
+        self.assertIn("return None", ui_icon_body.group(1))
+        self.assertGreaterEqual(chapter_screen.count("text chapter_icons[idx]"), 2)
+
+    def test_blank_start_protects_auto_winter_slot(self):
+        gallery = GALLERY.read_text(encoding="utf-8")
+        chapter_screen = gallery.split("screen chapter_select():", 1)[1]
+        whitelist = re.search(
+            r"(?ms)if ch_id in (\([^\n]+\))\s*\n\s*else Start\(ch_label\)",
+            chapter_screen,
+        )
+
+        self.assertIsNotNone(whitelist)
+        protected_ids = ast.literal_eval(whitelist.group(1))
+        self.assertIn("winter_interlude", protected_ids)
+        self.assertIn('$ ch_slot = "auto_ch-" + ch_id', chapter_screen)
+        self.assertIn("$ has_slot = renpy.can_load(ch_slot)", chapter_screen)
+        self.assertIn(
+            'SetField(persistent, "_skip_next_chapter_autosave", True)',
+            chapter_screen,
+        )
+        self.assertIn("Start(ch_label)", chapter_screen)
+        self.assertIn("action FileLoad(ch_slot, slot=True)", chapter_screen)
+        self.assertLess(
+            chapter_screen.index(
+                'SetField(persistent, "_skip_next_chapter_autosave", True)'
+            ),
+            chapter_screen.index("Start(ch_label)"),
+        )
+        self.assertNotIn('$ first_decree = ""', chapter_screen)
 
 
 class WinterModuleContractTests(unittest.TestCase):

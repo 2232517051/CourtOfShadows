@@ -412,6 +412,16 @@ init python:
         ]
         return len(matches) == 1
 
+    def _test_winter_action_ready(text):
+        matches = [
+            focus
+            for focus in renpy.display.focus.focus_list
+            if focus.x is not None
+            and text.casefold() in focus.widget._tts_all(True).casefold()
+            and getattr(focus.widget, "action", None) is not None
+        ]
+        return len(matches) == 1
+
 
 testsuite test_winter_interlude_state:
     before testcase:
@@ -943,6 +953,72 @@ testsuite test_winter_interlude_audio:
         assert eval ("cinematic_chapter2" in _test.winter_labels)
 
 
+testsuite test_winter_interlude_chapter_select:
+    before testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ _test.winter_select_persistent_snapshot = {"chapters_completed": None if persistent.chapters_completed is None else set(persistent.chapters_completed), "privacy_agreed": persistent.privacy_agreed, "tutorial_seen": persistent.tutorial_seen, "ng_plus_unlocked": persistent.ng_plus_unlocked, "ng_plus_bonus_power": persistent.ng_plus_bonus_power, "ng_plus_bonus_wealth": persistent.ng_plus_bonus_wealth, "ng_plus_bonus_intrigue": persistent.ng_plus_bonus_intrigue, "difficulty": persistent.difficulty, "skip_autosave": persistent._skip_next_chapter_autosave}
+        $ persistent.chapters_completed = {"chapter1"}
+        $ persistent.privacy_agreed = True
+        $ persistent.tutorial_seen = True
+        $ persistent.ng_plus_unlocked = False
+        $ persistent.ng_plus_bonus_power = 0
+        $ persistent.ng_plus_bonus_wealth = 0
+        $ persistent.ng_plus_bonus_intrigue = 0
+        $ persistent.difficulty = "normal"
+        $ persistent._skip_next_chapter_autosave = False
+        $ renpy.unlink_save("auto_ch-winter_interlude")
+
+    after testcase:
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        $ renpy.unlink_save("auto_ch-winter_interlude")
+        $ persistent.chapters_completed = _test.winter_select_persistent_snapshot["chapters_completed"]
+        $ persistent.privacy_agreed = _test.winter_select_persistent_snapshot["privacy_agreed"]
+        $ persistent.tutorial_seen = _test.winter_select_persistent_snapshot["tutorial_seen"]
+        $ persistent.ng_plus_unlocked = _test.winter_select_persistent_snapshot["ng_plus_unlocked"]
+        $ persistent.ng_plus_bonus_power = _test.winter_select_persistent_snapshot["ng_plus_bonus_power"]
+        $ persistent.ng_plus_bonus_wealth = _test.winter_select_persistent_snapshot["ng_plus_bonus_wealth"]
+        $ persistent.ng_plus_bonus_intrigue = _test.winter_select_persistent_snapshot["ng_plus_bonus_intrigue"]
+        $ persistent.difficulty = _test.winter_select_persistent_snapshot["difficulty"]
+        $ persistent._skip_next_chapter_autosave = _test.winter_select_persistent_snapshot["skip_autosave"]
+        $ renpy.save_persistent()
+
+    testcase blank_action_preserves_sentinel_and_mainline_replaces_real_slot:
+        run Start("test_winter_chapter_select_sentinel_driver") until screen "say" timeout 6.0
+        assert eval (renpy.can_load("auto_ch-winter_interlude"))
+        $ _test.winter_select_sentinel_json = dict(renpy.slot_json("auto_ch-winter_interlude"))
+        assert eval (_test.winter_select_sentinel_json.get("_save_name") == "winter-select-sentinel")
+        assert eval (_test.winter_select_sentinel_json.get("winter_select_marker") == "sentinel-v1")
+        assert eval (renpy.list_saved_games(r"^auto_ch-winter_interlude$", fast=True) == ["auto_ch-winter_interlude"])
+
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        run ShowMenu("chapter_select") until screen "chapter_select" timeout 4.0
+        pause until eval (_test_winter_action_ready("第一个冬天")) timeout 4.0
+        click "第一个冬天"
+        pause until screen "difficulty_select" timeout 4.0
+        click "简单"
+        click "确认"
+        pause until screen "name_input_screen" timeout 4.0
+        click "使用默认"
+        pause until screen "say" timeout 6.0
+        assert eval ((first_decree, southern_outcome, built_granary, gov_merchant_outcome, winter_interlude_status) == ("", "delegated", False, "", "unseen"))
+        assert eval (persistent._skip_next_chapter_autosave is False)
+        assert eval (dict(renpy.slot_json("auto_ch-winter_interlude")) == _test.winter_select_sentinel_json)
+
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        run FileLoad("auto_ch-winter_interlude", confirm=False, slot=True) until screen "say" timeout 6.0
+        assert eval ((first_decree, southern_outcome, built_granary, gov_merchant_outcome, winter_interlude_status) == ("建设", "vassal", True, "", "unseen"))
+
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        run Start("test_winter_chapter_select_mainline_driver") until screen "say" timeout 6.0
+        assert eval ((first_decree, southern_outcome, built_granary, gov_merchant_outcome, winter_interlude_status) == ("民生", "free", False, "", "unseen"))
+        assert eval (renpy.slot_json("auto_ch-winter_interlude").get("winter_select_marker") is None)
+        assert eval (dict(renpy.slot_json("auto_ch-winter_interlude")) != _test.winter_select_sentinel_json)
+
+        run MainMenu(confirm=False) until screen "main_menu" timeout 4.0
+        run FileLoad("auto_ch-winter_interlude", confirm=False, slot=True) until screen "say" timeout 6.0
+        assert eval ((first_decree, southern_outcome, built_granary, gov_merchant_outcome, winter_interlude_status) == ("民生", "free", False, "", "unseen"))
+
+
 label test_winter_active_save_driver:
     $ winter_interlude_status = "active"
     $ winter_investigations = ("market",)
@@ -981,6 +1057,33 @@ label test_winter_chapter2_audio_driver:
     $ _new_run_bootstrap_done = True
     $ apply_winter_delegation()
     jump chapter2_start
+
+
+label test_winter_chapter_select_sentinel_driver:
+    $ _new_run_bootstrap_done = True
+    $ first_decree = "建设"
+    $ southern_outcome = "vassal"
+    $ built_granary = True
+    $ famine_prevented = False
+    $ gov_merchant_outcome = ""
+    $ governance_events_seen[:] = []
+    $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
+    $ renpy.save("auto_ch-winter_interlude", extra_info="winter-select-sentinel", extra_json={"winter_select_marker": "sentinel-v1"})
+    "Winter chapter-select sentinel checkpoint."
+    return
+
+
+label test_winter_chapter_select_mainline_driver:
+    $ _new_run_bootstrap_done = True
+    $ first_decree = "民生"
+    $ southern_outcome = "free"
+    $ built_granary = False
+    $ famine_prevented = False
+    $ gov_merchant_outcome = ""
+    $ governance_events_seen[:] = []
+    $ winter_interlude_status, winter_investigations, winter_policy, winter_seed_priority = "unseen", (), "", "neutral"
+    $ persistent._skip_next_chapter_autosave = False
+    jump winter_interlude_start
 
 
 ## END TASK 3 WINTER STATE SUITES
@@ -1503,6 +1606,7 @@ testsuite test_new_run_bootstrap:
         parameter (entry_label, bootstrap_return) = [
             ("prologue", "_call_new_run_bootstrap_prologue"),
             ("chapter1_start", "_call_new_run_bootstrap_chapter1"),
+            ("winter_interlude_start", "_call_new_run_bootstrap_winter_interlude"),
             ("chapter2_start", "_call_new_run_bootstrap_chapter2"),
             ("chapter3_start", "_call_new_run_bootstrap_chapter3"),
             ("chapter4_start", "_call_new_run_bootstrap_chapter4"),

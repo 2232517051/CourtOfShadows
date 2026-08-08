@@ -376,7 +376,7 @@ init python:
 ## 使用处一律 if renpy.loadable(...) 兜底, 缺图回退原文字
 ## ════════════════════════════════════════════════════════════
 init python:
-    UI_CHAPTER_ICONS = ["ch_prologue", "ch_1", "ch_side", "ch_2", "ch_3", "ch_4", "ch_5"]
+    UI_CHAPTER_ICONS = ["ch_prologue", "ch_1", "ch_side", "ch_winter_interlude", "ch_2", "ch_3", "ch_4", "ch_5"]
     UI_ENDING_ICONS = {
         "iron_lord": "end_iron_lord", "shadow_king": "end_shadow_king",
         "holy_guardian": "end_holy_guardian", "peoples_lord": "end_peoples_lord",
