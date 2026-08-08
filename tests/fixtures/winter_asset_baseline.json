@@ -1,0 +1,4083 @@
+{
+  "baseline_commit": "ebb4efd2194fb31710d0331d53d0fe825eb8062c",
+  "generated_at_utc": "2026-08-08T10:38:00Z",
+  "file_count": 815,
+  "total_bytes": 539083150,
+  "files": [
+    {
+      "relative_path": "game/audio/music/battle_prepare.ogg",
+      "byte_size": 2536293,
+      "sha256": "28a46d689166d136cac4f2ce98ce1972c0758aa20363666146b50fc180a69e7d"
+    },
+    {
+      "relative_path": "game/audio/music/battle_prepare_alt.mp3",
+      "byte_size": 2468262,
+      "sha256": "0aac08628bec12c8a4740ed56b3b1d6b6cbf5018fd3af8ccb22888d91cfa824a"
+    },
+    {
+      "relative_path": "game/audio/music/betrayal.ogg",
+      "byte_size": 4157090,
+      "sha256": "18e1d49dc79ba09a08156a5b6325cbc2670f081e2e79b4642efa716f0a601a58"
+    },
+    {
+      "relative_path": "game/audio/music/betrayal_alt.mp3",
+      "byte_size": 3281070,
+      "sha256": "47f481cbfc3f34c409c44886a85f07e42f9c6f072298a0aa151afa2d893da6ea"
+    },
+    {
+      "relative_path": "game/audio/music/campfire.ogg",
+      "byte_size": 5297299,
+      "sha256": "9b6703a157dc4330a52624a88ec654ad6974855442674478ed15b6069c289bfd"
+    },
+    {
+      "relative_path": "game/audio/music/campfire_alt.mp3",
+      "byte_size": 4635126,
+      "sha256": "4c35416f62973ba35efd8d16a37ffc3e6e56e7150ae753004a2d0ac036b9e7f6"
+    },
+    {
+      "relative_path": "game/audio/music/castle_calm.ogg",
+      "byte_size": 3566495,
+      "sha256": "85f246d0f51f67c990f888bd894af9ed248500460f0bf3b7d548fef3b9b6aeae"
+    },
+    {
+      "relative_path": "game/audio/music/castle_calm_alt.mp3",
+      "byte_size": 3518838,
+      "sha256": "49aa26bc637c30ed36d27255babecf0abeea9cbae7a6b020e4bbc36b94cafe0f"
+    },
+    {
+      "relative_path": "game/audio/music/chase.ogg",
+      "byte_size": 1941296,
+      "sha256": "8b1a85963cb275eca6c1964b8b69634ab629d8e053c429fbc1f7d495fc725985"
+    },
+    {
+      "relative_path": "game/audio/music/chase_alt.mp3",
+      "byte_size": 2836446,
+      "sha256": "1744b09e403baa4b02b026a508dc1a727223cf97730a1f8dd7ba9edb3d7e0bb6"
+    },
+    {
+      "relative_path": "game/audio/music/church_choir.ogg",
+      "byte_size": 4300621,
+      "sha256": "4bb0e89b2104b4e5f8700005b16973cd020812838f7c4b905b883899394182db"
+    },
+    {
+      "relative_path": "game/audio/music/church_choir_alt.mp3",
+      "byte_size": 2075334,
+      "sha256": "9abd2cbb19468d0fb558c872e8eb9556ffed3c7475aea5ff1f519ae92787af8d"
+    },
+    {
+      "relative_path": "game/audio/music/conspiracy.ogg",
+      "byte_size": 2351224,
+      "sha256": "4ef0126cb2f3660d71a1508a7d498a1339dd1e6b5dae64d26eb482727783b83c"
+    },
+    {
+      "relative_path": "game/audio/music/conspiracy_alt.mp3",
+      "byte_size": 3889062,
+      "sha256": "9e4cc4fc309cacc6dfe702f04bf430c46dc50b038961e086b1230b5513d74332"
+    },
+    {
+      "relative_path": "game/audio/music/coronation.ogg",
+      "byte_size": 4598694,
+      "sha256": "20f2f7dc6f94a9b029fae414b184a31c058daaaa6b8ed3c4084d862e2b5fcdc1"
+    },
+    {
+      "relative_path": "game/audio/music/coronation_alt.mp3",
+      "byte_size": 5100918,
+      "sha256": "3313e1dc41afe74e638f990972ecb5b3efcb00b9cbfeb232a888c1be19851a5f"
+    },
+    {
+      "relative_path": "game/audio/music/dawn.ogg",
+      "byte_size": 1711823,
+      "sha256": "82df680e512e3f05afd7babaefedb84b3ac7fbf01fda31018ad04f7bff71cfff"
+    },
+    {
+      "relative_path": "game/audio/music/dawn_alt.mp3",
+      "byte_size": 5722878,
+      "sha256": "a53704ba0b306d95f6e4d9b56f7891affd7b1b654b8bc12925ad0ec3e86b61a3"
+    },
+    {
+      "relative_path": "game/audio/music/dungeon_drip.ogg",
+      "byte_size": 5026533,
+      "sha256": "61af5b99327248e66c479c9c7747079da696764b547de192167d589d29c6f0f9"
+    },
+    {
+      "relative_path": "game/audio/music/dungeon_drip_alt.mp3",
+      "byte_size": 4545222,
+      "sha256": "ed4cbec977fa83e9310f2c625bd5b41629842cf8dccb3dbe4eb71a54351989dd"
+    },
+    {
+      "relative_path": "game/audio/music/ending_bitter.ogg",
+      "byte_size": 338737,
+      "sha256": "62bd6ca2848c5949c11530241706afbd95adab0360785c6b1ea9f2537a73e062"
+    },
+    {
+      "relative_path": "game/audio/music/ending_dark.ogg",
+      "byte_size": 780806,
+      "sha256": "c094db7b30bac260feef03b55c680b51760ec519135a86e1738309af4732cb0c"
+    },
+    {
+      "relative_path": "game/audio/music/ending_triumph.ogg",
+      "byte_size": 247738,
+      "sha256": "a0b5eedf49e97d966e4b852e103259b4528e91a98392edd96992604940f5f62a"
+    },
+    {
+      "relative_path": "game/audio/music/escape.ogg",
+      "byte_size": 3773702,
+      "sha256": "3eccf66230105017710e31533ad9b945e5895b2e69377d06281b0d76679d1b03"
+    },
+    {
+      "relative_path": "game/audio/music/escape_alt.mp3",
+      "byte_size": 3361182,
+      "sha256": "f6ce419d6cda4b0d9ab6a37c794343bb5d0165a054bdd3fb958c90d8f45f0860"
+    },
+    {
+      "relative_path": "game/audio/music/forest_ambient.ogg",
+      "byte_size": 2313957,
+      "sha256": "45b72fc7599157542507f56ffba2e711b1f4d67218ee5595070f714e218f13a6"
+    },
+    {
+      "relative_path": "game/audio/music/forest_ambient_alt.mp3",
+      "byte_size": 2339742,
+      "sha256": "1d22f9e1bfcd8dac409967f56391ca27fffc228f29328c71195394b82adecdee"
+    },
+    {
+      "relative_path": "game/audio/music/great_hall.ogg",
+      "byte_size": 2002208,
+      "sha256": "fb09c8ac0a9b99c4b5d873767acb85c1130dea348987b3a9416f19af7306c929"
+    },
+    {
+      "relative_path": "game/audio/music/great_hall_alt.mp3",
+      "byte_size": 4029126,
+      "sha256": "4bd55f8cb37d8bbaa0076a7065952d90cd57d92be23fb5a0438d65847931f4b8"
+    },
+    {
+      "relative_path": "game/audio/music/grief.ogg",
+      "byte_size": 1982252,
+      "sha256": "0b3b5dcfa07ec680e0b949486d6869627d88a182ee5dba9ea7773417c631371f"
+    },
+    {
+      "relative_path": "game/audio/music/grief_alt.mp3",
+      "byte_size": 3167190,
+      "sha256": "2186151ff13b48fd5c8828daafe0df65a97557f977dbaa1ef0f5cb1c317b2b27"
+    },
+    {
+      "relative_path": "game/audio/music/harbor_waves.ogg",
+      "byte_size": 3552241,
+      "sha256": "b78f47e0e74c730ebe8e93f54675f999c721eba4406f3d7a30c57ebdce300909"
+    },
+    {
+      "relative_path": "game/audio/music/harbor_waves_alt.mp3",
+      "byte_size": 3295998,
+      "sha256": "76d756ef946a5286f8ea8ef825680ad3acdac7e415e68557658cc3941dabe2d4"
+    },
+    {
+      "relative_path": "game/audio/music/hope.ogg",
+      "byte_size": 2702736,
+      "sha256": "76144f7199250ace675d03373aa7e9b31d190f2f2f884623d15500148ed1fa11"
+    },
+    {
+      "relative_path": "game/audio/music/hope_alt.mp3",
+      "byte_size": 3924510,
+      "sha256": "d05226cbc803f259a98156f3aafe45742c1b09819aa8ad73e3ed5c8fc0925291"
+    },
+    {
+      "relative_path": "game/audio/music/main_theme.ogg",
+      "byte_size": 1780348,
+      "sha256": "e77fa3124349b8d4dc5640b0333e99d5413163a4d655ff1300de7d28ca3e2027"
+    },
+    {
+      "relative_path": "game/audio/music/main_theme_alt.mp3",
+      "byte_size": 3057174,
+      "sha256": "2f28797bac1f7ed24df058025f63b54e50712097f8f66a6df67796df7923d561"
+    },
+    {
+      "relative_path": "game/audio/music/market_bustle.ogg",
+      "byte_size": 2447193,
+      "sha256": "1a8e4688b98f81efff1f7d040b4d444cf3dd75744b5afc09592e0eee5120191b"
+    },
+    {
+      "relative_path": "game/audio/music/market_bustle_alt.mp3",
+      "byte_size": 2950710,
+      "sha256": "dd9be597ae9f24e34b2497014c9cf9989cb187a3fa123d163c298efaf3cee13e"
+    },
+    {
+      "relative_path": "game/audio/music/night_mystery.ogg",
+      "byte_size": 2634351,
+      "sha256": "73849885a26a6d412e705502bfe9b7f6051313209b1de389ea3b6488ccdf8b75"
+    },
+    {
+      "relative_path": "game/audio/music/night_mystery_alt.mp3",
+      "byte_size": 2729046,
+      "sha256": "23fa89953e5ba5386698f3840d5d01cc37531a9c49dbf254a3645047ad5031c3"
+    },
+    {
+      "relative_path": "game/audio/music/rain_storm.ogg",
+      "byte_size": 2840200,
+      "sha256": "9a32f5afb0cddb492103d48fb838b7b1ed5c0c049dad7eb3084aad157631fa99"
+    },
+    {
+      "relative_path": "game/audio/music/rain_storm_alt.mp3",
+      "byte_size": 5679606,
+      "sha256": "04ce07b09d39ae0b13a4bd546ac302fe593763976c8f4777a1588a6ba22b27c5"
+    },
+    {
+      "relative_path": "game/audio/music/revelation.ogg",
+      "byte_size": 1391752,
+      "sha256": "84d3e34a89581b36404d3ee1a3ddfd45b3331525d7c9f51b0de9f143e5bfc545"
+    },
+    {
+      "relative_path": "game/audio/music/revelation_alt.mp3",
+      "byte_size": 2238246,
+      "sha256": "b436722814a4d1e6b8aead1ea77098ad2e82f25ce09a254b70598dfbb84e580f"
+    },
+    {
+      "relative_path": "game/audio/music/ritual.ogg",
+      "byte_size": 4934932,
+      "sha256": "2eade52334eb2d82fde482dc6ccaa20959e65db408d52d80f1257ba16485c514"
+    },
+    {
+      "relative_path": "game/audio/music/ritual_alt.mp3",
+      "byte_size": 5186934,
+      "sha256": "3e519b7d56835cf5acc189b219540cde96832a8f75e716d65f1461bcf771b45e"
+    },
+    {
+      "relative_path": "game/audio/music/romance.ogg",
+      "byte_size": 4899779,
+      "sha256": "2200a1130723f635508b2b10d4ac54137f45194a5d4c8866a171a0ee8139ca32"
+    },
+    {
+      "relative_path": "game/audio/music/romance_alt.mp3",
+      "byte_size": 4610646,
+      "sha256": "1589858fdafd8457bcb7ea8710a7628e90c579e133c52bed5591fd8315e667bf"
+    },
+    {
+      "relative_path": "game/audio/music/sad.ogg",
+      "byte_size": 4698395,
+      "sha256": "37a778c41f46eb879aa3cd9ae352680fbcf262001be7309441aa4e5d6f63904b"
+    },
+    {
+      "relative_path": "game/audio/music/sad_alt.mp3",
+      "byte_size": 3016926,
+      "sha256": "298f7ec49be8c5e20885f3764a1736d091d4068c101061a8b1554c25313884fd"
+    },
+    {
+      "relative_path": "game/audio/music/sea_theme.ogg",
+      "byte_size": 3119204,
+      "sha256": "3ca02daa85d655777b971f82bb0577c092ac0aab97abe842e7ca7973afd6b57d"
+    },
+    {
+      "relative_path": "game/audio/music/southern_corsair.ogg",
+      "byte_size": 2998958,
+      "sha256": "8e6d1e729144d5ef8454879e4f6fb068fb71e4d65202abccf050a458636af8b9"
+    },
+    {
+      "relative_path": "game/audio/music/southern_fleet.ogg",
+      "byte_size": 3463567,
+      "sha256": "6a0117da482444b2adbfcb6f374b94585c7b6444b1a909e78fb6f44c03037f0e"
+    },
+    {
+      "relative_path": "game/audio/music/southern_freeport.ogg",
+      "byte_size": 4520847,
+      "sha256": "582193d29882b71ef68f0a0310b7d3d2598457d3c918c8cd7954f3977e222a49"
+    },
+    {
+      "relative_path": "game/audio/music/southern_port.ogg",
+      "byte_size": 2896678,
+      "sha256": "988d190f1450ee50cc59c90f96da7e3d19ac7cfaad517518e4736f19597ddab8"
+    },
+    {
+      "relative_path": "game/audio/music/southern_scheme.ogg",
+      "byte_size": 2917839,
+      "sha256": "6c9f7996d7fab473f5a588fbedb053bce479f5426335b6cfe084cc3a2c84e26c"
+    },
+    {
+      "relative_path": "game/audio/music/southern_tavern.ogg",
+      "byte_size": 3034972,
+      "sha256": "27525eb7942c755e2d2260663ddec95d185c01e7815dc9d526bd5ddb5c7db6bd"
+    },
+    {
+      "relative_path": "game/audio/music/tavern_lively.ogg",
+      "byte_size": 3078134,
+      "sha256": "80ed3b95ec50688e2d48d960f79048cf0ac51e91e6572e334a31a388ce57a03f"
+    },
+    {
+      "relative_path": "game/audio/music/tavern_lively_alt.mp3",
+      "byte_size": 1922958,
+      "sha256": "b9a1f8fff777ea504b39a74864c28bbc1de25eb818ab7b7e112dbc7a07205e4b"
+    },
+    {
+      "relative_path": "game/audio/music/tension.ogg",
+      "byte_size": 1749994,
+      "sha256": "92fb725d8ee9161f0394dc6f867322626b8981895e0505e8dae628ac2cd46bfb"
+    },
+    {
+      "relative_path": "game/audio/music/tension_alt.mp3",
+      "byte_size": 1701846,
+      "sha256": "4d6c820f0a5e3b43d76911ed98452df7b5a80007554497a116d481d75d7ec798"
+    },
+    {
+      "relative_path": "game/audio/music/test3.wav",
+      "byte_size": 5292080,
+      "sha256": "997d31604b1c05720e60e94cf39cff3776d6f33e412dafd5bd09d9ffe59fea5c"
+    },
+    {
+      "relative_path": "game/audio/music/throne.ogg",
+      "byte_size": 2478648,
+      "sha256": "94d3b642f97273a16f3dd5fd6e4fddca8bab8ab5b986187cfbc9dd05bcad0b5c"
+    },
+    {
+      "relative_path": "game/audio/music/throne_alt.mp3",
+      "byte_size": 2422182,
+      "sha256": "93889eea80e2ffbf00c4a77a272dc4afd912c62892aa91dcc52c7594dd51f899"
+    },
+    {
+      "relative_path": "game/audio/music/victory.ogg",
+      "byte_size": 4338090,
+      "sha256": "fe62352b5379a1048753f58484341a7d0932c535efacedc6508ee9431e1912cc"
+    },
+    {
+      "relative_path": "game/audio/music/victory_alt.mp3",
+      "byte_size": 4267518,
+      "sha256": "9bef5aaf61ecfad0ab0c987b71b418891d925d6e8b30e04141a8b1ec01df6f8d"
+    },
+    {
+      "relative_path": "game/audio/music/war_drums.ogg",
+      "byte_size": 1784404,
+      "sha256": "b2e219830cf1ac9bc21fff00c4e7bf605824b37e99393a58d2fb42fb7538ac7b"
+    },
+    {
+      "relative_path": "game/audio/music/war_drums_alt.mp3",
+      "byte_size": 4067190,
+      "sha256": "93be95880ec1cff7dca829692c3d4b3c15fc1deeb22a1629fbc5bc82d2bc117c"
+    },
+    {
+      "relative_path": "game/audio/music/winter_wind.ogg",
+      "byte_size": 3713270,
+      "sha256": "bf202c337b296af955bc6732056348474322d38cff1b0a1db65b8fbda8314a16"
+    },
+    {
+      "relative_path": "game/audio/music/winter_wind_alt.mp3",
+      "byte_size": 5634678,
+      "sha256": "7291e5e372f4b7142fc3c7293cd9aabb0d54f235e747966076283e0ab951f784"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_line1.mp3",
+      "byte_size": 64456,
+      "sha256": "8ebac03d9a78a2e9cc6121083fad85c4cd1a68d9d4be0ffef6b0f94f44bae532"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_line2.mp3",
+      "byte_size": 114193,
+      "sha256": "c3836a9fa34c44e94d746dc91ac3cce62c0e7c9a8e0c3ef963072f3edf70fb8b"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_line3.mp3",
+      "byte_size": 74069,
+      "sha256": "b1f904b1e17d73351f012fa18377e38f9c2b1bbc75643e5e287ad7f176557137"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_p2_line1.mp3",
+      "byte_size": 89952,
+      "sha256": "0875ad5f92bb9b3b2c437e074ec98e5432efd6ee023276f3904fca1ca35b2793"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_p2_line2.mp3",
+      "byte_size": 108342,
+      "sha256": "b800d73d49350150ca5db1226ce6a09e774183d532f0cb0aff490d2b0886388f"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_p2_line3.mp3",
+      "byte_size": 70726,
+      "sha256": "0ca0c5e3d2cacb0402484074adafbb40ca508ba73f9dbcd794be7a2c8eb8dfe0"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_p3_line1.mp3",
+      "byte_size": 83682,
+      "sha256": "f5b078106bf963643babe631cf3263185c552adb4342421111d1491de666ff13"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_p3_line2.mp3",
+      "byte_size": 69890,
+      "sha256": "5825becc674df5e1bcc699452ac0a6e6703333def1a912b86d54dd54d537b9b3"
+    },
+    {
+      "relative_path": "game/audio/narration/ch0_p3_line3.mp3",
+      "byte_size": 68636,
+      "sha256": "a8b59db6484a283777524bccac3cc27192a48bdee52fb2b4863e97bde7ccc117"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_line1.mp3",
+      "byte_size": 89116,
+      "sha256": "fce35c01bd53bee4db45f4b7e2b0944996c654f76083e67725c37c5cace14c26"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_line2.mp3",
+      "byte_size": 91206,
+      "sha256": "054823fafd6b7a2536386e51908e500a54c689f120793a0ef4b273e80f725a66"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_line3.mp3",
+      "byte_size": 84936,
+      "sha256": "3607089a49063098b9d0fd515dd181e8bdc8f3135bb7d0d3ee163f071dab4984"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_01.mp3",
+      "byte_size": 46902,
+      "sha256": "2b69926ac1947028736206110ea47c20c526cb2405145a765c6409cfb5b658c8"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_02.mp3",
+      "byte_size": 77413,
+      "sha256": "2a4acfacc2b97f61cda4529ecbe83bfa4a42acae6b2c864ef7ea5d5a3ad31293"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_03.mp3",
+      "byte_size": 66546,
+      "sha256": "d2fc5965ee323e74430fda3dacb9c891d5529931a4a1686fa9a2a90b5979c109"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_04.mp3",
+      "byte_size": 56515,
+      "sha256": "d281e62fbd6e8db286b66e893272fae1a18a67541b917974fa33110898aa88df"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_05.mp3",
+      "byte_size": 55679,
+      "sha256": "a0b347ef94f40bb001551c20b40b90b86c0411e103d62572f60bf37646cefd47"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_06.mp3",
+      "byte_size": 95385,
+      "sha256": "dd03692baf4283cfcb0d33c20eda4504eb8dae373f2564319d80d22b5346b2a4"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_07.mp3",
+      "byte_size": 68636,
+      "sha256": "0e7e43e25b039a29600de905fe20b09b5f891d25d6a2376c88c6141a0a7df41a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_08.mp3",
+      "byte_size": 42304,
+      "sha256": "2f5a18d5978209a7337664ed0e298fc9d37756cdeff43cf4b13a7c89cca229ae"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_09.mp3",
+      "byte_size": 84936,
+      "sha256": "f17e8c56c4bedc527ff4b9ca1c7714a0d6b723acc55ffe87d290efec1e101c8a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch1_narr_10.mp3",
+      "byte_size": 79503,
+      "sha256": "3c94af685c5065382c3d63e7ffb59c2ec1d2f6b66e9efd772f8752d30597e979"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_line1.mp3",
+      "byte_size": 42722,
+      "sha256": "ad2b2457b1a49ff0eaded9e5dc5ce30c774adfa84e1ce2ddb355573cd0a94d9b"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_line2.mp3",
+      "byte_size": 59859,
+      "sha256": "6104132d26e20855535a5fabbfc857eeb8c4f15f67056ecbaff8aa9fffaff66d"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_line3.mp3",
+      "byte_size": 73651,
+      "sha256": "f73a6ab50c58f7aac46cbdd2648b489e6be462f451679813927fcb2010643eac"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_01.mp3",
+      "byte_size": 20988,
+      "sha256": "a158b7d9dfe7a0ba8d4116354ba5acb10f5751b8700b4bea9a8b9820e9cdaf00"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_02.mp3",
+      "byte_size": 57769,
+      "sha256": "9dfc6f85bbd6e2e6520458464136915fe5518320a4f1d9115533fbfbc7da8872"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_03.mp3",
+      "byte_size": 48574,
+      "sha256": "64f6017d559025880effa3f492debbc8dfa48b30ce95f798ae010b1e2faefbe3"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_04.mp3",
+      "byte_size": 62784,
+      "sha256": "6d2524a7189c4ae5d9df3691baf20b63362769e0cc89acfeca2d45175b388b8f"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_05.mp3",
+      "byte_size": 61531,
+      "sha256": "8bc37a5264d95e03ed51a6e968752680eef3f2101564e08edd389558a302ed4a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_06.mp3",
+      "byte_size": 48574,
+      "sha256": "fbd89e845767b3f99da8f78908816af1fd643649d305c62b7132b01c7d47f991"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_07.mp3",
+      "byte_size": 51917,
+      "sha256": "5bd6075f43ffda175a8f6be31e32df93caff7bdbafefd12671c74b7d82e53599"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_08.mp3",
+      "byte_size": 67382,
+      "sha256": "c8287878074ed49749ee42e1cee670678044ea0a8a101c7cade3e0dc2c6bc5db"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_09.mp3",
+      "byte_size": 60277,
+      "sha256": "a5df186ac1b1ec50ac1ade69b57dc44a026c89f4278879427fa1e731a66a76da"
+    },
+    {
+      "relative_path": "game/audio/narration/ch2_narr_10.mp3",
+      "byte_size": 90370,
+      "sha256": "13d06121367ea135af31bfd0d890a3e0f9ff27e520a3c98e79cdcca5602a3011"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_line1.mp3",
+      "byte_size": 66128,
+      "sha256": "5fb117e47e44b44dbc8900f2799287f6273924c5276b9805739ac2aa0c9b2969"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_line2.mp3",
+      "byte_size": 90370,
+      "sha256": "8d9e966cdf9e4769bbc04abb98692bf03036f064c38e19a27880b2179a0d9f8a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_line3.mp3",
+      "byte_size": 68636,
+      "sha256": "dc48ad3d61b041297df9be90e8eab01cb6c08e4b2543038fe4d28869f8fee4da"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_01.mp3",
+      "byte_size": 37289,
+      "sha256": "041a0173cde0bc8a9c2fed6c7231eb4a27c273dfbbdbbb2ace2f86d30ad3093a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_02.mp3",
+      "byte_size": 94549,
+      "sha256": "b50f945cd3e9ca2855fe36af5cb2843c53051abddfb4cca9f8e99f9f8ddce472"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_03.mp3",
+      "byte_size": 79921,
+      "sha256": "4a3659e9a69c721bbad375c20e2e21efcc8f51a7820ac1bbfd83843b11bdbf93"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_04.mp3",
+      "byte_size": 55261,
+      "sha256": "95a589dd863c121913170034f3696e5efc4dd1066a3f4877fb2e7fb0973f7cbd"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_05.mp3",
+      "byte_size": 60695,
+      "sha256": "844832a0d2c0c28c3751f5c6204d5777e44fbfac94c9cabcde5e83f72f2719ac"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_06.mp3",
+      "byte_size": 49410,
+      "sha256": "df98ee5e9920369c7c35d3e8b1c259d85cd32d8abdef8ef780812962e76f129d"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_07.mp3",
+      "byte_size": 85772,
+      "sha256": "f0e937fb12c36ada71e461fb27cad6c940a3220181e0afa293bb7f92d2935316"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_08.mp3",
+      "byte_size": 60695,
+      "sha256": "86f6c7645eb001a767866cf4465564ef246023faede300a98518de472f2f33ca"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_09.mp3",
+      "byte_size": 49828,
+      "sha256": "958ef4c1e64b5a661936cbebfa69443f29766c8018ada1d377ebd5654918306e"
+    },
+    {
+      "relative_path": "game/audio/narration/ch3_narr_10.mp3",
+      "byte_size": 74069,
+      "sha256": "9b9a1bd056878987af925f2d235463baa5c40bec92b3effb7aa48d94a4c29d6f"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_line1.mp3",
+      "byte_size": 56933,
+      "sha256": "3917c73dc615f190362a612c2398e9b2f0878b3ffae5e57976bb5b67e689209a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_line2.mp3",
+      "byte_size": 66546,
+      "sha256": "a9061ca60a6fd259fd31cae840e9b115439be09bc0daa94e9c16e71a58d3dcbb"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_line3.mp3",
+      "byte_size": 64038,
+      "sha256": "624a729c5a56d993c1d971edc37ae8bb77ab947a5a33ae3d45de91b8b55cfa10"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_01.mp3",
+      "byte_size": 51082,
+      "sha256": "8a06b6ad1ba5a566d4af0f2230896adc089e08973c1aa2850e4f3288c209ac4f"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_02.mp3",
+      "byte_size": 60277,
+      "sha256": "7a50a3f2d58c321a27eac37aab61f29695928c0e0c81f5d1b402e3a83210bc3d"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_03.mp3",
+      "byte_size": 47320,
+      "sha256": "4fa7b594dd8070c0d8fd6ad77155ac0bf3fa50842ac9894550f7ceb92c90e8d5"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_04.mp3",
+      "byte_size": 74069,
+      "sha256": "b1043e6ffc2436913fd98a22b524a09bdad67eeb58d5335bd1aa4cce2ed6339c"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_05.mp3",
+      "byte_size": 92877,
+      "sha256": "8d8bead83530bc1300fd7dbac911671abebfa608276ae5804a6c43ae09314356"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_06.mp3",
+      "byte_size": 49410,
+      "sha256": "091ec0394da7443c30f9913ef0ce4b810c117e98acad91a35184c17e027bc352"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_07.mp3",
+      "byte_size": 77413,
+      "sha256": "aaaabc62c6c8c65d6e4b38a302e849de240381e9293115d029e139c1a58391ea"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_08.mp3",
+      "byte_size": 50664,
+      "sha256": "6e3193c165f228240bd8ed2e451a99e50803c32f3546535c1d26f5539455fe0e"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_09.mp3",
+      "byte_size": 49828,
+      "sha256": "187bf98dec3b13ade74d5b38fe1a1187b307db4945d176ed74bfa199ec123440"
+    },
+    {
+      "relative_path": "game/audio/narration/ch4_narr_10.mp3",
+      "byte_size": 72397,
+      "sha256": "6ee15d4648aa216856702b6af9a8ab7189f05a347d4a1afee0f7ee594e3a9af8"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_line1.mp3",
+      "byte_size": 64038,
+      "sha256": "aa5ceec8a4a5329674718cc875d793a209b1b4826842113f3591d9894d03845d"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_line2.mp3",
+      "byte_size": 109596,
+      "sha256": "4a18974c4927d5b01c620012e7b2b906b470aec745e4190b3d7ade046727441a"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_line3.mp3",
+      "byte_size": 87862,
+      "sha256": "c261b332c1180473ea499ad4e3d3136e6efc8ffa586db0f75ea14e23c2618ab0"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_01.mp3",
+      "byte_size": 59441,
+      "sha256": "cf14c7f81f2daee993f054e0a8ffa4f7dbdafdeebcda616b1d0755837e0995e0"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_02.mp3",
+      "byte_size": 35199,
+      "sha256": "3ed57f45267a4837199c96eaec46631af04d223411611246c3b894f5aa340e50"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_03.mp3",
+      "byte_size": 79503,
+      "sha256": "14f7b6e6017d32cd5207f30605100d74236f5ecab69c28c89bcb4c246dee6322"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_04.mp3",
+      "byte_size": 61531,
+      "sha256": "8498d1345707d7795f8fc020a2aa08397b6fc23fd73e0177dadf1edbeabde548"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_05.mp3",
+      "byte_size": 64456,
+      "sha256": "b3a77b3c286b2c9c6c83fee2c7f351024e41c57bd2c891be36a8768b7682fe1b"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_06.mp3",
+      "byte_size": 59023,
+      "sha256": "2327b0d48d6c882573f07e45ae00466699118e6f55c6439003d1059ec7938a70"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_07.mp3",
+      "byte_size": 67382,
+      "sha256": "8ea68ff345e3759b0ee79a8269b9e970a6553ae431e1e503aa56ae20bde0aed1"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_08.mp3",
+      "byte_size": 39797,
+      "sha256": "98aa585080cb328c1046e26295e89f27d59ea9df7e1882f0fe3cadb0e16cba4c"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_09.mp3",
+      "byte_size": 53171,
+      "sha256": "865034639529ba53810fd54a21389c7debd7c956af6bdbe0765b06df265619d8"
+    },
+    {
+      "relative_path": "game/audio/narration/ch5_narr_10.mp3",
+      "byte_size": 63202,
+      "sha256": "3c48754a3288678c64a6e7ffa69064e06b14f0b91ba5713ebf8ceccbc0fc94e3"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0001.mp3",
+      "byte_size": 23914,
+      "sha256": "b21bc3f55332269e6c344a6e585d68b4d3fc0239a2911bbc872dac72cf3be5f7"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0002.mp3",
+      "byte_size": 164766,
+      "sha256": "ebd2434b457f105708b1aefe3be9e756efd6dee3158ca6399ae3c7d23e2b3213"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0003.mp3",
+      "byte_size": 68218,
+      "sha256": "d974bfe2949b49a1e5dccf17f30d34316fafe9e343146b6cdd6fb72803ed0e04"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0004.mp3",
+      "byte_size": 188590,
+      "sha256": "3edb4157f9c7f09ddecf85fdb72bf7c20b41226ee5a90b86c31fdc625d0fec6b"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0005.mp3",
+      "byte_size": 93295,
+      "sha256": "c45c641ac33924ac8e3e3bac05c157b280ad5de90fdedf00c99339757726d73f"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0006.mp3",
+      "byte_size": 106252,
+      "sha256": "0c787167c7dc2858bef05474deb633b87a1cdf334465bce9a7dd6db223f5a1c0"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0007.mp3",
+      "byte_size": 119627,
+      "sha256": "1c9d681d1a0c8eb6969cb12d01e7bfffc5c55e81f740b85d99e21261265667eb"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0008.mp3",
+      "byte_size": 38125,
+      "sha256": "6fab193975637ad7f58cd87486c275ed06a771a0105848704cdee68f0ac9a29a"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0009.mp3",
+      "byte_size": 187336,
+      "sha256": "f4c839500bbfbd61037903d805dd841064da77f25a89f096928cb464271d578a"
+    },
+    {
+      "relative_path": "game/audio/narration/prol_narr_0010.mp3",
+      "byte_size": 90370,
+      "sha256": "77059c63e0e29f29419da0296489578a2dc619ebbfea7dab0efa6704ebd4b9ad"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a1_01.mp3",
+      "byte_size": 104998,
+      "sha256": "8acbf4b3f17ee995a9347bbd712169cfc295c5587b6fb9b1b41150ea21b4d07a"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a1_02.mp3",
+      "byte_size": 74905,
+      "sha256": "186b1494994aa30bf179861bb29aa9b269060a500abb67c5616b618070d49d3d"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a1_03.mp3",
+      "byte_size": 96639,
+      "sha256": "dba9a6ec7ebca53de59e73ce55e814d1e7de7c7cced3d6988397d78a0f83e396"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a2_01.mp3",
+      "byte_size": 116283,
+      "sha256": "5314ece3a2d51a88b7715efcb0db7eca085ce34681c5a1f7c1d3c36875e654fc"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a2_02.mp3",
+      "byte_size": 199457,
+      "sha256": "8ef75485832e22b3a42d0d0f8df785622d17073cc25045981ea45e0c0425328d"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a3_01.mp3",
+      "byte_size": 162677,
+      "sha256": "1b5bd974dc9aae817c4343c0e877e6f2a5828202a11dad84ee944dad9e5802fb"
+    },
+    {
+      "relative_path": "game/audio/narration/south_a3_02.mp3",
+      "byte_size": 153900,
+      "sha256": "3c4f914e234202faa74ce5bd1cae8200e2f6501060cdfbbd4b05c83d62c36a86"
+    },
+    {
+      "relative_path": "game/audio/narration/test_guy.mp3",
+      "byte_size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "game/audio/narration/voice_test/longfei_v2.mp3",
+      "byte_size": 82011,
+      "sha256": "480e3376405d9bb7bc9e2dfb7e55d05eb0425dbe44d7f7949299d2545a24aed2"
+    },
+    {
+      "relative_path": "game/audio/narration/voice_test/longhua_v2.mp3",
+      "byte_size": 89534,
+      "sha256": "514aee1f7dbeaacbbe3937cc07b560f5322360f76a653cb0c4bd62128ae44500"
+    },
+    {
+      "relative_path": "game/audio/narration/voice_test/longjielidou_v2.mp3",
+      "byte_size": 89534,
+      "sha256": "28504912a982e139bc4c4a9ab9d517b9ae751eb7c719a9334ca20feb2db37e4c"
+    },
+    {
+      "relative_path": "game/audio/narration/voice_test/longshu_v2.mp3",
+      "byte_size": 86608,
+      "sha256": "ce420de18583592f8c2d3b74db4499610c660ab86b37bfc2540754ab982fb805"
+    },
+    {
+      "relative_path": "game/audio/narration/voice_test/longshuo_v2.mp3",
+      "byte_size": 69890,
+      "sha256": "fd0502abc9eec3734ca3a278766291bd6581eeef2ae4567df81a12ebeac2a54b"
+    },
+    {
+      "relative_path": "game/audio/narration/voice_test/loongbella_v2.mp3",
+      "byte_size": 73651,
+      "sha256": "62b91ae52c2ee5c4d0ac6b78a4b97b1b90170d7d5844176ff080195f2348f955"
+    },
+    {
+      "relative_path": "game/audio/sfx/arrow_fly.ogg",
+      "byte_size": 35831,
+      "sha256": "4ed248226c3fa71e8555ec85d5a7749ac616133630bcd1de15cfdf21307939b2"
+    },
+    {
+      "relative_path": "game/audio/sfx/bell_toll.ogg",
+      "byte_size": 61079,
+      "sha256": "8e7caaf469550a9d81e47ef3c8ca886f54b97e24824d4f90ca0a30882530eda8"
+    },
+    {
+      "relative_path": "game/audio/sfx/coin_drop.ogg",
+      "byte_size": 33405,
+      "sha256": "42d4171eaa9df557ed297802ef8b556f55f594c1316d6316d60c99e23b894d61"
+    },
+    {
+      "relative_path": "game/audio/sfx/crowd_murmur.ogg",
+      "byte_size": 116495,
+      "sha256": "fdb5383d337063e7f02824248049d656363da4ea920444e6141eeba29260ab8b"
+    },
+    {
+      "relative_path": "game/audio/sfx/door_knock.ogg",
+      "byte_size": 37159,
+      "sha256": "e4a716c3008603aa0c00a52a32fa03e5d55f187ece78a0b2ab1dfbd5dbb082be"
+    },
+    {
+      "relative_path": "game/audio/sfx/fire_burst.ogg",
+      "byte_size": 42506,
+      "sha256": "95c8a6f118e672b0facd28a9025f4deae1eaf0bc696f4e62eab9ce6dd87f276e"
+    },
+    {
+      "relative_path": "game/audio/sfx/fire_crackle.ogg",
+      "byte_size": 109635,
+      "sha256": "e0952f717c1da9294f222fcfdf5e6d8396c02dbb6282f6211ba0a583cf76f94c"
+    },
+    {
+      "relative_path": "game/audio/sfx/footsteps.ogg",
+      "byte_size": 40740,
+      "sha256": "b681d330765f542a643b110b88396f66dbadfdae7382ad0b5f866fb1bcf703cf"
+    },
+    {
+      "relative_path": "game/audio/sfx/heartbeat.ogg",
+      "byte_size": 37459,
+      "sha256": "0031cf865df8b1b603b1de3bbfc5f604d9c336f20b5fb98d39f19007948c8171"
+    },
+    {
+      "relative_path": "game/audio/sfx/horse_gallop.ogg",
+      "byte_size": 86569,
+      "sha256": "fb2ec733fceb7bbf53ad7ff303fc89cdf9e13aa653ee04361f7c2be1d6512e62"
+    },
+    {
+      "relative_path": "game/audio/sfx/letter_open.ogg",
+      "byte_size": 32035,
+      "sha256": "242461d2bb542a398e7938155a6c5dc754d4d6f4b58562872580b761311377f4"
+    },
+    {
+      "relative_path": "game/audio/sfx/scene_change.ogg",
+      "byte_size": 19980,
+      "sha256": "cd65a0fb3e572e58d43f201adab94ec71d0a6a6bcbc558cc9194cc1923c44d16"
+    },
+    {
+      "relative_path": "game/audio/sfx/ship_creak.ogg",
+      "byte_size": 72529,
+      "sha256": "1261f0fa58f384e38b9bb240b89962ec5126772632ec07e719e3cb96a46ea6ea"
+    },
+    {
+      "relative_path": "game/audio/sfx/sword_draw.ogg",
+      "byte_size": 28645,
+      "sha256": "eb4f99f81494680b5c5936fc8d234e097dbb874ab3a593faa4102db953ae6244"
+    },
+    {
+      "relative_path": "game/audio/sfx/thunder.ogg",
+      "byte_size": 55616,
+      "sha256": "7fae2cbddaf4b65e32e7c9db8c1b57cf15a3c7f11b8923728a223fe32191c610"
+    },
+    {
+      "relative_path": "game/audio/sfx/ui_cancel.ogg",
+      "byte_size": 11000,
+      "sha256": "805397934dbf422226211c97a520f29f257ecd1cf0eda46c64b78d2c1f1ddca8"
+    },
+    {
+      "relative_path": "game/audio/sfx/ui_click.ogg",
+      "byte_size": 10425,
+      "sha256": "e6f93917e0321e2f114f47ebab88b2b127dfd4b55e1e63b1d3817c330c9cbcb7"
+    },
+    {
+      "relative_path": "game/audio/sfx/ui_confirm.ogg",
+      "byte_size": 10070,
+      "sha256": "d6b7c09d52c7fe44bb7af6a05e60a7b5b7c62c7814d004f94c902c9c36a05626"
+    },
+    {
+      "relative_path": "game/audio/sfx/ui_hover.ogg",
+      "byte_size": 10269,
+      "sha256": "6dd347bd7d00773fb756b9a51310f6e452718d27d136f0d63341513e6f08bd10"
+    },
+    {
+      "relative_path": "game/audio/sfx/ui_page.ogg",
+      "byte_size": 17035,
+      "sha256": "071be5f97f1000083811fa53e1c6371350c485132cb16ea96ecb73acef064c87"
+    },
+    {
+      "relative_path": "game/audio/sfx/wave_lap.ogg",
+      "byte_size": 127913,
+      "sha256": "2d4d6436ff3d7d4e0c2cd42e2abea82467e090999e4eb7e222809d37812eb2f6"
+    },
+    {
+      "relative_path": "game/gui/bar/bottom.png",
+      "byte_size": 85,
+      "sha256": "5e20ba8486294d43afcf1957d0ec3e7dfd156fae7009e4c84029da00fd1c27d4"
+    },
+    {
+      "relative_path": "game/gui/bar/left.png",
+      "byte_size": 92,
+      "sha256": "8ffb323d076cbfa5f8732e164c656c54c589335f767f636eaf2fbaac08dae13b"
+    },
+    {
+      "relative_path": "game/gui/bar/right.png",
+      "byte_size": 92,
+      "sha256": "65a1a660dc866884261eede42851a66590f8bfce332bef5034b95b14238c3590"
+    },
+    {
+      "relative_path": "game/gui/bar/top.png",
+      "byte_size": 85,
+      "sha256": "b8e41106fcc4e7e81bf491c2fbeee90a2ce381ec7d798f80d3657b3f2e8a98c5"
+    },
+    {
+      "relative_path": "game/gui/bubble.png",
+      "byte_size": 6886,
+      "sha256": "a1d09a38be1acf64e305e225614f994c6ca758a38908f2f8cd87ea5714947133"
+    },
+    {
+      "relative_path": "game/gui/button/check_foreground.png",
+      "byte_size": 391,
+      "sha256": "c39e8c926314583ece1685f712fdc2d9509f2676c6eb9aaa32e30ec3ec73012b"
+    },
+    {
+      "relative_path": "game/gui/button/check_selected_foreground.png",
+      "byte_size": 1221,
+      "sha256": "28e7cc21c91b1f837a82388f21fcbe69d86706fcc2a7de269687a0a9be3ec933"
+    },
+    {
+      "relative_path": "game/gui/button/choice_hover_background.png",
+      "byte_size": 16122,
+      "sha256": "8925f0092c8fb941d67cb69b616ceab50980b1e9bae28059a9606268c81740d0"
+    },
+    {
+      "relative_path": "game/gui/button/choice_idle_background.png",
+      "byte_size": 34043,
+      "sha256": "b1d557a5e53c67c0e87928e09bb657d54c5654e7db4b652dc2e35ec66bad5b15"
+    },
+    {
+      "relative_path": "game/gui/button/hover_background.png",
+      "byte_size": 195,
+      "sha256": "21b0570f8440627fa37d65bf04546cd1d0a7193f6ac959a3cd1757de9c952123"
+    },
+    {
+      "relative_path": "game/gui/button/idle_background.png",
+      "byte_size": 111,
+      "sha256": "1937d4246671fdd168ceebd54801a0355723fe80235c2815c4583b374a11fb2d"
+    },
+    {
+      "relative_path": "game/gui/button/quick_hover_background.png",
+      "byte_size": 161,
+      "sha256": "70c6556fa49e1bc2e443ac99f7d5c536d72c20a523687fbdd33b1b483ba054aa"
+    },
+    {
+      "relative_path": "game/gui/button/quick_idle_background.png",
+      "byte_size": 92,
+      "sha256": "37cd55ae7457d4366d054d65e5bf15141fec20a9b7e1acee8ae69a558e9f6b90"
+    },
+    {
+      "relative_path": "game/gui/button/radio_foreground.png",
+      "byte_size": 780,
+      "sha256": "1577ff4f111623d691d3c32f35528515fd454aec885ea96dfbe18c014c7cfcce"
+    },
+    {
+      "relative_path": "game/gui/button/radio_selected_foreground.png",
+      "byte_size": 1552,
+      "sha256": "4e783b21a95c8d1a8fe9fdc59fafce98ea952787156b695d5c34fcd1269e6a93"
+    },
+    {
+      "relative_path": "game/gui/button/slot_hover_background.png",
+      "byte_size": 345,
+      "sha256": "ccadbb41206939bfa06f23a497bf63c416f146dd99c8b929a88e94e3fb951e69"
+    },
+    {
+      "relative_path": "game/gui/button/slot_idle_background.png",
+      "byte_size": 24192,
+      "sha256": "99084823d89ad123740aa1fd45c664f4f5462da43779cec538292966c1d564a3"
+    },
+    {
+      "relative_path": "game/gui/frame.png",
+      "byte_size": 430606,
+      "sha256": "65047cc66521d8f60fd0c936da47b74174674672bffd3f51122da0de014f156b"
+    },
+    {
+      "relative_path": "game/gui/game_menu.png",
+      "byte_size": 606763,
+      "sha256": "c7cd78fe64724521099fa2735ea4108d424f5ef92431748cb28d4ceb92b41e83"
+    },
+    {
+      "relative_path": "game/gui/main_menu.png",
+      "byte_size": 1059140,
+      "sha256": "8ff9732ba86a0fed025b45c5b857377717ffe73e5e98f1ffa1b144cc9afa1372"
+    },
+    {
+      "relative_path": "game/gui/namebox.png",
+      "byte_size": 7073,
+      "sha256": "51f39c9f4840bb12fb7e02237d198852408fabca43b69c154465081e97ed5b05"
+    },
+    {
+      "relative_path": "game/gui/notify.png",
+      "byte_size": 21427,
+      "sha256": "2b10fdead51b804b12510f8695d63681cefeba98c79e696d161bb62c0e0aa6b5"
+    },
+    {
+      "relative_path": "game/gui/nvl.png",
+      "byte_size": 5313,
+      "sha256": "bb6a6d7d09e7cf05d6a01b5fe8efaa732cce8ac65501d6900156c72c87ab99f3"
+    },
+    {
+      "relative_path": "game/gui/overlay/cinematic_vignette.png",
+      "byte_size": 90406,
+      "sha256": "29b6bddda2c773d565353f820708478f51cedc1980bdafef3acc3e54e8909b8a"
+    },
+    {
+      "relative_path": "game/gui/overlay/confirm.png",
+      "byte_size": 5309,
+      "sha256": "1115a22ec4ef17d1d6f0c248bc167b8782779e131b01df7829ee9a055944f097"
+    },
+    {
+      "relative_path": "game/gui/overlay/game_menu.png",
+      "byte_size": 5351,
+      "sha256": "0294c1333665a5a77df3713a4435c3b65e06eecc8646565b9115e60ff1f6213a"
+    },
+    {
+      "relative_path": "game/gui/overlay/main_menu.png",
+      "byte_size": 5335,
+      "sha256": "68684f648c7ef69fa2fe2b20656d345989357322fb95bba04d6fd7501a5a02fa"
+    },
+    {
+      "relative_path": "game/gui/overlay/parchment_overlay.png",
+      "byte_size": 305186,
+      "sha256": "e3e9d6295dcbf731df693352c6799d616fdd9d001eab2fe085051cc7fc6e3f07"
+    },
+    {
+      "relative_path": "game/gui/phone/bar/bottom.png",
+      "byte_size": 96,
+      "sha256": "4c5508a48bdd25fa0275096c8f3a32d7ac53c351c2e6710e3167713813573743"
+    },
+    {
+      "relative_path": "game/gui/phone/bar/left.png",
+      "byte_size": 96,
+      "sha256": "d1ae9b67f04ce6e405aac3889e8351fea466faa7e1ca17249dcf3f40c1ff4ad0"
+    },
+    {
+      "relative_path": "game/gui/phone/bar/right.png",
+      "byte_size": 96,
+      "sha256": "02b9f8cafd596b142fb538fba6951add08002bab3861f1cd8707607b6b98f530"
+    },
+    {
+      "relative_path": "game/gui/phone/bar/top.png",
+      "byte_size": 96,
+      "sha256": "e63e12b523efe240a22a0d08cb77fe894f6588c338d1ce0f971c1f3b102d92cf"
+    },
+    {
+      "relative_path": "game/gui/phone/button/check_foreground.png",
+      "byte_size": 167,
+      "sha256": "93c9dde6e9baf40e73e79c43c8f6976311faccbbaa9bd7937899d52e1f5b0bf4"
+    },
+    {
+      "relative_path": "game/gui/phone/button/check_selected_foreground.png",
+      "byte_size": 241,
+      "sha256": "10529e98fd0694edf6ce42208419d58f506147b97bde3ede16673e993f4df386"
+    },
+    {
+      "relative_path": "game/gui/phone/button/choice_hover_background.png",
+      "byte_size": 402,
+      "sha256": "45c47d144568a319a511a37ecdd97163ddb0906f8772cb399b43312f96b05746"
+    },
+    {
+      "relative_path": "game/gui/phone/button/choice_idle_background.png",
+      "byte_size": 417,
+      "sha256": "3e3f7bbd85f303675bdefa6ab84f793364478f29ae7ae72bad1b843755fa558e"
+    },
+    {
+      "relative_path": "game/gui/phone/button/hover_background.png",
+      "byte_size": 220,
+      "sha256": "f3531f42fc5246f7a34c6b2f70eb9534acdbecc0001283923169ae20fd08343f"
+    },
+    {
+      "relative_path": "game/gui/phone/button/idle_background.png",
+      "byte_size": 119,
+      "sha256": "911d365fdc3ac6d2f9ce4f6ab85d22f58640668f96a81c0c0f3656683678ccf0"
+    },
+    {
+      "relative_path": "game/gui/phone/button/radio_foreground.png",
+      "byte_size": 210,
+      "sha256": "963a35af7813029490aa5750cbc23ec48deb1c25a4eaa3228053124e92e1585b"
+    },
+    {
+      "relative_path": "game/gui/phone/button/radio_selected_foreground.png",
+      "byte_size": 254,
+      "sha256": "f165795a06e35572b9b428909bd14cbeee900269513d4a852f978e0b0eee10e1"
+    },
+    {
+      "relative_path": "game/gui/phone/button/slot_hover_background.png",
+      "byte_size": 395,
+      "sha256": "5adffa24470870e22a5d7dfefb242b16741cdfd5301a12f01e2cf13492a4d246"
+    },
+    {
+      "relative_path": "game/gui/phone/button/slot_idle_background.png",
+      "byte_size": 396,
+      "sha256": "ef7be8f6daee552136e92c03fac7d0f6061f3cdaa771a92e911f0b27511cd694"
+    },
+    {
+      "relative_path": "game/gui/phone/nvl.png",
+      "byte_size": 6333,
+      "sha256": "84ad1d5e2171b3f98b6f74c0f02e111c29915cef324c4239861de26469a1c91c"
+    },
+    {
+      "relative_path": "game/gui/phone/overlay/game_menu.png",
+      "byte_size": 4513,
+      "sha256": "1663ae051187fb7e2cbb7880e6f9302161e39bf63f00c12997f7e46356307ffc"
+    },
+    {
+      "relative_path": "game/gui/phone/overlay/main_menu.png",
+      "byte_size": 4502,
+      "sha256": "35ce016afa00c905ae01d9ae4ed568b42138d33f8ea225201cf6c7968121315e"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/horizontal_hover_bar.png",
+      "byte_size": 121,
+      "sha256": "4fd8f864e84bb6fcfc0db6579432a9ff53e98a0492afa5d2189de3d0ca5babde"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/horizontal_hover_thumb.png",
+      "byte_size": 149,
+      "sha256": "994de2462d085a1bb7b4c8dc50e51141632c0532900db5033a553191cf62a413"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/horizontal_idle_bar.png",
+      "byte_size": 121,
+      "sha256": "b776bd2527a80663a713092038fca59ae3c5b1bd3c41695ae350130905967bce"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/horizontal_idle_thumb.png",
+      "byte_size": 149,
+      "sha256": "f806a5672253af75472cf63b3fdfcbd807a4d4bcec955af53334dbe61103bd32"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/vertical_hover_bar.png",
+      "byte_size": 156,
+      "sha256": "1765d820d41e9dfb77c76b51227624ec0f890decb43df2d3d2f5c095ff8abd7d"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/vertical_hover_thumb.png",
+      "byte_size": 167,
+      "sha256": "676015414659c12f498131fb6c4c6d5520f3a9981ff056c2d5469eb758b7bce7"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/vertical_idle_bar.png",
+      "byte_size": 156,
+      "sha256": "e3907911bfede3de969929b889697ab033f8561dce96d3a21022349fdc80db5d"
+    },
+    {
+      "relative_path": "game/gui/phone/scrollbar/vertical_idle_thumb.png",
+      "byte_size": 166,
+      "sha256": "6315c632fdb4d743a91b86eaa8f25abaa73b70a5096d79aa66d9c437042653d0"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/horizontal_hover_bar.png",
+      "byte_size": 246,
+      "sha256": "ecfa7245987b40e1f9fc7e5269d95d26889920f61f211adf34d94ab2f03d6cfe"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/horizontal_hover_thumb.png",
+      "byte_size": 158,
+      "sha256": "bd1075fd81073c9aeb6a7b5a925a9af42ef57a91c5181133f87c71f56a6b5475"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/horizontal_idle_bar.png",
+      "byte_size": 246,
+      "sha256": "f56999c7392646b145bb496ad2428a78c0dc411a396314f754296158e0d35c7f"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/horizontal_idle_thumb.png",
+      "byte_size": 158,
+      "sha256": "546a126e62203078942058b8e7aba39f908636ec1c1d65dedc136dbff3eead3f"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/vertical_hover_bar.png",
+      "byte_size": 558,
+      "sha256": "805226b2d5199db64eaa227fd2bcd30501ed18266010a93ec3d198381d79f587"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/vertical_hover_thumb.png",
+      "byte_size": 145,
+      "sha256": "0397d32d8718d909e048d12175497e71e6f0ff5d98756302dd1b968b1ec27e07"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/vertical_idle_bar.png",
+      "byte_size": 558,
+      "sha256": "f820942bc2a5aaf856c332ce897dbc2a46717bb374f4304ee5df82cf1dbae82e"
+    },
+    {
+      "relative_path": "game/gui/phone/slider/vertical_idle_thumb.png",
+      "byte_size": 145,
+      "sha256": "e9675f4bac8c686abb8e783732127b0f33354ba99c76f1b0dbf2ef7ee8786bca"
+    },
+    {
+      "relative_path": "game/gui/phone/textbox.png",
+      "byte_size": 7241,
+      "sha256": "91cf4c0a7f9609b85f1d6f651cc0812f028ceab7e76deb7eb63f7365717d89b5"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/horizontal_hover_bar.png",
+      "byte_size": 111,
+      "sha256": "9f84fb9113d7d85c96e7cea115ef436878712d88355585180ff586041f16d55c"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/horizontal_hover_thumb.png",
+      "byte_size": 124,
+      "sha256": "483e21bd31acfc33c60aaadea90356bf50af8d129160775ed6aed309c96d88ac"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/horizontal_idle_bar.png",
+      "byte_size": 111,
+      "sha256": "04b3fad5ec3571c6bbd2a1fa0033bbc9de9ec8f57978375bb341443bbc06b31c"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/horizontal_idle_thumb.png",
+      "byte_size": 123,
+      "sha256": "cfc0ae4e1603c03ee5bfa0b95b75b13b9ba5b1a79fb81832d12a9aa86aa7b6e7"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/vertical_hover_bar.png",
+      "byte_size": 119,
+      "sha256": "d68f9fd9b7e5084c7c486b07ca1f5995915365ae0876ad49cfd34bd197e2c9bd"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/vertical_hover_thumb.png",
+      "byte_size": 126,
+      "sha256": "6eb8b0f343913fb819a1ae223e9c60952ef0992339c0a0ef0bf06ae8b9a0c9af"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/vertical_idle_bar.png",
+      "byte_size": 119,
+      "sha256": "4cfc83ef0d914e9ad6d5dd19a7c9b79f11dc46e7f4c520e346bf8e36da6c3a70"
+    },
+    {
+      "relative_path": "game/gui/scrollbar/vertical_idle_thumb.png",
+      "byte_size": 125,
+      "sha256": "6fa22cc92fb69f24f22f3c62c01b2b0e5e9b91c3a95af19196c61df3381c89ed"
+    },
+    {
+      "relative_path": "game/gui/skip.png",
+      "byte_size": 264,
+      "sha256": "e46354958fa7f99c577d228688bcae27a59f22996ff2cb4aa9e673b40760e11f"
+    },
+    {
+      "relative_path": "game/gui/slider/horizontal_hover_bar.png",
+      "byte_size": 201,
+      "sha256": "664673c568b941df281be04f11f6538d1c6b0318a7e1d3677a02fa1aaeeef72d"
+    },
+    {
+      "relative_path": "game/gui/slider/horizontal_hover_thumb.png",
+      "byte_size": 143,
+      "sha256": "8206ef9b576b85b153196d6d1946b9f31b0aeed40de46c4d8d3b14530e214b75"
+    },
+    {
+      "relative_path": "game/gui/slider/horizontal_idle_bar.png",
+      "byte_size": 202,
+      "sha256": "118b1b1b2703d3f2a69491b026af9eb7d6f08b3459df9eb35a4a6f5da942b13f"
+    },
+    {
+      "relative_path": "game/gui/slider/horizontal_idle_thumb.png",
+      "byte_size": 143,
+      "sha256": "8d8cc57d91b2db3722355179470d2c36cb6a49f3782747fdece46f3a91aee272"
+    },
+    {
+      "relative_path": "game/gui/slider/vertical_hover_bar.png",
+      "byte_size": 579,
+      "sha256": "a44195b27b54b0246d1547f567418b4756aaf16e9b9add475a0f22dd28a78fd8"
+    },
+    {
+      "relative_path": "game/gui/slider/vertical_hover_thumb.png",
+      "byte_size": 139,
+      "sha256": "e1df367b48e85961db1487826c9446b16ca5e988a731c0d7fbfa46c6e44bacf5"
+    },
+    {
+      "relative_path": "game/gui/slider/vertical_idle_bar.png",
+      "byte_size": 580,
+      "sha256": "e8a2f329722ff5f543e783a3cc8daff99d460ea473257e2e6aff2a6b6433110b"
+    },
+    {
+      "relative_path": "game/gui/slider/vertical_idle_thumb.png",
+      "byte_size": 139,
+      "sha256": "8ce203c2f975928ffae21d91b03f06916b94336e06c7e84443e1e4eba3153df5"
+    },
+    {
+      "relative_path": "game/gui/textbox.png",
+      "byte_size": 2531,
+      "sha256": "e2fdd9e762be1be0a1063c6f7ab6344250ba72ee1ff54e5578b8db3ec34dc1ba"
+    },
+    {
+      "relative_path": "game/gui/thoughtbubble.png",
+      "byte_size": 4215,
+      "sha256": "fd012edefef7819e06b1dbb380a125d34d35bc71e4f5952fcd59067f4d96869c"
+    },
+    {
+      "relative_path": "game/gui/window_icon.png",
+      "byte_size": 2385,
+      "sha256": "69998ac96d6fe8a1eb2d4432bec1b5898aeea22a31bfae636baa3e144b9d22f7"
+    },
+    {
+      "relative_path": "game/images/aldric.png",
+      "byte_size": 1003778,
+      "sha256": "161408dcf3c9f0de2404cc3c0870b1e307bbe50ce5952970b38e4e943d0278ef"
+    },
+    {
+      "relative_path": "game/images/aldric_angry.png",
+      "byte_size": 941635,
+      "sha256": "52272e9bf68dce52a69b34421fa220a36050b891bb079f36941da450a4d908b1"
+    },
+    {
+      "relative_path": "game/images/aldric_happy.png",
+      "byte_size": 829550,
+      "sha256": "a8b19d0de25c6da61a1e6f0308efc27787408b678fa0012f095ec918576e841f"
+    },
+    {
+      "relative_path": "game/images/aldric_sad.png",
+      "byte_size": 1003533,
+      "sha256": "71870adbec3a5dde04798382cabe0d7fcaf62ab1ef39251a6fb23619ec78f372"
+    },
+    {
+      "relative_path": "game/images/assassin_char.png",
+      "byte_size": 957469,
+      "sha256": "55d1f8e1163f0e0a7352fe159d9ab3a6fc234804b836481415f263ccbe6deecf"
+    },
+    {
+      "relative_path": "game/images/assassin_char_angry.png",
+      "byte_size": 365711,
+      "sha256": "db3031b2d23f31010ac9baa061274c7c141d8165b40d53dc60886331ca30c0a5"
+    },
+    {
+      "relative_path": "game/images/assassin_char_happy.png",
+      "byte_size": 1119493,
+      "sha256": "72806fff1e02668e1b26e03d22438d8504461661a1be6d85549ee77615d33903"
+    },
+    {
+      "relative_path": "game/images/assassin_char_sad.png",
+      "byte_size": 988006,
+      "sha256": "cde92488ad10c0e31fcb5144946e1a11c11135b9b0b34f0876be3f0338a37f33"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_ancient_ruins.webp",
+      "byte_size": 116240,
+      "sha256": "1cea094bf43b8eabac6eee2668b433815a004bd5f5ef1752f5e4da99ac009265"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_battlefield.webp",
+      "byte_size": 128214,
+      "sha256": "0b920506e5e5b78cfca5248f60f058fe9fdbfd8d1e5af25ec7cfc06d8ce95486"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_battlefield_night.webp",
+      "byte_size": 143178,
+      "sha256": "a50b45163db59c180630670a1c3d1fef9482df3efae7f615245349119b1185e4"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_beach.webp",
+      "byte_size": 168342,
+      "sha256": "798a36feb89b42017d40d4dea6b78180e7dd6c941cb8480174b7211e4b000ef6"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_blacksmith.webp",
+      "byte_size": 114108,
+      "sha256": "97486bc04a3d8d148b07c2c3bf0bc2402f92f0b69148947311e13acc54ec3249"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_border.webp",
+      "byte_size": 162684,
+      "sha256": "0e9c9b3c70a5f4e19e8974a3e6a5fa85f2ef016de29a504e57c4fa2697441c47"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_border_dusk.webp",
+      "byte_size": 141942,
+      "sha256": "cdc37111c8fe7f086d336ed92c156653fe9cb1ac55f05e9cd5bf7f10e69b6c2a"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_border_night.webp",
+      "byte_size": 145582,
+      "sha256": "08bf589e5cf2f5515cdfd244aea77d815210258a63eb5b0dc4ef988a8ba5e91f"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_armory.webp",
+      "byte_size": 124462,
+      "sha256": "32b8302e273aa8318c950c88d7509a5d6c93e1de41d68f46fbdb071a5d65677a"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_barracks.webp",
+      "byte_size": 108866,
+      "sha256": "4e4d1dfa4938519201194ab906d3adf297661a73a5c778daf92d8369b20cc492"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_bedchamber.webp",
+      "byte_size": 193012,
+      "sha256": "fc0979db3574d77778ee2bb51196b31027619c1daadc82d1fbbb2733e49bbbee"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_chapel.webp",
+      "byte_size": 155100,
+      "sha256": "080882c00734fbefd288dd71d57ce813ee0d653da568dc7bdb1af05ab3797acb"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_exterior.webp",
+      "byte_size": 178188,
+      "sha256": "17271210bbd9feb0b63f0d4578f7b3ae42601412c4f13ac7761f60cf1cee6bfd"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_exterior_dusk.webp",
+      "byte_size": 165710,
+      "sha256": "50bd67c5ecdaf6eecacd0c646e7f45d2047991089ac0d54ef6278c8a3fe29b77"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_exterior_night.webp",
+      "byte_size": 168170,
+      "sha256": "57be150a45c27edd6abad07e8c7f683ec5ed02bbe6f9b79c2f206f8469345a9f"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_kitchen.webp",
+      "byte_size": 146374,
+      "sha256": "769549d98a87fcfdbd192945d39574d61c63b955af73ab228fbc695785c13700"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_library.webp",
+      "byte_size": 153426,
+      "sha256": "36e860c471fed8f55516f9a7949ea20566ad850b7093a80c86d390445fa6818a"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_stable.webp",
+      "byte_size": 160506,
+      "sha256": "0c1f2100264f28a75ba482e89d3e2533c5bcb162e9bdda37c1a6e6d091ed0caa"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_castle_treasury.webp",
+      "byte_size": 181258,
+      "sha256": "975574159a8eec575e41d6d0c8df3d8204e8b19f7c31437581bf8bca93e97766"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_church_interior.webp",
+      "byte_size": 167152,
+      "sha256": "7cc23396c69d6352879b129f382520fc5bc082674074042a1d28b4a2924d18e2"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_council_hall.webp",
+      "byte_size": 162306,
+      "sha256": "c372a8511c5150f85c2c0788949c4042309cf815400bf8baa7c7834facf90171"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_crypt.webp",
+      "byte_size": 97742,
+      "sha256": "dc282b8bd5e1b1c7b70117753920d00f2a3bea4f1e466f038e7c188210c5172d"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_dungeon.webp",
+      "byte_size": 124772,
+      "sha256": "aa49744ea62a751a8fe8452f1bd44e2196d12af3cdf793f985fd2a67a1149db3"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_forest_dark.webp",
+      "byte_size": 163338,
+      "sha256": "a98ad4c50fa0bfd558e4a448810d9495b98449617382113934d4147fa003fac3"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_forest_path.webp",
+      "byte_size": 163478,
+      "sha256": "9852b333367481e2adb61f08940dc3694448f0b5ea2c727653a5999457002008"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_garden_night.webp",
+      "byte_size": 175242,
+      "sha256": "318a58cdbaeb567085f218be6fb62427b24c17d4a0dce8675e1d6b319f173fe0"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_great_hall.webp",
+      "byte_size": 192928,
+      "sha256": "8d3994206c0ed181da84a9223055a59a0400144ad90eb684cdbe2e8699b28348"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_harbor.webp",
+      "byte_size": 149534,
+      "sha256": "96c6685b9d01a5a23450e1a6957c68065e11f392db185b69ac3ec43b83a3e68e"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_healer_house.webp",
+      "byte_size": 232064,
+      "sha256": "02c6a6007e6aa8d59966feee059bde6582003d3de763745ed791c2d7935fed35"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_hidden_chamber.webp",
+      "byte_size": 79188,
+      "sha256": "a69b9bb65cada6d1a228aaaff750c5b6443b7cc0d643f9915c36bf621e653cf7"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_interrogation_room.webp",
+      "byte_size": 96318,
+      "sha256": "020b5d88725ad7d251a276be1efcf4df4fb4886f944a42af6500ce92385d62e5"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_market.webp",
+      "byte_size": 149058,
+      "sha256": "5e9f184166516ba52c559dc8bbe6e54fc072f05a8ab5d16c0e352dd217492045"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_market_night.webp",
+      "byte_size": 164446,
+      "sha256": "1ab2ab71e8b8570412a37b8941e369e32df7ea6f8cdcb78bb293b385ff3c57e6"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_marketplace_day.webp",
+      "byte_size": 333052,
+      "sha256": "491c4491a1d9cc32522d223d4febfdf6988eba534dcca3e9bcd1e7251e147658"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_meadow_night.webp",
+      "byte_size": 88960,
+      "sha256": "4eb352b1d700ea291ab7855091759c50d095a0a081a17fa56e479c4c5584066c"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_mountain_pass.webp",
+      "byte_size": 137240,
+      "sha256": "64befe107e1ca62bcb7b3301e00100ede9b235d62b6a6595e4eefcac3f9e8207"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_noble_district.webp",
+      "byte_size": 144898,
+      "sha256": "322cbef1a4b19c00122e6407ab4dee9e9175a2fb376ee4218c86867db61001b0"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_palace_garden.webp",
+      "byte_size": 198762,
+      "sha256": "70d474596d888df7696cb1114d39c33379cb25e03d75d988f2d896b44c448a88"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_palace_garden_dusk.webp",
+      "byte_size": 179598,
+      "sha256": "ef80353c2b04a520b56725442d6e0ed2f236bc1a703b6c3ff944183cc627d20e"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_parliament_hall.webp",
+      "byte_size": 153834,
+      "sha256": "be11715c7fd6c2e09e92cd5083e1a7482068cccc4435f1c0631f012566580945"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_poor_district.webp",
+      "byte_size": 244592,
+      "sha256": "d655e79d939ec3dc799d7d13d68c9152f22159f972e73643d79009bcd53e1268"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_ritual_ground.webp",
+      "byte_size": 116140,
+      "sha256": "d49358c9e106d300da685955ccc3b2978a4d7e86a4d275ddf843e858b277a572"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_river_crossing.webp",
+      "byte_size": 296386,
+      "sha256": "a2476738142488e5bcf7725e35f7546ad0a75cbb3033c5338991323fcfbc1256"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_royal_palace.webp",
+      "byte_size": 161638,
+      "sha256": "6d6ab0bc34a90e85ce8b1a5ba45e8cc58ba8292cdbc5c651d9cf5e5d6f0b11ea"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_royal_palace_night.webp",
+      "byte_size": 185860,
+      "sha256": "4a3f2f2b11751cbe30c6ddb983df30c2382d1f20257af80024ac8863908b79f0"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_study.webp",
+      "byte_size": 90150,
+      "sha256": "c6cd62582343ddbd6b51b241e87ed0ef68a7ac1e537a13d5387e76de2983d274"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_swamp.webp",
+      "byte_size": 130180,
+      "sha256": "fdf9e97fcdbf04a12738de3e9dcef7e84057bd95d5c74341553ac33e002b322e"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_tavern.webp",
+      "byte_size": 157386,
+      "sha256": "a6f8f00012c77659804fa49b09692f37d66d85b670f2cb7c9609870c84f105f9"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_throne_room.webp",
+      "byte_size": 153462,
+      "sha256": "31ca2617e4320e78707b729b03b750e61dc0a5fab24bcdb83115f4b0a1b145a9"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_throne_room_night.webp",
+      "byte_size": 127236,
+      "sha256": "5628ac4ea9a97ee369c1b28896351dc773689a1dc76d3cffda04de6806d84582"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_town_square.webp",
+      "byte_size": 207018,
+      "sha256": "88e1f00c254f3b2110d237ba46c4e5c8db7415b46c74dda8eb596b32888c6bc9"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_underground.webp",
+      "byte_size": 206244,
+      "sha256": "0ea4c981eeca70fd3a7ceb5cc12806023cbbe4c0aeb35cfde2a976b9cab07272"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_war_room.webp",
+      "byte_size": 161984,
+      "sha256": "0c8157812b8eadf04225d0621eff9149c329ef8812d01f86ca56a407478e8b52"
+    },
+    {
+      "relative_path": "game/images/backup_sd/bg_waterfall.webp",
+      "byte_size": 169024,
+      "sha256": "493d846591d325d3df743539254341ccddd7a6e2e68ae07917f4563730e8426c"
+    },
+    {
+      "relative_path": "game/images/baron.png",
+      "byte_size": 1126978,
+      "sha256": "f97618d5c0f7bc2f01b97c7539f753e4ee0f37d900315c9959bdcde48bdc381a"
+    },
+    {
+      "relative_path": "game/images/baron_angry.png",
+      "byte_size": 831771,
+      "sha256": "630a0bd88fb726f18a02a8d43a319590049cda7441dd4ddb2e56dd6bfb9826ed"
+    },
+    {
+      "relative_path": "game/images/baron_happy.png",
+      "byte_size": 737015,
+      "sha256": "668ee9540cb679d5efdb44ad231251fa57a58d13d177a0053b34533538f50a2a"
+    },
+    {
+      "relative_path": "game/images/baron_sad.png",
+      "byte_size": 705274,
+      "sha256": "68107e3d0674569e11b131879f277f3f86e679fee5ba246f852b708447ef7f03"
+    },
+    {
+      "relative_path": "game/images/beggar.png",
+      "byte_size": 1160207,
+      "sha256": "8dbf22eb0d1f59a6fc98ca6e0e884c1a68612c9ffd544547c8e1bd3c7ea8ae45"
+    },
+    {
+      "relative_path": "game/images/bertrand.png",
+      "byte_size": 1099667,
+      "sha256": "fc7e393ea0e2d9f831b3e9c5fe39041700d462929a10d52b8f638bd980d7b00f"
+    },
+    {
+      "relative_path": "game/images/bertrand_angry.png",
+      "byte_size": 1307704,
+      "sha256": "7f89fc0986df548bbccc13e1b981436225df0624b1748e6530f3fd61935a9fa3"
+    },
+    {
+      "relative_path": "game/images/bertrand_happy.png",
+      "byte_size": 1383954,
+      "sha256": "abac07ee4f56e3e0521e08f0c2196e2be3d4b44c843d5079d87d747a1b22e238"
+    },
+    {
+      "relative_path": "game/images/bertrand_sad.png",
+      "byte_size": 541070,
+      "sha256": "61bd45b502579a6c948912f2d9ce7b1ee5e86685f95f187bf15dcd5d41e693a6"
+    },
+    {
+      "relative_path": "game/images/bg_ancient_ruins.webp",
+      "byte_size": 150956,
+      "sha256": "c014be9d278ff06649757cf455a555d0870b034f86069277b0ee3be093db2caa"
+    },
+    {
+      "relative_path": "game/images/bg_battlefield.webp",
+      "byte_size": 199228,
+      "sha256": "a3f9b3f2773cd657f63d6193b6f05235f5bb7eb9f77dcfc196f9f3ec9064ecef"
+    },
+    {
+      "relative_path": "game/images/bg_battlefield_night.webp",
+      "byte_size": 209910,
+      "sha256": "89a9990341f5985e71588fab8a88d43d1e78afbd6109f7a14e801d3503de7501"
+    },
+    {
+      "relative_path": "game/images/bg_beach.webp",
+      "byte_size": 202334,
+      "sha256": "f7e140d8f8619c2f60c809a2aa192cb099e8fade93e86f48bdb49df53620cebf"
+    },
+    {
+      "relative_path": "game/images/bg_blacksmith.webp",
+      "byte_size": 144884,
+      "sha256": "9674effaee42bd6d75794be0d4b6af15c410d3c6ebb41566e987a0153aa23e6f"
+    },
+    {
+      "relative_path": "game/images/bg_border.webp",
+      "byte_size": 257840,
+      "sha256": "187a70ab44776fd7d2393d6461911d262ba75d78503849fc6fd32c919742919b"
+    },
+    {
+      "relative_path": "game/images/bg_border_dusk.webp",
+      "byte_size": 221944,
+      "sha256": "b0e84df731ba265b9537609a978b9394640e7a303f0bae4b155777ab53f907a7"
+    },
+    {
+      "relative_path": "game/images/bg_border_night.webp",
+      "byte_size": 225418,
+      "sha256": "a0f22538fbf01fea49db9074e081129d18f0994147de820b1862cd80a476c31a"
+    },
+    {
+      "relative_path": "game/images/bg_castle_armory.webp",
+      "byte_size": 161612,
+      "sha256": "bbb38014bfb582dd0146f54baf08f93832d1f9ca3d521af3f18d4b038adac777"
+    },
+    {
+      "relative_path": "game/images/bg_castle_barracks.webp",
+      "byte_size": 127554,
+      "sha256": "3dd3f4611659334de7352d5e9160f8310effe25d71bd996c6612f58119a5b5dd"
+    },
+    {
+      "relative_path": "game/images/bg_castle_bedchamber.webp",
+      "byte_size": 237350,
+      "sha256": "0d25118eddf6bb5471435cf94c5a01719d8b9f75b43d77da4fbc00cbc2f6a33d"
+    },
+    {
+      "relative_path": "game/images/bg_castle_chapel.webp",
+      "byte_size": 195874,
+      "sha256": "bf038821c327c1c13aa2e7db909fc454b8e068f9a565c3f3c976f1157478fd6d"
+    },
+    {
+      "relative_path": "game/images/bg_castle_exterior.webp",
+      "byte_size": 263118,
+      "sha256": "64481229533ca1cd87d580b14fbd0a7c2c4843d37df35e79c97af28ba595dede"
+    },
+    {
+      "relative_path": "game/images/bg_castle_exterior_dusk.webp",
+      "byte_size": 249414,
+      "sha256": "1e3e731a74bbfc42578c89f16626b4e74048f9605802892b37f2cec527b07e7b"
+    },
+    {
+      "relative_path": "game/images/bg_castle_exterior_night.webp",
+      "byte_size": 254518,
+      "sha256": "ca726e62c7ccdd164e421cd1c9da129cce0f2c267770e580ad6a84935225ef7e"
+    },
+    {
+      "relative_path": "game/images/bg_castle_kitchen.webp",
+      "byte_size": 179968,
+      "sha256": "cd1c77fdbf05539baa06c99a03d443adc194f15af2238bf51f1bfb3f740126e1"
+    },
+    {
+      "relative_path": "game/images/bg_castle_library.webp",
+      "byte_size": 195408,
+      "sha256": "7f8785099cc80df173f50f91b1dc690ba8ef4dd9ed22e4fb28012ee113977742"
+    },
+    {
+      "relative_path": "game/images/bg_castle_stable.webp",
+      "byte_size": 208176,
+      "sha256": "4b231d0a7f2d853f086662abbaa153fb7f882f7aea53cebe26e5cd2e19af4e69"
+    },
+    {
+      "relative_path": "game/images/bg_castle_treasury.webp",
+      "byte_size": 223910,
+      "sha256": "3ee939fa5828d5a0b7dfed183f8e508a7e404895295c0c8ae7f88acbf1f26b8d"
+    },
+    {
+      "relative_path": "game/images/bg_church_interior.webp",
+      "byte_size": 241710,
+      "sha256": "08bfe8338b3f0e4c87e3f92fea55eba96741de5ac3c4509eccffc67197983ee3"
+    },
+    {
+      "relative_path": "game/images/bg_council_hall.webp",
+      "byte_size": 235466,
+      "sha256": "33ef6757fc5880599d42c28ee5fe0dd858427be7e492a30d637691763626b72b"
+    },
+    {
+      "relative_path": "game/images/bg_crypt.webp",
+      "byte_size": 118258,
+      "sha256": "33ea0f70e8550ff095b4576ea759a7d89734189b852eeeb9cc42a4f908fad38f"
+    },
+    {
+      "relative_path": "game/images/bg_dungeon.webp",
+      "byte_size": 202120,
+      "sha256": "685a2bad63895b187bc435a99809ce71f572a273a3b15b41f2bdc68489cf5e8d"
+    },
+    {
+      "relative_path": "game/images/bg_forest_dark.webp",
+      "byte_size": 200176,
+      "sha256": "d3f562d4bae6e86ad701a37dcd065f77dba7e33ff46c0729eab6cce7406c4411"
+    },
+    {
+      "relative_path": "game/images/bg_forest_grave.webp",
+      "byte_size": 243662,
+      "sha256": "87f9ae1df31969ba5c7c9548ebbe28c6d3bc108ee41ff7d966a9cdf6fc7f6edc"
+    },
+    {
+      "relative_path": "game/images/bg_forest_path.webp",
+      "byte_size": 245400,
+      "sha256": "058105f75f350149332734271424dc3ee319d06f8f065ad8bb65517c58417798"
+    },
+    {
+      "relative_path": "game/images/bg_garden_night.webp",
+      "byte_size": 217154,
+      "sha256": "4cf01cf826e1fd57c3b7fafb0a9fbec352265711b6314aeda65bd77e8c197c6b"
+    },
+    {
+      "relative_path": "game/images/bg_great_hall.webp",
+      "byte_size": 280876,
+      "sha256": "796096b802947228f89dd30b21d676fbb9af2872703381ef06717d955a657a66"
+    },
+    {
+      "relative_path": "game/images/bg_harbor.webp",
+      "byte_size": 187902,
+      "sha256": "bf6a32425906c2c3e2e779c76ce90c1876fd08e39069c61b5d17322a57c0cfc6"
+    },
+    {
+      "relative_path": "game/images/bg_healer_house.webp",
+      "byte_size": 267152,
+      "sha256": "2f3f0cc6f0e66433d16e68f0b1ab7f048dcd14965653e23c83a3db6a6cffce26"
+    },
+    {
+      "relative_path": "game/images/bg_herb_garden.webp",
+      "byte_size": 285136,
+      "sha256": "41d1141000b601fef3933849433f1ca530f3801d5c48bc6b7d3a0d99ad99d8ed"
+    },
+    {
+      "relative_path": "game/images/bg_hidden_chamber.webp",
+      "byte_size": 99364,
+      "sha256": "50586ee577e3e679cfbec2d2c029eae4c0b2f95a79a62e7f29cc3623a9f48c1f"
+    },
+    {
+      "relative_path": "game/images/bg_interrogation_room.webp",
+      "byte_size": 114696,
+      "sha256": "7c4b4a98c53ca44cea864434ce21281cc6df8c79974d7f970400c7fe7db8b585"
+    },
+    {
+      "relative_path": "game/images/bg_market.webp",
+      "byte_size": 224512,
+      "sha256": "8a1f1438b12d9093d4316d528587cb267a5e3bf7b97c45dadffbc8a36fa85fa7"
+    },
+    {
+      "relative_path": "game/images/bg_market_night.webp",
+      "byte_size": 241296,
+      "sha256": "b920f61f09a509f609cf67bb922038a456aba6022461e644fc8faa5febeac8b6"
+    },
+    {
+      "relative_path": "game/images/bg_marketplace_day.webp",
+      "byte_size": 380640,
+      "sha256": "4ce84cfe513e8cd3c553dfb1b3fe688ff5d462d981f171f4fa8d8e34ab609070"
+    },
+    {
+      "relative_path": "game/images/bg_meadow_night.webp",
+      "byte_size": 110254,
+      "sha256": "dd2a11a933a15086ff49007ef07db78439118a1b92d5aff0022f76a2b60757fa"
+    },
+    {
+      "relative_path": "game/images/bg_mountain_pass.webp",
+      "byte_size": 177110,
+      "sha256": "e1a741bbf81f1fa479e39d627b1243bd3775d1123a5c47f7146a8a93c0752533"
+    },
+    {
+      "relative_path": "game/images/bg_noble_district.webp",
+      "byte_size": 181900,
+      "sha256": "bece366f3e084455239091ae19120750c637e73c999ae21aa0848364cba1050e"
+    },
+    {
+      "relative_path": "game/images/bg_palace_garden.webp",
+      "byte_size": 291316,
+      "sha256": "d63868a9812a429749c54410a57d398520e550ff14d0b4269be7af606da172bb"
+    },
+    {
+      "relative_path": "game/images/bg_palace_garden_dusk.webp",
+      "byte_size": 257452,
+      "sha256": "810388e34b254168c6d84e5e9469086a58137e7a478290821dab1d070146fbf5"
+    },
+    {
+      "relative_path": "game/images/bg_parliament_hall.webp",
+      "byte_size": 192324,
+      "sha256": "beeebeb4d0d4b5a4ce6fb392ffb7a65449e31daa9631dfb9a7ec7fbf8ee60acd"
+    },
+    {
+      "relative_path": "game/images/bg_poor_district.webp",
+      "byte_size": 291026,
+      "sha256": "6e5201a7b8ad20291e63f9810369af91b93d81da773716ed43a6d8ad32ae2edb"
+    },
+    {
+      "relative_path": "game/images/bg_raven_deck.webp",
+      "byte_size": 148158,
+      "sha256": "57e0eddeb7861011ac1176c2edca8bc8e6d6ddd0b262216a42cad7bd921ea520"
+    },
+    {
+      "relative_path": "game/images/bg_ritual_ground.webp",
+      "byte_size": 150686,
+      "sha256": "d5ea2b3b3f3bdf87575476d60f199eb1d22dfcb591958bfc5df40dd0128ed296"
+    },
+    {
+      "relative_path": "game/images/bg_river_crossing.webp",
+      "byte_size": 343884,
+      "sha256": "cc003bc62bd0ac600f85fb796a611ae462d2d42c78c342fecc040cb6ec5190ab"
+    },
+    {
+      "relative_path": "game/images/bg_royal_palace.webp",
+      "byte_size": 240154,
+      "sha256": "d8b4f4b048e019230e2ee70ab8e97b32301c5cbc4f2254a646dd89f5e917256b"
+    },
+    {
+      "relative_path": "game/images/bg_royal_palace_night.webp",
+      "byte_size": 270462,
+      "sha256": "7b4612f6add7b317e177e7d27dc67404cbd9f17d19bfcbf693b860ae4ba703e4"
+    },
+    {
+      "relative_path": "game/images/bg_south_port.webp",
+      "byte_size": 213162,
+      "sha256": "5308f88c92c2f7810630d2f4765787104b6fefa5833f4c90931d63d2a6d7abe2"
+    },
+    {
+      "relative_path": "game/images/bg_study.webp",
+      "byte_size": 150160,
+      "sha256": "57278a65ce10c3279a2eee474d4ad1d8ee8b4e31b23c9cc63e76f504d9895780"
+    },
+    {
+      "relative_path": "game/images/bg_study_night.webp",
+      "byte_size": 93404,
+      "sha256": "9bd6ebfcf6fd45202e6e7c3ed98c724887c9e500b0cac4677d49927e84f91cde"
+    },
+    {
+      "relative_path": "game/images/bg_swamp.webp",
+      "byte_size": 160682,
+      "sha256": "b0ea4843da769d9cb672f4cfa29af399bbc295ab7ce7d6e7606575c45e17cf90"
+    },
+    {
+      "relative_path": "game/images/bg_tavern.webp",
+      "byte_size": 197202,
+      "sha256": "a5df6de2dbf4966ab78dc641164f6df7502fc166c5c50bd524415b60eba3644a"
+    },
+    {
+      "relative_path": "game/images/bg_throne_room.webp",
+      "byte_size": 228486,
+      "sha256": "1717b386c8bd22175d5843719effffa821463240a354b1128de94471eb26985d"
+    },
+    {
+      "relative_path": "game/images/bg_throne_room_night.webp",
+      "byte_size": 165240,
+      "sha256": "457c3c3ce12bf1958a7094a3efb2e0dff70631b477b7f725c071ea61704f956a"
+    },
+    {
+      "relative_path": "game/images/bg_tideport_beach.webp",
+      "byte_size": 221276,
+      "sha256": "753387f58f50f60bb821a8ee20fdb64815b59fa9b3e9e5e5f4fccfa79978d2ca"
+    },
+    {
+      "relative_path": "game/images/bg_tideport_fleet.webp",
+      "byte_size": 104238,
+      "sha256": "080aed5c3b7e3c950d5c18710da0d34d2d12fcd2485de88bb2594bfbb809af3a"
+    },
+    {
+      "relative_path": "game/images/bg_tideport_harbor.webp",
+      "byte_size": 303558,
+      "sha256": "6bd039752f475d06ec22315089cfec216d2cb3d3683c2c8135d89498803b3532"
+    },
+    {
+      "relative_path": "game/images/bg_tideport_office.webp",
+      "byte_size": 90434,
+      "sha256": "676f7c1ad7759470ea57d85e6a658d2cfc7f900964e961db06b7349099c813b1"
+    },
+    {
+      "relative_path": "game/images/bg_tideport_ship.webp",
+      "byte_size": 59796,
+      "sha256": "db91a9974cf3b303aa905a92f7f3f42cf5d5fdd177d8892a96df90f96da15b9e"
+    },
+    {
+      "relative_path": "game/images/bg_tideport_tavern.webp",
+      "byte_size": 135916,
+      "sha256": "5462ee4c1bab7c0b633a2b4abdfeec09a6d15876d179225abc6977c8ee586870"
+    },
+    {
+      "relative_path": "game/images/bg_town_square.webp",
+      "byte_size": 253780,
+      "sha256": "4999c72efae623c2886ce5a8ba276aad3ff129547508733ce804506a5abd9043"
+    },
+    {
+      "relative_path": "game/images/bg_underground.webp",
+      "byte_size": 296502,
+      "sha256": "311d7f9932079387a9c1bb6a44863ae0c11c9e5fbdf68c596305d93de0cbdd9c"
+    },
+    {
+      "relative_path": "game/images/bg_village.webp",
+      "byte_size": 215316,
+      "sha256": "64315e98b3b8ac3d4d3389483f6700dbefa0ea744f14c1f8106ac9b06aa83f6b"
+    },
+    {
+      "relative_path": "game/images/bg_war_room.webp",
+      "byte_size": 197648,
+      "sha256": "9e2028efca136e8d6c6924172e0765764d11e9339c15be337411b37b02cda21f"
+    },
+    {
+      "relative_path": "game/images/bg_waterfall.webp",
+      "byte_size": 202948,
+      "sha256": "933ffca15eab0ed5759d968ad9ce32494ae9f5385d0ac8d656745e31caa24fc8"
+    },
+    {
+      "relative_path": "game/images/bishop.png",
+      "byte_size": 980170,
+      "sha256": "cf757e90fc021fe00e89e3b850b21cab964e7005748ef8464704ec5df3bc496b"
+    },
+    {
+      "relative_path": "game/images/bishop_angry.png",
+      "byte_size": 980336,
+      "sha256": "822210c0a2df3fad1c1967eb3796b03e6379c8ca5573cf2e686229b46372b4be"
+    },
+    {
+      "relative_path": "game/images/bishop_happy.png",
+      "byte_size": 815679,
+      "sha256": "19d095bea04ba7591b509a83c0f82bf6b9aa95348829c849a07498578e6a8a2f"
+    },
+    {
+      "relative_path": "game/images/bishop_sad.png",
+      "byte_size": 790551,
+      "sha256": "538e1c7e258563846ef99fd1ea9e38087e957f0f5f0e8d76df5b1b803cf63e05"
+    },
+    {
+      "relative_path": "game/images/blacksmith_wife.png",
+      "byte_size": 1056979,
+      "sha256": "6cde4569949d062cab923feec314d8e370f4cda5c25a6d91bf3d3ae7e345ea48"
+    },
+    {
+      "relative_path": "game/images/blacksmith_wife_angry.png",
+      "byte_size": 1139622,
+      "sha256": "595045f4ce1487c8fb8b47f6752cdae2e5cfe11185ace87f450a3e4120848673"
+    },
+    {
+      "relative_path": "game/images/blacksmith_wife_happy.png",
+      "byte_size": 1022601,
+      "sha256": "1fb65f5cb24bf065990590fda18cca33d518e67c6c77156abca3676ffed4d5a9"
+    },
+    {
+      "relative_path": "game/images/blacksmith_wife_sad.png",
+      "byte_size": 898889,
+      "sha256": "8cbbdb5ff4c1f0be95b75d741788d80aada9bca6c511bb07d33f74b40720353a"
+    },
+    {
+      "relative_path": "game/images/bully_kid.png",
+      "byte_size": 1141724,
+      "sha256": "d28a4f75a3794a0262e6d319e29d0c015e0280252d8e06eef9805738571f15cf"
+    },
+    {
+      "relative_path": "game/images/bully_kid_angry.png",
+      "byte_size": 1184792,
+      "sha256": "f93dcfd921f695c0c496c08fcc98d8db423007b110d432cc22ebac4b73bdf4c6"
+    },
+    {
+      "relative_path": "game/images/bully_kid_happy.png",
+      "byte_size": 1100566,
+      "sha256": "971a264e289090543a456f313bb3445c8b4aea413baa6eab58cb617b94470b42"
+    },
+    {
+      "relative_path": "game/images/bully_kid_sad.png",
+      "byte_size": 1188042,
+      "sha256": "53179253da77bb59a93a44fb9061378f7c2f11eee068b9e931c3a9a1c6a980a7"
+    },
+    {
+      "relative_path": "game/images/captain.png",
+      "byte_size": 1242002,
+      "sha256": "3bfbf27e3ac6418020d46e6d2915cf23f143f1307127911c74935196bbfd30a4"
+    },
+    {
+      "relative_path": "game/images/captain_angry.png",
+      "byte_size": 879384,
+      "sha256": "cdc8fc38870435bfaf64ce3cff174292ccd2ccf1a6c2feb75609b90a0219e6ac"
+    },
+    {
+      "relative_path": "game/images/captain_happy.png",
+      "byte_size": 903774,
+      "sha256": "e97a1b2b267b3910f63024bf915654ac4051668d2da6dd76b27ecf11f05a5950"
+    },
+    {
+      "relative_path": "game/images/captain_sad.png",
+      "byte_size": 782589,
+      "sha256": "c68077f2750c5b6a814dfaac8fab180c6cd126cb588c07bf66056ca027c8ee7a"
+    },
+    {
+      "relative_path": "game/images/cg_confession_corsair.webp",
+      "byte_size": 139090,
+      "sha256": "6cac5429b6c6cad2f7db8bc862cef732ab33e9323687ab6f0a984021e4ffdccb"
+    },
+    {
+      "relative_path": "game/images/cg_confession_elena.webp",
+      "byte_size": 186256,
+      "sha256": "cabde4fbbac91aaf5953079b92d5c35fa5e4f2c15dcbd05e3e84d348acc57f62"
+    },
+    {
+      "relative_path": "game/images/cg_end_borgia.webp",
+      "byte_size": 196892,
+      "sha256": "f221d0898a2a7f8b557fddf022492c6931bc121c9d76d6eac21c3f92ddf1b20a"
+    },
+    {
+      "relative_path": "game/images/cg_end_fall.webp",
+      "byte_size": 184284,
+      "sha256": "26689d30fd67ca87419fcae53c9b92153067f18cc35c8ac6b7bf3b39f64fdcf7"
+    },
+    {
+      "relative_path": "game/images/cg_end_holy.webp",
+      "byte_size": 177050,
+      "sha256": "67468a05c1c4dc506f2c1957e78f9283b4d87c1db1919475a759720e631dbfdb"
+    },
+    {
+      "relative_path": "game/images/cg_end_iron.webp",
+      "byte_size": 127640,
+      "sha256": "1af42cf136a748c767a096c9b92625d989ceb27be54f02d7d21af4b187e27d38"
+    },
+    {
+      "relative_path": "game/images/cg_end_people.webp",
+      "byte_size": 219866,
+      "sha256": "4060bee20d527f442146668e9300c8298e952f592a4bc2f2c1d6448ba1c0b419"
+    },
+    {
+      "relative_path": "game/images/cg_end_sea.webp",
+      "byte_size": 126702,
+      "sha256": "1dc40315094a3d4602e413f78c09627987293ecd63feb549b629b4cac794ace3"
+    },
+    {
+      "relative_path": "game/images/cg_end_shadow.webp",
+      "byte_size": 136996,
+      "sha256": "5bf896e61c53bc33b57b37413a951b7916cb6fcbb745af241aa052ae304618ad"
+    },
+    {
+      "relative_path": "game/images/cg_end_truth.webp",
+      "byte_size": 117140,
+      "sha256": "c8aadf4fd6385fc96fdf0d12e720af7a909206dad9580b96525874a0a7b844d1"
+    },
+    {
+      "relative_path": "game/images/cg_end_vassal.webp",
+      "byte_size": 92378,
+      "sha256": "232c5cd301857b00784c11e1dfb38ac623b16eb9558448cab0f60360bb25bf1a"
+    },
+    {
+      "relative_path": "game/images/cg_father_son.webp",
+      "byte_size": 76334,
+      "sha256": "ecbed835d97a4a1982dd2501d61db72cdc24b78d2b79dab69e5ed0f644aed191"
+    },
+    {
+      "relative_path": "game/images/cg_father_son_empty.webp",
+      "byte_size": 76292,
+      "sha256": "6e3380bbd22d57a032a9b3bb5e039c17a86d549b3c0021ba18adc416834428fa"
+    },
+    {
+      "relative_path": "game/images/cg_unmask.webp",
+      "byte_size": 77814,
+      "sha256": "318c9eed87c7f55d41506d973601af4aae936febef3eb0dfb7728751f086ea49"
+    },
+    {
+      "relative_path": "game/images/chancellor.png",
+      "byte_size": 865670,
+      "sha256": "7718fd19e2d04262cb6c83a31324e32006385b15cd371d725abc967e7f4cd2f1"
+    },
+    {
+      "relative_path": "game/images/chen_captain.png",
+      "byte_size": 718258,
+      "sha256": "8a16bef2c7291f8d8940e967cbb21e6726748d48286ba706aba4abcad2fc57a4"
+    },
+    {
+      "relative_path": "game/images/corsair.png",
+      "byte_size": 703673,
+      "sha256": "7d95adfa90341237c32bcd4de5b7428d90215ccb4e6a0a9781171629dc840094"
+    },
+    {
+      "relative_path": "game/images/corsair_angry.png",
+      "byte_size": 753910,
+      "sha256": "8d6d883686de299b992cf1d81b19a4ea8f767f61bbbc076a0387b20f9e6896e8"
+    },
+    {
+      "relative_path": "game/images/corsair_happy.png",
+      "byte_size": 753152,
+      "sha256": "4b31d42fa99a4264c434812a244caa24ab0f41fcb2af4bf921378f27e14fa31f"
+    },
+    {
+      "relative_path": "game/images/corsair_intimate.png",
+      "byte_size": 764905,
+      "sha256": "d17c148ce0692cf8f0c390d8d2e9206c328601548cb7e46d0338d9fd6edb38ec"
+    },
+    {
+      "relative_path": "game/images/corsair_sad.png",
+      "byte_size": 784325,
+      "sha256": "81bf23b2e0ece532d74b7085fe26a11111fe6a4f9a7d5b488c29778f860b8b7f"
+    },
+    {
+      "relative_path": "game/images/count_grey.png",
+      "byte_size": 1123443,
+      "sha256": "7656564fc21fa0946345a7b141cadf7777a094539d6e9a22e78ed7c50b62ea9d"
+    },
+    {
+      "relative_path": "game/images/count_grey_angry.png",
+      "byte_size": 770367,
+      "sha256": "6e009e357dc829f1ed9aebb1ccdccf82178e2ca33674565db9b29ae9768192e8"
+    },
+    {
+      "relative_path": "game/images/count_grey_happy.png",
+      "byte_size": 946512,
+      "sha256": "c734d07085f10e500ff8828cbafc6def92efaffc54d63d1bf2c22915319c5b14"
+    },
+    {
+      "relative_path": "game/images/count_grey_sad.png",
+      "byte_size": 1099311,
+      "sha256": "e9eb0550f6ac99effebfeaf74136dbca588ec5d02e00e5f192bd38ff4f8ea6ff"
+    },
+    {
+      "relative_path": "game/images/countess_hilda.png",
+      "byte_size": 956395,
+      "sha256": "c6e85b9a7e6a6835f1e5d8a91bb654e2fa0bf5586d7b402a45d8433a4fffabca"
+    },
+    {
+      "relative_path": "game/images/countess_hilda_angry.png",
+      "byte_size": 1018668,
+      "sha256": "20359e1a1da71cc1be1a16dd943634d172d2712c43855607f06a5004a85382df"
+    },
+    {
+      "relative_path": "game/images/countess_hilda_happy.png",
+      "byte_size": 1401699,
+      "sha256": "a343c708f77658afc62448de7afb92db82b7fa153999c8ae77fc18b6bb9d2489"
+    },
+    {
+      "relative_path": "game/images/countess_hilda_sad.png",
+      "byte_size": 1033675,
+      "sha256": "ac1bb6d2994afca793bb7952f59b3b89f3ea4f788fe18c2bba7205ba03c14b72"
+    },
+    {
+      "relative_path": "game/images/countess_stein.png",
+      "byte_size": 803714,
+      "sha256": "4820f8bdee5fb5ab79855c41d918bea15cf50b5d5edb16d1f171ee92e5ee2515"
+    },
+    {
+      "relative_path": "game/images/countess_stein_angry.png",
+      "byte_size": 1075829,
+      "sha256": "4fce8bbf377fd79632e13a3cc4be49261b830f6c7cf1769fff76875495ae2808"
+    },
+    {
+      "relative_path": "game/images/countess_stein_happy.png",
+      "byte_size": 842160,
+      "sha256": "abc6c178cb468ec8825e3ee56fd4fce7db77f6562b0fd7892c4f647cbb42444b"
+    },
+    {
+      "relative_path": "game/images/countess_stein_sad.png",
+      "byte_size": 1109199,
+      "sha256": "149f721daaf39441ccdac40a255955721b2f25b0a42de0be238b6ceef8d7f34e"
+    },
+    {
+      "relative_path": "game/images/court_herald.png",
+      "byte_size": 1116347,
+      "sha256": "4694b1263ef485a0839e105f549f5698b03f7ea9ed34db3ec778dfba7055c0de"
+    },
+    {
+      "relative_path": "game/images/court_poet.png",
+      "byte_size": 1086990,
+      "sha256": "844b6e222c1ff5de29f68be1f405ebfe920fdef9f749af884ef026bb040b6a70"
+    },
+    {
+      "relative_path": "game/images/dockhand.png",
+      "byte_size": 605890,
+      "sha256": "9a7d1468cdee150cfe0f69fdf9aa33cc550e3252acb4d2c63a5535336f3cd410"
+    },
+    {
+      "relative_path": "game/images/edmund.png",
+      "byte_size": 2090014,
+      "sha256": "007336f3739d42ff29b96a44c227dfae9d4fe9cd34a2e17a48fe5cd3f6c919e2"
+    },
+    {
+      "relative_path": "game/images/edmund_masked.png",
+      "byte_size": 1787400,
+      "sha256": "c89720a602be94552b29376c9f6fa60ca7cb02ca9d1aacebdc2dad78fb714a08"
+    },
+    {
+      "relative_path": "game/images/elena.png",
+      "byte_size": 917517,
+      "sha256": "351783096bc22de1b71cabe0e7c7911d011e7fdfe78dafbc2a1198d7670db444"
+    },
+    {
+      "relative_path": "game/images/elena_angry.png",
+      "byte_size": 734069,
+      "sha256": "0a60acf77c4364f04ad050e3a1519c11d5ed3a874b2c14431ce84fd6c5c10969"
+    },
+    {
+      "relative_path": "game/images/elena_happy.png",
+      "byte_size": 759914,
+      "sha256": "4c039a267b311391a8c73aa7ea1e3a668f574131c40a400f338da46f6bd6d3ec"
+    },
+    {
+      "relative_path": "game/images/elena_intimate.png",
+      "byte_size": 1624194,
+      "sha256": "a7e08dfcecd338cc90d336906ffad5bbe3f13a156ca8c1570178cfdcbbd6dd69"
+    },
+    {
+      "relative_path": "game/images/elena_sad.png",
+      "byte_size": 790552,
+      "sha256": "a87dca3c6d52497db78fc2f1de038b2a8a38af8c684134c26eb64602fa014abc"
+    },
+    {
+      "relative_path": "game/images/farmer_rep.png",
+      "byte_size": 1224796,
+      "sha256": "83001210b9f3aa43cbfaae93617adedc9c5f7b78431c9c6774cbb91706830084"
+    },
+    {
+      "relative_path": "game/images/farmer_rep_angry.png",
+      "byte_size": 1061205,
+      "sha256": "4171bb499c078317f8e909ad10f334b6cc4a405d07ad2a09b4b328a0962717a1"
+    },
+    {
+      "relative_path": "game/images/farmer_rep_happy.png",
+      "byte_size": 1007118,
+      "sha256": "d1c40ddc575ffe3267b335a512fa6c8d6a34a59603c64f3d832b23f9039fb5cb"
+    },
+    {
+      "relative_path": "game/images/farmer_rep_sad.png",
+      "byte_size": 1011617,
+      "sha256": "34baf1c9e7bde46dc0bebc578064cef3fbe87e4db89872f26f1b9ffa19c48c24"
+    },
+    {
+      "relative_path": "game/images/father.png",
+      "byte_size": 1011466,
+      "sha256": "2c26d6733ae0a321db924da51b2c34b185a9876a3218379f5dcd3c49159e7fb3"
+    },
+    {
+      "relative_path": "game/images/father_angry.png",
+      "byte_size": 922279,
+      "sha256": "54c8f6f5d8d84054ec279d73d08fa58e67633af82ca403eeb7b9437cbde76d06"
+    },
+    {
+      "relative_path": "game/images/father_happy.png",
+      "byte_size": 956753,
+      "sha256": "3e5dbe778ad26ad135519593aa623e5a77d385fafae08d96425e938b2fe7c07c"
+    },
+    {
+      "relative_path": "game/images/father_sad.png",
+      "byte_size": 804350,
+      "sha256": "6b9723327dffb295a67632ce09b5eb092de0d17094493715835061c6ca22dc1f"
+    },
+    {
+      "relative_path": "game/images/friend_marcus.png",
+      "byte_size": 900350,
+      "sha256": "044f33f24378d71c56c4a720b5643621c816529d35d459baf954a48b390d3454"
+    },
+    {
+      "relative_path": "game/images/friend_marcus_angry.png",
+      "byte_size": 732931,
+      "sha256": "19bdc06122bc629ce96b37754a830bdcd30ee992bf767163cf0647c83f4ea7e6"
+    },
+    {
+      "relative_path": "game/images/friend_marcus_happy.png",
+      "byte_size": 817670,
+      "sha256": "e87682451367f45f50dab9b7358b480dee6c6e42ec0e3f5f8e3606023731eaa2"
+    },
+    {
+      "relative_path": "game/images/friend_marcus_sad.png",
+      "byte_size": 984616,
+      "sha256": "26d52ae8385eb59bb33693686b9fb278f62c15c7bdd7552b64eb16463c315090"
+    },
+    {
+      "relative_path": "game/images/guild_master.png",
+      "byte_size": 998936,
+      "sha256": "ed63ff5b11236f1d85f2bba961d42bfccd98b6ded10199b349964102b4ba2e32"
+    },
+    {
+      "relative_path": "game/images/harbor_master.png",
+      "byte_size": 782362,
+      "sha256": "aed05cc20ad5e502a7da1ca0c4b789c2145038263449e421b5c469775b40a3ab"
+    },
+    {
+      "relative_path": "game/images/hd/bg_ancient_ruins.webp",
+      "byte_size": 264028,
+      "sha256": "0b07e70605a7a4d6614ba4335f147ef73bbfde791d14c92bd7815d4c9f6454c2"
+    },
+    {
+      "relative_path": "game/images/hd/bg_battlefield.webp",
+      "byte_size": 384964,
+      "sha256": "96b4cad4291a3d156017d3bdd0378df68e40921407db562e1e3e970d2ef5e755"
+    },
+    {
+      "relative_path": "game/images/hd/bg_battlefield_night.webp",
+      "byte_size": 405834,
+      "sha256": "7d9674f231fdfa09a3c03f879092d7c73f23b2ad1b5a314d65bbd7a1beb81835"
+    },
+    {
+      "relative_path": "game/images/hd/bg_beach.webp",
+      "byte_size": 421462,
+      "sha256": "90872d004ef237840d6e30ec72dcdddedd4aa9b97c6d6b2858186e961b7ad54d"
+    },
+    {
+      "relative_path": "game/images/hd/bg_blacksmith.webp",
+      "byte_size": 251004,
+      "sha256": "dd93096845eae702585f5ca3fc075ebfee9951c57cbea2dad07bbf70718b6791"
+    },
+    {
+      "relative_path": "game/images/hd/bg_border.webp",
+      "byte_size": 483830,
+      "sha256": "1c2b26a7e4b5bef47b078b5e5b559d1e22e57a55b777964836c1302657fb409e"
+    },
+    {
+      "relative_path": "game/images/hd/bg_border_dusk.webp",
+      "byte_size": 422870,
+      "sha256": "973d7eaa72ac90aaecadf065ccbe19a1e050fe39f50c63ffbe650799fb92f4ab"
+    },
+    {
+      "relative_path": "game/images/hd/bg_border_night.webp",
+      "byte_size": 431444,
+      "sha256": "5e4fbcf8903400f3cf44d585f634912023807aa8ae0bd4d85a310de3cabcaaa8"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_armory.webp",
+      "byte_size": 287286,
+      "sha256": "415e651b679473fb0019f5f3c8bb7a3ed96f1a943adae028bccae634a0bfe7fa"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_barracks.webp",
+      "byte_size": 254914,
+      "sha256": "b36b0f2d02f7a19717dd9e60285c1a794ee08721700169431986da981b4b6980"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_bedchamber.webp",
+      "byte_size": 476174,
+      "sha256": "5c27c4fb6e75fb278bef10b7228f6d1f18c56b13da7b6a76b6fd77450da43ba4"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_chapel.webp",
+      "byte_size": 359050,
+      "sha256": "d396944754e6c46e5f83b4711e826770ea9706c663b03c30390c35b1fdb3fb03"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_exterior.webp",
+      "byte_size": 557244,
+      "sha256": "5148ce29a102c5cee8e6c64072034a31192a6c71e76ee440a713feaacdc663bc"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_exterior_dusk.webp",
+      "byte_size": 499458,
+      "sha256": "5ddb3534b723ea4b7157db568be83736024095f5cdf42c1d9961d69de9b9b8f2"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_exterior_night.webp",
+      "byte_size": 514766,
+      "sha256": "c8029691dd4d6298b79a15825c8b1f8e373829cf675f1797691621fb46d5cdd8"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_kitchen.webp",
+      "byte_size": 317852,
+      "sha256": "0ab1dc63c526cc793e37afb063d8bf9890bed9c996ae3d7edde8a79c579c12f9"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_library.webp",
+      "byte_size": 353626,
+      "sha256": "a6efc6f75a9dc52b3a97d9601ec1f3df33108710dc0f65275e9f6b0763cd70be"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_stable.webp",
+      "byte_size": 356752,
+      "sha256": "20b519f90d0d3c5f9b2f781765aacc392dc5abedb48926faa2fe76977073df3a"
+    },
+    {
+      "relative_path": "game/images/hd/bg_castle_treasury.webp",
+      "byte_size": 427138,
+      "sha256": "52fdba44b0006d92de3d65a3dd4512c073785cc4c0f14419e2509ec8293b318f"
+    },
+    {
+      "relative_path": "game/images/hd/bg_church_interior.webp",
+      "byte_size": 503402,
+      "sha256": "478cda10a465372b1e3d9c97af60d799f1efc786eae845624d3d25faac8565b4"
+    },
+    {
+      "relative_path": "game/images/hd/bg_council_hall.webp",
+      "byte_size": 459652,
+      "sha256": "7775c4fad4037cd44dea9f9fcf83e3183eb0c33ca87e3679af3a77fe04b7d1d8"
+    },
+    {
+      "relative_path": "game/images/hd/bg_crypt.webp",
+      "byte_size": 218052,
+      "sha256": "66d24155b5c05b24c202f3172cdf1a880dc9392ab5c4ab669e199eb844da9fee"
+    },
+    {
+      "relative_path": "game/images/hd/bg_dungeon.webp",
+      "byte_size": 355474,
+      "sha256": "6b07f9427d9a0cd9d683b60b3e3a8cba8f74cb3c078b755b3d1fd7eb155c70c3"
+    },
+    {
+      "relative_path": "game/images/hd/bg_forest_dark.webp",
+      "byte_size": 391412,
+      "sha256": "2f31897e8270bccd4e0c3f32fc87c44d9015cb204189988828e8341d8d4ca82c"
+    },
+    {
+      "relative_path": "game/images/hd/bg_forest_path.webp",
+      "byte_size": 474012,
+      "sha256": "9d6e81ba692d5f93d8e2093f0eb48833a786c3a4986b823f7da1dacd9af3d278"
+    },
+    {
+      "relative_path": "game/images/hd/bg_garden_night.webp",
+      "byte_size": 392960,
+      "sha256": "4018e82869be7ae454a9f583c881300fd880f85d6df3789dd0db713e9503f8e9"
+    },
+    {
+      "relative_path": "game/images/hd/bg_great_hall.webp",
+      "byte_size": 582006,
+      "sha256": "2dcbff1e1921f4778620f27f9bdc28645acecd70b2629c134119d88472fc4546"
+    },
+    {
+      "relative_path": "game/images/hd/bg_harbor.webp",
+      "byte_size": 325826,
+      "sha256": "25a498d80732e2292a19b054df15bc553317c5ce6f14d8750b5e48b5cbdeeadf"
+    },
+    {
+      "relative_path": "game/images/hd/bg_healer_house.webp",
+      "byte_size": 554222,
+      "sha256": "f56b13a0e793bbadcc75fbaef402b8375e979fe40dceae8468349f9e31c72aaa"
+    },
+    {
+      "relative_path": "game/images/hd/bg_hidden_chamber.webp",
+      "byte_size": 180162,
+      "sha256": "e81ba136762d49ddff92c3dfbbaee81a4e52b83fd5eebdb5a65dc727b853779e"
+    },
+    {
+      "relative_path": "game/images/hd/bg_interrogation_room.webp",
+      "byte_size": 219658,
+      "sha256": "a6bfc79b04466d337a0f8b689f4c75c1f64b64ab442b3fff5ff56c9464140b90"
+    },
+    {
+      "relative_path": "game/images/hd/bg_market.webp",
+      "byte_size": 432026,
+      "sha256": "5709f5a4d13cfd5dee19ce4884d6ddbe3e0a91a36d453b31792443087a2449e3"
+    },
+    {
+      "relative_path": "game/images/hd/bg_market_night.webp",
+      "byte_size": 454688,
+      "sha256": "f37c24fbb59e019397b5d733e1adaeecd07067a099dcbdb3ea94ed0d7b8101f2"
+    },
+    {
+      "relative_path": "game/images/hd/bg_marketplace_day.webp",
+      "byte_size": 799602,
+      "sha256": "311fa6f0d2934b443c0275c1ecd092e1859d6495a83d222ddc982052be23c43e"
+    },
+    {
+      "relative_path": "game/images/hd/bg_meadow_night.webp",
+      "byte_size": 204450,
+      "sha256": "468aa976ea12bf0b65d592c7d8c8d42f0dd93b8bb6663a897a995a4c50bd5814"
+    },
+    {
+      "relative_path": "game/images/hd/bg_mountain_pass.webp",
+      "byte_size": 306632,
+      "sha256": "a52c13535a0e7a1a6982b8f5a86adec7fddccf46bea4afe3bd4861040f2a9db1"
+    },
+    {
+      "relative_path": "game/images/hd/bg_noble_district.webp",
+      "byte_size": 329764,
+      "sha256": "611fa23d8b283b9f32bf4b8bebbfbae41747c170633f58bf78fc8e41d00f9482"
+    },
+    {
+      "relative_path": "game/images/hd/bg_palace_garden.webp",
+      "byte_size": 576524,
+      "sha256": "4231bbfcf11158926e81bdb59e6cec7bd59d10bc7af215f365a8807e74d4089b"
+    },
+    {
+      "relative_path": "game/images/hd/bg_palace_garden_dusk.webp",
+      "byte_size": 525668,
+      "sha256": "a90832d83ce7662b7ce95b5ead4dc916128e6ddbd7f5ccbcb31063da955feaef"
+    },
+    {
+      "relative_path": "game/images/hd/bg_parliament_hall.webp",
+      "byte_size": 353660,
+      "sha256": "e83518fd467ecc46bd2eae601108cb68eea728aa963fdf5d3faecbc97fd4672b"
+    },
+    {
+      "relative_path": "game/images/hd/bg_poor_district.webp",
+      "byte_size": 602100,
+      "sha256": "21a1894c015681f5e3a82db6d40cfb3bdf75b909177a89d457e3e0fdd6d2e089"
+    },
+    {
+      "relative_path": "game/images/hd/bg_ritual_ground.webp",
+      "byte_size": 274930,
+      "sha256": "882826efc927b1d3822aedcc2265203c0dc10ca9695e01aa05aa635e01064bbe"
+    },
+    {
+      "relative_path": "game/images/hd/bg_river_crossing.webp",
+      "byte_size": 765426,
+      "sha256": "6b7f50d375936a0853ce64716ed7519b8030335547858c98a6bdf799206be9f0"
+    },
+    {
+      "relative_path": "game/images/hd/bg_royal_palace.webp",
+      "byte_size": 458972,
+      "sha256": "ffd0e4959a3e81572cac3f4ac8e5e5f8f787ef61037246c3acc762bc52f12f5e"
+    },
+    {
+      "relative_path": "game/images/hd/bg_royal_palace_night.webp",
+      "byte_size": 532696,
+      "sha256": "87a6d6debe3bfcfb7328afc98592f00437b2b139eac2e025bea4566dd679ced5"
+    },
+    {
+      "relative_path": "game/images/hd/bg_study.webp",
+      "byte_size": 265184,
+      "sha256": "71f82d603c2665d6e0fe2d55e510bac3c1064e59841aff1619002079c4abc201"
+    },
+    {
+      "relative_path": "game/images/hd/bg_swamp.webp",
+      "byte_size": 284060,
+      "sha256": "900d6896828a6e7912007df32f14cf6769fd0026cfdc8cc10346f3d785264f91"
+    },
+    {
+      "relative_path": "game/images/hd/bg_tavern.webp",
+      "byte_size": 369926,
+      "sha256": "12caf38a97b077e4ee0d7da160b25e3944db30a8dd22fc1a807ec88ec9715b97"
+    },
+    {
+      "relative_path": "game/images/hd/bg_throne_room.webp",
+      "byte_size": 455480,
+      "sha256": "dae82d8d2e09bb10a58e90b1ce9252ab5b42dc5a258a22cec04ddbd69558ad62"
+    },
+    {
+      "relative_path": "game/images/hd/bg_throne_room_night.webp",
+      "byte_size": 300740,
+      "sha256": "7c331aec1dc63aaa58f95aa81fdc2e57e88803134daa23d00f922b4117bb7ae9"
+    },
+    {
+      "relative_path": "game/images/hd/bg_town_square.webp",
+      "byte_size": 476664,
+      "sha256": "9227268024ef8b229bf0be4d814f6d8c0f3b532b77f4dddb876d2c9d3923cc34"
+    },
+    {
+      "relative_path": "game/images/hd/bg_underground.webp",
+      "byte_size": 621440,
+      "sha256": "8c83d59bde0287c25bc8c77eb425793a58c83a262e84707a1cda6afb7093a4c5"
+    },
+    {
+      "relative_path": "game/images/hd/bg_war_room.webp",
+      "byte_size": 361480,
+      "sha256": "840e5bed477cffcd84f9bad0acd2a0e25d618b30b74ba96d4a4827aef81d8454"
+    },
+    {
+      "relative_path": "game/images/hd/bg_waterfall.webp",
+      "byte_size": 377018,
+      "sha256": "cc6a66d8fc40af6f205a358eb9359e0d09d2af9533e8656cf779b17cba25ff39"
+    },
+    {
+      "relative_path": "game/images/healer.png",
+      "byte_size": 1001138,
+      "sha256": "827f47a9c467f685f775187524aedee782635d6dd31aecd6d3743ab57038b429"
+    },
+    {
+      "relative_path": "game/images/healer_angry.png",
+      "byte_size": 1022015,
+      "sha256": "1c94da42d009d937f11be88295f2d5dbfadb0f09e916016d9fa56f514ea5c20a"
+    },
+    {
+      "relative_path": "game/images/healer_happy.png",
+      "byte_size": 1096696,
+      "sha256": "97ed2f8abb09d73f08abaf98da02666e02101637afed9d706dffb274bc53eff1"
+    },
+    {
+      "relative_path": "game/images/healer_sad.png",
+      "byte_size": 884490,
+      "sha256": "a780295a3dbab3a4468d9b3fa385065812ecff2d0fb1fb9a973dc113476e5c7a"
+    },
+    {
+      "relative_path": "game/images/herald.png",
+      "byte_size": 925010,
+      "sha256": "d70e2a4d4cf4ccd529175221f7214260a92a4a17b0c199f5576ee03acda1ef30"
+    },
+    {
+      "relative_path": "game/images/herbalist_vera.png",
+      "byte_size": 1069370,
+      "sha256": "72c48f078808844da4e7fb246b1f82a80fb0e9ec31dd739d2ccf59a89713094b"
+    },
+    {
+      "relative_path": "game/images/ingrid.png",
+      "byte_size": 1328343,
+      "sha256": "deca8cb5e1c0068a140b7aca57dcddc9569d6498b45d056c86b2d3690bb7a0d0"
+    },
+    {
+      "relative_path": "game/images/ingrid_angry.png",
+      "byte_size": 1487803,
+      "sha256": "1cdedddb0fb2223d37d92d52b263671e04410735aeca46e5b502067c9b6aa955"
+    },
+    {
+      "relative_path": "game/images/ingrid_happy.png",
+      "byte_size": 1321358,
+      "sha256": "d66daa3f98d60a7e4321067e45a8a68296c648813711653d7baf4ebc75fee0c1"
+    },
+    {
+      "relative_path": "game/images/ingrid_sad.png",
+      "byte_size": 1387662,
+      "sha256": "80f5171b7f1d55b540c3a360aa8ed80b34d6a828d738b33cdec6af4eb1d3e737"
+    },
+    {
+      "relative_path": "game/images/king_aldwin.png",
+      "byte_size": 1439331,
+      "sha256": "86a883f3de1dbc69dd466fc5cf4869c3624b473fb6b01f19fd388e5b1fcae09b"
+    },
+    {
+      "relative_path": "game/images/knight_commander.png",
+      "byte_size": 753493,
+      "sha256": "c6f9d3faf645532868f33c80452bf464b19a698f31f1d82a5ac9a0c9540284eb"
+    },
+    {
+      "relative_path": "game/images/lily_master.png",
+      "byte_size": 871249,
+      "sha256": "9bfda0f2e5a2cc93d23854c2d0489ee30d8bef2e7c8e892e3adcea8ce6f565cc"
+    },
+    {
+      "relative_path": "game/images/lily_master_angry.png",
+      "byte_size": 775593,
+      "sha256": "c2977fddf9003d10fe56af6e930bc9b8165424447f0c950ad1ea583bea64c05e"
+    },
+    {
+      "relative_path": "game/images/lily_master_happy.png",
+      "byte_size": 548976,
+      "sha256": "2bcc78c47f058ee24bd15ef773b869532aa36e5da2313089a5528a0256de0513"
+    },
+    {
+      "relative_path": "game/images/lily_master_sad.png",
+      "byte_size": 428727,
+      "sha256": "d490785ec0d75d169f461c1192372b751f01ba1db9003793a4b8d050773f0f88"
+    },
+    {
+      "relative_path": "game/images/lily_root.png",
+      "byte_size": 888777,
+      "sha256": "02246b1f9f9babd3d8c89a8a75a02a5ceb838e5822675ddb5a5ae26e0f02cdd2"
+    },
+    {
+      "relative_path": "game/images/logo.png",
+      "byte_size": 300773,
+      "sha256": "1422ad355eea3bc473252c86205072d45c183ad94ae065e94cbcbd001e727e95"
+    },
+    {
+      "relative_path": "game/images/masked_man.png",
+      "byte_size": 366612,
+      "sha256": "7b28ce6c592f14566e559c08fe6926dfdfe7928547344374a082a7221bd692c6"
+    },
+    {
+      "relative_path": "game/images/merchant_guild.png",
+      "byte_size": 920369,
+      "sha256": "9a79231a3643b859c6b30d5e2734db1cccebeed54fd66afa5a36059d9bb70cb6"
+    },
+    {
+      "relative_path": "game/images/merchant_guild_angry.png",
+      "byte_size": 896044,
+      "sha256": "f927f215e4154a4ea3d9001eb19718bc2e6844757fa1f53aeca3dc938a64dbb0"
+    },
+    {
+      "relative_path": "game/images/merchant_guild_happy.png",
+      "byte_size": 899269,
+      "sha256": "3c028ed531b6f5a094c1b5ef50c912d1b2f2b08f5df0ba2e8191c1893a772ffb"
+    },
+    {
+      "relative_path": "game/images/merchant_guild_sad.png",
+      "byte_size": 836079,
+      "sha256": "5c07747d7826d0be8baa0ec70ec2286b947f6e7251811e09eff6eeda5a7c891b"
+    },
+    {
+      "relative_path": "game/images/merchant_karl.png",
+      "byte_size": 1099395,
+      "sha256": "55747e480f5e3867bbef2d35eddc25cf5e0e8abc7fa14a2d23f9432622168baa"
+    },
+    {
+      "relative_path": "game/images/merchant_karl_angry.png",
+      "byte_size": 1003369,
+      "sha256": "4e7f04075061764f12a05fe7905aa69d89e1439f909894dcc351249de20467d3"
+    },
+    {
+      "relative_path": "game/images/merchant_karl_happy.png",
+      "byte_size": 891336,
+      "sha256": "34c63afa66b8d7bc2aa7c5235b1af32d8e520c93778657ef138d7c410938d9f0"
+    },
+    {
+      "relative_path": "game/images/merchant_karl_sad.png",
+      "byte_size": 760824,
+      "sha256": "bb0ada6ea9e319134b30adf44063dbbc0e192c7688f878588e1ae04f67a4e8f5"
+    },
+    {
+      "relative_path": "game/images/mother.png",
+      "byte_size": 826184,
+      "sha256": "8e9f238501ffab4d364e6baa8c5716a6c165d114ed91176afebc4eb7a4a59646"
+    },
+    {
+      "relative_path": "game/images/mother_angry.png",
+      "byte_size": 812549,
+      "sha256": "9d8be8a400497c29e9d874d72ef33fac3d58cf6304a3d3dfeebf30413b5d74e2"
+    },
+    {
+      "relative_path": "game/images/mother_happy.png",
+      "byte_size": 792895,
+      "sha256": "4dfaeb57b63bc2728e9c4aafcbfcd210c1e6257768e5b15aa9b2370da5049fc8"
+    },
+    {
+      "relative_path": "game/images/mother_sad.png",
+      "byte_size": 913173,
+      "sha256": "78b1d848f08e7cbb978468fb41e6c30885d92baffc8b2153517c1be1ef8a7a12"
+    },
+    {
+      "relative_path": "game/images/mysterious_lady.png",
+      "byte_size": 1110732,
+      "sha256": "4c8a1e05b71b555db2ed8962ae69f1e196172dafa5df4d7a44cfad28f5255624"
+    },
+    {
+      "relative_path": "game/images/noble_lady.png",
+      "byte_size": 1053118,
+      "sha256": "c347df40a0c5aab6aee59904505c4a6145bb4c96e7a5e6f22eb8a7d73c77ab06"
+    },
+    {
+      "relative_path": "game/images/noble_lady_angry.png",
+      "byte_size": 1374849,
+      "sha256": "012195872b730a38b2cc0cb504d69194ae1b67eb2173e5a4ffe02f36f49d835a"
+    },
+    {
+      "relative_path": "game/images/noble_lady_happy.png",
+      "byte_size": 898435,
+      "sha256": "ec068221ff8ad6db30f4567c778280198bd147900717e8f9493a79cd314989ee"
+    },
+    {
+      "relative_path": "game/images/noble_lady_sad.png",
+      "byte_size": 647356,
+      "sha256": "62d7391c8601b6c1acb6b4ea93791d7a3e97f7e35d874c923310f2f0d3dca2db"
+    },
+    {
+      "relative_path": "game/images/noble_werner.png",
+      "byte_size": 877791,
+      "sha256": "f8f388200f57f23583352df09f17514dc757016f7f446602f6a37b735c692e3e"
+    },
+    {
+      "relative_path": "game/images/noble_werner_angry.png",
+      "byte_size": 1101559,
+      "sha256": "79251f2a72616b223738c6094533d592079c626f52de28dd41d2d641ed6927bf"
+    },
+    {
+      "relative_path": "game/images/noble_werner_happy.png",
+      "byte_size": 1090152,
+      "sha256": "5964041826c21a0bc356df6102d883153b0fdcb1a84f6d31a342a3e98d799db5"
+    },
+    {
+      "relative_path": "game/images/noble_werner_sad.png",
+      "byte_size": 1043479,
+      "sha256": "dc2cf240a0dd04a2eaa2015935ff4ae25a1ed9c3131fecdb3b32252adee6c045"
+    },
+    {
+      "relative_path": "game/images/old_guard.png",
+      "byte_size": 1301452,
+      "sha256": "41840cab0922b6f33544d73117f1c2e412c2d9f4e44c9fe1b7815d01c3d57796"
+    },
+    {
+      "relative_path": "game/images/old_guard_angry.png",
+      "byte_size": 1407778,
+      "sha256": "4a3c2277f14b4929602509bb7e1d671568de239790a626b3217a86cb4a1250cf"
+    },
+    {
+      "relative_path": "game/images/old_guard_happy.png",
+      "byte_size": 1135441,
+      "sha256": "a05e5616a1acb54e6cbe6fdb53244b2498a4fcc34d66d2172d78cf8421c3550b"
+    },
+    {
+      "relative_path": "game/images/old_guard_sad.png",
+      "byte_size": 1061278,
+      "sha256": "980ec29682e4097319401dc5249d932c1e3a5a2e586e474bb16167e05ea56dbb"
+    },
+    {
+      "relative_path": "game/images/old_salt.png",
+      "byte_size": 997861,
+      "sha256": "0c0d37a008c7e2bad7e145e5b507c9af046ba04e076dabd6ddbeb4f935e96ba8"
+    },
+    {
+      "relative_path": "game/images/old_servant_ch4.png",
+      "byte_size": 1032148,
+      "sha256": "1dd7ad8e17e9eb1dbc861b5d3b953af1e314d8b2f063b39a73fecc840170a269"
+    },
+    {
+      "relative_path": "game/images/old_woman.png",
+      "byte_size": 1126080,
+      "sha256": "43e8b87d2472823451b153c227184d077dba8795b29c4f67f6b0693fd7b8a4d0"
+    },
+    {
+      "relative_path": "game/images/player_char.png",
+      "byte_size": 909852,
+      "sha256": "3d24c633d00b2f8d94aa4ddc235ba9b0810274225ba2de6ed215748d74fdbedc"
+    },
+    {
+      "relative_path": "game/images/player_char_angry.png",
+      "byte_size": 960270,
+      "sha256": "6c63d5883b6dbd901ec72ec6a3df60a9b1c7498396a1ec61eddc1df2d5163f17"
+    },
+    {
+      "relative_path": "game/images/player_char_happy.png",
+      "byte_size": 762371,
+      "sha256": "088d4b757bf6939abaa5d63e1ea5816b935f99a8e5ae23487a8fc7d6101f43d8"
+    },
+    {
+      "relative_path": "game/images/player_char_sad.png",
+      "byte_size": 989457,
+      "sha256": "962e6a08f16eb37c0206d2e5ac227d5b481b5be33778b899ff7fe0ff961dc443"
+    },
+    {
+      "relative_path": "game/images/player_char_scarred.png",
+      "byte_size": 1253819,
+      "sha256": "4d93d2e1c502deec49cb848020ad690e646adb257854a6f5b58d2c0481667076"
+    },
+    {
+      "relative_path": "game/images/player_char_scarred_angry.png",
+      "byte_size": 1235824,
+      "sha256": "0819694761022c6e72f8cc51da88954ac382e6bfc18db7652c76bf6ecdaa1893"
+    },
+    {
+      "relative_path": "game/images/player_char_scarred_happy.png",
+      "byte_size": 1048534,
+      "sha256": "2cbfb5002faa6e19057eca6f7032799b0dcda555640043ffcd7c4b7cf53f50b6"
+    },
+    {
+      "relative_path": "game/images/player_char_scarred_sad.png",
+      "byte_size": 1167256,
+      "sha256": "d5ecd206c62370cded9e219265b88b5523ef18bbb668a67ed58547d088260426"
+    },
+    {
+      "relative_path": "game/images/player_child.png",
+      "byte_size": 1004952,
+      "sha256": "3c14e19bdf224ef1f06a7e68961cc9e49b0480797c34b1516a0ae1aba470e512"
+    },
+    {
+      "relative_path": "game/images/player_child_angry.png",
+      "byte_size": 1029419,
+      "sha256": "495b6d84584ed5a0e9722f753a275e5f45cb7402b7ed752c4338bb68562fd06d"
+    },
+    {
+      "relative_path": "game/images/player_child_happy.png",
+      "byte_size": 1054654,
+      "sha256": "1986ab5f3cbc89753f3639cd6cbdbeaa1756fb1da4cc1699ebef5b531836ee79"
+    },
+    {
+      "relative_path": "game/images/player_child_sad.png",
+      "byte_size": 895360,
+      "sha256": "fb57f902cf01d95ff994ab92f4c42afc4b20389dd92308b17395cc68ec6bf7b3"
+    },
+    {
+      "relative_path": "game/images/player_teen.png",
+      "byte_size": 964776,
+      "sha256": "6b088b0858f929a4eea454c559b5cc10e3a21301969597912a020d4cd8649aba"
+    },
+    {
+      "relative_path": "game/images/player_teen_angry.png",
+      "byte_size": 745538,
+      "sha256": "7474ce648c596cc25b6215606d4bf895af867a08339a2713a9146e66919e8843"
+    },
+    {
+      "relative_path": "game/images/player_teen_happy.png",
+      "byte_size": 856080,
+      "sha256": "fae80316d55cf65c36df985ab35a0fbb7bff18aa2f412f387c312f9884df0c72"
+    },
+    {
+      "relative_path": "game/images/player_teen_sad.png",
+      "byte_size": 810240,
+      "sha256": "e2893a51ca9b6d5b22cf224192f162dd0913814ff8c389d570d311d2041787f6"
+    },
+    {
+      "relative_path": "game/images/player_young.png",
+      "byte_size": 1056120,
+      "sha256": "26ca70c027e37c84a77c425cc453d553f24e55fdf07232f64aa640678c349175"
+    },
+    {
+      "relative_path": "game/images/player_young_angry.png",
+      "byte_size": 1092937,
+      "sha256": "c7d58748a6bfe08f70e927c802538172f528a22aeab2367494edd60d04a3346d"
+    },
+    {
+      "relative_path": "game/images/player_young_happy.png",
+      "byte_size": 1072568,
+      "sha256": "bb8ac2a0780c6cdc585bb0d028302fbbcbb3381d9377e618fdeebd92ca8a98c0"
+    },
+    {
+      "relative_path": "game/images/player_young_sad.png",
+      "byte_size": 741935,
+      "sha256": "b7970d78c282508048d8e146f6e7499f5a670dac55d7f3eb6c7f7687fc03e281"
+    },
+    {
+      "relative_path": "game/images/priest_thomas.png",
+      "byte_size": 692490,
+      "sha256": "2bd4195d26aa864678ae906d9c4cf05a47e117082623cd213825828cd1d210b6"
+    },
+    {
+      "relative_path": "game/images/priest_thomas_angry.png",
+      "byte_size": 626142,
+      "sha256": "0fa95ef53ef550311a1fb4a7786c437edb3b3e9179032c9e06893ce312b09ab3"
+    },
+    {
+      "relative_path": "game/images/priest_thomas_happy.png",
+      "byte_size": 368899,
+      "sha256": "b12953c7572e073a8ec853a576473cfceebb46af54502765f5c08891b32e21a4"
+    },
+    {
+      "relative_path": "game/images/priest_thomas_sad.png",
+      "byte_size": 519084,
+      "sha256": "8701987651cdd96d336f9325640cdc92ae3330e9df725d634d2bb873573c6a36"
+    },
+    {
+      "relative_path": "game/images/prince.png",
+      "byte_size": 1005931,
+      "sha256": "09bf0131742e1a1787f868bacd98b8e1abed0717a760c2a2fec84de22d895439"
+    },
+    {
+      "relative_path": "game/images/prince_angry.png",
+      "byte_size": 804032,
+      "sha256": "6996a0e1096569ea97036c37b7222a01bc8887f74d951f00a30df20069b40fac"
+    },
+    {
+      "relative_path": "game/images/prince_happy.png",
+      "byte_size": 906893,
+      "sha256": "28b7716f489075db852f75a9ab085759554919641ef6b8616025a4731893a9bd"
+    },
+    {
+      "relative_path": "game/images/prince_sad.png",
+      "byte_size": 882788,
+      "sha256": "65667e420435d0853c4430b8347f26c530456c3fd65ea7f4f273c4cfe8680c3d"
+    },
+    {
+      "relative_path": "game/images/protocol_officer.png",
+      "byte_size": 833767,
+      "sha256": "a8093548a46319dc62d1b833965aceb5ea33f3d88331bb5daccef8a46afeec63"
+    },
+    {
+      "relative_path": "game/images/queen.png",
+      "byte_size": 1013516,
+      "sha256": "6bb78b71e4462ad4ab8a2c32ff9292293b83c0b090942f95845be6033d302b99"
+    },
+    {
+      "relative_path": "game/images/queen_angry.png",
+      "byte_size": 859347,
+      "sha256": "5a5896ddf7a9e0dd506a2b2baeeabfa204d0ffb6d9e585b66a6a22e7724edf79"
+    },
+    {
+      "relative_path": "game/images/queen_envoy.png",
+      "byte_size": 840909,
+      "sha256": "3a66965c70a5f598fbd56d76f457dbe24315a39c54e531ef27dd357b3df80ed9"
+    },
+    {
+      "relative_path": "game/images/queen_happy.png",
+      "byte_size": 832348,
+      "sha256": "a3ad9e79fd08f5bcfff3c75d93ffecb21b2d5bd1a26ed9bcd2d4d7f358022865"
+    },
+    {
+      "relative_path": "game/images/queen_sad.png",
+      "byte_size": 830590,
+      "sha256": "35814422cfbe89c583fd35bd428d48f17ecda515be22b4e6f3b367b23b9d3e25"
+    },
+    {
+      "relative_path": "game/images/rival_duke.png",
+      "byte_size": 885108,
+      "sha256": "f151ccfc16200426a468c5a781863d11acfca58394094a0f444ff622619de2ef"
+    },
+    {
+      "relative_path": "game/images/royal_admiral.png",
+      "byte_size": 928611,
+      "sha256": "477e43954811862b7466ce5d67fadde60182e8dc1f0370541f3dd5be6c3db3fd"
+    },
+    {
+      "relative_path": "game/images/royal_guard.png",
+      "byte_size": 1012759,
+      "sha256": "bf6e0958a7badd750fa7077a2948f6be74c4e32786efeb027d4e50cab887b96d"
+    },
+    {
+      "relative_path": "game/images/sea_dog.png",
+      "byte_size": 949926,
+      "sha256": "0ae7f2ba7e7e6f740600a2c09fd3c1fb3136a92c293a26fd1ee961644b45ad90"
+    },
+    {
+      "relative_path": "game/images/servant_generic.png",
+      "byte_size": 1105117,
+      "sha256": "3a01882132e56a20123b92f3025d731598f22055c89653a0983590173bec4366"
+    },
+    {
+      "relative_path": "game/images/servant_generic_angry.png",
+      "byte_size": 782445,
+      "sha256": "446e5859af83c61a560aa0f72595f855360f5299ff2df865cdbc37b5c6d4f454"
+    },
+    {
+      "relative_path": "game/images/servant_generic_happy.png",
+      "byte_size": 859525,
+      "sha256": "24d96d6927f5a95ff8e60381a8ed5c6fc2bda863cc4832e57fa3feb14ce9134c"
+    },
+    {
+      "relative_path": "game/images/servant_generic_sad.png",
+      "byte_size": 799096,
+      "sha256": "1833d0c02c8fa0fa7e0a3877eea186e42aba6105d503c67a71cb37e29bb0a685"
+    },
+    {
+      "relative_path": "game/images/servant_marta.png",
+      "byte_size": 1266892,
+      "sha256": "775939111feb29f4454cf9a9af15d6be8e4792205d6b8abfc0a93442885874c3"
+    },
+    {
+      "relative_path": "game/images/servant_marta_angry.png",
+      "byte_size": 1028988,
+      "sha256": "70e5e2bff71bca8d8a68aa3b461789e7ae1ffdbf74c1c91e81fc2aa58046b9d9"
+    },
+    {
+      "relative_path": "game/images/servant_marta_happy.png",
+      "byte_size": 932099,
+      "sha256": "08dcbdaa5fc5a490f0042cb139be35c2f021311e09a083f0a0bade04500c2f7f"
+    },
+    {
+      "relative_path": "game/images/servant_marta_sad.png",
+      "byte_size": 1090077,
+      "sha256": "bfa0ad7d806969a7bed656c5b92325d56e1d5a39bfc4d6dcaeab76d989d8f345"
+    },
+    {
+      "relative_path": "game/images/ship_boy.png",
+      "byte_size": 826615,
+      "sha256": "9f61f36c99519b0e3ac805ca6b7d69694fae3bf53e46a0162ac9ce962d1cca1c"
+    },
+    {
+      "relative_path": "game/images/soldier_generic.png",
+      "byte_size": 623288,
+      "sha256": "d2d3c8830879c2a59d5983e0919fa77472d32237f4d86dd9bb051e52181b6fa8"
+    },
+    {
+      "relative_path": "game/images/soldier_generic_angry.png",
+      "byte_size": 942287,
+      "sha256": "7fd5a0659a4753c1ada303857a6fcee7118949e5e6c4c8d58f07160cbb45a096"
+    },
+    {
+      "relative_path": "game/images/soldier_generic_happy.png",
+      "byte_size": 1283421,
+      "sha256": "ab57c1e9a4c9de3234dd122d52a3b954d5cff755b26869174831a8401e43d592"
+    },
+    {
+      "relative_path": "game/images/soldier_generic_sad.png",
+      "byte_size": 1165020,
+      "sha256": "0995e5d25c66ed0e24f7bf54be54218802efa9d99e91665a44ada1889c7ef737"
+    },
+    {
+      "relative_path": "game/images/stable_boy.png",
+      "byte_size": 1149179,
+      "sha256": "06be6470bcd795d5647810838b1f0c6093316f73f28df1c490bc4abf6f97e2c1"
+    },
+    {
+      "relative_path": "game/images/storyteller.png",
+      "byte_size": 1106072,
+      "sha256": "580e1d20b97118930b8b99402995df7b5d1c93d424f02f0238715beb9aab0dac"
+    },
+    {
+      "relative_path": "game/images/storyteller_angry.png",
+      "byte_size": 1425351,
+      "sha256": "4cd565cb8b58b8d1d6c8f3a83c4bee6c5698f5c745c54f58ded4dce58e82671c"
+    },
+    {
+      "relative_path": "game/images/storyteller_happy.png",
+      "byte_size": 784384,
+      "sha256": "e0a09cccaf21f94de73bbfc1d136749dfe38275435818fd2f0330737910bcf44"
+    },
+    {
+      "relative_path": "game/images/storyteller_sad.png",
+      "byte_size": 1039174,
+      "sha256": "32d06942fbaab76f270f898329ace344fbb74aa807a07c26378d9099bfb7132c"
+    },
+    {
+      "relative_path": "game/images/tavern_keeper.png",
+      "byte_size": 1026256,
+      "sha256": "956a06b10b0a920257863b51512305e18f11c22ae5d9a601c637f1687df6d6a2"
+    },
+    {
+      "relative_path": "game/images/tax_collector.png",
+      "byte_size": 1086714,
+      "sha256": "c927661e6ee0bf44148d51a9e2a4bc4ed3379c4d942b3d0edf0c9caa07adbfdd"
+    },
+    {
+      "relative_path": "game/images/tax_collector_angry.png",
+      "byte_size": 843137,
+      "sha256": "720749d416ae4096cc97f0429d452de5d21991fe27d5ef9f35f0c8c967208118"
+    },
+    {
+      "relative_path": "game/images/tax_collector_happy.png",
+      "byte_size": 1110384,
+      "sha256": "ca1519b70a101354f15bf5f2487f57f62c5e100999fb8236285aa8c8e728f2fd"
+    },
+    {
+      "relative_path": "game/images/tax_collector_sad.png",
+      "byte_size": 915590,
+      "sha256": "a684d9dfd4adfcfe145ab6107442ab9682e7202073352fc0bc10702e3a603f4a"
+    },
+    {
+      "relative_path": "game/images/tournament_herald.png",
+      "byte_size": 921542,
+      "sha256": "55de304b51b1edcc85b4f4f09accbde6922b55558da2b5a268a68341a9f1b589"
+    },
+    {
+      "relative_path": "game/images/tutor.png",
+      "byte_size": 893610,
+      "sha256": "d055747110400b68e3252ae42f166f347ba58322dfa6e6fca95d76e614e447a1"
+    },
+    {
+      "relative_path": "game/images/tutor_angry.png",
+      "byte_size": 706981,
+      "sha256": "fb1b58fa7366f360c057844eba63f9b93d204cf92155ad8d5d4f6a1e2d67a5d7"
+    },
+    {
+      "relative_path": "game/images/tutor_happy.png",
+      "byte_size": 572040,
+      "sha256": "f9fe53e3397639361e41f63a987730f34f50122c0dac8810bace16e8b5c19a8d"
+    },
+    {
+      "relative_path": "game/images/tutor_sad.png",
+      "byte_size": 1142691,
+      "sha256": "3a536c4be4a2493841a8f994ac13e15defe16fc56ccd4bbacd74a1b57245cacf"
+    },
+    {
+      "relative_path": "game/images/ui/ach_chapter.png",
+      "byte_size": 519886,
+      "sha256": "03a2b231e39c07b07c9ce1e86390fcfce56b0f7a01504d80c4418aa0937b33df"
+    },
+    {
+      "relative_path": "game/images/ui/ach_collect.png",
+      "byte_size": 477005,
+      "sha256": "89d7003e97b91bc68c2b470ec15fa5768730dfe73c1ee8cb123ceeeba761380d"
+    },
+    {
+      "relative_path": "game/images/ui/ach_ending.png",
+      "byte_size": 386866,
+      "sha256": "bdd781bd75360148e148492bf0a7d1ca333fcb00d7a95633cb6c6112d32c0a35"
+    },
+    {
+      "relative_path": "game/images/ui/ach_hidden.png",
+      "byte_size": 482767,
+      "sha256": "ff0041a69ab8e8c3932c69b7e3d51c31cd487c168907ddd0ac94407df023f408"
+    },
+    {
+      "relative_path": "game/images/ui/ach_south.png",
+      "byte_size": 258039,
+      "sha256": "87dde1873fa6a6cb73f8b617187fdf763be0f7c7e062430a908fc2b60efbdb03"
+    },
+    {
+      "relative_path": "game/images/ui/ach_stat.png",
+      "byte_size": 144033,
+      "sha256": "1792e5aeda4cff570963ce8d641d9a30c9b037ff95c598529c9fcd209b72e966"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/aldric.png",
+      "byte_size": 94035,
+      "sha256": "f6ae608e25110ea236ab5f687a0570ba2eae5ed3f809bfbc778fda7692177c3b"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/baron.png",
+      "byte_size": 78699,
+      "sha256": "ba1e9f9e785e0b0e81f9d62af255e57386703cbd8692046240bfbf4c50a3d6ae"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/bishop.png",
+      "byte_size": 62360,
+      "sha256": "2a1e13d33ea443356e5125833ea09b8e407e23995004dfc76c27aa2d611ed4f5"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/captain.png",
+      "byte_size": 76601,
+      "sha256": "65181a847253c44c351c4d677eb509849e2739c548c4563e334848438534a3e3"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/corsair.png",
+      "byte_size": 80149,
+      "sha256": "945f827e6c3d800dc569a56097b23de680903abf3b58d0a1bef0bf9b48cb59fe"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/count_grey.png",
+      "byte_size": 75389,
+      "sha256": "7207263d63f66f75d5a04aaa3a7d62c1f7ad6489d7abe551b416bd00dbdf2151"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/countess_stein.png",
+      "byte_size": 80450,
+      "sha256": "18ac52b5bd697b255e97ce77a3ff16334edb33d3cbd99324c367e4aac40307f5"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/edmund.png",
+      "byte_size": 78046,
+      "sha256": "ecc8df96200a5a04fc5740cb1362f0613dfaeaea9fc767303373cb0490dcca35"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/elena.png",
+      "byte_size": 84956,
+      "sha256": "993513251a30b2620399d103efdebf20a50273602e1a408622f738bcde0feb77"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/ingrid.png",
+      "byte_size": 87624,
+      "sha256": "6f5c8c82be836b94761a40a49009613bed72b1b2046d92ff06d183193d918d39"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/lily_master.png",
+      "byte_size": 64065,
+      "sha256": "3fb084243419056d86a18fe971bf0939b8082406c6c48572ea0aa05c3169c91f"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/merchant_karl.png",
+      "byte_size": 82619,
+      "sha256": "d2a1d2dcde2094a2e7d4d009e81e8784f24a5a1a68c2ffa98359c40fc5c857ed"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/priest_thomas.png",
+      "byte_size": 75297,
+      "sha256": "134387aabb5227289bccf56483102c95f56a124ddff100c17d30af399eb0b464"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/prince.png",
+      "byte_size": 77868,
+      "sha256": "00e294c46be1083b6a7f67aaa6e1f709ad8f9163be2beebf73bf35542e6b8463"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/queen.png",
+      "byte_size": 72732,
+      "sha256": "bc6055d738ee020e130a5fec1cdf93f19aaf055508a9adf74ea076cc7fcd53d7"
+    },
+    {
+      "relative_path": "game/images/ui/avatar/viscount_wells.png",
+      "byte_size": 74356,
+      "sha256": "7b57828abb80adf089ded58129605781bd5f1a82ffe3f154675eb3155da7ef71"
+    },
+    {
+      "relative_path": "game/images/ui/box_choice.png",
+      "byte_size": 2018293,
+      "sha256": "b76e93df3fe11e132ed25b0a072389da1fc52ea034b328bc80f4889e7ac0030f"
+    },
+    {
+      "relative_path": "game/images/ui/box_choice_hover.png",
+      "byte_size": 899027,
+      "sha256": "6d45b4de03d2e846339fd90d24a80be23e68ae29cd2c634bb1af60b496632627"
+    },
+    {
+      "relative_path": "game/images/ui/box_confirm.png",
+      "byte_size": 3032372,
+      "sha256": "530fe38503c6d88ccdf68c45a4efaf94ba7ba17a34347839eea43005524ac12b"
+    },
+    {
+      "relative_path": "game/images/ui/box_namebox.png",
+      "byte_size": 1462442,
+      "sha256": "a5884c6b37442e8bbbea8b5427563c20f2db85ebddc6b7639af499bf90c2d433"
+    },
+    {
+      "relative_path": "game/images/ui/box_notify.png",
+      "byte_size": 185539,
+      "sha256": "a49c6c72ff3c1e3db33d360c66397b4e03209e75eb42f1cca09323314ec8b702"
+    },
+    {
+      "relative_path": "game/images/ui/box_slot.png",
+      "byte_size": 2684984,
+      "sha256": "565b4fc1183db724b4bd8dd02a4b70d7b41050a9a66f8db0cfb11848ec541ad8"
+    },
+    {
+      "relative_path": "game/images/ui/box_textbox.png",
+      "byte_size": 738960,
+      "sha256": "53091a53ed372f5cbe80db00f8be93ba05a0a6119a7d1135cecb4a4c1b13e85b"
+    },
+    {
+      "relative_path": "game/images/ui/card_slot.png",
+      "byte_size": 1683592,
+      "sha256": "efaf4b5cef6d0c10fdd849535fafceb1872d1578c30604c84ac7d7c319e2e83b"
+    },
+    {
+      "relative_path": "game/images/ui/ch_1.png",
+      "byte_size": 184584,
+      "sha256": "7da10315d02a1c17033f99ddff2773a1e456a0418d3bce6a9086d3c2624f7f1f"
+    },
+    {
+      "relative_path": "game/images/ui/ch_2.png",
+      "byte_size": 192612,
+      "sha256": "6fa955989e7de9936bec25f750a06f75ff393fb96401e4f34632179a63809d8c"
+    },
+    {
+      "relative_path": "game/images/ui/ch_3.png",
+      "byte_size": 153933,
+      "sha256": "cb3817bc37ef0aeed860eacd1a7a94e11d7234c9a7539d6a3be245ac1d73bc2f"
+    },
+    {
+      "relative_path": "game/images/ui/ch_4.png",
+      "byte_size": 110139,
+      "sha256": "cdf516be641389e73c2cbba1362980880f92dd8ae4caa7bb5f59ac519973b778"
+    },
+    {
+      "relative_path": "game/images/ui/ch_5.png",
+      "byte_size": 242391,
+      "sha256": "0a17e251c3972c4c91d5dd91542f6d331d0bf49d27f94f346be3e66f0ad78938"
+    },
+    {
+      "relative_path": "game/images/ui/ch_prologue.png",
+      "byte_size": 212406,
+      "sha256": "b5f72c4f6cc2ca226a6e54ba029282437337a85f7b7ceea1e1bab253c9b962bb"
+    },
+    {
+      "relative_path": "game/images/ui/ch_side.png",
+      "byte_size": 130289,
+      "sha256": "b1f8532b020cbc11a3b7c5f8ad8f369fbe6110b6f6ed49ca29e1208572a8b5e9"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_check_off.png",
+      "byte_size": 185813,
+      "sha256": "4dd9edb8abd4a0d8788fa09d0994ee5f562f17eb7fa7735fdcf8647d6d6f8fb6"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_check_on.png",
+      "byte_size": 422909,
+      "sha256": "b4341f16e92f7bc95d87ea7d784accd1320ca25a21b5c6388bb20cde11f578bb"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_radio_off.png",
+      "byte_size": 210255,
+      "sha256": "ef264f06d496af79c478ed06d152820a590b43d6cb763846f796889943c0b58e"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_radio_on.png",
+      "byte_size": 390154,
+      "sha256": "efb7b10b295536d23c8238f636074575562ee4824080a59034b7bfdd4dc95c7b"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_scroll_thumb.png",
+      "byte_size": 53998,
+      "sha256": "70f67b130a49461c70e1c9eebaf38bf701960c243e9e91fb27aed880e7a74b29"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_scroll_track.png",
+      "byte_size": 19034,
+      "sha256": "e101c40b76e327bb9fd99ca8174ad17a760c40bae9f0414cea18155d8905e95d"
+    },
+    {
+      "relative_path": "game/images/ui/ctl_skip_arrow.png",
+      "byte_size": 112916,
+      "sha256": "8326db4bd00b50e67f8ab8277e8937da972049ee0aea18c271405723edacc22d"
+    },
+    {
+      "relative_path": "game/images/ui/diff_easy.png",
+      "byte_size": 470980,
+      "sha256": "6eb815b55a0286caba7c7b9341f56aeb644c167bfed3b18cf8a218de0c226329"
+    },
+    {
+      "relative_path": "game/images/ui/diff_hard.png",
+      "byte_size": 156073,
+      "sha256": "7c164a81b040e0c0f897187714d47732a1aec19c9c9d370015f8a320e6a01ef4"
+    },
+    {
+      "relative_path": "game/images/ui/diff_normal.png",
+      "byte_size": 171233,
+      "sha256": "c1c4042ad553ffcd4c148e34c300b792c773aa826696894e1af62e30840c70db"
+    },
+    {
+      "relative_path": "game/images/ui/divider_gold.png",
+      "byte_size": 737943,
+      "sha256": "8b1c340af5536757cfdefd4da6515463db9fa773094e869d2f23755c285b1455"
+    },
+    {
+      "relative_path": "game/images/ui/end_borgia.png",
+      "byte_size": 156744,
+      "sha256": "6c0f719b7ac4e63c63755a13b6c7898f1afe31267dc71cb920dc7ca6dd0828f9"
+    },
+    {
+      "relative_path": "game/images/ui/end_fall.png",
+      "byte_size": 175821,
+      "sha256": "96770a5e161c133fce9a1391bef6284a0a4d2b00f911caa97a6c49eda43c9f57"
+    },
+    {
+      "relative_path": "game/images/ui/end_holy_guardian.png",
+      "byte_size": 169732,
+      "sha256": "38b7be2bec8d7936328064855fbdc6a8d505fd3a0812839fc1cbec41989d2ce3"
+    },
+    {
+      "relative_path": "game/images/ui/end_iron_lord.png",
+      "byte_size": 98270,
+      "sha256": "56223461f499edde6fab08feca7106e4816ea878d0f646310a3d5137ef151a74"
+    },
+    {
+      "relative_path": "game/images/ui/end_peoples_lord.png",
+      "byte_size": 258041,
+      "sha256": "1e5aedb35e1eeccab30a192095fd53e6e6f52dfd421a78bc77b0a2233f2f51eb"
+    },
+    {
+      "relative_path": "game/images/ui/end_sea.png",
+      "byte_size": 125805,
+      "sha256": "113cfc858f5f8bea113dbeff60418bce84fa8d9a86221ab6446d8ea0a1c28d33"
+    },
+    {
+      "relative_path": "game/images/ui/end_shadow_king.png",
+      "byte_size": 184040,
+      "sha256": "8ed572b674032fcd23d5d0a66a812172ba2a5ea950664af5289c56d4f3dfa708"
+    },
+    {
+      "relative_path": "game/images/ui/end_truth.png",
+      "byte_size": 176250,
+      "sha256": "fc067324feb771537ece7ee6912b20fc56c74989b40dcd61270f1aaac39361c3"
+    },
+    {
+      "relative_path": "game/images/ui/end_vassal.png",
+      "byte_size": 174285,
+      "sha256": "8507f2effbfbbf17934f3f6c4347027b01d945633843a702c6c22ee1cc4a956f"
+    },
+    {
+      "relative_path": "game/images/ui/ico_alert.png",
+      "byte_size": 356935,
+      "sha256": "2c7d11ad6ed432ddf4e41dc5dbe15884e2276f46d3f43c2999a86987e8e40509"
+    },
+    {
+      "relative_path": "game/images/ui/ico_bookmark.png",
+      "byte_size": 133072,
+      "sha256": "b62ae46c6b89ae11dafe407bad443d2cb521d2e2c1bf3e009c616476e9e71401"
+    },
+    {
+      "relative_path": "game/images/ui/ico_chest.png",
+      "byte_size": 602349,
+      "sha256": "25cafaf4a491a42d9adfd8726370dd438260e33669b2f50fcc8781f64dec2eda"
+    },
+    {
+      "relative_path": "game/images/ui/ico_diamond.png",
+      "byte_size": 251123,
+      "sha256": "fc90350f64daac85b1e903a3d2c28ffabcf2deb6bf2bd9e9299893647eb43c16"
+    },
+    {
+      "relative_path": "game/images/ui/ico_hand.png",
+      "byte_size": 204179,
+      "sha256": "edcd213f245c12f8b26bf0736fef4e92c3d9b6b239eeed5f1bb5fb3ed85ff9df"
+    },
+    {
+      "relative_path": "game/images/ui/ico_harp.png",
+      "byte_size": 248085,
+      "sha256": "0d64ea807f097879c5a68496b194c3e59f980cd2f77a7bee2fa561be8467adeb"
+    },
+    {
+      "relative_path": "game/images/ui/ico_key_s.png",
+      "byte_size": 675322,
+      "sha256": "3d49da1ef553fad8d00ce10882f180bd9e947cc0bbbc95f20b3d80acf11d8702"
+    },
+    {
+      "relative_path": "game/images/ui/ico_map.png",
+      "byte_size": 558035,
+      "sha256": "e4eaaee21b9f1d77125648b18fdeecdce1863d3d6b0a09dd245dfe639c7da5ab"
+    },
+    {
+      "relative_path": "game/images/ui/ico_plus.png",
+      "byte_size": 374481,
+      "sha256": "4848645d3f6a8edc04dcebd239da50daacbd4cb05e703cee00869d01aaa22c9e"
+    },
+    {
+      "relative_path": "game/images/ui/ico_quill.png",
+      "byte_size": 177413,
+      "sha256": "0a545816493d36934deb9b08bd7f5fc665dbd011778df41e7aeb4be349c01dd3"
+    },
+    {
+      "relative_path": "game/images/ui/ico_scroll.png",
+      "byte_size": 416980,
+      "sha256": "e928d0ed52c4b1b2ec966fe14db489ded72d75c1beeed8e528239900f4e8bd60"
+    },
+    {
+      "relative_path": "game/images/ui/ico_star.png",
+      "byte_size": 267956,
+      "sha256": "17df9a4aa7b6bbab72ae5743d44985a18f934ceed2a480c62ec99a77ba53e076"
+    },
+    {
+      "relative_path": "game/images/ui/ico_touch.png",
+      "byte_size": 260991,
+      "sha256": "b2ce70143ad2f5f8c6fb63db250b9b5f0f73bc1fa745209b2c39c4b3f532d6a7"
+    },
+    {
+      "relative_path": "game/images/ui/lock_slot_square.png",
+      "byte_size": 2782426,
+      "sha256": "13b19ec7249f42d79e844d8b265b362425219da02d1187d177c160a82888520c"
+    },
+    {
+      "relative_path": "game/images/ui/lock_slot_wide.png",
+      "byte_size": 2589740,
+      "sha256": "6dfa44932f3a1b41ad5ee9457c3c625eafbd2a38cef658c01408540cb685d2e4"
+    },
+    {
+      "relative_path": "game/images/ui/map_border.png",
+      "byte_size": 299021,
+      "sha256": "14ad7762c07789057aa8fb52959ca1982faadb1edaa134ec6f82ee46dc2daddf"
+    },
+    {
+      "relative_path": "game/images/ui/map_capital.png",
+      "byte_size": 325882,
+      "sha256": "f9bda78b7a979774af6d9d5ad7f1d790cec84ee653911da3659e4928f0bb422a"
+    },
+    {
+      "relative_path": "game/images/ui/map_castle.png",
+      "byte_size": 356988,
+      "sha256": "762882f061f52bca7465f9c2f6e31d9d0aa7b35d8e4063ba0dbbf9be7404e45c"
+    },
+    {
+      "relative_path": "game/images/ui/map_cave.png",
+      "byte_size": 338119,
+      "sha256": "dd8e698661072648afc9750e7525db13461acd64a9c511b6ca62605702f6e290"
+    },
+    {
+      "relative_path": "game/images/ui/map_church.png",
+      "byte_size": 211717,
+      "sha256": "65c85f6e7ee572a7bdc17c2e410597b662aeb4ec8c063456ae2a9184356833ab"
+    },
+    {
+      "relative_path": "game/images/ui/map_dungeon.png",
+      "byte_size": 383015,
+      "sha256": "015917dbe6fe9c4c9786655ae99543937de44e46954039b396eb89e808e68fb1"
+    },
+    {
+      "relative_path": "game/images/ui/map_forest.png",
+      "byte_size": 366634,
+      "sha256": "eb1c685ca70ba657a3c7621bdb7cfafcbfc8f95b9f0c6cdd765f844ac7573b89"
+    },
+    {
+      "relative_path": "game/images/ui/map_garden.png",
+      "byte_size": 287484,
+      "sha256": "a47d480d14bed12f0d6b434ba42e3c5927db6e8bb42c27a593af6c0292d1b0f2"
+    },
+    {
+      "relative_path": "game/images/ui/map_hall.png",
+      "byte_size": 555323,
+      "sha256": "208e076e99b13d871e355244292de0128aca0c1719452c865e4fa47ba138f5dd"
+    },
+    {
+      "relative_path": "game/images/ui/map_lily.png",
+      "byte_size": 258913,
+      "sha256": "52c333337a429c54199f345e5ff1d85d75c100735e040800ddd82b2f609a6b45"
+    },
+    {
+      "relative_path": "game/images/ui/map_market.png",
+      "byte_size": 311327,
+      "sha256": "b4ce68e2eb64715a112345a50156846879da28822d8aaf272697796a91c86f07"
+    },
+    {
+      "relative_path": "game/images/ui/map_palace.png",
+      "byte_size": 283686,
+      "sha256": "7cb0df33a91af076de9e193e26a34e5dffed0e59993416224097ca32b3340cac"
+    },
+    {
+      "relative_path": "game/images/ui/mus_campfire.png",
+      "byte_size": 341342,
+      "sha256": "e75a6e33f97102ef965c75890122c86c85e048ce721a00b5bcf9e75cf4d24252"
+    },
+    {
+      "relative_path": "game/images/ui/mus_feast.png",
+      "byte_size": 371693,
+      "sha256": "8b316329a8c90551144b3c727c3ec4b85b464e3e47ffc637290af4715577d16c"
+    },
+    {
+      "relative_path": "game/images/ui/mus_finale.png",
+      "byte_size": 365906,
+      "sha256": "f145244dcae5d165a9988df3dfb696efe08a872fe6187f074fd5f70b77a52208"
+    },
+    {
+      "relative_path": "game/images/ui/mus_grief.png",
+      "byte_size": 196674,
+      "sha256": "f7f3fbe196c951096ab848ba7a10f9d848642a6600744166acffab761d21e935"
+    },
+    {
+      "relative_path": "game/images/ui/mus_holy.png",
+      "byte_size": 220557,
+      "sha256": "71d39d35bd8e083409ac082f4f5e063b3a8d88fd91c50279834c80466d2613b8"
+    },
+    {
+      "relative_path": "game/images/ui/mus_nature.png",
+      "byte_size": 178809,
+      "sha256": "e1aba8152db1a6e0306509bade3ddf4d013c4f9374bd0eb65e88660412400f66"
+    },
+    {
+      "relative_path": "game/images/ui/mus_night.png",
+      "byte_size": 358535,
+      "sha256": "320625c0ab78901a186700a8ca57422ac7d58be38847321f7fb7690df8074a7c"
+    },
+    {
+      "relative_path": "game/images/ui/mus_scheme.png",
+      "byte_size": 256873,
+      "sha256": "eab7d0793b7aa7e9d4b3f69f3c7a995b2f3d81623bed1f01e12fd1cab18215c7"
+    },
+    {
+      "relative_path": "game/images/ui/mus_sea.png",
+      "byte_size": 242173,
+      "sha256": "8fafc9ea15e7a76f99fb38bbc1ce1a5edebe0d1de080f1ecdce07a86ba514445"
+    },
+    {
+      "relative_path": "game/images/ui/mus_town.png",
+      "byte_size": 291116,
+      "sha256": "8dc9d45845932cefdc78f9a0d8ffb1203e1b90d3a69e98927d21b4a07a24697d"
+    },
+    {
+      "relative_path": "game/images/ui/mus_war.png",
+      "byte_size": 248062,
+      "sha256": "52f265fb043242cc0629afc448275456e1cb9cbbfe231dfba1aca0ccfa1fa42b"
+    },
+    {
+      "relative_path": "game/images/ui/panel_frame.png",
+      "byte_size": 3473870,
+      "sha256": "715be2e39fbd542852369746004b9c22391f0de862a8e74cbda2ce325d9bbbf0"
+    },
+    {
+      "relative_path": "game/images/ui/progress_fill.png",
+      "byte_size": 502163,
+      "sha256": "7b47f20ed333c5dcdbf9f02bcfcf64c0fc192610d08bb45af1d69f20c0f6c27a"
+    },
+    {
+      "relative_path": "game/images/ui/progress_track.png",
+      "byte_size": 1014689,
+      "sha256": "b1a82ba80c5ec8c95f435572d79d66aa19f2f178f5de9f50f3ad6d8cd6d5de38"
+    },
+    {
+      "relative_path": "game/images/ui/south_ash.png",
+      "byte_size": 160478,
+      "sha256": "6669b8f521a9c4ebc4bb66a518501e2b19caca89b0e27fad53aebdc325eb6137"
+    },
+    {
+      "relative_path": "game/images/ui/south_flag.png",
+      "byte_size": 165237,
+      "sha256": "8ecc9e0c63b3cf005612f064e042047a98a5513c44a431c87f8056dbb79010a6"
+    },
+    {
+      "relative_path": "game/images/ui/south_port.png",
+      "byte_size": 273313,
+      "sha256": "e19adc61355574083e61c9695686acecf2ecbdb100e0d55467c3d58fefb4f301"
+    },
+    {
+      "relative_path": "game/images/ui/south_scheme.png",
+      "byte_size": 276049,
+      "sha256": "f2026b2d2e910d499c79fd3a5137b09a994b99bdb557bb41f859b162f3090b26"
+    },
+    {
+      "relative_path": "game/images/ui/south_vassal.png",
+      "byte_size": 378989,
+      "sha256": "d5f6e9ab9ff7dc3de9281df9f3cd802aad3ccc459795756ca51d3b9dc3485320"
+    },
+    {
+      "relative_path": "game/images/ui/stat_courage.png",
+      "byte_size": 96304,
+      "sha256": "70fb5d0d3bc2f8b02a4879428a855f55629a43d19d11795c3f2ca917b525eb83"
+    },
+    {
+      "relative_path": "game/images/ui/stat_faith.png",
+      "byte_size": 115414,
+      "sha256": "1aa5c9ef2168ace2928868128cfce0a326dd9207a08dd8cbbfa505ff278d9cdd"
+    },
+    {
+      "relative_path": "game/images/ui/stat_intrigue.png",
+      "byte_size": 131444,
+      "sha256": "c351991208938829bc48e2f4208a9461ab75fa997c0a05c32a96abb3086db62b"
+    },
+    {
+      "relative_path": "game/images/ui/stat_loyalty.png",
+      "byte_size": 150072,
+      "sha256": "44e4b608faaab86ba4064352870d594818f2e4cded4ce5227d448df19f5a890e"
+    },
+    {
+      "relative_path": "game/images/ui/stat_power.png",
+      "byte_size": 117539,
+      "sha256": "8d2806eb7ea855563e76dfaede0293793b554272c0c505cd1f8f24b84adce757"
+    },
+    {
+      "relative_path": "game/images/ui/stat_reputation.png",
+      "byte_size": 180036,
+      "sha256": "f4770c656b3e6146416d15b895716f38720c9e67105b2a3791559cbf5a28d73d"
+    },
+    {
+      "relative_path": "game/images/ui/stat_wealth.png",
+      "byte_size": 176047,
+      "sha256": "c093b67827d3735d0441084e1c4f0911b6aac1bf2b2b064f7776894987de50f9"
+    },
+    {
+      "relative_path": "game/images/ui/ui_chronicle.png",
+      "byte_size": 197901,
+      "sha256": "a32a795a99744a0c80495f01fe150e41f2a42f92aba4ed5f55d04f7af6dc977d"
+    },
+    {
+      "relative_path": "game/images/ui/ui_close.png",
+      "byte_size": 149403,
+      "sha256": "8081e0d2d9935c5c2eef7547644c5bbacbc0c4d2a25bf9f2ba170f1800f51125"
+    },
+    {
+      "relative_path": "game/images/ui/ui_down.png",
+      "byte_size": 177242,
+      "sha256": "4056fc5797bb3df76ed8116a89e57c19f9ecf268f1d8138928847fca10946eca"
+    },
+    {
+      "relative_path": "game/images/ui/ui_gallery.png",
+      "byte_size": 180485,
+      "sha256": "6a0f30de7e99b76a2bc52c454bdae3ba2796ee224bb56972d8c74efa0ddb0073"
+    },
+    {
+      "relative_path": "game/images/ui/ui_lock.png",
+      "byte_size": 242422,
+      "sha256": "8ebfe4fb7cfa2a297887666b347f432419f4bcf54886eba0678f3030494632d8"
+    },
+    {
+      "relative_path": "game/images/ui/ui_music.png",
+      "byte_size": 168083,
+      "sha256": "7ee446b33b85d9fa07b8b9d6eb80e4f55a5de7a7710eae3039fe40744e664b09"
+    },
+    {
+      "relative_path": "game/images/ui/ui_play.png",
+      "byte_size": 138284,
+      "sha256": "5e6e7233a7cd7c7295be9dbce14a601e0359d9e357012709511c98a74d13547d"
+    },
+    {
+      "relative_path": "game/images/ui/ui_relation.png",
+      "byte_size": 303982,
+      "sha256": "a46619bbc20e14d98b4e70663f368e49bee57a798aa91de42479497426e94ff6"
+    },
+    {
+      "relative_path": "game/images/ui/ui_trophy.png",
+      "byte_size": 193477,
+      "sha256": "50c15e2cb255eb5b9136843364353b056f1dfc958412ec9b78618af3a7ad2371"
+    },
+    {
+      "relative_path": "game/images/ui/ui_up.png",
+      "byte_size": 143131,
+      "sha256": "78a31557a633abe6530ff4a1de8a64295912064913549e80637d8b6c0346fa4d"
+    },
+    {
+      "relative_path": "game/images/ui/world_map.png",
+      "byte_size": 4371294,
+      "sha256": "5f2178eedb5cd7894327b46c4267af117a91a512ea34047b050d32c95af1ef62"
+    },
+    {
+      "relative_path": "game/images/village_elder.png",
+      "byte_size": 1195128,
+      "sha256": "14cb6c8c2ced12e576b5840f17c126e7ac6a0c6c023513b08bb502032dba91ec"
+    },
+    {
+      "relative_path": "game/images/village_elder_angry.png",
+      "byte_size": 1311554,
+      "sha256": "78e017a9a33b0146425a06749a6dad969bb29ef0f993823442a549ffc70b3c8a"
+    },
+    {
+      "relative_path": "game/images/village_elder_happy.png",
+      "byte_size": 1161106,
+      "sha256": "18cb4487bf10682d4ef84a0647a9019963789e1fea5bd8c119ce091514879e9b"
+    },
+    {
+      "relative_path": "game/images/village_elder_sad.png",
+      "byte_size": 1073704,
+      "sha256": "0a14ac9311f5ab0799da5cce7d17a6e641e6b62c30b118ac7a0f35a0a37289cf"
+    },
+    {
+      "relative_path": "game/images/viscount_wells.png",
+      "byte_size": 1195956,
+      "sha256": "82a1c3e832a3d4e76b1b91b97cdb7c63681454492f2747b0be56834dfd9ff954"
+    },
+    {
+      "relative_path": "game/images/viscount_wells_angry.png",
+      "byte_size": 1025724,
+      "sha256": "adff6c956059f4801089bebdcc8b24a5f7d8d90c81300de491b513a94454d1f3"
+    },
+    {
+      "relative_path": "game/images/viscount_wells_happy.png",
+      "byte_size": 957731,
+      "sha256": "f566a921a1921a841c9c31989d4c70fc94e568cb0a4bd098f44b3afce86a9417"
+    },
+    {
+      "relative_path": "game/images/viscount_wells_sad.png",
+      "byte_size": 997682,
+      "sha256": "3ff9ef8de94eac841c23bf33aff04d0f63f1cf505cb2d73091ffe397638638b4"
+    },
+    {
+      "relative_path": "game/images/webp_backup/aldric.webp",
+      "byte_size": 123242,
+      "sha256": "a31df353f75803be9f92b82c043d081acee63c7cb647f4942f4a9eccb90a7a38"
+    },
+    {
+      "relative_path": "game/images/webp_backup/aldric_angry.webp",
+      "byte_size": 97874,
+      "sha256": "f8b505dfd8cc9ca84b68fedfa1de8369f6a2891e3b954cbf8b0b029393b85d72"
+    },
+    {
+      "relative_path": "game/images/webp_backup/aldric_happy.webp",
+      "byte_size": 108820,
+      "sha256": "1c09782f02779997c9046e70d039f3a74638722dbbeecad2ee0818c671bb054c"
+    },
+    {
+      "relative_path": "game/images/webp_backup/aldric_sad.webp",
+      "byte_size": 111052,
+      "sha256": "aab2a4cc8e26915051d420cefa19194d875e02ace3d060ddd299fdd86809c163"
+    },
+    {
+      "relative_path": "game/images/webp_backup/baron.webp",
+      "byte_size": 145088,
+      "sha256": "5e5fc15f4475b615e156cbbffd366c55415d438d0712362a5980038ae858dd07"
+    },
+    {
+      "relative_path": "game/images/webp_backup/baron_angry.webp",
+      "byte_size": 87990,
+      "sha256": "6ae3de056cefe9d445fa08d31148dd5aabda403fa0b80cee2cf4ba035dbc34ce"
+    },
+    {
+      "relative_path": "game/images/webp_backup/baron_happy.webp",
+      "byte_size": 91074,
+      "sha256": "5017628dd6ed86fd4abca473f695cdb83e4ec3c7ccd24ebe7b03808361a3fea6"
+    },
+    {
+      "relative_path": "game/images/webp_backup/baron_sad.webp",
+      "byte_size": 75124,
+      "sha256": "56775666d21321d8d42e42fd92fd77b4c2937cc41378b5132ff28a60ec903497"
+    },
+    {
+      "relative_path": "game/images/webp_backup/bishop.webp",
+      "byte_size": 123710,
+      "sha256": "9e681a006b77d7cf825b3383ce9d40eae1de5fc7f103abf6016ad534d15e1bb6"
+    },
+    {
+      "relative_path": "game/images/webp_backup/bishop_angry.webp",
+      "byte_size": 118336,
+      "sha256": "46a6b8e276b5f4b021029de31a4b40141e6d120f64e117b9ee55cd8c65ad8fca"
+    },
+    {
+      "relative_path": "game/images/webp_backup/bishop_happy.webp",
+      "byte_size": 100106,
+      "sha256": "cf3a01de8a65386edfe4672ad2dd5dd62a2066ccdb7e4408ff4a703f2d09258b"
+    },
+    {
+      "relative_path": "game/images/webp_backup/bishop_sad.webp",
+      "byte_size": 96308,
+      "sha256": "532061d9fbc32d44b807e85d63fd45dcf2d55aa1aad51181ee28d3a5d4df4bbe"
+    },
+    {
+      "relative_path": "game/images/webp_backup/captain.webp",
+      "byte_size": 156028,
+      "sha256": "af33bca4dc46253bcd10c88a30ba996b966d7967003865100ff21ed944fd0487"
+    },
+    {
+      "relative_path": "game/images/webp_backup/captain_angry.webp",
+      "byte_size": 103202,
+      "sha256": "3398a73820279615131f74a31129faaa97b254100948b613379ba6c5dea86033"
+    },
+    {
+      "relative_path": "game/images/webp_backup/captain_happy.webp",
+      "byte_size": 94936,
+      "sha256": "74b620809b31e68090a243b084810207d9ad27a4532cd984bc28dd70503fe4f4"
+    },
+    {
+      "relative_path": "game/images/webp_backup/captain_sad.webp",
+      "byte_size": 75174,
+      "sha256": "1e81f5efe177272684b5a32c569f79010fcd4230a735ac2dff3daf2d3f1e2a7e"
+    },
+    {
+      "relative_path": "game/images/webp_backup/elena.webp",
+      "byte_size": 96650,
+      "sha256": "3e3618fbfc7936104b03b4cc262c999bfd2edeb6827170351befdb38566e1065"
+    },
+    {
+      "relative_path": "game/images/webp_backup/elena_angry.webp",
+      "byte_size": 87372,
+      "sha256": "df5bcad03028e11b859d5026528b4decc0ce7701e24e94edf120dcc20fad49e3"
+    },
+    {
+      "relative_path": "game/images/webp_backup/elena_happy.webp",
+      "byte_size": 83746,
+      "sha256": "2e49bdec5137314f65c3f4639631ee2cafd24f9a958a06c520effe2342febba9"
+    },
+    {
+      "relative_path": "game/images/webp_backup/elena_sad.webp",
+      "byte_size": 79238,
+      "sha256": "35e209b452c3049d056e6f655e94fff4bf48c3a4878f3eda054725f83a4986bc"
+    },
+    {
+      "relative_path": "game/images/webp_backup/lily_master.webp",
+      "byte_size": 73470,
+      "sha256": "9284a8f4cd517de50c5ff1d0137a0d4b7d356f0166d07ed5dbfda5e8245c337f"
+    },
+    {
+      "relative_path": "game/images/webp_backup/lily_master_angry.webp",
+      "byte_size": 80392,
+      "sha256": "0d900172d33c2a3f54cfe29d26d43424396d179f9c63da368dd5f9da60b31313"
+    },
+    {
+      "relative_path": "game/images/webp_backup/lily_master_happy.webp",
+      "byte_size": 70256,
+      "sha256": "eb7f5049569ad594819cf162dc5b7fde3e5230ce540a575753385f33091f0bb1"
+    },
+    {
+      "relative_path": "game/images/webp_backup/lily_master_sad.webp",
+      "byte_size": 81250,
+      "sha256": "3b72d0af35df8990a150ca84315f0637f09514f3beebf2b7f368a10d2f55b856"
+    },
+    {
+      "relative_path": "game/images/webp_backup/merchant_karl.webp",
+      "byte_size": 164324,
+      "sha256": "029c991b04c49f3e81eca0032f7c10c79f4ef295ee01f36b546aafd7f1c60b3e"
+    },
+    {
+      "relative_path": "game/images/webp_backup/merchant_karl_angry.webp",
+      "byte_size": 118084,
+      "sha256": "ce1163988e26326c7e3113a14d91e8ca011f36b52c14026debe36f701f1ab4cc"
+    },
+    {
+      "relative_path": "game/images/webp_backup/merchant_karl_happy.webp",
+      "byte_size": 83824,
+      "sha256": "b9b8d51b01ff23160ece4771dfc33a2d6ba37dd7909aa4a972bdde0a28cf6350"
+    },
+    {
+      "relative_path": "game/images/webp_backup/merchant_karl_sad.webp",
+      "byte_size": 81004,
+      "sha256": "f4660d037855688cca2b529bc39d9dd4c53b6a914fe2e5c0bfb0b524f444d63e"
+    },
+    {
+      "relative_path": "game/images/webp_backup/prince.webp",
+      "byte_size": 126222,
+      "sha256": "0406512e6de23c8f3a502f7d413d6f312530dfbd9fdf12ddc129c7faf298e7ac"
+    },
+    {
+      "relative_path": "game/images/webp_backup/prince_angry.webp",
+      "byte_size": 90790,
+      "sha256": "0c61f80b6c51246928988677f6396e389f34fb74ba30e020275e3ba4ae3ea59d"
+    },
+    {
+      "relative_path": "game/images/webp_backup/prince_happy.webp",
+      "byte_size": 102040,
+      "sha256": "d0fc5b375fd7cd426278b491821d75ee16204b4e947da4ed7ee4c2c9b5ca3e50"
+    },
+    {
+      "relative_path": "game/images/webp_backup/prince_sad.webp",
+      "byte_size": 97808,
+      "sha256": "242da0e3397f0e1025bb18189a0c72c06d5e4f3b542bf0a8670427362eeb8b1a"
+    },
+    {
+      "relative_path": "game/images/webp_backup/queen.webp",
+      "byte_size": 131292,
+      "sha256": "ed9670a89068e1b1b8e346e49fca8bea147fac042a0df33a3d2b2b48d4e6e2d4"
+    },
+    {
+      "relative_path": "game/images/webp_backup/queen_angry.webp",
+      "byte_size": 87770,
+      "sha256": "0a434cdbfffde97247c093aa57c8f3ad44870704761a919d9512155168cdefa2"
+    },
+    {
+      "relative_path": "game/images/webp_backup/queen_happy.webp",
+      "byte_size": 88378,
+      "sha256": "182642750d2e214fc0e48aa4709a58aee930b9c6833c9424e09904e00915530a"
+    },
+    {
+      "relative_path": "game/images/webp_backup/queen_sad.webp",
+      "byte_size": 98786,
+      "sha256": "75d68769e47c220dea078bda75887ab34fdbb066db8f5ed1364b761d10b7faf5"
+    },
+    {
+      "relative_path": "game/msyh.ttf",
+      "byte_size": 2641192,
+      "sha256": "f8283620bf814a79fa5e9e15cbb52dc6e40609c94dada35928f4c57691824056"
+    }
+  ]
+}

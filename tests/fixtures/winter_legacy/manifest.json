@@ -1,0 +1,61 @@
+{
+  "baseline_commit": "ebb4efd2194fb31710d0331d53d0fe825eb8062c",
+  "renpy_version": "8.5.2",
+  "savegame_suffix": "-LT1.save",
+  "fixture_verifying_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExo2SI8BWrAFvbMVUXBKeQQh7qUUZla9zkj3pRpmgydQUvjYMGKooT+i5vs43/U/TRRcJ012sOh4KxcDYezLuJw==",
+  "generated_at_utc": "2026-08-08T10:32:39.841Z",
+  "fixtures": [
+    {
+      "logical_slot": "winter-legacy-merchant-inside",
+      "physical_filename": "winter-legacy-merchant-inside-LT1.save",
+      "provenance_type": "live continuation",
+      "source_driver": "test_winter_legacy_merchant_driver",
+      "expected_continuation": "_call_gov_merch2",
+      "signature_member": "signatures",
+      "byte_size": 100872,
+      "sha256": "5f3b1412f8b26ee671110157b8d8a5ce827a13e11cfb303312b0f52e924cf189"
+    },
+    {
+      "logical_slot": "winter-legacy-building-inside",
+      "physical_filename": "winter-legacy-building-inside-LT1.save",
+      "provenance_type": "live continuation",
+      "source_driver": "test_winter_legacy_building_driver",
+      "expected_continuation": "_call_gov_build2",
+      "signature_member": "signatures",
+      "byte_size": 82036,
+      "sha256": "b984c9d1da345ced955a2d10465f0701ad4b1d6647dd7caedba53eab637b14f8"
+    },
+    {
+      "logical_slot": "winter-legacy-famine-inside",
+      "physical_filename": "winter-legacy-famine-inside-LT1.save",
+      "provenance_type": "live continuation",
+      "source_driver": "test_winter_legacy_famine_driver",
+      "expected_continuation": "_call_gov_famine2",
+      "signature_member": "signatures",
+      "byte_size": 99435,
+      "sha256": "aae9d15f4d6f7fef9da79f6472f4c847617e0630f7146e407bb2101a62f24d6e"
+    },
+    {
+      "logical_slot": "winter-legacy-famine-success-after",
+      "physical_filename": "winter-legacy-famine-success-after-LT1.save",
+      "provenance_type": "real completed state",
+      "source_driver": "test_winter_legacy_famine_success_after_driver",
+      "permanent_stop_label": "ch2_preparation",
+      "migration_result": "Loads at ch2_preparation with famine_prevented true and famine_crisis recorded after the original _call_gov_famine2 return.",
+      "signature_member": "signatures",
+      "byte_size": 101772,
+      "sha256": "984fc9b6f53e806f309d9559ecf358f76beba83d7d75590e80c7cf874ad927c8"
+    },
+    {
+      "logical_slot": "winter-legacy-chapter2-no-governance",
+      "physical_filename": "winter-legacy-chapter2-no-governance-LT1.save",
+      "provenance_type": "synthetic compatibility state",
+      "source_driver": "test_winter_legacy_chapter2_no_governance_driver",
+      "permanent_stop_label": "ch2_preparation",
+      "migration_result": "Loads at ch2_preparation with neutral governance defaults and neither legacy governance event marker.",
+      "signature_member": "signatures",
+      "byte_size": 98935,
+      "sha256": "d3ca7898209cac8f9b65a485c8d52ddf0b95c49df2c2c26e8c5f32dce0308b15"
+    }
+  ]
+}

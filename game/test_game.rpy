@@ -1,3 +1,8 @@
+python early:
+    if renpy.game.args.command == "test":
+        config.save_token_keys.append("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExo2SI8BWrAFvbMVUXBKeQQh7qUUZla9zkj3pRpmgydQUvjYMGKooT+i5vs43/U/TRRcJ012sOh4KxcDYezLuJw==")
+
+
 ## ============================================================
 ## 自动化测试脚本
 ## test_game.rpy
