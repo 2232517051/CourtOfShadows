@@ -73,7 +73,7 @@ The module must:
 7. Pass argument arrays to child processes; it must not concatenate shell command strings.
 8. Stop immediately when any step returns nonzero, exceeds its timeout, or violates its postcondition.
 9. Return process exit code 0 only after every required automated step succeeds.
-10. Write per-step stdout, stderr, exit code, elapsed time, and a final summary under `RunRoot/evidence`.
+10. While `RunRoot` still passes its final-identity check, write per-step stdout, stderr, exit code, elapsed time, and a final summary under `RunRoot/evidence`.
 11. Preserve the existing `Tools/Run-RenPySuite.ps1` interface, including its PID-bounded timeout, fresh-status, isolated-savedir, and fixture-staging behavior.
 12. Launch every `Run-RenPySuite.ps1` invocation in a separate child `powershell.exe` process, because the existing runner deliberately terminates with `exit 0` or `exit 1`.
 13. Place each child in a gate-owned bounded process tree. Python children use `ToolTimeoutSeconds`; runner children receive `RenPyTimeoutSeconds` and an outer watchdog of that value plus a fixed 60-second wrapper grace. On timeout, terminate only that recorded tree, wait for it to disappear, preserve its evidence, and never search for unrelated Python or Ren'Py processes.
@@ -140,6 +140,7 @@ A successful automated Narrative gate does not approve prose. Fresh Opus provena
 - A failed child process records its own stdout/stderr and prevents every later step from starting.
 - The summary distinguishes process failure, postcondition failure, timeout, and invalid evidence.
 - The gate retains `RunRoot`, suite savedirs, and evidence for inspection; it performs no recursive filesystem cleanup. Process cleanup is limited to the recorded gate-owned child tree.
+- If `RunRoot` identity changes, stop before any further filesystem write. Report the path-identity failure only on the gate process's stderr and leave the already-written evidence untouched; a final summary is intentionally absent in this case.
 - Successful evidence names include gate, step ordinal, step name, and the current commit SHA when available.
 - The gate invokes children from the resolved project root inside `try/finally`; the caller's original working directory is restored even after failure.
 - Scanner output is directed to or copied into `RunRoot/evidence`. Narrative prerequisites must prevent `missing_portraits_B.txt` or other repository reports from being rewritten by a gate invocation.
