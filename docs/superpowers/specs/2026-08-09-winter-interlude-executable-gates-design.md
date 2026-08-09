@@ -19,11 +19,17 @@ The executable gate itself must be the module. The plan should only tell a maint
 Create one shared deep module:
 
 ```powershell
-& Tools/Run-WinterInterludeGate.ps1 -Gate Structural -ProjectRoot (Get-Location).Path
+$gateHost = Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'
+& $gateHost -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File `
+  (Resolve-Path -LiteralPath Tools/Run-WinterInterludeGate.ps1).Path `
+  -Gate Structural -ProjectRoot (Get-Location).Path
 ```
 
 ```powershell
-& Tools/Run-WinterInterludeGate.ps1 -Gate Narrative -ProjectRoot (Get-Location).Path
+$gateHost = Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'
+& $gateHost -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File `
+  (Resolve-Path -LiteralPath Tools/Run-WinterInterludeGate.ps1).Path `
+  -Gate Narrative -ProjectRoot (Get-Location).Path
 ```
 
 One script is preferred over two scripts because both gates share project validation, isolated run directories, evidence capture, Ren'Py suite invocation, timeout handling, and fail-fast behavior. Two scripts would either duplicate those rules or require a third common helper plus two shallow adapters.
@@ -60,23 +66,27 @@ The Markdown plan remains documentation. It is not treated as an executable inte
 
 No ordinary caller needs to know step manifests, process construction, savedir naming, or evidence layout.
 
+The public script is always launched as a separate Windows PowerShell 5.1 `-File` process, including from the tracked plan. The caller derives that host from `[Environment]::SystemDirectory`, never from `PATH`, `$env:SystemRoot`, or another mutable environment value. At startup the gate verifies Desktop PowerShell major version 5 and verifies the current host executable's final object identity against the expected System-directory executable. It terminates that dedicated host with exit 0 or 1. Do not dot-source it or invoke it directly inside the caller's interactive runspace; this keeps `$LASTEXITCODE` authoritative without allowing the gate to terminate the caller's shell.
+
 ## Interface Invariants
 
 The module must:
 
 1. Resolve and validate `ProjectRoot` before running any step.
 2. Make containment decisions from operating-system final-path identity, not lexical `GetFullPath` prefixes alone. On Windows, resolve existing components through handles to their final targets, reject any reparse-point component in the protected or candidate chain, and fail if final-path resolution is unavailable.
-3. For a nonexistent `RunRoot`, resolve its nearest existing ancestor, append only the unresolved plain path components, reject a target inside the final `ProjectRoot` or final player `CourtOfShadows-save`, create the directory, then reopen and verify its final identity. Repeat the identity check before every child launch and evidence write.
+3. For a nonexistent `RunRoot`, resolve its nearest existing ancestor, append only the unresolved plain path components, and reject a target inside the final `ProjectRoot` or player `CourtOfShadows-save`. Protect both the Windows known Roaming Application Data folder and the process's `APPDATA` folder when those identities differ, so tests can isolate the environment without unprotecting the real player directory. Create the run directory, then reopen and verify its final identity. Repeat the identity check before every child launch and evidence write.
 4. Reject a relative or pre-existing `RunRoot` and retain the exact created run tree as evidence. The gate must not recursively delete `RunRoot` or suite savedirs on success or failure.
 5. Create one unique external savedir for every Ren'Py suite.
 6. Set every child process's working directory to the resolved `ProjectRoot` and use absolute script/module paths.
 7. Pass argument arrays to child processes; it must not concatenate shell command strings.
 8. Stop immediately when any step returns nonzero, exceeds its timeout, or violates its postcondition.
-9. Return process exit code 0 only after every required automated step succeeds.
+9. Terminate the dedicated gate host with process exit code 0 only after every required automated step succeeds; every failure exits 1.
 10. While `RunRoot` still passes its final-identity check, write per-step stdout, stderr, exit code, elapsed time, and a final summary under `RunRoot/evidence`.
 11. Preserve the existing `Tools/Run-RenPySuite.ps1` interface, including its PID-bounded timeout, fresh-status, isolated-savedir, and fixture-staging behavior.
 12. Launch every `Run-RenPySuite.ps1` invocation in a separate child `powershell.exe` process, because the existing runner deliberately terminates with `exit 0` or `exit 1`.
 13. Place each child in a gate-owned bounded process tree. Python children use `ToolTimeoutSeconds`; runner children receive `RenPyTimeoutSeconds` and an outer watchdog of that value plus a fixed 60-second wrapper grace. On timeout, terminate only that recorded tree, wait for it to disappear, preserve its evidence, and never search for unrelated Python or Ren'Py processes.
+14. Resolve both directory and executable identities through the same native final-path primitive, including the leaf object. Reject a reparse point at any existing component or at the leaf executable itself.
+15. Create every child suspended, bind stdin to a gate-owned `NUL` handle, assign the process to its Job Object, and only then resume it. If assignment or resume fails, terminate the still-suspended process and its Job Object, wait for the active-process count to reach zero within the cleanup bound, and close every process, thread, job, stream, and `NUL` handle before reporting failure.
 
 ## Internal Design
 
@@ -160,10 +170,12 @@ Required RED-to-GREEN cases are:
 7. every Python step receives `ToolTimeoutSeconds`, and a hanging fake Python child or fake runner tree is terminated within its bound without leaving its child process alive;
 8. a recording child that fails or times out at step N makes the public gate return nonzero and step N+1 is never observed;
 9. paths containing spaces, parentheses, and apostrophes remain single atomic arguments;
-10. project-contained, player-save-contained, relative, pre-existing, junction/reparse-routed, or final-path-changing `RunRoot` values are rejected before a child starts;
+10. project-contained, player-save-contained, relative, pre-existing, junction/reparse-routed, or final-path-changing `RunRoot` values are rejected without writing through the changed identity; path tests override the gate subprocess's `APPDATA` with a test-owned temporary tree and never create a junction to the real player-save directory;
 11. child stdout/stderr and summary files correspond to the observed steps;
 12. every runner call occurs in a child PowerShell process, so the runner's own `exit` cannot terminate the parent gate early;
 13. a real-project `Structural` invocation completes through the public entrypoint with all five fresh Ren'Py suites.
+
+The final-path-changing test is deterministic: the first recording child replaces the test-owned `RunRoot/evidence` directory with a junction before it exits. The gate must detect the changed identity before writing that step's result or launching step two, emit the failure only on gate stderr, leave the junction target untouched, and omit the final summary. Teardown removes each junction leaf explicitly before recursively deleting only the surrounding test-owned temporary root.
 
 The existing winter source, route, save, audio, semantic, and old-game tests remain unchanged. Markdown may receive a lightweight discoverability assertion for the script name, but no automated claim that Markdown itself executes.
 
