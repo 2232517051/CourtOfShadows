@@ -1351,15 +1351,12 @@ After each load status remains active until one successful finalization, then be
 
 - [ ] **Step 9: Run all structural route cases GREEN**
 
-~~~powershell
-python -m unittest Tools.test_governance_winter_interlude -v
-if ($LASTEXITCODE -ne 0) { throw 'Winter structural source contracts failed.' }
-foreach ($suite in @('test_winter_interlude_state','test_winter_interlude_routing','test_winter_interlude_ending_invariance','test_winter_interlude_route_matrix','test_winter_interlude_mid_save')) {
-  $suiteSaveDir = Join-Path 'C:\Users\22325\Documents\Codex\2026-07-31\new-chat-2\work' ("renpy-winter-$suite-{0}" -f (Get-Date -Format 'yyyyMMdd-HHmmss-ffff'))
-  & Tools/Run-RenPySuite.ps1 -ProjectRoot (Get-Location).Path -Suite $suite -SaveDir $suiteSaveDir -Mode Suite -Expect PASSED -TimeoutSeconds 300
-  if ($LASTEXITCODE -ne 0) { throw "Winter structural wrapper failed: $suite" }
-}
-~~~
+```powershell
+$gateHost = Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'
+$winterGate = (Resolve-Path -LiteralPath Tools/Run-WinterInterludeGate.ps1 -ErrorAction Stop).Path
+& $gateHost -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $winterGate -Gate Structural -ProjectRoot (Get-Location).Path
+if ($LASTEXITCODE -ne 0) { throw 'Winter Structural gate failed.' }
+```
 
 Expected: every command exits zero with fresh PASSED evidence; 12 real ordered menus, six omitted-report combinations, 36 real result routes, all double-mitigation candidates, southern salt limits, delegated, corrupted-active fallback, two mid-save loads, one-shot routing, forbidden-state snapshots, ending sets, and resistance outcomes all pass.
 
@@ -1377,146 +1374,138 @@ if ($LASTEXITCODE -ne 0) { throw 'Winter story-graph commit failed.' }
 
 ---
 
-### Task 8: Transplant approved legacy passages and generate final Chinese prose in scene-isolated Opus sessions
+### Task 7.5: Replace Markdown command interpretation with one executable winter gate
 
 **Files:**
 
-- Read: CANON.md
-- Read: the approved design
-- Read: only the specific legacy label bodies selected for reuse
-- Modify: game/governance_winter_interlude.rpy
-- Modify later-scene prose in Task 9, not state or routing here
-- Modify: game/msyh.ttf only through prepare_release.py after text is final
-- Create: docs/development/winter-interlude-content-ledger.md
-- Modify: Tools/scan_nested_quotes.py
-- Modify: Tools/test_governance_winter_interlude.py, including coordinated migration of those six expectations
-- Modify: game/test_game.rpy only for coordinated migration of the six approved player-visible semantic expectations
+- Create: Tools/Run-WinterInterludeGate.ps1
+- Create: Tools/test_winter_interlude_gate.py
+- Modify: Tools/test_governance_winter_interlude.py
+- Modify: docs/superpowers/plans/2026-08-08-governance-winter-interlude.md
 
-**Interfaces:**
+**Implementation plan:** docs/superpowers/plans/2026-08-09-winter-interlude-executable-gates.md
 
-- Consumes: fixed labels/state from Task 7, current canon, six outcome contracts, existing character identities, and approximately one-third reusable governance material.
-- Produces: player-visible paths of 11,000–14,000 Chinese characters, with roughly one-third verified verbatim legacy reuse and two-thirds new prose, without Claude-authored code.
+Markdown is documentation; executable proof comes from Tools/test_winter_interlude_gate.py. Implement and verify the public Structural and Narrative entrypoints, remove the handwritten Markdown/PowerShell interpreter, and keep this range limited to the four files above.
 
-- [ ] **Step 1: Create the content ledger before generating prose**
+Commit with `refactor: execute winter interlude gates from scripts`.
 
-Record, by source label and source line span only:
+**Asset audit:** Tooling and documentation only; no art, music, SFX, portrait, animation, UI, font, old-game, shipping source, or package-size change.
 
-- which merchant, inventory, purchase, ration, and granary quoted passages can be reused verbatim without timeline/canon changes;
-- their Chinese-character counts;
-- the SHA-256 of each exact source substring;
-- which new target labels they enter;
-- each complete route's projected visible-character count.
+---
 
-Do not move or delete source text from game/governance.rpy. Do not paste the old prose into the Claude prompt. Any passage that needs wording adaptation counts as new prose and goes to a fresh Opus session; it does not count toward the reuse numerator.
+### Task 8: Author and approve a dedicated winter-interlude narrative delivery plan
 
-- [ ] **Step 2: Transplant the ledger-selected legacy passages verbatim**
+**Status:** blocked on a separate implementation plan.
 
-Use apply_patch to copy only the approved exact quoted passages into their target structural labels. Do not edit them during transplantation and do not remove them from game/governance.rpy. Extend the source test to verify every transplanted substring hash against both source and target and to calculate reused characters from actual target occurrences, not a ledger claim.
+Do not implement Task 8 from this umbrella plan. Do not edit prose, tests, scanners, the capability checker, the font, or any shipping file until the dedicated plan below exists and has passed fresh Spec and Standards review with `Critical 0 / Important 0 — READY`.
 
-Run canon, timeline, and route tests after the transplant. If an exact passage no longer fits, remove it from the reuse ledger rather than silently adapting it.
+- [ ] **Step 1: Create and approve the dedicated Task 8 delivery plan**
 
-- [ ] **Step 3: Use the invoke-opus-4-6 skill with a fresh Claude Code session for every scene**
+After Task 7.5 is committed and its real Structural proof is current, start a new planning session with `superpowers:writing-plans`. Create exactly this tracked plan:
 
-Keep six high-level review batches, but never reuse a Claude session across different scenes. Required fresh sessions are:
+`docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md`
 
-1. crisis brief and neutral delegation, as two sessions;
-2. market and emergency council, as two sessions;
-3. market, village, granary, and route investigations, as four sessions, plus one separate omitted-reports session;
-4. crisis escalation, as one session;
-5. two-layer decision setup as one session, then each of the six concrete consequence variants as its own session;
-6. closure as one session, then each downstream scene in Task 9 as its own fresh session (Harrenhall conference pressure, Chapter 2 merchant recognition, Karl's later offer framing, road conflict, Chapter 5 refugee-reserve exchange, Chapter 5 military supply report, Chapter 5 expansion report, and People's Lord epilogue).
+The dedicated plan, not this umbrella task, owns every Task 8 implementation edit. It must contain complete copy-pastable tests and production bodies, with no prose such as “implement”, “add contracts”, metavariables, omitted helper bodies, or multi-tool GREEN steps. It must split at least these independent RED-to-GREEN slices:
 
-For every scene session:
+1. the real `Tools/check_winter_narrative_capabilities.py` producer and its dedicated tests;
+2. canon JSON output and all four blocking categories plus trigger-only nonblocking behavior;
+3. portrait JSON output without repository-report writes;
+4. narration-overlap JSON output;
+5. show-before-prevention scanning and its negative mutation;
+6. nested-quote scoped JSON output;
+7. capability-to-tool linkage mutations proving that breaking each scanner flag, schema, negative mutation, show coverage, or scene-contract probe makes the real checker publish that capability as false, `ready=false`, and exit nonzero rather than hard-coding Boolean success;
+8. one fresh Opus session, raw-output presentation, explicit user approval, atomic integration, and an immediate real Narrative Batch gate for each individual scene;
+9. final-only length, reuse-ratio, semantic, placeholder-removal, and final-copy contracts, written with the then-approved literal prose facts before one real Narrative Final transition;
+10. exact staging, current-HEAD evidence, asset/package audit, and fresh Spec plus Standards review.
 
-- start a fresh Claude Code process/session;
-- explicitly select /model claude-opus-4-6;
-- disable tools and session persistence;
-- provide only current scene facts, characters present, canon, entry line, exit line, required beneficiary/bearer, and requested plain-text scene blocks;
-- do not provide examples, style rules, prior output, rejected candidates, Few-shot corpora, writing-game-copy, local paths, Ren'Py syntax, or branch logic;
-- validate the initialization and assistant result metadata both report claude-opus-4-6;
-- retain exact raw output in ignored .superpowers/sdd evidence;
-- show that raw scene result to the user for approval before applying it;
-- if rejected, start another fresh session without giving the rejected draft to the new session.
+**Machine-JSON gate contract:**
 
-- [ ] **Step 4: Integrate approved prose without changing structure**
+`WINTER_GATE_STRUCTURED_OUTPUT_HANDLE` is the sole gate-mode write authority for all six machine-JSON producers. In gate mode a producer must not open, create, replace, reopen, or fall back to `--output` by path. Standalone mode exists only when the handle environment variable is absent; it uses `CREATE_NEW` and never overwrites. Gate evidence is limited to 1,048,576 UTF-8 bytes, 1,048,576 UTF-16 characters, depth 64, and number-token length 128; it uses RFC 8259 lexemes, strings, and surrogate pairs, decoded object keys are unique by `Ordinal`, and it reports `strict_json:<reason> at UTF-16 offset N.` before `ConvertFrom-Json`. Portrait output requires exactly one registered direct parent using `OrdinalIgnoreCase`; prefix/`StartsWith` matching is forbidden and `--output-dir` remains forbidden. The dedicated plan must include a per-producer handle-linkage, path-reopen, and path-fallback mutation.
 
-Use apply_patch to replace only the structural draft dialogue. Preserve:
+The six producers are
+`Tools/check_winter_narrative_capabilities.py`, `Tools/scan_canon.py`,
+`scan_missing_portraits.py`, `scan_narration_overlap.py`,
+`Tools/scan_show_before_prevention.py`, and
+`Tools/scan_nested_quotes.py`. Their dedicated-plan slices must implement and
+test all of the following together with their producer-specific schemas:
 
-- every label name;
-- every call/jump;
-- every state write;
-- every menu key and visibility;
-- every investigation/policy/priority identifier;
-- every cleanup path.
+- When the environment variable is present, parse it as a positive decimal
+  handle, resolve its final path, require the normalized result to equal the
+  exact `--output` path with `OrdinalIgnoreCase`, clear inheritance, seek to
+  zero, truncate, write UTF-8 without BOM, durably flush, and close the child
+  duplicate. Missing, malformed, mismatched, or unwritable gate handles must
+  make the producer exit nonzero without a valid evidence document.
+- A Job-contained producer never has a path fallback. Only a process with no
+  structured-output environment variable is standalone; its path mode uses
+  exclusive `CREATE_NEW`, never overwrites, and never replaces an existing
+  leaf.
+- Before launch the gate creates the exact direct child with `CREATE_NEW` and
+  share mode zero, writes a random marker, and retains both the owner handle
+  and exact direct-parent guard. A JSON child receives only a duplicate as the
+  fourth inherited handle; a non-JSON child retains the exact stdin/stdout/
+  stderr three-handle list. The child environment always scrubs an attacker-
+  supplied structured-output value before injecting the owned duplicate.
+- The owner reservation remains live through Job `ActiveProcesses == 0`,
+  owner-handle freeze/read, result evaluation, and success or failure summary
+  publication, and is released only by the gate's outer `finally`. The gate
+  reads only through that owner handle; an unchanged marker is missing
+  evidence, not a valid empty document.
+- Producers use strict serializers that cannot emit BOM, NaN, Infinity,
+  duplicate keys, invalid escapes, or invalid surrogate sequences. They need
+  not copy the gate's parser, but every emitted document must pass the same
+  byte/character/depth/number/RFC profile before its existing exact schema and
+  postcondition checks.
+- For each producer, the dedicated tests must independently mutate inherited
+  handle linkage, path reopen, and path fallback. A broken scanner producer
+  must make its corresponding capability false, `ready=false`, and the real
+  checker exit nonzero; a broken capability producer must exit nonzero without
+  valid evidence. Every mutation must also make the real Narrative gate fail.
 
-Codex must correct only objective canon or Ren'Py integration errors; any material prose rewrite returns to a fresh Opus batch.
+Each slice must name the exact files and insertion points, include the complete test fixture and minimal production patch, run one behavior-specific RED that fails for the intended missing behavior, run its focused GREEN with an immediate `$LASTEXITCODE` guard, and preserve prior GREEN slices. The dedicated plan must account for these owned paths:
+
+- `game/governance_winter_interlude.rpy`
+- `game/test_game.rpy`
+- `game/msyh.ttf`
+- `docs/development/winter-interlude-content-ledger.md`
+- `Tools/check_winter_narrative_capabilities.py`
+- `Tools/scan_show_before_prevention.py`
+- `Tools/test_winter_narrative_capabilities.py`
+- `Tools/scan_canon.py`
+- `scan_missing_portraits.py`
+- `scan_narration_overlap.py`
+- `Tools/scan_nested_quotes.py`
+- `Tools/test_governance_winter_interlude.py`
+- `Tools/test_winter_interlude_gate.py`
+- `Tools/Run-WinterInterludeGate.ps1`
+
+The public-gate calls that the dedicated plan must place after each approved atomic scene and after the final-only transition are exactly:
+
+```powershell
+$gateHost = Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'
+$winterGate = (Resolve-Path -LiteralPath Tools/Run-WinterInterludeGate.ps1 -ErrorAction Stop).Path
+& $gateHost -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $winterGate -Gate Narrative -NarrativePhase Batch -ProjectRoot (Get-Location).Path
+if ($LASTEXITCODE -ne 0) { throw 'Winter Narrative Batch gate failed.' }
+```
+
+```powershell
+$gateHost = Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'
+$winterGate = (Resolve-Path -LiteralPath Tools/Run-WinterInterludeGate.ps1 -ErrorAction Stop).Path
+& $gateHost -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $winterGate -Gate Narrative -NarrativePhase Final -ProjectRoot (Get-Location).Path
+if ($LASTEXITCODE -ne 0) { throw 'Winter Narrative Final gate failed.' }
+```
+
+These two fences document the required public interface for the future dedicated plan; they are not Task 8 execution authorization in this umbrella plan.
 
 Task 7's six player-visible semantic expectations are a coordinated test-owned interface: four omitted-report sentences, one shared-cause sentence, and one neutral-delegation sentence. A Task 8 final-prose change may update them only after the matching fresh scene-specific claude-opus-4-6 raw output has been shown to and approved by the user. In the same atomic commit, update game/governance_winter_interlude.rpy and the independent expectations in Tools/test_governance_winter_interlude.py and game/test_game.rpy. Never derive either test expectation from production text and never replace the visible checks with hidden-marker-only assertions. Preserve all six opposite-semantic mutation cases and real _history verification, then rerun the focused source contract and the production route matrix including delegation. Without explicit user approval, none of the six production sentences or their two test-owned expectations may change.
 
-- [ ] **Step 5: Enforce path-length and reuse ratios from actual target text**
+If the dedicated plan is absent, contains placeholders, lacks any required
+per-tool or per-scene loop, omits any inherited-handle, no-path-fallback,
+strict-profile, exact portrait-parent, or per-producer mutation contract, lacks
+the real checker linkage mutations, or has not received both READY verdicts,
+stop at this checkpoint. Do not infer permission to implement Task 8 from the
+high-level requirements above.
 
-Extend Tools/test_governance_winter_interlude.py with a parser that computes visible quoted Chinese characters for:
-
-- each of the 12 ordered investigation paths;
-- each of the six outcomes;
-- the delegated path separately.
-
-For every active complete path require 11,000–14,000 characters. The parser must classify characters covered by verified transplanted source hashes as reuse and all other visible characters as new. Require approximately one-third reuse and two-thirds new text with a five-percentage-point tolerance on every complete active path; the ledger alone cannot make this test pass.
-
-The 1–2 minute brief before the active/delegate choice must remain short; the test must reject a pre-choice block longer than 700 Chinese characters.
-
-- [ ] **Step 6: Run narrative gates after every approved scene integration**
-
-First extend Tools/scan_nested_quotes.py's narrative allowlist to include governance_winter_interlude.rpy and make it return a nonzero exit when its issue count is nonzero. Add a unit regression proving the new file is scanned rather than silently skipped.
-
-~~~powershell
-New-Item -ItemType Directory -Path .superpowers/sdd -Force | Out-Null
-python Tools/scan_canon.py
-if ($LASTEXITCODE -ne 0) { throw 'Canon scanner crashed on interlude prose.' }
-python Tools/scan_ai_smell.py game/governance_winter_interlude.rpy
-if ($LASTEXITCODE -ne 0) { throw 'AI-smell scanner crashed on interlude prose.' }
-python scan_missing_portraits.py
-if ($LASTEXITCODE -ne 0) { throw 'Portrait scanner crashed on interlude prose.' }
-$portraitReport = Get-Content -LiteralPath missing_portraits_full.json -Raw | ConvertFrom-Json
-$newPortraitFindings = @((@($portraitReport.class_a) + @($portraitReport.class_b)) | Where-Object { $_.file -like '*governance_winter_interlude.rpy' })
-if (@($newPortraitFindings).Count -ne 0) { throw 'The new interlude has missing-portrait findings.' }
-python scan_narration_overlap.py governance_winter_interlude.rpy | Tee-Object -FilePath .superpowers/sdd/winter-narration-overlap.txt
-if ($LASTEXITCODE -ne 0) { throw 'Narration-overlap scanner crashed on interlude prose.' }
-if (-not (Select-String -LiteralPath .superpowers/sdd/winter-narration-overlap.txt -Pattern 'TOTAL: 0 处' -Quiet)) { throw 'New interlude has unresolved portrait/narration overlap findings.' }
-python Tools/scan_nested_quotes.py
-if ($LASTEXITCODE -ne 0) { throw 'Nested-quote scan found an issue in the interlude.' }
-python -m unittest Tools.test_governance_winter_interlude -v
-if ($LASTEXITCODE -ne 0) { throw 'Interlude narrative contracts failed.' }
-$task8RouteSaveDir = Join-Path ([System.IO.Path]::GetTempPath()) ("renpy-task8-route-{0}" -f [guid]::NewGuid().ToString("N"))
-& Tools/Run-RenPySuite.ps1 -ProjectRoot (Get-Location).Path -SaveDir $task8RouteSaveDir -Mode Suite -Suite test_winter_interlude_route_matrix -Expect PASSED -TimeoutSeconds 300
-if ($LASTEXITCODE -ne 0) { throw 'Task 8 production route/delegation contract failed.' }
-~~~
-
-Expected: canon and structural gates pass; the new module's portrait findings and its overlap total are zero. Existing findings elsewhere in the project are not misreported as new. AI-smell results are manually reviewed only for repeated local templates introduced by this batch.
-
-- [ ] **Step 7: Refresh and verify the font**
-
-~~~powershell
-python prepare_release.py
-$fontFirst = $LASTEXITCODE
-if ($fontFirst -notin @(0,1)) { throw 'First interlude font gate failed.' }
-python prepare_release.py
-if ($LASTEXITCODE -ne 0) { throw 'Second interlude font gate failed.' }
-~~~
-
-Expected: the first run may exit 1 and regenerate game/msyh.ttf; the second must exit 0. If the font changes, include it in this task's commit.
-
-- [ ] **Step 8: Commit the approved interlude prose**
-
-~~~powershell
-git add game/governance_winter_interlude.rpy game/msyh.ttf docs/development/winter-interlude-content-ledger.md Tools/scan_nested_quotes.py Tools/test_governance_winter_interlude.py game/test_game.rpy
-git diff --cached --check
-if ($LASTEXITCODE -ne 0) { throw 'Interlude-prose index failed whitespace validation.' }
-git commit -m "feat: write the first winter interlude"
-if ($LASTEXITCODE -ne 0) { throw 'Interlude-prose commit failed.' }
-~~~
-
-**Asset audit:** Text may change the subset font size; report the exact byte delta. No art, music, SFX, portrait, animation, or UI asset is added in this task.
+**Asset audit:** Planning only. Art, music, SFX, portrait, animation, UI, font, old-game, shipping source, and package size remain unchanged until the separately approved delivery plan is executed.
 
 ---
 
