@@ -1,6 +1,6 @@
 # Winter Interlude Executable Gates Design
 
-**Status:** Single-module architecture approved in conversation on 2026-08-09; written specification pending review
+**Status:** Approved by the user on 2026-08-09
 
 **Scope:** Development and release-test tooling only
 
@@ -125,6 +125,8 @@ Each Ren'Py suite receives a distinct savedir and `RenPyTimeoutSeconds`. The rou
 7. nested-quote scan after Task 8 makes the scanner cover the winter module and return nonzero for findings;
 8. `python -m unittest Tools.test_governance_winter_interlude -v`, including the structural contracts and the independently maintained semantic expectations for every scene approved so far;
 9. `test_winter_interlude_route_matrix`, including the real delegation case.
+
+The canon scanner's machine-readable schema separates blocking defects from informational review data. `blocking_count` is exactly the sum of anti-logic, geography, terminology, and typo/canon-deviation findings; any positive value returns nonzero. Canon trigger-word occurrences remain in an `informational_occurrences` section for manual comparison with `CANON.md` and do not affect the process exit code by themselves. Capability tests must include one positive and one zero case for every blocking category plus a trigger-word-only case that remains nonblocking.
 
 `-Gate Narrative -NarrativePhase Final` runs the same ordered steps after all approved scenes are integrated, but calls the capability checker with `--phase final` and requires the source suite to include and pass the complete length, reuse-ratio, semantic, placeholder-removal, and final-copy contracts. The final-only contracts are added immediately before this transition; they are not installed as permanently failing tests during earlier batch integrations.
 
