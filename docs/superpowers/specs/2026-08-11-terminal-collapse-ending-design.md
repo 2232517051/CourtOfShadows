@@ -110,11 +110,21 @@
 - 不删除或重命名任何 label。
 - 新增的都是非保留名普通 `default` 存档字段：`iron_terminal_collapse_snapshot = None` 与 `fall_cause = ""`；不新增 persistent 字段或结局键。旧存档缺少字段时按这两个默认值工作。
 - 当前状态包装函数对其他可选字段继续使用 `getattr(store, ..., safe_default)`；永久回归测试必须临时删除并恢复这些可选字段，证明旧存档不会因缺少新增或历史变量而崩溃。
-- 旧存档可能直接恢复在最终战术菜单，因此不能只依赖菜单前赋值。兼容验证分成两层：一次性本地证据在基线提交上用隔离 `SaveDir` 生成真实旧版存档（停在最终战术菜单、带旧 `_iron_prepared=True`，但资源与支援满足终末崩盘），记录基线提交、存档哈希、可复现步骤与改后加载结果；该二进制和运行记录只作 git-ignored 证据，不进入常规测试或提交。可提交的永久回归则用 testsuite 夹具模拟相同恢复状态：`_iron_prepared=True`、`iron_terminal_collapse_snapshot=None`，选择准备分支后必须在播放胜利文本前进入 `fall`。
+- 旧存档可能直接恢复在最终战术菜单，因此不能只依赖菜单前赋值。兼容验证分成两层：一次性本地证据在基线提交上用隔离 `SaveDir` 和 Ren'Py 自带 testcase 自动生成真实旧版存档（停在最终战术菜单、带旧 `_iron_prepared=True`，但资源与支援满足终末崩盘），记录基线提交、存档哈希、可复现步骤与改后加载结果；该二进制和运行记录只作 git-ignored 证据，不进入常规测试或提交。可提交的永久回归则用 testsuite 夹具模拟相同恢复状态：`_iron_prepared=True`、`iron_terminal_collapse_snapshot=None`，选择准备分支后必须在播放胜利文本前进入 `fall`。
 - 对已经保存在准备分支正文内部、因而越过新增锁定点的旧档，只承诺可加载且维持它已选择的旧版胜负，不做无法可靠重建菜单前忠诚/关系值的追溯判死。永久夹具必须覆盖“汇合点收到 `None` 时不崩溃、不重新分类”；完成标准中的旧存档兼容只指无崩溃、旧菜单选择可被新规则拦截，不宣称分支中途存档会被追溯改判。
 - 已经进入 `game_ending` 或已经解锁的 `fall`/`iron_lord` 记录不回滚。
 
-一次性旧档门禁不能使用 `Run-RenPySuite.ps1 -StageLegacyFixtures`，因为该开关只搬运仓库内 winter manifest。实施计划必须给出并保存以下同等严格的本地步骤：在基线提交的独立生成目录里创建停在最终菜单的存档，退出引擎后把原始引擎文件复制成只读的 git-ignored 证据母本，并记录基线提交与 SHA-256；改后验证时绝不直接打开母本，而是为“正面强攻”和“迂回”各建一个仓库外唯一空 `SaveDir`，分别以引擎原始文件名复制同一母本并再次核对源/两份副本哈希相等。设置并验证 `RENPY_SDK` 后，每次都用可见窗口的 `$Process = Start-Process -FilePath (Join-Path $env:RENPY_SDK 'renpy.exe') -ArgumentList $ArgumentLine -PassThru` 启动，记录 `$Process.Id`，人工加载记录的 slot 并选择对应分支，再用 `$Process.WaitForExit()` 和 `$Process.ExitCode` 取得终态；`$ArgumentLine` 必须把 `$ProjectRoot` 与 `--savedir $SaveDir` 分别按 Windows 原生命令行规则加引号。保存两次加载前后画面、`log.txt`、PID、退出码和结果说明。只允许在确认目标位于本轮临时目录、进程已退出后清理两份副本；ignored 母本与证据保留到设计复审结束。
+### 无桌面接管的一次性旧档门禁
+
+一次性旧档门禁不能使用 `Run-RenPySuite.ps1 -StageLegacyFixtures`，因为该开关只搬运仓库内 winter manifest；也不能调用 Computer Use、发送真实鼠标或键盘事件、抢占前台窗口，或在后台失败后回退为人工桌面操作。实施计划必须给出并保存以下同等严格的本地步骤。
+
+1. **基线生成器。** 在修复前精确基线提交的独立 detached worktree 中，只临时新增一个 `game/zz_terminal_collapse_legacy_fixture.rpy`，不得修改生产脚本。使用仓库外、玩家存档外的唯一空 `SaveDir`；worktree 内的 `game/saves` 也必须不存在或是本轮任务拥有的空目录，否则停止，防止 Ren'Py 在多个 save location 之间选错文件。生成与回载保持同一个本机用户和 Ren'Py save-token 身份，不改 `RENPY_PATH_TO_SAVES`。临时 testcase 先写入计划锁定的原始 primitive 状态，再以 `run Start("ending_iron_lord")` 让生产 label 成为顶层游戏执行流；禁止用 `call`、`call_in_new_context` 或夹具 driver label 给存档留下临时返回点。
+2. **真实分支推进。** testcase 通过 Ren'Py 引擎自己的 `click`/`advance` 依次选择“截断补给线——让他们饿三天再打”“亲自率领前锋出击”“记住这一切，继续前进”，不得直接写入这三项选择的结果状态。停在最终战术 `screen choice` 且尚未选择最终战术时，必须断言 `intrigue == 55`、`power == 60`、`_iron_prepared is True`，并从 `screen choice` 的实际 `items` 中证明“正面强攻”和“迂回”各出现一次、硬拼不出现。
+3. **执行栈与存档。** 保存前必须断言当前是顶层 context、`return_stack` 为空、当前脚本位置属于 `game/chapter5.rpy` 的最终战术 Menu，而不是 testcase 或 `zz` 文件；随后才调用 `renpy.save("1-1", ...)`。退出后要求恰有一个 `1-1-*.save`，并核对 slot JSON 的基线提交、三项选择、菜单位置和状态标记。
+4. **零可见窗口。** 生成、干净回载和改后双分支回放的子进程都只在各自进程环境中设置 `SDL_VIDEODRIVER=dummy`、`SDL_AUDIODRIVER=dummy` 与 `RENPY_RENDERER=sw`。启动器必须分别捕获 stdout/stderr、PID、真实退出码，并在整个生命周期检查该进程树没有可见顶层窗口。dummy 后端不能渲染真实 choice、检测到任何可见窗口、需要未知 save-token 确认或出现其他交互时，立即停止本次门禁并报告 `NEEDS_CONTEXT`；不得改用桌面控制继续。
+5. **干净基线回载。** 在第二个精确基线 detached worktree 中确保生成器 `zz` 文件不存在，只允许一个不写游戏状态的临时验证观察器，并对其 `game/saves` 执行同样的不存在/任务自有空目录断言。把候选 slot 复制到新的唯一空 `SaveDir`，复核复制前后哈希，并以正常 `run`（不是 `test`）配合 `RENPY_AUTO_LOAD=1-1` 自动加载。观察器只在正式 choice interaction 出现后核对当前文件/菜单、空返回栈、上述状态、两个最终战术选项，以及当前 slot JSON 中候选独有的 provenance marker；然后写出结果并退出。任何未知 label、incompatible script、未知 token、确认框、夹具依赖或 marker 不匹配都使候选作废。
+6. **冻结与改后回放。** 只有干净基线正常回载通过后，才把原始引擎文件复制成只读的 git-ignored 证据母本，并记录基线提交、引擎版本、文件字节数与 SHA-256。改后验证绝不直接打开母本，而是为“正面强攻”和“迂回”各建一个仓库外唯一空 `SaveDir`，分别以引擎原始文件名复制同一母本并再次核对源/两份副本哈希相等；每个回放 worktree 的 `game/saves` 同样必须不存在或为任务自有空目录。两个 dummy-mode testcase 分别加载一个副本，先核对 provenance marker，再选择对应分支，并证明都在胜利文本前进入 `fall`。
+7. **证据与清理。** 保存生成、干净回载和两次改后回放的日志、环境、PID、窗口检查、退出码、状态断言与结果说明。只有确认目标位于本轮任务拥有的临时根、相关进程树全部退出后，才能清理 disposable worktree 和副本 `SaveDir`；ignored 母本与证据保留到设计复审结束。中断或失败尝试的日志与存档不得被后续尝试覆盖或冒充通过证据。
 
 ## 正文生成与审批边界
 
