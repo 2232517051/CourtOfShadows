@@ -10,13 +10,14 @@
 
 ## Global Constraints
 
-- The approved design is `docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md`, physical SHA-256 `09AAC47CEC9B8FAEE0C930ED6759EDCE88F37B2B73E376196D4D70C44AE390CE`, committed at `bdad1441d9731fbfac3e1b90654dbe888f354296`.
+- The approved written design is `docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md`, physical SHA-256 `5852B225DE5C17C32F548E7221896599121E76FC4DEBEFA8B060FEA1C598F810`, committed at `22ce7cf48aa6f9a0062a697d9cbf954881c60245`. Its original design commit is `bdad1441d9731fbfac3e1b90654dbe888f354296`.
 - The unrelated untracked plan `docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md` must remain byte-identical at SHA-256 `0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C`; never stage, edit, delete, or incorporate it.
-- In the shared implementation worktree, Phase A may modify exactly `game/difficulty.rpy`, `game/balance.rpy`, and `game/test_game.rpy`. Task 1's explicitly disposable detached baseline worktree may carry only its two temporary fixture edits and must be destroyed after evidence capture. Neither worktree may modify `game/chapter5.rpy`, `game/endings_expansion.rpy`, any visible production prose, persistent ending key, achievement ID, asset, font, store copy, version, or package metadata.
+- In the shared implementation worktree, Phase A may modify exactly `game/difficulty.rpy`, `game/balance.rpy`, and `game/test_game.rpy`. Task 1's generator worktree may carry only one temporary `game/zz_terminal_collapse_legacy_fixture.rpy`; its clean-replay worktree may carry only one distinct state-read-only observer `zz` file that never assigns game state, and neither Task 1 worktree may modify a production script. Each Task 2 test invocation uses a fresh detached mirror whose only source differences are the exact current allowed RED or GREEN files copied byte-for-byte from the shared worktree; its local `game/saves` starts absent and is removed only with that verified task-owned mirror after the run drains. Neither the shared nor disposable worktrees may modify `game/chapter5.rpy`, `game/endings_expansion.rpy`, any visible production prose, persistent ending key, achievement ID, asset, font, store copy, version, or package metadata.
 - The intermediate rules commit is not shippable or merge-ready by itself: it intentionally precedes the runtime guard and approved death copy. Do not run Final, build a release, merge, or advertise the player bug as fixed at the Phase A hard stop.
-- Generate the old save before the first tracked game-file edit. Generate it from the exact approved-design commit in a disposable detached worktree, using a unique external save directory. Never regenerate it from changed code.
+- Generate the old save before the first tracked game-file edit. Generate it from the exact final Phase A plan commit in a disposable detached worktree after proving that commit's `game/` tree is byte-identical to the original design commit. Use a unique external save directory. Never regenerate it from changed code.
 - All evidence under `.superpowers/sdd/terminal-collapse-ending/` must be ignored, must never be staged, and must survive through Phase B review. Do not clean or overwrite evidence to obtain a better result.
-- Every Ren'Py runner call uses a unique external `SaveDir`; `Run-RenPySuite.ps1` exits its host, so invoke it through a fresh child `powershell.exe` and check the real exit code immediately.
+- Every Ren'Py engine `test` or `run` launch uses a unique external `SaveDir` and applies the task-specific local `game/saves` preflight. Every `Run-RenPySuite.ps1` host must run exactly once through `.superpowers/sdd/terminal-collapse-ending/helpers/Invoke-PrivateDesktopProcess.ps1` on its never-switched private desktop, with process-local `SDL_VIDEODRIVER=dummy`, `SDL_AUDIODRIVER=dummy`, and `RENPY_RENDERER=sw`, and with child `RENPY_PATH_TO_SAVES` removed. The only non-helper exception is Task 0's console-subsystem `renpy.py --version` probe, which cannot initialize the display and does not execute a project. Preserve the helper and runner evidence; any non-`COMPLETED` result, incomplete process coverage, visible window, timeout, interaction requirement, or unexpected exit is `NEEDS_CONTEXT` and must not be retried or replaced with a direct/manual launch.
+- No remaining Phase A task and no later Phase B replay may invoke Computer Use, send real mouse/keyboard input, create or focus a window on the user's current or any switchable desktop, or fall back to manual UI. The sole detector-only exception is Task 1 Step 3's short-lived sentinel Form on a never-switched private desktop: the helper must classify it `NEEDS_CONTEXT`, capture `EVENT_OBJECT_SHOW`, and fully drain and clean its Job before the self-test can pass. No Ren'Py generator, observer, suite, or Phase B replay is allowed any visible window even on its private desktop. Those runs use process-local SDL dummy drivers plus a pre-armed process-tree window monitor; any visible window or interaction requirement is `NEEDS_CONTEXT`, not permission to take over the desktop.
 - Each numbered task starts a new agent context. Re-establish every path/hash input at the task's first step. Tasks 0, 1, and 3 must each keep one explicit persistent Windows PowerShell 5.1 session open for all of that task's PowerShell fences; no variable is allowed to leak from a previous task.
 - The copy stage uses three fresh, mutually isolated Claude Code sessions. Each receives identical prompt bytes, sees no Codex draft or sibling candidate, and is accepted only if the final launcher metadata proves `claude-opus-4-6`. No fallback, retry under another model, synthesis, or Codex polishing is allowed.
 - User approval is the only prose-quality gate. Randomize the three verified raw results to neutral labels A/B/C and display them in full without model/order clues. Stop if the user rejects all three or has not selected one.
@@ -40,24 +41,45 @@ Run from the repository root:
 ```powershell
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-$DesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
-$DesignSha256 = '09AAC47CEC9B8FAEE0C930ED6759EDCE88F37B2B73E376196D4D70C44AE390CE'
+$OriginalDesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
+$OriginalPlanCommit = '168c3f2f6440628fc580e6eeb79065d2ae1439a5'
+$WrittenSpecCommit = '22ce7cf48aa6f9a0062a697d9cbf954881c60245'
+$DesignSha256 = '5852B225DE5C17C32F548E7221896599121E76FC4DEBEFA8B060FEA1C598F810'
 $UnrelatedPlan = 'docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md'
 $UnrelatedSha256 = '0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C'
 $ThisPlan = 'docs/superpowers/plans/2026-08-11-terminal-collapse-ending-phase-a.md'
+$DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
 
-if ((git log -1 --format=%s) -cne 'docs: plan terminal collapse phase one') {
+if ((git log -1 --format=%s) -cne 'docs: update terminal collapse phase one for headless evidence') {
     throw 'HEAD is not the approved Phase A plan commit.'
 }
-if ((git rev-parse HEAD^) -cne $DesignCommit) {
-    throw 'Phase A plan parent is not the approved design commit.'
+if ((git rev-parse HEAD^) -cne $WrittenSpecCommit) {
+    throw 'Phase A plan parent is not the approved written-spec commit.'
 }
 $PlanCommitPaths = @(git diff-tree --no-commit-id --name-only -r HEAD)
 if ($PlanCommitPaths.Count -ne 1 -or $PlanCommitPaths[0] -cne $ThisPlan) {
     throw 'Phase A plan commit scope is not exactly the plan file.'
 }
-if ((Get-FileHash -Algorithm SHA256 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md').Hash -cne $DesignSha256) {
+if ((git log -1 --format=%s $WrittenSpecCommit) -cne 'docs: require headless legacy save evidence' -or
+    (git rev-parse ($WrittenSpecCommit + '^')) -cne $OriginalPlanCommit) {
+    throw 'Written-spec commit topology drifted.'
+}
+$SpecCommitPaths = @(git diff-tree --no-commit-id --name-only -r $WrittenSpecCommit)
+if ($SpecCommitPaths.Count -ne 1 -or $SpecCommitPaths[0] -cne $DesignPath) {
+    throw 'Written-spec commit scope is not exactly the design file.'
+}
+if ((git rev-parse ($OriginalPlanCommit + '^')) -cne $OriginalDesignCommit) {
+    throw 'Original Phase A plan no longer descends directly from the design commit.'
+}
+if ((Get-FileHash -Algorithm SHA256 $DesignPath).Hash -cne $DesignSha256) {
     throw 'Approved design bytes drifted.'
+}
+$OriginalGameTree = git rev-parse ($OriginalDesignCommit + ':game')
+if ($LASTEXITCODE -ne 0) { throw 'Could not resolve the original design game tree.' }
+$PlanGameTree = git rev-parse 'HEAD:game'
+if ($LASTEXITCODE -ne 0) { throw 'Could not resolve the executable-plan game tree.' }
+if ($PlanGameTree -cne $OriginalGameTree) {
+    throw 'The executable plan commit does not preserve the original pre-fix game tree.'
 }
 if ((Get-FileHash -Algorithm SHA256 $UnrelatedPlan).Hash -cne $UnrelatedSha256) {
     throw 'Unrelated narrative-delivery plan drifted.'
@@ -71,15 +93,18 @@ if ($Status.Count -ne 1 -or $Status[0] -cne ('?? ' + $UnrelatedPlan)) {
 }
 ```
 
-Expected: all assertions pass; the only status entry is the preserved unrelated plan.
+Expected: HEAD is a plan-only commit whose parent is the approved written-spec commit; the specification hash is exact; HEAD's `game/` tree object equals the original design commit's pre-fix `game/` tree; the index is empty; and the only status entry is the preserved unrelated plan.
 
 - [ ] **Step 2: Verify the trusted SDK and runner parser before evidence work**
 
 ```powershell
-if ([string]::IsNullOrWhiteSpace($env:RENPY_SDK)) {
-    throw 'RENPY_SDK is not set.'
+$TrustedSdkRoot = 'E:\Projects\renpy-8.5.2-sdk'
+$ConfiguredSdkRoot = [Environment]::GetEnvironmentVariable('RENPY_SDK', 'Process')
+if (-not [string]::IsNullOrWhiteSpace($ConfiguredSdkRoot) -and
+    -not [IO.Path]::GetFullPath($ConfiguredSdkRoot).TrimEnd('\').Equals($TrustedSdkRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Process RENPY_SDK points somewhere other than the approved RenPy 8.5.2 SDK.'
 }
-$RenPyExe = Join-Path $env:RENPY_SDK 'renpy.exe'
+$RenPyExe = Join-Path $TrustedSdkRoot 'renpy.exe'
 if (-not (Test-Path -LiteralPath $RenPyExe -PathType Leaf)) {
     throw 'RENPY_SDK does not contain renpy.exe.'
 }
@@ -93,18 +118,13 @@ $ParserErrors = $null
 if ($ParserErrors.Count -ne 0) {
     throw ('Run-RenPySuite.ps1 parse errors: ' + ($ParserErrors.Message -join '; '))
 }
-$LauncherProbe = Start-Process -FilePath $RenPyExe -ArgumentList '--version' -Wait -PassThru
-if ($LauncherProbe.ExitCode -ne 0) {
-    throw ('RenPy GUI launcher version probe failed with exit ' + $LauncherProbe.ExitCode + '.')
-}
-
-# renpy.exe is a Windows GUI-subsystem launcher, so direct invocation does not
-# reliably update $LASTEXITCODE or attach its version text to WinPS 5.1. Use
-# the bundled console interpreter against the same SDK entrypoint for the
-# exact version line, and bind it to the official version declaration.
-$RenPyConsole = Join-Path $env:RENPY_SDK 'lib\py3-windows-x86_64\python.exe'
-$RenPyEntry = Join-Path $env:RENPY_SDK 'renpy.py'
-$RenPyVersionFile = Join-Path $env:RENPY_SDK 'renpy\vc_version.py'
+# Do not launch renpy.exe here: it is a Windows GUI-subsystem executable, and
+# Task 0 has not installed the private-desktop monitor yet. Use the bundled
+# console interpreter against the same SDK entrypoint for the exact version
+# line, and bind it to the official version declaration.
+$RenPyConsole = Join-Path $TrustedSdkRoot 'lib\py3-windows-x86_64\python.exe'
+$RenPyEntry = Join-Path $TrustedSdkRoot 'renpy.py'
+$RenPyVersionFile = Join-Path $TrustedSdkRoot 'renpy\vc_version.py'
 foreach ($RequiredSdkFile in @($RenPyConsole, $RenPyEntry, $RenPyVersionFile)) {
     if (-not (Test-Path -LiteralPath $RequiredSdkFile -PathType Leaf)) {
         throw ('Trusted SDK version input is missing: ' + $RequiredSdkFile)
@@ -131,7 +151,7 @@ if ($VersionAssignments.Count -ne 1 -or
 }
 ```
 
-Expected: Windows PowerShell parser errors `0`; the GUI launcher exits `0`; the same SDK's console entrypoint reports exactly `Ren'Py 8.5.2.26010301`; and `renpy/vc_version.py` declares the same official version.
+Expected: Windows PowerShell parser errors `0`; no GUI-subsystem process is launched; the trusted SDK's console entrypoint reports exactly `Ren'Py 8.5.2.26010301`; and `renpy/vc_version.py` declares the same official version.
 
 - [ ] **Step 3: Establish the ignored evidence root without touching tracked scope**
 
@@ -143,7 +163,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Terminal-collapse evidence root is not ignored
 [IO.Directory]::CreateDirectory($EvidenceRoot) | Out-Null
 ```
 
-Do not stage the directory. Any small human-authored evidence manifest must be created with `apply_patch`; engine logs, screenshots, binary saves, and launcher outputs may be copied/generated by their owning tools.
+Do not stage the directory. Any small human-authored evidence manifest or helper source must be created with `apply_patch`; engine logs, stdout/stderr captures, process-tree/window-monitor reports, binary saves, and launcher outputs may be copied/generated by their owning tools.
 
 ---
 
@@ -151,181 +171,1115 @@ Do not stage the directory. Any small human-authored evidence manifest must be c
 
 **Files:**
 
-- Temporary-only modify in detached worktree: `game/script.rpy:14`
-- Temporary-only create in detached worktree: `game/zz_terminal_collapse_legacy_fixture.rpy`
-- Preserve ignored binary master: `.superpowers/sdd/terminal-collapse-ending/legacy/mother/1-1-*.save` (the exact single engine-generated filename selected in Step 4)
+- Create from the committed exact appendix and execute ignored helper: `.superpowers/sdd/terminal-collapse-ending/helpers/PrivateDesktopRunner.cs`
+- Create from the committed exact appendix and execute ignored helper: `.superpowers/sdd/terminal-collapse-ending/helpers/Invoke-PrivateDesktopProcess.ps1`
+- Create from the committed exact appendix and execute ignored helper: `.superpowers/sdd/terminal-collapse-ending/helpers/Test-PrivateDesktopRunner.ps1`
+- Temporary-only create in generator worktree: `game/zz_terminal_collapse_legacy_fixture.rpy`
+- Temporary-only create in clean-replay worktree: `game/zz_terminal_collapse_legacy_observer.rpy`
+- Preserve ignored binary master: `.superpowers/sdd/terminal-collapse-ending/legacy/mother/1-1-*.save`
 - Preserve ignored evidence: `.superpowers/sdd/terminal-collapse-ending/legacy/baseline-evidence.md`
+- Preserve ignored machine evidence: `.superpowers/sdd/terminal-collapse-ending/legacy/generator-state.json`, `.superpowers/sdd/terminal-collapse-ending/legacy/observer-state.json`, and the helper-owned evidence directories
 
-- [ ] **Step 1: Create and verify a disposable detached baseline worktree**
+This task is fully headless and fail-closed. Do not use Computer Use, `Start-Process`, a manually opened terminal or game window, synthetic desktop input, or a manual fallback. Every Ren'Py invocation, including a testcase invocation, must go through `Invoke-PrivateDesktopProcess`. `NEEDS_CONTEXT`, `TIMEOUT`, `LAUNCH_ERROR`, any visible window, a confirmation/consent screen, or missing evidence stops the task and preserves all new worktrees, save directories, logs, and reports for diagnosis.
+
+For this task, the global local-save isolation rule is a pre-launch rule: `game/saves` must be absent before both runs. After the generator, Ren'Py 8.5.2 `MultiLocation` is expected to create exactly one local `1-1` mirror whose filename and bytes match the external save. After the clean normal-run autoload, a local directory and `persistent` are permitted, but no local `1-1` candidate is permitted.
+
+Three points must be proven by disposable prototypes before their output is trusted: the independent-desktop helper and its visible-descendant detector; Ren'Py 8.5.2's native testcase click/save behavior, including its `MultiLocation` local mirror; and ordinary `run` autoload callback timing. The steps below are those prototypes. A failure is evidence, not permission to change production code or take over the desktop.
+
+Before opening Task 1's persistent PowerShell session, use `apply_patch` to create the three ignored helper files from Appendices A, B, and C of this plan, byte for byte. Do not copy either exploratory `plan-draft` or `independent-draft`, and do not substitute another launcher. Appendices A-C and their fixed SHA-256 values are part of the committed executable plan; a missing file, a pre-existing different file, or a hash mismatch is `NEEDS_CONTEXT`, not permission to regenerate helper code during execution.
+
+- [ ] **Step 1: Re-establish the exact baseline commit, trusted paths, and task-owned temporary root**
+
+Open one persistent Windows PowerShell 5.1 session at the repository root and use that same session for every PowerShell fence in Task 1:
 
 ```powershell
+Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-$DesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
+$OriginalDesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
+$WrittenSpecCommit = '22ce7cf48aa6f9a0062a697d9cbf954881c60245'
+$ExpectedPlanSubject = 'docs: update terminal collapse phase one for headless evidence'
+$ExpectedGameTree = 'fa7a398e9d989731b24e3c1642f3e2e33ce846ff'
+$DesignSha256 = '5852B225DE5C17C32F548E7221896599121E76FC4DEBEFA8B060FEA1C598F810'
+$DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
+$ThisPlan = 'docs/superpowers/plans/2026-08-11-terminal-collapse-ending-phase-a.md'
+$UnrelatedPlan = 'docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md'
+$UnrelatedSha256 = '0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C'
 $EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
-$RenPyExe = Join-Path $env:RENPY_SDK 'renpy.exe'
-if (-not (Test-Path -LiteralPath $RenPyExe -PathType Leaf)) {
-    throw 'RENPY_SDK does not contain renpy.exe.'
+$HelperRoot = Join-Path $EvidenceRoot 'helpers'
+$LegacyRoot = Join-Path $EvidenceRoot 'legacy'
+$RunnerSource = Join-Path $HelperRoot 'PrivateDesktopRunner.cs'
+$HeadlessWrapper = Join-Path $HelperRoot 'Invoke-PrivateDesktopProcess.ps1'
+$HeadlessSelfTest = Join-Path $HelperRoot 'Test-PrivateDesktopRunner.ps1'
+$ExpectedHelperPayloads = [ordered]@{
+    'PrivateDesktopRunner.cs' = [pscustomobject]@{ Bytes = 69781; Sha256 = 'F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154' }
+    'Invoke-PrivateDesktopProcess.ps1' = [pscustomobject]@{ Bytes = 5016; Sha256 = '8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A' }
+    'Test-PrivateDesktopRunner.ps1' = [pscustomobject]@{ Bytes = 16866; Sha256 = '00808C50EE4BEC6D28CC3B7DE8C6EF853D9BC1DDCAABE9625E84D3FD767A183F' }
 }
-$BaselineRoot = Join-Path ([IO.Path]::GetTempPath()) ('cos-terminal-collapse-baseline-' + [Guid]::NewGuid().ToString('N'))
-$BaselineSaveDir = Join-Path ([IO.Path]::GetTempPath()) ('cos-terminal-collapse-old-save-' + [Guid]::NewGuid().ToString('N'))
-if (Test-Path -LiteralPath $BaselineRoot) { throw 'Baseline worktree path already exists.' }
-if (Test-Path -LiteralPath $BaselineSaveDir) { throw 'Baseline save path already exists.' }
-git worktree add --detach $BaselineRoot $DesignCommit
-if ($LASTEXITCODE -ne 0) { throw 'Could not create detached baseline worktree.' }
-if ((git -C $BaselineRoot rev-parse HEAD) -cne $DesignCommit) {
-    throw 'Detached worktree is not at the approved design commit.'
+$TrustedSdkRoot = 'E:\Projects\renpy-8.5.2-sdk'
+$ConfiguredSdkRoot = [Environment]::GetEnvironmentVariable('RENPY_SDK', 'Process')
+if (-not [string]::IsNullOrWhiteSpace($ConfiguredSdkRoot) -and
+    -not [IO.Path]::GetFullPath($ConfiguredSdkRoot).TrimEnd('\').Equals($TrustedSdkRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Process RENPY_SDK points somewhere other than the approved RenPy 8.5.2 SDK.'
 }
-if (@(git -C $BaselineRoot status --short).Count -ne 0) {
-    throw 'Detached baseline worktree did not start clean.'
+$RenPyExe = Join-Path $TrustedSdkRoot 'renpy.exe'
+$BaselineCommit = (& git rev-parse HEAD).Trim()
+
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($BaselineCommit)) {
+    throw 'Could not resolve the executable-plan HEAD.'
 }
+if ((git log -1 --format=%s) -cne $ExpectedPlanSubject) {
+    throw 'HEAD is not the approved final Phase A plan commit.'
+}
+if ((git rev-parse HEAD^) -cne $WrittenSpecCommit) {
+    throw 'The final Phase A plan commit does not directly follow the written specification.'
+}
+$PlanPaths = @(git diff-tree --no-commit-id --name-only -r $BaselineCommit)
+if ($PlanPaths.Count -ne 1 -or $PlanPaths[0] -cne $ThisPlan) {
+    throw 'The final Phase A plan commit is not plan-only.'
+}
+if ((Get-FileHash -LiteralPath $DesignPath -Algorithm SHA256).Hash -cne $DesignSha256) {
+    throw 'The approved written specification drifted.'
+}
+$BaselineGameTree = (& git rev-parse ($BaselineCommit + ':game')).Trim()
+$OriginalGameTree = (& git rev-parse ($OriginalDesignCommit + ':game')).Trim()
+if ($BaselineGameTree -cne $ExpectedGameTree -or $OriginalGameTree -cne $ExpectedGameTree) {
+    throw 'The executable-plan game tree is not the original pre-change game tree.'
+}
+if ((Get-FileHash -LiteralPath $UnrelatedPlan -Algorithm SHA256).Hash -cne $UnrelatedSha256) {
+    throw 'The unrelated narrative-delivery plan drifted.'
+}
+if (@(git diff --cached --name-only).Count -ne 0) { throw 'The shared index is not empty.' }
+$SharedStatus = @(git status --short --untracked-files=all)
+if ($SharedStatus.Count -ne 1 -or $SharedStatus[0] -cne ('?? ' + $UnrelatedPlan)) {
+    throw ('Unexpected shared worktree status: ' + ($SharedStatus -join '; '))
+}
+foreach ($RequiredPath in @($RenPyExe, $RunnerSource, $HeadlessWrapper, $HeadlessSelfTest)) {
+    if (-not (Test-Path -LiteralPath $RequiredPath -PathType Leaf)) {
+        throw ('Required Task 1 input is missing: ' + $RequiredPath)
+    }
+}
+foreach ($HelperName in $ExpectedHelperPayloads.Keys) {
+    $HelperPath = Join-Path $HelperRoot $HelperName
+    $ExpectedPayload = $ExpectedHelperPayloads[$HelperName]
+    $ObservedItem = Get-Item -LiteralPath $HelperPath -ErrorAction Stop
+    $ObservedHash = (Get-FileHash -LiteralPath $HelperPath -Algorithm SHA256).Hash
+    if ($ObservedItem.Length -ne [long]$ExpectedPayload.Bytes -or
+        $ObservedHash -cne [string]$ExpectedPayload.Sha256) {
+        throw ('Helper does not match its committed appendix: ' + $HelperName)
+    }
+}
+foreach ($IgnoredPath in @($RunnerSource, $HeadlessWrapper, $HeadlessSelfTest)) {
+    git check-ignore -q $IgnoredPath
+    if ($LASTEXITCODE -ne 0) { throw ('Helper appendix is not ignored: ' + $IgnoredPath) }
+}
+
+function Get-CanonicalPath([string]$Path) {
+    return [IO.Path]::GetFullPath($Path).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+}
+function Test-SameOrChildPath([string]$Candidate, [string]$Parent) {
+    $ChildPath = Get-CanonicalPath $Candidate
+    $ParentPath = Get-CanonicalPath $Parent
+    return $ChildPath.Equals($ParentPath, [StringComparison]::OrdinalIgnoreCase) -or
+        $ChildPath.StartsWith($ParentPath + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)
+}
+
+$ExplicitTaskTempRoot = [Environment]::GetEnvironmentVariable('TC_TASK_TEMP_ROOT', 'Process')
+if (-not [string]::IsNullOrWhiteSpace($ExplicitTaskTempRoot)) {
+    $TaskTempRoot = Get-CanonicalPath $ExplicitTaskTempRoot
+} elseif (Test-Path -LiteralPath 'E:\' -PathType Container) {
+    $TaskTempRoot = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp'
+} else {
+    throw 'Set TC_TASK_TEMP_ROOT to an explicit repository-external task directory; no E: drive is available.'
+}
+[IO.Directory]::CreateDirectory($TaskTempRoot) | Out-Null
+$TaskTempRoot = (Resolve-Path -LiteralPath $TaskTempRoot).Path
+if ((Test-SameOrChildPath $TaskTempRoot $ProjectRoot) -or (Test-SameOrChildPath $ProjectRoot $TaskTempRoot)) {
+    throw 'Task temporary root must be outside and must not contain the repository.'
+}
+$OriginalTempEnvironment = [Environment]::GetEnvironmentVariable('TEMP', 'Process')
+$OriginalTmpEnvironment = [Environment]::GetEnvironmentVariable('TMP', 'Process')
+$env:TEMP = $TaskTempRoot
+$env:TMP = $TaskTempRoot
 ```
 
-- [ ] **Step 2: Add the disposable baseline driver with `apply_patch`**
+Expected: `$BaselineCommit` is the dynamic SHA of the final plan-only commit, not `bdad1441d9731fbfac3e1b90654dbe888f354296`; both its `game/` tree and the original design's `game/` tree are exactly `fa7a398e9d989731b24e3c1642f3e2e33ce846ff`. The selected temporary root is explicit and repository-external. Do not use `[IO.Path]::GetTempPath()` for a worktree or save path outside the helper's own self-test.
 
-Insert this one line immediately after `label start:` in the detached worktree's `game/script.rpy`:
+- [ ] **Step 2: Preserve the interrupted attempt, then remove only its exact verified worktree**
 
-```renpy
-    jump terminal_collapse_legacy_generation_driver
-```
-
-Create `game/zz_terminal_collapse_legacy_fixture.rpy` in that detached worktree with exactly:
-
-```renpy
-label terminal_collapse_legacy_generation_driver:
-    $ persistent.difficulty = "normal"
-    $ power = 56
-    $ intrigue = 52
-    $ faith = 0
-    $ loyalty = 0
-    $ wealth = 0
-    $ reputation = 0
-    $ rel_baron = -1
-    $ rel_queen = -1
-    $ rel_captain = 20
-    $ alliance_baron = False
-    $ prince_ally = False
-    $ prince_betrayed = False
-    $ built_granary = False
-    $ ch5_pay_advance_pension = False
-    $ marriage_route = False
-    $ iron_thorn_controlled = False
-    $ baron_supply_intel = False
-    $ resist_route = False
-    $ iron_war_score = 0
-    $ iron_battle_outcome = "decisive"
-    $ ending_type = ""
-    jump ending_iron_lord
-```
-
-This is test-only generation code in a disposable baseline worktree. It must never be copied, committed, or applied to the implementation worktree.
-
-- [ ] **Step 3: Launch the unchanged baseline visibly and save at the exact menu**
-
-Use the Windows-native quoting helper and a visible Ren'Py process:
+The previous UI-based attempt is failed evidence, not a usable legacy save. Preserve its report, external save directory, artifacts, and copied log. Only its exact registered worktree may be removed after all guards pass:
 
 ```powershell
-function Quote-NativeArgument([string]$Value) {
-    if ($Value -notmatch '[\s"]') { return $Value }
-    $Quoted = [regex]::Replace($Value, '(\\*)"', '$1$1\"')
-    $Quoted = [regex]::Replace($Quoted, '(\\+)$', '$1$1')
-    return '"' + $Quoted + '"'
+$InterruptedWorktree = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp\cos-terminal-collapse-baseline-34e7c2d874ff4075b243e4b5949f7b78'
+$InterruptedSaveDir = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp\cos-terminal-collapse-old-save-1f027ab224b74d8890172376314ea3b1'
+$InterruptedPid = 90932
+$InterruptedCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
+$InterruptedLogHash = 'EA0799C53B982E25B8E6E19111EDC2982D5B1225F7793D5562D8E4AA02ABA595'
+$InterruptedReport = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-task-1-report-v2.md'
+$InterruptedReportExpectedHash = '0312AC00D64A9C43CA5B67A42F0170F411222B8C91962A556EC1AF4B6F674D27'
+$InterruptedArchive = Join-Path $LegacyRoot 'interrupted-attempt'
+$ExpectedInterruptedFiles = [ordered]@{
+    'quick-1-LT1.save' = 'F04B0614CEDFC4E8C7AAEFBDE8EACEEBEF1BB9064CC9CE6831DAAF0B2FA1F4B3'
+    'auto-1-LT1.save' = 'CC59436C6D19E518143D4860F9BC83C54694D414678A8B73474289021C39A3B9'
+    'auto-2-LT1.save' = '27028A705C441F1EEECB424F3A6FAD7EEDC543F0453A6B36AAAEF90CB7BC54E2'
+    'persistent' = '0E810763707C70DF37039BD0DAEB180DAE791C15BD53A650740DAAC38D4A7B99'
 }
 
-[IO.Directory]::CreateDirectory($BaselineSaveDir) | Out-Null
-$ArgumentLine = "$(Quote-NativeArgument $BaselineRoot) --savedir $(Quote-NativeArgument $BaselineSaveDir)"
-$BaselineProcess = Start-Process -FilePath $RenPyExe -ArgumentList $ArgumentLine -PassThru
-$BaselinePid = $BaselineProcess.Id
-"baseline_pid=$BaselinePid"
-```
-
-In the visible window, perform exactly:
-
-1. Start a new game; the disposable `start` jump enters the fixture.
-2. Choose `截断补给线——让他们饿三天再打`.
-3. Choose `亲自率领前锋出击`.
-4. Choose `记住这一切，继续前进`.
-5. At the final-tactics menu, verify both `正面强攻，以气势压倒对方` and `采用迂回战术，先攻击敌军侧翼` are visible. Do not select either.
-6. Open the normal save UI, save to logical slot `1`, return to the menu, and quit normally.
-
-Before accepting the menu state, verify the current diminishing-return arithmetic from the unchanged baseline source: supply-line applies raw `intrigue +5` to 52 and yields 55; personal-vanguard applies raw `power +5` to 56 and yields 59; remember-and-continue applies raw `power +2` to 59 and yields 60. Therefore the final fixture state must report `intrigue=55`, `power=60`, and `_iron_prepared=True`. Any different value is a hard stop; do not save a merely similar menu state.
-
-Then wait for the exact launched process:
-
-```powershell
-$BaselineProcess.WaitForExit()
-$BaselineExitCode = $BaselineProcess.ExitCode
-if ($BaselineExitCode -ne 0) { throw "Baseline RenPy exited $BaselineExitCode." }
-if (Get-Process -Id $BaselinePid -ErrorAction SilentlyContinue) {
-    throw 'Baseline RenPy PID is still alive.'
+foreach ($FixedSha in @($InterruptedLogHash, $InterruptedReportExpectedHash) + @($ExpectedInterruptedFiles.Values)) {
+    if ([string]$FixedSha -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('Malformed fixed interrupted-evidence SHA-256: ' + [string]$FixedSha)
+    }
 }
-```
 
-- [ ] **Step 4: Freeze the single engine save as a read-only mother artifact**
-
-```powershell
-$SaveCandidates = @(
-    Get-ChildItem -LiteralPath $BaselineSaveDir -File |
-        Where-Object { $_.Name -like '1-1-*.save' }
+if (-not (Test-Path -LiteralPath $InterruptedReport -PathType Leaf)) {
+    throw 'Interrupted-attempt report is missing; do not clean its worktree.'
+}
+if ((Get-FileHash -LiteralPath $InterruptedReport -Algorithm SHA256).Hash -cne $InterruptedReportExpectedHash -or
+    (Get-Content -LiteralPath $InterruptedReport -Encoding UTF8 -TotalCount 1) -cne 'STATUS: NEEDS_CONTEXT') {
+    throw 'Interrupted-attempt report drifted; do not clean its worktree.'
+}
+if (-not (Test-Path -LiteralPath $InterruptedSaveDir -PathType Container)) {
+    throw 'Interrupted-attempt SaveDir is missing; do not clean its worktree.'
+}
+$ObservedInterruptedFiles = @(Get-ChildItem -LiteralPath $InterruptedSaveDir -File)
+if ($ObservedInterruptedFiles.Count -ne $ExpectedInterruptedFiles.Count) {
+    throw 'Interrupted SaveDir file count drifted; preserve everything and stop.'
+}
+foreach ($Name in $ExpectedInterruptedFiles.Keys) {
+    $Path = Join-Path $InterruptedSaveDir $Name
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf) -or
+        (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash -cne $ExpectedInterruptedFiles[$Name]) {
+        throw ('Interrupted SaveDir evidence drifted: ' + $Name)
+    }
+}
+if (@($ObservedInterruptedFiles | Where-Object { $_.Name -like '1-1-*.save' }).Count -ne 0) {
+    throw 'Interrupted attempt unexpectedly contains a page-1/slot-1 save; preserve and investigate.'
+}
+if (-not (Test-Path -LiteralPath $InterruptedWorktree -PathType Container)) {
+    throw 'Expected interrupted worktree is missing; preserve evidence and stop.'
+}
+if ((git -C $InterruptedWorktree rev-parse HEAD) -cne $InterruptedCommit) {
+    throw 'Interrupted worktree commit drifted.'
+}
+$ExpectedInterruptedStatus = @(' M game/script.rpy', '?? game/zz_terminal_collapse_legacy_fixture.rpy')
+$ObservedInterruptedStatus = @(git -C $InterruptedWorktree status --short --untracked-files=all)
+if (Compare-Object ($ExpectedInterruptedStatus | Sort-Object) ($ObservedInterruptedStatus | Sort-Object)) {
+    throw ('Interrupted worktree status drifted: ' + ($ObservedInterruptedStatus -join '; '))
+}
+$InterruptedLog = Join-Path $InterruptedWorktree 'log.txt'
+if (-not (Test-Path -LiteralPath $InterruptedLog -PathType Leaf) -or
+    (Get-FileHash -LiteralPath $InterruptedLog -Algorithm SHA256).Hash -cne $InterruptedLogHash) {
+    throw 'Interrupted worktree log drifted.'
+}
+$RegisteredWorktrees = @(
+    git worktree list --porcelain |
+        Where-Object { $_.StartsWith('worktree ', [StringComparison]::Ordinal) } |
+        ForEach-Object { Get-CanonicalPath $_.Substring(9) }
 )
-if ($SaveCandidates.Count -ne 1) {
-    throw ('Expected exactly one page-1/slot-1 save, found ' + $SaveCandidates.Count)
+if ($RegisteredWorktrees -notcontains (Get-CanonicalPath $InterruptedWorktree)) {
+    throw 'Interrupted worktree is not the exact registered worktree.'
 }
-$SourceSave = $SaveCandidates[0]
-$MotherDir = Join-Path $EvidenceRoot 'legacy\mother'
-[IO.Directory]::CreateDirectory($MotherDir) | Out-Null
-$MotherSave = Join-Path $MotherDir $SourceSave.Name
-if (Test-Path -LiteralPath $MotherSave) {
-    throw 'Mother save already exists; do not overwrite evidence.'
+if (Get-Process -Id $InterruptedPid -ErrorAction SilentlyContinue) {
+    throw 'Interrupted RenPy PID is still alive.'
 }
-Copy-Item -LiteralPath $SourceSave.FullName -Destination $MotherSave
-$SourceHash = (Get-FileHash -Algorithm SHA256 $SourceSave.FullName).Hash
-$MotherHash = (Get-FileHash -Algorithm SHA256 $MotherSave).Hash
-if ($SourceHash -cne $MotherHash) { throw 'Mother save copy hash mismatch.' }
-(Get-Item -LiteralPath $MotherSave).IsReadOnly = $true
-if (-not (Get-Item -LiteralPath $MotherSave).IsReadOnly) {
-    throw 'Mother save is not read-only.'
+$InterruptedReferences = @(
+    Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {
+        ($null -ne $_.ExecutablePath -and $_.ExecutablePath.StartsWith($InterruptedWorktree, [StringComparison]::OrdinalIgnoreCase)) -or
+        ($null -ne $_.CommandLine -and $_.CommandLine.IndexOf($InterruptedWorktree, [StringComparison]::OrdinalIgnoreCase) -ge 0)
+    }
+)
+if ($InterruptedReferences.Count -ne 0) {
+    throw 'A live process still references the interrupted worktree.'
+}
+if (Test-Path -LiteralPath $InterruptedArchive) {
+    throw 'Interrupted-attempt archive already exists; do not overwrite evidence.'
+}
+[IO.Directory]::CreateDirectory($InterruptedArchive) | Out-Null
+[IO.File]::Copy($InterruptedLog, (Join-Path $InterruptedArchive 'log.txt'), $false)
+$InterruptedReportHash = (Get-FileHash -LiteralPath $InterruptedReport -Algorithm SHA256).Hash
+if ((Get-FileHash -LiteralPath (Join-Path $InterruptedArchive 'log.txt') -Algorithm SHA256).Hash -cne $InterruptedLogHash) {
+    throw 'Interrupted log archive hash mismatch.'
+}
+git check-ignore -q (Join-Path $InterruptedArchive 'log.txt')
+if ($LASTEXITCODE -ne 0) { throw 'Interrupted log archive is not ignored.' }
+
+$ApprovedInterruptedRoot = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp'
+if (-not (Test-SameOrChildPath $InterruptedWorktree $ApprovedInterruptedRoot) -or
+    (Get-CanonicalPath $InterruptedWorktree).Equals((Get-CanonicalPath $ApprovedInterruptedRoot), [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Refusing to remove an interrupted worktree outside its exact approved root.'
+}
+git worktree remove --force $InterruptedWorktree
+if ($LASTEXITCODE -ne 0) { throw 'Could not remove the exact interrupted worktree.' }
+git worktree prune
+if (Test-Path -LiteralPath $InterruptedWorktree) {
+    throw 'Interrupted worktree remains after guarded removal.'
+}
+```
+
+Do not delete or alter `$InterruptedSaveDir`, `$InterruptedReport`, `$InterruptedArchive`, or their contents. Record `$InterruptedReportHash` in the final evidence manifest.
+
+- [ ] **Step 3: Parse, compile, and exercise the independent-desktop helper appendices**
+
+The selected helper contract is fixed: dot-source `Invoke-PrivateDesktopProcess.ps1`, then call `Invoke-PrivateDesktopProcess -FilePath <absolute executable> -ArgumentList <string[]> -WorkingDirectory <absolute directory> -EnvironmentOverrides <hashtable> -TimeoutSeconds <1..86400> -EvidenceDirectory <new absent directory> [-RunnerSource <absolute PrivateDesktopRunner.cs>]`. A `$null` environment value removes that variable from the child. The helper creates `request.json`, `stdout.txt`, `stderr.txt`, and `result.json` with create-new semantics. Its exact result fields are `schema_version`, `classification`, `detail`, `started`, `root_pid`, `root_exit_code`, `timed_out`, `job_drained`, `desktop_name`, `process_ids`, `new_process_ids`, `active_snapshot_process_ids`, `job_total_processes`, `process_coverage_complete`, `monitor_armed_before_resume`, `monitor_armed_utc`, `resumed_utc`, `cleanup_complete`, `cleanup_errors`, `visible_windows`, `started_utc`, `finished_utc`, `elapsed_milliseconds`, `stdout_path`, and `stderr_path`; the wrapper adds `helper_exit_code`. A dedicated watcher thread must enter the private desktop, create its message queue, arm create/show WinEvent hooks, and enumerate that private desktop before launch. The root then starts suspended, enters the kill-on-close Job, and resumes only after the monitor is armed. The watcher continues WinEvent plus private `EnumDesktopWindows` coverage until the Job drains; Job accounting must equal the distinct accumulated process IDs, and cleanup must be complete. Any visible window or incomplete monitoring, process coverage, drain, or cleanup fails closed. Do not substitute a different launcher.
+
+```powershell
+$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+$HelperHashes = [ordered]@{}
+foreach ($PowerShellPath in @($HeadlessWrapper, $HeadlessSelfTest)) {
+    $Tokens = $null
+    $Errors = $null
+    [Management.Automation.Language.Parser]::ParseFile($PowerShellPath, [ref]$Tokens, [ref]$Errors) | Out-Null
+    if ($Errors.Count -ne 0) {
+        throw ('Helper parse failure in ' + $PowerShellPath + ': ' + ($Errors.Message -join '; '))
+    }
+    $HelperName = Split-Path $PowerShellPath -Leaf
+    $HelperHashes[$HelperName] = (Get-FileHash -LiteralPath $PowerShellPath -Algorithm SHA256).Hash
+    if ($HelperHashes[$HelperName] -cne [string]$ExpectedHelperPayloads[$HelperName].Sha256 -or
+        (Get-Item -LiteralPath $PowerShellPath).Length -ne [long]$ExpectedHelperPayloads[$HelperName].Bytes) {
+        throw ('PowerShell helper drifted from its committed appendix: ' + $HelperName)
+    }
+}
+$RunnerText = [IO.File]::ReadAllText($RunnerSource, $StrictUtf8)
+if ([string]::IsNullOrWhiteSpace($RunnerText) -or $RunnerText.Contains([char]0xFFFD)) {
+    throw 'PrivateDesktopRunner.cs is empty or invalid UTF-8.'
+}
+$RunnerName = Split-Path $RunnerSource -Leaf
+$HelperHashes[$RunnerName] = (Get-FileHash -LiteralPath $RunnerSource -Algorithm SHA256).Hash
+if ($HelperHashes[$RunnerName] -cne [string]$ExpectedHelperPayloads[$RunnerName].Sha256 -or
+    (Get-Item -LiteralPath $RunnerSource).Length -ne [long]$ExpectedHelperPayloads[$RunnerName].Bytes) {
+    throw 'C# helper drifted from its committed appendix.'
+}
+
+# The self-test performs the single C# 5 Add-Type compilation for this fresh
+# process. Do not pre-load the same type here and then attempt to add it twice.
+$SelfTestOutput = @(& $HeadlessSelfTest -IncludeVisibleWindowTest)
+if ($SelfTestOutput.Count -ne 1) {
+    throw 'Private-desktop helper self-test did not return exactly one successful result; preserve its task-temp evidence.'
+}
+$SelfTestResult = $SelfTestOutput[0]
+foreach ($SelfTestProperty in @(
+    'verdict', 'no_window_exit7', 'timeout_tree_drain', 'short_lived_pid_coverage',
+    'argv_roundtrip', 'environment_isolation', 'preexisting_evidence_rejection',
+    'banned_api_scan', 'visible_descendant'
+)) {
+    if ($null -eq $SelfTestResult.PSObject.Properties[$SelfTestProperty] -or
+        [string]$SelfTestResult.$SelfTestProperty -cne 'PASS') {
+        throw ('Private-desktop helper self-test did not prove ' + $SelfTestProperty + '.')
+    }
+}
+$SelfTestRoot = [string]$SelfTestResult.test_root
+if ([string]::IsNullOrWhiteSpace($SelfTestRoot) -or
+    -not (Test-Path -LiteralPath $SelfTestRoot -PathType Container) -or
+    -not (Test-SameOrChildPath $SelfTestRoot $TaskTempRoot)) {
+    throw 'Private-desktop self-test evidence is not under the task-owned temporary root.'
+}
+
+. $HeadlessWrapper
+if (-not (Get-Command Invoke-PrivateDesktopProcess -CommandType Function -ErrorAction SilentlyContinue)) {
+    throw 'Invoke-PrivateDesktopProcess was not defined by the selected wrapper.'
+}
+function New-PrivateRenPyEnvironment([hashtable]$Additional) {
+    $Values = @{
+        'SDL_VIDEODRIVER' = 'dummy'
+        'SDL_AUDIODRIVER' = 'dummy'
+        'RENPY_RENDERER' = 'sw'
+        'RENPY_NO_REDIRECT_STDIO' = '1'
+        'RENPY_PATH_TO_SAVES' = $null
+    }
+    foreach ($Key in $Additional.Keys) { $Values[$Key] = $Additional[$Key] }
+    return $Values
+}
+function Assert-PrivateDesktopCompletion([object]$Result, [int]$ExpectedRootExitCode, [string]$Context) {
+    if ($null -eq $Result) { throw ($Context + ' returned no private-desktop result.') }
+    foreach ($RequiredProperty in @(
+        'schema_version', 'classification', 'detail', 'started', 'root_pid', 'root_exit_code',
+        'timed_out', 'job_drained', 'desktop_name', 'process_ids', 'new_process_ids',
+        'active_snapshot_process_ids', 'job_total_processes', 'process_coverage_complete',
+        'monitor_armed_before_resume', 'monitor_armed_utc', 'resumed_utc',
+        'cleanup_complete', 'cleanup_errors', 'visible_windows', 'started_utc',
+        'finished_utc', 'elapsed_milliseconds', 'stdout_path', 'stderr_path', 'helper_exit_code'
+    )) {
+        if ($null -eq $Result.PSObject.Properties[$RequiredProperty]) {
+            throw ($Context + ' result omits required field ' + $RequiredProperty + '.')
+        }
+    }
+    $ProcessIds = @($Result.process_ids)
+    $UniqueProcessIds = @($ProcessIds | Sort-Object -Unique)
+    $ArmedUtc = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, [Globalization.CultureInfo]::InvariantCulture)
+    $ResumedUtc = [DateTimeOffset]::Parse([string]$Result.resumed_utc, [Globalization.CultureInfo]::InvariantCulture)
+    if ([int]$Result.schema_version -ne 1 -or
+        [string]$Result.classification -cne 'COMPLETED' -or [int]$Result.helper_exit_code -ne 0 -or
+        -not [bool]$Result.started -or [bool]$Result.timed_out -or -not [bool]$Result.job_drained -or
+        -not [bool]$Result.process_coverage_complete -or -not [bool]$Result.monitor_armed_before_resume -or
+        $ArmedUtc -gt $ResumedUtc -or -not [bool]$Result.cleanup_complete -or
+        @($Result.cleanup_errors).Count -ne 0 -or
+        @($Result.visible_windows).Count -ne 0 -or [int]$Result.root_exit_code -ne $ExpectedRootExitCode -or
+        [string]::IsNullOrWhiteSpace([string]$Result.desktop_name) -or $ProcessIds.Count -lt 1 -or
+        $UniqueProcessIds.Count -ne $ProcessIds.Count -or
+        [int]$Result.job_total_processes -ne $ProcessIds.Count -or
+        $ProcessIds -notcontains [int]$Result.root_pid) {
+        throw ($Context + ' failed private-desktop completion gates. Classification=' + [string]$Result.classification + '; detail=' + [string]$Result.detail)
+    }
+    foreach ($EvidencePath in @($Result.stdout_path, $Result.stderr_path)) {
+        if (-not [IO.Path]::IsPathRooted([string]$EvidencePath) -or -not (Test-Path -LiteralPath $EvidencePath -PathType Leaf)) {
+            throw ($Context + ' has missing process evidence: ' + [string]$EvidencePath)
+        }
+    }
+}
+```
+
+Expected: both PowerShell appendices parse, the C# appendix compiles, all eight helper behaviors plus the overall self-test verdict are `PASS`, and its unique root remains preserved for the evidence manifest. The three physical files must remain exactly 69,781 / 5,016 / 16,866 bytes with SHA-256 `F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154`, `8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A`, and `00808C50EE4BEC6D28CC3B7DE8C6EF853D9BC1DDCAABE9625E84D3FD767A183F`. If cross-review changes helper source, update the appendices and fixed hashes through a new reviewed plan revision before execution; never accept dynamic schema or source drift.
+
+- [ ] **Step 4: Create a detached generator worktree and add only the native testcase fixture**
+
+```powershell
+$GeneratorRoot = Join-Path $TaskTempRoot ('cos-terminal-collapse-generator-' + [Guid]::NewGuid().ToString('N'))
+$GeneratorSaveDir = Join-Path $TaskTempRoot ('cos-terminal-collapse-generator-save-' + [Guid]::NewGuid().ToString('N'))
+$GeneratorProcessEvidence = Join-Path $LegacyRoot 'generator-process'
+$GeneratorStateResult = Join-Path $LegacyRoot 'generator-state.json'
+foreach ($AbsentPath in @($GeneratorRoot, $GeneratorSaveDir, $GeneratorProcessEvidence, $GeneratorStateResult)) {
+    if (Test-Path -LiteralPath $AbsentPath) { throw ('Create-new generator path already exists: ' + $AbsentPath) }
+}
+git worktree add --detach $GeneratorRoot $BaselineCommit
+if ($LASTEXITCODE -ne 0) { throw 'Could not create the detached generator worktree.' }
+if ((git -C $GeneratorRoot rev-parse HEAD) -cne $BaselineCommit -or
+    (git -C $GeneratorRoot rev-parse 'HEAD:game') -cne $ExpectedGameTree -or
+    @(git -C $GeneratorRoot status --short --untracked-files=all).Count -ne 0) {
+    throw 'Detached generator worktree is not the exact clean executable baseline.'
+}
+$GeneratorLocalSaves = Join-Path $GeneratorRoot 'game\saves'
+if (Test-Path -LiteralPath $GeneratorLocalSaves) {
+    throw 'Generator game/saves must be absent before the first engine run.'
+}
+```
+
+With `apply_patch`, create only `$GeneratorRoot\game\zz_terminal_collapse_legacy_fixture.rpy` with exactly:
+
+```renpy
+init -1000 python:
+    import json as _tc_json
+    import os as _tc_os
+    import traceback as _tc_traceback
+
+    def _tc_generate_legacy_save():
+        r = renpy
+        j = _tc_json
+        o = _tc_os
+        tb = _tc_traceback
+        result_path = o.environ.get("TC_GENERATOR_RESULT", "")
+        expected_marker = o.environ.get("TC_EXPECTED_MARKER", "")
+        expected_commit = o.environ.get("TC_EXPECTED_BASELINE_COMMIT", "")
+        expected_game_tree = o.environ.get("TC_EXPECTED_GAME_TREE", "")
+        expected_savedir = o.environ.get("TC_EXPECTED_SAVEDIR", "")
+        expected_choices = [u"截断补给线——让他们饿三天再打", u"亲自率领前锋出击", u"记住这一切，继续前进"]
+        expected_menu = [u"正面强攻，以气势压倒对方", u"采用迂回战术，先攻击敌军侧翼"]
+
+        def canon(value):
+            return o.path.normcase(o.path.realpath(o.path.abspath(value)))
+
+        def finish(verdict, reason, payload, code):
+            payload.update({"schema": 1, "verdict": verdict, "reason": reason})
+            try:
+                if (not result_path) or (not o.path.isabs(result_path)):
+                    raise Exception("TC_GENERATOR_RESULT must be absolute")
+                temp = result_path + ".tmp-" + str(o.getpid())
+                raw = (j.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+                with open(temp, "xb") as stream:
+                    stream.write(raw)
+                    stream.flush()
+                    o.fsync(stream.fileno())
+                o.rename(temp, result_path)
+            except Exception:
+                print("TC_GENERATOR_EVIDENCE_WRITE_FAILURE")
+                print(tb.format_exc())
+                r.quit(status=97)
+            r.quit(status=code)
+
+        try:
+            ctx = r.game.context()
+            node = r.game.script.namemap.get(ctx.current, None)
+            file_line = r.get_filename_line()
+            items = list(r.get_screen_variable("items", screen="choice"))
+            raw_captions = [i.caption for i in items if getattr(i, "action", None) is not None]
+            display_captions = [r.substitute(value).split("|", 1)[0] for value in raw_captions]
+            return_stack = r.get_return_stack()
+            state = {
+                "intrigue": getattr(r.store, "intrigue", None),
+                "power": getattr(r.store, "power", None),
+                "iron_prepared": getattr(r.store, "_iron_prepared", None),
+            }
+            actual = {
+                "command": getattr(r.game.args, "command", None),
+                "is_in_test": bool(r.is_in_test()),
+                "configured_savedir": r.config.savedir,
+                "argument_savedir": getattr(r.game.args, "savedir", None),
+                "path_to_saves_env_present": "RENPY_PATH_TO_SAVES" in o.environ,
+                "context_count": len(r.game.contexts),
+                "is_top_context": len(r.game.contexts) == 1 and ctx is r.game.contexts[0],
+                "return_stack": [repr(value) for value in return_stack],
+                "context_current": repr(ctx.current),
+                "node_type": None if node is None else type(node).__name__,
+                "node_file": None if node is None else node.filename.replace("\\", "/"),
+                "node_line": None if node is None else node.linenumber,
+                "filename_line": [file_line[0].replace("\\", "/"), file_line[1]],
+                "statement_name": r.get_statement_name(),
+                "raw_captions": raw_captions,
+                "display_captions": display_captions,
+                "state": state,
+            }
+            checks = {
+                "native_test": actual["command"] == "test" and actual["is_in_test"],
+                "savedir": bool(expected_savedir) and canon(r.config.savedir) == canon(expected_savedir) and canon(r.game.args.savedir) == canon(expected_savedir),
+                "path_to_saves_absent": not actual["path_to_saves_env_present"],
+                "top_context": actual["is_top_context"],
+                "empty_return_stack": return_stack == [],
+                "production_menu_node": node is not None and type(node).__name__ == "Menu" and actual["node_file"].lower().endswith("game/chapter5.rpy") and actual["node_line"] == 2807 and actual["filename_line"] == [actual["node_file"], actual["node_line"]] and actual["statement_name"] == "menu",
+                "state": state == {"intrigue": 55, "power": 60, "iron_prepared": True},
+                "menu_items": display_captions == expected_menu and u"硬拼——你没有更好的选择了" not in display_captions,
+                "marker_inputs": bool(expected_marker) and bool(expected_commit) and bool(expected_game_tree),
+            }
+            failures = sorted([name for name, passed in checks.items() if not passed])
+            if failures:
+                finish("FAIL", "pre-save generator assertions failed", {"checks": checks, "failures": failures, "actual": actual}, 41)
+
+            r.store.terminal_collapse_legacy_marker = expected_marker
+            metadata = {
+                "tc_legacy_schema": 1,
+                "tc_legacy_marker": expected_marker,
+                "tc_baseline_commit": expected_commit,
+                "tc_game_tree": expected_game_tree,
+                "tc_choice_path": expected_choices,
+                "tc_menu_file": "game/chapter5.rpy",
+                "tc_menu_line": 2807,
+                "tc_state": state,
+            }
+            r.save("1-1", include_screenshot=False, extra_json=metadata)
+            slot_metadata = r.slot_json("1-1") or {}
+            post_save_checks = {
+                "can_load": bool(r.can_load("1-1")),
+                "store_marker": getattr(r.store, "terminal_collapse_legacy_marker", None) == expected_marker,
+                "slot_marker": slot_metadata.get("tc_legacy_schema") == 1 and slot_metadata.get("tc_legacy_marker") == expected_marker,
+                "slot_commit": slot_metadata.get("tc_baseline_commit") == expected_commit,
+                "slot_game_tree": slot_metadata.get("tc_game_tree") == expected_game_tree,
+                "slot_choices": slot_metadata.get("tc_choice_path") == expected_choices,
+                "slot_menu": slot_metadata.get("tc_menu_file") == "game/chapter5.rpy" and slot_metadata.get("tc_menu_line") == 2807,
+                "slot_state": slot_metadata.get("tc_state") == {"intrigue": 55, "power": 60, "iron_prepared": True},
+            }
+            post_failures = sorted([name for name, passed in post_save_checks.items() if not passed])
+            payload = {"checks": checks, "post_save_checks": post_save_checks, "failures": post_failures, "actual": actual, "slot_metadata": slot_metadata}
+            if post_failures:
+                finish("FAIL", "post-save generator assertions failed", payload, 42)
+            finish("PASS", "native testcase saved the unchanged production final tactics Menu", payload, 0)
+        except r.game.QuitException:
+            raise
+        except Exception:
+            finish("FAIL", "generator internal exception", {"traceback": tb.format_exc()}, 43)
+
+
+testsuite terminal_collapse_legacy_generator:
+    before testcase:
+        $ _test.timeout = 30.0
+        $ persistent.privacy_agreed = True
+        $ persistent.tutorial_seen = True
+        $ persistent.difficulty = "normal"
+        $ power = 56
+        $ intrigue = 52
+        $ faith = 0
+        $ loyalty = 0
+        $ wealth = 0
+        $ reputation = 0
+        $ rel_baron = -1
+        $ rel_queen = -1
+        $ rel_captain = 20
+        $ alliance_baron = False
+        $ prince_ally = False
+        $ prince_betrayed = False
+        $ built_granary = False
+        $ ch5_pay_advance_pension = False
+        $ marriage_route = False
+        $ iron_thorn_controlled = False
+        $ baron_supply_intel = False
+        $ resist_route = False
+        $ iron_war_score = 0
+        $ iron_battle_outcome = "decisive"
+        $ ending_type = ""
+
+    testcase generate_final_tactics_slot:
+        run Start("ending_iron_lord") until screen "say" timeout 4.0
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        click "截断补给线——让他们饿三天再打"
+        pause 0.5
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        click "亲自率领前锋出击"
+        pause 0.5
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        click "记住这一切，继续前进"
+        pause 0.5
+        advance until screen "choice" timeout 30.0
+        pause 1.0
+        assert screen "choice"
+        assert eval ((intrigue, power, _iron_prepared) == (55, 60, True))
+        $ _tc_generate_legacy_save()
+```
+
+This fixture calls the production `Start("ending_iron_lord")`, performs three real engine-native `click` commands against the three real menus, and stops on the production `Menu` at `game/chapter5.rpy:2807`. It neither replaces a production label nor edits a production script. Before running it, prove its worktree scope:
+
+```powershell
+$GeneratorFixture = 'game/zz_terminal_collapse_legacy_fixture.rpy'
+$GeneratorStatus = @(git -C $GeneratorRoot status --short --untracked-files=all)
+if ($GeneratorStatus.Count -ne 1 -or $GeneratorStatus[0] -cne ('?? ' + $GeneratorFixture)) {
+    throw ('Generator worktree scope is not exactly its temporary fixture: ' + ($GeneratorStatus -join '; '))
+}
+```
+
+- [ ] **Step 5: Run the generator privately and bind both `MultiLocation` save copies**
+
+The marker is unique to the exact executable baseline and choice path:
+
+```powershell
+$LegacyMarker = 'terminal-collapse-legacy-v1:' + $BaselineCommit + ':supply-vanguard-remember:final-menu'
+if (Test-Path -LiteralPath $GeneratorSaveDir) {
+    throw 'Generator external SaveDir must be absent before launch.'
+}
+if (Test-Path -LiteralPath $GeneratorLocalSaves) {
+    throw 'Generator game/saves must be absent before launch.'
+}
+$GeneratorEnvironment = New-PrivateRenPyEnvironment @{
+    'TC_GENERATOR_RESULT' = $GeneratorStateResult
+    'TC_EXPECTED_MARKER' = $LegacyMarker
+    'TC_EXPECTED_BASELINE_COMMIT' = $BaselineCommit
+    'TC_EXPECTED_GAME_TREE' = $BaselineGameTree
+    'TC_EXPECTED_SAVEDIR' = $GeneratorSaveDir
+}
+$GeneratorRun = Invoke-PrivateDesktopProcess `
+    -FilePath $RenPyExe `
+    -ArgumentList @($GeneratorRoot, 'test', 'terminal_collapse_legacy_generator', '--savedir', $GeneratorSaveDir) `
+    -WorkingDirectory $GeneratorRoot `
+    -EnvironmentOverrides $GeneratorEnvironment `
+    -TimeoutSeconds 180 `
+    -EvidenceDirectory $GeneratorProcessEvidence `
+    -RunnerSource $RunnerSource
+Assert-PrivateDesktopCompletion $GeneratorRun 0 'legacy generator'
+
+if (-not (Test-Path -LiteralPath $GeneratorStateResult -PathType Leaf)) {
+    throw 'Generator state result is missing.'
+}
+$GeneratorState = [IO.File]::ReadAllText($GeneratorStateResult, $StrictUtf8) | ConvertFrom-Json -ErrorAction Stop
+if ([string]$GeneratorState.verdict -cne 'PASS' -or @($GeneratorState.failures).Count -ne 0) {
+    throw ('Generator state assertions failed: ' + [string]$GeneratorState.reason)
+}
+foreach ($Property in $GeneratorState.checks.PSObject.Properties) {
+    if (-not [bool]$Property.Value) { throw ('Generator pre-save check failed: ' + $Property.Name) }
+}
+foreach ($Property in $GeneratorState.post_save_checks.PSObject.Properties) {
+    if (-not [bool]$Property.Value) { throw ('Generator post-save check failed: ' + $Property.Name) }
+}
+if (-not (Test-Path -LiteralPath $GeneratorSaveDir -PathType Container)) {
+    throw 'Generator external SaveDir was not created.'
+}
+if (-not (Test-Path -LiteralPath $GeneratorLocalSaves -PathType Container)) {
+    throw 'RenPy MultiLocation did not create the expected local game/saves mirror.'
+}
+$ExternalCandidates = @(Get-ChildItem -LiteralPath $GeneratorSaveDir -File | Where-Object { $_.Name -like '1-1-*.save' })
+$LocalCandidates = @(Get-ChildItem -LiteralPath $GeneratorLocalSaves -File | Where-Object { $_.Name -like '1-1-*.save' })
+if ($ExternalCandidates.Count -ne 1 -or $LocalCandidates.Count -ne 1) {
+    throw ('Expected one external and one local page-1/slot-1 save; found external=' + $ExternalCandidates.Count + ', local=' + $LocalCandidates.Count)
+}
+$ExternalSave = $ExternalCandidates[0]
+$LocalSave = $LocalCandidates[0]
+if ($ExternalSave.Name -cne $LocalSave.Name -or $ExternalSave.Length -ne $LocalSave.Length) {
+    throw 'MultiLocation save filename or byte count differs between external and local copies.'
+}
+$ExternalHash = (Get-FileHash -LiteralPath $ExternalSave.FullName -Algorithm SHA256).Hash
+$LocalHash = (Get-FileHash -LiteralPath $LocalSave.FullName -Algorithm SHA256).Hash
+if ($ExternalHash -cne $LocalHash -or
+    [Convert]::ToBase64String([IO.File]::ReadAllBytes($ExternalSave.FullName)) -cne [Convert]::ToBase64String([IO.File]::ReadAllBytes($LocalSave.FullName))) {
+    throw 'MultiLocation external and local save bytes are not identical.'
+}
+
+Add-Type -AssemblyName System.IO.Compression
+function Read-RenPySaveJson([string]$SavePath) {
+    $Stream = [IO.File]::Open($SavePath, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::Read)
+    try {
+        $Archive = New-Object IO.Compression.ZipArchive -ArgumentList @($Stream, [IO.Compression.ZipArchiveMode]::Read, $false)
+        try {
+            $Entry = $Archive.GetEntry('json')
+            if ($null -eq $Entry) { throw ('Save has no json entry: ' + $SavePath) }
+            $EntryStream = $Entry.Open()
+            try {
+                $Reader = New-Object IO.StreamReader -ArgumentList @($EntryStream, $StrictUtf8, $true, 1024, $true)
+                try { $JsonText = $Reader.ReadToEnd() } finally { $Reader.Dispose() }
+            } finally {
+                $EntryStream.Dispose()
+            }
+        } finally {
+            $Archive.Dispose()
+        }
+    } finally {
+        $Stream.Dispose()
+    }
+    return ($JsonText | ConvertFrom-Json -ErrorAction Stop)
+}
+$ExternalMetadata = Read-RenPySaveJson $ExternalSave.FullName
+$LocalMetadata = Read-RenPySaveJson $LocalSave.FullName
+foreach ($Metadata in @($ExternalMetadata, $LocalMetadata)) {
+    if ([int]$Metadata.tc_legacy_schema -ne 1 -or
+        [string]$Metadata.tc_legacy_marker -cne $LegacyMarker -or
+        [string]$Metadata.tc_baseline_commit -cne $BaselineCommit -or
+        [string]$Metadata.tc_game_tree -cne $BaselineGameTree -or
+        [string]$Metadata.tc_menu_file -cne 'game/chapter5.rpy' -or [int]$Metadata.tc_menu_line -ne 2807 -or
+        [int]$Metadata.tc_state.intrigue -ne 55 -or [int]$Metadata.tc_state.power -ne 60 -or
+        -not [bool]$Metadata.tc_state.iron_prepared -or
+        (@($Metadata.tc_choice_path) -join "`n") -cne (@('截断补给线——让他们饿三天再打', '亲自率领前锋出击', '记住这一切，继续前进') -join "`n")) {
+        throw 'Generator save metadata does not bind the approved legacy state.'
+    }
+}
+$GeneratorLog = Join-Path $GeneratorRoot 'log.txt'
+$GeneratorLogEvidence = Join-Path $GeneratorProcessEvidence 'renpy-log.txt'
+if (-not (Test-Path -LiteralPath $GeneratorLog -PathType Leaf) -or (Test-Path -LiteralPath $GeneratorLogEvidence)) {
+    throw 'Generator log is missing or its create-new evidence path already exists.'
+}
+[IO.File]::Copy($GeneratorLog, $GeneratorLogEvidence, $false)
+$GeneratorLogHash = (Get-FileHash -LiteralPath $GeneratorLogEvidence -Algorithm SHA256).Hash
+$GeneratorLogText = [IO.File]::ReadAllText($GeneratorLogEvidence, $StrictUtf8)
+$GeneratorStatusMatches = [regex]::Matches($GeneratorLogText, '(?m)^\[rpytest\] Status:\s+([A-Z ]+?)\s*$')
+if ($GeneratorStatusMatches.Count -ne 1 -or
+    $GeneratorStatusMatches[0].Groups[1].Value.Trim() -cne 'PASSED') {
+    throw 'Generator log does not contain exactly one terminal rpytest PASSED status.'
+}
+```
+
+Stage the external copy, not the local mirror, at the future mother path. The local copy is corroborating evidence only. This is still a writable candidate: do not mark it read-only or call it frozen until the clean normal-run proof passes in Step 7.
+
+```powershell
+$MotherDir = Join-Path $LegacyRoot 'mother'
+if (Test-Path -LiteralPath $MotherDir) {
+    if ($null -ne (Get-ChildItem -LiteralPath $MotherDir -Force | Select-Object -First 1)) {
+        throw 'Mother directory is not empty; never overwrite legacy evidence.'
+    }
+} else {
+    [IO.Directory]::CreateDirectory($MotherDir) | Out-Null
+}
+$MotherSave = Join-Path $MotherDir $ExternalSave.Name
+if (Test-Path -LiteralPath $MotherSave) { throw 'Mother save already exists.' }
+[IO.File]::Copy($ExternalSave.FullName, $MotherSave, $false)
+$MotherHash = (Get-FileHash -LiteralPath $MotherSave -Algorithm SHA256).Hash
+$MotherLength = (Get-Item -LiteralPath $MotherSave).Length
+if ($MotherHash -cne $ExternalHash -or $MotherLength -ne $ExternalSave.Length) {
+    throw 'Candidate mother copy does not match the engine-generated external save.'
 }
 git check-ignore -q $MotherSave
-if ($LASTEXITCODE -ne 0) { throw 'Mother save is not ignored.' }
+if ($LASTEXITCODE -ne 0) { throw 'Candidate mother save is not ignored.' }
 ```
 
-- [ ] **Step 5: Record literal baseline evidence and clean only the verified disposable worktree**
-
-Create `.superpowers/sdd/terminal-collapse-ending/legacy/baseline-evidence.md` with `apply_patch`, inserting the observed literal values for:
-
-- `baseline_commit` = `bdad1441d9731fbfac3e1b90654dbe888f354296`
-- Ren'Py version reported in Task 0
-- `baseline_worktree`
-- `baseline_savedir`
-- `engine_filename`
-- `byte_count`
-- `sha256`
-- logical slot `1`
-- choices `supply-line -> personal-vanguard -> remember-and-continue`
-- final menu facts `_iron_prepared=True`, frontal visible, flanking visible
-- `pid` and `exit_code=0`
-
-Copy the baseline `log.txt` into the same ignored evidence directory and record its SHA-256. Re-read the Markdown and both hashes before cleanup.
+- [ ] **Step 6: Create a second clean baseline worktree with only a state-read-only observer**
 
 ```powershell
-$TempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
-$ResolvedBaselineRoot = [IO.Path]::GetFullPath($BaselineRoot)
-if (-not $ResolvedBaselineRoot.StartsWith($TempRoot, [StringComparison]::OrdinalIgnoreCase)) {
-    throw 'Refusing to remove a non-temporary baseline worktree.'
+$CleanRoot = Join-Path $TaskTempRoot ('cos-terminal-collapse-clean-' + [Guid]::NewGuid().ToString('N'))
+$CleanSaveDir = Join-Path $TaskTempRoot ('cos-terminal-collapse-clean-save-' + [Guid]::NewGuid().ToString('N'))
+$ObserverProcessEvidence = Join-Path $LegacyRoot 'observer-process'
+$ObserverStateResult = Join-Path $LegacyRoot 'observer-state.json'
+foreach ($AbsentPath in @($CleanRoot, $CleanSaveDir, $ObserverProcessEvidence, $ObserverStateResult)) {
+    if (Test-Path -LiteralPath $AbsentPath) { throw ('Create-new observer path already exists: ' + $AbsentPath) }
 }
-if (Get-Process -Id $BaselinePid -ErrorAction SilentlyContinue) {
-    throw 'Refusing cleanup while baseline RenPy is alive.'
+git worktree add --detach $CleanRoot $BaselineCommit
+if ($LASTEXITCODE -ne 0) { throw 'Could not create the detached clean-replay worktree.' }
+if ((git -C $CleanRoot rev-parse HEAD) -cne $BaselineCommit -or
+    (git -C $CleanRoot rev-parse 'HEAD:game') -cne $ExpectedGameTree -or
+    @(git -C $CleanRoot status --short --untracked-files=all).Count -ne 0) {
+    throw 'Clean-replay worktree is not the exact clean executable baseline.'
 }
-git worktree remove --force $ResolvedBaselineRoot
-if ($LASTEXITCODE -ne 0) { throw 'Could not remove disposable baseline worktree.' }
-git worktree prune
-if (Test-Path -LiteralPath $ResolvedBaselineRoot) {
-    throw 'Disposable baseline worktree still exists.'
+$CleanLocalSaves = Join-Path $CleanRoot 'game\saves'
+if (Test-Path -LiteralPath $CleanLocalSaves) {
+    throw 'Clean-replay game/saves must be absent before the normal run.'
 }
 ```
 
-Do not delete `$BaselineSaveDir`, the mother, or its evidence until Phase B review is complete.
+With `apply_patch`, create only `$CleanRoot\game\zz_terminal_collapse_legacy_observer.rpy` with exactly:
+
+```renpy
+init -1000 python:
+    import json as _tc_json
+    import os as _tc_os
+    import traceback as _tc_traceback
+
+    def _tc_install_observer():
+        r = renpy
+        j = _tc_json
+        o = _tc_os
+        tb = _tc_traceback
+        loaded = [False]
+        done = [False]
+        result_path = o.environ.get("TC_OBSERVER_RESULT", "")
+        expected_marker = o.environ.get("TC_EXPECTED_MARKER", "")
+        expected_commit = o.environ.get("TC_EXPECTED_BASELINE_COMMIT", "")
+        expected_game_tree = o.environ.get("TC_EXPECTED_GAME_TREE", "")
+        expected_savedir = o.environ.get("TC_EXPECTED_SAVEDIR", "")
+        expected_choices = [u"截断补给线——让他们饿三天再打", u"亲自率领前锋出击", u"记住这一切，继续前进"]
+        expected_menu = [u"正面强攻，以气势压倒对方", u"采用迂回战术，先攻击敌军侧翼"]
+
+        def canon(value):
+            return o.path.normcase(o.path.realpath(o.path.abspath(value)))
+
+        def finish(verdict, reason, payload, code):
+            if done[0]:
+                return
+            done[0] = True
+            payload.update({"schema": 1, "verdict": verdict, "reason": reason})
+            try:
+                if (not result_path) or (not o.path.isabs(result_path)):
+                    raise Exception("TC_OBSERVER_RESULT must be absolute")
+                temp = result_path + ".tmp-" + str(o.getpid())
+                raw = (j.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+                with open(temp, "xb") as stream:
+                    stream.write(raw)
+                    stream.flush()
+                    o.fsync(stream.fileno())
+                o.rename(temp, result_path)
+            except Exception:
+                print("TC_OBSERVER_EVIDENCE_WRITE_FAILURE")
+                print(tb.format_exc())
+                r.quit(status=97)
+            r.quit(status=code)
+
+        def after_load():
+            loaded[0] = True
+
+        def interact_body():
+            blockers = [name for name in ("confirm", "yesno_prompt", "privacy_policy_screen") if r.get_screen(name) is not None]
+            if blockers:
+                finish("FAIL", "unexpected confirmation or consent interaction", {"loaded": loaded[0], "blocking_screens": blockers}, 42)
+            if not loaded[0]:
+                return
+            if r.get_screen("choice") is None:
+                return
+
+            ctx = r.game.context()
+            node = r.game.script.namemap.get(ctx.current, None)
+            file_line = r.get_filename_line()
+            items = list(r.get_screen_variable("items", screen="choice"))
+            raw_captions = [i.caption for i in items if getattr(i, "action", None) is not None]
+            display_captions = [r.substitute(value).split("|", 1)[0] for value in raw_captions]
+            metadata = r.slot_json("1-1") or {}
+            return_stack = r.get_return_stack()
+            state = {
+                "intrigue": getattr(r.store, "intrigue", None),
+                "power": getattr(r.store, "power", None),
+                "iron_prepared": getattr(r.store, "_iron_prepared", None),
+            }
+            actual = {
+                "command": getattr(r.game.args, "command", None),
+                "is_in_test": bool(r.is_in_test()),
+                "configured_savedir": r.config.savedir,
+                "argument_savedir": getattr(r.game.args, "savedir", None),
+                "path_to_saves_env_present": "RENPY_PATH_TO_SAVES" in o.environ,
+                "context_count": len(r.game.contexts),
+                "is_top_context": len(r.game.contexts) == 1 and ctx is r.game.contexts[0],
+                "return_stack": [repr(value) for value in return_stack],
+                "context_current": repr(ctx.current),
+                "node_type": None if node is None else type(node).__name__,
+                "node_file": None if node is None else node.filename.replace("\\", "/"),
+                "node_line": None if node is None else node.linenumber,
+                "filename_line": [file_line[0].replace("\\", "/"), file_line[1]],
+                "statement_name": r.get_statement_name(),
+                "raw_captions": raw_captions,
+                "display_captions": display_captions,
+                "state": state,
+                "store_marker": getattr(r.store, "terminal_collapse_legacy_marker", None),
+                "slot_metadata": metadata,
+            }
+            checks = {
+                "normal_run": actual["command"] == "run" and not actual["is_in_test"],
+                "savedir": bool(expected_savedir) and canon(r.config.savedir) == canon(expected_savedir) and canon(r.game.args.savedir) == canon(expected_savedir),
+                "path_to_saves_absent": not actual["path_to_saves_env_present"],
+                "top_context": actual["is_top_context"],
+                "empty_return_stack": return_stack == [],
+                "production_menu_node": node is not None and type(node).__name__ == "Menu" and actual["node_file"].lower().endswith("game/chapter5.rpy") and actual["node_line"] == 2807 and actual["filename_line"] == [actual["node_file"], actual["node_line"]] and actual["statement_name"] == "menu",
+                "state": state == {"intrigue": 55, "power": 60, "iron_prepared": True},
+                "menu_items": display_captions == expected_menu and u"硬拼——你没有更好的选择了" not in display_captions,
+                "store_marker": bool(expected_marker) and actual["store_marker"] == expected_marker,
+                "slot_marker": metadata.get("tc_legacy_schema") == 1 and metadata.get("tc_legacy_marker") == expected_marker,
+                "slot_commit": bool(expected_commit) and metadata.get("tc_baseline_commit") == expected_commit,
+                "slot_game_tree": bool(expected_game_tree) and metadata.get("tc_game_tree") == expected_game_tree,
+                "slot_choices": metadata.get("tc_choice_path") == expected_choices,
+                "slot_menu": metadata.get("tc_menu_file") == "game/chapter5.rpy" and metadata.get("tc_menu_line") == 2807,
+                "slot_state": metadata.get("tc_state") == {"intrigue": 55, "power": 60, "iron_prepared": True},
+            }
+            failures = sorted([name for name, passed in checks.items() if not passed])
+            payload = {"loaded": True, "checks": checks, "failures": failures, "actual": actual}
+            if failures:
+                finish("FAIL", "observer assertions failed", payload, 41)
+            finish("PASS", "clean baseline normal-run autoload reached the production final tactics menu", payload, 0)
+
+        def interact():
+            try:
+                interact_body()
+            except r.game.QuitException:
+                raise
+            except Exception:
+                finish("FAIL", "observer internal exception", {"loaded": loaded[0], "traceback": tb.format_exc()}, 43)
+
+        return after_load, interact
+
+    _tc_after_load_observer, _tc_interact_observer = _tc_install_observer()
+    config.after_load_callbacks.append(_tc_after_load_observer)
+    config.interact_callbacks.append(_tc_interact_observer)
+```
+
+`init -1000` is deliberately later than the SDK's `init -1600` callback-list reset. The observer changes only its closure flags and writes external evidence; it never assigns game state. Prove its worktree scope, then create the unique clean external SaveDir and copy—not move—the read-only mother under its exact engine filename:
+
+```powershell
+$ObserverFixture = 'game/zz_terminal_collapse_legacy_observer.rpy'
+$CleanStatus = @(git -C $CleanRoot status --short --untracked-files=all)
+if ($CleanStatus.Count -ne 1 -or $CleanStatus[0] -cne ('?? ' + $ObserverFixture)) {
+    throw ('Clean-replay worktree scope is not exactly its observer: ' + ($CleanStatus -join '; '))
+}
+if (Test-Path -LiteralPath $CleanSaveDir) { throw 'Clean external SaveDir must start absent.' }
+[IO.Directory]::CreateDirectory($CleanSaveDir) | Out-Null
+$CleanInputSave = Join-Path $CleanSaveDir (Split-Path $MotherSave -Leaf)
+[IO.File]::Copy($MotherSave, $CleanInputSave, $false)
+$CleanInputHashBefore = (Get-FileHash -LiteralPath $CleanInputSave -Algorithm SHA256).Hash
+if ($CleanInputHashBefore -cne $MotherHash -or (Get-Item -LiteralPath $CleanInputSave).Length -ne $MotherLength) {
+    throw 'Clean replay copy does not match the mother.'
+}
+if (@(Get-ChildItem -LiteralPath $CleanSaveDir -File).Count -ne 1 -or (Test-Path -LiteralPath $CleanLocalSaves)) {
+    throw 'Clean replay isolation drifted before normal run.'
+}
+```
+
+- [ ] **Step 7: Prove an ordinary headless `run` autoloads the frozen slot at the exact production Menu**
+
+```powershell
+$ObserverEnvironment = New-PrivateRenPyEnvironment @{
+    'RENPY_AUTO_LOAD' = '1-1'
+    'TC_OBSERVER_RESULT' = $ObserverStateResult
+    'TC_EXPECTED_MARKER' = $LegacyMarker
+    'TC_EXPECTED_BASELINE_COMMIT' = $BaselineCommit
+    'TC_EXPECTED_GAME_TREE' = $BaselineGameTree
+    'TC_EXPECTED_SAVEDIR' = $CleanSaveDir
+}
+$ObserverRun = Invoke-PrivateDesktopProcess `
+    -FilePath $RenPyExe `
+    -ArgumentList @($CleanRoot, 'run', '--savedir', $CleanSaveDir) `
+    -WorkingDirectory $CleanRoot `
+    -EnvironmentOverrides $ObserverEnvironment `
+    -TimeoutSeconds 120 `
+    -EvidenceDirectory $ObserverProcessEvidence `
+    -RunnerSource $RunnerSource
+Assert-PrivateDesktopCompletion $ObserverRun 0 'clean normal-run observer'
+
+if (-not (Test-Path -LiteralPath $ObserverStateResult -PathType Leaf)) {
+    throw 'Observer state result is missing.'
+}
+$ObserverState = [IO.File]::ReadAllText($ObserverStateResult, $StrictUtf8) | ConvertFrom-Json -ErrorAction Stop
+if ([string]$ObserverState.verdict -cne 'PASS' -or -not [bool]$ObserverState.loaded -or @($ObserverState.failures).Count -ne 0) {
+    throw ('Clean normal-run observer failed: ' + [string]$ObserverState.reason)
+}
+foreach ($Property in $ObserverState.checks.PSObject.Properties) {
+    if (-not [bool]$Property.Value) { throw ('Observer check failed: ' + $Property.Name) }
+}
+if ([string]$ObserverState.actual.command -cne 'run' -or [bool]$ObserverState.actual.is_in_test) {
+    throw 'The second proof was not an ordinary RenPy run.'
+}
+$CleanInputHashAfter = (Get-FileHash -LiteralPath $CleanInputSave -Algorithm SHA256).Hash
+if ($CleanInputHashAfter -cne $MotherHash -or (Get-Item -LiteralPath $CleanInputSave).Length -ne $MotherLength) {
+    throw 'Normal-run autoload changed the replay save copy.'
+}
+$CleanExternalCandidates = @(Get-ChildItem -LiteralPath $CleanSaveDir -File | Where-Object { $_.Name -like '1-1-*.save' })
+if ($CleanExternalCandidates.Count -ne 1 -or $CleanExternalCandidates[0].Name -cne (Split-Path $MotherSave -Leaf)) {
+    throw 'Clean external SaveDir no longer contains exactly the copied legacy slot.'
+}
+if (Test-Path -LiteralPath $CleanLocalSaves -PathType Container) {
+    $CleanLocalCandidates = @(Get-ChildItem -LiteralPath $CleanLocalSaves -File | Where-Object { $_.Name -like '1-1-*.save' })
+    if ($CleanLocalCandidates.Count -ne 0) {
+        throw 'Ordinary autoload unexpectedly wrote a local page-1/slot-1 candidate.'
+    }
+} else {
+    $CleanLocalCandidates = @()
+}
+$ObserverLog = Join-Path $CleanRoot 'log.txt'
+$ObserverLogEvidence = Join-Path $ObserverProcessEvidence 'renpy-log.txt'
+if (-not (Test-Path -LiteralPath $ObserverLog -PathType Leaf) -or (Test-Path -LiteralPath $ObserverLogEvidence)) {
+    throw 'Observer log is missing or its create-new evidence path already exists.'
+}
+[IO.File]::Copy($ObserverLog, $ObserverLogEvidence, $false)
+$ObserverLogHash = (Get-FileHash -LiteralPath $ObserverLogEvidence -Algorithm SHA256).Hash
+
+if ((Get-FileHash -LiteralPath $MotherSave -Algorithm SHA256).Hash -cne $MotherHash -or
+    (Get-Item -LiteralPath $MotherSave).Length -ne $MotherLength) {
+    throw 'Candidate mother drifted during the independent clean replay.'
+}
+(Get-Item -LiteralPath $MotherSave).IsReadOnly = $true
+if (-not (Get-Item -LiteralPath $MotherSave).IsReadOnly) {
+    throw 'Mother save did not become read-only after the clean normal-run proof.'
+}
+```
+
+The post-run local rule is intentionally different from the generator rule. Ren'Py may create `$CleanRoot\game\saves` and a local `persistent` during ordinary startup, but it must not create any local `1-1-*.save`; the only loaded slot remains the exact unchanged external copy. Only now is the ignored mother frozen read-only.
+
+- [ ] **Step 8: Write and re-read the literal baseline evidence before cleanup**
+
+Create `.superpowers/sdd/terminal-collapse-ending/legacy/baseline-evidence.md` with `apply_patch`. It must contain literal, non-placeholder values for every item below:
+
+- `verdict=PASS`, `renpy_version=Ren'Py 8.5.2.26010301`, and the UTC evidence time;
+- `baseline_commit=$BaselineCommit`, `baseline_game_tree=fa7a398e9d989731b24e3c1642f3e2e33ce846ff`, `original_design_commit=bdad1441d9731fbfac3e1b90654dbe888f354296`, and `written_spec_commit=22ce7cf48aa6f9a0062a697d9cbf954881c60245`;
+- all three fixed helper byte counts and SHA-256 values, `$SelfTestRoot`, the nine `PASS` self-test fields, and the preserved self-test result/evidence hashes;
+- `$InterruptedReport`, `$InterruptedReportHash`, `$InterruptedSaveDir`, the four preserved interrupted artifact hashes, and `$InterruptedLogHash`;
+- `$GeneratorRoot`, `$GeneratorSaveDir`, generator helper `root_pid`, distinct `process_ids`, `job_total_processes`, `process_coverage_complete=True`, `monitor_armed_before_resume=True`, monitor/resume timestamps, `job_drained=True`, `cleanup_complete=True`, `cleanup_errors=0`, `desktop_name`, `root_exit_code=0`, `classification=COMPLETED`, `visible_windows=0`, and hashes for its four helper files, state JSON, and copied Ren'Py log;
+- physical engine filename, logical slot `1-1`, `$MotherLength`, `$MotherHash`, external/local generator filenames, lengths, SHA-256 values, and `multilocation_bytes_equal=PASS`;
+- `choice_path=截断补给线——让他们饿三天再打 -> 亲自率领前锋出击 -> 记住这一切，继续前进`;
+- `menu_node=game/chapter5.rpy:2807`, `context_count=1`, `return_stack=[]`, `intrigue=55`, `power=60`, `_iron_prepared=True`, both exact visible final choices, and hard-grind absent;
+- `$CleanRoot`, `$CleanSaveDir`, observer helper `root_pid`, distinct `process_ids`, `job_total_processes`, `process_coverage_complete=True`, `monitor_armed_before_resume=True`, monitor/resume timestamps, `job_drained=True`, `cleanup_complete=True`, `cleanup_errors=0`, `desktop_name`, `root_exit_code=0`, `classification=COMPLETED`, `visible_windows=0`, and hashes for its four helper files, state JSON, and copied Ren'Py log;
+- `observer_command=run`, `observer_is_in_test=False`, `RENPY_AUTO_LOAD=1-1`, `RENPY_PATH_TO_SAVES=absent`, the store marker, every slot metadata field, `clean_external_hash_unchanged=PASS`, and `clean_local_1-1_count=0`;
+- the exact generator/clean worktree and SaveDir paths, followed later by their successful cleanup status. Do not include or copy the save payload itself into Markdown.
+
+Then bind the manifest and all preserved evidence before deleting any successful temporary copy:
+
+```powershell
+$BaselineEvidence = Join-Path $LegacyRoot 'baseline-evidence.md'
+if (-not (Test-Path -LiteralPath $BaselineEvidence -PathType Leaf)) {
+    throw 'Literal baseline evidence manifest is missing.'
+}
+$BaselineEvidenceText = [IO.File]::ReadAllText($BaselineEvidence, $StrictUtf8)
+foreach ($RequiredLiteral in @(
+    'verdict=PASS',
+    ('baseline_commit=' + $BaselineCommit),
+    ('baseline_game_tree=' + $BaselineGameTree),
+    ('engine_filename=' + (Split-Path $MotherSave -Leaf)),
+    ('sha256=' + $MotherHash),
+    ('marker=' + $LegacyMarker),
+    'observer_command=run',
+    'clean_local_1-1_count=0',
+    'visible_windows=0'
+)) {
+    if (-not $BaselineEvidenceText.Contains($RequiredLiteral)) {
+        throw ('Baseline evidence omits required literal: ' + $RequiredLiteral)
+    }
+}
+$BaselineEvidenceHash = (Get-FileHash -LiteralPath $BaselineEvidence -Algorithm SHA256).Hash
+$GeneratorStateHash = (Get-FileHash -LiteralPath $GeneratorStateResult -Algorithm SHA256).Hash
+$ObserverStateHash = (Get-FileHash -LiteralPath $ObserverStateResult -Algorithm SHA256).Hash
+foreach ($EvidencePath in @(
+    $BaselineEvidence,
+    $GeneratorStateResult,
+    $ObserverStateResult,
+    (Join-Path $GeneratorProcessEvidence 'request.json'),
+    (Join-Path $GeneratorProcessEvidence 'stdout.txt'),
+    (Join-Path $GeneratorProcessEvidence 'stderr.txt'),
+    (Join-Path $GeneratorProcessEvidence 'result.json'),
+    (Join-Path $ObserverProcessEvidence 'request.json'),
+    (Join-Path $ObserverProcessEvidence 'stdout.txt'),
+    (Join-Path $ObserverProcessEvidence 'stderr.txt'),
+    (Join-Path $ObserverProcessEvidence 'result.json'),
+    $GeneratorLogEvidence,
+    $ObserverLogEvidence,
+    $MotherSave
+)) {
+    if (-not (Test-Path -LiteralPath $EvidencePath -PathType Leaf)) { throw ('Evidence file is missing: ' + $EvidencePath) }
+    git check-ignore -q $EvidencePath
+    if ($LASTEXITCODE -ne 0) { throw ('Evidence file is not ignored: ' + $EvidencePath) }
+}
+if ((Get-FileHash -LiteralPath $MotherSave -Algorithm SHA256).Hash -cne $MotherHash -or
+    -not (Get-Item -LiteralPath $MotherSave).IsReadOnly) {
+    throw 'Read-only mother drifted before cleanup.'
+}
+```
+
+- [ ] **Step 9: Clean only successful disposable copies; preserve every failure and all durable evidence**
+
+Do not run this step if any prior check failed or either helper classification was not `COMPLETED`. Do not clean `$SelfTestRoot`, the interrupted SaveDir/report/archive, the read-only mother, either helper evidence directory, either state JSON, either copied log, or the baseline manifest.
+
+```powershell
+function Assert-NoProcessReference([string[]]$Paths) {
+    $References = @(
+        Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {
+            $Process = $_
+            @($Paths | Where-Object {
+                ($null -ne $Process.ExecutablePath -and $Process.ExecutablePath.StartsWith($_, [StringComparison]::OrdinalIgnoreCase)) -or
+                ($null -ne $Process.CommandLine -and $Process.CommandLine.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0)
+            }).Count -gt 0
+        }
+    )
+    if ($References.Count -ne 0) {
+        throw ('A live process still references a cleanup target: ' + (($References | ForEach-Object { $_.ProcessId }) -join ','))
+    }
+}
+function Remove-VerifiedTaskDirectory([string]$Path, [string]$RequiredPrefix) {
+    $ResolvedPath = Get-CanonicalPath $Path
+    $ResolvedTaskRoot = Get-CanonicalPath $TaskTempRoot
+    if (-not (Test-SameOrChildPath $ResolvedPath $ResolvedTaskRoot) -or
+        $ResolvedPath.Equals($ResolvedTaskRoot, [StringComparison]::OrdinalIgnoreCase) -or
+        -not (Split-Path $ResolvedPath -Leaf).StartsWith($RequiredPrefix, [StringComparison]::Ordinal)) {
+        throw ('Refusing recursive removal of unverified path: ' + $ResolvedPath)
+    }
+    Remove-Item -LiteralPath $ResolvedPath -Recurse -Force
+    if (Test-Path -LiteralPath $ResolvedPath) { throw ('Cleanup target remains: ' + $ResolvedPath) }
+}
+
+if ([string]$GeneratorRun.classification -cne 'COMPLETED' -or [string]$ObserverRun.classification -cne 'COMPLETED') {
+    throw 'Refusing cleanup because both private runs were not successful.'
+}
+Assert-NoProcessReference @($GeneratorRoot, $GeneratorSaveDir, $CleanRoot, $CleanSaveDir)
+foreach ($Worktree in @($GeneratorRoot, $CleanRoot)) {
+    if ((git -C $Worktree rev-parse HEAD) -cne $BaselineCommit) { throw ('Cleanup worktree commit drifted: ' + $Worktree) }
+}
+$GeneratorFinalStatus = @(git -C $GeneratorRoot status --short --untracked-files=all)
+$CleanFinalStatus = @(git -C $CleanRoot status --short --untracked-files=all)
+if ($GeneratorFinalStatus.Count -ne 1 -or $GeneratorFinalStatus[0] -cne ('?? ' + $GeneratorFixture) -or
+    $CleanFinalStatus.Count -ne 1 -or $CleanFinalStatus[0] -cne ('?? ' + $ObserverFixture)) {
+    throw 'A disposable worktree changed outside its one permitted zz fixture; preserve and stop.'
+}
+
+git worktree remove --force $GeneratorRoot
+if ($LASTEXITCODE -ne 0) { throw 'Could not remove verified generator worktree.' }
+git worktree remove --force $CleanRoot
+if ($LASTEXITCODE -ne 0) { throw 'Could not remove verified clean-replay worktree.' }
+git worktree prune
+Remove-VerifiedTaskDirectory $GeneratorSaveDir 'cos-terminal-collapse-generator-save-'
+Remove-VerifiedTaskDirectory $CleanSaveDir 'cos-terminal-collapse-clean-save-'
+
+if ($null -eq $OriginalTempEnvironment) { Remove-Item Env:TEMP -ErrorAction SilentlyContinue } else { $env:TEMP = $OriginalTempEnvironment }
+if ($null -eq $OriginalTmpEnvironment) { Remove-Item Env:TMP -ErrorAction SilentlyContinue } else { $env:TMP = $OriginalTmpEnvironment }
+```
+
+Use `apply_patch` once more to append the literal four cleanup results to `baseline-evidence.md`: generator worktree removed, generator SaveDir removed, clean worktree removed, clean SaveDir removed. Re-read it and refresh its recorded manifest SHA-256 if the manifest records its own digest outside itself.
+
+- [ ] **Step 10: Prove the shared repository and durable mother are unchanged**
+
+```powershell
+if ((git rev-parse HEAD) -cne $BaselineCommit -or (git rev-parse 'HEAD:game') -cne $ExpectedGameTree) {
+    throw 'Shared HEAD or game tree changed during legacy-save generation.'
+}
+if (@(git diff --cached --name-only).Count -ne 0) { throw 'Shared index changed during Task 1.' }
+$FinalSharedStatus = @(git status --short --untracked-files=all)
+if ($FinalSharedStatus.Count -ne 1 -or $FinalSharedStatus[0] -cne ('?? ' + $UnrelatedPlan)) {
+    throw ('Unexpected final shared status: ' + ($FinalSharedStatus -join '; '))
+}
+if ((Get-FileHash -LiteralPath $UnrelatedPlan -Algorithm SHA256).Hash -cne $UnrelatedSha256) {
+    throw 'Unrelated narrative-delivery plan changed during Task 1.'
+}
+if ((Get-FileHash -LiteralPath $MotherSave -Algorithm SHA256).Hash -cne $MotherHash -or
+    (Get-Item -LiteralPath $MotherSave).Length -ne $MotherLength -or
+    -not (Get-Item -LiteralPath $MotherSave).IsReadOnly) {
+    throw 'Durable mother save is no longer the exact read-only engine artifact.'
+}
+if (-not (Test-Path -LiteralPath $SelfTestRoot -PathType Container) -or
+    -not (Test-Path -LiteralPath $InterruptedSaveDir -PathType Container) -or
+    -not (Test-Path -LiteralPath $InterruptedReport -PathType Leaf)) {
+    throw 'Required helper or interrupted-attempt evidence was removed.'
+}
+$FinalBaselineEvidenceHash = (Get-FileHash -LiteralPath $BaselineEvidence -Algorithm SHA256).Hash
+"baseline_commit=$BaselineCommit"
+"baseline_game_tree=$BaselineGameTree"
+"mother=$MotherSave"
+"mother_sha256=$MotherHash"
+"baseline_evidence_sha256=$FinalBaselineEvidenceHash"
+```
+
+Expected: the only durable game-state artifact is the ignored, read-only mother save, backed by generator and clean-normal-run evidence. The shared `game/` tree is still the original pre-change tree. Art, music, sound effects, animation, and UI changes are not required; no shipping asset or package byte has been added.
 
 ---
 
@@ -669,14 +1623,416 @@ testsuite test_terminal_collapse_rules:
 
 - [ ] **Step 2: Run and preserve the exact RED**
 
+Start one fresh Windows PowerShell 5.1 session for Task 2 and keep it open through Step 10. Re-bind the ignored helper sources to Task 1's literal evidence before any Ren'Py process starts; do not reconstruct this state after a failed invocation.
+
 ```powershell
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-$RedSaveDir = Join-Path ([IO.Path]::GetTempPath()) ('cos-terminal-collapse-rules-red-' + [Guid]::NewGuid().ToString('N'))
-& powershell.exe -NoProfile -File .\Tools\Run-RenPySuite.ps1 -ProjectRoot $ProjectRoot -SaveDir $RedSaveDir -Mode Suite -Suite test_terminal_collapse_rules -Expect FAILED -ExpectedPattern 'is_terminal_resistance_collapse' -TimeoutSeconds 120
-if ($LASTEXITCODE -ne 0) { throw 'Expected RED was not the named missing collapse helper.' }
+$EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
+$HelperRoot = Join-Path $EvidenceRoot 'helpers'
+$RunnerSource = Join-Path $HelperRoot 'PrivateDesktopRunner.cs'
+$HeadlessWrapper = Join-Path $HelperRoot 'Invoke-PrivateDesktopProcess.ps1'
+$ExpectedTask2HelperHashes = [ordered]@{
+    'PrivateDesktopRunner.cs' = 'F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154'
+    'Invoke-PrivateDesktopProcess.ps1' = '8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A'
+}
+$BaselineEvidence = Join-Path $EvidenceRoot 'legacy\baseline-evidence.md'
+$RunnerTemplatePath = Join-Path $ProjectRoot 'Tools\Run-RenPySuite.ps1'
+$TrustedSdkRoot = 'E:\Projects\renpy-8.5.2-sdk'
+$RenPyExe = Join-Path $TrustedSdkRoot 'renpy.exe'
+$ConfiguredSdkRoot = [Environment]::GetEnvironmentVariable('RENPY_SDK', 'Process')
+if (-not [string]::IsNullOrWhiteSpace($ConfiguredSdkRoot) -and
+    -not [IO.Path]::GetFullPath($ConfiguredSdkRoot).TrimEnd('\').Equals($TrustedSdkRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Process RENPY_SDK points somewhere other than the approved RenPy 8.5.2 SDK.'
+}
+$PowerShellExe = (Get-Command powershell.exe -CommandType Application -ErrorAction Stop).Source
+$Task2BaselineCommit = (& git rev-parse HEAD).Trim()
+$ExpectedPlanSubject = 'docs: update terminal collapse phase one for headless evidence'
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($Task2BaselineCommit) -or
+    (git log -1 --format=%s) -cne $ExpectedPlanSubject) {
+    throw 'Task 2 did not start from the final executable-plan commit.'
+}
+$Task2EvidenceRoot = Join-Path $EvidenceRoot 'rules'
+$ExplicitTaskTempRoot = [Environment]::GetEnvironmentVariable('TC_TASK_TEMP_ROOT', 'Process')
+if (-not [string]::IsNullOrWhiteSpace($ExplicitTaskTempRoot)) {
+    $TaskTempRoot = [IO.Path]::GetFullPath($ExplicitTaskTempRoot)
+} else {
+    $TaskTempRoot = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp'
+}
+if (-not (Test-Path -LiteralPath $TaskTempRoot -PathType Container)) {
+    throw ('Task 2 temp root must already exist outside the repository: ' + $TaskTempRoot)
+}
+$TaskTempRoot = (Resolve-Path -LiteralPath $TaskTempRoot).Path
+$Task2SaveRoot = Join-Path $TaskTempRoot ('cos-terminal-collapse-task2-' + [Guid]::NewGuid().ToString('N'))
+
+foreach ($RequiredFile in @($RunnerSource, $HeadlessWrapper, $BaselineEvidence, $RunnerTemplatePath, $RenPyExe, $PowerShellExe)) {
+    if (-not (Test-Path -LiteralPath $RequiredFile -PathType Leaf)) {
+        throw ('Task 2 prerequisite is missing: ' + $RequiredFile)
+    }
+}
+$RunnerTemplateHash = (Get-FileHash -LiteralPath $RunnerTemplatePath -Algorithm SHA256).Hash
+if ([string]::IsNullOrWhiteSpace($RunnerTemplateHash) -or
+    @(git diff --name-only -- Tools/Run-RenPySuite.ps1).Count -ne 0) {
+    throw 'Task 2 runner is not the unchanged file from the executable-plan baseline.'
+}
+$BaselineEvidenceText = [IO.File]::ReadAllText($BaselineEvidence, $StrictUtf8)
+if (-not $BaselineEvidenceText.Contains('verdict=PASS')) {
+    throw 'Task 1 baseline evidence is not PASS.'
+}
+$Task2HelperHashes = [ordered]@{}
+foreach ($HelperPath in @($RunnerSource, $HeadlessWrapper)) {
+    git check-ignore -q -- $HelperPath
+    if ($LASTEXITCODE -ne 0) { throw ('Helper is not ignored: ' + $HelperPath) }
+    $HelperHash = (Get-FileHash -LiteralPath $HelperPath -Algorithm SHA256).Hash
+    $HelperName = Split-Path $HelperPath -Leaf
+    if ($HelperHash -cne [string]$ExpectedTask2HelperHashes[$HelperName] -or
+        $BaselineEvidenceText.IndexOf($HelperHash, [StringComparison]::OrdinalIgnoreCase) -lt 0) {
+        throw ('Helper hash is not bound by Task 1 evidence: ' + $HelperPath)
+    }
+    $Task2HelperHashes[$HelperName] = $HelperHash
+}
+. $HeadlessWrapper
+if ($null -eq (Get-Command Invoke-PrivateDesktopProcess -CommandType Function -ErrorAction SilentlyContinue)) {
+    throw 'Invoke-PrivateDesktopProcess was not imported.'
+}
+foreach ($NewRoot in @($Task2EvidenceRoot, $Task2SaveRoot)) {
+    if (Test-Path -LiteralPath $NewRoot) { throw ('Task 2 root unexpectedly exists: ' + $NewRoot) }
+    New-Item -ItemType Directory -Path $NewRoot -ErrorAction Stop | Out-Null
+}
+git check-ignore -q -- $Task2EvidenceRoot
+if ($LASTEXITCODE -ne 0) { throw 'Task 2 evidence root is not ignored.' }
+
+# The stable ignored `rules` directory is the create-new attempt ledger for
+# the entire task. If this session is lost or any invocation fails, a future
+# session sees the directory and stops above; it must not choose a new root or
+# replay a RED/GREEN without explicit new user authorization.
+$ProjectPrefix = $ProjectRoot.TrimEnd('\') + '\'
+$TaskTempPrefix = $TaskTempRoot.TrimEnd('\') + '\'
+$SavePrefix = ([IO.Path]::GetFullPath($Task2SaveRoot)).TrimEnd('\') + '\'
+if ($TaskTempPrefix.StartsWith($ProjectPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $ProjectPrefix.StartsWith($TaskTempPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $SavePrefix.StartsWith($ProjectPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $ProjectPrefix.StartsWith($SavePrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Task 2 temp and SaveDir roots must be external to and disjoint from ProjectRoot.'
+}
+
+function New-Task2TestMirror {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$Name,
+        [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][string[]]$ExpectedPaths
+    )
+
+    $ExpectedSorted = @($ExpectedPaths | Sort-Object)
+    $SharedDiffPaths = @(git diff --name-only | Sort-Object)
+    if (Compare-Object $ExpectedSorted $SharedDiffPaths) {
+        throw ('NEEDS_CONTEXT: shared RED/GREEN scope is not the exact mirror input for ' + $Name + ': ' + ($SharedDiffPaths -join ', '))
+    }
+    if (@(git diff --cached --name-only).Count -ne 0) {
+        throw 'NEEDS_CONTEXT: shared index is not empty before creating a Task 2 test mirror.'
+    }
+
+    $MirrorRoot = Join-Path $TaskTempRoot ('cos-terminal-collapse-task2-mirror-' + $Name + '-' + [Guid]::NewGuid().ToString('N'))
+    if (Test-Path -LiteralPath $MirrorRoot) {
+        throw ('NEEDS_CONTEXT: Task 2 mirror path already exists: ' + $MirrorRoot)
+    }
+    git worktree add --detach $MirrorRoot $Task2BaselineCommit
+    if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: could not create Task 2 mirror: ' + $MirrorRoot) }
+    if ((git -C $MirrorRoot rev-parse HEAD) -cne $Task2BaselineCommit -or
+        @(git -C $MirrorRoot status --short --untracked-files=all).Count -ne 0) {
+        throw ('NEEDS_CONTEXT: fresh Task 2 mirror is not the exact clean plan baseline: ' + $MirrorRoot)
+    }
+    if (Test-Path -LiteralPath (Join-Path $MirrorRoot 'game\saves')) {
+        throw ('NEEDS_CONTEXT: fresh Task 2 mirror unexpectedly contains game/saves: ' + $MirrorRoot)
+    }
+
+    foreach ($RelativePath in $ExpectedSorted) {
+        if (-not $RelativePath.StartsWith('game/', [StringComparison]::Ordinal) -or
+            $RelativePath.Contains('..') -or -not $RelativePath.EndsWith('.rpy', [StringComparison]::Ordinal)) {
+            throw ('NEEDS_CONTEXT: invalid Task 2 mirror source path: ' + $RelativePath)
+        }
+        $SourcePath = Join-Path $ProjectRoot ($RelativePath.Replace('/', '\'))
+        $DestinationPath = Join-Path $MirrorRoot ($RelativePath.Replace('/', '\'))
+        if (-not (Test-Path -LiteralPath $SourcePath -PathType Leaf) -or
+            -not (Test-Path -LiteralPath $DestinationPath -PathType Leaf)) {
+            throw ('NEEDS_CONTEXT: Task 2 mirror source or destination is missing: ' + $RelativePath)
+        }
+        [IO.File]::Copy($SourcePath, $DestinationPath, $true)
+        if ((Get-FileHash -LiteralPath $SourcePath -Algorithm SHA256).Hash -cne
+            (Get-FileHash -LiteralPath $DestinationPath -Algorithm SHA256).Hash) {
+            throw ('NEEDS_CONTEXT: byte copy into Task 2 mirror failed: ' + $RelativePath)
+        }
+    }
+
+    $ExpectedStatus = @($ExpectedSorted | ForEach-Object { ' M ' + $_ })
+    $MirrorStatus = @(git -C $MirrorRoot status --short --untracked-files=all | Sort-Object)
+    if (Compare-Object $ExpectedStatus $MirrorStatus) {
+        throw ('NEEDS_CONTEXT: Task 2 mirror scope drifted: ' + ($MirrorStatus -join '; '))
+    }
+    git -C $MirrorRoot diff --check -- @ExpectedSorted
+    if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: Task 2 mirror diff check failed: ' + $MirrorRoot) }
+    return $MirrorRoot
+}
+
+function Remove-VerifiedTask2Mirror {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string]$MirrorRoot,
+        [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][string[]]$ExpectedPaths
+    )
+
+    $MirrorFull = [IO.Path]::GetFullPath($MirrorRoot).TrimEnd('\')
+    $TempFull = [IO.Path]::GetFullPath($TaskTempRoot).TrimEnd('\')
+    if (-not $MirrorFull.StartsWith($TempFull + '\', [StringComparison]::OrdinalIgnoreCase) -or
+        -not (Split-Path $MirrorFull -Leaf).StartsWith('cos-terminal-collapse-task2-mirror-', [StringComparison]::Ordinal)) {
+        throw ('NEEDS_CONTEXT: refusing to remove unverified Task 2 mirror: ' + $MirrorFull)
+    }
+    if ((git -C $MirrorFull rev-parse HEAD) -cne $Task2BaselineCommit) {
+        throw ('NEEDS_CONTEXT: Task 2 mirror HEAD drifted before cleanup: ' + $MirrorFull)
+    }
+    $ExpectedStatus = @($ExpectedPaths | Sort-Object | ForEach-Object { ' M ' + $_ })
+    $ObservedStatus = @(git -C $MirrorFull status --short --untracked-files=all | Sort-Object)
+    if (Compare-Object $ExpectedStatus $ObservedStatus) {
+        throw ('NEEDS_CONTEXT: Task 2 mirror scope drifted before cleanup: ' + ($ObservedStatus -join '; '))
+    }
+    $RegisteredRoots = @(
+        git worktree list --porcelain |
+            Where-Object { $_.StartsWith('worktree ', [StringComparison]::Ordinal) } |
+            ForEach-Object { [IO.Path]::GetFullPath($_.Substring(9)).TrimEnd('\') }
+    )
+    if ($RegisteredRoots -notcontains $MirrorFull) {
+        throw ('NEEDS_CONTEXT: Task 2 mirror is not the exact registered worktree: ' + $MirrorFull)
+    }
+    git worktree remove --force $MirrorFull
+    if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: verified Task 2 mirror cleanup failed: ' + $MirrorFull) }
+    git worktree prune
+    if (Test-Path -LiteralPath $MirrorFull) {
+        throw ('NEEDS_CONTEXT: verified Task 2 mirror remains after cleanup: ' + $MirrorFull)
+    }
+}
+
+function Invoke-HeadlessTerminalCollapseSuite {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$EvidenceName,
+        [Parameter()][ValidateSet('Suite', 'Lint')][string]$Mode = 'Suite',
+        [Parameter()][string]$Suite,
+        [Parameter()][ValidateSet('PASSED', 'FAILED')][string]$Expect,
+        [Parameter()][string]$ExpectedPattern,
+        [Parameter(Mandatory = $true)][ValidateRange(1, 1800)][int]$TimeoutSeconds,
+        [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][string[]]$ExpectedPaths
+    )
+
+    if ($Mode -ceq 'Suite') {
+        if ([string]::IsNullOrWhiteSpace($Suite) -or [string]::IsNullOrWhiteSpace($Expect)) {
+            throw 'Suite mode requires Suite and Expect.'
+        }
+        if ($Expect -ceq 'FAILED' -and [string]::IsNullOrWhiteSpace($ExpectedPattern)) {
+            throw 'A FAILED suite expectation requires ExpectedPattern.'
+        }
+    } elseif ($PSBoundParameters.ContainsKey('Suite') -or
+        $PSBoundParameters.ContainsKey('Expect') -or
+        $PSBoundParameters.ContainsKey('ExpectedPattern')) {
+        throw 'Lint mode forbids Suite, Expect, and ExpectedPattern.'
+    }
+    foreach ($HelperPath in @($RunnerSource, $HeadlessWrapper)) {
+        $CurrentHash = (Get-FileHash -LiteralPath $HelperPath -Algorithm SHA256).Hash
+        $ExpectedHash = [string]$Task2HelperHashes[(Split-Path $HelperPath -Leaf)]
+        if ($CurrentHash -cne $ExpectedHash) {
+            throw ('NEEDS_CONTEXT: helper drifted after Task 2 binding; do not launch or retry: ' + $HelperPath)
+        }
+    }
+
+    $InvocationId = $EvidenceName
+    $MirrorRoot = New-Task2TestMirror -Name $EvidenceName -ExpectedPaths $ExpectedPaths
+    $RunnerPath = Join-Path $MirrorRoot 'Tools\Run-RenPySuite.ps1'
+    if (-not (Test-Path -LiteralPath $RunnerPath -PathType Leaf) -or
+        (Get-FileHash -LiteralPath $RunnerPath -Algorithm SHA256).Hash -cne $RunnerTemplateHash -or
+        (Get-FileHash -LiteralPath $RunnerTemplatePath -Algorithm SHA256).Hash -cne $RunnerTemplateHash -or
+        (Test-Path -LiteralPath (Join-Path $MirrorRoot 'game\saves'))) {
+        throw ('NEEDS_CONTEXT: Task 2 mirror runner or local-save preflight failed: ' + $MirrorRoot)
+    }
+    $SaveDir = Join-Path $Task2SaveRoot ('save-' + $InvocationId)
+    $HelperEvidenceDir = Join-Path $Task2EvidenceRoot ('private-desktop-' + $InvocationId)
+    $RunnerEvidenceDir = Join-Path $Task2EvidenceRoot ('renpy-runner-' + $InvocationId)
+    foreach ($FreshPath in @($SaveDir, $HelperEvidenceDir, $RunnerEvidenceDir)) {
+        if (Test-Path -LiteralPath $FreshPath) {
+            throw ('NEEDS_CONTEXT: unique invocation path already exists; do not overwrite or retry: ' + $FreshPath)
+        }
+    }
+
+    $Arguments = New-Object 'System.Collections.Generic.List[string]'
+    foreach ($Argument in @(
+        '-NoLogo',
+        '-NoProfile',
+        '-NonInteractive',
+        '-ExecutionPolicy', 'Bypass',
+        '-File', $RunnerPath,
+        '-ProjectRoot', $MirrorRoot,
+        '-SaveDir', $SaveDir,
+        '-Mode', $Mode,
+        '-EvidenceDir', $RunnerEvidenceDir,
+        '-TimeoutSeconds', [string]$TimeoutSeconds
+    )) {
+        [void]$Arguments.Add([string]$Argument)
+    }
+    if ($Mode -ceq 'Suite') {
+        [void]$Arguments.Add('-Suite')
+        [void]$Arguments.Add($Suite)
+        [void]$Arguments.Add('-Expect')
+        [void]$Arguments.Add($Expect)
+        if (-not [string]::IsNullOrWhiteSpace($ExpectedPattern)) {
+            [void]$Arguments.Add('-ExpectedPattern')
+            [void]$Arguments.Add($ExpectedPattern)
+        }
+    }
+
+    $ParentHadSaveOverride = Test-Path Env:RENPY_PATH_TO_SAVES
+    $ParentSaveOverride = if ($ParentHadSaveOverride) { $env:RENPY_PATH_TO_SAVES } else { $null }
+    try {
+        $Result = Invoke-PrivateDesktopProcess `
+            -FilePath $PowerShellExe `
+            -ArgumentList $Arguments.ToArray() `
+            -WorkingDirectory $MirrorRoot `
+            -EnvironmentOverrides @{
+                SDL_VIDEODRIVER = 'dummy'
+                SDL_AUDIODRIVER = 'dummy'
+                RENPY_RENDERER = 'sw'
+                RENPY_SDK = $TrustedSdkRoot
+                RENPY_PATH_TO_SAVES = $null
+                TEMP = $TaskTempRoot
+                TMP = $TaskTempRoot
+            } `
+            -TimeoutSeconds ($TimeoutSeconds + 60) `
+            -EvidenceDirectory $HelperEvidenceDir `
+            -RunnerSource $RunnerSource
+    } catch {
+        throw ('NEEDS_CONTEXT: private-desktop launch failed; preserve ' + $HelperEvidenceDir + ' and do not retry. ' + $_.Exception.Message)
+    }
+
+    $ParentStillHasSaveOverride = Test-Path Env:RENPY_PATH_TO_SAVES
+    if ($ParentStillHasSaveOverride -ne $ParentHadSaveOverride -or
+        ($ParentHadSaveOverride -and $env:RENPY_PATH_TO_SAVES -cne $ParentSaveOverride)) {
+        throw 'NEEDS_CONTEXT: child environment isolation changed the parent RENPY_PATH_TO_SAVES; do not retry.'
+    }
+    if ($null -eq $Result) {
+        throw ('NEEDS_CONTEXT: private-desktop wrapper returned no result; preserve ' + $HelperEvidenceDir + ' and do not retry.')
+    }
+    foreach ($RequiredProperty in @(
+        'schema_version', 'classification', 'detail', 'started', 'root_pid', 'root_exit_code',
+        'timed_out', 'job_drained', 'desktop_name', 'process_ids', 'new_process_ids',
+        'active_snapshot_process_ids', 'job_total_processes', 'process_coverage_complete',
+        'monitor_armed_before_resume', 'monitor_armed_utc', 'resumed_utc',
+        'cleanup_complete', 'cleanup_errors', 'visible_windows', 'stdout_path',
+        'stderr_path', 'helper_exit_code'
+    )) {
+        if ($null -eq $Result.PSObject.Properties[$RequiredProperty]) {
+            throw ('NEEDS_CONTEXT: private-desktop result omits ' + $RequiredProperty + '; preserve evidence and do not retry.')
+        }
+    }
+    $ProcessIds = @($Result.process_ids)
+    $UniqueProcessIds = @($ProcessIds | Sort-Object -Unique)
+    $ArmedUtc = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, [Globalization.CultureInfo]::InvariantCulture)
+    $ResumedUtc = [DateTimeOffset]::Parse([string]$Result.resumed_utc, [Globalization.CultureInfo]::InvariantCulture)
+    if ([int]$Result.schema_version -ne 1 -or
+        [string]$Result.classification -cne 'COMPLETED' -or [int]$Result.helper_exit_code -ne 0 -or
+        -not [bool]$Result.started -or [bool]$Result.timed_out -or -not [bool]$Result.job_drained -or
+        -not [bool]$Result.process_coverage_complete -or -not [bool]$Result.monitor_armed_before_resume -or
+        $ArmedUtc -gt $ResumedUtc -or -not [bool]$Result.cleanup_complete -or
+        @($Result.cleanup_errors).Count -ne 0 -or
+        @($Result.visible_windows).Count -ne 0 -or [int]$Result.root_exit_code -ne 0 -or
+        [string]::IsNullOrWhiteSpace([string]$Result.desktop_name) -or $ProcessIds.Count -lt 1 -or
+        $UniqueProcessIds.Count -ne $ProcessIds.Count -or
+        [int]$Result.job_total_processes -ne $ProcessIds.Count -or
+        $ProcessIds -notcontains ([int]$Result.root_pid)) {
+        throw ('NEEDS_CONTEXT: headless suite gates failed; preserve ' + $HelperEvidenceDir + ' and ' + $RunnerEvidenceDir + '; do not retry. Classification=' + [string]$Result.classification + '; detail=' + [string]$Result.detail)
+    }
+
+    $HelperArtifacts = @(
+        (Join-Path $HelperEvidenceDir 'request.json'),
+        (Join-Path $HelperEvidenceDir 'stdout.txt'),
+        (Join-Path $HelperEvidenceDir 'stderr.txt'),
+        (Join-Path $HelperEvidenceDir 'result.json')
+    )
+    foreach ($EvidencePath in $HelperArtifacts) {
+        if (-not (Test-Path -LiteralPath $EvidencePath -PathType Leaf)) {
+            throw ('NEEDS_CONTEXT: helper evidence is incomplete; preserve the invocation and do not retry: ' + $EvidencePath)
+        }
+        git check-ignore -q -- $EvidencePath
+        if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: helper evidence is not ignored: ' + $EvidencePath) }
+    }
+    $Request = [IO.File]::ReadAllText($HelperArtifacts[0], $StrictUtf8) | ConvertFrom-Json -ErrorAction Stop
+    $ExpectedChildEnvironment = [ordered]@{
+        SDL_VIDEODRIVER = 'dummy'
+        SDL_AUDIODRIVER = 'dummy'
+        RENPY_RENDERER = 'sw'
+        RENPY_SDK = $TrustedSdkRoot
+        RENPY_PATH_TO_SAVES = $null
+        TEMP = $TaskTempRoot
+        TMP = $TaskTempRoot
+    }
+    foreach ($EnvironmentName in $ExpectedChildEnvironment.Keys) {
+        $EnvironmentRows = @($Request.environment_overrides | Where-Object { [string]$_.name -ceq $EnvironmentName })
+        if ($EnvironmentRows.Count -ne 1) {
+            throw ('NEEDS_CONTEXT: request evidence does not contain exactly one ' + $EnvironmentName + ' override; do not retry.')
+        }
+        $ExpectedValue = $ExpectedChildEnvironment[$EnvironmentName]
+        if (($null -eq $ExpectedValue -and $null -ne $EnvironmentRows[0].value) -or
+            ($null -ne $ExpectedValue -and [string]$EnvironmentRows[0].value -cne [string]$ExpectedValue)) {
+            throw ('NEEDS_CONTEXT: request evidence has the wrong ' + $EnvironmentName + ' value; do not retry.')
+        }
+    }
+    $RunnerExtension = if ($Mode -ceq 'Suite') { '*.log' } else { '*.txt' }
+    $RunnerOutputs = @(Get-ChildItem -LiteralPath $RunnerEvidenceDir -File -Filter $RunnerExtension)
+    if ($RunnerOutputs.Count -ne 1) {
+        throw ('NEEDS_CONTEXT: expected exactly one preserved ' + $Mode + ' output; preserve the invocation and do not retry: ' + $RunnerEvidenceDir)
+    }
+    if ($Mode -ceq 'Suite') {
+        $RunnerOutputText = [IO.File]::ReadAllText($RunnerOutputs[0].FullName, $StrictUtf8)
+        $StatusMatches = [regex]::Matches($RunnerOutputText, '(?m)^\[rpytest\] Status:\s+([A-Z ]+?)\s*$')
+        if ($StatusMatches.Count -ne 1 -or $StatusMatches[0].Groups[1].Value.Trim() -cne $Expect) {
+            throw ('NEEDS_CONTEXT: preserved runner status does not match ' + $Expect + '; do not retry: ' + $RunnerOutputs[0].FullName)
+        }
+    }
+    foreach ($EvidencePath in @($RunnerEvidenceDir, $RunnerOutputs[0].FullName)) {
+        git check-ignore -q -- $EvidencePath
+        if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: runner evidence is not ignored: ' + $EvidencePath) }
+    }
+
+    $EvidenceHashes = [ordered]@{}
+    foreach ($EvidencePath in @($HelperArtifacts + $RunnerOutputs[0].FullName)) {
+        $EvidenceHashes[$EvidencePath] = (Get-FileHash -LiteralPath $EvidencePath -Algorithm SHA256).Hash
+    }
+
+    # The helper has proved the complete process tree drained. Only now remove
+    # the exact task-owned mirror, including its engine-created local saves.
+    Remove-VerifiedTask2Mirror -MirrorRoot $MirrorRoot -ExpectedPaths $ExpectedPaths
+
+    $Result | Add-Member -NotePropertyName invocation_name -NotePropertyValue $EvidenceName
+    $Result | Add-Member -NotePropertyName test_mirror_path -NotePropertyValue $MirrorRoot
+    $Result | Add-Member -NotePropertyName test_mirror_removed -NotePropertyValue $true
+    $Result | Add-Member -NotePropertyName save_dir -NotePropertyValue $SaveDir
+    $Result | Add-Member -NotePropertyName helper_evidence_dir -NotePropertyValue $HelperEvidenceDir
+    $Result | Add-Member -NotePropertyName runner_evidence_dir -NotePropertyValue $RunnerEvidenceDir
+    $Result | Add-Member -NotePropertyName runner_output -NotePropertyValue $RunnerOutputs[0].FullName
+    $Result | Add-Member -NotePropertyName runner_output_sha256 -NotePropertyValue $EvidenceHashes[$RunnerOutputs[0].FullName]
+    $Result | Add-Member -NotePropertyName evidence_sha256 -NotePropertyValue $EvidenceHashes
+    return $Result
+}
+
+$RedResult = Invoke-HeadlessTerminalCollapseSuite `
+    -EvidenceName 'rules-red' `
+    -Suite 'test_terminal_collapse_rules' `
+    -Expect 'FAILED' `
+    -ExpectedPattern 'is_terminal_resistance_collapse' `
+    -TimeoutSeconds 120 `
+    -ExpectedPaths @('game/test_game.rpy')
+$RedResult | Format-List invocation_name, classification, root_pid, root_exit_code, job_total_processes, process_coverage_complete, monitor_armed_before_resume, job_drained, cleanup_complete, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
 ```
 
-Expected: the Ren'Py suite fails for the missing `is_terminal_resistance_collapse` helper, while the runner itself exits `0` because that exact RED was required. Copy the runner evidence into `.superpowers/sdd/terminal-collapse-ending/rules-red/`, record its SHA-256, and do not edit the log.
+Expected: the Ren'Py suite fails for the missing `is_terminal_resistance_collapse` helper, while the runner host exits `0` because that exact RED was required. `$RedResult` must be `COMPLETED`, fully process-covered, job-drained, and window-free. Preserve its create-new helper request/stdout/stderr/result report, unique external save directory, and unique runner evidence directory exactly where recorded; hash the runner log and do not edit, copy, rerun, or replace it.
 
 - [ ] **Step 3: Replace the mapper and current-state wrappers in `game/difficulty.rpy`**
 
@@ -1236,28 +2592,195 @@ The exact disposition is:
 
 Do not weaken required flags with defaults to make an omitted caller pass.
 
-- [ ] **Step 9: Run the focused GREEN suites once each**
+- [ ] **Step 9: Run the focused GREEN suites, mandatory script scans, and lint once each**
 
 ```powershell
-$ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-function New-TerminalCollapseSaveDir([string]$Name) {
-    return Join-Path ([IO.Path]::GetTempPath()) ("cos-terminal-collapse-{0}-{1}" -f $Name, [Guid]::NewGuid().ToString('N'))
+if ($null -eq (Get-Command Invoke-HeadlessTerminalCollapseSuite -CommandType Function -ErrorAction SilentlyContinue)) {
+    throw 'NEEDS_CONTEXT: the bound Task 2 headless session is gone; do not launch or rerun any suite.'
 }
 
-& powershell.exe -NoProfile -File .\Tools\Run-RenPySuite.ps1 -ProjectRoot $ProjectRoot -SaveDir (New-TerminalCollapseSaveDir 'rules-green') -Mode Suite -Suite test_terminal_collapse_rules -Expect PASSED -TimeoutSeconds 120
-if ($LASTEXITCODE -ne 0) { throw 'test_terminal_collapse_rules failed.' }
+$GreenPaths = @('game/balance.rpy', 'game/difficulty.rpy', 'game/test_game.rpy')
+$RulesGreen = Invoke-HeadlessTerminalCollapseSuite -EvidenceName 'rules-green' -Suite 'test_terminal_collapse_rules' -Expect 'PASSED' -TimeoutSeconds 120 -ExpectedPaths $GreenPaths
+$CatalogGreen = Invoke-HeadlessTerminalCollapseSuite -EvidenceName 'catalog-green' -Suite 'test_ending_catalog' -Expect 'PASSED' -TimeoutSeconds 120 -ExpectedPaths $GreenPaths
+$BalanceGreen = Invoke-HeadlessTerminalCollapseSuite -EvidenceName 'balance-green' -Suite 'test_balance_ending_report' -Expect 'PASSED' -TimeoutSeconds 120 -ExpectedPaths $GreenPaths
+$WinterGreen = Invoke-HeadlessTerminalCollapseSuite -EvidenceName 'winter-invariance-green' -Suite 'test_winter_interlude_ending_invariance' -Expect 'PASSED' -TimeoutSeconds 180 -ExpectedPaths $GreenPaths
 
-& powershell.exe -NoProfile -File .\Tools\Run-RenPySuite.ps1 -ProjectRoot $ProjectRoot -SaveDir (New-TerminalCollapseSaveDir 'catalog-green') -Mode Suite -Suite test_ending_catalog -Expect PASSED -TimeoutSeconds 120
-if ($LASTEXITCODE -ne 0) { throw 'test_ending_catalog failed.' }
+foreach ($GreenResult in @($RulesGreen, $CatalogGreen, $BalanceGreen, $WinterGreen)) {
+    $GreenResult | Format-List invocation_name, classification, root_pid, root_exit_code, job_total_processes, process_coverage_complete, monitor_armed_before_resume, job_drained, cleanup_complete, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
+}
 
-& powershell.exe -NoProfile -File .\Tools\Run-RenPySuite.ps1 -ProjectRoot $ProjectRoot -SaveDir (New-TerminalCollapseSaveDir 'balance-green') -Mode Suite -Suite test_balance_ending_report -Expect PASSED -TimeoutSeconds 120
-if ($LASTEXITCODE -ne 0) { throw 'test_balance_ending_report failed.' }
+function Write-Task2CreateNewUtf8 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Text
+    )
 
-& powershell.exe -NoProfile -File .\Tools\Run-RenPySuite.ps1 -ProjectRoot $ProjectRoot -SaveDir (New-TerminalCollapseSaveDir 'winter-invariance-green') -Mode Suite -Suite test_winter_interlude_ending_invariance -Expect PASSED -TimeoutSeconds 180
-if ($LASTEXITCODE -ne 0) { throw 'test_winter_interlude_ending_invariance failed.' }
+    $Bytes = $StrictUtf8.GetBytes($Text)
+    $Stream = [IO.File]::Open($Path, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    try {
+        $Stream.Write($Bytes, 0, $Bytes.Length)
+        $Stream.Flush()
+    } finally {
+        $Stream.Dispose()
+    }
+}
+
+function Invoke-Task2ConsoleScanner {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$Name,
+        [Parameter(Mandatory = $true)][string]$MirrorRoot,
+        [Parameter(Mandatory = $true)][string]$ScriptPath,
+        [Parameter()][string]$ExpectedStdoutPattern,
+        [Parameter()][string]$ForbiddenStdoutPattern,
+        [Parameter()][switch]$RequireEmptyStdout
+    )
+
+    if (-not (Test-Path -LiteralPath $ScriptPath -PathType Leaf) -or $ScriptPath.Contains('"')) {
+        throw ('NEEDS_CONTEXT: scanner path is missing or cannot be quoted safely: ' + $ScriptPath)
+    }
+    $ScannerEvidence = Join-Path $Task2EvidenceRoot ('scanner-' + $Name)
+    if (Test-Path -LiteralPath $ScannerEvidence) {
+        throw ('NEEDS_CONTEXT: scanner evidence already exists; do not overwrite or retry: ' + $ScannerEvidence)
+    }
+    New-Item -ItemType Directory -Path $ScannerEvidence -ErrorAction Stop | Out-Null
+    git check-ignore -q -- $ScannerEvidence
+    if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: scanner evidence is not ignored: ' + $ScannerEvidence) }
+
+    $StdoutPath = Join-Path $ScannerEvidence 'stdout.txt'
+    $StderrPath = Join-Path $ScannerEvidence 'stderr.txt'
+    $ResultPath = Join-Path $ScannerEvidence 'result.json'
+    $StartInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $StartInfo.FileName = $Task2Python
+    $StartInfo.Arguments = '-B "' + $ScriptPath + '"'
+    $StartInfo.WorkingDirectory = $MirrorRoot
+    $StartInfo.UseShellExecute = $false
+    $StartInfo.CreateNoWindow = $true
+    $StartInfo.RedirectStandardOutput = $true
+    $StartInfo.RedirectStandardError = $true
+    $StartInfo.StandardOutputEncoding = $StrictUtf8
+    $StartInfo.StandardErrorEncoding = $StrictUtf8
+    $StartInfo.EnvironmentVariables['PYTHONDONTWRITEBYTECODE'] = '1'
+    $StartInfo.EnvironmentVariables['PYTHONIOENCODING'] = 'utf-8'
+    $StartInfo.EnvironmentVariables['PYTHONUTF8'] = '1'
+
+    $Process = New-Object System.Diagnostics.Process
+    $Process.StartInfo = $StartInfo
+    $StartedUtc = [DateTimeOffset]::UtcNow
+    if (-not $Process.Start()) { throw ('NEEDS_CONTEXT: scanner did not start: ' + $Name) }
+    $ProcessId = $Process.Id
+    $StdoutTask = $Process.StandardOutput.ReadToEndAsync()
+    $StderrTask = $Process.StandardError.ReadToEndAsync()
+    $Completed = $Process.WaitForExit(120000)
+    if (-not $Completed) {
+        $Process.Kill()
+        [void]$Process.WaitForExit(10000)
+    }
+    [void]$Process.WaitForExit()
+    $Process.Refresh()
+    $ExitCode = if ($Completed) { $Process.ExitCode } else { $null }
+    $Stdout = $StdoutTask.GetAwaiter().GetResult()
+    $Stderr = $StderrTask.GetAwaiter().GetResult()
+    $EndedUtc = [DateTimeOffset]::UtcNow
+    $Process.Dispose()
+
+    Write-Task2CreateNewUtf8 -Path $StdoutPath -Text $Stdout
+    Write-Task2CreateNewUtf8 -Path $StderrPath -Text $Stderr
+    $ScannerResult = [ordered]@{
+        schema_version = 1
+        name = $Name
+        script_path = $ScriptPath
+        script_sha256 = (Get-FileHash -LiteralPath $ScriptPath -Algorithm SHA256).Hash
+        process_id = $ProcessId
+        started_utc = $StartedUtc.ToString('o')
+        ended_utc = $EndedUtc.ToString('o')
+        completed = $Completed
+        exit_code = $ExitCode
+        stdout_sha256 = (Get-FileHash -LiteralPath $StdoutPath -Algorithm SHA256).Hash
+        stderr_sha256 = (Get-FileHash -LiteralPath $StderrPath -Algorithm SHA256).Hash
+    }
+    Write-Task2CreateNewUtf8 -Path $ResultPath -Text (($ScannerResult | ConvertTo-Json -Depth 4) + "`n")
+
+    if (-not $Completed -or $null -eq $ExitCode -or [int]$ExitCode -ne 0 -or
+        -not [string]::IsNullOrEmpty($Stderr) -or
+        ($RequireEmptyStdout -and -not [string]::IsNullOrEmpty($Stdout)) -or
+        (-not [string]::IsNullOrWhiteSpace($ExpectedStdoutPattern) -and
+            [regex]::Matches($Stdout, $ExpectedStdoutPattern).Count -ne 1) -or
+        (-not [string]::IsNullOrWhiteSpace($ForbiddenStdoutPattern) -and
+            [regex]::IsMatch($Stdout, $ForbiddenStdoutPattern))) {
+        throw ('NEEDS_CONTEXT: mandatory script scanner failed; preserve mirror and evidence and do not retry: ' + $Name)
+    }
+
+    return [pscustomobject]@{
+        name = $Name
+        process_id = $ProcessId
+        exit_code = $ExitCode
+        evidence_dir = $ScannerEvidence
+        result_sha256 = (Get-FileHash -LiteralPath $ResultPath -Algorithm SHA256).Hash
+    }
+}
+
+$Task2Python = Join-Path $TrustedSdkRoot 'lib\py3-windows-x86_64\python.exe'
+if (-not (Test-Path -LiteralPath $Task2Python -PathType Leaf)) {
+    throw ('NEEDS_CONTEXT: trusted SDK Python is missing: ' + $Task2Python)
+}
+$ScannerMirror = New-Task2TestMirror -Name 'script-scanners-green' -ExpectedPaths $GreenPaths
+$MissingPortraitResult = Invoke-Task2ConsoleScanner `
+    -Name 'missing-portraits-green' `
+    -MirrorRoot $ScannerMirror `
+    -ScriptPath (Join-Path $ScannerMirror 'scan_missing_portraits.py') `
+    -ExpectedStdoutPattern '(?m)^=== Total findings: 0 ===\s*$' `
+    -ForbiddenStdoutPattern '(?m)^!!'
+$NarrationOverlapResult = Invoke-Task2ConsoleScanner `
+    -Name 'narration-overlap-green' `
+    -MirrorRoot $ScannerMirror `
+    -ScriptPath (Join-Path $ScannerMirror 'scan_narration_overlap.py') `
+    -ExpectedStdoutPattern '(?m)^TOTAL:\s+0\b.*$'
+
+$ShowScanSourceDir = Join-Path $Task2EvidenceRoot 'scanner-show-before-source'
+if (Test-Path -LiteralPath $ShowScanSourceDir) {
+    throw ('NEEDS_CONTEXT: show-scan source already exists; do not overwrite or retry: ' + $ShowScanSourceDir)
+}
+New-Item -ItemType Directory -Path $ShowScanSourceDir -ErrorAction Stop | Out-Null
+git check-ignore -q -- $ShowScanSourceDir
+if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: show-scan source is not ignored: ' + $ShowScanSourceDir) }
+$ShowScanPath = Join-Path $ShowScanSourceDir 'show-before-scan.py'
+$ShowScanSource = @'
+import re
+from pathlib import Path
+for path in ["game/balance.rpy", "game/difficulty.rpy", "game/test_game.rpy"]:
+    lines = Path(path).read_text(encoding="utf-8").splitlines()
+    for i, line in enumerate(lines):
+        m = re.match(r'^(\s*)show\s+(\w+_img)\s+at\s+left\b', line)
+        if not m: continue
+        j = i - 1
+        while j >= 0 and (not lines[j].strip() or lines[j].strip().startswith("#")): j -= 1
+        prev = lines[j].strip() if j >= 0 else ""
+        if not re.match(r'^(\$\s*hide_all_chars\s*\(|scene\s+bg\b|hide\s+\w+_img)', prev):
+            print(f"{path}:L{i+1}  show {m.group(2)}  prev={prev!r}")
+'@
+Write-Task2CreateNewUtf8 -Path $ShowScanPath -Text ($ShowScanSource.Replace("`r`n", "`n") + "`n")
+$ShowBeforeResult = Invoke-Task2ConsoleScanner `
+    -Name 'show-before-green' `
+    -MirrorRoot $ScannerMirror `
+    -ScriptPath $ShowScanPath `
+    -RequireEmptyStdout
+
+foreach ($ScannerResult in @($MissingPortraitResult, $NarrationOverlapResult, $ShowBeforeResult)) {
+    $ScannerResult | Format-List name, process_id, exit_code, evidence_dir, result_sha256
+}
+Remove-VerifiedTask2Mirror -MirrorRoot $ScannerMirror -ExpectedPaths $GreenPaths
+
+$LintGreen = Invoke-HeadlessTerminalCollapseSuite `
+    -EvidenceName 'lint-green' `
+    -Mode 'Lint' `
+    -TimeoutSeconds 180 `
+    -ExpectedPaths $GreenPaths
+$LintGreen | Format-List invocation_name, classification, root_pid, root_exit_code, job_total_processes, process_coverage_complete, monitor_armed_before_resume, job_drained, cleanup_complete, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
 ```
 
-Expected: each command has real exit code `0`, reports `PASSED`, and retains a unique runner evidence path. Do not repeat a passing suite on the same bytes.
+Expected: each of the four focused suites is launched exactly once, has root exit code `0`, reports `PASSED`, is fully process-covered and job-drained with zero visible windows, and retains unique helper request/stdout/stderr/result reports plus a unique runner log and external `SaveDir`. On a fifth fresh mirror, the two mandatory repository scanners report exactly zero findings and the exact three-file show-before scanner emits no stdout. Finally, a sixth fresh mirror runs lint exactly once through the same pre-armed private-desktop helper; lint exits `0`, creates exactly one preserved runner text output, has complete process coverage and cleanup, and shows no window. These console-only Python scanners are not Ren'Py engine launches; they still use create-new ignored evidence and a disposable mirror. Stop immediately on the first `NEEDS_CONTEXT`; preserve every completed and failed invocation directory and mirror, and never repeat a scanner, suite, or lint on the same bytes.
 
 - [ ] **Step 10: Check exact scope and commit the rules slice**
 
@@ -1282,9 +2805,28 @@ if (Compare-Object $ExpectedPaths $CachedPaths) {
 git commit -m "fix: enforce terminal resistance collapse rules"
 if ($LASTEXITCODE -ne 0) { throw 'Rules-slice commit failed.' }
 if (@(git diff --cached --name-only).Count -ne 0) { throw 'Index not empty after rules commit.' }
+$RulesCommit = (& git rev-parse HEAD).Trim()
+if ((git rev-parse HEAD^) -cne $Task2BaselineCommit -or
+    (git log -1 --format=%s) -cne 'fix: enforce terminal resistance collapse rules') {
+    throw 'NEEDS_CONTEXT: rules commit topology or subject is wrong.'
+}
+$CommittedPaths = @(git diff-tree --no-commit-id --name-only -r $RulesCommit | Sort-Object)
+if (Compare-Object $ExpectedPaths $CommittedPaths) {
+    throw ('NEEDS_CONTEXT: a hook or commit step added unexpected paths: ' + ($CommittedPaths -join ', '))
+}
+if ((Get-FileHash -Algorithm SHA256 $UnrelatedPlan).Hash -cne $UnrelatedSha256) {
+    throw 'NEEDS_CONTEXT: unrelated narrative-delivery plan drifted during commit.'
+}
+$ExpectedStatus = @('?? ' + $UnrelatedPlan)
+$ObservedStatus = @(git status --short --untracked-files=all)
+if (Compare-Object $ExpectedStatus $ObservedStatus) {
+    throw ('NEEDS_CONTEXT: worktree is not exact after the rules commit: ' + ($ObservedStatus -join '; '))
+}
 ```
 
-Asset report for this commit: art `not required`, music `not required`, sound effects `not required`, animation `not required`, UI `not required`; no binary or package-size change.
+Expected: the successful commit is a direct child of the executable-plan baseline, has the exact subject above, and contains exactly the three text `.rpy` paths. This post-commit check is mandatory because the repository pre-commit hook may update and stage `game/msyh.ttf`; any fourth path is `NEEDS_CONTEXT`, and the rules slice must not be described as complete. The index is empty and the only remaining status row is the protected unrelated plan.
+
+Asset report for this commit: art `not required`, music `not required`, sound effects `not required`, animation `not required`, UI `not required`; no binary or package-size change. The post-commit tree check proves the font was not changed or added by the hook.
 
 ---
 
@@ -1295,6 +2837,7 @@ Asset report for this commit: art `not required`, music `not required`, sound ef
 - Read: `CANON.md`
 - Read: `CLAUDE.md`
 - Read: `docs/writing-style/INDEX.md`
+- Read: `docs/writing-style/guidance.md`
 - Read context only: `game/chapter5.rpy:2387-2469, 6068-6194, 6396-6505`
 - Read context only: `game/endings_expansion.rpy:204-249`
 - Create ignored prompts/results only: `.superpowers/sdd/terminal-collapse-ending/copy/run-01/`, `run-02/`, `run-03/`
@@ -1302,7 +2845,7 @@ Asset report for this commit: art `not required`, music `not required`, sound ef
 
 - [ ] **Step 1: Reconfirm the mandatory three-candidate branch**
 
-Read `CANON.md`, `CLAUDE.md`, and `docs/writing-style/INDEX.md` in full. Assert that the style index still reports seed maturity and no active approved examples. If an active approved corpus now exists, stop and revise this plan before generating anything; do not silently switch workflows.
+Read `CANON.md`, `CLAUDE.md`, `docs/writing-style/INDEX.md`, and `docs/writing-style/guidance.md` in full. Assert that the style index still reports seed maturity and no active approved examples, and that the guidance table has no active row. If an active approved corpus or guidance row now exists, stop and revise this plan before generating anything; do not silently switch workflows or omit approved guidance from the prompts.
 
 Verify that `game/chapter5.rpy` and `game/endings_expansion.rpy` remain unmodified:
 
@@ -1311,6 +2854,36 @@ $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
 $EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
 $StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+$GuidancePath = Join-Path $ProjectRoot 'docs\writing-style\guidance.md'
+if (-not (Test-Path -LiteralPath $GuidancePath -PathType Leaf)) {
+    throw 'Writing-style guidance is missing.'
+}
+$GuidanceLines = [IO.File]::ReadAllLines($GuidancePath, $StrictUtf8)
+$GuidanceHeaderIndexes = @(
+    for ($Index = 0; $Index -lt $GuidanceLines.Count; $Index++) {
+        if ($GuidanceLines[$Index].Trim().StartsWith('| guidance_id |', [StringComparison]::Ordinal)) {
+            $Index
+        }
+    }
+)
+if ($GuidanceHeaderIndexes.Count -ne 1) {
+    throw 'Writing-style guidance does not contain exactly one canonical table header.'
+}
+$GuidanceHeaderIndex = [int]$GuidanceHeaderIndexes[0]
+if ($GuidanceHeaderIndex + 1 -ge $GuidanceLines.Count -or
+    $GuidanceLines[$GuidanceHeaderIndex + 1].Trim() -notmatch '^\|(?:\s*:?-+:?\s*\|)+$') {
+    throw 'Writing-style guidance table separator is malformed.'
+}
+$ActiveGuidanceRows = @(
+    for ($Index = $GuidanceHeaderIndex + 2; $Index -lt $GuidanceLines.Count; $Index++) {
+        if (-not [string]::IsNullOrWhiteSpace($GuidanceLines[$Index])) {
+            $GuidanceLines[$Index]
+        }
+    }
+)
+if ($ActiveGuidanceRows.Count -ne 0) {
+    throw 'Active approved guidance now exists; stop and revise all three prompts before invoking Opus.'
+}
 if (@(git status --short -- game/chapter5.rpy game/endings_expansion.rpy).Count -ne 0) {
     throw 'Visible finale prose changed before raw-copy approval.'
 }
@@ -1664,8 +3237,1851 @@ After the user selects exactly one raw candidate, first bind its literal `result
 - `game/endings_expansion.rpy`: non-reserved `default iron_terminal_collapse_snapshot = None` and `default fall_cause = ""`; leave `ending_fall_epilogue` text unchanged.
 - `game/chapter5.rpy`: reset/lock collapse snapshot; branch-entry and post-join guards; collapsed-menu visibility; hard-grind override; `prince_ally and not prince_betrayed` score; `fall_cause` entry writes; approved neutral-baron exchange; approved death sequence and three cause variants; skip `ending_side_characters_fate` for fall while retaining the fall epilogue.
 - `game/test_game.rpy`: ordinary-difficulty player-feedback path; prepared frontal/flanking old-menu guards before any branch mutation; `None` mid-branch preservation; exact approved-copy/source contracts; a new `test_terminal_collapse_ending` reaching the unique approved death sentence while restoring persistent state.
-- Real old-save validation: copy the read-only mother into two fresh external SaveDirs, verify all three hashes, visibly load the frontal and flanking copies, record screenshots/log/PID/exit code, and prove both lose before branch mutation. Never load the mother directly.
+- Real old-save validation: never open the read-only mother directly. Create one repository-external unique empty `SaveDir` for each frontal/flanking replay, assert each replay worktree's `game/saves` is absent or a task-owned empty directory, copy the mother under its engine filename, and verify mother/source/two-copy SHA-256 equality. Launch each replay with process-local `SDL_VIDEODRIVER=dummy`, `SDL_AUDIODRIVER=dummy`, and `RENPY_RENDERER=sw` plus a pre-armed process-tree visible-window monitor; capture stdout/stderr, PID/tree, window report, real exit code, provenance marker, and state assertions. Each engine-native testcase must load its own copy, select exactly its named real choice, and prove `fall` occurs before any victory text or branch mutation. Any visible window, confirmation or interaction requirement, unknown token or label, or fixture/marker mismatch is `NEEDS_CONTEXT`; never use Computer Use, real input, screenshots, or manual fallback.
 - Final tests exactly once on the final tracked SHA: focused suites, `python -B -m unittest discover -s Tools -v`, portrait/narration/show/canon/AI-smell/release/font checks, `test_terminal_collapse_ending`, Full, Lint, process cleanup, diff scope, and independent Spec/Standards review.
 - Final asset report: no new art/music/SFX/animation/UI; reuse existing `castle_exterior`, `battlefield`, black scene, and `war_drums.ogg`; measure actual font/package delta after approved text enters.
 
 Phase B must end with the last tracked implementation commit before Final and independent reviews; no tracked evidence commit may follow those gates.
+
+---
+
+## Appendix A — `PrivateDesktopRunner.cs`
+
+Exact committed helper payload: **69,781 bytes**; **SHA-256 `F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
+
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Threading;
+
+namespace CourtOfShadows.Headless
+{
+    [DataContract]
+    public sealed class EnvironmentEntry
+    {
+        [DataMember(Name = "name", Order = 1, IsRequired = true)]
+        public string Name;
+
+        [DataMember(Name = "value", Order = 2, EmitDefaultValue = true)]
+        public string Value;
+    }
+
+    [DataContract]
+    public sealed class RunRequest
+    {
+        [DataMember(Name = "schema_version", Order = 1, IsRequired = true)]
+        public int SchemaVersion;
+
+        [DataMember(Name = "executable", Order = 2, IsRequired = true)]
+        public string Executable;
+
+        [DataMember(Name = "arguments", Order = 3, IsRequired = true)]
+        public string[] Arguments;
+
+        [DataMember(Name = "working_directory", Order = 4, IsRequired = true)]
+        public string WorkingDirectory;
+
+        [DataMember(Name = "environment_overrides", Order = 5, IsRequired = true)]
+        public EnvironmentEntry[] EnvironmentOverrides;
+
+        [DataMember(Name = "timeout_milliseconds", Order = 6, IsRequired = true)]
+        public int TimeoutMilliseconds;
+
+        [DataMember(Name = "stdout_path", Order = 7, IsRequired = true)]
+        public string StdoutPath;
+
+        [DataMember(Name = "stderr_path", Order = 8, IsRequired = true)]
+        public string StderrPath;
+
+        [DataMember(Name = "result_path", Order = 9, IsRequired = true)]
+        public string ResultPath;
+    }
+
+    [DataContract]
+    public sealed class WindowEvidence
+    {
+        [DataMember(Name = "pid", Order = 1)]
+        public int Pid;
+
+        [DataMember(Name = "hwnd", Order = 2)]
+        public string Hwnd;
+
+        [DataMember(Name = "event", Order = 3)]
+        public string Event;
+
+        [DataMember(Name = "title", Order = 4)]
+        public string Title;
+
+        [DataMember(Name = "class_name", Order = 5)]
+        public string ClassName;
+
+        [DataMember(Name = "desktop", Order = 6)]
+        public string Desktop;
+
+        [DataMember(Name = "observed_utc", Order = 7)]
+        public string ObservedUtc;
+    }
+
+    [DataContract]
+    public sealed class RunResult
+    {
+        [DataMember(Name = "schema_version", Order = 1)]
+        public int SchemaVersion;
+
+        [DataMember(Name = "classification", Order = 2)]
+        public string Classification;
+
+        [DataMember(Name = "detail", Order = 3)]
+        public string Detail;
+
+        [DataMember(Name = "started", Order = 4)]
+        public bool Started;
+
+        [DataMember(Name = "root_pid", Order = 5, EmitDefaultValue = true)]
+        public int? RootPid;
+
+        [DataMember(Name = "root_exit_code", Order = 6, EmitDefaultValue = true)]
+        public int? RootExitCode;
+
+        [DataMember(Name = "timed_out", Order = 7)]
+        public bool TimedOut;
+
+        [DataMember(Name = "job_drained", Order = 8)]
+        public bool JobDrained;
+
+        [DataMember(Name = "desktop_name", Order = 9)]
+        public string DesktopName;
+
+        [DataMember(Name = "process_ids", Order = 10)]
+        public int[] ProcessIds;
+
+        [DataMember(Name = "new_process_ids", Order = 11)]
+        public int[] NewProcessIds;
+
+        [DataMember(Name = "active_snapshot_process_ids", Order = 12)]
+        public int[] ActiveSnapshotProcessIds;
+
+        [DataMember(Name = "job_total_processes", Order = 13, EmitDefaultValue = true)]
+        public int? JobTotalProcesses;
+
+        [DataMember(Name = "process_coverage_complete", Order = 14)]
+        public bool ProcessCoverageComplete;
+
+        [DataMember(Name = "monitor_armed_before_resume", Order = 15)]
+        public bool MonitorArmedBeforeResume;
+
+        [DataMember(Name = "monitor_armed_utc", Order = 16, EmitDefaultValue = true)]
+        public string MonitorArmedUtc;
+
+        [DataMember(Name = "resumed_utc", Order = 17, EmitDefaultValue = true)]
+        public string ResumedUtc;
+
+        [DataMember(Name = "cleanup_complete", Order = 18)]
+        public bool CleanupComplete;
+
+        [DataMember(Name = "cleanup_errors", Order = 19)]
+        public string[] CleanupErrors;
+
+        [DataMember(Name = "visible_windows", Order = 20)]
+        public WindowEvidence[] VisibleWindows;
+
+        [DataMember(Name = "started_utc", Order = 21)]
+        public string StartedUtc;
+
+        [DataMember(Name = "finished_utc", Order = 22)]
+        public string FinishedUtc;
+
+        [DataMember(Name = "elapsed_milliseconds", Order = 23)]
+        public long ElapsedMilliseconds;
+
+        [DataMember(Name = "stdout_path", Order = 24)]
+        public string StdoutPath;
+
+        [DataMember(Name = "stderr_path", Order = 25)]
+        public string StderrPath;
+    }
+
+    public static class PrivateDesktopRunner
+    {
+        private const uint CREATE_SUSPENDED = 0x00000004;
+        private const uint CREATE_UNICODE_ENVIRONMENT = 0x00000400;
+        private const uint CREATE_NEW_PROCESS_GROUP = 0x00000200;
+        private const uint CREATE_NO_WINDOW = 0x08000000;
+        private const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+        private const uint STARTF_USESTDHANDLES = 0x00000100;
+        private const uint PROC_THREAD_ATTRIBUTE_HANDLE_LIST = 0x00020002;
+        private const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;
+        private const uint JobObjectBasicAccountingInformation = 1;
+        private const uint JobObjectAssociateCompletionPortInformation = 7;
+        private const uint JobObjectExtendedLimitInformation = 9;
+        private const uint JobObjectBasicProcessIdList = 3;
+        private const uint JOB_OBJECT_MSG_NEW_PROCESS = 6;
+        private const uint JOB_OBJECT_MSG_EXIT_PROCESS = 7;
+        private const uint JOB_OBJECT_MSG_ABNORMAL_EXIT_PROCESS = 8;
+        private const uint JOB_OBJECT_MSG_ACTIVE_PROCESS_ZERO = 4;
+        private const uint WAIT_OBJECT_0 = 0;
+        private const uint WAIT_TIMEOUT = 258;
+        private const uint STILL_ACTIVE = 259;
+        private const uint GENERIC_READ = 0x80000000;
+        private const uint GENERIC_WRITE = 0x40000000;
+        private const uint FILE_SHARE_READ = 0x00000001;
+        private const uint FILE_SHARE_WRITE = 0x00000002;
+        private const uint CREATE_NEW = 1;
+        private const uint OPEN_EXISTING = 3;
+        private const uint FILE_ATTRIBUTE_NORMAL = 0x00000080;
+        private const uint DESKTOP_READOBJECTS = 0x0001;
+        private const uint DESKTOP_CREATEWINDOW = 0x0002;
+        private const uint DESKTOP_CREATEMENU = 0x0004;
+        private const uint DESKTOP_ENUMERATE = 0x0040;
+        private const uint DESKTOP_WRITEOBJECTS = 0x0080;
+        private const uint EVENT_OBJECT_CREATE = 0x8000;
+        private const uint EVENT_OBJECT_SHOW = 0x8002;
+        private const uint WINEVENT_OUTOFCONTEXT = 0x0000;
+        private const int OBJID_WINDOW = 0;
+        private const int CHILDID_SELF = 0;
+        private const uint GA_ROOT = 2;
+        private const uint PM_NOREMOVE = 0x0000;
+        private const uint PM_REMOVE = 0x0001;
+        private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
+        private const uint THREAD_QUERY_LIMITED_INFORMATION = 0x0800;
+        private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+
+        private static readonly object ObservationLock = new object();
+        private static readonly HashSet<int> EverOwnedPids = new HashSet<int>();
+        private static readonly HashSet<int> NewProcessPids = new HashSet<int>();
+        private static readonly HashSet<int> ActiveSnapshotPids = new HashSet<int>();
+
+        public static int RunRequestFile(string requestPath)
+        {
+            RunRequest request = null;
+            RunResult result = null;
+            string resultPath = null;
+            try
+            {
+                request = ReadRequest(requestPath);
+                resultPath = request.ResultPath;
+                ValidateRequest(request, requestPath);
+                result = Execute(request);
+            }
+            catch (Exception ex)
+            {
+                result = FailureResult(request, ex);
+                if (resultPath == null && request != null)
+                    resultPath = request.ResultPath;
+            }
+
+            if (String.IsNullOrEmpty(resultPath))
+                throw new InvalidOperationException("No usable result_path was available; " + result.Detail);
+
+            WriteJsonCreateNew(resultPath, result);
+            if (String.Equals(result.Classification, "COMPLETED", StringComparison.Ordinal)) return 0;
+            if (String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal)) return 20;
+            if (String.Equals(result.Classification, "TIMEOUT", StringComparison.Ordinal)) return 21;
+            return 22;
+        }
+
+        public static string QuoteWindowsArgument(string value)
+        {
+            if (value == null) throw new ArgumentNullException("value");
+            if (value.Length == 0) return "\"\"";
+            bool needsQuotes = false;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char c = value[i];
+                if (Char.IsWhiteSpace(c) || c == '"') { needsQuotes = true; break; }
+            }
+            if (!needsQuotes) return value;
+
+            StringBuilder output = new StringBuilder(value.Length + 2);
+            output.Append('"');
+            int slashCount = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char c = value[i];
+                if (c == '\\')
+                {
+                    slashCount++;
+                    continue;
+                }
+                if (c == '"')
+                {
+                    output.Append('\\', slashCount * 2 + 1);
+                    output.Append('"');
+                    slashCount = 0;
+                    continue;
+                }
+                output.Append('\\', slashCount);
+                slashCount = 0;
+                output.Append(c);
+            }
+            output.Append('\\', slashCount * 2);
+            output.Append('"');
+            return output.ToString();
+        }
+
+        private static RunResult Execute(RunRequest request)
+        {
+            ResetObservationState();
+            DateTime startedUtc = DateTime.UtcNow;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            RunResult result = NewBaseResult(request, startedUtc);
+            IntPtr desktop = IntPtr.Zero;
+            IntPtr job = IntPtr.Zero;
+            IntPtr completionPort = IntPtr.Zero;
+            IntPtr stdoutHandle = INVALID_HANDLE_VALUE;
+            IntPtr stderrHandle = INVALID_HANDLE_VALUE;
+            IntPtr stdinHandle = INVALID_HANDLE_VALUE;
+            IntPtr attributeList = IntPtr.Zero;
+            IntPtr handleListMemory = IntPtr.Zero;
+            IntPtr environmentMemory = IntPtr.Zero;
+            PROCESS_INFORMATION processInfo = new PROCESS_INFORMATION();
+            bool processCreated = false;
+            bool processAssignedToJob = false;
+            bool jobTerminated = false;
+            bool attributeListInitialized = false;
+            List<string> cleanupErrors = new List<string>();
+            PrivateDesktopWatcher watcher = null;
+
+            try
+            {
+                string desktopName = "CosHeadless_" + Guid.NewGuid().ToString("N");
+                uint desktopAccess = DESKTOP_READOBJECTS | DESKTOP_CREATEWINDOW | DESKTOP_CREATEMENU |
+                                     DESKTOP_ENUMERATE | DESKTOP_WRITEOBJECTS;
+                desktop = CreateDesktopW(desktopName, null, IntPtr.Zero, 0, desktopAccess, IntPtr.Zero);
+                if (desktop == IntPtr.Zero) ThrowLastWin32("CreateDesktopW");
+                result.DesktopName = "WinSta0\\" + desktopName;
+
+                job = CreateJobObjectW(IntPtr.Zero, null);
+                if (job == IntPtr.Zero) ThrowLastWin32("CreateJobObjectW");
+                ConfigureKillOnClose(job);
+
+                completionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, IntPtr.Zero, UIntPtr.Zero, 1);
+                if (completionPort == IntPtr.Zero) ThrowLastWin32("CreateIoCompletionPort");
+                AssociateJobCompletionPort(job, completionPort);
+
+                watcher = new PrivateDesktopWatcher(desktop, desktopName, job);
+                watcher.StartAndWaitUntilArmed(5000);
+                result.MonitorArmedUtc = FormatUtc(watcher.ArmedUtc);
+
+                SECURITY_ATTRIBUTES inheritable = new SECURITY_ATTRIBUTES();
+                inheritable.nLength = Marshal.SizeOf(typeof(SECURITY_ATTRIBUTES));
+                inheritable.bInheritHandle = true;
+                stdoutHandle = CreateFileW(request.StdoutPath, GENERIC_WRITE, FILE_SHARE_READ,
+                    ref inheritable, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
+                if (stdoutHandle == INVALID_HANDLE_VALUE) ThrowLastWin32("CreateFileW(stdout, CREATE_NEW)");
+                stderrHandle = CreateFileW(request.StderrPath, GENERIC_WRITE, FILE_SHARE_READ,
+                    ref inheritable, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
+                if (stderrHandle == INVALID_HANDLE_VALUE) ThrowLastWin32("CreateFileW(stderr, CREATE_NEW)");
+                stdinHandle = CreateFileW("NUL", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    ref inheritable, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
+                if (stdinHandle == INVALID_HANDLE_VALUE) ThrowLastWin32("CreateFileW(NUL)");
+
+                STARTUPINFOEX startup = new STARTUPINFOEX();
+                startup.StartupInfo.cb = Marshal.SizeOf(typeof(STARTUPINFOEX));
+                startup.StartupInfo.lpDesktop = result.DesktopName;
+                startup.StartupInfo.dwFlags = STARTF_USESTDHANDLES;
+                startup.StartupInfo.hStdInput = stdinHandle;
+                startup.StartupInfo.hStdOutput = stdoutHandle;
+                startup.StartupInfo.hStdError = stderrHandle;
+
+                UIntPtr attributeBytes = UIntPtr.Zero;
+                InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref attributeBytes);
+                int initError = Marshal.GetLastWin32Error();
+                if (attributeBytes == UIntPtr.Zero || initError != 122)
+                    throw new Win32Exception(initError, "InitializeProcThreadAttributeList(size) failed");
+                attributeList = Marshal.AllocHGlobal(CheckedUIntPtrToInt(attributeBytes));
+                if (!InitializeProcThreadAttributeList(attributeList, 1, 0, ref attributeBytes))
+                    ThrowLastWin32("InitializeProcThreadAttributeList");
+                attributeListInitialized = true;
+                startup.lpAttributeList = attributeList;
+
+                IntPtr[] inheritedHandles = new IntPtr[] { stdinHandle, stdoutHandle, stderrHandle };
+                handleListMemory = Marshal.AllocHGlobal(IntPtr.Size * inheritedHandles.Length);
+                Marshal.Copy(inheritedHandles, 0, handleListMemory, inheritedHandles.Length);
+                if (!UpdateProcThreadAttribute(attributeList, 0, new UIntPtr(PROC_THREAD_ATTRIBUTE_HANDLE_LIST),
+                    handleListMemory, new UIntPtr((uint)(IntPtr.Size * inheritedHandles.Length)),
+                    IntPtr.Zero, IntPtr.Zero))
+                    ThrowLastWin32("UpdateProcThreadAttribute(HANDLE_LIST)");
+
+                environmentMemory = BuildUnicodeEnvironmentBlock(request.EnvironmentOverrides);
+                StringBuilder commandLine = BuildCommandLine(request.Executable, request.Arguments);
+                uint creationFlags = CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT |
+                                     CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW | EXTENDED_STARTUPINFO_PRESENT;
+                if (!CreateProcessW(request.Executable, commandLine, IntPtr.Zero, IntPtr.Zero, true,
+                    creationFlags, environmentMemory, request.WorkingDirectory, ref startup, out processInfo))
+                    ThrowLastWin32("CreateProcessW");
+                processCreated = true;
+                result.Started = true;
+                result.RootPid = unchecked((int)processInfo.dwProcessId);
+
+                if (!AssignProcessToJobObject(job, processInfo.hProcess))
+                    ThrowLastWin32("AssignProcessToJobObject before ResumeThread");
+                processAssignedToJob = true;
+                AddOwnedPid(unchecked((int)processInfo.dwProcessId));
+                PumpJobMessages(completionPort);
+                RefreshOwnedPidsFromJob(job);
+                watcher.ThrowIfFailed();
+                watcher.Reconcile(GetOwnedPidSnapshot());
+                if (watcher.HasAcceptedWindows)
+                    throw new InvalidOperationException("A task-owned visible window existed before resume.");
+
+                uint resumeResult = ResumeThread(processInfo.hThread);
+                if (resumeResult == UInt32.MaxValue) ThrowLastWin32("ResumeThread");
+                DateTime resumedUtc = DateTime.UtcNow;
+                result.ResumedUtc = FormatUtc(resumedUtc);
+                result.MonitorArmedBeforeResume = watcher.ArmedUtc <= resumedUtc;
+
+                bool activeZero = false;
+                bool rootExited = false;
+                while (true)
+                {
+                    watcher.ThrowIfFailed();
+                    PumpJobMessages(completionPort);
+                    RefreshOwnedPidsFromJob(job);
+                    watcher.Reconcile(GetOwnedPidSnapshot());
+
+                    if (watcher.HasAcceptedWindows)
+                    {
+                        result.Classification = "NEEDS_CONTEXT";
+                        result.Detail = "A task-owned visible top-level window was observed; desktop interaction is forbidden.";
+                        TerminateJobOrThrow(job, 0xEC000001, "TerminateJobObject(visible window)");
+                        jobTerminated = true;
+                        break;
+                    }
+
+                    uint rootWait = WaitForSingleObject(processInfo.hProcess, 0);
+                    if (rootWait == WAIT_OBJECT_0) rootExited = true;
+                    else if (rootWait != WAIT_TIMEOUT) ThrowLastWin32("WaitForSingleObject(root)");
+
+                    activeZero = QueryActiveProcessCount(job) == 0;
+                    if (rootExited && activeZero)
+                    {
+                        result.Classification = "COMPLETED";
+                        result.Detail = "The complete job process tree exited without a visible top-level window.";
+                        result.JobDrained = true;
+                        break;
+                    }
+
+                    if (stopwatch.ElapsedMilliseconds >= request.TimeoutMilliseconds)
+                    {
+                        result.Classification = "TIMEOUT";
+                        result.Detail = "The complete job process tree did not drain before timeout.";
+                        result.TimedOut = true;
+                        TerminateJobOrThrow(job, 0xEC000002, "TerminateJobObject(timeout)");
+                        jobTerminated = true;
+                        break;
+                    }
+                    Thread.Sleep(10);
+                }
+
+                if (jobTerminated)
+                    result.JobDrained = DrainTerminatedJob(job, completionPort, 5000);
+
+                uint exitCode;
+                if (GetExitCodeProcess(processInfo.hProcess, out exitCode) && exitCode != STILL_ACTIVE)
+                    result.RootExitCode = unchecked((int)exitCode);
+                else
+                    result.RootExitCode = null;
+
+                watcher.ThrowIfFailed();
+                PumpJobMessages(completionPort);
+                RefreshOwnedPidsFromJob(job);
+                watcher.Reconcile(GetOwnedPidSnapshot());
+                if (watcher.HasAcceptedWindows && !String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal))
+                {
+                    result.Classification = "NEEDS_CONTEXT";
+                    result.Detail = "A task-owned visible top-level window was observed during final reconciliation.";
+                    if (!jobTerminated) TerminateJobOrThrow(job, 0xEC000003, "TerminateJobObject(final window)");
+                    result.JobDrained = DrainTerminatedJob(job, completionPort, 5000);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Classification = "LAUNCH_ERROR";
+                result.Detail = ex.GetType().FullName + ": " + ex.Message;
+                if (processCreated && processInfo.hProcess != IntPtr.Zero)
+                {
+                    uint exitCode;
+                    if (GetExitCodeProcess(processInfo.hProcess, out exitCode) && exitCode != STILL_ACTIVE)
+                        result.RootExitCode = unchecked((int)exitCode);
+                }
+            }
+            finally
+            {
+                if (watcher != null)
+                {
+                    try
+                    {
+                        watcher.StopAndJoin(5000);
+                        watcher.Reconcile(GetOwnedPidSnapshot());
+                        if (watcher.HasAcceptedWindows &&
+                            !String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal) &&
+                            !String.Equals(result.Classification, "LAUNCH_ERROR", StringComparison.Ordinal))
+                        {
+                            result.Classification = "NEEDS_CONTEXT";
+                            result.Detail = "A task-owned visible top-level window was observed during watcher shutdown.";
+                        }
+                    }
+                    catch (Exception watcherError)
+                    {
+                        cleanupErrors.Add("watcher stop/unhook/join: " + watcherError.GetType().FullName + ": " + watcherError.Message);
+                    }
+                }
+
+                if (processCreated && !processAssignedToJob && processInfo.hProcess != IntPtr.Zero)
+                {
+                    uint unassignedWait = WaitForSingleObject(processInfo.hProcess, 0);
+                    if (unassignedWait == WAIT_TIMEOUT)
+                    {
+                        if (!TerminateProcess(processInfo.hProcess, 0xEC000005))
+                            cleanupErrors.Add("TerminateProcess(unassigned root): " + new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                        else
+                        {
+                            unassignedWait = WaitForSingleObject(processInfo.hProcess, 5000);
+                            if (unassignedWait != WAIT_OBJECT_0)
+                                cleanupErrors.Add("WaitForSingleObject(unassigned root) did not report termination: " +
+                                    unassignedWait.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                        }
+                    }
+                    else if (unassignedWait != WAIT_OBJECT_0)
+                    {
+                        cleanupErrors.Add("WaitForSingleObject(unassigned root) failed: " +
+                            new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                    }
+                }
+
+                processInfo.hThread = CloseKernelHandleForCleanup(processInfo.hThread, "root thread", cleanupErrors);
+                processInfo.hProcess = CloseKernelHandleForCleanup(processInfo.hProcess, "root process", cleanupErrors);
+                stdinHandle = CloseKernelHandleForCleanup(stdinHandle, "stdin NUL", cleanupErrors);
+                stdoutHandle = CloseKernelHandleForCleanup(stdoutHandle, "stdout", cleanupErrors);
+                stderrHandle = CloseKernelHandleForCleanup(stderrHandle, "stderr", cleanupErrors);
+
+                if (processAssignedToJob && job != IntPtr.Zero)
+                {
+                    try
+                    {
+                        PumpJobMessages(completionPort);
+                        RefreshOwnedPidsFromJob(job);
+                        if (QueryActiveProcessCount(job) != 0)
+                        {
+                            if (!TerminateJobObject(job, 0xEC000006))
+                                throw new Win32Exception(Marshal.GetLastWin32Error(), "TerminateJobObject(final cleanup) failed");
+                            jobTerminated = true;
+                            result.JobDrained = DrainTerminatedJob(job, completionPort, 5000);
+                        }
+                        else
+                        {
+                            result.JobDrained = true;
+                        }
+                        if (!result.JobDrained || QueryActiveProcessCount(job) != 0)
+                            throw new InvalidOperationException("Job process tree did not drain during final cleanup.");
+                        PumpJobMessages(completionPort);
+                        RefreshOwnedPidsFromJob(job);
+                        FinalizeProcessCoverage(result, job);
+                    }
+                    catch (Exception coverageError)
+                    {
+                        cleanupErrors.Add("job drain/accounting: " + coverageError.GetType().FullName + ": " + coverageError.Message);
+                        result.ProcessCoverageComplete = false;
+                    }
+                }
+
+                PopulateObservationResult(result, watcher);
+                if (attributeList != IntPtr.Zero)
+                {
+                    if (attributeListInitialized) DeleteProcThreadAttributeList(attributeList);
+                    Marshal.FreeHGlobal(attributeList);
+                    attributeList = IntPtr.Zero;
+                }
+                if (handleListMemory != IntPtr.Zero) { Marshal.FreeHGlobal(handleListMemory); handleListMemory = IntPtr.Zero; }
+                if (environmentMemory != IntPtr.Zero) { Marshal.FreeHGlobal(environmentMemory); environmentMemory = IntPtr.Zero; }
+
+                job = CloseKernelHandleForCleanup(job, "job", cleanupErrors);
+                completionPort = CloseKernelHandleForCleanup(completionPort, "completion port", cleanupErrors);
+                if (desktop != IntPtr.Zero)
+                {
+                    if (!CloseDesktop(desktop))
+                        cleanupErrors.Add("CloseDesktop: " + new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                    desktop = IntPtr.Zero;
+                }
+
+                if ((String.Equals(result.Classification, "COMPLETED", StringComparison.Ordinal) ||
+                     String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal) ||
+                     String.Equals(result.Classification, "TIMEOUT", StringComparison.Ordinal)) &&
+                    !result.MonitorArmedBeforeResume)
+                {
+                    cleanupErrors.Add("monitor was not proven armed before ResumeThread");
+                }
+
+                result.CleanupErrors = cleanupErrors.ToArray();
+                result.CleanupComplete = cleanupErrors.Count == 0;
+                if (!result.CleanupComplete)
+                {
+                    string priorClassification = result.Classification;
+                    string priorDetail = result.Detail;
+                    result.Classification = "LAUNCH_ERROR";
+                    result.Detail = "Cleanup failed: " + String.Join(" | ", cleanupErrors.ToArray()) +
+                        ". Previous classification=" + priorClassification + "; previous detail=" + priorDetail;
+                }
+            }
+
+            stopwatch.Stop();
+            result.FinishedUtc = FormatUtc(DateTime.UtcNow);
+            result.ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+            return result;
+        }
+
+        private static void ValidateRequest(RunRequest request, string requestPath)
+        {
+            if (request == null) throw new InvalidDataException("Request JSON was null.");
+            if (request.SchemaVersion != 1) throw new InvalidDataException("schema_version must be exactly 1.");
+            RequireAbsoluteExistingFile(request.Executable, "executable");
+            RequireAbsoluteExistingDirectory(request.WorkingDirectory, "working_directory");
+            RequireAbsoluteNewFile(request.StdoutPath, "stdout_path");
+            RequireAbsoluteNewFile(request.StderrPath, "stderr_path");
+            RequireAbsoluteNewFile(request.ResultPath, "result_path");
+            if (request.Arguments == null) throw new InvalidDataException("arguments must be an array.");
+            for (int i = 0; i < request.Arguments.Length; i++)
+            {
+                if (request.Arguments[i] == null) throw new InvalidDataException("arguments may not contain null.");
+                RejectNul(request.Arguments[i], "arguments[" + i + "]");
+            }
+            if (request.EnvironmentOverrides == null) throw new InvalidDataException("environment_overrides must be an array.");
+            HashSet<string> envNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < request.EnvironmentOverrides.Length; i++)
+            {
+                EnvironmentEntry entry = request.EnvironmentOverrides[i];
+                if (entry == null || String.IsNullOrEmpty(entry.Name)) throw new InvalidDataException("environment override name is empty.");
+                RejectNul(entry.Name, "environment override name");
+                if (entry.Name.IndexOf('=') >= 0) throw new InvalidDataException("environment override names may not contain '='.");
+                if (!envNames.Add(entry.Name)) throw new InvalidDataException("duplicate environment override: " + entry.Name);
+                if (entry.Value != null) RejectNul(entry.Value, "environment override value");
+            }
+            if (request.TimeoutMilliseconds < 1 || request.TimeoutMilliseconds > 86400000)
+                throw new InvalidDataException("timeout_milliseconds must be between 1 and 86400000.");
+            RejectNul(request.Executable, "executable");
+            RejectNul(request.WorkingDirectory, "working_directory");
+            string[] paths = new string[] { requestPath, request.StdoutPath, request.StderrPath, request.ResultPath };
+            for (int i = 0; i < paths.Length; i++)
+                for (int j = i + 1; j < paths.Length; j++)
+                    if (String.Equals(Path.GetFullPath(paths[i]), Path.GetFullPath(paths[j]), StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidDataException("request/stdout/stderr/result paths must be distinct.");
+        }
+
+        private static void RequireAbsoluteExistingFile(string path, string name)
+        {
+            if (String.IsNullOrWhiteSpace(path) || !Path.IsPathRooted(path)) throw new InvalidDataException(name + " must be absolute.");
+            if (!File.Exists(path)) throw new FileNotFoundException(name + " does not exist.", path);
+        }
+
+        private static void RequireAbsoluteExistingDirectory(string path, string name)
+        {
+            if (String.IsNullOrWhiteSpace(path) || !Path.IsPathRooted(path)) throw new InvalidDataException(name + " must be absolute.");
+            if (!Directory.Exists(path)) throw new DirectoryNotFoundException(name + " does not exist: " + path);
+        }
+
+        private static void RequireAbsoluteNewFile(string path, string name)
+        {
+            if (String.IsNullOrWhiteSpace(path) || !Path.IsPathRooted(path)) throw new InvalidDataException(name + " must be absolute.");
+            string parent = Path.GetDirectoryName(Path.GetFullPath(path));
+            if (!Directory.Exists(parent)) throw new DirectoryNotFoundException(name + " parent does not exist: " + parent);
+            if (File.Exists(path) || Directory.Exists(path)) throw new IOException(name + " already exists; evidence is append-only: " + path);
+        }
+
+        private static void RejectNul(string value, string name)
+        {
+            if (value.IndexOf('\0') >= 0) throw new InvalidDataException(name + " contains NUL.");
+        }
+
+        private static RunRequest ReadRequest(string path)
+        {
+            RequireAbsoluteExistingFile(path, "request_path");
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RunRequest));
+            using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                return (RunRequest)serializer.ReadObject(stream);
+        }
+
+        private static void WriteJsonCreateNew(string path, object value)
+        {
+            string parent = Path.GetDirectoryName(Path.GetFullPath(path));
+            if (!Directory.Exists(parent)) throw new DirectoryNotFoundException("result parent does not exist: " + parent);
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(value.GetType());
+            using (FileStream stream = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.Read))
+            {
+                serializer.WriteObject(stream, value);
+                stream.Flush(true);
+            }
+        }
+
+        private static RunResult FailureResult(RunRequest request, Exception ex)
+        {
+            DateTime now = DateTime.UtcNow;
+            return new RunResult {
+                SchemaVersion = 1, Classification = "LAUNCH_ERROR",
+                Detail = ex.GetType().FullName + ": " + ex.Message,
+                Started = false, RootPid = null, RootExitCode = null,
+                TimedOut = false, JobDrained = true, DesktopName = null,
+                ProcessIds = new int[0], NewProcessIds = new int[0],
+                ActiveSnapshotProcessIds = new int[0], JobTotalProcesses = null,
+                ProcessCoverageComplete = false, MonitorArmedBeforeResume = false,
+                MonitorArmedUtc = null, ResumedUtc = null, CleanupComplete = true,
+                CleanupErrors = new string[0], VisibleWindows = new WindowEvidence[0],
+                StartedUtc = FormatUtc(now), FinishedUtc = FormatUtc(now), ElapsedMilliseconds = 0,
+                StdoutPath = request == null ? null : request.StdoutPath,
+                StderrPath = request == null ? null : request.StderrPath
+            };
+        }
+
+        private static RunResult NewBaseResult(RunRequest request, DateTime startedUtc)
+        {
+            return new RunResult {
+                SchemaVersion = 1, Classification = "LAUNCH_ERROR", Detail = "Execution did not complete.",
+                Started = false, RootPid = null, RootExitCode = null, TimedOut = false,
+                JobDrained = false, DesktopName = null, ProcessIds = new int[0],
+                NewProcessIds = new int[0], ActiveSnapshotProcessIds = new int[0],
+                JobTotalProcesses = null, ProcessCoverageComplete = false,
+                MonitorArmedBeforeResume = false, MonitorArmedUtc = null, ResumedUtc = null,
+                CleanupComplete = false, CleanupErrors = new string[0],
+                VisibleWindows = new WindowEvidence[0], StartedUtc = FormatUtc(startedUtc),
+                FinishedUtc = null, ElapsedMilliseconds = 0,
+                StdoutPath = request.StdoutPath, StderrPath = request.StderrPath
+            };
+        }
+
+        private static string FormatUtc(DateTime value)
+        {
+            return value.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        private static StringBuilder BuildCommandLine(string executable, string[] arguments)
+        {
+            StringBuilder line = new StringBuilder();
+            line.Append(QuoteWindowsArgument(executable));
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                line.Append(' ');
+                line.Append(QuoteWindowsArgument(arguments[i]));
+            }
+            return line;
+        }
+
+        private static IntPtr BuildUnicodeEnvironmentBlock(EnvironmentEntry[] overrides)
+        {
+            SortedDictionary<string, string> environment = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            IDictionary inherited = Environment.GetEnvironmentVariables();
+            foreach (DictionaryEntry pair in inherited)
+                environment[(string)pair.Key] = (string)pair.Value;
+            for (int i = 0; i < overrides.Length; i++)
+            {
+                EnvironmentEntry entry = overrides[i];
+                if (entry.Value == null) environment.Remove(entry.Name);
+                else environment[entry.Name] = entry.Value;
+            }
+            StringBuilder block = new StringBuilder();
+            foreach (KeyValuePair<string, string> pair in environment)
+            {
+                block.Append(pair.Key);
+                block.Append('=');
+                block.Append(pair.Value);
+                block.Append('\0');
+            }
+            block.Append('\0');
+            char[] chars = block.ToString().ToCharArray();
+            IntPtr memory = Marshal.AllocHGlobal(chars.Length * 2);
+            Marshal.Copy(chars, 0, memory, chars.Length);
+            return memory;
+        }
+
+        private static void ConfigureKillOnClose(IntPtr job)
+        {
+            JOBOBJECT_EXTENDED_LIMIT_INFORMATION info = new JOBOBJECT_EXTENDED_LIMIT_INFORMATION();
+            info.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+            int size = Marshal.SizeOf(typeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION));
+            IntPtr memory = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.StructureToPtr(info, memory, false);
+                if (!SetInformationJobObject(job, JobObjectExtendedLimitInformation, memory, (uint)size))
+                    ThrowLastWin32("SetInformationJobObject(KILL_ON_JOB_CLOSE)");
+            }
+            finally { Marshal.FreeHGlobal(memory); }
+        }
+
+        private static void AssociateJobCompletionPort(IntPtr job, IntPtr completionPort)
+        {
+            JOBOBJECT_ASSOCIATE_COMPLETION_PORT association = new JOBOBJECT_ASSOCIATE_COMPLETION_PORT();
+            association.CompletionKey = job;
+            association.CompletionPort = completionPort;
+            int size = Marshal.SizeOf(typeof(JOBOBJECT_ASSOCIATE_COMPLETION_PORT));
+            IntPtr memory = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.StructureToPtr(association, memory, false);
+                if (!SetInformationJobObject(job, JobObjectAssociateCompletionPortInformation, memory, (uint)size))
+                    ThrowLastWin32("SetInformationJobObject(CompletionPort)");
+            }
+            finally { Marshal.FreeHGlobal(memory); }
+        }
+
+        private static void PumpJobMessages(IntPtr port)
+        {
+            if (port == IntPtr.Zero) return;
+            while (true)
+            {
+                uint message;
+                UIntPtr key;
+                IntPtr overlapped;
+                bool ok = GetQueuedCompletionStatus(port, out message, out key, out overlapped, 0);
+                if (!ok)
+                {
+                    int error = Marshal.GetLastWin32Error();
+                    if (error == 258) return;
+                    throw new Win32Exception(error, "GetQueuedCompletionStatus failed");
+                }
+                if (message == JOB_OBJECT_MSG_NEW_PROCESS)
+                {
+                    int pid = unchecked((int)overlapped.ToInt64());
+                    AddOwnedPid(pid);
+                    lock (ObservationLock) NewProcessPids.Add(pid);
+                }
+            }
+        }
+
+        private static void RefreshOwnedPidsFromJob(IntPtr job)
+        {
+            int capacity = 64;
+            while (capacity <= 65536)
+            {
+                int headerSize = 8;
+                int size = headerSize + capacity * IntPtr.Size;
+                IntPtr memory = Marshal.AllocHGlobal(size);
+                try
+                {
+                    uint returned;
+                    if (!QueryInformationJobObject(job, JobObjectBasicProcessIdList, memory, (uint)size, out returned))
+                    {
+                        int error = Marshal.GetLastWin32Error();
+                        if (error == 234) { capacity *= 2; continue; }
+                        throw new Win32Exception(error, "QueryInformationJobObject(ProcessIdList) failed");
+                    }
+                    uint assigned = unchecked((uint)Marshal.ReadInt32(memory, 0));
+                    uint count = unchecked((uint)Marshal.ReadInt32(memory, 4));
+                    if (assigned > count && capacity < assigned) { capacity = checked((int)assigned); continue; }
+                    int offset = 8;
+                    for (uint i = 0; i < count; i++)
+                    {
+                        int pid = unchecked((int)Marshal.ReadIntPtr(memory, offset + checked((int)i) * IntPtr.Size).ToInt64());
+                        AddOwnedPid(pid);
+                        lock (ObservationLock) ActiveSnapshotPids.Add(pid);
+                    }
+                    return;
+                }
+                finally { Marshal.FreeHGlobal(memory); }
+            }
+            throw new InvalidOperationException("Job process list exceeded the supported size.");
+        }
+
+        private static uint QueryActiveProcessCount(IntPtr job)
+        {
+            return QueryJobAccounting(job).ActiveProcesses;
+        }
+
+        private static JOBOBJECT_BASIC_ACCOUNTING_INFORMATION QueryJobAccounting(IntPtr job)
+        {
+            int size = Marshal.SizeOf(typeof(JOBOBJECT_BASIC_ACCOUNTING_INFORMATION));
+            IntPtr memory = Marshal.AllocHGlobal(size);
+            try
+            {
+                uint returned;
+                if (!QueryInformationJobObject(job, JobObjectBasicAccountingInformation, memory, (uint)size, out returned))
+                    ThrowLastWin32("QueryInformationJobObject(Accounting)");
+                return (JOBOBJECT_BASIC_ACCOUNTING_INFORMATION)Marshal.PtrToStructure(
+                    memory, typeof(JOBOBJECT_BASIC_ACCOUNTING_INFORMATION));
+            }
+            finally { Marshal.FreeHGlobal(memory); }
+        }
+
+        private static bool DrainTerminatedJob(IntPtr job, IntPtr port, int milliseconds)
+        {
+            Stopwatch drain = Stopwatch.StartNew();
+            while (drain.ElapsedMilliseconds < milliseconds)
+            {
+                PumpJobMessages(port);
+                try { RefreshOwnedPidsFromJob(job); } catch { }
+                if (QueryActiveProcessCount(job) == 0) return true;
+                Thread.Sleep(10);
+            }
+            return QueryActiveProcessCount(job) == 0;
+        }
+
+        private static void AddOwnedPid(int pid)
+        {
+            if (pid <= 0) return;
+            lock (ObservationLock) EverOwnedPids.Add(pid);
+        }
+
+        private static void ResetObservationState()
+        {
+            lock (ObservationLock)
+            {
+                EverOwnedPids.Clear();
+                NewProcessPids.Clear();
+                ActiveSnapshotPids.Clear();
+            }
+        }
+
+        private static HashSet<int> GetOwnedPidSnapshot()
+        {
+            lock (ObservationLock) return new HashSet<int>(EverOwnedPids);
+        }
+
+        private static int[] SortedPidArray(HashSet<int> source)
+        {
+            int[] values = new int[source.Count];
+            source.CopyTo(values);
+            Array.Sort(values);
+            return values;
+        }
+
+        private static void PopulateObservationResult(RunResult result, PrivateDesktopWatcher watcher)
+        {
+            lock (ObservationLock)
+            {
+                result.ProcessIds = SortedPidArray(EverOwnedPids);
+                result.NewProcessIds = SortedPidArray(NewProcessPids);
+                result.ActiveSnapshotProcessIds = SortedPidArray(ActiveSnapshotPids);
+            }
+            result.VisibleWindows = watcher == null ? new WindowEvidence[0] : watcher.SnapshotWindows();
+        }
+
+        private static void FinalizeProcessCoverage(RunResult result, IntPtr job)
+        {
+            JOBOBJECT_BASIC_ACCOUNTING_INFORMATION accounting = QueryJobAccounting(job);
+            int total = checked((int)accounting.TotalProcesses);
+            int observed;
+            lock (ObservationLock) observed = EverOwnedPids.Count;
+            result.JobTotalProcesses = total;
+            result.ProcessCoverageComplete = result.JobDrained && observed == total;
+            if (result.JobDrained && !result.ProcessCoverageComplete)
+            {
+                string previousClassification = result.Classification;
+                string previousDetail = result.Detail;
+                result.Classification = "LAUNCH_ERROR";
+                result.Detail = "Job PID coverage mismatch after tree drain: observed " +
+                    observed.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    " unique PIDs but JOBOBJECT_BASIC_ACCOUNTING_INFORMATION.TotalProcesses was " +
+                    total.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                    ". Previous classification=" + previousClassification + "; previous detail=" + previousDetail;
+            }
+        }
+
+        private static bool? TryIsProcessInJobAtObservation(int pid, IntPtr job)
+        {
+            if (pid <= 0 || job == IntPtr.Zero) return null;
+            IntPtr process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, unchecked((uint)pid));
+            if (process == IntPtr.Zero) return null;
+            try
+            {
+                bool inJob;
+                if (!IsProcessInJob(process, job, out inJob)) return null;
+                return inJob;
+            }
+            finally
+            {
+                if (!CloseHandle(process))
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "CloseHandle(observed process) failed");
+            }
+        }
+
+        private sealed class PrivateDesktopWatcher
+        {
+            private readonly IntPtr desktopHandle;
+            private readonly string desktopName;
+            private readonly IntPtr jobHandle;
+            private readonly object stateLock = new object();
+            private readonly List<WindowCandidate> candidates = new List<WindowCandidate>();
+            private readonly Dictionary<string, WindowEvidence> accepted =
+                new Dictionary<string, WindowEvidence>(StringComparer.Ordinal);
+            private readonly ManualResetEvent armed = new ManualResetEvent(false);
+            private readonly ManualResetEvent stop = new ManualResetEvent(false);
+            private Thread thread;
+            private Exception failure;
+            private uint nativeThreadId;
+            private bool postArmObservation;
+            private DateTime armedUtc;
+            private WinEventDelegate winEventCallback;
+            private EnumDesktopWindowsDelegate enumDesktopCallback;
+
+            public PrivateDesktopWatcher(IntPtr desktopHandle, string desktopName, IntPtr jobHandle)
+            {
+                this.desktopHandle = desktopHandle;
+                this.desktopName = desktopName;
+                this.jobHandle = jobHandle;
+            }
+
+            public bool HasAcceptedWindows
+            {
+                get { lock (stateLock) return accepted.Count != 0; }
+            }
+
+            public DateTime ArmedUtc
+            {
+                get { lock (stateLock) return armedUtc; }
+            }
+
+            public void StartAndWaitUntilArmed(int milliseconds)
+            {
+                thread = new Thread(ThreadMain);
+                thread.IsBackground = true;
+                thread.Name = "CosPrivateDesktopWatcher";
+                thread.Start();
+                if (!armed.WaitOne(milliseconds))
+                    throw new TimeoutException("Private-desktop watcher did not arm before launch.");
+                ThrowIfFailed();
+            }
+
+            public void ThrowIfFailed()
+            {
+                Exception observed;
+                lock (stateLock) observed = failure;
+                if (observed != null)
+                    throw new InvalidOperationException("Private-desktop watcher failed: " + observed.Message, observed);
+            }
+
+            public void StopAndJoin(int milliseconds)
+            {
+                if (thread == null) return;
+                stop.Set();
+                if (!thread.Join(milliseconds))
+                    throw new TimeoutException("Private-desktop watcher did not stop.");
+                ThrowIfFailed();
+            }
+
+            public void Reconcile(HashSet<int> ownedPids)
+            {
+                lock (stateLock)
+                {
+                    for (int i = 0; i < candidates.Count; i++)
+                    {
+                        WindowCandidate item = candidates[i];
+                        if (!item.PrivateShowProof && item.InJobAtObservation != true && !ownedPids.Contains(item.Pid)) continue;
+                        string key = item.Pid.ToString(System.Globalization.CultureInfo.InvariantCulture) + ":" +
+                            item.Hwnd.ToInt64().ToString("X", System.Globalization.CultureInfo.InvariantCulture);
+                        WindowEvidence evidence = new WindowEvidence {
+                            Pid = item.Pid,
+                            Hwnd = "0x" + item.Hwnd.ToInt64().ToString("X", System.Globalization.CultureInfo.InvariantCulture),
+                            Event = item.Source,
+                            Title = item.Title,
+                            ClassName = item.ClassName,
+                            Desktop = desktopName,
+                            ObservedUtc = FormatUtc(item.ObservedUtc)
+                        };
+                        WindowEvidence existing;
+                        if (accepted.TryGetValue(key, out existing))
+                        {
+                            if (item.PrivateShowProof && !String.Equals(existing.Event, "EVENT_OBJECT_SHOW", StringComparison.Ordinal))
+                                accepted[key] = evidence;
+                            continue;
+                        }
+                        accepted[key] = evidence;
+                    }
+                }
+            }
+
+            public WindowEvidence[] SnapshotWindows()
+            {
+                lock (stateLock)
+                {
+                    List<WindowEvidence> values = new List<WindowEvidence>(accepted.Values);
+                    values.Sort(delegate(WindowEvidence left, WindowEvidence right) {
+                        int pidOrder = left.Pid.CompareTo(right.Pid);
+                        return pidOrder != 0 ? pidOrder : String.CompareOrdinal(left.Hwnd, right.Hwnd);
+                    });
+                    return values.ToArray();
+                }
+            }
+
+            private void ThreadMain()
+            {
+                IntPtr createHook = IntPtr.Zero;
+                IntPtr showHook = IntPtr.Zero;
+                try
+                {
+                    if (!SetThreadDesktop(desktopHandle)) ThrowLastWin32("SetThreadDesktop(private watcher)");
+                    nativeThreadId = GetCurrentThreadId();
+                    MSG queueProbe;
+                    PeekMessageW(out queueProbe, IntPtr.Zero, 0, 0, PM_NOREMOVE);
+                    winEventCallback = OnWinEvent;
+                    enumDesktopCallback = OnEnumDesktopWindow;
+                    createHook = SetWinEventHook(EVENT_OBJECT_CREATE, EVENT_OBJECT_CREATE, IntPtr.Zero,
+                        winEventCallback, 0, 0, WINEVENT_OUTOFCONTEXT);
+                    if (createHook == IntPtr.Zero) ThrowLastWin32("SetWinEventHook(EVENT_OBJECT_CREATE)");
+                    showHook = SetWinEventHook(EVENT_OBJECT_SHOW, EVENT_OBJECT_SHOW, IntPtr.Zero,
+                        winEventCallback, 0, 0, WINEVENT_OUTOFCONTEXT);
+                    if (showHook == IntPtr.Zero) ThrowLastWin32("SetWinEventHook(EVENT_OBJECT_SHOW)");
+
+                    EnumeratePrivateDesktop("prelaunch-enumeration");
+                    lock (stateLock)
+                    {
+                        if (candidates.Count != 0)
+                            throw new InvalidOperationException("A newly created private desktop was not empty.");
+                        postArmObservation = true;
+                        armedUtc = DateTime.UtcNow;
+                    }
+                    armed.Set();
+
+                    while (!stop.WaitOne(2))
+                    {
+                        PumpWindowMessages();
+                        EnumeratePrivateDesktop("desktop-enumeration");
+                    }
+                    PumpWindowMessages();
+                    EnumeratePrivateDesktop("final-enumeration");
+                }
+                catch (Exception ex)
+                {
+                    RecordFailure(ex);
+                    armed.Set();
+                }
+                finally
+                {
+                    if (showHook != IntPtr.Zero && !UnhookWinEvent(showHook))
+                        RecordFailure(new Win32Exception(Marshal.GetLastWin32Error(), "UnhookWinEvent(SHOW) failed"));
+                    if (createHook != IntPtr.Zero && !UnhookWinEvent(createHook))
+                        RecordFailure(new Win32Exception(Marshal.GetLastWin32Error(), "UnhookWinEvent(CREATE) failed"));
+                    armed.Set();
+                }
+            }
+
+            private void RecordFailure(Exception ex)
+            {
+                lock (stateLock) if (failure == null) failure = ex;
+            }
+
+            private void OnWinEvent(IntPtr hook, uint eventType, IntPtr hwnd, int idObject,
+                int idChild, uint eventThread, uint eventTime)
+            {
+                if (hwnd == IntPtr.Zero || idObject != OBJID_WINDOW || idChild != CHILDID_SELF) return;
+                try
+                {
+                    CaptureVisibleTopLevel(hwnd,
+                        eventType == EVENT_OBJECT_SHOW ? "EVENT_OBJECT_SHOW" : "EVENT_OBJECT_CREATE",
+                        eventType == EVENT_OBJECT_SHOW, eventThread);
+                }
+                catch (Exception ex) { RecordFailure(ex); }
+            }
+
+            private bool OnEnumDesktopWindow(IntPtr hwnd, IntPtr parameter)
+            {
+                try
+                {
+                    string source = Marshal.PtrToStringUni(parameter);
+                    CaptureVisibleTopLevel(hwnd, source == null ? "EnumDesktopWindows" : source, false, 0);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    RecordFailure(ex);
+                    return false;
+                }
+            }
+
+            private void EnumeratePrivateDesktop(string source)
+            {
+                IntPtr sourceMemory = Marshal.StringToHGlobalUni(source);
+                try
+                {
+                    SetLastError(0);
+                    if (!EnumDesktopWindows(desktopHandle, enumDesktopCallback, sourceMemory))
+                    {
+                        int error = Marshal.GetLastWin32Error();
+                        if (error != 0) throw new Win32Exception(error, "EnumDesktopWindows failed");
+                        ThrowIfFailed();
+                    }
+                }
+                finally { Marshal.FreeHGlobal(sourceMemory); }
+            }
+
+            private void CaptureVisibleTopLevel(IntPtr hwnd, string source, bool privateShowProof, uint eventThread)
+            {
+                if (GetCurrentThreadId() != nativeThreadId)
+                    throw new InvalidOperationException("A window candidate arrived outside the dedicated watcher thread.");
+                bool windowAlive = IsWindow(hwnd);
+                if (!privateShowProof)
+                {
+                    if (!windowAlive || !IsWindowVisible(hwnd) || GetAncestor(hwnd, GA_ROOT) != hwnd) return;
+                }
+                else if (windowAlive && GetAncestor(hwnd, GA_ROOT) != hwnd)
+                {
+                    return;
+                }
+
+                uint pid = 0;
+                uint windowThread = windowAlive ? GetWindowThreadProcessId(hwnd, out pid) : 0;
+                if (windowThread == 0) pid = 0;
+                if (pid == 0 && eventThread != 0) pid = GetProcessIdForEventThread(eventThread);
+                if (pid == 0 && !privateShowProof) return;
+
+                bool afterArm;
+                lock (stateLock) afterArm = postArmObservation;
+                bool? inJob = afterArm
+                    ? TryIsProcessInJobAtObservation(unchecked((int)pid), jobHandle)
+                    : (bool?)null;
+                if (afterArm && inJob == false) return;
+
+                WindowCandidate candidate = new WindowCandidate();
+                candidate.Pid = unchecked((int)pid);
+                candidate.Hwnd = hwnd;
+                candidate.Source = source;
+                candidate.Title = windowAlive ? ReadWindowText(hwnd) : "";
+                candidate.ClassName = windowAlive ? ReadClassName(hwnd) : "";
+                candidate.InJobAtObservation = inJob;
+                candidate.PrivateShowProof = privateShowProof;
+                candidate.ObservedUtc = DateTime.UtcNow;
+                lock (stateLock) candidates.Add(candidate);
+            }
+
+            private static void PumpWindowMessages()
+            {
+                MSG message;
+                while (PeekMessageW(out message, IntPtr.Zero, 0, 0, PM_REMOVE))
+                {
+                    TranslateMessage(ref message);
+                    DispatchMessageW(ref message);
+                }
+            }
+        }
+
+        private static uint GetProcessIdForEventThread(uint threadId)
+        {
+            IntPtr thread = OpenThread(THREAD_QUERY_LIMITED_INFORMATION, false, threadId);
+            if (thread == IntPtr.Zero) return 0;
+            try { return GetProcessIdOfThread(thread); }
+            finally
+            {
+                if (!CloseHandle(thread))
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "CloseHandle(event thread) failed");
+            }
+        }
+
+        private static string ReadWindowText(IntPtr hwnd)
+        {
+            int length = GetWindowTextLengthW(hwnd);
+            StringBuilder text = new StringBuilder(Math.Max(length + 1, 2));
+            GetWindowTextW(hwnd, text, text.Capacity);
+            return text.ToString();
+        }
+
+        private static string ReadClassName(IntPtr hwnd)
+        {
+            StringBuilder text = new StringBuilder(512);
+            int count = GetClassNameW(hwnd, text, text.Capacity);
+            return count > 0 ? text.ToString() : "";
+        }
+
+        private static int CheckedUIntPtrToInt(UIntPtr value)
+        {
+            ulong raw = value.ToUInt64();
+            if (raw > Int32.MaxValue) throw new OverflowException("Native allocation exceeds Int32.MaxValue.");
+            return (int)raw;
+        }
+
+        private static IntPtr CloseKernelHandleForCleanup(IntPtr handle, string name, List<string> cleanupErrors)
+        {
+            if (handle != IntPtr.Zero && handle != INVALID_HANDLE_VALUE && !CloseHandle(handle))
+                cleanupErrors.Add("CloseHandle(" + name + "): " +
+                    new Win32Exception(Marshal.GetLastWin32Error()).Message);
+            return IntPtr.Zero;
+        }
+
+        private static void TerminateJobOrThrow(IntPtr job, uint exitCode, string operation)
+        {
+            if (!TerminateJobObject(job, exitCode)) ThrowLastWin32(operation);
+        }
+
+        private static void ThrowLastWin32(string operation)
+        {
+            int error = Marshal.GetLastWin32Error();
+            throw new Win32Exception(error, operation + " failed");
+        }
+
+        private sealed class WindowCandidate
+        {
+            public int Pid;
+            public IntPtr Hwnd;
+            public string Source;
+            public string Title;
+            public string ClassName;
+            public bool? InJobAtObservation;
+            public bool PrivateShowProof;
+            public DateTime ObservedUtc;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        private struct STARTUPINFO
+        {
+            public int cb; public string lpReserved; public string lpDesktop; public string lpTitle;
+            public int dwX; public int dwY; public int dwXSize; public int dwYSize;
+            public int dwXCountChars; public int dwYCountChars; public int dwFillAttribute;
+            public uint dwFlags; public short wShowWindow; public short cbReserved2;
+            public IntPtr lpReserved2; public IntPtr hStdInput; public IntPtr hStdOutput; public IntPtr hStdError;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct STARTUPINFOEX { public STARTUPINFO StartupInfo; public IntPtr lpAttributeList; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct PROCESS_INFORMATION
+        {
+            public IntPtr hProcess; public IntPtr hThread; public uint dwProcessId; public uint dwThreadId;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SECURITY_ATTRIBUTES
+        {
+            public int nLength; public IntPtr lpSecurityDescriptor;
+            [MarshalAs(UnmanagedType.Bool)] public bool bInheritHandle;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct JOBOBJECT_BASIC_LIMIT_INFORMATION
+        {
+            public long PerProcessUserTimeLimit; public long PerJobUserTimeLimit; public uint LimitFlags;
+            public UIntPtr MinimumWorkingSetSize; public UIntPtr MaximumWorkingSetSize;
+            public uint ActiveProcessLimit; public UIntPtr Affinity; public uint PriorityClass; public uint SchedulingClass;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct IO_COUNTERS
+        {
+            public ulong ReadOperationCount; public ulong WriteOperationCount; public ulong OtherOperationCount;
+            public ulong ReadTransferCount; public ulong WriteTransferCount; public ulong OtherTransferCount;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct JOBOBJECT_EXTENDED_LIMIT_INFORMATION
+        {
+            public JOBOBJECT_BASIC_LIMIT_INFORMATION BasicLimitInformation; public IO_COUNTERS IoInfo;
+            public UIntPtr ProcessMemoryLimit; public UIntPtr JobMemoryLimit;
+            public UIntPtr PeakProcessMemoryUsed; public UIntPtr PeakJobMemoryUsed;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct JOBOBJECT_ASSOCIATE_COMPLETION_PORT
+        {
+            public IntPtr CompletionKey; public IntPtr CompletionPort;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct JOBOBJECT_BASIC_ACCOUNTING_INFORMATION
+        {
+            public long TotalUserTime; public long TotalKernelTime; public long ThisPeriodTotalUserTime;
+            public long ThisPeriodTotalKernelTime; public uint TotalPageFaultCount;
+            public uint TotalProcesses; public uint ActiveProcesses; public uint TotalTerminatedProcesses;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct POINT { public int x; public int y; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MSG
+        {
+            public IntPtr hwnd; public uint message; public UIntPtr wParam; public IntPtr lParam;
+            public uint time; public POINT pt;
+        }
+
+        private delegate void WinEventDelegate(IntPtr hook, uint eventType, IntPtr hwnd, int idObject,
+            int idChild, uint eventThread, uint eventTime);
+        private delegate bool EnumDesktopWindowsDelegate(IntPtr hwnd, IntPtr parameter);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr CreateDesktopW(string desktop, string device, IntPtr devmode,
+            uint flags, uint desiredAccess, IntPtr securityAttributes);
+        [DllImport("user32.dll", SetLastError = true)] private static extern bool CloseDesktop(IntPtr desktop);
+        [DllImport("user32.dll", SetLastError = true)] private static extern bool EnumDesktopWindows(IntPtr desktop, EnumDesktopWindowsDelegate callback, IntPtr parameter);
+        [DllImport("user32.dll", SetLastError = true)] private static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr module, WinEventDelegate callback, uint process, uint thread, uint flags);
+        [DllImport("user32.dll", SetLastError = true)] private static extern bool UnhookWinEvent(IntPtr hook);
+        [DllImport("user32.dll")] private static extern bool IsWindow(IntPtr hwnd);
+        [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr hwnd);
+        [DllImport("user32.dll")] private static extern IntPtr GetAncestor(IntPtr hwnd, uint flags);
+        [DllImport("user32.dll", SetLastError = true)] private static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint processId);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetWindowTextLengthW(IntPtr hwnd);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetWindowTextW(IntPtr hwnd, StringBuilder text, int count);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetClassNameW(IntPtr hwnd, StringBuilder text, int count);
+        [DllImport("user32.dll", SetLastError = true)] private static extern bool SetThreadDesktop(IntPtr desktop);
+        [DllImport("user32.dll")] private static extern bool PeekMessageW(out MSG message, IntPtr hwnd, uint min, uint max, uint remove);
+        [DllImport("user32.dll")] private static extern bool TranslateMessage(ref MSG message);
+        [DllImport("user32.dll")] private static extern IntPtr DispatchMessageW(ref MSG message);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool CreateProcessW(string applicationName, StringBuilder commandLine,
+            IntPtr processAttributes, IntPtr threadAttributes, bool inheritHandles, uint creationFlags,
+            IntPtr environment, string currentDirectory, ref STARTUPINFOEX startupInfo,
+            out PROCESS_INFORMATION processInformation);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern uint ResumeThread(IntPtr thread);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern uint WaitForSingleObject(IntPtr handle, uint milliseconds);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool GetExitCodeProcess(IntPtr process, out uint exitCode);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool TerminateProcess(IntPtr process, uint exitCode);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool CloseHandle(IntPtr handle);
+        [DllImport("kernel32.dll")] private static extern uint GetCurrentThreadId();
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern IntPtr OpenThread(uint desiredAccess, bool inheritHandle, uint threadId);
+        [DllImport("kernel32.dll")] private static extern uint GetProcessIdOfThread(IntPtr thread);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern IntPtr OpenProcess(uint desiredAccess, bool inheritHandle, uint processId);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool IsProcessInJob(IntPtr process, IntPtr job, out bool result);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr CreateFileW(string name, uint access, uint share, ref SECURITY_ATTRIBUTES security,
+            uint creation, uint flags, IntPtr template);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool InitializeProcThreadAttributeList(IntPtr list, int count, int flags, ref UIntPtr size);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool UpdateProcThreadAttribute(IntPtr list, uint flags, UIntPtr attribute, IntPtr value, UIntPtr size, IntPtr previous, IntPtr returnedSize);
+        [DllImport("kernel32.dll")] private static extern void DeleteProcThreadAttributeList(IntPtr list);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)] private static extern IntPtr CreateJobObjectW(IntPtr attributes, string name);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool SetInformationJobObject(IntPtr job, uint infoClass, IntPtr info, uint length);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool QueryInformationJobObject(IntPtr job, uint infoClass, IntPtr info, uint length, out uint returnedLength);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool TerminateJobObject(IntPtr job, uint exitCode);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern IntPtr CreateIoCompletionPort(IntPtr file, IntPtr existingPort, UIntPtr completionKey, uint threads);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool GetQueuedCompletionStatus(IntPtr port, out uint bytes, out UIntPtr key, out IntPtr overlapped, uint milliseconds);
+        [DllImport("kernel32.dll")] private static extern void SetLastError(uint errorCode);
+    }
+}
+```
+
+## Appendix B — `Invoke-PrivateDesktopProcess.ps1`
+
+Exact committed helper payload: **5,016 bytes**; **SHA-256 `8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
+
+```powershell
+[CmdletBinding()]
+param()
+
+function Write-NewUtf8File {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string]$LiteralPath,
+        [Parameter(Mandatory = $true)][string]$Text
+    )
+    $Encoding = New-Object System.Text.UTF8Encoding($false, $true)
+    $Stream = New-Object System.IO.FileStream(
+        $LiteralPath,
+        [IO.FileMode]::CreateNew,
+        [IO.FileAccess]::Write,
+        [IO.FileShare]::Read
+    )
+    try {
+        $Writer = New-Object System.IO.StreamWriter($Stream, $Encoding)
+        try {
+            $Writer.Write($Text)
+            $Writer.Flush()
+            $Stream.Flush($true)
+        } finally {
+            $Writer.Dispose()
+        }
+    } finally {
+        $Stream.Dispose()
+    }
+}
+
+function Import-PrivateDesktopRunner {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][string]$SourcePath)
+
+    if ('CourtOfShadows.Headless.PrivateDesktopRunner' -as [type]) { return }
+    $ResolvedSource = (Resolve-Path -LiteralPath $SourcePath).Path
+    Add-Type -Path $ResolvedSource -ReferencedAssemblies @(
+        'System.dll',
+        'System.Core.dll',
+        'System.Runtime.Serialization.dll',
+        'System.Xml.dll'
+    ) -ErrorAction Stop
+}
+
+function Invoke-PrivateDesktopProcess {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [Parameter()][AllowEmptyCollection()][string[]]$ArgumentList = @(),
+        [Parameter(Mandatory = $true)][string]$WorkingDirectory,
+        [Parameter()][hashtable]$EnvironmentOverrides = @{},
+        [Parameter(Mandatory = $true)][ValidateRange(1, 86400)][int]$TimeoutSeconds,
+        [Parameter(Mandatory = $true)][string]$EvidenceDirectory,
+        [Parameter()][string]$RunnerSource = (Join-Path $PSScriptRoot 'PrivateDesktopRunner.cs')
+    )
+
+    $ResolvedExe = (Resolve-Path -LiteralPath $FilePath).Path
+    $ResolvedWorkingDirectory = (Resolve-Path -LiteralPath $WorkingDirectory).Path
+    if (Test-Path -LiteralPath $EvidenceDirectory) {
+        throw "EvidenceDirectory already exists; refusing to reuse or overwrite evidence: $EvidenceDirectory"
+    }
+    $EvidenceFullPath = [IO.Path]::GetFullPath($EvidenceDirectory)
+    [IO.Directory]::CreateDirectory($EvidenceFullPath) | Out-Null
+
+    $RequestPath = Join-Path $EvidenceFullPath 'request.json'
+    $StdoutPath = Join-Path $EvidenceFullPath 'stdout.txt'
+    $StderrPath = Join-Path $EvidenceFullPath 'stderr.txt'
+    $ResultPath = Join-Path $EvidenceFullPath 'result.json'
+
+    $EnvironmentRows = @(
+        foreach ($Key in @($EnvironmentOverrides.Keys | Sort-Object { [string]$_ })) {
+            $Name = [string]$Key
+            if ([string]::IsNullOrEmpty($Name) -or $Name.Contains("`0") -or $Name.Contains('=')) {
+                throw "Invalid environment variable name: $Name"
+            }
+            $RawValue = $EnvironmentOverrides[$Key]
+            if ($null -eq $RawValue) {
+                [ordered]@{ name = $Name; value = $null }
+            } else {
+                $Value = [string]$RawValue
+                if ($Value.Contains("`0")) { throw "Environment value contains NUL: $Name" }
+                [ordered]@{ name = $Name; value = $Value }
+            }
+        }
+    )
+
+    $Request = [ordered]@{
+        schema_version = 1
+        executable = $ResolvedExe
+        arguments = @($ArgumentList)
+        working_directory = $ResolvedWorkingDirectory
+        environment_overrides = $EnvironmentRows
+        timeout_milliseconds = [int]($TimeoutSeconds * 1000)
+        stdout_path = $StdoutPath
+        stderr_path = $StderrPath
+        result_path = $ResultPath
+    }
+    $Json = ConvertTo-Json -InputObject $Request -Depth 6 -Compress
+    Write-NewUtf8File -LiteralPath $RequestPath -Text $Json
+
+    Import-PrivateDesktopRunner -SourcePath $RunnerSource
+    $HelperExitCode = [CourtOfShadows.Headless.PrivateDesktopRunner]::RunRequestFile($RequestPath)
+    if (-not (Test-Path -LiteralPath $ResultPath -PathType Leaf)) {
+        throw 'Private desktop helper returned without a result.json artifact.'
+    }
+    $StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+    $Result = [IO.File]::ReadAllText($ResultPath, $StrictUtf8) | ConvertFrom-Json -ErrorAction Stop
+    if ($Result.schema_version -ne 1) { throw 'Private desktop helper result schema drifted.' }
+    if ($HelperExitCode -eq 0 -and $Result.classification -cne 'COMPLETED') {
+        throw 'Helper exit/result classification mismatch.'
+    }
+    if ($HelperExitCode -eq 20 -and $Result.classification -cne 'NEEDS_CONTEXT') {
+        throw 'Helper exit/result classification mismatch.'
+    }
+    if ($HelperExitCode -eq 21 -and $Result.classification -cne 'TIMEOUT') {
+        throw 'Helper exit/result classification mismatch.'
+    }
+    if ($HelperExitCode -eq 22 -and $Result.classification -cne 'LAUNCH_ERROR') {
+        throw 'Helper exit/result classification mismatch.'
+    }
+    $Result | Add-Member -NotePropertyName helper_exit_code -NotePropertyValue $HelperExitCode
+    return $Result
+}
+```
+
+## Appendix C — `Test-PrivateDesktopRunner.ps1`
+
+Exact committed helper payload: **16,866 bytes**; **SHA-256 `00808C50EE4BEC6D28CC3B7DE8C6EF853D9BC1DDCAABE9625E84D3FD767A183F`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
+
+```powershell
+[CmdletBinding()]
+param(
+    [switch]$IncludeVisibleWindowTest
+)
+
+Set-StrictMode -Version 2.0
+$ErrorActionPreference = 'Stop'
+$RunnerSource = Join-Path $PSScriptRoot 'PrivateDesktopRunner.cs'
+$CSharp5 = New-Object System.CodeDom.Compiler.CompilerParameters
+$CSharp5.CompilerOptions = '/langversion:5'
+foreach ($Reference in @('System.dll', 'System.Core.dll', 'System.Runtime.Serialization.dll', 'System.Xml.dll')) {
+    [void]$CSharp5.ReferencedAssemblies.Add($Reference)
+}
+Add-Type -Path $RunnerSource -CompilerParameters $CSharp5 -ErrorAction Stop
+. (Join-Path $PSScriptRoot 'Invoke-PrivateDesktopProcess.ps1')
+
+$TestRoot = Join-Path ([IO.Path]::GetTempPath()) ('cos-private-desktop-selftest-' + [Guid]::NewGuid().ToString('N'))
+[IO.Directory]::CreateDirectory($TestRoot) | Out-Null
+$PowerShell = (Get-Command powershell.exe -ErrorAction Stop).Source
+
+function Assert-Equal($Actual, $Expected, [string]$Context) {
+    if ($Actual -cne $Expected) { throw "$Context expected <$Expected>, actual <$Actual>." }
+}
+
+function Assert-MonitorAndCleanup($Result, [string]$Context) {
+    Assert-Equal $Result.monitor_armed_before_resume $true "$Context monitor armed before resume"
+    $Armed = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, [Globalization.CultureInfo]::InvariantCulture)
+    $Resumed = [DateTimeOffset]::Parse([string]$Result.resumed_utc, [Globalization.CultureInfo]::InvariantCulture)
+    if ($Armed -gt $Resumed) { throw "$Context monitor timestamp is after ResumeThread." }
+    Assert-Equal $Result.cleanup_complete $true "$Context cleanup complete"
+    Assert-Equal @($Result.cleanup_errors).Count 0 "$Context cleanup error count"
+}
+
+try {
+    Add-Type -TypeDefinition @'
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Threading;
+
+public static class TimeoutTreeFixture {
+    public static int Main(string[] args) {
+        if (args.Length == 1 && args[0] == "child") {
+            Thread.Sleep(60000);
+            return 0;
+        }
+        ProcessStartInfo start = new ProcessStartInfo();
+        start.FileName = Assembly.GetExecutingAssembly().Location;
+        start.Arguments = "child";
+        start.UseShellExecute = false;
+        start.CreateNoWindow = true;
+        Process.Start(start);
+        Thread.Sleep(60000);
+        return 0;
+    }
+}
+'@ -ReferencedAssemblies @('System.dll') -OutputAssembly (Join-Path $TestRoot 'TimeoutTreeFixture.exe') -OutputType ConsoleApplication
+
+    Add-Type -TypeDefinition @'
+using System;
+using System.Diagnostics;
+using System.Reflection;
+
+public static class CoverageBurstFixture {
+    public static int Main(string[] args) {
+        if (args.Length == 1 && args[0] == "child") return 0;
+        for (int i = 0; i < 32; i++) {
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = Assembly.GetExecutingAssembly().Location;
+            start.Arguments = "child";
+            start.UseShellExecute = false;
+            start.CreateNoWindow = true;
+            using (Process child = Process.Start(start)) child.WaitForExit();
+        }
+        return 0;
+    }
+}
+'@ -ReferencedAssemblies @('System.dll') -OutputAssembly (Join-Path $TestRoot 'CoverageBurstFixture.exe') -OutputType ConsoleApplication
+
+    Add-Type -TypeDefinition @'
+using System;
+using System.Text;
+
+public static class ArgvProbeFixture {
+    public static int Main(string[] args) {
+        for (int i = 0; i < args.Length; i++) {
+            Console.WriteLine(Convert.ToBase64String(Encoding.UTF8.GetBytes(args[i])));
+        }
+        return 0;
+    }
+}
+'@ -ReferencedAssemblies @('System.dll') -OutputAssembly (Join-Path $TestRoot 'ArgvProbeFixture.exe') -OutputType ConsoleApplication
+
+    Add-Type -TypeDefinition @'
+using System;
+
+public static class EnvironmentProbeFixture {
+    public static int Main(string[] args) {
+        string setValue = Environment.GetEnvironmentVariable(args[0], EnvironmentVariableTarget.Process);
+        string removedValue = Environment.GetEnvironmentVariable(args[1], EnvironmentVariableTarget.Process);
+        Console.Write((setValue ?? "<NULL>") + "|" + (removedValue ?? "<NULL>"));
+        return 0;
+    }
+}
+'@ -ReferencedAssemblies @('System.dll') -OutputAssembly (Join-Path $TestRoot 'EnvironmentProbeFixture.exe') -OutputType ConsoleApplication
+
+    $NoWindowDir = Join-Path $TestRoot 'no-window-exit7'
+    $NoWindow = Invoke-PrivateDesktopProcess -FilePath $PowerShell `
+        -ArgumentList @('-NoProfile', '-NonInteractive', '-Command', '[Console]::Out.Write("out"); [Console]::Error.Write("err"); exit 7') `
+        -WorkingDirectory $TestRoot -EnvironmentOverrides @{ COS_CHILD_ONLY = 'yes' } `
+        -TimeoutSeconds 20 -EvidenceDirectory $NoWindowDir
+    Assert-Equal $NoWindow.classification 'COMPLETED' 'no-window classification'
+    Assert-Equal $NoWindow.root_exit_code 7 'no-window exit code'
+    Assert-Equal @($NoWindow.visible_windows).Count 0 'no-window visible count'
+    Assert-Equal $NoWindow.job_drained $true 'no-window tree drain'
+    Assert-Equal $NoWindow.process_coverage_complete $true 'no-window PID coverage'
+    Assert-Equal $NoWindow.job_total_processes @($NoWindow.process_ids).Count 'no-window accounting coverage'
+    Assert-MonitorAndCleanup $NoWindow 'no-window'
+    Assert-Equal ([IO.File]::ReadAllText((Join-Path $NoWindowDir 'stdout.txt'))) 'out' 'stdout capture'
+    Assert-Equal ([IO.File]::ReadAllText((Join-Path $NoWindowDir 'stderr.txt'))) 'err' 'stderr capture'
+
+    $TimeoutDir = Join-Path $TestRoot 'timeout-tree-drain'
+    $Timeout = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'TimeoutTreeFixture.exe') `
+        -WorkingDirectory $TestRoot -TimeoutSeconds 1 -EvidenceDirectory $TimeoutDir
+    Assert-Equal $Timeout.classification 'TIMEOUT' 'timeout classification'
+    Assert-Equal $Timeout.timed_out $true 'timeout flag'
+    Assert-Equal $Timeout.job_drained $true 'timeout tree drain'
+    Assert-Equal @($Timeout.visible_windows).Count 0 'timeout visible count'
+    Assert-Equal $Timeout.process_coverage_complete $true 'timeout PID coverage'
+    Assert-Equal $Timeout.job_total_processes @($Timeout.process_ids).Count 'timeout accounting coverage'
+    Assert-MonitorAndCleanup $Timeout 'timeout'
+    if (@($Timeout.process_ids).Count -lt 2) { throw 'timeout test did not observe the descendant PID.' }
+    if (@($Timeout.active_snapshot_process_ids).Count -lt 1) { throw 'timeout test did not use active Job snapshots as a PID source.' }
+
+    $CoverageDir = Join-Path $TestRoot 'short-lived-pid-coverage'
+    $Coverage = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'CoverageBurstFixture.exe') `
+        -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $CoverageDir
+    Assert-Equal $Coverage.classification 'COMPLETED' 'short-lived coverage classification'
+    Assert-Equal $Coverage.job_drained $true 'short-lived coverage tree drain'
+    Assert-Equal $Coverage.process_coverage_complete $true 'short-lived PID coverage'
+    Assert-Equal $Coverage.job_total_processes @($Coverage.process_ids).Count 'short-lived accounting coverage'
+    Assert-MonitorAndCleanup $Coverage 'short-lived coverage'
+    if ($Coverage.job_total_processes -lt 33) { throw 'short-lived accounting did not include the root and 32 child launches.' }
+    if (@($Coverage.new_process_ids).Count -lt 33) { throw 'NEW_PROCESS messages did not cover the root and short-lived descendants.' }
+
+    $ComplexArguments = @('', 'plain', 'white space', 'quote"inside', 'trailing\', 'slashes\\before"quote', '中文 空格', "tab`tvalue")
+    $ArgvDir = Join-Path $TestRoot 'argv-roundtrip'
+    $ArgvResult = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'ArgvProbeFixture.exe') `
+        -ArgumentList $ComplexArguments -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $ArgvDir
+    Assert-Equal $ArgvResult.classification 'COMPLETED' 'argv classification'
+    Assert-Equal $ArgvResult.root_exit_code 0 'argv exit code'
+    Assert-MonitorAndCleanup $ArgvResult 'argv'
+    $ArgvLines = [IO.File]::ReadAllLines((Join-Path $ArgvDir 'stdout.txt'))
+    Assert-Equal $ArgvLines.Count $ComplexArguments.Count 'argv count'
+    for ($Index = 0; $Index -lt $ComplexArguments.Count; $Index++) {
+        $Decoded = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($ArgvLines[$Index]))
+        Assert-Equal $Decoded $ComplexArguments[$Index] ("argv[$Index]")
+    }
+
+    $SetName = 'COS_PRIVATE_DESKTOP_SET_' + [Guid]::NewGuid().ToString('N')
+    $RemoveName = 'COS_PRIVATE_DESKTOP_REMOVE_' + [Guid]::NewGuid().ToString('N')
+    [Environment]::SetEnvironmentVariable($SetName, 'parent-set', 'Process')
+    [Environment]::SetEnvironmentVariable($RemoveName, 'parent-remove', 'Process')
+    try {
+        $EnvironmentDir = Join-Path $TestRoot 'environment-isolation'
+        $EnvironmentResult = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'EnvironmentProbeFixture.exe') `
+            -ArgumentList @($SetName, $RemoveName) -WorkingDirectory $TestRoot `
+            -EnvironmentOverrides @{ $SetName = 'child-set'; $RemoveName = $null } `
+            -TimeoutSeconds 20 -EvidenceDirectory $EnvironmentDir
+        Assert-Equal $EnvironmentResult.classification 'COMPLETED' 'environment classification'
+        Assert-MonitorAndCleanup $EnvironmentResult 'environment'
+        Assert-Equal ([IO.File]::ReadAllText((Join-Path $EnvironmentDir 'stdout.txt'))) 'child-set|<NULL>' 'child environment set/remove'
+        Assert-Equal ([Environment]::GetEnvironmentVariable($SetName, 'Process')) 'parent-set' 'parent set variable unchanged'
+        Assert-Equal ([Environment]::GetEnvironmentVariable($RemoveName, 'Process')) 'parent-remove' 'parent removed variable unchanged'
+    } finally {
+        [Environment]::SetEnvironmentVariable($SetName, $null, 'Process')
+        [Environment]::SetEnvironmentVariable($RemoveName, $null, 'Process')
+    }
+
+    $ExistingDir = Join-Path $TestRoot 'preexisting-evidence'
+    [IO.Directory]::CreateDirectory($ExistingDir) | Out-Null
+    [IO.File]::WriteAllText((Join-Path $ExistingDir 'sentinel.txt'), 'do-not-overwrite')
+    $Rejected = $false
+    try {
+        Invoke-PrivateDesktopProcess -FilePath $PowerShell -ArgumentList @('-NoProfile', '-Command', 'exit 0') `
+            -WorkingDirectory $TestRoot -TimeoutSeconds 5 -EvidenceDirectory $ExistingDir | Out-Null
+    } catch {
+        $Rejected = $_.Exception.Message -like 'EvidenceDirectory already exists*'
+    }
+    Assert-Equal $Rejected $true 'preexisting evidence rejection'
+    Assert-Equal ([IO.File]::ReadAllText((Join-Path $ExistingDir 'sentinel.txt'))) 'do-not-overwrite' 'preexisting sentinel'
+
+    $Source = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'PrivateDesktopRunner.cs'))
+    foreach ($Banned in @('SwitchDesktop(', 'OpenInputDesktop(', 'SendInput(', 'mouse_event(', 'keybd_event(', 'SetForegroundWindow(')) {
+        if ($Source.Contains($Banned)) { throw "Banned desktop/input API appears in helper source: $Banned" }
+    }
+    if (-not $Source.Contains('SetThreadDesktop(')) { throw 'Dedicated private-desktop watcher does not bind its thread desktop.' }
+    if (-not $Source.Contains('CREATE_NO_WINDOW')) { throw 'CREATE_NO_WINDOW is absent from the helper.' }
+    if (-not $Source.Contains('private sealed class PrivateDesktopWatcher')) { throw 'Dedicated private-desktop watcher type is absent.' }
+    if ($Source.Contains('ReadDesktopName(')) { throw 'Window classification still relies on a separately queried desktop-name field.' }
+    if ([regex]::Matches($Source, '!SetThreadDesktop\(desktopHandle\)').Count -ne 1 -or
+        [regex]::Matches($Source, 'extern bool SetThreadDesktop\(IntPtr desktop\)').Count -ne 1) {
+        throw 'SetThreadDesktop must have exactly one watcher call and one P/Invoke declaration.'
+    }
+    $WatcherBind = $Source.IndexOf('if (!SetThreadDesktop(desktopHandle))', [StringComparison]::Ordinal)
+    $QueueReady = $Source.IndexOf('PeekMessageW(out queueProbe, IntPtr.Zero, 0, 0, PM_NOREMOVE);', $WatcherBind, [StringComparison]::Ordinal)
+    $WatcherHook = $Source.IndexOf('createHook = SetWinEventHook(', $WatcherBind, [StringComparison]::Ordinal)
+    $WatcherArm = $Source.IndexOf('armed.Set();', $WatcherHook, [StringComparison]::Ordinal)
+    if ($WatcherBind -lt 0 -or $QueueReady -le $WatcherBind -or $WatcherHook -le $QueueReady -or $WatcherArm -le $WatcherHook) {
+        throw 'Watcher bind/queue/hook/arm ordering is not explicit.'
+    }
+    $WaitForArm = $Source.IndexOf('watcher.StartAndWaitUntilArmed(5000);', [StringComparison]::Ordinal)
+    $CreateSuspended = $Source.IndexOf('if (!CreateProcessW(', $WaitForArm, [StringComparison]::Ordinal)
+    $ResumeSuspended = $Source.IndexOf('uint resumeResult = ResumeThread(', $CreateSuspended, [StringComparison]::Ordinal)
+    if ($WaitForArm -lt 0 -or $CreateSuspended -le $WaitForArm -or $ResumeSuspended -le $CreateSuspended) {
+        throw 'Watcher arming does not precede CreateProcessW and ResumeThread.'
+    }
+    if (-not $Source.Contains('TryIsProcessInJobAtObservation')) { throw 'Observation-time IsProcessInJob binding is absent.' }
+    if (-not $Source.Contains('JOBOBJECT_BASIC_ACCOUNTING_INFORMATION.TotalProcesses')) {
+        throw 'Fail-closed TotalProcesses coverage detail is absent.'
+    }
+    if (-not $Source.Contains('bool attributeListInitialized = false;') -or
+        -not $Source.Contains('if (attributeListInitialized) DeleteProcThreadAttributeList(attributeList);')) {
+        throw 'Attribute-list initialization is not guarded during cleanup.'
+    }
+    if (-not $Source.Contains('item.PrivateShowProof') -or
+        -not $Source.Contains('pid == 0 && !privateShowProof')) {
+        throw 'EVENT_OBJECT_SHOW is not retained as fail-closed private-watcher proof.'
+    }
+
+    if ($IncludeVisibleWindowTest) {
+        Add-Type -TypeDefinition @'
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Threading;
+using System.Windows.Forms;
+public static class VisibleDescendantFixture {
+    public static void Main(string[] args) {
+        if (args.Length == 1 && args[0] == "child") {
+            using (Form form = new Form()) {
+                form.Text = "private desktop sentinel";
+                form.Show();
+                Application.DoEvents();
+                Thread.Sleep(25);
+                form.Close();
+                Application.DoEvents();
+            }
+            return;
+        }
+        ProcessStartInfo start = new ProcessStartInfo();
+        start.FileName = Assembly.GetExecutingAssembly().Location;
+        start.Arguments = "child";
+        start.UseShellExecute = false;
+        start.CreateNoWindow = true;
+        Process.Start(start);
+        Thread.Sleep(30000);
+    }
+}
+'@ -ReferencedAssemblies @('System.dll', 'System.Windows.Forms.dll') -OutputAssembly (Join-Path $TestRoot 'VisibleDescendantFixture.exe') -OutputType ConsoleApplication
+        $VisibleDir = Join-Path $TestRoot 'visible-descendant'
+        $Visible = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'VisibleDescendantFixture.exe') `
+            -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $VisibleDir
+        Assert-Equal $Visible.classification 'NEEDS_CONTEXT' 'visible descendant classification'
+        Assert-Equal $Visible.job_drained $true 'visible descendant tree drain'
+        Assert-Equal $Visible.process_coverage_complete $true 'visible descendant PID coverage'
+        Assert-Equal $Visible.job_total_processes @($Visible.process_ids).Count 'visible descendant accounting coverage'
+        Assert-MonitorAndCleanup $Visible 'visible descendant'
+        if (@($Visible.visible_windows).Count -lt 1) { throw 'visible descendant evidence is empty.' }
+        $Sentinels = @($Visible.visible_windows | Where-Object { $_.title -ceq 'private desktop sentinel' })
+        if ($Sentinels.Count -lt 1) { throw 'visible descendant did not record the actual private-desktop Form.' }
+        if (@($Sentinels | Where-Object { $_.event -ceq 'EVENT_OBJECT_SHOW' }).Count -lt 1) {
+            throw 'visible descendant Form was not preserved from the SHOW hook.'
+        }
+        if (@($Visible.visible_windows | Where-Object { $_.class_name -ceq 'PseudoConsoleWindow' }).Count -ne 0) {
+            throw 'visible descendant was classified from a PseudoConsoleWindow instead of the private Form.'
+        }
+    }
+
+    [pscustomobject][ordered]@{
+        verdict = 'PASS'
+        test_root = $TestRoot
+        no_window_exit7 = 'PASS'
+        timeout_tree_drain = 'PASS'
+        short_lived_pid_coverage = 'PASS'
+        argv_roundtrip = 'PASS'
+        environment_isolation = 'PASS'
+        preexisting_evidence_rejection = 'PASS'
+        banned_api_scan = 'PASS'
+        visible_descendant = $(if ($IncludeVisibleWindowTest) { 'PASS' } else { 'NOT_RUN' })
+    }
+} catch {
+    Write-Error $_
+    throw
+}
+```
