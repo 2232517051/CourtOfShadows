@@ -126,6 +126,19 @@
 6. **冻结与改后回放。** 只有干净基线正常回载通过后，才把原始引擎文件复制成只读的 git-ignored 证据母本，并记录基线提交、引擎版本、文件字节数与 SHA-256。改后验证绝不直接打开母本，而是为“正面强攻”和“迂回”各建一个仓库外唯一空 `SaveDir`，分别以引擎原始文件名复制同一母本并再次核对源/两份副本哈希相等；每个回放 worktree 的 `game/saves` 同样必须不存在或为任务自有空目录。两个 dummy-mode testcase 分别加载一个副本，先核对 provenance marker，再选择对应分支，并证明都在胜利文本前进入 `fall`。
 7. **证据与清理。** 保存生成、干净回载和两次改后回放的日志、环境、PID、窗口检查、退出码、状态断言与结果说明。只有确认目标位于本轮任务拥有的临时根、相关进程树全部退出后，才能清理 disposable worktree 和副本 `SaveDir`；ignored 母本与证据保留到设计复审结束。中断或失败尝试的日志与存档不得被后续尝试覆盖或冒充通过证据。
 
+### Private Desktop process-evidence contract v2
+
+本门禁的启动器结果升级为 `result schema v2`。`job_total_processes`、所有 PID 数组和 completion-port PID 历史都只用于诊断，绝不得再把 `JobObjectBasicAccountingInformation.TotalProcesses` 与去重 PID 数量相等当作硬门；前者是进程实例计数，后者不是。硬门仅为：
+
+1. 新建的私有桌面在启动前为空，且窗口监控在 `CreateProcess` 与 `ResumeThread` 之前已经武装。
+2. 根进程成功加入禁止 breakaway 的 Job 后才可 `ResumeThread`。
+3. 私有桌面任一可见顶层窗口，无论其 PID 是否出现在任何历史数组中，均为 `NEEDS_CONTEXT`。
+4. 结束时 `ActiveProcesses=0`，Job 已排空、清理完整，且根进程以预先声明的预期退出状态结束。
+
+schema v2 必须同时保存上述硬门字段、`job_total_processes`、PID/事件诊断字段、`visible_windows`、`cleanup_complete`、退出状态和分类；诊断字段不得把安全结论升级为“完整进程实例覆盖”。保留既有失败证据：`cos-private-desktop-selftest-d37d19e4adfc4b5fb3622abcc8a53212/short-lived-pid-coverage/result.json`，SHA-256 为 `300515E17B8EDD6B0CD99C268E685DCAE6770BC664B5C28F231F231F03E9F27B`。
+
+只允许在全新的唯一证据目录以 schema v2 完整运行一次 helper selftest；旧目录不得覆盖。该次自检任一硬门失败即停止为 `NEEDS_CONTEXT`，不得重试，且在通过前不得启动 Ren'Py、生成器、观察器或任何旧档门禁阶段。
+
 ## 正文生成与审批边界
 
 死亡段落、`fall_cause` 三种入口摘要、为避免战死后活人视角而调整的衔接句，以及直接铁腕路线中把“男爵带兵联手”更正为“保持中立、不背刺”的对白，都属于新的可见游戏正文，必须遵守现有游戏文案流程：
