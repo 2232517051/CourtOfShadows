@@ -133,9 +133,10 @@
 1. 新建的私有桌面在启动前为空，且窗口监控在 `CreateProcess` 与 `ResumeThread` 之前已经武装。
 2. 根进程成功加入禁止 breakaway 的 Job 后才可 `ResumeThread`。
 3. 私有桌面任一可见顶层窗口，无论其 PID 是否出现在任何历史数组中，均为 `NEEDS_CONTEXT`。
-4. 结束时 `ActiveProcesses=0`，Job 已排空、清理完整，且根进程以预先声明的预期退出状态结束。
+4. watcher hooks 与枚举必须持续活动到 `ActiveProcesses=0`、Job 排空已经证明之后，异常路径清理期间也不得提前撤销；持久化证据必须写入 `monitor_completed_after_job_drain=true`。
+5. 结束时 `ActiveProcesses=0`，Job 已排空、清理完整。通用 helper 只记录 `root_exit_code` 并按结果中立的规则分类；每个调用方都必须独立断言自己预先声明的预期退出码。
 
-schema v2 必须同时保存上述硬门字段、`job_total_processes`、PID/事件诊断字段、`visible_windows`、`cleanup_complete`、退出状态和分类；诊断字段不得把安全结论升级为“完整进程实例覆盖”。保留既有失败证据：`cos-private-desktop-selftest-d37d19e4adfc4b5fb3622abcc8a53212/short-lived-pid-coverage/result.json`，SHA-256 为 `300515E17B8EDD6B0CD99C268E685DCAE6770BC664B5C28F231F231F03E9F27B`。
+schema v2 必须同时保存上述硬门字段、`monitor_completed_after_job_drain`、`job_total_processes`、PID/事件诊断字段、`visible_windows`、`cleanup_complete`、`root_exit_code` 和分类；诊断字段不得把安全结论升级为“完整进程实例覆盖”。保留既有失败证据：`cos-private-desktop-selftest-d37d19e4adfc4b5fb3622abcc8a53212/short-lived-pid-coverage/result.json`，SHA-256 为 `300515E17B8EDD6B0CD99C268E685DCAE6770BC664B5C28F231F231F03E9F27B`。
 
 只允许在全新的唯一证据目录以 schema v2 完整运行一次 helper selftest；旧目录不得覆盖。该次自检任一硬门失败即停止为 `NEEDS_CONTEXT`，不得重试，且在通过前不得启动 Ren'Py、生成器、观察器或任何旧档门禁阶段。
 
