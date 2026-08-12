@@ -10,13 +10,16 @@
 
 ## Global Constraints
 
-- The approved written design is `docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md`, physical SHA-256 `5852B225DE5C17C32F548E7221896599121E76FC4DEBEFA8B060FEA1C598F810`, committed at `22ce7cf48aa6f9a0062a697d9cbf954881c60245`. Its original design commit is `bdad1441d9731fbfac3e1b90654dbe888f354296`.
+- The approved written design is `docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md`, physical SHA-256 `F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232`, committed in its final host-teardown form at `98ff5ca351806732f435b977c7b3b445d586bf6b`. Its exact history is `98ff5ca` (dedicated-host teardown binding) -> `51d089f` (catastrophic cleanup) -> `babfcb9` (monitor lifetime) -> `bdebe79` (coverage-v2 contract) -> `3d67be6` (headless Phase A plan) -> `22ce7cf` (headless legacy-save specification) -> `168c3f2` (original Phase A plan) -> `bdad1441` (original design).
 - The unrelated untracked plan `docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md` must remain byte-identical at SHA-256 `0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C`; never stage, edit, delete, or incorporate it.
 - In the shared implementation worktree, Phase A may modify exactly `game/difficulty.rpy`, `game/balance.rpy`, and `game/test_game.rpy`. Task 1's generator worktree may carry only one temporary `game/zz_terminal_collapse_legacy_fixture.rpy`; its clean-replay worktree may carry only one distinct state-read-only observer `zz` file that never assigns game state, and neither Task 1 worktree may modify a production script. Each Task 2 test invocation uses a fresh detached mirror whose only source differences are the exact current allowed RED or GREEN files copied byte-for-byte from the shared worktree; its local `game/saves` starts absent and is removed only with that verified task-owned mirror after the run drains. Neither the shared nor disposable worktrees may modify `game/chapter5.rpy`, `game/endings_expansion.rpy`, any visible production prose, persistent ending key, achievement ID, asset, font, store copy, version, or package metadata.
 - The intermediate rules commit is not shippable or merge-ready by itself: it intentionally precedes the runtime guard and approved death copy. Do not run Final, build a release, merge, or advertise the player bug as fixed at the Phase A hard stop.
 - Generate the old save before the first tracked game-file edit. Generate it from the exact final Phase A plan commit in a disposable detached worktree after proving that commit's `game/` tree is byte-identical to the original design commit. Use a unique external save directory. Never regenerate it from changed code.
 - All evidence under `.superpowers/sdd/terminal-collapse-ending/` must be ignored, must never be staged, and must survive through Phase B review. Do not clean or overwrite evidence to obtain a better result.
-- Every Ren'Py engine `test` or `run` launch uses a unique external `SaveDir` and applies the task-specific local `game/saves` preflight. Every `Run-RenPySuite.ps1` host must run exactly once through `.superpowers/sdd/terminal-collapse-ending/helpers/Invoke-PrivateDesktopProcess.ps1` on its never-switched private desktop, with process-local `SDL_VIDEODRIVER=dummy`, `SDL_AUDIODRIVER=dummy`, and `RENPY_RENDERER=sw`, and with child `RENPY_PATH_TO_SAVES` removed. The only non-helper exception is Task 0's console-subsystem `renpy.py --version` probe, which cannot initialize the display and does not execute a project. Preserve the helper and runner evidence; any non-`COMPLETED` result, incomplete process coverage, visible window, timeout, interaction requirement, or unexpected exit is `NEEDS_CONTEXT` and must not be retried or replaced with a direct/manual launch.
+- Before the plan is executed, the controller creates exactly one ignored, create-new approval lock at `.superpowers/sdd/terminal-collapse-ending/approved-plan-lock.json`, then never modifies or deletes it. Its exact case-sensitive schema is `schema_version=1`, `approved_plan_commit` (lowercase 40-hex), `plan_sha256` (uppercase 64-hex), `spec_commit=98ff5ca351806732f435b977c7b3b445d586bf6b`, and `spec_sha256=F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232`; no sixth property, duplicate property, BOM, invalid UTF-8, or type coercion is allowed. The controller supplies the same physical lock SHA-256 to every fresh Task 0/1/2/3 context out of band as mandatory parameter `$ApprovalLockSha256`; this plan deliberately does not self-embed the eventual plan commit, physical plan hash, or lock hash. Each task's first project action validates the out-of-band hash, exact JSON contract, physical plan hash, raw plan blob at `approved_plan_commit`, and physical/raw committed specification. Task 0, Task 1, and pre-commit Task 2 additionally require `HEAD == approved_plan_commit`; Task 2 later proves its rules commit is the exact direct child; Task 3 repeats that topology before each Opus invocation. Any lock failure is `NEEDS_CONTEXT` with no retry. Every cleanup target must be proven disjoint from the lock, and the lock must remain ignored and byte-identical through Phase B.
+- Task 0 does not execute `renpy.exe`, the SDK Python, `renpy.py`, or any other Ren'Py entrypoint. It only verifies the trusted SDK files and exact `renpy/vc_version.py` bytes statically. After the sole full helper self-test has passed and its completion record has been create-new written and `Flush(true)` has returned, Task 1 runs exactly one version probe through the reviewed private-desktop wrapper, with dummy SDL/renderer variables and fixed create-new evidence, and requires exact stdout plus the complete reusable safety/outcome envelope.
+- Every Ren'Py engine `test` or `run` launch uses a unique external `SaveDir` and applies the task-specific local `game/saves` preflight. Every `Run-RenPySuite.ps1` host, the post-selftest version probe, and every Task 2 Python scanner must run exactly once through `.superpowers/sdd/terminal-collapse-ending/helpers/Invoke-PrivateDesktopProcess.ps1` on its never-switched private desktop, with process-local `SDL_VIDEODRIVER=dummy`, `SDL_AUDIODRIVER=dummy`, and `RENPY_RENDERER=sw`, and with child `RENPY_PATH_TO_SAVES` removed. The wrapper launches one new noninteractive PowerShell helper host for each invocation, proves its actual process exit, and validates that exit against the C#-persisted `helper_exit_code` and the exact `COMPLETED=0` / `NEEDS_CONTEXT=20` / `TIMEOUT=21` / `LAUNCH_ERROR=22` mapping. A missing, truncated, still-running, catastrophically terminated, or mismatched result is `NEEDS_CONTEXT` with no retry. Every returned reusable result must pass `Assert-PrivateDesktopSafetyEnvelope`; callers then separately require `COMPLETED`, integral non-null `root_exit_code` equal to the declared expected value, zero visible windows, no timeout, and `helper_exit_code=0`. `job_total_processes`, `observed_distinct_process_id_count`, `process_diagnostic_errors`, and the three PID arrays are diagnostic only and never classify or satisfy cleanup. Preserve all helper and runner evidence; any failed envelope or caller gate is `NEEDS_CONTEXT` and must not be retried or replaced with a direct/manual launch.
+- Preserve the failed v1 evidence root `E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp\cos-private-desktop-selftest-d37d19e4adfc4b5fb3622abcc8a53212` unchanged; its `short-lived-pid-coverage\result.json` SHA-256 is `300515E17B8EDD6B0CD99C268E685DCAE6770BC664B5C28F231F231F03E9F27B`. Contract-only validator/static checks launch no helper child and do not consume the retry. Task 1 Step 3 may run exactly one full result-schema-v2 helper self-test in one new unique evidence root. Any failure stops without another self-test, Ren'Py, generator, observer, or manual fallback.
 - No remaining Phase A task and no later Phase B replay may invoke Computer Use, send real mouse/keyboard input, create or focus a window on the user's current or any switchable desktop, or fall back to manual UI. The sole detector-only exception is Task 1 Step 3's short-lived sentinel Form on a never-switched private desktop: the helper must classify it `NEEDS_CONTEXT`, capture `EVENT_OBJECT_SHOW`, and fully drain and clean its Job before the self-test can pass. No Ren'Py generator, observer, suite, or Phase B replay is allowed any visible window even on its private desktop. Those runs use process-local SDL dummy drivers plus a pre-armed process-tree window monitor; any visible window or interaction requirement is `NEEDS_CONTEXT`, not permission to take over the desktop.
 - Each numbered task starts a new agent context. Re-establish every path/hash input at the task's first step. Tasks 0, 1, and 3 must each keep one explicit persistent Windows PowerShell 5.1 session open for all of that task's PowerShell fences; no variable is allowed to leak from a previous task.
 - The copy stage uses three fresh, mutually isolated Claude Code sessions. Each receives identical prompt bytes, sees no Codex draft or sibling candidate, and is accepted only if the final launcher metadata proves `claude-opus-4-6`. No fallback, retry under another model, synthesis, or Codex polishing is allowed.
@@ -41,35 +44,119 @@ Run from the repository root:
 ```powershell
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-$OriginalDesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
-$OriginalPlanCommit = '168c3f2f6440628fc580e6eeb79065d2ae1439a5'
-$WrittenSpecCommit = '22ce7cf48aa6f9a0062a697d9cbf954881c60245'
-$DesignSha256 = '5852B225DE5C17C32F548E7221896599121E76FC4DEBEFA8B060FEA1C598F810'
-$UnrelatedPlan = 'docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md'
-$UnrelatedSha256 = '0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C'
 $ThisPlan = 'docs/superpowers/plans/2026-08-11-terminal-collapse-ending-phase-a.md'
 $DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
+$ApprovalLockPath = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending\approved-plan-lock.json'
+$ApprovalLockVariable = Get-Variable -Name ApprovalLockSha256 -Scope 0 -ErrorAction SilentlyContinue
+if ($null -eq $ApprovalLockVariable -or
+    $ApprovalLockVariable.Value -isnot [string] -or
+    [string]$ApprovalLockVariable.Value -cnotmatch '^[0-9A-F]{64}$') {
+    throw 'NEEDS_CONTEXT: controller did not bind the out-of-band ApprovalLockSha256 parameter.'
+}
+$ApprovalLockSha256 = [string]$ApprovalLockVariable.Value
+$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+if (-not (Test-Path -LiteralPath $ApprovalLockPath -PathType Leaf)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock is missing.'
+}
+git check-ignore -q -- $ApprovalLockPath
+if ($LASTEXITCODE -ne 0) { throw 'NEEDS_CONTEXT: approved-plan lock is not ignored.' }
+$ApprovalLockBytes = [IO.File]::ReadAllBytes($ApprovalLockPath)
+if ($ApprovalLockBytes.Length -eq 0 -or
+    ($ApprovalLockBytes.Length -ge 3 -and $ApprovalLockBytes[0] -eq 0xEF -and
+     $ApprovalLockBytes[1] -eq 0xBB -and $ApprovalLockBytes[2] -eq 0xBF)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock is empty or has a BOM.'
+}
+$ApprovalLockText = $StrictUtf8.GetString($ApprovalLockBytes)
+if ($ApprovalLockText.Contains([char]0xFFFD)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock is not strict UTF-8.'
+}
+if ((Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockSha256) {
+    throw 'NEEDS_CONTEXT: approved-plan lock does not match the out-of-band hash.'
+}
+$ApprovalExpectedProperties = @('schema_version', 'approved_plan_commit', 'plan_sha256', 'spec_commit', 'spec_sha256')
+$ApprovalRawProperties = @(
+    [regex]::Matches($ApprovalLockText, '"([^"\\]+)"\s*:') |
+        ForEach-Object { $_.Groups[1].Value }
+)
+if ($ApprovalRawProperties.Count -ne $ApprovalExpectedProperties.Count -or
+    (Compare-Object $ApprovalExpectedProperties $ApprovalRawProperties -CaseSensitive)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock has an inexact or duplicate raw property set.'
+}
+$ApprovalRecord = $ApprovalLockText | ConvertFrom-Json -ErrorAction Stop
+$ApprovalActualProperties = @($ApprovalRecord.PSObject.Properties.Name)
+if ($ApprovalRecord -isnot [pscustomobject] -or
+    $ApprovalActualProperties.Count -ne $ApprovalExpectedProperties.Count -or
+    (Compare-Object $ApprovalExpectedProperties $ApprovalActualProperties -CaseSensitive) -or
+    $ApprovalRecord.schema_version -isnot [int] -or [int]$ApprovalRecord.schema_version -ne 1 -or
+    $ApprovalRecord.approved_plan_commit -isnot [string] -or
+    [string]$ApprovalRecord.approved_plan_commit -cnotmatch '^[0-9a-f]{40}$' -or
+    $ApprovalRecord.plan_sha256 -isnot [string] -or
+    [string]$ApprovalRecord.plan_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    $ApprovalRecord.spec_commit -isnot [string] -or
+    [string]$ApprovalRecord.spec_commit -cne '98ff5ca351806732f435b977c7b3b445d586bf6b' -or
+    $ApprovalRecord.spec_sha256 -isnot [string] -or
+    [string]$ApprovalRecord.spec_sha256 -cne 'F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232') {
+    throw 'NEEDS_CONTEXT: approved-plan lock schema, types, or values are invalid.'
+}
+if ((Get-FileHash -LiteralPath $ThisPlan -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.plan_sha256) {
+    throw 'NEEDS_CONTEXT: physical Phase A plan hash differs from the approval lock.'
+}
+$PhysicalPlanBlob = (& git hash-object --no-filters -- $ThisPlan).Trim()
+$CommittedPlanBlob = (& git rev-parse ([string]$ApprovalRecord.approved_plan_commit + ':' + $ThisPlan)).Trim()
+if ($LASTEXITCODE -ne 0 -or $PhysicalPlanBlob -cne $CommittedPlanBlob) {
+    throw 'NEEDS_CONTEXT: physical Phase A plan is not the raw approved commit blob.'
+}
+if ((Get-FileHash -LiteralPath $DesignPath -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.spec_sha256) {
+    throw 'NEEDS_CONTEXT: physical specification hash differs from the approval lock.'
+}
+$PhysicalSpecBlob = (& git hash-object --no-filters -- $DesignPath).Trim()
+$CommittedSpecBlob = (& git rev-parse ([string]$ApprovalRecord.spec_commit + ':' + $DesignPath)).Trim()
+if ($LASTEXITCODE -ne 0 -or $PhysicalSpecBlob -cne $CommittedSpecBlob) {
+    throw 'NEEDS_CONTEXT: physical specification is not the raw approved commit blob.'
+}
+if ((& git rev-parse HEAD).Trim() -cne [string]$ApprovalRecord.approved_plan_commit) {
+    throw 'NEEDS_CONTEXT: Task 0 HEAD is not the approval-locked plan commit.'
+}
+$OriginalDesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
+$OriginalPlanCommit = '168c3f2f6440628fc580e6eeb79065d2ae1439a5'
+$LegacySaveSpecCommit = '22ce7cf48aa6f9a0062a697d9cbf954881c60245'
+$HeadlessPlanCommit = '3d67be6ba5df0ce7df0445988306bc603d3a69e4'
+$CoverageContractCommit = 'bdebe79f3411927496df29ea34a0abbc0a13bfad'
+$MonitorLifetimeCommit = 'babfcb9372f3005decc7caf5e014511677c9da8c'
+$CatastrophicCleanupCommit = '51d089fe76f7be9cc2535f47b6a83db5e006a6e8'
+$ApprovedSpecCommit = '98ff5ca351806732f435b977c7b3b445d586bf6b'
+$DesignSha256 = 'F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232'
+$UnrelatedPlan = 'docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md'
+$UnrelatedSha256 = '0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C'
 
-if ((git log -1 --format=%s) -cne 'docs: update terminal collapse phase one for headless evidence') {
+if ((git log -1 --format=%s) -cne 'docs: plan terminal collapse coverage v2 retry') {
     throw 'HEAD is not the approved Phase A plan commit.'
 }
-if ((git rev-parse HEAD^) -cne $WrittenSpecCommit) {
-    throw 'Phase A plan parent is not the approved written-spec commit.'
+if ((git rev-parse HEAD^) -cne $ApprovedSpecCommit) {
+    throw 'Phase A plan parent is not the final approved coverage-v2 specification commit.'
 }
 $PlanCommitPaths = @(git diff-tree --no-commit-id --name-only -r HEAD)
 if ($PlanCommitPaths.Count -ne 1 -or $PlanCommitPaths[0] -cne $ThisPlan) {
     throw 'Phase A plan commit scope is not exactly the plan file.'
 }
-if ((git log -1 --format=%s $WrittenSpecCommit) -cne 'docs: require headless legacy save evidence' -or
-    (git rev-parse ($WrittenSpecCommit + '^')) -cne $OriginalPlanCommit) {
-    throw 'Written-spec commit topology drifted.'
-}
-$SpecCommitPaths = @(git diff-tree --no-commit-id --name-only -r $WrittenSpecCommit)
-if ($SpecCommitPaths.Count -ne 1 -or $SpecCommitPaths[0] -cne $DesignPath) {
-    throw 'Written-spec commit scope is not exactly the design file.'
-}
-if ((git rev-parse ($OriginalPlanCommit + '^')) -cne $OriginalDesignCommit) {
-    throw 'Original Phase A plan no longer descends directly from the design commit.'
+$ExpectedHistory = @(
+    [pscustomobject]@{ Commit = $ApprovedSpecCommit; Parent = $CatastrophicCleanupCommit; Subject = 'docs: bind terminal collapse host teardown contract'; Path = $DesignPath },
+    [pscustomobject]@{ Commit = $CatastrophicCleanupCommit; Parent = $MonitorLifetimeCommit; Subject = 'docs: harden terminal collapse catastrophic cleanup'; Path = $DesignPath },
+    [pscustomobject]@{ Commit = $MonitorLifetimeCommit; Parent = $CoverageContractCommit; Subject = 'docs: clarify terminal collapse monitor lifetime'; Path = $DesignPath },
+    [pscustomobject]@{ Commit = $CoverageContractCommit; Parent = $HeadlessPlanCommit; Subject = 'docs: correct terminal collapse process evidence contract'; Path = $DesignPath },
+    [pscustomobject]@{ Commit = $HeadlessPlanCommit; Parent = $LegacySaveSpecCommit; Subject = 'docs: update terminal collapse phase one for headless evidence'; Path = $ThisPlan },
+    [pscustomobject]@{ Commit = $LegacySaveSpecCommit; Parent = $OriginalPlanCommit; Subject = 'docs: require headless legacy save evidence'; Path = $DesignPath },
+    [pscustomobject]@{ Commit = $OriginalPlanCommit; Parent = $OriginalDesignCommit; Subject = 'docs: plan terminal collapse phase one'; Path = $ThisPlan }
+)
+foreach ($HistoryEntry in $ExpectedHistory) {
+    if ((git log -1 --format=%s $HistoryEntry.Commit) -cne $HistoryEntry.Subject -or
+        (git rev-parse ($HistoryEntry.Commit + '^')) -cne $HistoryEntry.Parent) {
+        throw ('Approved history topology drifted at ' + $HistoryEntry.Commit)
+    }
+    $HistoryPaths = @(git diff-tree --no-commit-id --name-only -r $HistoryEntry.Commit)
+    if ($HistoryPaths.Count -ne 1 -or $HistoryPaths[0] -cne $HistoryEntry.Path) {
+        throw ('Approved history scope drifted at ' + $HistoryEntry.Commit)
+    }
 }
 if ((Get-FileHash -Algorithm SHA256 $DesignPath).Hash -cne $DesignSha256) {
     throw 'Approved design bytes drifted.'
@@ -93,7 +180,7 @@ if ($Status.Count -ne 1 -or $Status[0] -cne ('?? ' + $UnrelatedPlan)) {
 }
 ```
 
-Expected: HEAD is a plan-only commit whose parent is the approved written-spec commit; the specification hash is exact; HEAD's `game/` tree object equals the original design commit's pre-fix `game/` tree; the index is empty; and the only status entry is the preserved unrelated plan.
+Expected: HEAD is the new coverage-v2 plan-only commit whose parent is `98ff5ca`; every commit and parent in the exact chain through `51d089f`, `babfcb9`, `bdebe79`, `3d67be6`, `22ce7cf`, `168c3f2`, and `bdad1441` has the expected one-file scope and subject; the current specification hash is exact; HEAD's `game/` tree object equals the original design commit's pre-fix `game/` tree; the index is empty; and the only status entry is the preserved unrelated plan.
 
 - [ ] **Step 2: Verify the trusted SDK and runner parser before evidence work**
 
@@ -118,40 +205,28 @@ $ParserErrors = $null
 if ($ParserErrors.Count -ne 0) {
     throw ('Run-RenPySuite.ps1 parse errors: ' + ($ParserErrors.Message -join '; '))
 }
-# Do not launch renpy.exe here: it is a Windows GUI-subsystem executable, and
-# Task 0 has not installed the private-desktop monitor yet. Use the bundled
-# console interpreter against the same SDK entrypoint for the exact version
-# line, and bind it to the official version declaration.
+# Task 0 is static-only. Do not execute renpy.exe, the SDK Python, renpy.py, or
+# any other Ren'Py entrypoint before the sole full helper selftest has passed.
 $RenPyConsole = Join-Path $TrustedSdkRoot 'lib\py3-windows-x86_64\python.exe'
 $RenPyEntry = Join-Path $TrustedSdkRoot 'renpy.py'
 $RenPyVersionFile = Join-Path $TrustedSdkRoot 'renpy\vc_version.py'
 foreach ($RequiredSdkFile in @($RenPyConsole, $RenPyEntry, $RenPyVersionFile)) {
     if (-not (Test-Path -LiteralPath $RequiredSdkFile -PathType Leaf)) {
-        throw ('Trusted SDK version input is missing: ' + $RequiredSdkFile)
+        throw ('Trusted SDK static input is missing: ' + $RequiredSdkFile)
     }
 }
-$VersionOutput = @(& $RenPyConsole $RenPyEntry --version 2>&1)
-$VersionExit = $LASTEXITCODE
-if ($VersionExit -ne 0) {
-    throw ('RenPy console version probe failed with exit ' + $VersionExit + '.')
+if ((Get-Item -LiteralPath $RenPyVersionFile).Length -ne 106 -or
+    (Get-FileHash -LiteralPath $RenPyVersionFile -Algorithm SHA256).Hash -cne 'A0DD836920B6EAA68758C1FC6BCF722313152C09F7773654BC565209F545CBE7') {
+    throw 'Trusted SDK vc_version.py byte count or hash drifted.'
 }
-$VersionLines = @($VersionOutput | ForEach-Object { [string]$_ })
-if ($VersionLines.Count -ne 1 -or $VersionLines[0] -cne "Ren'Py 8.5.2.26010301") {
-    throw ('Unexpected RenPy version output: ' + ($VersionLines -join '; '))
-}
-$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
 $VersionSource = [IO.File]::ReadAllText($RenPyVersionFile, $StrictUtf8)
-$VersionAssignments = [regex]::Matches($VersionSource, "(?m)^version = '([^']+)'\r?$")
-$OfficialAssignments = [regex]::Matches($VersionSource, '(?m)^official = (True|False)\r?$')
-if ($VersionAssignments.Count -ne 1 -or
-    $VersionAssignments[0].Groups[1].Value -cne '8.5.2.26010301' -or
-    $OfficialAssignments.Count -ne 1 -or
-    $OfficialAssignments[0].Groups[1].Value -cne 'True') {
-    throw 'RenPy official version declaration does not match 8.5.2.26010301.'
+$ExpectedVersionSource = "branch = 'fix'`nnightly = False`nofficial = True`nversion = '8.5.2.26010301'`nversion_name = 'In Good Health'`n"
+if ($VersionSource -cne $ExpectedVersionSource) {
+    throw 'RenPy vc_version.py bytes do not exactly declare the approved official version.'
 }
 ```
 
-Expected: Windows PowerShell parser errors `0`; no GUI-subsystem process is launched; the trusted SDK's console entrypoint reports exactly `Ren'Py 8.5.2.26010301`; and `renpy/vc_version.py` declares the same official version.
+Expected: Windows PowerShell parser errors `0`; no Ren'Py entrypoint or child process is launched; `renpy.exe`, the SDK Python, and `renpy.py` exist; and `renpy/vc_version.py` is exactly the fixed-hash 106-byte official `8.5.2.26010301` declaration. Runtime version evidence is deliberately deferred until Task 1, after the sole full helper selftest completion record has been durably flushed.
 
 - [ ] **Step 3: Establish the ignored evidence root without touching tracked scope**
 
@@ -186,23 +261,89 @@ For this task, the global local-save isolation rule is a pre-launch rule: `game/
 
 Three points must be proven by disposable prototypes before their output is trusted: the independent-desktop helper and its visible-descendant detector; Ren'Py 8.5.2's native testcase click/save behavior, including its `MultiLocation` local mirror; and ordinary `run` autoload callback timing. The steps below are those prototypes. A failure is evidence, not permission to change production code or take over the desktop.
 
-Before opening Task 1's persistent PowerShell session, use `apply_patch` to create the three ignored helper files from Appendices A, B, and C of this plan, byte for byte. Do not copy either exploratory `plan-draft` or `independent-draft`, and do not substitute another launcher. Appendices A-C and their fixed SHA-256 values are part of the committed executable plan; a missing file, a pre-existing different file, or a hash mismatch is `NEEDS_CONTEXT`, not permission to regenerate helper code during execution.
+- [ ] **Step 0: Validate the immutable approval lock before creating helpers or reading other project inputs**
 
-- [ ] **Step 1: Re-establish the exact baseline commit, trusted paths, and task-owned temporary root**
-
-Open one persistent Windows PowerShell 5.1 session at the repository root and use that same session for every PowerShell fence in Task 1:
+The controller must provide `$ApprovalLockSha256` out of band when it opens this fresh persistent Windows PowerShell 5.1 session. This is Task 1's first project action. Do not create either helper, inspect the interrupted attempt, or read any other repository/SDK input until this fence passes; keep the same session open for all later Task 1 PowerShell fences:
 
 ```powershell
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-$OriginalDesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
-$WrittenSpecCommit = '22ce7cf48aa6f9a0062a697d9cbf954881c60245'
-$ExpectedPlanSubject = 'docs: update terminal collapse phase one for headless evidence'
-$ExpectedGameTree = 'fa7a398e9d989731b24e3c1642f3e2e33ce846ff'
-$DesignSha256 = '5852B225DE5C17C32F548E7221896599121E76FC4DEBEFA8B060FEA1C598F810'
-$DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
 $ThisPlan = 'docs/superpowers/plans/2026-08-11-terminal-collapse-ending-phase-a.md'
+$DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
+$ApprovalLockPath = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending\approved-plan-lock.json'
+$ApprovalLockVariable = Get-Variable -Name ApprovalLockSha256 -Scope 0 -ErrorAction SilentlyContinue
+if ($null -eq $ApprovalLockVariable -or $ApprovalLockVariable.Value -isnot [string] -or
+    [string]$ApprovalLockVariable.Value -cnotmatch '^[0-9A-F]{64}$') {
+    throw 'NEEDS_CONTEXT: Task 1 controller did not bind the out-of-band ApprovalLockSha256 parameter.'
+}
+$ApprovalLockSha256 = [string]$ApprovalLockVariable.Value
+$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+if (-not (Test-Path -LiteralPath $ApprovalLockPath -PathType Leaf)) { throw 'NEEDS_CONTEXT: approved-plan lock is missing.' }
+git check-ignore -q -- $ApprovalLockPath
+if ($LASTEXITCODE -ne 0) { throw 'NEEDS_CONTEXT: approved-plan lock is not ignored.' }
+$ApprovalLockBytes = [IO.File]::ReadAllBytes($ApprovalLockPath)
+if ($ApprovalLockBytes.Length -eq 0 -or
+    ($ApprovalLockBytes.Length -ge 3 -and $ApprovalLockBytes[0] -eq 0xEF -and
+     $ApprovalLockBytes[1] -eq 0xBB -and $ApprovalLockBytes[2] -eq 0xBF)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock is empty or has a BOM.'
+}
+$ApprovalLockText = $StrictUtf8.GetString($ApprovalLockBytes)
+if ($ApprovalLockText.Contains([char]0xFFFD) -or
+    (Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockSha256) {
+    throw 'NEEDS_CONTEXT: approved-plan lock UTF-8 or out-of-band hash validation failed.'
+}
+$ApprovalExpectedProperties = @('schema_version', 'approved_plan_commit', 'plan_sha256', 'spec_commit', 'spec_sha256')
+$ApprovalRawProperties = @([regex]::Matches($ApprovalLockText, '"([^"\\]+)"\s*:') | ForEach-Object { $_.Groups[1].Value })
+if ($ApprovalRawProperties.Count -ne 5 -or
+    (Compare-Object $ApprovalExpectedProperties $ApprovalRawProperties -CaseSensitive)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock has an inexact or duplicate raw property set.'
+}
+$ApprovalRecord = $ApprovalLockText | ConvertFrom-Json -ErrorAction Stop
+$ApprovalActualProperties = @($ApprovalRecord.PSObject.Properties.Name)
+if ($ApprovalRecord -isnot [pscustomobject] -or $ApprovalActualProperties.Count -ne 5 -or
+    (Compare-Object $ApprovalExpectedProperties $ApprovalActualProperties -CaseSensitive) -or
+    $ApprovalRecord.schema_version -isnot [int] -or [int]$ApprovalRecord.schema_version -ne 1 -or
+    $ApprovalRecord.approved_plan_commit -isnot [string] -or [string]$ApprovalRecord.approved_plan_commit -cnotmatch '^[0-9a-f]{40}$' -or
+    $ApprovalRecord.plan_sha256 -isnot [string] -or [string]$ApprovalRecord.plan_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    $ApprovalRecord.spec_commit -isnot [string] -or [string]$ApprovalRecord.spec_commit -cne '98ff5ca351806732f435b977c7b3b445d586bf6b' -or
+    $ApprovalRecord.spec_sha256 -isnot [string] -or [string]$ApprovalRecord.spec_sha256 -cne 'F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232') {
+    throw 'NEEDS_CONTEXT: approved-plan lock schema, types, or values are invalid.'
+}
+if ((Get-FileHash -LiteralPath $ThisPlan -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.plan_sha256 -or
+    (& git hash-object --no-filters -- $ThisPlan).Trim() -cne
+        (& git rev-parse ([string]$ApprovalRecord.approved_plan_commit + ':' + $ThisPlan)).Trim()) {
+    throw 'NEEDS_CONTEXT: physical Phase A plan is not the approval-locked raw commit blob.'
+}
+if ((Get-FileHash -LiteralPath $DesignPath -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.spec_sha256 -or
+    (& git hash-object --no-filters -- $DesignPath).Trim() -cne
+        (& git rev-parse ([string]$ApprovalRecord.spec_commit + ':' + $DesignPath)).Trim()) {
+    throw 'NEEDS_CONTEXT: physical specification is not the approval-locked raw commit blob.'
+}
+if ((& git rev-parse HEAD).Trim() -cne [string]$ApprovalRecord.approved_plan_commit) {
+    throw 'NEEDS_CONTEXT: Task 1 HEAD is not the approval-locked plan commit.'
+}
+$ApprovalLockHashAtTask1Start = (Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash
+```
+
+Only after Step 0 passes, use `apply_patch` to create the three ignored helper files from Appendices A, B, and C of this plan, byte for byte. Do not copy either exploratory `plan-draft` or `independent-draft`, and do not substitute another launcher. Appendices A-C and their fixed SHA-256 values are part of the committed executable plan; a missing file, a pre-existing different file, or a hash mismatch is `NEEDS_CONTEXT`, not permission to regenerate helper code during execution.
+
+- [ ] **Step 1: Re-establish the exact baseline commit, trusted paths, and task-owned temporary root**
+
+Continue in the same approval-validated PowerShell session:
+
+```powershell
+$OriginalDesignCommit = 'bdad1441d9731fbfac3e1b90654dbe888f354296'
+$ApprovedSpecCommit = '98ff5ca351806732f435b977c7b3b445d586bf6b'
+$CatastrophicCleanupCommit = '51d089fe76f7be9cc2535f47b6a83db5e006a6e8'
+$MonitorLifetimeCommit = 'babfcb9372f3005decc7caf5e014511677c9da8c'
+$CoverageContractCommit = 'bdebe79f3411927496df29ea34a0abbc0a13bfad'
+$HeadlessPlanCommit = '3d67be6ba5df0ce7df0445988306bc603d3a69e4'
+$LegacySaveSpecCommit = '22ce7cf48aa6f9a0062a697d9cbf954881c60245'
+$OriginalPlanCommit = '168c3f2f6440628fc580e6eeb79065d2ae1439a5'
+$ExpectedPlanSubject = 'docs: plan terminal collapse coverage v2 retry'
+$ExpectedGameTree = 'fa7a398e9d989731b24e3c1642f3e2e33ce846ff'
+$DesignSha256 = 'F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232'
 $UnrelatedPlan = 'docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md'
 $UnrelatedSha256 = '0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C'
 $EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
@@ -211,12 +352,20 @@ $LegacyRoot = Join-Path $EvidenceRoot 'legacy'
 $RunnerSource = Join-Path $HelperRoot 'PrivateDesktopRunner.cs'
 $HeadlessWrapper = Join-Path $HelperRoot 'Invoke-PrivateDesktopProcess.ps1'
 $HeadlessSelfTest = Join-Path $HelperRoot 'Test-PrivateDesktopRunner.ps1'
+$FailedV1SelfTestRoot = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp\cos-private-desktop-selftest-d37d19e4adfc4b5fb3622abcc8a53212'
+$FailedV1CoverageResult = Join-Path $FailedV1SelfTestRoot 'short-lived-pid-coverage\result.json'
+$FailedV1CoverageResultSha256 = '300515E17B8EDD6B0CD99C268E685DCAE6770BC664B5C28F231F231F03E9F27B'
 $ExpectedHelperPayloads = [ordered]@{
-    'PrivateDesktopRunner.cs' = [pscustomobject]@{ Bytes = 69781; Sha256 = 'F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154' }
-    'Invoke-PrivateDesktopProcess.ps1' = [pscustomobject]@{ Bytes = 5016; Sha256 = '8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A' }
-    'Test-PrivateDesktopRunner.ps1' = [pscustomobject]@{ Bytes = 16866; Sha256 = '00808C50EE4BEC6D28CC3B7DE8C6EF853D9BC1DDCAABE9625E84D3FD767A183F' }
+    'PrivateDesktopRunner.cs' = [pscustomobject]@{ Bytes = 82334; Sha256 = 'E0393DB1E113FDB8C35097978AA73B7D33AFDD5788499002B6423D883DEED4E8' }
+    'Invoke-PrivateDesktopProcess.ps1' = [pscustomobject]@{ Bytes = 24229; Sha256 = '73A3F9C43CF994E08F004E0A1266122A3EC5E0EAF065C63E6D9439CF0B0E1880' }
+    'Test-PrivateDesktopRunner.ps1' = [pscustomobject]@{ Bytes = 53188; Sha256 = '20198B669F70E51E51F71BD01E6D06D1949D300F43CE9A94FB0190A47D781A15' }
 }
 $TrustedSdkRoot = 'E:\Projects\renpy-8.5.2-sdk'
+$RenPyConsole = Join-Path $TrustedSdkRoot 'lib\py3-windows-x86_64\python.exe'
+$RenPyEntry = Join-Path $TrustedSdkRoot 'renpy.py'
+$RenPyVersionFile = Join-Path $TrustedSdkRoot 'renpy\vc_version.py'
+$VersionProcessEvidence = Join-Path $LegacyRoot 'renpy-version-process'
+$Task1CompletionRecord = Join-Path $LegacyRoot 'task1-completion.json'
 $ConfiguredSdkRoot = [Environment]::GetEnvironmentVariable('RENPY_SDK', 'Process')
 if (-not [string]::IsNullOrWhiteSpace($ConfiguredSdkRoot) -and
     -not [IO.Path]::GetFullPath($ConfiguredSdkRoot).TrimEnd('\').Equals($TrustedSdkRoot, [StringComparison]::OrdinalIgnoreCase)) {
@@ -228,11 +377,14 @@ $BaselineCommit = (& git rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($BaselineCommit)) {
     throw 'Could not resolve the executable-plan HEAD.'
 }
+if ($BaselineCommit -cne [string]$ApprovalRecord.approved_plan_commit) {
+    throw 'The dynamic Task 1 baseline does not equal the approval-locked plan commit.'
+}
 if ((git log -1 --format=%s) -cne $ExpectedPlanSubject) {
     throw 'HEAD is not the approved final Phase A plan commit.'
 }
-if ((git rev-parse HEAD^) -cne $WrittenSpecCommit) {
-    throw 'The final Phase A plan commit does not directly follow the written specification.'
+if ((git rev-parse HEAD^) -cne $ApprovedSpecCommit) {
+    throw 'The final Phase A plan commit does not directly follow the approved coverage-v2 specification.'
 }
 $PlanPaths = @(git diff-tree --no-commit-id --name-only -r $BaselineCommit)
 if ($PlanPaths.Count -ne 1 -or $PlanPaths[0] -cne $ThisPlan) {
@@ -254,10 +406,27 @@ $SharedStatus = @(git status --short --untracked-files=all)
 if ($SharedStatus.Count -ne 1 -or $SharedStatus[0] -cne ('?? ' + $UnrelatedPlan)) {
     throw ('Unexpected shared worktree status: ' + ($SharedStatus -join '; '))
 }
-foreach ($RequiredPath in @($RenPyExe, $RunnerSource, $HeadlessWrapper, $HeadlessSelfTest)) {
+foreach ($RequiredPath in @($RenPyExe, $RenPyConsole, $RenPyEntry, $RenPyVersionFile, $RunnerSource, $HeadlessWrapper, $HeadlessSelfTest)) {
     if (-not (Test-Path -LiteralPath $RequiredPath -PathType Leaf)) {
         throw ('Required Task 1 input is missing: ' + $RequiredPath)
     }
+}
+if ((Get-Item -LiteralPath $RenPyVersionFile).Length -ne 106 -or
+    (Get-FileHash -LiteralPath $RenPyVersionFile -Algorithm SHA256).Hash -cne 'A0DD836920B6EAA68758C1FC6BCF722313152C09F7773654BC565209F545CBE7') {
+    throw 'Trusted SDK vc_version.py byte count or hash drifted before Task 1.'
+}
+$VersionSource = [IO.File]::ReadAllText($RenPyVersionFile, $StrictUtf8)
+$ExpectedVersionSource = "branch = 'fix'`nnightly = False`nofficial = True`nversion = '8.5.2.26010301'`nversion_name = 'In Good Health'`n"
+if ($VersionSource -cne $ExpectedVersionSource) { throw 'Trusted SDK vc_version.py bytes drifted.' }
+foreach ($CreateNewTask1Path in @($VersionProcessEvidence, $Task1CompletionRecord)) {
+    if (Test-Path -LiteralPath $CreateNewTask1Path) {
+        throw ('Task 1 create-new path already exists; do not rerun or overwrite: ' + $CreateNewTask1Path)
+    }
+}
+if (-not (Test-Path -LiteralPath $FailedV1SelfTestRoot -PathType Container) -or
+    -not (Test-Path -LiteralPath $FailedV1CoverageResult -PathType Leaf) -or
+    (Get-FileHash -LiteralPath $FailedV1CoverageResult -Algorithm SHA256).Hash -cne $FailedV1CoverageResultSha256) {
+    throw 'Preserved d37d v1 failure evidence is missing or drifted.'
 }
 foreach ($HelperName in $ExpectedHelperPayloads.Keys) {
     $HelperPath = Join-Path $HelperRoot $HelperName
@@ -420,7 +589,9 @@ Do not delete or alter `$InterruptedSaveDir`, `$InterruptedReport`, `$Interrupte
 
 - [ ] **Step 3: Parse, compile, and exercise the independent-desktop helper appendices**
 
-The selected helper contract is fixed: dot-source `Invoke-PrivateDesktopProcess.ps1`, then call `Invoke-PrivateDesktopProcess -FilePath <absolute executable> -ArgumentList <string[]> -WorkingDirectory <absolute directory> -EnvironmentOverrides <hashtable> -TimeoutSeconds <1..86400> -EvidenceDirectory <new absent directory> [-RunnerSource <absolute PrivateDesktopRunner.cs>]`. A `$null` environment value removes that variable from the child. The helper creates `request.json`, `stdout.txt`, `stderr.txt`, and `result.json` with create-new semantics. Its exact result fields are `schema_version`, `classification`, `detail`, `started`, `root_pid`, `root_exit_code`, `timed_out`, `job_drained`, `desktop_name`, `process_ids`, `new_process_ids`, `active_snapshot_process_ids`, `job_total_processes`, `process_coverage_complete`, `monitor_armed_before_resume`, `monitor_armed_utc`, `resumed_utc`, `cleanup_complete`, `cleanup_errors`, `visible_windows`, `started_utc`, `finished_utc`, `elapsed_milliseconds`, `stdout_path`, and `stderr_path`; the wrapper adds `helper_exit_code`. A dedicated watcher thread must enter the private desktop, create its message queue, arm create/show WinEvent hooks, and enumerate that private desktop before launch. The root then starts suspended, enters the kill-on-close Job, and resumes only after the monitor is armed. The watcher continues WinEvent plus private `EnumDesktopWindows` coverage until the Job drains; Job accounting must equal the distinct accumulated process IDs, and cleanup must be complete. Any visible window or incomplete monitoring, process coverage, drain, or cleanup fails closed. Do not substitute a different launcher.
+The selected helper contract is fixed: dot-source `.superpowers/sdd/terminal-collapse-ending/helpers/Invoke-PrivateDesktopProcess.ps1`, then call `Invoke-PrivateDesktopProcess -FilePath <absolute executable> -ArgumentList <string[]> -WorkingDirectory <absolute directory> -EnvironmentOverrides <hashtable> -TimeoutSeconds <1..86400> -EvidenceDirectory <new absent directory> [-RunnerSource <absolute PrivateDesktopRunner.cs>]`. A `$null` environment value removes that variable from the target child. Each public invocation writes request schema v1 with create-new semantics, starts exactly one new hidden/noninteractive `powershell.exe` helper host, waits boundedly for that actual host process to exit, reads strict UTF-8 `result.json`, and validates the actual host exit against the C#-persisted `helper_exit_code` and classification. Result schema v2 has exactly `schema_version`, `classification`, `detail`, `started`, `root_pid`, `root_exit_code`, `timed_out`, `job_drained`, `desktop_name`, `process_ids`, `new_process_ids`, `active_snapshot_process_ids`, `job_total_processes`, `observed_distinct_process_id_count`, `process_id_accounting_kind`, `process_diagnostic_errors`, `private_desktop_initially_empty`, `monitor_armed_before_create`, `monitor_armed_before_resume`, `monitor_armed_utc`, `process_created_utc`, `resumed_utc`, `root_assigned_to_job_before_resume`, `job_kill_on_close_verified`, `job_breakaway_forbidden`, `job_handle_non_inheritable`, `job_active_processes_final`, `monitor_completed_after_job_drain`, `host_termination_required`, `cleanup_complete`, `cleanup_errors`, `visible_windows`, `started_utc`, `finished_utc`, `elapsed_milliseconds`, `stdout_path`, `stderr_path`, and `helper_exit_code`; legacy `process_coverage_complete` is forbidden. The helper exit mapping is exactly `COMPLETED=0`, `NEEDS_CONTEXT=20`, `TIMEOUT=21`, and `LAUNCH_ERROR=22`; `root_exit_code` is independent and a signaled target exit of `259` remains the legitimate value `259`.
+
+Before `ResumeThread`, a dedicated watcher binds the never-switched private desktop, creates its queue, arms create/show hooks, proves the desktop initially empty, and records `armed <= created <= resumed`. `PROC_THREAD_ATTRIBUTE_JOB_LIST` atomically creates the suspended root inside a no-breakaway Job whose kill-on-close flag has been set and queried back; `IsProcessInJob` proves membership, and the Job handle is non-inheritable, never duplicated, absent from the inherited handle list, and owned only by that helper host. Every visible private-desktop top-level window is `NEEDS_CONTEXT`; transient SHOW remains fail-closed evidence even when later PID or `GetAncestor` resolution fails. Watcher hooks remain active through all Job termination/drain work and stop only after `ActiveProcesses=0` is proven. If drain cannot be proven or watcher join times out, C# persists and flushes a create-new v2 result with `host_termination_required=true`, `classification=NEEDS_CONTEXT`, `helper_exit_code=20`, `cleanup_complete=false`, and `monitor_completed_after_job_drain=false`, preserves Job/completion-port/watcher/desktop ownership, and immediately terminates that one-shot host. The parent rejects such a result as a safety PASS and never retries. `job_total_processes`, all PID arrays, `observed_distinct_process_id_count`, and bounded/deduplicated `process_diagnostic_errors` are type-checked diagnostics only: no count, equality, minimum, or diagnostic-error-content rule may classify the result or satisfy cleanup. Do not substitute a different launcher.
 
 ```powershell
 $StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
@@ -450,29 +621,104 @@ if ($HelperHashes[$RunnerName] -cne [string]$ExpectedHelperPayloads[$RunnerName]
     throw 'C# helper drifted from its committed appendix.'
 }
 
-# The self-test performs the single C# 5 Add-Type compilation for this fresh
-# process. Do not pre-load the same type here and then attempt to add it twice.
-$SelfTestOutput = @(& $HeadlessSelfTest -IncludeVisibleWindowTest)
+# Contract-only validation is pure PowerShell/static source inspection. It
+# returns before Add-Type, fixture creation, Invoke-PrivateDesktopProcess, or
+# any child launch and therefore does not consume the one full-test attempt.
+$ContractOnlyOutput = @(& $HeadlessSelfTest -ContractOnly)
+if ($ContractOnlyOutput.Count -ne 1) {
+    throw 'Contract-only helper validation did not return exactly one result.'
+}
+$ContractOnlyResult = $ContractOnlyOutput[0]
+if ([string]$ContractOnlyResult.verdict -cne 'PASS' -or
+    [string]$ContractOnlyResult.mode -cne 'CONTRACT_ONLY' -or
+    [int]$ContractOnlyResult.accepted_job_total_processes -ne 66 -or
+    [int]$ContractOnlyResult.accepted_observed_distinct_process_id_count -ne 63 -or
+    [int]$ContractOnlyResult.rejected_mutations -ne 27 -or
+    [int]$ContractOnlyResult.rejected_parent_host_mutations -ne 7) {
+    throw 'Contract-only v2 mutation contract failed.'
+}
+foreach ($ContractPass in @(
+    'catastrophic_parent_validation', 'dedicated_host_architecture',
+    'atomic_job_assignment', 'root_exit_259_contract',
+    'ascii_source_contract', 'static_source_contract'
+)) {
+    if ([string]$ContractOnlyResult.$ContractPass -cne 'PASS') {
+        throw ('Contract-only validation did not prove ' + $ContractPass + '.')
+    }
+}
+
+# This fixed create-new ledger is written before the only authorized full v2
+# self-test. If the session or any case fails, the directory remains and every
+# later session must stop instead of choosing a new root or retrying.
+$SelfTestAttemptLedger = Join-Path $EvidenceRoot 'helper-v2-full-selftest-attempt'
+if (Test-Path -LiteralPath $SelfTestAttemptLedger) {
+    throw 'The one full v2 helper self-test attempt has already been consumed; do not retry.'
+}
+[IO.Directory]::CreateDirectory($SelfTestAttemptLedger) | Out-Null
+git check-ignore -q $SelfTestAttemptLedger
+if ($LASTEXITCODE -ne 0) { throw 'Full helper self-test attempt ledger is not ignored.' }
+$SelfTestAttemptRecord = Join-Path $SelfTestAttemptLedger 'attempt.json'
+$SelfTestAttemptPayload = [ordered]@{
+    schema_version = 1
+    attempt_id = [Guid]::NewGuid().ToString('N')
+    started_utc = [DateTimeOffset]::UtcNow.ToString('o')
+    helper_sha256 = $HelperHashes
+    full_selftest_retry_allowed = $false
+}
+$SelfTestAttemptBytes = $StrictUtf8.GetBytes(($SelfTestAttemptPayload | ConvertTo-Json -Depth 4) + "`n")
+$SelfTestAttemptStream = [IO.File]::Open($SelfTestAttemptRecord, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
+try {
+    $SelfTestAttemptStream.Write($SelfTestAttemptBytes, 0, $SelfTestAttemptBytes.Length)
+    $SelfTestAttemptStream.Flush($true)
+} finally {
+    $SelfTestAttemptStream.Dispose()
+}
+
+try {
+    # Sole full invocation. It compiles fixtures and exercises dedicated hosts.
+    $SelfTestOutput = @(& $HeadlessSelfTest -IncludeVisibleWindowTest)
+} catch {
+    throw ('NEEDS_CONTEXT: the sole full v2 helper self-test failed; preserve its attempt ledger/task-temp evidence and do not retry or launch RenPy. ' + $_.Exception.Message)
+}
 if ($SelfTestOutput.Count -ne 1) {
-    throw 'Private-desktop helper self-test did not return exactly one successful result; preserve its task-temp evidence.'
+    throw 'NEEDS_CONTEXT: the sole full v2 helper self-test did not return exactly one result; preserve evidence and do not retry.'
 }
 $SelfTestResult = $SelfTestOutput[0]
 foreach ($SelfTestProperty in @(
-    'verdict', 'no_window_exit7', 'timeout_tree_drain', 'short_lived_pid_coverage',
-    'argv_roundtrip', 'environment_isolation', 'preexisting_evidence_rejection',
-    'banned_api_scan', 'visible_descendant'
+    'verdict', 'contract_v2', 'no_window_exit7', 'timeout_tree_drain',
+    'short_lived_process_accounting', 'argv_roundtrip', 'environment_isolation',
+    'preexisting_evidence_rejection', 'banned_api_scan', 'visible_descendant'
 )) {
     if ($null -eq $SelfTestResult.PSObject.Properties[$SelfTestProperty] -or
         [string]$SelfTestResult.$SelfTestProperty -cne 'PASS') {
-        throw ('Private-desktop helper self-test did not prove ' + $SelfTestProperty + '.')
+        throw ('NEEDS_CONTEXT: the sole full v2 helper self-test did not prove ' + $SelfTestProperty + '; do not retry.')
     }
 }
 $SelfTestRoot = [string]$SelfTestResult.test_root
 if ([string]::IsNullOrWhiteSpace($SelfTestRoot) -or
     -not (Test-Path -LiteralPath $SelfTestRoot -PathType Container) -or
     -not (Test-SameOrChildPath $SelfTestRoot $TaskTempRoot)) {
-    throw 'Private-desktop self-test evidence is not under the task-owned temporary root.'
+    throw 'NEEDS_CONTEXT: private-desktop self-test evidence is not under the task-owned temporary root; do not retry.'
 }
+$SelfTestCompletionRecord = Join-Path $SelfTestAttemptLedger 'completion.json'
+$SelfTestCompletionPayload = [ordered]@{
+    schema_version = 1
+    verdict = 'PASS'
+    finished_utc = [DateTimeOffset]::UtcNow.ToString('o')
+    test_root = $SelfTestRoot
+    contract_only = $ContractOnlyResult
+    full_selftest = $SelfTestResult
+}
+$SelfTestCompletionBytes = $StrictUtf8.GetBytes(($SelfTestCompletionPayload | ConvertTo-Json -Depth 8) + "`n")
+$SelfTestCompletionStream = [IO.File]::Open($SelfTestCompletionRecord, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
+try {
+    $SelfTestCompletionStream.Write($SelfTestCompletionBytes, 0, $SelfTestCompletionBytes.Length)
+    $SelfTestCompletionStream.Flush($true)
+} finally {
+    $SelfTestCompletionStream.Dispose()
+}
+$SelfTestAttemptHash = (Get-FileHash -LiteralPath $SelfTestAttemptRecord -Algorithm SHA256).Hash
+$SelfTestCompletionHash = (Get-FileHash -LiteralPath $SelfTestCompletionRecord -Algorithm SHA256).Hash
 
 . $HeadlessWrapper
 if (-not (Get-Command Invoke-PrivateDesktopProcess -CommandType Function -ErrorAction SilentlyContinue)) {
@@ -491,33 +737,18 @@ function New-PrivateRenPyEnvironment([hashtable]$Additional) {
 }
 function Assert-PrivateDesktopCompletion([object]$Result, [int]$ExpectedRootExitCode, [string]$Context) {
     if ($null -eq $Result) { throw ($Context + ' returned no private-desktop result.') }
-    foreach ($RequiredProperty in @(
-        'schema_version', 'classification', 'detail', 'started', 'root_pid', 'root_exit_code',
-        'timed_out', 'job_drained', 'desktop_name', 'process_ids', 'new_process_ids',
-        'active_snapshot_process_ids', 'job_total_processes', 'process_coverage_complete',
-        'monitor_armed_before_resume', 'monitor_armed_utc', 'resumed_utc',
-        'cleanup_complete', 'cleanup_errors', 'visible_windows', 'started_utc',
-        'finished_utc', 'elapsed_milliseconds', 'stdout_path', 'stderr_path', 'helper_exit_code'
-    )) {
-        if ($null -eq $Result.PSObject.Properties[$RequiredProperty]) {
-            throw ($Context + ' result omits required field ' + $RequiredProperty + '.')
-        }
+    try {
+        Assert-PrivateDesktopSafetyEnvelope -Result $Result
+    } catch {
+        throw ($Context + ' failed the reusable schema-v2 safety envelope: ' + $_.Exception.Message)
     }
-    $ProcessIds = @($Result.process_ids)
-    $UniqueProcessIds = @($ProcessIds | Sort-Object -Unique)
-    $ArmedUtc = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, [Globalization.CultureInfo]::InvariantCulture)
-    $ResumedUtc = [DateTimeOffset]::Parse([string]$Result.resumed_utc, [Globalization.CultureInfo]::InvariantCulture)
-    if ([int]$Result.schema_version -ne 1 -or
-        [string]$Result.classification -cne 'COMPLETED' -or [int]$Result.helper_exit_code -ne 0 -or
-        -not [bool]$Result.started -or [bool]$Result.timed_out -or -not [bool]$Result.job_drained -or
-        -not [bool]$Result.process_coverage_complete -or -not [bool]$Result.monitor_armed_before_resume -or
-        $ArmedUtc -gt $ResumedUtc -or -not [bool]$Result.cleanup_complete -or
-        @($Result.cleanup_errors).Count -ne 0 -or
-        @($Result.visible_windows).Count -ne 0 -or [int]$Result.root_exit_code -ne $ExpectedRootExitCode -or
-        [string]::IsNullOrWhiteSpace([string]$Result.desktop_name) -or $ProcessIds.Count -lt 1 -or
-        $UniqueProcessIds.Count -ne $ProcessIds.Count -or
-        [int]$Result.job_total_processes -ne $ProcessIds.Count -or
-        $ProcessIds -notcontains [int]$Result.root_pid) {
+    if (-not (Test-PrivateDesktopIntegralValue $Result.root_exit_code)) {
+        throw ($Context + ' returned a null or non-integral root_exit_code.')
+    }
+    if ([string]$Result.classification -cne 'COMPLETED' -or
+        [int]$Result.helper_exit_code -ne 0 -or [bool]$Result.timed_out -or
+        @($Result.visible_windows).Count -ne 0 -or
+        [int64]$Result.root_exit_code -ne [int64]$ExpectedRootExitCode) {
         throw ($Context + ' failed private-desktop completion gates. Classification=' + [string]$Result.classification + '; detail=' + [string]$Result.detail)
     }
     foreach ($EvidencePath in @($Result.stdout_path, $Result.stderr_path)) {
@@ -526,9 +757,48 @@ function Assert-PrivateDesktopCompletion([object]$Result, [int]$ExpectedRootExit
         }
     }
 }
+
+# Task 0 was static-only. This is the sole runtime version probe, and it is
+# ordered strictly after completion.json was create-new written and Flush(true)
+# returned. It consumes a fixed evidence path and therefore cannot be retried.
+$PersistedSelfTestCompletion = [IO.File]::ReadAllText($SelfTestCompletionRecord, $StrictUtf8) | ConvertFrom-Json -ErrorAction Stop
+if ([string]$PersistedSelfTestCompletion.verdict -cne 'PASS' -or
+    [string]$PersistedSelfTestCompletion.full_selftest.verdict -cne 'PASS') {
+    throw 'NEEDS_CONTEXT: durably persisted full-selftest completion did not re-read as PASS; do not run the version probe.'
+}
+$VersionRun = Invoke-PrivateDesktopProcess `
+    -FilePath $RenPyConsole `
+    -ArgumentList @($RenPyEntry, '--version') `
+    -WorkingDirectory $TrustedSdkRoot `
+    -EnvironmentOverrides (New-PrivateRenPyEnvironment @{}) `
+    -TimeoutSeconds 30 `
+    -EvidenceDirectory $VersionProcessEvidence `
+    -RunnerSource $RunnerSource
+Assert-PrivateDesktopCompletion $VersionRun 0 'trusted RenPy version probe'
+$VersionStdoutPath = [string]$VersionRun.stdout_path
+$VersionStderrPath = [string]$VersionRun.stderr_path
+$VersionStdoutBytes = [IO.File]::ReadAllBytes($VersionStdoutPath)
+$VersionStderrBytes = [IO.File]::ReadAllBytes($VersionStderrPath)
+$VersionStdoutText = $StrictUtf8.GetString($VersionStdoutBytes)
+$VersionStderrText = $StrictUtf8.GetString($VersionStderrBytes)
+if ($VersionStdoutText.Contains([char]0xFFFD) -or $VersionStderrText.Contains([char]0xFFFD) -or
+    $VersionStdoutText -cne "Ren'Py 8.5.2.26010301`r`n" -or
+    $VersionStderrText -cne '') {
+    throw ('NEEDS_CONTEXT: private version probe output was not exact; preserve ' + $VersionProcessEvidence + ' and do not retry.')
+}
+$VersionArtifactHashes = [ordered]@{}
+foreach ($VersionArtifactName in @('request.json', 'stdout.txt', 'stderr.txt', 'result.json')) {
+    $VersionArtifactPath = Join-Path $VersionProcessEvidence $VersionArtifactName
+    if (-not (Test-Path -LiteralPath $VersionArtifactPath -PathType Leaf)) {
+        throw ('NEEDS_CONTEXT: private version probe evidence is incomplete: ' + $VersionArtifactPath)
+    }
+    git check-ignore -q -- $VersionArtifactPath
+    if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: version evidence is not ignored: ' + $VersionArtifactPath) }
+    $VersionArtifactHashes[$VersionArtifactName] = (Get-FileHash -LiteralPath $VersionArtifactPath -Algorithm SHA256).Hash
+}
 ```
 
-Expected: both PowerShell appendices parse, the C# appendix compiles, all eight helper behaviors plus the overall self-test verdict are `PASS`, and its unique root remains preserved for the evidence manifest. The three physical files must remain exactly 69,781 / 5,016 / 16,866 bytes with SHA-256 `F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154`, `8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A`, and `00808C50EE4BEC6D28CC3B7DE8C6EF853D9BC1DDCAABE9625E84D3FD767A183F`. If cross-review changes helper source, update the appendices and fixed hashes through a new reviewed plan revision before execution; never accept dynamic schema or source drift.
+Expected: both PowerShell appendices parse; the pure contract-only v2 mutation/static suite returns its single PASS without `Add-Type` or a child; then the create-new ledger permits exactly one full self-test, whose nine named behavior fields and overall verdict are `PASS`, including the throwing exit-259 fixture gate and opt-in visible Form sentinel. Only after the flushed completion record re-reads as PASS does one private dummy-driver version probe run; it passes the central envelope and separate classification/helper/no-timeout/zero-window/non-null-integral-root-exit-0 gates and emits exactly `Ren'Py 8.5.2.26010301` plus CRLF on stdout and zero stderr bytes. The full test's unique root, both ledger records, and four fixed version artifacts remain preserved for the sealed completion record. The three physical helper files must remain exactly 82,334 / 24,229 / 53,188 bytes with SHA-256 `E0393DB1E113FDB8C35097978AA73B7D33AFDD5788499002B6423D883DEED4E8`, `73A3F9C43CF994E08F004E0A1266122A3EC5E0EAF065C63E6D9439CF0B0E1880`, and `20198B669F70E51E51F71BD01E6D06D1949D300F43CE9A94FB0190A47D781A15`. Any full-test or version-probe failure preserves the fixed ledger/root/evidence and stops before generator Ren'Py with no retry. If cross-review changes helper source, update the appendices and fixed hashes through a new reviewed plan revision before execution; never accept dynamic schema or source drift.
 
 - [ ] **Step 4: Create a detached generator worktree and add only the native testcase fixture**
 
@@ -1125,14 +1395,16 @@ The post-run local rule is intentionally different from the generator rule. Ren'
 Create `.superpowers/sdd/terminal-collapse-ending/legacy/baseline-evidence.md` with `apply_patch`. It must contain literal, non-placeholder values for every item below:
 
 - `verdict=PASS`, `renpy_version=Ren'Py 8.5.2.26010301`, and the UTC evidence time;
-- `baseline_commit=$BaselineCommit`, `baseline_game_tree=fa7a398e9d989731b24e3c1642f3e2e33ce846ff`, `original_design_commit=bdad1441d9731fbfac3e1b90654dbe888f354296`, and `written_spec_commit=22ce7cf48aa6f9a0062a697d9cbf954881c60245`;
-- all three fixed helper byte counts and SHA-256 values, `$SelfTestRoot`, the nine `PASS` self-test fields, and the preserved self-test result/evidence hashes;
+- `baseline_commit=$BaselineCommit`, `baseline_game_tree=fa7a398e9d989731b24e3c1642f3e2e33ce846ff`, `original_design_commit=bdad1441d9731fbfac3e1b90654dbe888f354296`, `legacy_save_spec_commit=22ce7cf48aa6f9a0062a697d9cbf954881c60245`, `approved_spec_commit=98ff5ca351806732f435b977c7b3b445d586bf6b`, and `approved_spec_sha256=F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232`;
+- the fixed approval-lock path, `$ApprovalLockHashAtTask1Start`, locked plan commit/hash, and `approval_lock_validation=PASS`;
+- all three fixed helper byte counts and SHA-256 values, the preserved d37d v1 root/result SHA-256, the contract-only 66/63 PASS and mutation counts, `$SelfTestAttemptLedger`, `$SelfTestAttemptHash`, `$SelfTestCompletionHash`, `$SelfTestRoot`, the ten full-output `PASS` properties (overall verdict plus nine named behavior fields), and all preserved full-selftest evidence hashes;
+- the private version helper's complete schema-v2 hard gates, `root_exit_code=0`, exact stdout text/byte count, empty stderr, `$VersionProcessEvidence`, and the hashes/byte counts of its fixed `request.json`, `stdout.txt`, `stderr.txt`, and `result.json`;
 - `$InterruptedReport`, `$InterruptedReportHash`, `$InterruptedSaveDir`, the four preserved interrupted artifact hashes, and `$InterruptedLogHash`;
-- `$GeneratorRoot`, `$GeneratorSaveDir`, generator helper `root_pid`, distinct `process_ids`, `job_total_processes`, `process_coverage_complete=True`, `monitor_armed_before_resume=True`, monitor/resume timestamps, `job_drained=True`, `cleanup_complete=True`, `cleanup_errors=0`, `desktop_name`, `root_exit_code=0`, `classification=COMPLETED`, `visible_windows=0`, and hashes for its four helper files, state JSON, and copied Ren'Py log;
+- `$GeneratorRoot`, `$GeneratorSaveDir`, generator helper `schema_version=2`, `root_pid`, diagnostic `process_ids` / `new_process_ids` / `active_snapshot_process_ids`, nullable diagnostic `job_total_processes`, diagnostic `observed_distinct_process_id_count`, `process_id_accounting_kind=diagnostic_distinct_pid`, bounded `process_diagnostic_errors`, `private_desktop_initially_empty=True`, both monitor-before-create/resume gates and all three ordered timestamps, `root_assigned_to_job_before_resume=True`, `job_kill_on_close_verified=True`, `job_breakaway_forbidden=True`, `job_handle_non_inheritable=True`, `job_active_processes_final=0`, `job_drained=True`, `monitor_completed_after_job_drain=True`, `host_termination_required=False`, `cleanup_complete=True`, `cleanup_errors=0`, `desktop_name`, `root_exit_code=0`, `classification=COMPLETED`, `helper_exit_code=0`, `parent_host_validation=PASS`, `visible_windows=0`, and hashes for its four helper files, state JSON, and copied Ren'Py log; do not describe PID/count diagnostics as complete coverage;
 - physical engine filename, logical slot `1-1`, `$MotherLength`, `$MotherHash`, external/local generator filenames, lengths, SHA-256 values, and `multilocation_bytes_equal=PASS`;
 - `choice_path=截断补给线——让他们饿三天再打 -> 亲自率领前锋出击 -> 记住这一切，继续前进`;
 - `menu_node=game/chapter5.rpy:2807`, `context_count=1`, `return_stack=[]`, `intrigue=55`, `power=60`, `_iron_prepared=True`, both exact visible final choices, and hard-grind absent;
-- `$CleanRoot`, `$CleanSaveDir`, observer helper `root_pid`, distinct `process_ids`, `job_total_processes`, `process_coverage_complete=True`, `monitor_armed_before_resume=True`, monitor/resume timestamps, `job_drained=True`, `cleanup_complete=True`, `cleanup_errors=0`, `desktop_name`, `root_exit_code=0`, `classification=COMPLETED`, `visible_windows=0`, and hashes for its four helper files, state JSON, and copied Ren'Py log;
+- `$CleanRoot`, `$CleanSaveDir`, observer helper `schema_version=2`, `root_pid`, the same diagnostic-only PID/count/error fields, all private-desktop/create/resume/Job ownership/drain/monitor/cleanup hard gates, `job_active_processes_final=0`, `host_termination_required=False`, `root_exit_code=0`, `classification=COMPLETED`, `helper_exit_code=0`, `parent_host_validation=PASS`, `visible_windows=0`, and hashes for its four helper files, state JSON, and copied Ren'Py log; do not assert diagnostic count equality or completeness;
 - `observer_command=run`, `observer_is_in_test=False`, `RENPY_AUTO_LOAD=1-1`, `RENPY_PATH_TO_SAVES=absent`, the store marker, every slot metadata field, `clean_external_hash_unchanged=PASS`, and `clean_local_1-1_count=0`;
 - the exact generator/clean worktree and SaveDir paths, followed later by their successful cleanup status. Do not include or copy the save payload itself into Markdown.
 
@@ -1148,11 +1420,19 @@ foreach ($RequiredLiteral in @(
     'verdict=PASS',
     ('baseline_commit=' + $BaselineCommit),
     ('baseline_game_tree=' + $BaselineGameTree),
+    ('approved_spec_commit=' + $ApprovedSpecCommit),
+    ('selftest_attempt_sha256=' + $SelfTestAttemptHash),
+    ('selftest_completion_sha256=' + $SelfTestCompletionHash),
     ('engine_filename=' + (Split-Path $MotherSave -Leaf)),
     ('sha256=' + $MotherHash),
     ('marker=' + $LegacyMarker),
     'observer_command=run',
+    "renpy_version=Ren'Py 8.5.2.26010301",
+    ('approval_lock_sha256=' + $ApprovalLockHashAtTask1Start),
+    ('version_evidence_dir=' + $VersionProcessEvidence),
     'clean_local_1-1_count=0',
+    'parent_host_validation=PASS',
+    'host_termination_required=False',
     'visible_windows=0'
 )) {
     if (-not $BaselineEvidenceText.Contains($RequiredLiteral)) {
@@ -1163,7 +1443,14 @@ $BaselineEvidenceHash = (Get-FileHash -LiteralPath $BaselineEvidence -Algorithm 
 $GeneratorStateHash = (Get-FileHash -LiteralPath $GeneratorStateResult -Algorithm SHA256).Hash
 $ObserverStateHash = (Get-FileHash -LiteralPath $ObserverStateResult -Algorithm SHA256).Hash
 foreach ($EvidencePath in @(
+    $ApprovalLockPath,
     $BaselineEvidence,
+    $SelfTestAttemptRecord,
+    $SelfTestCompletionRecord,
+    (Join-Path $VersionProcessEvidence 'request.json'),
+    (Join-Path $VersionProcessEvidence 'stdout.txt'),
+    (Join-Path $VersionProcessEvidence 'stderr.txt'),
+    (Join-Path $VersionProcessEvidence 'result.json'),
     $GeneratorStateResult,
     $ObserverStateResult,
     (Join-Path $GeneratorProcessEvidence 'request.json'),
@@ -1222,6 +1509,15 @@ function Remove-VerifiedTaskDirectory([string]$Path, [string]$RequiredPrefix) {
 if ([string]$GeneratorRun.classification -cne 'COMPLETED' -or [string]$ObserverRun.classification -cne 'COMPLETED') {
     throw 'Refusing cleanup because both private runs were not successful.'
 }
+if ((Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockHashAtTask1Start) {
+    throw 'NEEDS_CONTEXT: approval lock drifted before cleanup; preserve all evidence and stop.'
+}
+foreach ($CleanupTarget in @($GeneratorRoot, $GeneratorSaveDir, $CleanRoot, $CleanSaveDir)) {
+    if ((Test-SameOrChildPath $ApprovalLockPath $CleanupTarget) -or
+        (Test-SameOrChildPath $CleanupTarget (Split-Path $ApprovalLockPath -Parent))) {
+        throw ('NEEDS_CONTEXT: cleanup target is not disjoint from the approval lock: ' + $CleanupTarget)
+    }
+}
 Assert-NoProcessReference @($GeneratorRoot, $GeneratorSaveDir, $CleanRoot, $CleanSaveDir)
 foreach ($Worktree in @($GeneratorRoot, $CleanRoot)) {
     if ((git -C $Worktree rev-parse HEAD) -cne $BaselineCommit) { throw ('Cleanup worktree commit drifted: ' + $Worktree) }
@@ -1253,6 +1549,10 @@ Use `apply_patch` once more to append the literal four cleanup results to `basel
 if ((git rev-parse HEAD) -cne $BaselineCommit -or (git rev-parse 'HEAD:game') -cne $ExpectedGameTree) {
     throw 'Shared HEAD or game tree changed during legacy-save generation.'
 }
+if ((Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockHashAtTask1Start -or
+    $ApprovalLockHashAtTask1Start -cne $ApprovalLockSha256) {
+    throw 'Approval lock changed during Task 1.'
+}
 if (@(git diff --cached --name-only).Count -ne 0) { throw 'Shared index changed during Task 1.' }
 $FinalSharedStatus = @(git status --short --untracked-files=all)
 if ($FinalSharedStatus.Count -ne 1 -or $FinalSharedStatus[0] -cne ('?? ' + $UnrelatedPlan)) {
@@ -1267,19 +1567,163 @@ if ((Get-FileHash -LiteralPath $MotherSave -Algorithm SHA256).Hash -cne $MotherH
     throw 'Durable mother save is no longer the exact read-only engine artifact.'
 }
 if (-not (Test-Path -LiteralPath $SelfTestRoot -PathType Container) -or
+    -not (Test-Path -LiteralPath $SelfTestAttemptRecord -PathType Leaf) -or
+    -not (Test-Path -LiteralPath $SelfTestCompletionRecord -PathType Leaf) -or
+    (Get-FileHash -LiteralPath $SelfTestAttemptRecord -Algorithm SHA256).Hash -cne $SelfTestAttemptHash -or
+    (Get-FileHash -LiteralPath $SelfTestCompletionRecord -Algorithm SHA256).Hash -cne $SelfTestCompletionHash -or
     -not (Test-Path -LiteralPath $InterruptedSaveDir -PathType Container) -or
-    -not (Test-Path -LiteralPath $InterruptedReport -PathType Leaf)) {
+    -not (Test-Path -LiteralPath $InterruptedReport -PathType Leaf) -or
+    -not (Test-Path -LiteralPath $FailedV1CoverageResult -PathType Leaf) -or
+    (Get-FileHash -LiteralPath $FailedV1CoverageResult -Algorithm SHA256).Hash -cne $FailedV1CoverageResultSha256) {
     throw 'Required helper or interrupted-attempt evidence was removed.'
 }
 $FinalBaselineEvidenceHash = (Get-FileHash -LiteralPath $BaselineEvidence -Algorithm SHA256).Hash
+
+# Seal one strict machine-readable Task 1 completion record. Task 2 consumes
+# this record directly and never treats baseline-evidence.md as an authority.
+$Task1ArtifactPathMap = @{}
+function Add-Task1ArtifactPath([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw ('Cannot seal missing Task 1 artifact: ' + $Path)
+    }
+    $FullPath = (Resolve-Path -LiteralPath $Path).Path
+    $Task1ArtifactPathMap[$FullPath] = $FullPath
+}
+foreach ($FixedArtifact in @(
+    $ApprovalLockPath, $ThisPlan, $DesignPath,
+    $RunnerSource, $HeadlessWrapper, $HeadlessSelfTest,
+    $RenPyConsole, $RenPyEntry, $RenPyVersionFile,
+    $FailedV1CoverageResult, $SelfTestAttemptRecord, $SelfTestCompletionRecord,
+    $InterruptedReport, (Join-Path $InterruptedArchive 'log.txt'),
+    $MotherSave, $BaselineEvidence,
+    $GeneratorStateResult, $ObserverStateResult,
+    (Join-Path $GeneratorProcessEvidence 'request.json'),
+    (Join-Path $GeneratorProcessEvidence 'stdout.txt'),
+    (Join-Path $GeneratorProcessEvidence 'stderr.txt'),
+    (Join-Path $GeneratorProcessEvidence 'result.json'),
+    $GeneratorLogEvidence,
+    (Join-Path $ObserverProcessEvidence 'request.json'),
+    (Join-Path $ObserverProcessEvidence 'stdout.txt'),
+    (Join-Path $ObserverProcessEvidence 'stderr.txt'),
+    (Join-Path $ObserverProcessEvidence 'result.json'),
+    $ObserverLogEvidence,
+    (Join-Path $VersionProcessEvidence 'request.json'),
+    (Join-Path $VersionProcessEvidence 'stdout.txt'),
+    (Join-Path $VersionProcessEvidence 'stderr.txt'),
+    (Join-Path $VersionProcessEvidence 'result.json')
+)) {
+    Add-Task1ArtifactPath $FixedArtifact
+}
+foreach ($ArtifactDirectory in @($SelfTestRoot, $InterruptedSaveDir)) {
+    foreach ($ArtifactFile in @(Get-ChildItem -LiteralPath $ArtifactDirectory -Recurse -File | Sort-Object FullName)) {
+        Add-Task1ArtifactPath $ArtifactFile.FullName
+    }
+}
+$Task1ArtifactEntries = @(
+    foreach ($ArtifactPath in @($Task1ArtifactPathMap.Keys | Sort-Object)) {
+        $ArtifactItem = Get-Item -LiteralPath $ArtifactPath -ErrorAction Stop
+        [pscustomobject][ordered]@{
+            path = $ArtifactItem.FullName
+            bytes = [long]$ArtifactItem.Length
+            sha256 = (Get-FileHash -LiteralPath $ArtifactItem.FullName -Algorithm SHA256).Hash
+        }
+    }
+)
+if ($Task1ArtifactEntries.Count -lt 30) {
+    throw 'Task 1 sealed artifact set is unexpectedly small.'
+}
+$Task1CompletionPayload = [ordered]@{
+    schema_version = 1
+    verdict = 'PASS'
+    approved_plan_lock_sha256 = $ApprovalLockHashAtTask1Start
+    approved_plan_commit = $BaselineCommit
+    plan_sha256 = [string]$ApprovalRecord.plan_sha256
+    spec_commit = [string]$ApprovalRecord.spec_commit
+    spec_sha256 = [string]$ApprovalRecord.spec_sha256
+    baseline_game_tree = $BaselineGameTree
+    full_selftest_attempt_sha256 = $SelfTestAttemptHash
+    full_selftest_completion_sha256 = $SelfTestCompletionHash
+    full_selftest_root = $SelfTestRoot
+    mother_path = $MotherSave
+    mother_sha256 = $MotherHash
+    mother_bytes = [long]$MotherLength
+    mother_read_only = $true
+    artifact_count = [int]$Task1ArtifactEntries.Count
+    artifacts = $Task1ArtifactEntries
+    cleanup = [ordered]@{
+        generator_worktree_removed = -not (Test-Path -LiteralPath $GeneratorRoot)
+        generator_savedir_removed = -not (Test-Path -LiteralPath $GeneratorSaveDir)
+        observer_worktree_removed = -not (Test-Path -LiteralPath $CleanRoot)
+        observer_savedir_removed = -not (Test-Path -LiteralPath $CleanSaveDir)
+    }
+    finished_utc = [DateTimeOffset]::UtcNow.ToString('o')
+}
+$Task1CompletionBytes = $StrictUtf8.GetBytes(($Task1CompletionPayload | ConvertTo-Json -Depth 8) + "`n")
+$Task1CompletionStream = [IO.File]::Open($Task1CompletionRecord, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
+try {
+    $Task1CompletionStream.Write($Task1CompletionBytes, 0, $Task1CompletionBytes.Length)
+    $Task1CompletionStream.Flush($true)
+} finally {
+    $Task1CompletionStream.Dispose()
+}
+git check-ignore -q -- $Task1CompletionRecord
+if ($LASTEXITCODE -ne 0) { throw 'Task 1 sealed completion record is not ignored.' }
+$SealedTask1Bytes = [IO.File]::ReadAllBytes($Task1CompletionRecord)
+if ($SealedTask1Bytes.Length -eq 0 -or
+    ($SealedTask1Bytes.Length -ge 3 -and $SealedTask1Bytes[0] -eq 0xEF -and
+     $SealedTask1Bytes[1] -eq 0xBB -and $SealedTask1Bytes[2] -eq 0xBF)) {
+    throw 'Task 1 sealed completion record is empty or has a BOM.'
+}
+$SealedTask1Text = $StrictUtf8.GetString($SealedTask1Bytes)
+if ($SealedTask1Text.Contains([char]0xFFFD)) { throw 'Task 1 sealed completion record is not strict UTF-8.' }
+$SealedTask1 = $SealedTask1Text | ConvertFrom-Json -ErrorAction Stop
+$ExpectedTask1CompletionProperties = @(
+    'schema_version', 'verdict', 'approved_plan_lock_sha256', 'approved_plan_commit',
+    'plan_sha256', 'spec_commit', 'spec_sha256', 'baseline_game_tree',
+    'full_selftest_attempt_sha256', 'full_selftest_completion_sha256', 'full_selftest_root',
+    'mother_path', 'mother_sha256', 'mother_bytes', 'mother_read_only',
+    'artifact_count', 'artifacts', 'cleanup', 'finished_utc'
+)
+if ($SealedTask1 -isnot [pscustomobject] -or
+    (Compare-Object $ExpectedTask1CompletionProperties @($SealedTask1.PSObject.Properties.Name) -CaseSensitive) -or
+    $SealedTask1.schema_version -isnot [int] -or [int]$SealedTask1.schema_version -ne 1 -or
+    [string]$SealedTask1.verdict -cne 'PASS' -or
+    [int]$SealedTask1.artifact_count -ne @($SealedTask1.artifacts).Count -or
+    -not [bool]$SealedTask1.mother_read_only) {
+    throw 'Task 1 sealed completion record failed its exact top-level contract.'
+}
+foreach ($CleanupProperty in $SealedTask1.cleanup.PSObject.Properties) {
+    if ($CleanupProperty.Value -isnot [bool] -or -not [bool]$CleanupProperty.Value) {
+        throw ('Task 1 sealed cleanup proof failed: ' + $CleanupProperty.Name)
+    }
+}
+foreach ($Artifact in @($SealedTask1.artifacts)) {
+    if ($Artifact -isnot [pscustomobject] -or
+        (Compare-Object @('path', 'bytes', 'sha256') @($Artifact.PSObject.Properties.Name) -CaseSensitive) -or
+        $Artifact.path -isnot [string] -or -not [IO.Path]::IsPathRooted([string]$Artifact.path) -or
+        -not (Test-PrivateDesktopIntegralValue $Artifact.bytes) -or [int64]$Artifact.bytes -lt 0 -or
+        $Artifact.sha256 -isnot [string] -or [string]$Artifact.sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+        -not (Test-Path -LiteralPath ([string]$Artifact.path) -PathType Leaf) -or
+        (Get-Item -LiteralPath ([string]$Artifact.path)).Length -ne [long]$Artifact.bytes -or
+        (Get-FileHash -LiteralPath ([string]$Artifact.path) -Algorithm SHA256).Hash -cne [string]$Artifact.sha256) {
+        throw ('Task 1 sealed artifact validation failed: ' + [string]$Artifact.path)
+    }
+}
+(Get-Item -LiteralPath $Task1CompletionRecord).IsReadOnly = $true
+if (-not (Get-Item -LiteralPath $Task1CompletionRecord).IsReadOnly) {
+    throw 'Task 1 completion record could not be sealed read-only.'
+}
+$Task1CompletionHash = (Get-FileHash -LiteralPath $Task1CompletionRecord -Algorithm SHA256).Hash
 "baseline_commit=$BaselineCommit"
 "baseline_game_tree=$BaselineGameTree"
 "mother=$MotherSave"
 "mother_sha256=$MotherHash"
 "baseline_evidence_sha256=$FinalBaselineEvidenceHash"
+"task1_completion=$Task1CompletionRecord"
+"task1_completion_sha256=$Task1CompletionHash"
 ```
 
-Expected: the only durable game-state artifact is the ignored, read-only mother save, backed by generator and clean-normal-run evidence. The shared `game/` tree is still the original pre-change tree. Art, music, sound effects, animation, and UI changes are not required; no shipping asset or package byte has been added.
+Expected: the durable game-state artifact is the ignored, read-only mother save, backed by generator and clean-normal-run evidence. A second ignored, read-only, strict machine record seals the approval lock, plan/spec identity, full-selftest attempt/completion, d37d failure, helper sources and full evidence tree, version probe, interrupted attempt, mother, generator, observer, and baseline-manifest artifacts with literal byte counts and SHA-256 values. The shared `game/` tree is still the original pre-change tree. Art, music, sound effects, animation, and UI changes are not required; no shipping asset or package byte has been added.
 
 ---
 
@@ -1291,6 +1735,69 @@ Expected: the only durable game-state artifact is the ignored, read-only mother 
 - Modify: `game/balance.rpy:15-98`
 - Test: `game/test_game.rpy:127-254`
 - Test migration: `game/test_game.rpy:894-968`
+
+- [ ] **Step 0: Validate the immutable approval lock before the first RED edit**
+
+The controller must provide `$ApprovalLockSha256` out of band when it opens this fresh persistent Windows PowerShell 5.1 session. This is Task 2's first project action. Do not read or edit `game/test_game.rpy`, create the `rules` ledger, or inspect Task 1 evidence until this fence passes; keep the same session open through Step 11:
+
+```powershell
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+$ProjectRoot = (Resolve-Path -LiteralPath '.').Path
+$ThisPlan = 'docs/superpowers/plans/2026-08-11-terminal-collapse-ending-phase-a.md'
+$DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
+$EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
+$ApprovalLockPath = Join-Path $EvidenceRoot 'approved-plan-lock.json'
+$ApprovalLockVariable = Get-Variable -Name ApprovalLockSha256 -Scope 0 -ErrorAction SilentlyContinue
+if ($null -eq $ApprovalLockVariable -or $ApprovalLockVariable.Value -isnot [string] -or
+    [string]$ApprovalLockVariable.Value -cnotmatch '^[0-9A-F]{64}$') {
+    throw 'NEEDS_CONTEXT: Task 2 controller did not bind the out-of-band ApprovalLockSha256 parameter.'
+}
+$ApprovalLockSha256 = [string]$ApprovalLockVariable.Value
+if (-not (Test-Path -LiteralPath $ApprovalLockPath -PathType Leaf)) { throw 'NEEDS_CONTEXT: approved-plan lock is missing.' }
+git check-ignore -q -- $ApprovalLockPath
+if ($LASTEXITCODE -ne 0) { throw 'NEEDS_CONTEXT: approved-plan lock is not ignored.' }
+$ApprovalLockBytes = [IO.File]::ReadAllBytes($ApprovalLockPath)
+if ($ApprovalLockBytes.Length -eq 0 -or
+    ($ApprovalLockBytes.Length -ge 3 -and $ApprovalLockBytes[0] -eq 0xEF -and
+     $ApprovalLockBytes[1] -eq 0xBB -and $ApprovalLockBytes[2] -eq 0xBF)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock is empty or has a BOM.'
+}
+$ApprovalLockText = $StrictUtf8.GetString($ApprovalLockBytes)
+if ($ApprovalLockText.Contains([char]0xFFFD) -or
+    (Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockSha256) {
+    throw 'NEEDS_CONTEXT: approved-plan lock UTF-8 or out-of-band hash validation failed.'
+}
+$ApprovalExpectedProperties = @('schema_version', 'approved_plan_commit', 'plan_sha256', 'spec_commit', 'spec_sha256')
+$ApprovalRawProperties = @([regex]::Matches($ApprovalLockText, '"([^"\\]+)"\s*:') | ForEach-Object { $_.Groups[1].Value })
+if ($ApprovalRawProperties.Count -ne 5 -or
+    (Compare-Object $ApprovalExpectedProperties $ApprovalRawProperties -CaseSensitive)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock has an inexact or duplicate raw property set.'
+}
+$ApprovalRecord = $ApprovalLockText | ConvertFrom-Json -ErrorAction Stop
+if ($ApprovalRecord -isnot [pscustomobject] -or
+    (Compare-Object $ApprovalExpectedProperties @($ApprovalRecord.PSObject.Properties.Name) -CaseSensitive) -or
+    $ApprovalRecord.schema_version -isnot [int] -or [int]$ApprovalRecord.schema_version -ne 1 -or
+    $ApprovalRecord.approved_plan_commit -isnot [string] -or [string]$ApprovalRecord.approved_plan_commit -cnotmatch '^[0-9a-f]{40}$' -or
+    $ApprovalRecord.plan_sha256 -isnot [string] -or [string]$ApprovalRecord.plan_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    $ApprovalRecord.spec_commit -isnot [string] -or [string]$ApprovalRecord.spec_commit -cne '98ff5ca351806732f435b977c7b3b445d586bf6b' -or
+    $ApprovalRecord.spec_sha256 -isnot [string] -or [string]$ApprovalRecord.spec_sha256 -cne 'F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232') {
+    throw 'NEEDS_CONTEXT: approved-plan lock schema, types, or values are invalid.'
+}
+if ((Get-FileHash -LiteralPath $ThisPlan -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.plan_sha256 -or
+    (& git hash-object --no-filters -- $ThisPlan).Trim() -cne
+        (& git rev-parse ([string]$ApprovalRecord.approved_plan_commit + ':' + $ThisPlan)).Trim() -or
+    (Get-FileHash -LiteralPath $DesignPath -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.spec_sha256 -or
+    (& git hash-object --no-filters -- $DesignPath).Trim() -cne
+        (& git rev-parse ([string]$ApprovalRecord.spec_commit + ':' + $DesignPath)).Trim()) {
+    throw 'NEEDS_CONTEXT: physical plan/spec are not the approval-locked raw commit blobs.'
+}
+if ((& git rev-parse HEAD).Trim() -cne [string]$ApprovalRecord.approved_plan_commit) {
+    throw 'NEEDS_CONTEXT: pre-commit Task 2 HEAD is not the approval-locked plan commit.'
+}
+$ApprovalLockHashAtTask2Start = (Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash
+```
 
 - [ ] **Step 1: Add the complete failing pure-rule suite**
 
@@ -1623,22 +2130,20 @@ testsuite test_terminal_collapse_rules:
 
 - [ ] **Step 2: Run and preserve the exact RED**
 
-Start one fresh Windows PowerShell 5.1 session for Task 2 and keep it open through Step 10. Re-bind the ignored helper sources to Task 1's literal evidence before any Ren'Py process starts; do not reconstruct this state after a failed invocation.
+Continue in the same approval-validated Task 2 PowerShell session. Re-bind the ignored helper sources to Task 1's sealed machine evidence before any Ren'Py process starts; do not reconstruct this state after a failed invocation.
 
 ```powershell
-Set-StrictMode -Version Latest
-$ErrorActionPreference = 'Stop'
-$StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
-$ProjectRoot = (Resolve-Path -LiteralPath '.').Path
-$EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
 $HelperRoot = Join-Path $EvidenceRoot 'helpers'
 $RunnerSource = Join-Path $HelperRoot 'PrivateDesktopRunner.cs'
 $HeadlessWrapper = Join-Path $HelperRoot 'Invoke-PrivateDesktopProcess.ps1'
+$HeadlessSelfTest = Join-Path $HelperRoot 'Test-PrivateDesktopRunner.ps1'
 $ExpectedTask2HelperHashes = [ordered]@{
-    'PrivateDesktopRunner.cs' = 'F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154'
-    'Invoke-PrivateDesktopProcess.ps1' = '8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A'
+    'PrivateDesktopRunner.cs' = [pscustomobject]@{ Bytes = 82334; Sha256 = 'E0393DB1E113FDB8C35097978AA73B7D33AFDD5788499002B6423D883DEED4E8' }
+    'Invoke-PrivateDesktopProcess.ps1' = [pscustomobject]@{ Bytes = 24229; Sha256 = '73A3F9C43CF994E08F004E0A1266122A3EC5E0EAF065C63E6D9439CF0B0E1880' }
+    'Test-PrivateDesktopRunner.ps1' = [pscustomobject]@{ Bytes = 53188; Sha256 = '20198B669F70E51E51F71BD01E6D06D1949D300F43CE9A94FB0190A47D781A15' }
 }
 $BaselineEvidence = Join-Path $EvidenceRoot 'legacy\baseline-evidence.md'
+$Task1CompletionRecord = Join-Path $EvidenceRoot 'legacy\task1-completion.json'
 $RunnerTemplatePath = Join-Path $ProjectRoot 'Tools\Run-RenPySuite.ps1'
 $TrustedSdkRoot = 'E:\Projects\renpy-8.5.2-sdk'
 $RenPyExe = Join-Path $TrustedSdkRoot 'renpy.exe'
@@ -1649,10 +2154,13 @@ if (-not [string]::IsNullOrWhiteSpace($ConfiguredSdkRoot) -and
 }
 $PowerShellExe = (Get-Command powershell.exe -CommandType Application -ErrorAction Stop).Source
 $Task2BaselineCommit = (& git rev-parse HEAD).Trim()
-$ExpectedPlanSubject = 'docs: update terminal collapse phase one for headless evidence'
+$ExpectedPlanSubject = 'docs: plan terminal collapse coverage v2 retry'
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($Task2BaselineCommit) -or
     (git log -1 --format=%s) -cne $ExpectedPlanSubject) {
     throw 'Task 2 did not start from the final executable-plan commit.'
+}
+if ($Task2BaselineCommit -cne [string]$ApprovalRecord.approved_plan_commit) {
+    throw 'Task 2 baseline is not the approval-locked plan commit.'
 }
 $Task2EvidenceRoot = Join-Path $EvidenceRoot 'rules'
 $ExplicitTaskTempRoot = [Environment]::GetEnvironmentVariable('TC_TASK_TEMP_ROOT', 'Process')
@@ -1667,7 +2175,7 @@ if (-not (Test-Path -LiteralPath $TaskTempRoot -PathType Container)) {
 $TaskTempRoot = (Resolve-Path -LiteralPath $TaskTempRoot).Path
 $Task2SaveRoot = Join-Path $TaskTempRoot ('cos-terminal-collapse-task2-' + [Guid]::NewGuid().ToString('N'))
 
-foreach ($RequiredFile in @($RunnerSource, $HeadlessWrapper, $BaselineEvidence, $RunnerTemplatePath, $RenPyExe, $PowerShellExe)) {
+foreach ($RequiredFile in @($RunnerSource, $HeadlessWrapper, $HeadlessSelfTest, $BaselineEvidence, $Task1CompletionRecord, $RunnerTemplatePath, $RenPyExe, $PowerShellExe)) {
     if (-not (Test-Path -LiteralPath $RequiredFile -PathType Leaf)) {
         throw ('Task 2 prerequisite is missing: ' + $RequiredFile)
     }
@@ -1677,19 +2185,164 @@ if ([string]::IsNullOrWhiteSpace($RunnerTemplateHash) -or
     @(git diff --name-only -- Tools/Run-RenPySuite.ps1).Count -ne 0) {
     throw 'Task 2 runner is not the unchanged file from the executable-plan baseline.'
 }
-$BaselineEvidenceText = [IO.File]::ReadAllText($BaselineEvidence, $StrictUtf8)
-if (-not $BaselineEvidenceText.Contains('verdict=PASS')) {
-    throw 'Task 1 baseline evidence is not PASS.'
+git check-ignore -q -- $Task1CompletionRecord
+if ($LASTEXITCODE -ne 0 -or -not (Get-Item -LiteralPath $Task1CompletionRecord).IsReadOnly) {
+    throw 'Task 1 sealed completion record is not ignored and read-only.'
 }
+function Test-Task2IntegralValue($Value) {
+    return ($Value -is [byte] -or $Value -is [sbyte] -or
+        $Value -is [int16] -or $Value -is [uint16] -or
+        $Value -is [int32] -or $Value -is [uint32] -or
+        $Value -is [int64] -or $Value -is [uint64])
+}
+$Task1CompletionBytes = [IO.File]::ReadAllBytes($Task1CompletionRecord)
+if ($Task1CompletionBytes.Length -eq 0 -or
+    ($Task1CompletionBytes.Length -ge 3 -and $Task1CompletionBytes[0] -eq 0xEF -and
+     $Task1CompletionBytes[1] -eq 0xBB -and $Task1CompletionBytes[2] -eq 0xBF)) {
+    throw 'Task 1 sealed completion record is empty or has a BOM.'
+}
+$Task1CompletionText = $StrictUtf8.GetString($Task1CompletionBytes)
+if ($Task1CompletionText.Contains([char]0xFFFD)) { throw 'Task 1 sealed completion record is not strict UTF-8.' }
+$Task1Completion = $Task1CompletionText | ConvertFrom-Json -ErrorAction Stop
+$ExpectedTask1CompletionProperties = @(
+    'schema_version', 'verdict', 'approved_plan_lock_sha256', 'approved_plan_commit',
+    'plan_sha256', 'spec_commit', 'spec_sha256', 'baseline_game_tree',
+    'full_selftest_attempt_sha256', 'full_selftest_completion_sha256', 'full_selftest_root',
+    'mother_path', 'mother_sha256', 'mother_bytes', 'mother_read_only',
+    'artifact_count', 'artifacts', 'cleanup', 'finished_utc'
+)
+if ($Task1Completion -isnot [pscustomobject] -or
+    (Compare-Object $ExpectedTask1CompletionProperties @($Task1Completion.PSObject.Properties.Name) -CaseSensitive) -or
+    $Task1Completion.schema_version -isnot [int] -or [int]$Task1Completion.schema_version -ne 1 -or
+    $Task1Completion.verdict -isnot [string] -or [string]$Task1Completion.verdict -cne 'PASS' -or
+    $Task1Completion.approved_plan_lock_sha256 -isnot [string] -or
+    [string]$Task1Completion.approved_plan_lock_sha256 -cne $ApprovalLockSha256 -or
+    $Task1Completion.approved_plan_commit -isnot [string] -or
+    [string]$Task1Completion.approved_plan_commit -cne [string]$ApprovalRecord.approved_plan_commit -or
+    $Task1Completion.plan_sha256 -isnot [string] -or
+    [string]$Task1Completion.plan_sha256 -cne [string]$ApprovalRecord.plan_sha256 -or
+    $Task1Completion.spec_commit -isnot [string] -or
+    [string]$Task1Completion.spec_commit -cne [string]$ApprovalRecord.spec_commit -or
+    $Task1Completion.spec_sha256 -isnot [string] -or
+    [string]$Task1Completion.spec_sha256 -cne [string]$ApprovalRecord.spec_sha256 -or
+    $Task1Completion.baseline_game_tree -isnot [string] -or
+    [string]$Task1Completion.baseline_game_tree -cne 'fa7a398e9d989731b24e3c1642f3e2e33ce846ff' -or
+    $Task1Completion.full_selftest_attempt_sha256 -isnot [string] -or
+    [string]$Task1Completion.full_selftest_attempt_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    $Task1Completion.full_selftest_completion_sha256 -isnot [string] -or
+    [string]$Task1Completion.full_selftest_completion_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    $Task1Completion.full_selftest_root -isnot [string] -or
+    -not [IO.Path]::IsPathRooted([string]$Task1Completion.full_selftest_root) -or
+    -not (Test-Path -LiteralPath ([string]$Task1Completion.full_selftest_root) -PathType Container) -or
+    $Task1Completion.mother_path -isnot [string] -or
+    -not [IO.Path]::IsPathRooted([string]$Task1Completion.mother_path) -or
+    $Task1Completion.mother_sha256 -isnot [string] -or
+    [string]$Task1Completion.mother_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    -not (Test-Task2IntegralValue $Task1Completion.mother_bytes) -or [int64]$Task1Completion.mother_bytes -le 0 -or
+    $Task1Completion.mother_read_only -isnot [bool] -or -not [bool]$Task1Completion.mother_read_only -or
+    -not (Test-Task2IntegralValue $Task1Completion.artifact_count) -or [int64]$Task1Completion.artifact_count -lt 30 -or
+    [int64]$Task1Completion.artifact_count -ne @($Task1Completion.artifacts).Count -or
+    $Task1Completion.finished_utc -isnot [string]) {
+    throw 'Task 1 sealed completion record failed its exact Task 2 top-level contract.'
+}
+$ExpectedCleanupProperties = @(
+    'generator_worktree_removed', 'generator_savedir_removed',
+    'observer_worktree_removed', 'observer_savedir_removed'
+)
+if ($Task1Completion.cleanup -isnot [pscustomobject] -or
+    (Compare-Object $ExpectedCleanupProperties @($Task1Completion.cleanup.PSObject.Properties.Name) -CaseSensitive)) {
+    throw 'Task 1 sealed cleanup property set is inexact.'
+}
+foreach ($CleanupProperty in $Task1Completion.cleanup.PSObject.Properties) {
+    if ($CleanupProperty.Value -isnot [bool] -or -not [bool]$CleanupProperty.Value) {
+        throw ('Task 1 sealed cleanup proof failed: ' + $CleanupProperty.Name)
+    }
+}
+$Task1ArtifactLookup = @{}
+foreach ($Artifact in @($Task1Completion.artifacts)) {
+    if ($Artifact -isnot [pscustomobject] -or
+        (Compare-Object @('path', 'bytes', 'sha256') @($Artifact.PSObject.Properties.Name) -CaseSensitive) -or
+        $Artifact.path -isnot [string] -or -not [IO.Path]::IsPathRooted([string]$Artifact.path) -or
+        -not (Test-Task2IntegralValue $Artifact.bytes) -or [int64]$Artifact.bytes -lt 0 -or
+        $Artifact.sha256 -isnot [string] -or [string]$Artifact.sha256 -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('Task 1 sealed artifact has an invalid schema: ' + [string]$Artifact.path)
+    }
+    $ArtifactKey = [IO.Path]::GetFullPath([string]$Artifact.path).TrimEnd('\')
+    if ($Task1ArtifactLookup.ContainsKey($ArtifactKey)) {
+        throw ('Task 1 sealed artifact path is duplicated: ' + $ArtifactKey)
+    }
+    if (-not (Test-Path -LiteralPath $ArtifactKey -PathType Leaf) -or
+        (Get-Item -LiteralPath $ArtifactKey).Length -ne [int64]$Artifact.bytes -or
+        (Get-FileHash -LiteralPath $ArtifactKey -Algorithm SHA256).Hash -cne [string]$Artifact.sha256) {
+        throw ('Task 1 sealed artifact is missing or drifted: ' + $ArtifactKey)
+    }
+    $Task1ArtifactLookup[$ArtifactKey] = $Artifact
+}
+function Assert-Task1SealedArtifact([string]$Path, [string]$ExpectedSha256 = '') {
+    $ArtifactKey = [IO.Path]::GetFullPath($Path).TrimEnd('\')
+    if (-not $Task1ArtifactLookup.ContainsKey($ArtifactKey)) {
+        throw ('Task 1 completion does not seal required artifact: ' + $ArtifactKey)
+    }
+    if (-not [string]::IsNullOrWhiteSpace($ExpectedSha256) -and
+        [string]$Task1ArtifactLookup[$ArtifactKey].sha256 -cne $ExpectedSha256) {
+        throw ('Task 1 completion seals the wrong hash for: ' + $ArtifactKey)
+    }
+}
+$FailedV1CoverageResult = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp\cos-private-desktop-selftest-d37d19e4adfc4b5fb3622abcc8a53212\short-lived-pid-coverage\result.json'
+$SelfTestAttemptRecord = Join-Path $EvidenceRoot 'helper-v2-full-selftest-attempt\attempt.json'
+$SelfTestCompletionRecord = Join-Path $EvidenceRoot 'helper-v2-full-selftest-attempt\completion.json'
+$InterruptedSaveDir = 'E:\Projects\renpy-8.5.2-sdk\terminal-collapse-temp\cos-terminal-collapse-old-save-1f027ab224b74d8890172376314ea3b1'
+foreach ($RequiredSealedArtifact in @(
+    $ApprovalLockPath, (Join-Path $ProjectRoot $ThisPlan), (Join-Path $ProjectRoot $DesignPath),
+    $RunnerSource, $HeadlessWrapper, $HeadlessSelfTest, $BaselineEvidence,
+    $FailedV1CoverageResult, $SelfTestAttemptRecord, $SelfTestCompletionRecord,
+    (Join-Path $EvidenceRoot 'legacy\generator-state.json'),
+    (Join-Path $EvidenceRoot 'legacy\observer-state.json'),
+    (Join-Path $EvidenceRoot 'legacy\generator-process\request.json'),
+    (Join-Path $EvidenceRoot 'legacy\generator-process\stdout.txt'),
+    (Join-Path $EvidenceRoot 'legacy\generator-process\stderr.txt'),
+    (Join-Path $EvidenceRoot 'legacy\generator-process\result.json'),
+    (Join-Path $EvidenceRoot 'legacy\generator-process\renpy-log.txt'),
+    (Join-Path $EvidenceRoot 'legacy\observer-process\request.json'),
+    (Join-Path $EvidenceRoot 'legacy\observer-process\stdout.txt'),
+    (Join-Path $EvidenceRoot 'legacy\observer-process\stderr.txt'),
+    (Join-Path $EvidenceRoot 'legacy\observer-process\result.json'),
+    (Join-Path $EvidenceRoot 'legacy\observer-process\renpy-log.txt'),
+    (Join-Path $EvidenceRoot 'legacy\renpy-version-process\request.json'),
+    (Join-Path $EvidenceRoot 'legacy\renpy-version-process\stdout.txt'),
+    (Join-Path $EvidenceRoot 'legacy\renpy-version-process\stderr.txt'),
+    (Join-Path $EvidenceRoot 'legacy\renpy-version-process\result.json'),
+    [string]$Task1Completion.mother_path
+)) {
+    Assert-Task1SealedArtifact $RequiredSealedArtifact
+}
+Assert-Task1SealedArtifact $ApprovalLockPath $ApprovalLockSha256
+Assert-Task1SealedArtifact $FailedV1CoverageResult '300515E17B8EDD6B0CD99C268E685DCAE6770BC664B5C28F231F231F03E9F27B'
+Assert-Task1SealedArtifact $SelfTestAttemptRecord ([string]$Task1Completion.full_selftest_attempt_sha256)
+Assert-Task1SealedArtifact $SelfTestCompletionRecord ([string]$Task1Completion.full_selftest_completion_sha256)
+Assert-Task1SealedArtifact ([string]$Task1Completion.mother_path) ([string]$Task1Completion.mother_sha256)
+if ((Get-Item -LiteralPath ([string]$Task1Completion.mother_path)).Length -ne [int64]$Task1Completion.mother_bytes -or
+    -not (Get-Item -LiteralPath ([string]$Task1Completion.mother_path)).IsReadOnly) {
+    throw 'Task 1 mother no longer matches its sealed size/read-only contract.'
+}
+foreach ($RecursiveSealedFile in @(
+    @(Get-ChildItem -LiteralPath ([string]$Task1Completion.full_selftest_root) -Recurse -File) +
+    @(Get-ChildItem -LiteralPath $InterruptedSaveDir -Recurse -File)
+)) {
+    Assert-Task1SealedArtifact $RecursiveSealedFile.FullName
+}
+$Task1CompletionHashAtTask2Start = (Get-FileHash -LiteralPath $Task1CompletionRecord -Algorithm SHA256).Hash
 $Task2HelperHashes = [ordered]@{}
-foreach ($HelperPath in @($RunnerSource, $HeadlessWrapper)) {
+foreach ($HelperPath in @($RunnerSource, $HeadlessWrapper, $HeadlessSelfTest)) {
     git check-ignore -q -- $HelperPath
     if ($LASTEXITCODE -ne 0) { throw ('Helper is not ignored: ' + $HelperPath) }
     $HelperHash = (Get-FileHash -LiteralPath $HelperPath -Algorithm SHA256).Hash
     $HelperName = Split-Path $HelperPath -Leaf
-    if ($HelperHash -cne [string]$ExpectedTask2HelperHashes[$HelperName] -or
-        $BaselineEvidenceText.IndexOf($HelperHash, [StringComparison]::OrdinalIgnoreCase) -lt 0) {
-        throw ('Helper hash is not bound by Task 1 evidence: ' + $HelperPath)
+    $ExpectedHelper = $ExpectedTask2HelperHashes[$HelperName]
+    if ($HelperHash -cne [string]$ExpectedHelper.Sha256 -or
+        (Get-Item -LiteralPath $HelperPath).Length -ne [long]$ExpectedHelper.Bytes -or
+        [string]$Task1ArtifactLookup[[IO.Path]::GetFullPath($HelperPath).TrimEnd('\')].sha256 -cne $HelperHash) {
+        throw ('Helper hash is not bound by the Task 1 sealed completion: ' + $HelperPath)
     }
     $Task2HelperHashes[$HelperName] = $HelperHash
 }
@@ -1813,6 +2466,137 @@ function Remove-VerifiedTask2Mirror {
     }
 }
 
+function Write-Task2CreateNewUtf8 {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Text
+    )
+
+    $Bytes = $StrictUtf8.GetBytes($Text)
+    $Stream = [IO.File]::Open($Path, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    try {
+        $Stream.Write($Bytes, 0, $Bytes.Length)
+        $Stream.Flush($true)
+    } finally {
+        $Stream.Dispose()
+    }
+}
+
+function New-Task2FileSeal([string]$Path) {
+    if (-not [IO.Path]::IsPathRooted($Path) -or -not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw ('NEEDS_CONTEXT: invocation receipt source is missing or non-absolute: ' + $Path)
+    }
+    $FullPath = (Resolve-Path -LiteralPath $Path).Path
+    $Item = Get-Item -LiteralPath $FullPath -ErrorAction Stop
+    return [pscustomobject][ordered]@{
+        path = $FullPath
+        bytes = [long]$Item.Length
+        sha256 = (Get-FileHash -LiteralPath $FullPath -Algorithm SHA256).Hash
+    }
+}
+
+function Test-Task2FileSealIdentity($Left, $Right) {
+    return (
+        $Left -is [pscustomobject] -and $Right -is [pscustomobject] -and
+        [string]$Left.path -ceq [string]$Right.path -and
+        [int64]$Left.bytes -eq [int64]$Right.bytes -and
+        [string]$Left.sha256 -ceq [string]$Right.sha256
+    )
+}
+
+function New-Task2InvocationReceipt {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$Name,
+        [Parameter(Mandatory = $true)][ValidateSet('suite','scanner','lint')][string]$Kind,
+        [Parameter(Mandatory = $true)][string]$Expected,
+        [Parameter(Mandatory = $true)][string]$Actual,
+        [Parameter(Mandatory = $true)][string]$HelperEvidenceDir,
+        [Parameter(Mandatory = $true)][string]$RunnerOrScannerEvidenceDir,
+        [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][string[]]$DirectEvidencePaths,
+        [Parameter()][string[]]$SourceEvidencePaths = @()
+    )
+
+    if ($Expected -cne $Actual) {
+        throw ('NEEDS_CONTEXT: refusing to seal a non-PASS invocation receipt: ' + $Name)
+    }
+    if (-not [IO.Path]::IsPathRooted($HelperEvidenceDir) -or
+        -not (Test-Path -LiteralPath $HelperEvidenceDir -PathType Container) -or
+        -not [IO.Path]::IsPathRooted($RunnerOrScannerEvidenceDir) -or
+        -not (Test-Path -LiteralPath $RunnerOrScannerEvidenceDir -PathType Container)) {
+        throw ('NEEDS_CONTEXT: receipt evidence directory is missing or non-absolute: ' + $Name)
+    }
+    $HelperFull = (Resolve-Path -LiteralPath $HelperEvidenceDir).Path
+    $RunnerOrScannerFull = (Resolve-Path -LiteralPath $RunnerOrScannerEvidenceDir).Path
+    $HelperArtifacts = @(
+        New-Task2FileSeal (Join-Path $HelperFull 'request.json')
+        New-Task2FileSeal (Join-Path $HelperFull 'stdout.txt')
+        New-Task2FileSeal (Join-Path $HelperFull 'stderr.txt')
+        New-Task2FileSeal (Join-Path $HelperFull 'result.json')
+    )
+    $HelperResult = $HelperArtifacts[3]
+    $DirectEvidence = @($DirectEvidencePaths | ForEach-Object { New-Task2FileSeal $_ })
+    $SourceEvidence = @($SourceEvidencePaths | ForEach-Object { New-Task2FileSeal $_ })
+
+    $ExpectedDirectCount = if ($Name -ceq 'show-before-green') { 3 } elseif ($Kind -ceq 'scanner') { 2 } else { 1 }
+    $ExpectedSourceCount = if ($Name -ceq 'show-before-green') { 1 } else { 0 }
+    if ($DirectEvidence.Count -ne $ExpectedDirectCount -or $SourceEvidence.Count -ne $ExpectedSourceCount) {
+        throw ('NEEDS_CONTEXT: receipt direct/source cardinality failed: ' + $Name)
+    }
+    if ($Kind -ceq 'scanner') {
+        if ($RunnerOrScannerFull -cne $HelperFull -or
+            -not (Test-Task2FileSealIdentity $DirectEvidence[0] $HelperArtifacts[1]) -or
+            -not (Test-Task2FileSealIdentity $DirectEvidence[1] $HelperArtifacts[2])) {
+            throw ('NEEDS_CONTEXT: scanner stdout/stderr receipt relation failed: ' + $Name)
+        }
+    } else {
+        $ExpectedRunnerExtension = if ($Kind -ceq 'suite') { '.log' } else { '.txt' }
+        if ([IO.Path]::GetDirectoryName([string]$DirectEvidence[0].path) -cne $RunnerOrScannerFull -or
+            [IO.Path]::GetExtension([string]$DirectEvidence[0].path) -cne $ExpectedRunnerExtension) {
+            throw ('NEEDS_CONTEXT: suite/lint direct evidence relation failed: ' + $Name)
+        }
+    }
+    if ($Name -ceq 'show-before-green' -and
+        ($Kind -cne 'scanner' -or -not (Test-Task2FileSealIdentity $DirectEvidence[2] $SourceEvidence[0]))) {
+        throw 'NEEDS_CONTEXT: show-before source is not exactly direct_evidence[2].'
+    }
+    $ReceiptPath = Join-Path $HelperFull 'invocation-receipt.json'
+    $ReceiptPayload = [ordered]@{
+        schema_version = 1
+        name = $Name
+        kind = $Kind
+        expected = $Expected
+        actual = $Actual
+        verdict = 'PASS'
+        helper_evidence_dir = $HelperFull
+        helper_artifacts = $HelperArtifacts
+        helper_result = $HelperResult
+        runner_or_scanner_evidence_dir = $RunnerOrScannerFull
+        direct_evidence = $DirectEvidence
+        source_evidence = $SourceEvidence
+        assertions = [ordered]@{
+            central_safety_envelope = 'PASS'
+            outcome_gates = 'PASS'
+            runner_or_scanner = 'PASS'
+        }
+        created_utc = [DateTimeOffset]::UtcNow.ToString('o')
+    }
+    Write-Task2CreateNewUtf8 -Path $ReceiptPath -Text (($ReceiptPayload | ConvertTo-Json -Depth 10) + "`n")
+    $ReceiptRaw = [IO.File]::ReadAllBytes($ReceiptPath)
+    if ($ReceiptRaw.Length -eq 0 -or
+        ($ReceiptRaw.Length -ge 3 -and $ReceiptRaw[0] -eq 0xEF -and
+         $ReceiptRaw[1] -eq 0xBB -and $ReceiptRaw[2] -eq 0xBF)) {
+        throw ('NEEDS_CONTEXT: invocation receipt is empty or has a BOM: ' + $Name)
+    }
+    [void]$StrictUtf8.GetString($ReceiptRaw)
+    return [pscustomobject][ordered]@{
+        path = (Resolve-Path -LiteralPath $ReceiptPath).Path
+        bytes = [long]$ReceiptRaw.Length
+        sha256 = (Get-FileHash -LiteralPath $ReceiptPath -Algorithm SHA256).Hash
+    }
+}
+
 function Invoke-HeadlessTerminalCollapseSuite {
     [CmdletBinding()]
     param(
@@ -1840,7 +2624,8 @@ function Invoke-HeadlessTerminalCollapseSuite {
     foreach ($HelperPath in @($RunnerSource, $HeadlessWrapper)) {
         $CurrentHash = (Get-FileHash -LiteralPath $HelperPath -Algorithm SHA256).Hash
         $ExpectedHash = [string]$Task2HelperHashes[(Split-Path $HelperPath -Leaf)]
-        if ($CurrentHash -cne $ExpectedHash) {
+        $ExpectedBytes = [long]$ExpectedTask2HelperHashes[(Split-Path $HelperPath -Leaf)].Bytes
+        if ($CurrentHash -cne $ExpectedHash -or (Get-Item -LiteralPath $HelperPath).Length -ne $ExpectedBytes) {
             throw ('NEEDS_CONTEXT: helper drifted after Task 2 binding; do not launch or retry: ' + $HelperPath)
         }
     }
@@ -1920,33 +2705,17 @@ function Invoke-HeadlessTerminalCollapseSuite {
     if ($null -eq $Result) {
         throw ('NEEDS_CONTEXT: private-desktop wrapper returned no result; preserve ' + $HelperEvidenceDir + ' and do not retry.')
     }
-    foreach ($RequiredProperty in @(
-        'schema_version', 'classification', 'detail', 'started', 'root_pid', 'root_exit_code',
-        'timed_out', 'job_drained', 'desktop_name', 'process_ids', 'new_process_ids',
-        'active_snapshot_process_ids', 'job_total_processes', 'process_coverage_complete',
-        'monitor_armed_before_resume', 'monitor_armed_utc', 'resumed_utc',
-        'cleanup_complete', 'cleanup_errors', 'visible_windows', 'stdout_path',
-        'stderr_path', 'helper_exit_code'
-    )) {
-        if ($null -eq $Result.PSObject.Properties[$RequiredProperty]) {
-            throw ('NEEDS_CONTEXT: private-desktop result omits ' + $RequiredProperty + '; preserve evidence and do not retry.')
-        }
+    try {
+        Assert-PrivateDesktopSafetyEnvelope -Result $Result
+    } catch {
+        throw ('NEEDS_CONTEXT: reusable schema-v2 safety envelope failed; preserve ' + $HelperEvidenceDir + ' and do not retry. ' + $_.Exception.Message)
     }
-    $ProcessIds = @($Result.process_ids)
-    $UniqueProcessIds = @($ProcessIds | Sort-Object -Unique)
-    $ArmedUtc = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, [Globalization.CultureInfo]::InvariantCulture)
-    $ResumedUtc = [DateTimeOffset]::Parse([string]$Result.resumed_utc, [Globalization.CultureInfo]::InvariantCulture)
-    if ([int]$Result.schema_version -ne 1 -or
-        [string]$Result.classification -cne 'COMPLETED' -or [int]$Result.helper_exit_code -ne 0 -or
-        -not [bool]$Result.started -or [bool]$Result.timed_out -or -not [bool]$Result.job_drained -or
-        -not [bool]$Result.process_coverage_complete -or -not [bool]$Result.monitor_armed_before_resume -or
-        $ArmedUtc -gt $ResumedUtc -or -not [bool]$Result.cleanup_complete -or
-        @($Result.cleanup_errors).Count -ne 0 -or
-        @($Result.visible_windows).Count -ne 0 -or [int]$Result.root_exit_code -ne 0 -or
-        [string]::IsNullOrWhiteSpace([string]$Result.desktop_name) -or $ProcessIds.Count -lt 1 -or
-        $UniqueProcessIds.Count -ne $ProcessIds.Count -or
-        [int]$Result.job_total_processes -ne $ProcessIds.Count -or
-        $ProcessIds -notcontains ([int]$Result.root_pid)) {
+    if (-not (Test-PrivateDesktopIntegralValue $Result.root_exit_code)) {
+        throw ('NEEDS_CONTEXT: headless suite returned null/non-integral root_exit_code; preserve ' + $HelperEvidenceDir + ' and do not retry.')
+    }
+    if ([string]$Result.classification -cne 'COMPLETED' -or
+        [int]$Result.helper_exit_code -ne 0 -or [bool]$Result.timed_out -or
+        @($Result.visible_windows).Count -ne 0 -or [int64]$Result.root_exit_code -ne 0) {
         throw ('NEEDS_CONTEXT: headless suite gates failed; preserve ' + $HelperEvidenceDir + ' and ' + $RunnerEvidenceDir + '; do not retry. Classification=' + [string]$Result.classification + '; detail=' + [string]$Result.detail)
     }
 
@@ -1989,10 +2758,17 @@ function Invoke-HeadlessTerminalCollapseSuite {
     if ($RunnerOutputs.Count -ne 1) {
         throw ('NEEDS_CONTEXT: expected exactly one preserved ' + $Mode + ' output; preserve the invocation and do not retry: ' + $RunnerEvidenceDir)
     }
+    $InvocationKind = if ($Mode -ceq 'Suite') { 'suite' } else { 'lint' }
+    $InvocationExpected = if ($Mode -ceq 'Suite') { $Expect } else { 'PASS' }
+    $InvocationActual = 'PASS'
     if ($Mode -ceq 'Suite') {
         $RunnerOutputText = [IO.File]::ReadAllText($RunnerOutputs[0].FullName, $StrictUtf8)
         $StatusMatches = [regex]::Matches($RunnerOutputText, '(?m)^\[rpytest\] Status:\s+([A-Z ]+?)\s*$')
-        if ($StatusMatches.Count -ne 1 -or $StatusMatches[0].Groups[1].Value.Trim() -cne $Expect) {
+        if ($StatusMatches.Count -ne 1) {
+            throw ('NEEDS_CONTEXT: preserved runner output has no unique status; do not retry: ' + $RunnerOutputs[0].FullName)
+        }
+        $InvocationActual = $StatusMatches[0].Groups[1].Value.Trim()
+        if ($InvocationActual -cne $Expect) {
             throw ('NEEDS_CONTEXT: preserved runner status does not match ' + $Expect + '; do not retry: ' + $RunnerOutputs[0].FullName)
         }
     }
@@ -2010,6 +2786,18 @@ function Invoke-HeadlessTerminalCollapseSuite {
     # the exact task-owned mirror, including its engine-created local saves.
     Remove-VerifiedTask2Mirror -MirrorRoot $MirrorRoot -ExpectedPaths $ExpectedPaths
 
+    # Seal the facts while this invocation's validated files are still the
+    # exact bytes just observed. Later steps consume this receipt; they do not
+    # reconstruct actual/verdict values from in-memory assumptions.
+    $Receipt = New-Task2InvocationReceipt `
+        -Name $EvidenceName `
+        -Kind $InvocationKind `
+        -Expected $InvocationExpected `
+        -Actual $InvocationActual `
+        -HelperEvidenceDir $HelperEvidenceDir `
+        -RunnerOrScannerEvidenceDir $RunnerEvidenceDir `
+        -DirectEvidencePaths @($RunnerOutputs[0].FullName)
+
     $Result | Add-Member -NotePropertyName invocation_name -NotePropertyValue $EvidenceName
     $Result | Add-Member -NotePropertyName test_mirror_path -NotePropertyValue $MirrorRoot
     $Result | Add-Member -NotePropertyName test_mirror_removed -NotePropertyValue $true
@@ -2019,6 +2807,9 @@ function Invoke-HeadlessTerminalCollapseSuite {
     $Result | Add-Member -NotePropertyName runner_output -NotePropertyValue $RunnerOutputs[0].FullName
     $Result | Add-Member -NotePropertyName runner_output_sha256 -NotePropertyValue $EvidenceHashes[$RunnerOutputs[0].FullName]
     $Result | Add-Member -NotePropertyName evidence_sha256 -NotePropertyValue $EvidenceHashes
+    $Result | Add-Member -NotePropertyName receipt_path -NotePropertyValue $Receipt.path
+    $Result | Add-Member -NotePropertyName receipt_bytes -NotePropertyValue $Receipt.bytes
+    $Result | Add-Member -NotePropertyName receipt_sha256 -NotePropertyValue $Receipt.sha256
     return $Result
 }
 
@@ -2029,10 +2820,10 @@ $RedResult = Invoke-HeadlessTerminalCollapseSuite `
     -ExpectedPattern 'is_terminal_resistance_collapse' `
     -TimeoutSeconds 120 `
     -ExpectedPaths @('game/test_game.rpy')
-$RedResult | Format-List invocation_name, classification, root_pid, root_exit_code, job_total_processes, process_coverage_complete, monitor_armed_before_resume, job_drained, cleanup_complete, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
+$RedResult | Format-List invocation_name, classification, helper_exit_code, root_pid, root_exit_code, job_total_processes, observed_distinct_process_id_count, process_id_accounting_kind, process_diagnostic_errors, private_desktop_initially_empty, monitor_armed_before_create, monitor_armed_before_resume, root_assigned_to_job_before_resume, job_kill_on_close_verified, job_breakaway_forbidden, job_handle_non_inheritable, job_active_processes_final, job_drained, monitor_completed_after_job_drain, host_termination_required, cleanup_complete, visible_windows, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
 ```
 
-Expected: the Ren'Py suite fails for the missing `is_terminal_resistance_collapse` helper, while the runner host exits `0` because that exact RED was required. `$RedResult` must be `COMPLETED`, fully process-covered, job-drained, and window-free. Preserve its create-new helper request/stdout/stderr/result report, unique external save directory, and unique runner evidence directory exactly where recorded; hash the runner log and do not edit, copy, rerun, or replace it.
+Expected: the Ren'Py suite fails for the missing `is_terminal_resistance_collapse` helper, while the runner root exits `0` because that exact RED was required. `$RedResult` must pass the reusable schema-v2 safety envelope and the separate `COMPLETED` / no-timeout / zero-window / expected-root-exit gates. Its PID/count/error values remain diagnostics and may not be called complete coverage. Preserve its create-new helper request/stdout/stderr/result report, unique external save directory, and unique runner evidence directory exactly where recorded; hash the runner log and do not edit, copy, rerun, or replace it.
 
 - [ ] **Step 3: Replace the mapper and current-state wrappers in `game/difficulty.rpy`**
 
@@ -2606,24 +3397,7 @@ $BalanceGreen = Invoke-HeadlessTerminalCollapseSuite -EvidenceName 'balance-gree
 $WinterGreen = Invoke-HeadlessTerminalCollapseSuite -EvidenceName 'winter-invariance-green' -Suite 'test_winter_interlude_ending_invariance' -Expect 'PASSED' -TimeoutSeconds 180 -ExpectedPaths $GreenPaths
 
 foreach ($GreenResult in @($RulesGreen, $CatalogGreen, $BalanceGreen, $WinterGreen)) {
-    $GreenResult | Format-List invocation_name, classification, root_pid, root_exit_code, job_total_processes, process_coverage_complete, monitor_armed_before_resume, job_drained, cleanup_complete, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
-}
-
-function Write-Task2CreateNewUtf8 {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)][string]$Path,
-        [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Text
-    )
-
-    $Bytes = $StrictUtf8.GetBytes($Text)
-    $Stream = [IO.File]::Open($Path, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
-    try {
-        $Stream.Write($Bytes, 0, $Bytes.Length)
-        $Stream.Flush()
-    } finally {
-        $Stream.Dispose()
-    }
+    $GreenResult | Format-List invocation_name, classification, helper_exit_code, root_pid, root_exit_code, job_total_processes, observed_distinct_process_id_count, process_id_accounting_kind, process_diagnostic_errors, private_desktop_initially_empty, monitor_armed_before_create, monitor_armed_before_resume, root_assigned_to_job_before_resume, job_kill_on_close_verified, job_breakaway_forbidden, job_handle_non_inheritable, job_active_processes_final, job_drained, monitor_completed_after_job_drain, host_termination_required, cleanup_complete, visible_windows, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
 }
 
 function Invoke-Task2ConsoleScanner {
@@ -2634,7 +3408,8 @@ function Invoke-Task2ConsoleScanner {
         [Parameter(Mandatory = $true)][string]$ScriptPath,
         [Parameter()][string]$ExpectedStdoutPattern,
         [Parameter()][string]$ForbiddenStdoutPattern,
-        [Parameter()][switch]$RequireEmptyStdout
+        [Parameter()][switch]$RequireEmptyStdout,
+        [Parameter()][string[]]$SourceEvidencePaths = @()
     )
 
     if (-not (Test-Path -LiteralPath $ScriptPath -PathType Leaf) -or $ScriptPath.Contains('"')) {
@@ -2644,66 +3419,49 @@ function Invoke-Task2ConsoleScanner {
     if (Test-Path -LiteralPath $ScannerEvidence) {
         throw ('NEEDS_CONTEXT: scanner evidence already exists; do not overwrite or retry: ' + $ScannerEvidence)
     }
-    New-Item -ItemType Directory -Path $ScannerEvidence -ErrorAction Stop | Out-Null
     git check-ignore -q -- $ScannerEvidence
     if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: scanner evidence is not ignored: ' + $ScannerEvidence) }
 
-    $StdoutPath = Join-Path $ScannerEvidence 'stdout.txt'
-    $StderrPath = Join-Path $ScannerEvidence 'stderr.txt'
-    $ResultPath = Join-Path $ScannerEvidence 'result.json'
-    $StartInfo = New-Object System.Diagnostics.ProcessStartInfo
-    $StartInfo.FileName = $Task2Python
-    $StartInfo.Arguments = '-B "' + $ScriptPath + '"'
-    $StartInfo.WorkingDirectory = $MirrorRoot
-    $StartInfo.UseShellExecute = $false
-    $StartInfo.CreateNoWindow = $true
-    $StartInfo.RedirectStandardOutput = $true
-    $StartInfo.RedirectStandardError = $true
-    $StartInfo.StandardOutputEncoding = $StrictUtf8
-    $StartInfo.StandardErrorEncoding = $StrictUtf8
-    $StartInfo.EnvironmentVariables['PYTHONDONTWRITEBYTECODE'] = '1'
-    $StartInfo.EnvironmentVariables['PYTHONIOENCODING'] = 'utf-8'
-    $StartInfo.EnvironmentVariables['PYTHONUTF8'] = '1'
-
-    $Process = New-Object System.Diagnostics.Process
-    $Process.StartInfo = $StartInfo
-    $StartedUtc = [DateTimeOffset]::UtcNow
-    if (-not $Process.Start()) { throw ('NEEDS_CONTEXT: scanner did not start: ' + $Name) }
-    $ProcessId = $Process.Id
-    $StdoutTask = $Process.StandardOutput.ReadToEndAsync()
-    $StderrTask = $Process.StandardError.ReadToEndAsync()
-    $Completed = $Process.WaitForExit(120000)
-    if (-not $Completed) {
-        $Process.Kill()
-        [void]$Process.WaitForExit(10000)
+    try {
+        $ScannerRun = Invoke-PrivateDesktopProcess `
+            -FilePath $Task2Python `
+            -ArgumentList @('-B', $ScriptPath) `
+            -WorkingDirectory $MirrorRoot `
+            -EnvironmentOverrides @{
+                PYTHONDONTWRITEBYTECODE = '1'
+                PYTHONIOENCODING = 'utf-8'
+                PYTHONUTF8 = '1'
+                SDL_VIDEODRIVER = 'dummy'
+                SDL_AUDIODRIVER = 'dummy'
+                RENPY_RENDERER = 'sw'
+                RENPY_PATH_TO_SAVES = $null
+                TEMP = $TaskTempRoot
+                TMP = $TaskTempRoot
+            } `
+            -TimeoutSeconds 120 `
+            -EvidenceDirectory $ScannerEvidence `
+            -RunnerSource $RunnerSource
+    } catch {
+        throw ('NEEDS_CONTEXT: private scanner launch failed; preserve evidence and do not retry: ' + $Name + '. ' + $_.Exception.Message)
     }
-    [void]$Process.WaitForExit()
-    $Process.Refresh()
-    $ExitCode = if ($Completed) { $Process.ExitCode } else { $null }
-    $Stdout = $StdoutTask.GetAwaiter().GetResult()
-    $Stderr = $StderrTask.GetAwaiter().GetResult()
-    $EndedUtc = [DateTimeOffset]::UtcNow
-    $Process.Dispose()
-
-    Write-Task2CreateNewUtf8 -Path $StdoutPath -Text $Stdout
-    Write-Task2CreateNewUtf8 -Path $StderrPath -Text $Stderr
-    $ScannerResult = [ordered]@{
-        schema_version = 1
-        name = $Name
-        script_path = $ScriptPath
-        script_sha256 = (Get-FileHash -LiteralPath $ScriptPath -Algorithm SHA256).Hash
-        process_id = $ProcessId
-        started_utc = $StartedUtc.ToString('o')
-        ended_utc = $EndedUtc.ToString('o')
-        completed = $Completed
-        exit_code = $ExitCode
-        stdout_sha256 = (Get-FileHash -LiteralPath $StdoutPath -Algorithm SHA256).Hash
-        stderr_sha256 = (Get-FileHash -LiteralPath $StderrPath -Algorithm SHA256).Hash
+    try {
+        Assert-PrivateDesktopSafetyEnvelope -Result $ScannerRun
+    } catch {
+        throw ('NEEDS_CONTEXT: scanner safety envelope failed; preserve evidence and do not retry: ' + $Name + '. ' + $_.Exception.Message)
     }
-    Write-Task2CreateNewUtf8 -Path $ResultPath -Text (($ScannerResult | ConvertTo-Json -Depth 4) + "`n")
-
-    if (-not $Completed -or $null -eq $ExitCode -or [int]$ExitCode -ne 0 -or
-        -not [string]::IsNullOrEmpty($Stderr) -or
+    if (-not (Test-PrivateDesktopIntegralValue $ScannerRun.root_exit_code)) {
+        throw ('NEEDS_CONTEXT: scanner returned null/non-integral root_exit_code; preserve evidence and do not retry: ' + $Name)
+    }
+    if ([string]$ScannerRun.classification -cne 'COMPLETED' -or
+        [int]$ScannerRun.helper_exit_code -ne 0 -or [bool]$ScannerRun.timed_out -or
+        @($ScannerRun.visible_windows).Count -ne 0 -or [int64]$ScannerRun.root_exit_code -ne 0) {
+        throw ('NEEDS_CONTEXT: scanner private completion gates failed; preserve evidence and do not retry: ' + $Name)
+    }
+    $StdoutPath = [string]$ScannerRun.stdout_path
+    $StderrPath = [string]$ScannerRun.stderr_path
+    $Stdout = [IO.File]::ReadAllText($StdoutPath, $StrictUtf8)
+    $Stderr = [IO.File]::ReadAllText($StderrPath, $StrictUtf8)
+    if (-not [string]::IsNullOrEmpty($Stderr) -or
         ($RequireEmptyStdout -and -not [string]::IsNullOrEmpty($Stdout)) -or
         (-not [string]::IsNullOrWhiteSpace($ExpectedStdoutPattern) -and
             [regex]::Matches($Stdout, $ExpectedStdoutPattern).Count -ne 1) -or
@@ -2712,12 +3470,29 @@ function Invoke-Task2ConsoleScanner {
         throw ('NEEDS_CONTEXT: mandatory script scanner failed; preserve mirror and evidence and do not retry: ' + $Name)
     }
 
+    $ScannerActual = 'PASS'
+    $ReceiptDirectPaths = @($StdoutPath, $StderrPath) + @($SourceEvidencePaths)
+    $Receipt = New-Task2InvocationReceipt `
+        -Name $Name `
+        -Kind 'scanner' `
+        -Expected 'PASS' `
+        -Actual $ScannerActual `
+        -HelperEvidenceDir $ScannerEvidence `
+        -RunnerOrScannerEvidenceDir $ScannerEvidence `
+        -DirectEvidencePaths $ReceiptDirectPaths `
+        -SourceEvidencePaths $SourceEvidencePaths
+
     return [pscustomobject]@{
         name = $Name
-        process_id = $ProcessId
-        exit_code = $ExitCode
+        process_id = $ScannerRun.root_pid
+        exit_code = $ScannerRun.root_exit_code
         evidence_dir = $ScannerEvidence
-        result_sha256 = (Get-FileHash -LiteralPath $ResultPath -Algorithm SHA256).Hash
+        stdout_path = $StdoutPath
+        stderr_path = $StderrPath
+        result_sha256 = (Get-FileHash -LiteralPath (Join-Path $ScannerEvidence 'result.json') -Algorithm SHA256).Hash
+        receipt_path = $Receipt.path
+        receipt_bytes = $Receipt.bytes
+        receipt_sha256 = $Receipt.sha256
     }
 }
 
@@ -2765,7 +3540,8 @@ $ShowBeforeResult = Invoke-Task2ConsoleScanner `
     -Name 'show-before-green' `
     -MirrorRoot $ScannerMirror `
     -ScriptPath $ShowScanPath `
-    -RequireEmptyStdout
+    -RequireEmptyStdout `
+    -SourceEvidencePaths @($ShowScanPath)
 
 foreach ($ScannerResult in @($MissingPortraitResult, $NarrationOverlapResult, $ShowBeforeResult)) {
     $ScannerResult | Format-List name, process_id, exit_code, evidence_dir, result_sha256
@@ -2777,10 +3553,10 @@ $LintGreen = Invoke-HeadlessTerminalCollapseSuite `
     -Mode 'Lint' `
     -TimeoutSeconds 180 `
     -ExpectedPaths $GreenPaths
-$LintGreen | Format-List invocation_name, classification, root_pid, root_exit_code, job_total_processes, process_coverage_complete, monitor_armed_before_resume, job_drained, cleanup_complete, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
+$LintGreen | Format-List invocation_name, classification, helper_exit_code, root_pid, root_exit_code, job_total_processes, observed_distinct_process_id_count, process_id_accounting_kind, process_diagnostic_errors, private_desktop_initially_empty, monitor_armed_before_create, monitor_armed_before_resume, root_assigned_to_job_before_resume, job_kill_on_close_verified, job_breakaway_forbidden, job_handle_non_inheritable, job_active_processes_final, job_drained, monitor_completed_after_job_drain, host_termination_required, cleanup_complete, visible_windows, desktop_name, test_mirror_path, test_mirror_removed, save_dir, helper_evidence_dir, runner_evidence_dir, runner_output, runner_output_sha256
 ```
 
-Expected: each of the four focused suites is launched exactly once, has root exit code `0`, reports `PASSED`, is fully process-covered and job-drained with zero visible windows, and retains unique helper request/stdout/stderr/result reports plus a unique runner log and external `SaveDir`. On a fifth fresh mirror, the two mandatory repository scanners report exactly zero findings and the exact three-file show-before scanner emits no stdout. Finally, a sixth fresh mirror runs lint exactly once through the same pre-armed private-desktop helper; lint exits `0`, creates exactly one preserved runner text output, has complete process coverage and cleanup, and shows no window. These console-only Python scanners are not Ren'Py engine launches; they still use create-new ignored evidence and a disposable mirror. Stop immediately on the first `NEEDS_CONTEXT`; preserve every completed and failed invocation directory and mirror, and never repeat a scanner, suite, or lint on the same bytes.
+Expected: each of the four focused suites is launched exactly once, has a non-null integral root exit code `0`, reports `PASSED`, passes the reusable schema-v2 safety envelope plus the separate `COMPLETED` / helper-0 / no-timeout / zero-window gates, and retains unique helper request/stdout/stderr/result reports plus a unique runner log and external `SaveDir`. PID/count/error fields are recorded only as diagnostics, without equality or minimum assertions. On a fifth fresh mirror, each of the two mandatory repository scanners and the exact three-file show-before scanner runs through its own one-shot private helper host, gets the same full envelope/outcome gates, and leaves create-new request/stdout/stderr/result evidence; zero findings/empty show output are then asserted from the helper-owned streams. No direct `System.Diagnostics.Process` or unbounded `WaitForExit()` scanner path exists. Finally, a sixth fresh mirror runs lint exactly once through the same dedicated-host private-desktop helper. Stop immediately on the first `NEEDS_CONTEXT`; preserve every completed and failed invocation directory and mirror, and never repeat a scanner, suite, or lint on the same bytes.
 
 - [ ] **Step 10: Check exact scope and commit the rules slice**
 
@@ -2822,9 +3598,445 @@ $ObservedStatus = @(git status --short --untracked-files=all)
 if (Compare-Object $ExpectedStatus $ObservedStatus) {
     throw ('NEEDS_CONTEXT: worktree is not exact after the rules commit: ' + ($ObservedStatus -join '; '))
 }
+if ((git rev-parse ($RulesCommit + '^')) -cne [string]$ApprovalRecord.approved_plan_commit -or
+    (git log -1 --format=%s $RulesCommit) -cne 'fix: enforce terminal resistance collapse rules' -or
+    (Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockHashAtTask2Start -or
+    (Get-FileHash -LiteralPath $Task1CompletionRecord -Algorithm SHA256).Hash -cne $Task1CompletionHashAtTask2Start) {
+    throw 'NEEDS_CONTEXT: approval-locked P -> exact rules R topology or sealed evidence drifted after commit.'
+}
+$RulesCommitPaths = @(git diff-tree --no-commit-id --name-only -r $RulesCommit | Sort-Object)
+if (Compare-Object @('game/balance.rpy', 'game/difficulty.rpy', 'game/test_game.rpy') $RulesCommitPaths) {
+    throw 'NEEDS_CONTEXT: rules commit is not the exact approved three-path child of P.'
+}
 ```
 
 Expected: the successful commit is a direct child of the executable-plan baseline, has the exact subject above, and contains exactly the three text `.rpy` paths. This post-commit check is mandatory because the repository pre-commit hook may update and stage `game/msyh.ttf`; any fourth path is `NEEDS_CONTEXT`, and the rules slice must not be described as complete. The index is empty and the only remaining status row is the protected unrelated plan.
+
+- [ ] **Step 11: Seal the exact nine-invocation Task 2 completion record**
+
+Only after Step 10 has proved the exact P-to-R commit may this create-new record be written. It is the sole machine authority consumed by Task 3; Markdown output is not a substitute.
+
+```powershell
+$Task2CompletionRecord = Join-Path $Task2EvidenceRoot 'task2-completion.json'
+if (Test-Path -LiteralPath $Task2CompletionRecord) {
+    throw 'NEEDS_CONTEXT: Task 2 completion record already exists; do not overwrite or replay Task 2.'
+}
+if ((Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockHashAtTask2Start -or
+    (Get-FileHash -LiteralPath $Task1CompletionRecord -Algorithm SHA256).Hash -cne $Task1CompletionHashAtTask2Start -or
+    (git rev-parse HEAD) -cne $RulesCommit -or
+    (git rev-parse ($RulesCommit + '^')) -cne [string]$ApprovalRecord.approved_plan_commit) {
+    throw 'NEEDS_CONTEXT: approval, Task 1, or P-to-R state drifted before Task 2 sealing.'
+}
+$ExpectedRulesPaths = @('game/balance.rpy', 'game/difficulty.rpy', 'game/test_game.rpy')
+if (Compare-Object $ExpectedRulesPaths @(git diff-tree --no-commit-id --name-only -r $RulesCommit | Sort-Object)) {
+    throw 'NEEDS_CONTEXT: rules commit paths drifted before Task 2 sealing.'
+}
+$Task2InvocationSpecs = @(
+    [pscustomobject]@{ name='rules-red'; kind='suite'; expected='FAILED'; value=$RedResult },
+    [pscustomobject]@{ name='rules-green'; kind='suite'; expected='PASSED'; value=$RulesGreen },
+    [pscustomobject]@{ name='catalog-green'; kind='suite'; expected='PASSED'; value=$CatalogGreen },
+    [pscustomobject]@{ name='balance-green'; kind='suite'; expected='PASSED'; value=$BalanceGreen },
+    [pscustomobject]@{ name='winter-invariance-green'; kind='suite'; expected='PASSED'; value=$WinterGreen },
+    [pscustomobject]@{ name='missing-portraits-green'; kind='scanner'; expected='PASS'; value=$MissingPortraitResult },
+    [pscustomobject]@{ name='narration-overlap-green'; kind='scanner'; expected='PASS'; value=$NarrationOverlapResult },
+    [pscustomobject]@{ name='show-before-green'; kind='scanner'; expected='PASS'; value=$ShowBeforeResult },
+    [pscustomobject]@{ name='lint-green'; kind='lint'; expected='PASS'; value=$LintGreen }
+)
+$ExpectedTask2InvocationNames = @(
+    'rules-red', 'rules-green', 'catalog-green', 'balance-green',
+    'winter-invariance-green', 'missing-portraits-green',
+    'narration-overlap-green', 'show-before-green', 'lint-green'
+)
+if ($Task2InvocationSpecs.Count -ne 9 -or
+    (Compare-Object $ExpectedTask2InvocationNames @($Task2InvocationSpecs.name) -CaseSensitive)) {
+    throw 'NEEDS_CONTEXT: Task 2 did not produce the exact nine named invocations.'
+}
+$ReceiptProperties = @(
+    'schema_version','name','kind','expected','actual','verdict','helper_evidence_dir',
+    'helper_artifacts','helper_result','runner_or_scanner_evidence_dir','direct_evidence',
+    'source_evidence','assertions','created_utc'
+)
+$FileSealProperties = @('path','bytes','sha256')
+$AssertionProperties = @('central_safety_envelope','outcome_gates','runner_or_scanner')
+$ExpectedTask2InvocationContract = [ordered]@{
+    'rules-red' = [pscustomobject]@{ kind='suite'; expected='FAILED'; direct_count=1; source_count=0 }
+    'rules-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+    'catalog-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+    'balance-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+    'winter-invariance-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+    'missing-portraits-green' = [pscustomobject]@{ kind='scanner'; expected='PASS'; direct_count=2; source_count=0 }
+    'narration-overlap-green' = [pscustomobject]@{ kind='scanner'; expected='PASS'; direct_count=2; source_count=0 }
+    'show-before-green' = [pscustomobject]@{ kind='scanner'; expected='PASS'; direct_count=3; source_count=1 }
+    'lint-green' = [pscustomobject]@{ kind='lint'; expected='PASS'; direct_count=1; source_count=0 }
+}
+
+function Assert-Task2FileSealStrict($Seal, [string]$Context) {
+    if ($Seal -isnot [pscustomobject] -or
+        (@($Seal.PSObject.Properties.Name) -join '|') -cne ($FileSealProperties -join '|') -or
+        $Seal.path -isnot [string] -or -not [IO.Path]::IsPathRooted([string]$Seal.path) -or
+        -not (Test-Path -LiteralPath ([string]$Seal.path) -PathType Leaf) -or
+        -not (Test-PrivateDesktopIntegralValue $Seal.bytes) -or [int64]$Seal.bytes -lt 0 -or
+        $Seal.sha256 -isnot [string] -or [string]$Seal.sha256 -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('NEEDS_CONTEXT: invalid Task 2 file seal: ' + $Context)
+    }
+    $ResolvedPath = (Resolve-Path -LiteralPath ([string]$Seal.path)).Path
+    if ($ResolvedPath -cne [string]$Seal.path -or
+        (Get-Item -LiteralPath $ResolvedPath).Length -ne [int64]$Seal.bytes -or
+        (Get-FileHash -LiteralPath $ResolvedPath -Algorithm SHA256).Hash -cne [string]$Seal.sha256) {
+        throw ('NEEDS_CONTEXT: Task 2 sealed artifact drifted: ' + $Context)
+    }
+}
+
+function Read-Task2StrictUtf8Json([string]$Path, [string]$Context) {
+    $RawBytes = [IO.File]::ReadAllBytes($Path)
+    if ($RawBytes.Length -eq 0 -or
+        ($RawBytes.Length -ge 3 -and $RawBytes[0] -eq 0xEF -and
+         $RawBytes[1] -eq 0xBB -and $RawBytes[2] -eq 0xBF)) {
+        throw ('NEEDS_CONTEXT: JSON is empty or has a BOM: ' + $Context)
+    }
+    $RawText = $StrictUtf8.GetString($RawBytes)
+    if ($RawText.Contains([char]0xFFFD)) {
+        throw ('NEEDS_CONTEXT: JSON is not strict UTF-8: ' + $Context)
+    }
+    return ($RawText | ConvertFrom-Json -ErrorAction Stop)
+}
+
+function Assert-Task2ReceiptRawPropertyCounts(
+    [string]$ReceiptText,
+    [int]$DirectCount,
+    [int]$SourceCount,
+    [string]$Context
+) {
+    $SealObjectCount = 5 + $DirectCount + $SourceCount
+    $ExpectedRawCounts = [ordered]@{
+        schema_version=1; name=1; kind=1; expected=1; actual=1; verdict=1
+        helper_evidence_dir=1; helper_artifacts=1; helper_result=1
+        runner_or_scanner_evidence_dir=1; direct_evidence=1; source_evidence=1
+        assertions=1; created_utc=1
+        path=$SealObjectCount; bytes=$SealObjectCount; sha256=$SealObjectCount
+        central_safety_envelope=1; outcome_gates=1; runner_or_scanner=1
+    }
+    $RawKeys = @([regex]::Matches($ReceiptText, '"([^"\\]+)"\s*:') | ForEach-Object { $_.Groups[1].Value })
+    $ExpectedRows = @($ExpectedRawCounts.GetEnumerator() | ForEach-Object {
+        [string]$_.Key + '=' + [string]$_.Value
+    } | Sort-Object)
+    $ObservedRows = @($RawKeys | Group-Object -CaseSensitive | ForEach-Object {
+        [string]$_.Name + '=' + [string]$_.Count
+    } | Sort-Object)
+    if (Compare-Object $ExpectedRows $ObservedRows -CaseSensitive) {
+        throw ('NEEDS_CONTEXT: receipt has duplicate, missing, or extra raw properties: ' + $Context)
+    }
+}
+
+function Read-Task2InvocationReceiptStrict($Spec) {
+    $Contract = $ExpectedTask2InvocationContract[[string]$Spec.name]
+    if ($null -eq $Contract -or [string]$Spec.kind -cne [string]$Contract.kind -or
+        [string]$Spec.expected -cne [string]$Contract.expected) {
+        throw ('NEEDS_CONTEXT: invocation specification is outside the fixed contract: ' + [string]$Spec.name)
+    }
+    if ($Spec.value.receipt_path -isnot [string] -or
+        -not [IO.Path]::IsPathRooted([string]$Spec.value.receipt_path) -or
+        -not (Test-PrivateDesktopIntegralValue $Spec.value.receipt_bytes) -or [int64]$Spec.value.receipt_bytes -le 0 -or
+        $Spec.value.receipt_sha256 -isnot [string] -or [string]$Spec.value.receipt_sha256 -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('NEEDS_CONTEXT: invocation-time receipt locator is invalid: ' + [string]$Spec.name)
+    }
+    $ReceiptSeal = [pscustomobject][ordered]@{
+        path = [string]$Spec.value.receipt_path
+        bytes = [long]$Spec.value.receipt_bytes
+        sha256 = [string]$Spec.value.receipt_sha256
+    }
+    $null = Assert-Task2FileSealStrict $ReceiptSeal ('receipt locator ' + [string]$Spec.name)
+    git check-ignore -q -- $ReceiptSeal.path
+    if ($LASTEXITCODE -ne 0) {
+        throw ('NEEDS_CONTEXT: invocation receipt is not ignored: ' + [string]$Spec.name)
+    }
+
+    $ReceiptBytes = [IO.File]::ReadAllBytes($ReceiptSeal.path)
+    if ($ReceiptBytes.Length -eq 0 -or
+        ($ReceiptBytes.Length -ge 3 -and $ReceiptBytes[0] -eq 0xEF -and
+         $ReceiptBytes[1] -eq 0xBB -and $ReceiptBytes[2] -eq 0xBF)) {
+        throw ('NEEDS_CONTEXT: invocation receipt is empty or has a BOM: ' + [string]$Spec.name)
+    }
+    $ReceiptText = $StrictUtf8.GetString($ReceiptBytes)
+    if ($ReceiptText.Contains([char]0xFFFD)) {
+        throw ('NEEDS_CONTEXT: invocation receipt is not strict UTF-8: ' + [string]$Spec.name)
+    }
+    $null = Assert-Task2ReceiptRawPropertyCounts `
+        $ReceiptText ([int]$Contract.direct_count) ([int]$Contract.source_count) ([string]$Spec.name)
+    $Receipt = $ReceiptText | ConvertFrom-Json -ErrorAction Stop
+
+    if ($Receipt -isnot [pscustomobject] -or
+        (@($Receipt.PSObject.Properties.Name) -join '|') -cne ($ReceiptProperties -join '|') -or
+        $Receipt.schema_version -isnot [int] -or [int]$Receipt.schema_version -ne 1 -or
+        $Receipt.name -isnot [string] -or [string]$Receipt.name -cne [string]$Spec.name -or
+        $Receipt.kind -isnot [string] -or [string]$Receipt.kind -cne [string]$Contract.kind -or
+        $Receipt.expected -isnot [string] -or [string]$Receipt.expected -cne [string]$Contract.expected -or
+        $Receipt.actual -isnot [string] -or [string]$Receipt.actual -cne [string]$Receipt.expected -or
+        $Receipt.verdict -isnot [string] -or [string]$Receipt.verdict -cne 'PASS' -or
+        $Receipt.helper_evidence_dir -isnot [string] -or
+        $Receipt.runner_or_scanner_evidence_dir -isnot [string] -or
+        $Receipt.assertions -isnot [pscustomobject] -or
+        (@($Receipt.assertions.PSObject.Properties.Name) -join '|') -cne ($AssertionProperties -join '|') -or
+        @($Receipt.assertions.PSObject.Properties.Value | Where-Object { $_ -isnot [string] -or $_ -cne 'PASS' }).Count -ne 0 -or
+        $Receipt.created_utc -isnot [string]) {
+        throw ('NEEDS_CONTEXT: invocation receipt canonical contract failed: ' + [string]$Spec.name)
+    }
+    try {
+        [void][DateTimeOffset]::ParseExact(
+            [string]$Receipt.created_utc,
+            'o',
+            [Globalization.CultureInfo]::InvariantCulture,
+            [Globalization.DateTimeStyles]::RoundtripKind
+        )
+    } catch {
+        throw ('NEEDS_CONTEXT: invocation receipt created_utc is not round-trip format: ' + [string]$Spec.name)
+    }
+
+    if (-not [IO.Path]::IsPathRooted([string]$Receipt.helper_evidence_dir) -or
+        -not (Test-Path -LiteralPath ([string]$Receipt.helper_evidence_dir) -PathType Container) -or
+        -not [IO.Path]::IsPathRooted([string]$Receipt.runner_or_scanner_evidence_dir) -or
+        -not (Test-Path -LiteralPath ([string]$Receipt.runner_or_scanner_evidence_dir) -PathType Container)) {
+        throw ('NEEDS_CONTEXT: receipt evidence directory contract failed: ' + [string]$Spec.name)
+    }
+    $HelperEvidenceFull = (Resolve-Path -LiteralPath ([string]$Receipt.helper_evidence_dir)).Path
+    $RunnerOrScannerFull = (Resolve-Path -LiteralPath ([string]$Receipt.runner_or_scanner_evidence_dir)).Path
+    if ([string]$Receipt.helper_evidence_dir -cne $HelperEvidenceFull -or
+        [string]$Receipt.runner_or_scanner_evidence_dir -cne $RunnerOrScannerFull -or
+        [string]$ReceiptSeal.path -cne [IO.Path]::GetFullPath((Join-Path $HelperEvidenceFull 'invocation-receipt.json'))) {
+        throw ('NEEDS_CONTEXT: receipt path/directory canonicalization failed: ' + [string]$Spec.name)
+    }
+
+    if (@($Receipt.helper_artifacts).Count -ne 4 -or
+        @($Receipt.direct_evidence).Count -ne [int]$Contract.direct_count -or
+        @($Receipt.source_evidence).Count -ne [int]$Contract.source_count) {
+        throw ('NEEDS_CONTEXT: receipt evidence cardinality failed: ' + [string]$Spec.name)
+    }
+    $AllReceiptSeals = @($Receipt.helper_artifacts) + @($Receipt.helper_result) +
+        @($Receipt.direct_evidence) + @($Receipt.source_evidence)
+    foreach ($Seal in $AllReceiptSeals) {
+        $null = Assert-Task2FileSealStrict $Seal ('receipt artifact ' + [string]$Spec.name)
+    }
+
+    $ExpectedHelperArtifactPaths = @(
+        [IO.Path]::GetFullPath((Join-Path $HelperEvidenceFull 'request.json'))
+        [IO.Path]::GetFullPath((Join-Path $HelperEvidenceFull 'stdout.txt'))
+        [IO.Path]::GetFullPath((Join-Path $HelperEvidenceFull 'stderr.txt'))
+        [IO.Path]::GetFullPath((Join-Path $HelperEvidenceFull 'result.json'))
+    )
+    for ($HelperIndex = 0; $HelperIndex -lt 4; $HelperIndex++) {
+        if ([string]$Receipt.helper_artifacts[$HelperIndex].path -cne $ExpectedHelperArtifactPaths[$HelperIndex]) {
+            throw ('NEEDS_CONTEXT: helper artifact order/path failed: ' + [string]$Spec.name)
+        }
+    }
+    if (-not (Test-Task2FileSealIdentity $Receipt.helper_result $Receipt.helper_artifacts[3])) {
+        throw ('NEEDS_CONTEXT: helper_result is not exactly helper_artifacts[3]: ' + [string]$Spec.name)
+    }
+
+    if ([string]$Contract.kind -ceq 'scanner') {
+        if ($RunnerOrScannerFull -cne $HelperEvidenceFull -or
+            -not (Test-Task2FileSealIdentity $Receipt.direct_evidence[0] $Receipt.helper_artifacts[1]) -or
+            -not (Test-Task2FileSealIdentity $Receipt.direct_evidence[1] $Receipt.helper_artifacts[2])) {
+            throw ('NEEDS_CONTEXT: scanner receipt stdout/stderr relation failed: ' + [string]$Spec.name)
+        }
+    } else {
+        $ExpectedRunnerExtension = if ([string]$Contract.kind -ceq 'suite') { '.log' } else { '.txt' }
+        if ([IO.Path]::GetDirectoryName([string]$Receipt.direct_evidence[0].path) -cne $RunnerOrScannerFull -or
+            [IO.Path]::GetExtension([string]$Receipt.direct_evidence[0].path) -cne $ExpectedRunnerExtension) {
+            throw ('NEEDS_CONTEXT: suite/lint direct evidence relation failed: ' + [string]$Spec.name)
+        }
+    }
+    if ([string]$Spec.name -ceq 'show-before-green') {
+        if (-not (Test-Path -LiteralPath $ShowScanPath -PathType Leaf) -or
+            [string]$Receipt.source_evidence[0].path -cne (Resolve-Path -LiteralPath $ShowScanPath).Path -or
+            -not (Test-Task2FileSealIdentity $Receipt.source_evidence[0] $Receipt.direct_evidence[2])) {
+            throw 'NEEDS_CONTEXT: show-before source/direct relation failed.'
+        }
+    }
+
+    $HelperResult = Read-Task2StrictUtf8Json $Receipt.helper_result.path ('helper result ' + [string]$Spec.name)
+    $null = Assert-PrivateDesktopSafetyEnvelope -Result $HelperResult
+    if (-not (Test-PrivateDesktopIntegralValue $HelperResult.root_exit_code) -or
+        [int64]$HelperResult.root_exit_code -ne 0 -or
+        [string]$HelperResult.classification -cne 'COMPLETED' -or
+        $HelperResult.helper_exit_code -isnot [int] -or [int]$HelperResult.helper_exit_code -ne 0 -or
+        $HelperResult.timed_out -isnot [bool] -or [bool]$HelperResult.timed_out -or
+        @($HelperResult.visible_windows).Count -ne 0 -or
+        [string]$HelperResult.stdout_path -cne [string]$Receipt.helper_artifacts[1].path -or
+        [string]$HelperResult.stderr_path -cne [string]$Receipt.helper_artifacts[2].path) {
+        throw ('NEEDS_CONTEXT: sealed helper result outcome failed: ' + [string]$Spec.name)
+    }
+
+    if ([string]$Contract.kind -ceq 'suite') {
+        $RunnerText = [IO.File]::ReadAllText([string]$Receipt.direct_evidence[0].path, $StrictUtf8)
+        $Matches = [regex]::Matches($RunnerText, '(?m)^\[rpytest\] Status:\s+([A-Z ]+?)\s*$')
+        if ($Matches.Count -ne 1 -or $Matches[0].Groups[1].Value.Trim() -cne [string]$Receipt.actual) {
+            throw ('NEEDS_CONTEXT: sealed suite status contradicts its receipt: ' + [string]$Spec.name)
+        }
+    } elseif ([string]$Contract.kind -ceq 'scanner') {
+        $ScannerOut = [IO.File]::ReadAllText([string]$Receipt.direct_evidence[0].path, $StrictUtf8)
+        $ScannerErr = [IO.File]::ReadAllText([string]$Receipt.direct_evidence[1].path, $StrictUtf8)
+        if ($ScannerErr.Length -ne 0 -or
+            ([string]$Spec.name -ceq 'show-before-green' -and $ScannerOut.Length -ne 0) -or
+            ([string]$Spec.name -ceq 'missing-portraits-green' -and
+             [regex]::Matches($ScannerOut, '(?m)^=== Total findings: 0 ===\s*$').Count -ne 1) -or
+            ([string]$Spec.name -ceq 'narration-overlap-green' -and
+             [regex]::Matches($ScannerOut, '(?m)^TOTAL:\s+0\b.*$').Count -ne 1)) {
+            throw ('NEEDS_CONTEXT: sealed scanner output contradicts its receipt: ' + [string]$Spec.name)
+        }
+    }
+
+    return [pscustomobject][ordered]@{
+        receipt = $ReceiptSeal
+        record = $Receipt
+    }
+}
+
+function New-Task2ExternallyBoundSeal([string]$Path, [string]$ExpectedSha256) {
+    if ($ExpectedSha256 -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('NEEDS_CONTEXT: invalid externally bound artifact hash: ' + $Path)
+    }
+    $FullPath = (Resolve-Path -LiteralPath $Path).Path
+    $Item = Get-Item -LiteralPath $FullPath -ErrorAction Stop
+    if ((Get-FileHash -LiteralPath $FullPath -Algorithm SHA256).Hash -cne $ExpectedSha256) {
+        throw ('NEEDS_CONTEXT: externally bound Task 2 artifact drifted: ' + $FullPath)
+    }
+    return [pscustomobject][ordered]@{
+        path = $FullPath
+        bytes = [long]$Item.Length
+        sha256 = $ExpectedSha256
+    }
+}
+
+$Task2ArtifactLookup = New-Object 'System.Collections.Generic.Dictionary[string,object]' ([StringComparer]::OrdinalIgnoreCase)
+function Add-Task2CompletionArtifactSeal($Seal, [string]$Context) {
+    $null = Assert-Task2FileSealStrict $Seal $Context
+    if ($Task2ArtifactLookup.ContainsKey([string]$Seal.path)) {
+        if (-not (Test-Task2FileSealIdentity $Task2ArtifactLookup[[string]$Seal.path] $Seal)) {
+            throw ('NEEDS_CONTEXT: conflicting Task 2 seals for one path: ' + [string]$Seal.path)
+        }
+        return
+    }
+    $StoredSeal = [pscustomobject][ordered]@{
+        path = [string]$Seal.path
+        bytes = [long]$Seal.bytes
+        sha256 = [string]$Seal.sha256
+    }
+    $Task2ArtifactLookup.Add($StoredSeal.path, $StoredSeal)
+}
+
+$FixedTask2Seals = @(
+    New-Task2ExternallyBoundSeal $ApprovalLockPath $ApprovalLockHashAtTask2Start
+    New-Task2ExternallyBoundSeal $Task1CompletionRecord $Task1CompletionHashAtTask2Start
+    New-Task2ExternallyBoundSeal $ThisPlan ([string]$ApprovalRecord.plan_sha256)
+    New-Task2ExternallyBoundSeal $DesignPath ([string]$ApprovalRecord.spec_sha256)
+)
+foreach ($FixedSeal in $FixedTask2Seals) {
+    Add-Task2CompletionArtifactSeal $FixedSeal 'fixed Task 2 authority'
+}
+
+$Task2InvocationEntries = @()
+foreach ($Spec in $Task2InvocationSpecs) {
+    $InvocationEntry = Read-Task2InvocationReceiptStrict $Spec
+    Add-Task2CompletionArtifactSeal $InvocationEntry.receipt ('receipt ' + [string]$Spec.name)
+    foreach ($Seal in @($InvocationEntry.record.helper_artifacts)) {
+        Add-Task2CompletionArtifactSeal $Seal ('helper artifact ' + [string]$Spec.name)
+    }
+    foreach ($Seal in @($InvocationEntry.record.direct_evidence)) {
+        Add-Task2CompletionArtifactSeal $Seal ('direct evidence ' + [string]$Spec.name)
+    }
+    foreach ($Seal in @($InvocationEntry.record.source_evidence)) {
+        Add-Task2CompletionArtifactSeal $Seal ('source evidence ' + [string]$Spec.name)
+    }
+    $Task2InvocationEntries += $InvocationEntry
+}
+$Task2Artifacts = @($Task2ArtifactLookup.Values | Sort-Object path)
+if ($Task2Artifacts.Count -ne 56) {
+    throw ('NEEDS_CONTEXT: exact Task 2 artifact union must contain 56 files; found ' + [string]$Task2Artifacts.Count)
+}
+$Task2CompletionPayload = [ordered]@{
+    schema_version = 1
+    verdict = 'PASS'
+    approved_plan_lock_sha256 = $ApprovalLockHashAtTask2Start
+    task1_completion_path = (Resolve-Path -LiteralPath $Task1CompletionRecord).Path
+    task1_completion_sha256 = $Task1CompletionHashAtTask2Start
+    approved_plan_commit = [string]$ApprovalRecord.approved_plan_commit
+    rules_commit = $RulesCommit
+    rules_parent_commit = (git rev-parse ($RulesCommit + '^')).Trim()
+    rules_subject = 'fix: enforce terminal resistance collapse rules'
+    rules_paths = $ExpectedRulesPaths
+    invocation_count = 9
+    invocations = $Task2InvocationEntries
+    artifact_count = [int]$Task2Artifacts.Count
+    artifacts = $Task2Artifacts
+    finished_utc = [DateTimeOffset]::UtcNow.ToString('o')
+}
+Write-Task2CreateNewUtf8 -Path $Task2CompletionRecord -Text (($Task2CompletionPayload | ConvertTo-Json -Depth 10) + "`n")
+$Task2CompletionCheck = Read-Task2StrictUtf8Json $Task2CompletionRecord 'Task 2 completion record'
+$ExpectedTask2CompletionProperties = @(
+    'schema_version','verdict','approved_plan_lock_sha256','task1_completion_path',
+    'task1_completion_sha256','approved_plan_commit','rules_commit','rules_parent_commit',
+    'rules_subject','rules_paths','invocation_count','invocations','artifact_count','artifacts','finished_utc'
+)
+if ($Task2CompletionCheck -isnot [pscustomobject] -or
+    (@($Task2CompletionCheck.PSObject.Properties.Name) -join '|') -cne ($ExpectedTask2CompletionProperties -join '|') -or
+    $Task2CompletionCheck.schema_version -isnot [int] -or [int]$Task2CompletionCheck.schema_version -ne 1 -or
+    $Task2CompletionCheck.verdict -isnot [string] -or $Task2CompletionCheck.verdict -cne 'PASS' -or
+    $Task2CompletionCheck.approved_plan_lock_sha256 -isnot [string] -or $Task2CompletionCheck.approved_plan_lock_sha256 -cne $ApprovalLockHashAtTask2Start -or
+    $Task2CompletionCheck.task1_completion_path -isnot [string] -or $Task2CompletionCheck.task1_completion_path -cne (Resolve-Path -LiteralPath $Task1CompletionRecord).Path -or
+    $Task2CompletionCheck.task1_completion_sha256 -isnot [string] -or $Task2CompletionCheck.task1_completion_sha256 -cne $Task1CompletionHashAtTask2Start -or
+    $Task2CompletionCheck.approved_plan_commit -isnot [string] -or $Task2CompletionCheck.approved_plan_commit -cne [string]$ApprovalRecord.approved_plan_commit -or
+    $Task2CompletionCheck.rules_commit -isnot [string] -or $Task2CompletionCheck.rules_commit -cne $RulesCommit -or
+    $Task2CompletionCheck.rules_parent_commit -isnot [string] -or $Task2CompletionCheck.rules_parent_commit -cne [string]$ApprovalRecord.approved_plan_commit -or
+    $Task2CompletionCheck.rules_subject -isnot [string] -or $Task2CompletionCheck.rules_subject -cne 'fix: enforce terminal resistance collapse rules' -or
+    @($Task2CompletionCheck.rules_paths | Where-Object { $_ -isnot [string] }).Count -ne 0 -or
+    (@($Task2CompletionCheck.rules_paths) -join '|') -cne ($ExpectedRulesPaths -join '|') -or
+    $Task2CompletionCheck.invocation_count -isnot [int] -or $Task2CompletionCheck.invocation_count -ne 9 -or @($Task2CompletionCheck.invocations).Count -ne 9 -or
+    $Task2CompletionCheck.artifact_count -isnot [int] -or $Task2CompletionCheck.artifact_count -ne 56 -or @($Task2CompletionCheck.artifacts).Count -ne 56 -or
+    $Task2CompletionCheck.finished_utc -isnot [string] -or
+    (@($Task2CompletionCheck.invocations.record.name) -join '|') -cne ($ExpectedTask2InvocationNames -join '|')) {
+    throw 'Task 2 completion record failed strict top-level reread.'
+}
+try {
+    [void][DateTimeOffset]::ParseExact(
+        [string]$Task2CompletionCheck.finished_utc,
+        'o',
+        [Globalization.CultureInfo]::InvariantCulture,
+        [Globalization.DateTimeStyles]::RoundtripKind
+    )
+} catch {
+    throw 'Task 2 completion record finished_utc is not round-trip format.'
+}
+$Task2CompletionInvocationArray = @($Task2CompletionCheck.invocations)
+for ($InvocationIndex = 0; $InvocationIndex -lt 9; $InvocationIndex++) {
+    $Invocation = $Task2CompletionInvocationArray[$InvocationIndex]
+    $ExpectedInvocationEntry = $Task2InvocationEntries[$InvocationIndex]
+    if ($Invocation -isnot [pscustomobject] -or
+        (@($Invocation.PSObject.Properties.Name) -join '|') -cne 'receipt|record' -or
+        $Invocation.receipt -isnot [pscustomobject] -or
+        -not (Test-Task2FileSealIdentity $Invocation.receipt $ExpectedInvocationEntry.receipt) -or
+        $Invocation.record -isnot [pscustomobject] -or
+        ($Invocation.record | ConvertTo-Json -Depth 10 -Compress) -cne
+            ($ExpectedInvocationEntry.record | ConvertTo-Json -Depth 10 -Compress)) {
+        throw ('Task 2 completion invocation failed strict reread: ' + [string]$Invocation.record.name)
+    }
+    $null = Assert-Task2FileSealStrict $Invocation.receipt ('completion receipt ' + [string]$Invocation.record.name)
+}
+$Task2CompletionArtifactArray = @($Task2CompletionCheck.artifacts)
+for ($ArtifactIndex = 0; $ArtifactIndex -lt 56; $ArtifactIndex++) {
+    $Artifact = $Task2CompletionArtifactArray[$ArtifactIndex]
+    if (-not (Test-Task2FileSealIdentity $Artifact $Task2Artifacts[$ArtifactIndex])) {
+        throw ('Task 2 completion artifact union changed at index ' + [string]$ArtifactIndex)
+    }
+    $null = Assert-Task2FileSealStrict $Artifact ('completion artifact index ' + [string]$ArtifactIndex)
+}
+git check-ignore -q -- $Task2CompletionRecord
+if ($LASTEXITCODE -ne 0) { throw 'Task 2 completion record is not ignored.' }
+(Get-Item -LiteralPath $Task2CompletionRecord).IsReadOnly = $true
+if (-not (Get-Item -LiteralPath $Task2CompletionRecord).IsReadOnly) { throw 'Task 2 completion record is not read-only.' }
+$Task2CompletionHash = (Get-FileHash -LiteralPath $Task2CompletionRecord -Algorithm SHA256).Hash
+```
+
+Expected: the strict read-only record binds the immutable approval lock, Task 1 completion hash, exact P-to-R ancestry/subject/three paths, exactly nine named PASS invocations (one RED, four GREEN suites, three scanners, one lint), their expected and actual outcomes, helper evidence/result, and runner/scanner direct evidence. Its exact 56-file union is the four externally bound authorities, nine invocation-time receipt locators, 36 helper artifacts, six distinct suite/lint runner outputs, and one distinct show-before source; scanner stdout/stderr alias helper artifacts, `helper_result` aliases the fourth helper artifact, and the show source aliases its third direct evidence, so none is counted twice. Every duplicate path must carry the identical pre-existing seal, and the completion reread compares every invocation and sorted artifact row to the pre-write structures rather than re-baselining current bytes. Neither the lock nor either completion record is a cleanup target.
 
 Asset report for this commit: art `not required`, music `not required`, sound effects `not required`, animation `not required`, UI `not required`; no binary or package-size change. The post-commit tree check proves the font was not changed or added by the hook.
 
@@ -2843,17 +4055,452 @@ Asset report for this commit: art `not required`, music `not required`, sound ef
 - Create ignored prompts/results only: `.superpowers/sdd/terminal-collapse-ending/copy/run-01/`, `run-02/`, `run-03/`
 - Create ignored blind map only: `.superpowers/sdd/terminal-collapse-ending/copy/blind-map.md`
 
-- [ ] **Step 1: Reconfirm the mandatory three-candidate branch**
+- [ ] **Step 0: Validate the immutable approval lock and exact P-to-R topology before reading project inputs**
 
-Read `CANON.md`, `CLAUDE.md`, `docs/writing-style/INDEX.md`, and `docs/writing-style/guidance.md` in full. Assert that the style index still reports seed maturity and no active approved examples, and that the guidance table has no active row. If an active approved corpus or guidance row now exists, stop and revise this plan before generating anything; do not silently switch workflows or omit approved guidance from the prompts.
-
-Verify that `game/chapter5.rpy` and `game/endings_expansion.rpy` remain unmodified:
+The controller must provide `$ApprovalLockSha256` out of band when it opens this fresh persistent Windows PowerShell 5.1 session. This is Task 3's first project action. Do not read `CANON.md`, guidance, prose context, Task 1/2 evidence, or any other repository file before this approval lock and P-to-R topology gate passes:
 
 ```powershell
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath '.').Path
 $EvidenceRoot = Join-Path $ProjectRoot '.superpowers\sdd\terminal-collapse-ending'
 $StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+$ThisPlan = 'docs/superpowers/plans/2026-08-11-terminal-collapse-ending-phase-a.md'
+$DesignPath = 'docs/superpowers/specs/2026-08-11-terminal-collapse-ending-design.md'
+$UnrelatedPlan = 'docs/superpowers/plans/2026-08-09-winter-interlude-narrative-delivery.md'
+$UnrelatedPlanHash = '0F39B5F5ACE1D4666DD146863CABDF398B031F5666C29AE337CEB89796E4276C'
+$ApprovalLockPath = Join-Path $EvidenceRoot 'approved-plan-lock.json'
+$ApprovalLockVariable = Get-Variable -Name ApprovalLockSha256 -Scope 0 -ErrorAction SilentlyContinue
+if ($null -eq $ApprovalLockVariable -or $ApprovalLockVariable.Value -isnot [string] -or
+    [string]$ApprovalLockVariable.Value -cnotmatch '^[0-9A-F]{64}$') {
+    throw 'NEEDS_CONTEXT: Task 3 controller did not bind the out-of-band ApprovalLockSha256 parameter.'
+}
+$ApprovalLockSha256 = [string]$ApprovalLockVariable.Value
+if (-not (Test-Path -LiteralPath $ApprovalLockPath -PathType Leaf)) { throw 'NEEDS_CONTEXT: approved-plan lock is missing.' }
+git check-ignore -q -- $ApprovalLockPath
+if ($LASTEXITCODE -ne 0) { throw 'NEEDS_CONTEXT: approved-plan lock is not ignored.' }
+$ApprovalLockBytes = [IO.File]::ReadAllBytes($ApprovalLockPath)
+if ($ApprovalLockBytes.Length -eq 0 -or
+    ($ApprovalLockBytes.Length -ge 3 -and $ApprovalLockBytes[0] -eq 0xEF -and
+     $ApprovalLockBytes[1] -eq 0xBB -and $ApprovalLockBytes[2] -eq 0xBF)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock is empty or has a BOM.'
+}
+$ApprovalLockText = $StrictUtf8.GetString($ApprovalLockBytes)
+$ApprovalExpectedProperties = @('schema_version', 'approved_plan_commit', 'plan_sha256', 'spec_commit', 'spec_sha256')
+$ApprovalRawProperties = @([regex]::Matches($ApprovalLockText, '"([^"\\]+)"\s*:') | ForEach-Object { $_.Groups[1].Value })
+if ($ApprovalLockText.Contains([char]0xFFFD) -or
+    (Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockSha256 -or
+    $ApprovalRawProperties.Count -ne 5 -or
+    (Compare-Object $ApprovalExpectedProperties $ApprovalRawProperties -CaseSensitive)) {
+    throw 'NEEDS_CONTEXT: approved-plan lock encoding, hash, or raw property contract failed.'
+}
+$ApprovalRecord = $ApprovalLockText | ConvertFrom-Json -ErrorAction Stop
+if ($ApprovalRecord -isnot [pscustomobject] -or
+    (Compare-Object $ApprovalExpectedProperties @($ApprovalRecord.PSObject.Properties.Name) -CaseSensitive) -or
+    $ApprovalRecord.schema_version -isnot [int] -or [int]$ApprovalRecord.schema_version -ne 1 -or
+    $ApprovalRecord.approved_plan_commit -isnot [string] -or [string]$ApprovalRecord.approved_plan_commit -cnotmatch '^[0-9a-f]{40}$' -or
+    $ApprovalRecord.plan_sha256 -isnot [string] -or [string]$ApprovalRecord.plan_sha256 -cnotmatch '^[0-9A-F]{64}$' -or
+    $ApprovalRecord.spec_commit -isnot [string] -or [string]$ApprovalRecord.spec_commit -cne '98ff5ca351806732f435b977c7b3b445d586bf6b' -or
+    $ApprovalRecord.spec_sha256 -isnot [string] -or [string]$ApprovalRecord.spec_sha256 -cne 'F7C833952D0F783A922FFF18F6F0A2B9F44BA8F1BF31520917FA6B1237B1A232') {
+    throw 'NEEDS_CONTEXT: approved-plan lock schema, types, or values are invalid.'
+}
+$ExpectedRulesCommit = (& git rev-parse HEAD).Trim()
+function Assert-Task3ApprovalState([string]$Context) {
+    if ((Get-FileHash -LiteralPath $ApprovalLockPath -Algorithm SHA256).Hash -cne $ApprovalLockSha256 -or
+        (Get-FileHash -LiteralPath $ThisPlan -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.plan_sha256 -or
+        (& git hash-object --no-filters -- $ThisPlan).Trim() -cne
+            (& git rev-parse ([string]$ApprovalRecord.approved_plan_commit + ':' + $ThisPlan)).Trim() -or
+        (Get-FileHash -LiteralPath $DesignPath -Algorithm SHA256).Hash -cne [string]$ApprovalRecord.spec_sha256 -or
+        (& git hash-object --no-filters -- $DesignPath).Trim() -cne
+            (& git rev-parse ([string]$ApprovalRecord.spec_commit + ':' + $DesignPath)).Trim()) {
+        throw ('NEEDS_CONTEXT: approval lock, plan, or specification drifted ' + $Context + '; do not invoke Opus.')
+    }
+    if ((& git rev-parse HEAD).Trim() -cne $ExpectedRulesCommit -or
+        (& git rev-parse ($ExpectedRulesCommit + '^')).Trim() -cne [string]$ApprovalRecord.approved_plan_commit -or
+        (git log -1 --format=%s $ExpectedRulesCommit) -cne 'fix: enforce terminal resistance collapse rules') {
+        throw ('NEEDS_CONTEXT: exact P -> R ancestry/subject drifted ' + $Context + '; do not invoke Opus.')
+    }
+    $RulesPaths = @(git diff-tree --no-commit-id --name-only -r $ExpectedRulesCommit | Sort-Object)
+    if (Compare-Object @('game/balance.rpy', 'game/difficulty.rpy', 'game/test_game.rpy') $RulesPaths) {
+        throw ('NEEDS_CONTEXT: exact three-path rules commit drifted ' + $Context + '; do not invoke Opus.')
+    }
+    if (@(git diff --cached --name-only).Count -ne 0) {
+        throw ('NEEDS_CONTEXT: index is not empty ' + $Context + '; do not invoke Opus.')
+    }
+    $Task3Status = @(git status --short --untracked-files=all)
+    if ($Task3Status.Count -ne 1 -or $Task3Status[0] -cne ('?? ' + $UnrelatedPlan) -or
+        (Get-FileHash -LiteralPath $UnrelatedPlan -Algorithm SHA256).Hash -cne $UnrelatedPlanHash) {
+        throw ('NEEDS_CONTEXT: protected worktree/winter state drifted ' + $Context + '; do not invoke Opus.')
+    }
+}
+Assert-Task3ApprovalState 'at Task 3 start'
+$Task1CompletionRecord = Join-Path $EvidenceRoot 'legacy\task1-completion.json'
+$Task2CompletionRecord = Join-Path $EvidenceRoot 'rules\task2-completion.json'
+foreach ($CompletionPath in @($Task1CompletionRecord, $Task2CompletionRecord)) {
+    if (-not (Test-Path -LiteralPath $CompletionPath -PathType Leaf) -or
+        -not (Get-Item -LiteralPath $CompletionPath).IsReadOnly) {
+        throw ('NEEDS_CONTEXT: sealed completion record is missing or not read-only: ' + $CompletionPath)
+    }
+    git check-ignore -q -- $CompletionPath
+    if ($LASTEXITCODE -ne 0) { throw ('NEEDS_CONTEXT: sealed completion record is not ignored: ' + $CompletionPath) }
+}
+$Task1CompletionSha256 = (Get-FileHash -LiteralPath $Task1CompletionRecord -Algorithm SHA256).Hash
+$Task2CompletionSha256 = (Get-FileHash -LiteralPath $Task2CompletionRecord -Algorithm SHA256).Hash
+function Get-Task3RawJsonObjectKeys([string]$Json, [string]$Context) {
+    $Stack = New-Object 'System.Collections.Generic.Stack[object]'
+    $Keys = New-Object 'System.Collections.Generic.List[string]'
+    for ($Index = 0; $Index -lt $Json.Length; $Index++) {
+        $Character = $Json[$Index]
+        if ($Character -eq '{') {
+            $Stack.Push((New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)))
+        } elseif ($Character -eq '[') {
+            $Stack.Push($null)
+        } elseif ($Character -eq '}' -or $Character -eq ']') {
+            if ($Stack.Count -eq 0) { throw ('NEEDS_CONTEXT: unbalanced raw JSON ' + $Context) }
+            [void]$Stack.Pop()
+        } elseif ($Character -eq '"') {
+            $Start = $Index
+            $Escaped = $false
+            do {
+                $Index++
+                if ($Index -ge $Json.Length) { throw ('NEEDS_CONTEXT: unterminated JSON string ' + $Context) }
+                if ($Escaped) { $Escaped = $false; continue }
+                if ($Json[$Index] -eq '\') { $Escaped = $true; continue }
+            } while ($Json[$Index] -ne '"')
+            $After = $Index + 1
+            while ($After -lt $Json.Length -and [char]::IsWhiteSpace($Json[$After])) { $After++ }
+            if ($After -lt $Json.Length -and $Json[$After] -eq ':') {
+                if ($Stack.Count -eq 0 -or $null -eq $Stack.Peek()) { throw ('NEEDS_CONTEXT: JSON key outside object ' + $Context) }
+                $RawToken = $Json.Substring($Start, $Index - $Start + 1)
+                $Key = [string]($RawToken | ConvertFrom-Json -ErrorAction Stop)
+                if (-not $Stack.Peek().Add($Key)) { throw ('NEEDS_CONTEXT: duplicate JSON object key ' + $Key + ' ' + $Context) }
+                [void]$Keys.Add($Key)
+            }
+        }
+    }
+    if ($Stack.Count -ne 0) { throw ('NEEDS_CONTEXT: unbalanced raw JSON containers ' + $Context) }
+    return $Keys.ToArray()
+}
+function Get-Task3ParsedJsonObjectKeys($Value) {
+    $Keys = New-Object 'System.Collections.Generic.List[string]'
+    if ($Value -is [pscustomobject]) {
+        foreach ($Property in $Value.PSObject.Properties) {
+            [void]$Keys.Add($Property.Name)
+            foreach ($Nested in @(Get-Task3ParsedJsonObjectKeys $Property.Value)) { [void]$Keys.Add($Nested) }
+        }
+    } elseif ($Value -is [Array]) {
+        foreach ($Element in $Value) {
+            foreach ($Nested in @(Get-Task3ParsedJsonObjectKeys $Element)) { [void]$Keys.Add($Nested) }
+        }
+    }
+    return $Keys.ToArray()
+}
+function Get-Task3KeyCountRows([string[]]$Keys) {
+    $Counts = New-Object 'System.Collections.Generic.Dictionary[string,int]' ([StringComparer]::Ordinal)
+    foreach ($Key in @($Keys)) {
+        if ($Counts.ContainsKey($Key)) {
+            $Counts[$Key] = $Counts[$Key] + 1
+        } else {
+            $Counts.Add($Key, 1)
+        }
+    }
+    return @($Counts.GetEnumerator() | ForEach-Object { $_.Key + '=' + [string]$_.Value })
+}
+function Read-Task3StrictJsonObject([string]$Path, [string]$Context) {
+    $Raw = [IO.File]::ReadAllBytes($Path)
+    if ($Raw.Length -eq 0 -or
+        ($Raw.Length -ge 3 -and $Raw[0] -eq 0xEF -and $Raw[1] -eq 0xBB -and $Raw[2] -eq 0xBF)) {
+        throw ('NEEDS_CONTEXT: JSON is empty or has a BOM ' + $Context + '; do not invoke Opus.')
+    }
+    $Text = $StrictUtf8.GetString($Raw)
+    if ($Text.Contains([char]0xFFFD)) {
+        throw ('NEEDS_CONTEXT: JSON is not strict UTF-8 ' + $Context + '; do not invoke Opus.')
+    }
+    $RawPropertyKeys = @(Get-Task3RawJsonObjectKeys $Text $Context)
+    $Record = $Text | ConvertFrom-Json -ErrorAction Stop
+    $ParsedPropertyKeys = @(Get-Task3ParsedJsonObjectKeys $Record)
+    $RawPropertyCounts = @(Get-Task3KeyCountRows $RawPropertyKeys)
+    $ParsedPropertyCounts = @(Get-Task3KeyCountRows $ParsedPropertyKeys)
+    if (Compare-Object $ParsedPropertyCounts $RawPropertyCounts -CaseSensitive) {
+        throw ('NEEDS_CONTEXT: raw JSON property-token counts do not exactly match parsed properties ' + $Context)
+    }
+    return $Record
+}
+function Test-Task3IntegralValue($Value) {
+    return ($Value -is [sbyte] -or $Value -is [byte] -or
+        $Value -is [int16] -or $Value -is [uint16] -or
+        $Value -is [int] -or $Value -is [uint32] -or
+        $Value -is [long] -or $Value -is [uint64])
+}
+function Assert-Task3FileSealStrict($Seal, [string]$Context) {
+    $ExpectedProperties = @('path','bytes','sha256')
+    if ($Seal -isnot [pscustomobject] -or
+        (@($Seal.PSObject.Properties.Name) -join '|') -cne ($ExpectedProperties -join '|') -or
+        $Seal.path -isnot [string] -or -not [IO.Path]::IsPathRooted([string]$Seal.path) -or
+        -not (Test-Path -LiteralPath ([string]$Seal.path) -PathType Leaf) -or
+        -not (Test-Task3IntegralValue $Seal.bytes) -or [int64]$Seal.bytes -lt 0 -or
+        $Seal.sha256 -isnot [string] -or [string]$Seal.sha256 -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('NEEDS_CONTEXT: invalid Task 2 file seal ' + $Context + '; do not invoke Opus.')
+    }
+    $ResolvedPath = (Resolve-Path -LiteralPath ([string]$Seal.path)).Path
+    if ($ResolvedPath -cne [string]$Seal.path -or
+        (Get-Item -LiteralPath $ResolvedPath).Length -ne [int64]$Seal.bytes -or
+        (Get-FileHash -LiteralPath $ResolvedPath -Algorithm SHA256).Hash -cne [string]$Seal.sha256) {
+        throw ('NEEDS_CONTEXT: Task 2 sealed artifact drifted ' + $Context + '; do not invoke Opus.')
+    }
+}
+function Test-Task3FileSealIdentity($Left, $Right) {
+    return ($Left -is [pscustomobject] -and $Right -is [pscustomobject] -and
+        [string]$Left.path -ceq [string]$Right.path -and
+        (Test-Task3IntegralValue $Left.bytes) -and (Test-Task3IntegralValue $Right.bytes) -and
+        [int64]$Left.bytes -eq [int64]$Right.bytes -and
+        [string]$Left.sha256 -ceq [string]$Right.sha256)
+}
+function New-Task3ExternallyBoundSeal([string]$Path, [string]$ExpectedSha256) {
+    if ($ExpectedSha256 -cnotmatch '^[0-9A-F]{64}$') {
+        throw ('NEEDS_CONTEXT: invalid externally bound hash for ' + $Path)
+    }
+    $FullPath = (Resolve-Path -LiteralPath $Path).Path
+    $Item = Get-Item -LiteralPath $FullPath -ErrorAction Stop
+    if ((Get-FileHash -LiteralPath $FullPath -Algorithm SHA256).Hash -cne $ExpectedSha256) {
+        throw ('NEEDS_CONTEXT: externally bound artifact drifted ' + $FullPath + '; do not invoke Opus.')
+    }
+    return [pscustomobject][ordered]@{
+        path = $FullPath
+        bytes = [long]$Item.Length
+        sha256 = $ExpectedSha256
+    }
+}
+function Add-Task3ArtifactSeal($Lookup, $Seal, [string]$Context) {
+    $null = Assert-Task3FileSealStrict $Seal $Context
+    if ($Lookup.ContainsKey([string]$Seal.path)) {
+        if (-not (Test-Task3FileSealIdentity $Lookup[[string]$Seal.path] $Seal)) {
+            throw ('NEEDS_CONTEXT: conflicting Task 2 artifact seals for ' + [string]$Seal.path)
+        }
+        return
+    }
+    $Lookup.Add([string]$Seal.path, [pscustomobject][ordered]@{
+        path = [string]$Seal.path
+        bytes = [long]$Seal.bytes
+        sha256 = [string]$Seal.sha256
+    })
+}
+function Assert-Task3Task2Completion([string]$Context) {
+    if (-not (Get-Item -LiteralPath $Task1CompletionRecord).IsReadOnly -or
+        -not (Get-Item -LiteralPath $Task2CompletionRecord).IsReadOnly -or
+        (Get-FileHash -LiteralPath $Task1CompletionRecord -Algorithm SHA256).Hash -cne $Task1CompletionSha256 -or
+        (Get-FileHash -LiteralPath $Task2CompletionRecord -Algorithm SHA256).Hash -cne $Task2CompletionSha256) {
+        throw ('NEEDS_CONTEXT: Task 1/2 completion hash drifted ' + $Context + '; do not invoke Opus.')
+    }
+    $Record = Read-Task3StrictJsonObject $Task2CompletionRecord ('Task 2 completion ' + $Context)
+    $ExpectedProperties = @(
+        'schema_version','verdict','approved_plan_lock_sha256','task1_completion_path',
+        'task1_completion_sha256','approved_plan_commit','rules_commit','rules_parent_commit',
+        'rules_subject','rules_paths','invocation_count','invocations','artifact_count','artifacts','finished_utc'
+    )
+    $ExpectedNames = @(
+        'rules-red','rules-green','catalog-green','balance-green','winter-invariance-green',
+        'missing-portraits-green','narration-overlap-green','show-before-green','lint-green'
+    )
+    $ExpectedRulesPaths = @('game/balance.rpy','game/difficulty.rpy','game/test_game.rpy')
+    $ExpectedInvocationContract = [ordered]@{
+        'rules-red' = [pscustomobject]@{ kind='suite'; expected='FAILED'; direct_count=1; source_count=0 }
+        'rules-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+        'catalog-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+        'balance-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+        'winter-invariance-green' = [pscustomobject]@{ kind='suite'; expected='PASSED'; direct_count=1; source_count=0 }
+        'missing-portraits-green' = [pscustomobject]@{ kind='scanner'; expected='PASS'; direct_count=2; source_count=0 }
+        'narration-overlap-green' = [pscustomobject]@{ kind='scanner'; expected='PASS'; direct_count=2; source_count=0 }
+        'show-before-green' = [pscustomobject]@{ kind='scanner'; expected='PASS'; direct_count=3; source_count=1 }
+        'lint-green' = [pscustomobject]@{ kind='lint'; expected='PASS'; direct_count=1; source_count=0 }
+    }
+    if ($Record -isnot [pscustomobject] -or
+        (@($Record.PSObject.Properties.Name) -join '|') -cne ($ExpectedProperties -join '|') -or
+        $Record.schema_version -isnot [int] -or [int]$Record.schema_version -ne 1 -or
+        $Record.verdict -isnot [string] -or [string]$Record.verdict -cne 'PASS' -or
+        $Record.approved_plan_lock_sha256 -isnot [string] -or [string]$Record.approved_plan_lock_sha256 -cne $ApprovalLockSha256 -or
+        $Record.task1_completion_path -isnot [string] -or [string]$Record.task1_completion_path -cne (Resolve-Path -LiteralPath $Task1CompletionRecord).Path -or
+        $Record.task1_completion_sha256 -isnot [string] -or [string]$Record.task1_completion_sha256 -cne $Task1CompletionSha256 -or
+        $Record.approved_plan_commit -isnot [string] -or [string]$Record.approved_plan_commit -cne [string]$ApprovalRecord.approved_plan_commit -or
+        $Record.rules_commit -isnot [string] -or [string]$Record.rules_commit -cne $ExpectedRulesCommit -or
+        $Record.rules_parent_commit -isnot [string] -or [string]$Record.rules_parent_commit -cne [string]$ApprovalRecord.approved_plan_commit -or
+        $Record.rules_subject -isnot [string] -or [string]$Record.rules_subject -cne 'fix: enforce terminal resistance collapse rules' -or
+        $Record.rules_paths -isnot [Array] -or @($Record.rules_paths | Where-Object { $_ -isnot [string] }).Count -ne 0 -or
+        (@($Record.rules_paths) -join '|') -cne ($ExpectedRulesPaths -join '|') -or
+        $Record.invocation_count -isnot [int] -or [int]$Record.invocation_count -ne 9 -or
+        $Record.invocations -isnot [Array] -or @($Record.invocations).Count -ne 9 -or
+        (@($Record.invocations.record.name) -join '|') -cne ($ExpectedNames -join '|') -or
+        $Record.artifact_count -isnot [int] -or [int]$Record.artifact_count -ne 56 -or
+        $Record.artifacts -isnot [Array] -or @($Record.artifacts).Count -ne 56 -or
+        $Record.finished_utc -isnot [string]) {
+        throw ('NEEDS_CONTEXT: Task 2 completion top-level contract failed ' + $Context + '; do not invoke Opus.')
+    }
+    try {
+        [void][DateTimeOffset]::ParseExact(
+            [string]$Record.finished_utc,
+            'o',
+            [Globalization.CultureInfo]::InvariantCulture,
+            [Globalization.DateTimeStyles]::RoundtripKind
+        )
+    } catch {
+        throw ('NEEDS_CONTEXT: Task 2 completion timestamp failed ' + $Context + '; do not invoke Opus.')
+    }
+
+    $ArtifactLookup = New-Object 'System.Collections.Generic.Dictionary[string,object]' ([StringComparer]::OrdinalIgnoreCase)
+    foreach ($FixedSeal in @(
+        (New-Task3ExternallyBoundSeal $ApprovalLockPath $ApprovalLockSha256),
+        (New-Task3ExternallyBoundSeal $Task1CompletionRecord $Task1CompletionSha256),
+        (New-Task3ExternallyBoundSeal $ThisPlan ([string]$ApprovalRecord.plan_sha256)),
+        (New-Task3ExternallyBoundSeal $DesignPath ([string]$ApprovalRecord.spec_sha256))
+    )) {
+        Add-Task3ArtifactSeal $ArtifactLookup $FixedSeal 'fixed Task 2 authority'
+    }
+
+    $ReceiptProperties = @(
+        'schema_version','name','kind','expected','actual','verdict','helper_evidence_dir',
+        'helper_artifacts','helper_result','runner_or_scanner_evidence_dir','direct_evidence',
+        'source_evidence','assertions','created_utc'
+    )
+    $AssertionProperties = @('central_safety_envelope','outcome_gates','runner_or_scanner')
+    $InvocationArray = @($Record.invocations)
+    for ($InvocationIndex = 0; $InvocationIndex -lt 9; $InvocationIndex++) {
+        $Invocation = $InvocationArray[$InvocationIndex]
+        $ExpectedName = $ExpectedNames[$InvocationIndex]
+        $Contract = $ExpectedInvocationContract[$ExpectedName]
+        if ($Invocation -isnot [pscustomobject] -or
+            (@($Invocation.PSObject.Properties.Name) -join '|') -cne 'receipt|record' -or
+            $Invocation.receipt -isnot [pscustomobject] -or
+            $Invocation.record -isnot [pscustomobject]) {
+            throw ('NEEDS_CONTEXT: Task 2 invocation wrapper failed at index ' + [string]$InvocationIndex)
+        }
+        $null = Assert-Task3FileSealStrict $Invocation.receipt ('receipt ' + $ExpectedName)
+        $Receipt = $Invocation.record
+        if ((@($Receipt.PSObject.Properties.Name) -join '|') -cne ($ReceiptProperties -join '|') -or
+            $Receipt.schema_version -isnot [int] -or [int]$Receipt.schema_version -ne 1 -or
+            $Receipt.name -isnot [string] -or [string]$Receipt.name -cne $ExpectedName -or
+            $Receipt.kind -isnot [string] -or [string]$Receipt.kind -cne [string]$Contract.kind -or
+            $Receipt.expected -isnot [string] -or [string]$Receipt.expected -cne [string]$Contract.expected -or
+            $Receipt.actual -isnot [string] -or [string]$Receipt.actual -cne [string]$Contract.expected -or
+            $Receipt.verdict -isnot [string] -or [string]$Receipt.verdict -cne 'PASS' -or
+            $Receipt.helper_evidence_dir -isnot [string] -or
+            $Receipt.helper_artifacts -isnot [Array] -or
+            $Receipt.helper_result -isnot [pscustomobject] -or
+            $Receipt.runner_or_scanner_evidence_dir -isnot [string] -or
+            $Receipt.direct_evidence -isnot [Array] -or
+            $Receipt.source_evidence -isnot [Array] -or
+            $Receipt.assertions -isnot [pscustomobject] -or
+            (@($Receipt.assertions.PSObject.Properties.Name) -join '|') -cne ($AssertionProperties -join '|') -or
+            @($Receipt.assertions.PSObject.Properties.Value | Where-Object { $_ -isnot [string] -or [string]$_ -cne 'PASS' }).Count -ne 0 -or
+            $Receipt.created_utc -isnot [string]) {
+            throw ('NEEDS_CONTEXT: Task 2 invocation receipt contract failed for ' + $ExpectedName)
+        }
+        try {
+            [void][DateTimeOffset]::ParseExact(
+                [string]$Receipt.created_utc,
+                'o',
+                [Globalization.CultureInfo]::InvariantCulture,
+                [Globalization.DateTimeStyles]::RoundtripKind
+            )
+        } catch {
+            throw ('NEEDS_CONTEXT: receipt timestamp failed for ' + $ExpectedName)
+        }
+        if (-not [IO.Path]::IsPathRooted([string]$Receipt.helper_evidence_dir) -or
+            -not (Test-Path -LiteralPath ([string]$Receipt.helper_evidence_dir) -PathType Container) -or
+            -not [IO.Path]::IsPathRooted([string]$Receipt.runner_or_scanner_evidence_dir) -or
+            -not (Test-Path -LiteralPath ([string]$Receipt.runner_or_scanner_evidence_dir) -PathType Container)) {
+            throw ('NEEDS_CONTEXT: receipt directory contract failed for ' + $ExpectedName)
+        }
+        $HelperFull = (Resolve-Path -LiteralPath ([string]$Receipt.helper_evidence_dir)).Path
+        $RunnerOrScannerFull = (Resolve-Path -LiteralPath ([string]$Receipt.runner_or_scanner_evidence_dir)).Path
+        if ([string]$Receipt.helper_evidence_dir -cne $HelperFull -or
+            [string]$Receipt.runner_or_scanner_evidence_dir -cne $RunnerOrScannerFull -or
+            [string]$Invocation.receipt.path -cne [IO.Path]::GetFullPath((Join-Path $HelperFull 'invocation-receipt.json'))) {
+            throw ('NEEDS_CONTEXT: receipt path/directory relation failed for ' + $ExpectedName)
+        }
+        if (@($Receipt.helper_artifacts).Count -ne 4 -or
+            @($Receipt.direct_evidence).Count -ne [int]$Contract.direct_count -or
+            @($Receipt.source_evidence).Count -ne [int]$Contract.source_count) {
+            throw ('NEEDS_CONTEXT: receipt cardinality failed for ' + $ExpectedName)
+        }
+        foreach ($Seal in @($Receipt.helper_artifacts) + @($Receipt.helper_result) +
+            @($Receipt.direct_evidence) + @($Receipt.source_evidence)) {
+            $null = Assert-Task3FileSealStrict $Seal ('receipt artifact ' + $ExpectedName)
+        }
+        $ExpectedHelperPaths = @(
+            [IO.Path]::GetFullPath((Join-Path $HelperFull 'request.json'))
+            [IO.Path]::GetFullPath((Join-Path $HelperFull 'stdout.txt'))
+            [IO.Path]::GetFullPath((Join-Path $HelperFull 'stderr.txt'))
+            [IO.Path]::GetFullPath((Join-Path $HelperFull 'result.json'))
+        )
+        for ($HelperIndex = 0; $HelperIndex -lt 4; $HelperIndex++) {
+            if ([string]$Receipt.helper_artifacts[$HelperIndex].path -cne $ExpectedHelperPaths[$HelperIndex]) {
+                throw ('NEEDS_CONTEXT: helper artifact order/path failed for ' + $ExpectedName)
+            }
+        }
+        if (-not (Test-Task3FileSealIdentity $Receipt.helper_result $Receipt.helper_artifacts[3])) {
+            throw ('NEEDS_CONTEXT: helper_result relation failed for ' + $ExpectedName)
+        }
+        if ([string]$Contract.kind -ceq 'scanner') {
+            if ($RunnerOrScannerFull -cne $HelperFull -or
+                -not (Test-Task3FileSealIdentity $Receipt.direct_evidence[0] $Receipt.helper_artifacts[1]) -or
+                -not (Test-Task3FileSealIdentity $Receipt.direct_evidence[1] $Receipt.helper_artifacts[2])) {
+                throw ('NEEDS_CONTEXT: scanner stdout/stderr relation failed for ' + $ExpectedName)
+            }
+        } else {
+            $ExpectedExtension = if ([string]$Contract.kind -ceq 'suite') { '.log' } else { '.txt' }
+            if ([IO.Path]::GetDirectoryName([string]$Receipt.direct_evidence[0].path) -cne $RunnerOrScannerFull -or
+                [IO.Path]::GetExtension([string]$Receipt.direct_evidence[0].path) -cne $ExpectedExtension) {
+                throw ('NEEDS_CONTEXT: suite/lint evidence relation failed for ' + $ExpectedName)
+            }
+        }
+        if ($ExpectedName -ceq 'show-before-green') {
+            $ExpectedShowSource = [IO.Path]::GetFullPath((Join-Path $EvidenceRoot 'rules\scanner-show-before-source\show-before-scan.py'))
+            if ([string]$Receipt.source_evidence[0].path -cne $ExpectedShowSource -or
+                -not (Test-Task3FileSealIdentity $Receipt.source_evidence[0] $Receipt.direct_evidence[2])) {
+                throw 'NEEDS_CONTEXT: show-before exact source/direct relation failed.'
+            }
+        }
+
+        $PhysicalReceipt = Read-Task3StrictJsonObject ([string]$Invocation.receipt.path) ('physical receipt ' + $ExpectedName)
+        if ($PhysicalReceipt -isnot [pscustomobject] -or
+            ($PhysicalReceipt | ConvertTo-Json -Depth 10 -Compress) -cne
+                ($Receipt | ConvertTo-Json -Depth 10 -Compress)) {
+            throw ('NEEDS_CONTEXT: physical receipt differs from embedded record for ' + $ExpectedName)
+        }
+
+        Add-Task3ArtifactSeal $ArtifactLookup $Invocation.receipt ('receipt ' + $ExpectedName)
+        foreach ($Seal in @($Receipt.helper_artifacts)) {
+            Add-Task3ArtifactSeal $ArtifactLookup $Seal ('helper artifact ' + $ExpectedName)
+        }
+        foreach ($Seal in @($Receipt.direct_evidence)) {
+            Add-Task3ArtifactSeal $ArtifactLookup $Seal ('direct evidence ' + $ExpectedName)
+        }
+        foreach ($Seal in @($Receipt.source_evidence)) {
+            Add-Task3ArtifactSeal $ArtifactLookup $Seal ('source evidence ' + $ExpectedName)
+        }
+    }
+
+    $ExpectedArtifacts = @($ArtifactLookup.Values | Sort-Object path)
+    if ($ExpectedArtifacts.Count -ne 56) {
+        throw ('NEEDS_CONTEXT: exact Task 2 artifact union must contain 56 files; found ' + [string]$ExpectedArtifacts.Count)
+    }
+    $ObservedArtifacts = @($Record.artifacts)
+    for ($ArtifactIndex = 0; $ArtifactIndex -lt 56; $ArtifactIndex++) {
+        $null = Assert-Task3FileSealStrict $ObservedArtifacts[$ArtifactIndex] ('completion artifact index ' + [string]$ArtifactIndex)
+        if (-not (Test-Task3FileSealIdentity $ObservedArtifacts[$ArtifactIndex] $ExpectedArtifacts[$ArtifactIndex])) {
+            throw ('NEEDS_CONTEXT: Task 2 artifact union differs at index ' + [string]$ArtifactIndex + ' ' + $Context)
+        }
+    }
+}
+Assert-Task3Task2Completion 'at Task 3 start'
+```
+
+- [ ] **Step 1: Reconfirm the mandatory three-candidate branch**
+
+Only after Step 0 passes, read `CANON.md`, `CLAUDE.md`, `docs/writing-style/INDEX.md`, and `docs/writing-style/guidance.md` in full. Assert that the style index still reports seed maturity and no active approved examples, and that the guidance table has no active row. If an active approved corpus or guidance row now exists, stop and revise this plan before generating anything; do not silently switch workflows or omit approved guidance from the prompts.
+
+Continue in the same session and verify that `game/chapter5.rpy` and `game/endings_expansion.rpy` remain unmodified:
+
+```powershell
 $GuidancePath = Join-Path $ProjectRoot 'docs\writing-style\guidance.md'
 if (-not (Test-Path -LiteralPath $GuidancePath -PathType Leaf)) {
     throw 'Writing-style guidance is missing.'
@@ -3015,6 +4662,8 @@ function Assert-NonemptyJsonString([object]$Value, [string]$Context) {
     }
 }
 foreach ($RunRoot in $RunRoots) {
+    Assert-Task3ApprovalState ('immediately before Opus invocation for ' + $RunRoot)
+    Assert-Task3Task2Completion ('immediately before Opus invocation for ' + $RunRoot)
     $PromptPath = Join-Path $RunRoot 'prompt.txt'
     try {
         $SummaryText = (& $Launcher -PromptFile $PromptPath -OutputDirectory $RunRoot -ErrorAction Stop | Out-String).Trim()
@@ -3237,7 +4886,7 @@ After the user selects exactly one raw candidate, first bind its literal `result
 - `game/endings_expansion.rpy`: non-reserved `default iron_terminal_collapse_snapshot = None` and `default fall_cause = ""`; leave `ending_fall_epilogue` text unchanged.
 - `game/chapter5.rpy`: reset/lock collapse snapshot; branch-entry and post-join guards; collapsed-menu visibility; hard-grind override; `prince_ally and not prince_betrayed` score; `fall_cause` entry writes; approved neutral-baron exchange; approved death sequence and three cause variants; skip `ending_side_characters_fate` for fall while retaining the fall epilogue.
 - `game/test_game.rpy`: ordinary-difficulty player-feedback path; prepared frontal/flanking old-menu guards before any branch mutation; `None` mid-branch preservation; exact approved-copy/source contracts; a new `test_terminal_collapse_ending` reaching the unique approved death sentence while restoring persistent state.
-- Real old-save validation: never open the read-only mother directly. Create one repository-external unique empty `SaveDir` for each frontal/flanking replay, assert each replay worktree's `game/saves` is absent or a task-owned empty directory, copy the mother under its engine filename, and verify mother/source/two-copy SHA-256 equality. Launch each replay with process-local `SDL_VIDEODRIVER=dummy`, `SDL_AUDIODRIVER=dummy`, and `RENPY_RENDERER=sw` plus a pre-armed process-tree visible-window monitor; capture stdout/stderr, PID/tree, window report, real exit code, provenance marker, and state assertions. Each engine-native testcase must load its own copy, select exactly its named real choice, and prove `fall` occurs before any victory text or branch mutation. Any visible window, confirmation or interaction requirement, unknown token or label, or fixture/marker mismatch is `NEEDS_CONTEXT`; never use Computer Use, real input, screenshots, or manual fallback.
+- Real old-save validation: every fresh Phase B controller first consumes the same out-of-band `$ApprovalLockSha256`, strictly revalidates the immutable approval lock and the physical/raw plan/spec blobs, then strictly parses `.superpowers/sdd/terminal-collapse-ending/legacy/task1-completion.json` and re-hashes every sealed artifact before trusting the mother or helper. Never infer completion from Markdown. Never open the read-only mother directly. Create one repository-external unique empty `SaveDir` for each frontal/flanking replay, assert each replay worktree's `game/saves` is absent or a task-owned empty directory, copy the mother under its engine filename, and verify mother/source/two-copy SHA-256 equality. Bind the exact ignored helpers under `.superpowers/sdd/terminal-collapse-ending/helpers/` to the 82,334 / 24,229 / 53,188 byte payloads and SHA-256 values `E0393DB1E113FDB8C35097978AA73B7D33AFDD5788499002B6423D883DEED4E8`, `73A3F9C43CF994E08F004E0A1266122A3EC5E0EAF065C63E6D9439CF0B0E1880`, and `20198B669F70E51E51F71BD01E6D06D1949D300F43CE9A94FB0190A47D781A15`. Launch each replay through one fresh dedicated helper host with process-local `SDL_VIDEODRIVER=dummy`, `SDL_AUDIODRIVER=dummy`, and `RENPY_RENDERER=sw`; require parent actual-host-exit/result mapping validation, then `Assert-PrivateDesktopSafetyEnvelope`, then explicitly require `Test-PrivateDesktopIntegralValue(result.root_exit_code)`, non-null root exit equal to the declared expected code, `COMPLETED`, helper-0, zero-window, and no-timeout. Capture stdout/stderr, schema-v2 Job/window diagnostics, provenance marker, and state assertions without treating PID/count diagnostics as coverage. Every other Phase B helper call with an expected target exit uses the same integral/non-null-before-compare gate. Each engine-native testcase must load its own copy, select exactly its named real choice, and prove `fall` occurs before any victory text or branch mutation. Missing/truncated/mismatched evidence, catastrophic host termination, any visible window, confirmation or interaction requirement, unknown token or label, fixture/marker mismatch, null/non-integral root exit, approval-lock drift, or sealed-artifact drift is `NEEDS_CONTEXT`; preserve the create-new attempt and never retry, use Computer Use, send real input, take screenshots, or use manual fallback.
 - Final tests exactly once on the final tracked SHA: focused suites, `python -B -m unittest discover -s Tools -v`, portrait/narration/show/canon/AI-smell/release/font checks, `test_terminal_collapse_ending`, Full, Lint, process cleanup, diff scope, and independent Spec/Standards review.
 - Final asset report: no new art/music/SFX/animation/UI; reuse existing `castle_exterior`, `battlefield`, black scene, and `war_drums.ogg`; measure actual font/package delta after approved text enters.
 
@@ -3247,7 +4896,7 @@ Phase B must end with the last tracked implementation commit before Final and in
 
 ## Appendix A — `PrivateDesktopRunner.cs`
 
-Exact committed helper payload: **69,781 bytes**; **SHA-256 `F25B6B4449AF625DAF3707F0CCBE7E8132B044695107D48949A928684A524154`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
+Exact committed helper payload: **82,334 bytes**; **SHA-256 `E0393DB1E113FDB8C35097978AA73B7D33AFDD5788499002B6423D883DEED4E8`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
 
 ```csharp
 using System;
@@ -3372,40 +5021,79 @@ namespace CourtOfShadows.Headless
         [DataMember(Name = "job_total_processes", Order = 13, EmitDefaultValue = true)]
         public int? JobTotalProcesses;
 
-        [DataMember(Name = "process_coverage_complete", Order = 14)]
-        public bool ProcessCoverageComplete;
+        [DataMember(Name = "observed_distinct_process_id_count", Order = 14)]
+        public int ObservedDistinctProcessIdCount;
 
-        [DataMember(Name = "monitor_armed_before_resume", Order = 15)]
+        [DataMember(Name = "process_id_accounting_kind", Order = 15)]
+        public string ProcessIdAccountingKind;
+
+        [DataMember(Name = "process_diagnostic_errors", Order = 34)]
+        public string[] ProcessDiagnosticErrors;
+
+        [DataMember(Name = "host_termination_required", Order = 35)]
+        public bool HostTerminationRequired;
+
+        [DataMember(Name = "helper_exit_code", Order = 36)]
+        public int HelperExitCode;
+
+        [DataMember(Name = "job_kill_on_close_verified", Order = 37)]
+        public bool JobKillOnCloseVerified;
+
+        [DataMember(Name = "job_handle_non_inheritable", Order = 38)]
+        public bool JobHandleNonInheritable;
+
+        [DataMember(Name = "private_desktop_initially_empty", Order = 16)]
+        public bool PrivateDesktopInitiallyEmpty;
+
+        [DataMember(Name = "monitor_armed_before_create", Order = 17)]
+        public bool MonitorArmedBeforeCreate;
+
+        [DataMember(Name = "monitor_armed_before_resume", Order = 18)]
         public bool MonitorArmedBeforeResume;
 
-        [DataMember(Name = "monitor_armed_utc", Order = 16, EmitDefaultValue = true)]
+        [DataMember(Name = "monitor_armed_utc", Order = 19, EmitDefaultValue = true)]
         public string MonitorArmedUtc;
 
-        [DataMember(Name = "resumed_utc", Order = 17, EmitDefaultValue = true)]
+        [DataMember(Name = "process_created_utc", Order = 20, EmitDefaultValue = true)]
+        public string ProcessCreatedUtc;
+
+        [DataMember(Name = "resumed_utc", Order = 21, EmitDefaultValue = true)]
         public string ResumedUtc;
 
-        [DataMember(Name = "cleanup_complete", Order = 18)]
+        [DataMember(Name = "root_assigned_to_job_before_resume", Order = 22)]
+        public bool RootAssignedToJobBeforeResume;
+
+        [DataMember(Name = "job_breakaway_forbidden", Order = 23)]
+        public bool JobBreakawayForbidden;
+
+        [DataMember(Name = "job_active_processes_final", Order = 24, EmitDefaultValue = true)]
+        public int? JobActiveProcessesFinal;
+
+        [DataMember(Name = "monitor_completed_after_job_drain", Order = 25)]
+        public bool MonitorCompletedAfterJobDrain;
+
+        [DataMember(Name = "cleanup_complete", Order = 26)]
         public bool CleanupComplete;
 
-        [DataMember(Name = "cleanup_errors", Order = 19)]
+        [DataMember(Name = "cleanup_errors", Order = 27)]
         public string[] CleanupErrors;
 
-        [DataMember(Name = "visible_windows", Order = 20)]
+        [DataMember(Name = "visible_windows", Order = 28)]
         public WindowEvidence[] VisibleWindows;
 
-        [DataMember(Name = "started_utc", Order = 21)]
+        [DataMember(Name = "started_utc", Order = 29)]
         public string StartedUtc;
 
-        [DataMember(Name = "finished_utc", Order = 22)]
+        [DataMember(Name = "finished_utc", Order = 30)]
         public string FinishedUtc;
 
-        [DataMember(Name = "elapsed_milliseconds", Order = 23)]
+        [DataMember(Name = "elapsed_milliseconds", Order = 31)]
         public long ElapsedMilliseconds;
 
-        [DataMember(Name = "stdout_path", Order = 24)]
+        [DataMember(Name = "stdout_path", Order = 32)]
         public string StdoutPath;
 
-        [DataMember(Name = "stderr_path", Order = 25)]
+        [DataMember(Name = "stderr_path", Order = 33)]
         public string StderrPath;
     }
 
@@ -3418,6 +5106,9 @@ namespace CourtOfShadows.Headless
         private const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
         private const uint STARTF_USESTDHANDLES = 0x00000100;
         private const uint PROC_THREAD_ATTRIBUTE_HANDLE_LIST = 0x00020002;
+        private const uint PROC_THREAD_ATTRIBUTE_JOB_LIST = 0x0002000D;
+        private const uint JOB_OBJECT_LIMIT_BREAKAWAY_OK = 0x00000800;
+        private const uint JOB_OBJECT_LIMIT_SILENT_BREAKAWAY_OK = 0x00001000;
         private const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;
         private const uint JobObjectBasicAccountingInformation = 1;
         private const uint JobObjectAssociateCompletionPortInformation = 7;
@@ -3450,8 +5141,9 @@ namespace CourtOfShadows.Headless
         private const uint GA_ROOT = 2;
         private const uint PM_NOREMOVE = 0x0000;
         private const uint PM_REMOVE = 0x0001;
-        private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
-        private const uint THREAD_QUERY_LIMITED_INFORMATION = 0x0800;
+        private const uint HANDLE_FLAG_INHERIT = 0x00000001;
+        private const int MAX_PROCESS_DIAGNOSTIC_ERRORS = 8;
+        private const int MAX_PROCESS_DIAGNOSTIC_ERROR_CHARACTERS = 2048;
         private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
         private static readonly object ObservationLock = new object();
@@ -3481,11 +5173,37 @@ namespace CourtOfShadows.Headless
             if (String.IsNullOrEmpty(resultPath))
                 throw new InvalidOperationException("No usable result_path was available; " + result.Detail);
 
+            int helperExitCode = MapResultExitCode(result);
+            result.HelperExitCode = helperExitCode;
+            if (result.HostTerminationRequired)
+            {
+                PersistResultAndTerminateHost(resultPath, result, helperExitCode);
+                throw new InvalidOperationException("Environment.Exit returned after catastrophic helper termination.");
+            }
+
             WriteJsonCreateNew(resultPath, result);
+            return helperExitCode;
+        }
+
+        private static void PersistResultAndTerminateHost(string resultPath, RunResult result, int helperExitCode)
+        {
+            try
+            {
+                WriteJsonCreateNew(resultPath, result);
+            }
+            finally
+            {
+                Environment.Exit(helperExitCode);
+            }
+        }
+
+        private static int MapResultExitCode(RunResult result)
+        {
             if (String.Equals(result.Classification, "COMPLETED", StringComparison.Ordinal)) return 0;
             if (String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal)) return 20;
             if (String.Equals(result.Classification, "TIMEOUT", StringComparison.Ordinal)) return 21;
-            return 22;
+            if (String.Equals(result.Classification, "LAUNCH_ERROR", StringComparison.Ordinal)) return 22;
+            throw new InvalidOperationException("Unknown helper classification: " + result.Classification);
         }
 
         public static string QuoteWindowsArgument(string value)
@@ -3541,13 +5259,16 @@ namespace CourtOfShadows.Headless
             IntPtr stdinHandle = INVALID_HANDLE_VALUE;
             IntPtr attributeList = IntPtr.Zero;
             IntPtr handleListMemory = IntPtr.Zero;
+            IntPtr jobListMemory = IntPtr.Zero;
             IntPtr environmentMemory = IntPtr.Zero;
             PROCESS_INFORMATION processInfo = new PROCESS_INFORMATION();
             bool processCreated = false;
-            bool processAssignedToJob = false;
+            bool rootExitProven = false;
+            bool rootJobMembershipProven = false;
             bool jobTerminated = false;
             bool attributeListInitialized = false;
             List<string> cleanupErrors = new List<string>();
+            List<string> processDiagnosticErrors = new List<string>();
             PrivateDesktopWatcher watcher = null;
 
             try
@@ -3562,13 +5283,18 @@ namespace CourtOfShadows.Headless
                 job = CreateJobObjectW(IntPtr.Zero, null);
                 if (job == IntPtr.Zero) ThrowLastWin32("CreateJobObjectW");
                 ConfigureKillOnClose(job);
+                VerifyKillOnCloseAndNoBreakaway(job);
+                result.JobKillOnCloseVerified = true;
+                result.JobBreakawayForbidden = true;
+                result.JobHandleNonInheritable = VerifyHandleNonInheritable(job);
 
                 completionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, IntPtr.Zero, UIntPtr.Zero, 1);
                 if (completionPort == IntPtr.Zero) ThrowLastWin32("CreateIoCompletionPort");
                 AssociateJobCompletionPort(job, completionPort);
 
-                watcher = new PrivateDesktopWatcher(desktop, desktopName, job);
+                watcher = new PrivateDesktopWatcher(desktop, desktopName);
                 watcher.StartAndWaitUntilArmed(5000);
+                result.PrivateDesktopInitiallyEmpty = watcher.InitiallyEmpty;
                 result.MonitorArmedUtc = FormatUtc(watcher.ArmedUtc);
 
                 SECURITY_ATTRIBUTES inheritable = new SECURITY_ATTRIBUTES();
@@ -3593,12 +5319,12 @@ namespace CourtOfShadows.Headless
                 startup.StartupInfo.hStdError = stderrHandle;
 
                 UIntPtr attributeBytes = UIntPtr.Zero;
-                InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref attributeBytes);
+                InitializeProcThreadAttributeList(IntPtr.Zero, 2, 0, ref attributeBytes);
                 int initError = Marshal.GetLastWin32Error();
                 if (attributeBytes == UIntPtr.Zero || initError != 122)
                     throw new Win32Exception(initError, "InitializeProcThreadAttributeList(size) failed");
                 attributeList = Marshal.AllocHGlobal(CheckedUIntPtrToInt(attributeBytes));
-                if (!InitializeProcThreadAttributeList(attributeList, 1, 0, ref attributeBytes))
+                if (!InitializeProcThreadAttributeList(attributeList, 2, 0, ref attributeBytes))
                     ThrowLastWin32("InitializeProcThreadAttributeList");
                 attributeListInitialized = true;
                 startup.lpAttributeList = attributeList;
@@ -3611,6 +5337,12 @@ namespace CourtOfShadows.Headless
                     IntPtr.Zero, IntPtr.Zero))
                     ThrowLastWin32("UpdateProcThreadAttribute(HANDLE_LIST)");
 
+                jobListMemory = Marshal.AllocHGlobal(IntPtr.Size);
+                Marshal.WriteIntPtr(jobListMemory, job);
+                if (!UpdateProcThreadAttribute(attributeList, 0, new UIntPtr(PROC_THREAD_ATTRIBUTE_JOB_LIST),
+                    jobListMemory, new UIntPtr((uint)IntPtr.Size), IntPtr.Zero, IntPtr.Zero))
+                    ThrowLastWin32("UpdateProcThreadAttribute(JOB_LIST)");
+
                 environmentMemory = BuildUnicodeEnvironmentBlock(request.EnvironmentOverrides);
                 StringBuilder commandLine = BuildCommandLine(request.Executable, request.Arguments);
                 uint creationFlags = CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT |
@@ -3618,20 +5350,27 @@ namespace CourtOfShadows.Headless
                 if (!CreateProcessW(request.Executable, commandLine, IntPtr.Zero, IntPtr.Zero, true,
                     creationFlags, environmentMemory, request.WorkingDirectory, ref startup, out processInfo))
                     ThrowLastWin32("CreateProcessW");
+                DateTime processCreatedUtc = DateTime.UtcNow;
                 processCreated = true;
                 result.Started = true;
                 result.RootPid = unchecked((int)processInfo.dwProcessId);
+                result.ProcessCreatedUtc = FormatUtc(processCreatedUtc);
+                result.MonitorArmedBeforeCreate = watcher.ArmedUtc <= processCreatedUtc;
 
-                if (!AssignProcessToJobObject(job, processInfo.hProcess))
-                    ThrowLastWin32("AssignProcessToJobObject before ResumeThread");
-                processAssignedToJob = true;
+                bool rootInJob;
+                if (!IsProcessInJob(processInfo.hProcess, job, out rootInJob))
+                    ThrowLastWin32("IsProcessInJob(root before ResumeThread)");
+                if (!rootInJob)
+                    throw new InvalidOperationException("PROC_THREAD_ATTRIBUTE_JOB_LIST did not place the suspended root in the private Job.");
+                rootJobMembershipProven = true;
+                result.RootAssignedToJobBeforeResume = true;
                 AddOwnedPid(unchecked((int)processInfo.dwProcessId));
-                PumpJobMessages(completionPort);
-                RefreshOwnedPidsFromJob(job);
+                TryPumpJobMessages(completionPort, processDiagnosticErrors);
+                TryRefreshOwnedPidsFromJob(job, processDiagnosticErrors);
                 watcher.ThrowIfFailed();
-                watcher.Reconcile(GetOwnedPidSnapshot());
+                watcher.Reconcile();
                 if (watcher.HasAcceptedWindows)
-                    throw new InvalidOperationException("A task-owned visible window existed before resume.");
+                    throw new InvalidOperationException("A visible top-level window existed on the private desktop before resume.");
 
                 uint resumeResult = ResumeThread(processInfo.hThread);
                 if (resumeResult == UInt32.MaxValue) ThrowLastWin32("ResumeThread");
@@ -3640,29 +5379,28 @@ namespace CourtOfShadows.Headless
                 result.MonitorArmedBeforeResume = watcher.ArmedUtc <= resumedUtc;
 
                 bool activeZero = false;
-                bool rootExited = false;
                 while (true)
                 {
                     watcher.ThrowIfFailed();
-                    PumpJobMessages(completionPort);
-                    RefreshOwnedPidsFromJob(job);
-                    watcher.Reconcile(GetOwnedPidSnapshot());
+                    TryPumpJobMessages(completionPort, processDiagnosticErrors);
+                    TryRefreshOwnedPidsFromJob(job, processDiagnosticErrors);
+                    watcher.Reconcile();
 
                     if (watcher.HasAcceptedWindows)
                     {
                         result.Classification = "NEEDS_CONTEXT";
-                        result.Detail = "A task-owned visible top-level window was observed; desktop interaction is forbidden.";
+                        result.Detail = "A visible top-level window was observed on the private desktop; desktop interaction is forbidden.";
                         TerminateJobOrThrow(job, 0xEC000001, "TerminateJobObject(visible window)");
                         jobTerminated = true;
                         break;
                     }
 
                     uint rootWait = WaitForSingleObject(processInfo.hProcess, 0);
-                    if (rootWait == WAIT_OBJECT_0) rootExited = true;
+                    if (rootWait == WAIT_OBJECT_0) rootExitProven = true;
                     else if (rootWait != WAIT_TIMEOUT) ThrowLastWin32("WaitForSingleObject(root)");
 
                     activeZero = QueryActiveProcessCount(job) == 0;
-                    if (rootExited && activeZero)
+                    if (rootExitProven && activeZero)
                     {
                         result.Classification = "COMPLETED";
                         result.Detail = "The complete job process tree exited without a visible top-level window.";
@@ -3683,24 +5421,30 @@ namespace CourtOfShadows.Headless
                 }
 
                 if (jobTerminated)
-                    result.JobDrained = DrainTerminatedJob(job, completionPort, 5000);
+                    result.JobDrained = DrainTerminatedJob(job, completionPort, 5000, processDiagnosticErrors);
 
-                uint exitCode;
-                if (GetExitCodeProcess(processInfo.hProcess, out exitCode) && exitCode != STILL_ACTIVE)
-                    result.RootExitCode = unchecked((int)exitCode);
-                else
-                    result.RootExitCode = null;
+                if (result.JobDrained && !rootExitProven)
+                {
+                    uint drainedRootWait = WaitForSingleObject(processInfo.hProcess, 0);
+                    if (drainedRootWait == WAIT_OBJECT_0) rootExitProven = true;
+                    else if (drainedRootWait != WAIT_TIMEOUT) ThrowLastWin32("WaitForSingleObject(root after Job drain)");
+                }
+                TryCaptureRootExitCode(result, processInfo.hProcess, rootExitProven);
 
                 watcher.ThrowIfFailed();
-                PumpJobMessages(completionPort);
-                RefreshOwnedPidsFromJob(job);
-                watcher.Reconcile(GetOwnedPidSnapshot());
+                TryPumpJobMessages(completionPort, processDiagnosticErrors);
+                TryRefreshOwnedPidsFromJob(job, processDiagnosticErrors);
+                watcher.Reconcile();
                 if (watcher.HasAcceptedWindows && !String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal))
                 {
                     result.Classification = "NEEDS_CONTEXT";
-                    result.Detail = "A task-owned visible top-level window was observed during final reconciliation.";
-                    if (!jobTerminated) TerminateJobOrThrow(job, 0xEC000003, "TerminateJobObject(final window)");
-                    result.JobDrained = DrainTerminatedJob(job, completionPort, 5000);
+                    result.Detail = "A visible top-level window was observed on the private desktop during final reconciliation.";
+                    if (!jobTerminated)
+                    {
+                        TerminateJobOrThrow(job, 0xEC000003, "TerminateJobObject(final window)");
+                        jobTerminated = true;
+                    }
+                    result.JobDrained = DrainTerminatedJob(job, completionPort, 5000, processDiagnosticErrors);
                 }
             }
             catch (Exception ex)
@@ -3708,122 +5452,210 @@ namespace CourtOfShadows.Headless
                 result.Classification = "LAUNCH_ERROR";
                 result.Detail = ex.GetType().FullName + ": " + ex.Message;
                 if (processCreated && processInfo.hProcess != IntPtr.Zero)
-                {
-                    uint exitCode;
-                    if (GetExitCodeProcess(processInfo.hProcess, out exitCode) && exitCode != STILL_ACTIVE)
-                        result.RootExitCode = unchecked((int)exitCode);
-                }
+                    TryCaptureRootExitCode(result, processInfo.hProcess, rootExitProven);
             }
             finally
             {
-                if (watcher != null)
+                if (job != IntPtr.Zero)
                 {
                     try
                     {
-                        watcher.StopAndJoin(5000);
-                        watcher.Reconcile(GetOwnedPidSnapshot());
-                        if (watcher.HasAcceptedWindows &&
-                            !String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal) &&
-                            !String.Equals(result.Classification, "LAUNCH_ERROR", StringComparison.Ordinal))
-                        {
-                            result.Classification = "NEEDS_CONTEXT";
-                            result.Detail = "A task-owned visible top-level window was observed during watcher shutdown.";
-                        }
-                    }
-                    catch (Exception watcherError)
-                    {
-                        cleanupErrors.Add("watcher stop/unhook/join: " + watcherError.GetType().FullName + ": " + watcherError.Message);
-                    }
-                }
-
-                if (processCreated && !processAssignedToJob && processInfo.hProcess != IntPtr.Zero)
-                {
-                    uint unassignedWait = WaitForSingleObject(processInfo.hProcess, 0);
-                    if (unassignedWait == WAIT_TIMEOUT)
-                    {
-                        if (!TerminateProcess(processInfo.hProcess, 0xEC000005))
-                            cleanupErrors.Add("TerminateProcess(unassigned root): " + new Win32Exception(Marshal.GetLastWin32Error()).Message);
-                        else
-                        {
-                            unassignedWait = WaitForSingleObject(processInfo.hProcess, 5000);
-                            if (unassignedWait != WAIT_OBJECT_0)
-                                cleanupErrors.Add("WaitForSingleObject(unassigned root) did not report termination: " +
-                                    unassignedWait.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                        }
-                    }
-                    else if (unassignedWait != WAIT_OBJECT_0)
-                    {
-                        cleanupErrors.Add("WaitForSingleObject(unassigned root) failed: " +
-                            new Win32Exception(Marshal.GetLastWin32Error()).Message);
-                    }
-                }
-
-                processInfo.hThread = CloseKernelHandleForCleanup(processInfo.hThread, "root thread", cleanupErrors);
-                processInfo.hProcess = CloseKernelHandleForCleanup(processInfo.hProcess, "root process", cleanupErrors);
-                stdinHandle = CloseKernelHandleForCleanup(stdinHandle, "stdin NUL", cleanupErrors);
-                stdoutHandle = CloseKernelHandleForCleanup(stdoutHandle, "stdout", cleanupErrors);
-                stderrHandle = CloseKernelHandleForCleanup(stderrHandle, "stderr", cleanupErrors);
-
-                if (processAssignedToJob && job != IntPtr.Zero)
-                {
-                    try
-                    {
-                        PumpJobMessages(completionPort);
-                        RefreshOwnedPidsFromJob(job);
+                        TryPumpJobMessages(completionPort, processDiagnosticErrors);
+                        TryRefreshOwnedPidsFromJob(job, processDiagnosticErrors);
                         if (QueryActiveProcessCount(job) != 0)
                         {
                             if (!TerminateJobObject(job, 0xEC000006))
                                 throw new Win32Exception(Marshal.GetLastWin32Error(), "TerminateJobObject(final cleanup) failed");
                             jobTerminated = true;
-                            result.JobDrained = DrainTerminatedJob(job, completionPort, 5000);
+                            result.JobDrained = DrainTerminatedJob(job, completionPort, 5000, processDiagnosticErrors);
                         }
                         else
                         {
                             result.JobDrained = true;
                         }
-                        if (!result.JobDrained || QueryActiveProcessCount(job) != 0)
+                        uint finalActiveProcesses = QueryActiveProcessCount(job);
+                        result.JobActiveProcessesFinal = checked((int)finalActiveProcesses);
+                        if (!result.JobDrained || finalActiveProcesses != 0)
                             throw new InvalidOperationException("Job process tree did not drain during final cleanup.");
-                        PumpJobMessages(completionPort);
-                        RefreshOwnedPidsFromJob(job);
-                        FinalizeProcessCoverage(result, job);
+                        TryPumpJobMessages(completionPort, processDiagnosticErrors);
+                        TryRefreshOwnedPidsFromJob(job, processDiagnosticErrors);
+                        TryFinalizeProcessAccounting(result, job, processDiagnosticErrors);
                     }
-                    catch (Exception coverageError)
+                    catch (Exception jobCleanupError)
                     {
-                        cleanupErrors.Add("job drain/accounting: " + coverageError.GetType().FullName + ": " + coverageError.Message);
-                        result.ProcessCoverageComplete = false;
+                        cleanupErrors.Add("job drain: " + jobCleanupError.GetType().FullName + ": " + jobCleanupError.Message);
+                        if (rootJobMembershipProven &&
+                            (!result.JobDrained || !result.JobActiveProcessesFinal.HasValue || result.JobActiveProcessesFinal.Value != 0))
+                        {
+                            try
+                            {
+                                if (!jobTerminated)
+                                {
+                                    TerminateJobOrThrow(job, 0xEC000007, "TerminateJobObject(recovery cleanup)");
+                                    jobTerminated = true;
+                                }
+                                result.JobDrained = DrainTerminatedJob(job, completionPort, 5000, processDiagnosticErrors);
+                                uint recoveredActiveProcesses = QueryActiveProcessCount(job);
+                                result.JobActiveProcessesFinal = checked((int)recoveredActiveProcesses);
+                                if (!result.JobDrained || recoveredActiveProcesses != 0)
+                                    throw new InvalidOperationException("Job process tree did not drain during recovery cleanup.");
+                                TryPumpJobMessages(completionPort, processDiagnosticErrors);
+                                TryRefreshOwnedPidsFromJob(job, processDiagnosticErrors);
+                                TryFinalizeProcessAccounting(result, job, processDiagnosticErrors);
+                            }
+                            catch (Exception recoveryError)
+                            {
+                                cleanupErrors.Add("job recovery drain: " + recoveryError.GetType().FullName + ": " + recoveryError.Message);
+                            }
+                        }
+                    }
+                }
+
+                bool drainProven = result.JobDrained && result.JobActiveProcessesFinal.HasValue &&
+                    result.JobActiveProcessesFinal.Value == 0;
+                if (processCreated && processInfo.hProcess != IntPtr.Zero && drainProven && !rootExitProven)
+                {
+                    try
+                    {
+                        uint cleanupRootWait = WaitForSingleObject(processInfo.hProcess, 0);
+                        if (cleanupRootWait == WAIT_OBJECT_0) rootExitProven = true;
+                        else if (cleanupRootWait != WAIT_TIMEOUT) ThrowLastWin32("WaitForSingleObject(root after final Job drain)");
+                    }
+                    catch (Exception rootSignalError)
+                    {
+                        cleanupErrors.Add("root exit signal after Job drain: " + rootSignalError.GetType().FullName + ": " + rootSignalError.Message);
+                    }
+                }
+                if (job != IntPtr.Zero && !drainProven)
+                {
+                    cleanupErrors.Add("final Job ActiveProcesses=0 was not proven after all termination/drain attempts");
+                    result.HostTerminationRequired = true;
+                }
+
+                bool watcherJoinSucceeded = false;
+                bool watcherCompletionSucceeded = false;
+                if (watcher != null && drainProven)
+                {
+                    try
+                    {
+                        watcher.StopAndJoin(5000);
+                        watcherJoinSucceeded = true;
+                    }
+                    catch (Exception watcherError)
+                    {
+                        cleanupErrors.Add("watcher stop/unhook/join: " + watcherError.GetType().FullName + ": " + watcherError.Message);
+                        result.HostTerminationRequired = true;
+                    }
+
+                    if (watcherJoinSucceeded)
+                    {
+                        try
+                        {
+                            watcher.ThrowIfFailed();
+                            watcherCompletionSucceeded = true;
+                        }
+                        catch (Exception watcherCompletionError)
+                        {
+                            cleanupErrors.Add("watcher completion: " + watcherCompletionError.GetType().FullName + ": " + watcherCompletionError.Message);
+                        }
+                    }
+                }
+
+                if (watcher != null)
+                {
+                    try
+                    {
+                        watcher.Reconcile();
+                        if (watcher.HasAcceptedWindows)
+                        {
+                            string priorClassification = result.Classification;
+                            string priorDetail = result.Detail;
+                            result.Classification = "NEEDS_CONTEXT";
+                            result.Detail = "A visible top-level window was observed on the private desktop before watcher shutdown." +
+                                " Previous classification=" + priorClassification + "; previous detail=" + priorDetail;
+                        }
+                    }
+                    catch (Exception reconciliationError)
+                    {
+                        cleanupErrors.Add("watcher final reconciliation: " + reconciliationError.GetType().FullName + ": " + reconciliationError.Message);
+                    }
+
+                    if (drainProven && watcherJoinSucceeded && watcherCompletionSucceeded)
+                        result.MonitorCompletedAfterJobDrain = true;
+
+                    if (watcherJoinSucceeded)
+                    {
+                        try
+                        {
+                            watcher.DisposeEventsAfterJoin();
+                        }
+                        catch (Exception disposeError)
+                        {
+                            cleanupErrors.Add("watcher event disposal: " + disposeError.GetType().FullName + ": " + disposeError.Message);
+                        }
                     }
                 }
 
                 PopulateObservationResult(result, watcher);
-                if (attributeList != IntPtr.Zero)
-                {
-                    if (attributeListInitialized) DeleteProcThreadAttributeList(attributeList);
-                    Marshal.FreeHGlobal(attributeList);
-                    attributeList = IntPtr.Zero;
-                }
-                if (handleListMemory != IntPtr.Zero) { Marshal.FreeHGlobal(handleListMemory); handleListMemory = IntPtr.Zero; }
-                if (environmentMemory != IntPtr.Zero) { Marshal.FreeHGlobal(environmentMemory); environmentMemory = IntPtr.Zero; }
+                result.ProcessDiagnosticErrors = processDiagnosticErrors.ToArray();
+                if (processCreated && processInfo.hProcess != IntPtr.Zero && !result.RootExitCode.HasValue)
+                    TryCaptureRootExitCode(result, processInfo.hProcess, rootExitProven);
 
-                job = CloseKernelHandleForCleanup(job, "job", cleanupErrors);
-                completionPort = CloseKernelHandleForCleanup(completionPort, "completion port", cleanupErrors);
-                if (desktop != IntPtr.Zero)
+                if (!result.HostTerminationRequired)
                 {
-                    if (!CloseDesktop(desktop))
-                        cleanupErrors.Add("CloseDesktop: " + new Win32Exception(Marshal.GetLastWin32Error()).Message);
-                    desktop = IntPtr.Zero;
+                    processInfo.hThread = CloseKernelHandleForCleanup(processInfo.hThread, "root thread", cleanupErrors);
+                    processInfo.hProcess = CloseKernelHandleForCleanup(processInfo.hProcess, "root process", cleanupErrors);
+                    stdinHandle = CloseKernelHandleForCleanup(stdinHandle, "stdin NUL", cleanupErrors);
+                    stdoutHandle = CloseKernelHandleForCleanup(stdoutHandle, "stdout", cleanupErrors);
+                    stderrHandle = CloseKernelHandleForCleanup(stderrHandle, "stderr", cleanupErrors);
+
+                    if (attributeList != IntPtr.Zero)
+                    {
+                        if (attributeListInitialized) DeleteProcThreadAttributeList(attributeList);
+                        Marshal.FreeHGlobal(attributeList);
+                        attributeList = IntPtr.Zero;
+                    }
+                    if (handleListMemory != IntPtr.Zero) { Marshal.FreeHGlobal(handleListMemory); handleListMemory = IntPtr.Zero; }
+                    if (jobListMemory != IntPtr.Zero) { Marshal.FreeHGlobal(jobListMemory); jobListMemory = IntPtr.Zero; }
+                    if (environmentMemory != IntPtr.Zero) { Marshal.FreeHGlobal(environmentMemory); environmentMemory = IntPtr.Zero; }
+
+                    job = CloseKernelHandleForCleanup(job, "job", cleanupErrors);
+                    completionPort = CloseKernelHandleForCleanup(completionPort, "completion port", cleanupErrors);
+                    if (desktop != IntPtr.Zero)
+                    {
+                        if (!CloseDesktop(desktop))
+                            cleanupErrors.Add("CloseDesktop: " + new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                        desktop = IntPtr.Zero;
+                    }
                 }
 
                 if ((String.Equals(result.Classification, "COMPLETED", StringComparison.Ordinal) ||
                      String.Equals(result.Classification, "NEEDS_CONTEXT", StringComparison.Ordinal) ||
                      String.Equals(result.Classification, "TIMEOUT", StringComparison.Ordinal)) &&
-                    !result.MonitorArmedBeforeResume)
+                    (!result.PrivateDesktopInitiallyEmpty || !result.MonitorArmedBeforeCreate ||
+                     !result.MonitorArmedBeforeResume || !result.RootAssignedToJobBeforeResume ||
+                     !result.JobKillOnCloseVerified || !result.JobBreakawayForbidden ||
+                     !result.JobHandleNonInheritable || !result.JobDrained ||
+                     !result.JobActiveProcessesFinal.HasValue || result.JobActiveProcessesFinal.Value != 0 ||
+                     !result.MonitorCompletedAfterJobDrain))
                 {
-                    cleanupErrors.Add("monitor was not proven armed before ResumeThread");
+                    cleanupErrors.Add("one or more private-desktop infrastructure safety gates were not proven");
                 }
 
                 result.CleanupErrors = cleanupErrors.ToArray();
                 result.CleanupComplete = cleanupErrors.Count == 0;
-                if (!result.CleanupComplete)
+                bool visibleWindowObserved = result.VisibleWindows != null && result.VisibleWindows.Length != 0;
+                if (visibleWindowObserved)
+                {
+                    string priorClassification = result.Classification;
+                    string priorDetail = result.Detail;
+                    result.Classification = "NEEDS_CONTEXT";
+                    result.Detail = "A visible top-level window was observed on the private desktop.";
+                    if (!result.CleanupComplete)
+                        result.Detail += " Cleanup also failed: " + String.Join(" | ", cleanupErrors.ToArray()) + ".";
+                    result.Detail += " Previous classification=" + priorClassification + "; previous detail=" + priorDetail;
+                }
+                else if (!result.CleanupComplete)
                 {
                     string priorClassification = result.Classification;
                     string priorDetail = result.Detail;
@@ -3831,12 +5663,31 @@ namespace CourtOfShadows.Headless
                     result.Detail = "Cleanup failed: " + String.Join(" | ", cleanupErrors.ToArray()) +
                         ". Previous classification=" + priorClassification + "; previous detail=" + priorDetail;
                 }
+
+                if (result.HostTerminationRequired)
+                {
+                    string priorClassification = result.Classification;
+                    string priorDetail = result.Detail;
+                    result.MonitorCompletedAfterJobDrain = false;
+                    result.CleanupComplete = false;
+                    result.Classification = "NEEDS_CONTEXT";
+                    result.Detail = "Catastrophic helper-host termination is required." +
+                        " Previous classification=" + priorClassification + "; previous detail=" + priorDetail;
+                }
             }
 
             stopwatch.Stop();
             result.FinishedUtc = FormatUtc(DateTime.UtcNow);
             result.ElapsedMilliseconds = stopwatch.ElapsedMilliseconds;
             return result;
+        }
+
+        private static void TryCaptureRootExitCode(RunResult result, IntPtr processHandle, bool rootExitProven)
+        {
+            uint exitCode;
+            if (!GetExitCodeProcess(processHandle, out exitCode)) return;
+            if (exitCode == STILL_ACTIVE && !rootExitProven) return;
+            result.RootExitCode = unchecked((int)exitCode);
         }
 
         private static void ValidateRequest(RunRequest request, string requestPath)
@@ -3925,14 +5776,22 @@ namespace CourtOfShadows.Headless
         {
             DateTime now = DateTime.UtcNow;
             return new RunResult {
-                SchemaVersion = 1, Classification = "LAUNCH_ERROR",
+                SchemaVersion = 2, Classification = "LAUNCH_ERROR",
                 Detail = ex.GetType().FullName + ": " + ex.Message,
                 Started = false, RootPid = null, RootExitCode = null,
                 TimedOut = false, JobDrained = true, DesktopName = null,
                 ProcessIds = new int[0], NewProcessIds = new int[0],
                 ActiveSnapshotProcessIds = new int[0], JobTotalProcesses = null,
-                ProcessCoverageComplete = false, MonitorArmedBeforeResume = false,
-                MonitorArmedUtc = null, ResumedUtc = null, CleanupComplete = true,
+                ObservedDistinctProcessIdCount = 0, ProcessIdAccountingKind = "diagnostic_distinct_pid",
+                ProcessDiagnosticErrors = new string[0],
+                PrivateDesktopInitiallyEmpty = false, MonitorArmedBeforeCreate = false,
+                MonitorArmedBeforeResume = false, MonitorArmedUtc = null,
+                ProcessCreatedUtc = null, ResumedUtc = null,
+                RootAssignedToJobBeforeResume = false, JobKillOnCloseVerified = false,
+                JobBreakawayForbidden = false, JobHandleNonInheritable = false,
+                JobActiveProcessesFinal = null, MonitorCompletedAfterJobDrain = false,
+                HostTerminationRequired = false, HelperExitCode = 22,
+                CleanupComplete = true,
                 CleanupErrors = new string[0], VisibleWindows = new WindowEvidence[0],
                 StartedUtc = FormatUtc(now), FinishedUtc = FormatUtc(now), ElapsedMilliseconds = 0,
                 StdoutPath = request == null ? null : request.StdoutPath,
@@ -3943,12 +5802,20 @@ namespace CourtOfShadows.Headless
         private static RunResult NewBaseResult(RunRequest request, DateTime startedUtc)
         {
             return new RunResult {
-                SchemaVersion = 1, Classification = "LAUNCH_ERROR", Detail = "Execution did not complete.",
+                SchemaVersion = 2, Classification = "LAUNCH_ERROR", Detail = "Execution did not complete.",
                 Started = false, RootPid = null, RootExitCode = null, TimedOut = false,
                 JobDrained = false, DesktopName = null, ProcessIds = new int[0],
                 NewProcessIds = new int[0], ActiveSnapshotProcessIds = new int[0],
-                JobTotalProcesses = null, ProcessCoverageComplete = false,
-                MonitorArmedBeforeResume = false, MonitorArmedUtc = null, ResumedUtc = null,
+                JobTotalProcesses = null, ObservedDistinctProcessIdCount = 0,
+                ProcessIdAccountingKind = "diagnostic_distinct_pid",
+                ProcessDiagnosticErrors = new string[0],
+                PrivateDesktopInitiallyEmpty = false, MonitorArmedBeforeCreate = false,
+                MonitorArmedBeforeResume = false, MonitorArmedUtc = null,
+                ProcessCreatedUtc = null, ResumedUtc = null,
+                RootAssignedToJobBeforeResume = false, JobKillOnCloseVerified = false,
+                JobBreakawayForbidden = false, JobHandleNonInheritable = false,
+                JobActiveProcessesFinal = null, MonitorCompletedAfterJobDrain = false,
+                HostTerminationRequired = false, HelperExitCode = 22,
                 CleanupComplete = false, CleanupErrors = new string[0],
                 VisibleWindows = new WindowEvidence[0], StartedUtc = FormatUtc(startedUtc),
                 FinishedUtc = null, ElapsedMilliseconds = 0,
@@ -4015,6 +5882,37 @@ namespace CourtOfShadows.Headless
             finally { Marshal.FreeHGlobal(memory); }
         }
 
+        private static void VerifyKillOnCloseAndNoBreakaway(IntPtr job)
+        {
+            int size = Marshal.SizeOf(typeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION));
+            IntPtr memory = Marshal.AllocHGlobal(size);
+            try
+            {
+                uint returned;
+                if (!QueryInformationJobObject(job, JobObjectExtendedLimitInformation, memory, (uint)size, out returned))
+                    ThrowLastWin32("QueryInformationJobObject(ExtendedLimitInformation)");
+                JOBOBJECT_EXTENDED_LIMIT_INFORMATION info =
+                    (JOBOBJECT_EXTENDED_LIMIT_INFORMATION)Marshal.PtrToStructure(
+                        memory, typeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION));
+                uint flags = info.BasicLimitInformation.LimitFlags;
+                bool killOnClose = (flags & JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE) != 0;
+                bool breakawayForbidden =
+                    (flags & (JOB_OBJECT_LIMIT_BREAKAWAY_OK | JOB_OBJECT_LIMIT_SILENT_BREAKAWAY_OK)) == 0;
+                if (!killOnClose || !breakawayForbidden)
+                    throw new InvalidOperationException("The private Job did not preserve kill-on-close with breakaway forbidden.");
+            }
+            finally { Marshal.FreeHGlobal(memory); }
+        }
+
+        private static bool VerifyHandleNonInheritable(IntPtr handle)
+        {
+            uint flags;
+            if (!GetHandleInformation(handle, out flags)) ThrowLastWin32("GetHandleInformation(Job)");
+            if ((flags & HANDLE_FLAG_INHERIT) != 0)
+                throw new InvalidOperationException("The private Job handle is inheritable.");
+            return true;
+        }
+
         private static void AssociateJobCompletionPort(IntPtr job, IntPtr completionPort)
         {
             JOBOBJECT_ASSOCIATE_COMPLETION_PORT association = new JOBOBJECT_ASSOCIATE_COMPLETION_PORT();
@@ -4029,6 +5927,34 @@ namespace CourtOfShadows.Headless
                     ThrowLastWin32("SetInformationJobObject(CompletionPort)");
             }
             finally { Marshal.FreeHGlobal(memory); }
+        }
+
+        private static void TryPumpJobMessages(IntPtr port, List<string> diagnosticErrors)
+        {
+            try { PumpJobMessages(port); }
+            catch (Exception ex) { RecordProcessDiagnosticError(diagnosticErrors, "completion-port messages", ex); }
+        }
+
+        private static void TryRefreshOwnedPidsFromJob(IntPtr job, List<string> diagnosticErrors)
+        {
+            try { RefreshOwnedPidsFromJob(job); }
+            catch (Exception ex) { RecordProcessDiagnosticError(diagnosticErrors, "active PID snapshot", ex); }
+        }
+
+        private static void TryFinalizeProcessAccounting(RunResult result, IntPtr job, List<string> diagnosticErrors)
+        {
+            try { FinalizeProcessAccounting(result, job); }
+            catch (Exception ex) { RecordProcessDiagnosticError(diagnosticErrors, "final Job process accounting", ex); }
+        }
+
+        private static void RecordProcessDiagnosticError(List<string> diagnosticErrors, string operation, Exception ex)
+        {
+            string message = operation + ": " + ex.GetType().FullName + ": " + ex.Message;
+            if (message.Length > MAX_PROCESS_DIAGNOSTIC_ERROR_CHARACTERS)
+                message = message.Substring(0, MAX_PROCESS_DIAGNOSTIC_ERROR_CHARACTERS);
+            if (diagnosticErrors.Contains(message) || diagnosticErrors.Count >= MAX_PROCESS_DIAGNOSTIC_ERRORS)
+                return;
+            diagnosticErrors.Add(message);
         }
 
         private static void PumpJobMessages(IntPtr port)
@@ -4109,13 +6035,14 @@ namespace CourtOfShadows.Headless
             finally { Marshal.FreeHGlobal(memory); }
         }
 
-        private static bool DrainTerminatedJob(IntPtr job, IntPtr port, int milliseconds)
+        private static bool DrainTerminatedJob(IntPtr job, IntPtr port, int milliseconds,
+            List<string> diagnosticErrors)
         {
             Stopwatch drain = Stopwatch.StartNew();
             while (drain.ElapsedMilliseconds < milliseconds)
             {
-                PumpJobMessages(port);
-                try { RefreshOwnedPidsFromJob(job); } catch { }
+                TryPumpJobMessages(port, diagnosticErrors);
+                TryRefreshOwnedPidsFromJob(job, diagnosticErrors);
                 if (QueryActiveProcessCount(job) == 0) return true;
                 Thread.Sleep(10);
             }
@@ -4138,11 +6065,6 @@ namespace CourtOfShadows.Headless
             }
         }
 
-        private static HashSet<int> GetOwnedPidSnapshot()
-        {
-            lock (ObservationLock) return new HashSet<int>(EverOwnedPids);
-        }
-
         private static int[] SortedPidArray(HashSet<int> source)
         {
             int[] values = new int[source.Count];
@@ -4158,54 +6080,25 @@ namespace CourtOfShadows.Headless
                 result.ProcessIds = SortedPidArray(EverOwnedPids);
                 result.NewProcessIds = SortedPidArray(NewProcessPids);
                 result.ActiveSnapshotProcessIds = SortedPidArray(ActiveSnapshotPids);
+                result.ObservedDistinctProcessIdCount = EverOwnedPids.Count;
             }
             result.VisibleWindows = watcher == null ? new WindowEvidence[0] : watcher.SnapshotWindows();
         }
 
-        private static void FinalizeProcessCoverage(RunResult result, IntPtr job)
+        private static void FinalizeProcessAccounting(RunResult result, IntPtr job)
         {
             JOBOBJECT_BASIC_ACCOUNTING_INFORMATION accounting = QueryJobAccounting(job);
             int total = checked((int)accounting.TotalProcesses);
             int observed;
             lock (ObservationLock) observed = EverOwnedPids.Count;
             result.JobTotalProcesses = total;
-            result.ProcessCoverageComplete = result.JobDrained && observed == total;
-            if (result.JobDrained && !result.ProcessCoverageComplete)
-            {
-                string previousClassification = result.Classification;
-                string previousDetail = result.Detail;
-                result.Classification = "LAUNCH_ERROR";
-                result.Detail = "Job PID coverage mismatch after tree drain: observed " +
-                    observed.ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    " unique PIDs but JOBOBJECT_BASIC_ACCOUNTING_INFORMATION.TotalProcesses was " +
-                    total.ToString(System.Globalization.CultureInfo.InvariantCulture) +
-                    ". Previous classification=" + previousClassification + "; previous detail=" + previousDetail;
-            }
-        }
-
-        private static bool? TryIsProcessInJobAtObservation(int pid, IntPtr job)
-        {
-            if (pid <= 0 || job == IntPtr.Zero) return null;
-            IntPtr process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, unchecked((uint)pid));
-            if (process == IntPtr.Zero) return null;
-            try
-            {
-                bool inJob;
-                if (!IsProcessInJob(process, job, out inJob)) return null;
-                return inJob;
-            }
-            finally
-            {
-                if (!CloseHandle(process))
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "CloseHandle(observed process) failed");
-            }
+            result.ObservedDistinctProcessIdCount = observed;
         }
 
         private sealed class PrivateDesktopWatcher
         {
             private readonly IntPtr desktopHandle;
             private readonly string desktopName;
-            private readonly IntPtr jobHandle;
             private readonly object stateLock = new object();
             private readonly List<WindowCandidate> candidates = new List<WindowCandidate>();
             private readonly Dictionary<string, WindowEvidence> accepted =
@@ -4215,16 +6108,15 @@ namespace CourtOfShadows.Headless
             private Thread thread;
             private Exception failure;
             private uint nativeThreadId;
-            private bool postArmObservation;
+            private bool initiallyEmpty;
             private DateTime armedUtc;
             private WinEventDelegate winEventCallback;
             private EnumDesktopWindowsDelegate enumDesktopCallback;
 
-            public PrivateDesktopWatcher(IntPtr desktopHandle, string desktopName, IntPtr jobHandle)
+            public PrivateDesktopWatcher(IntPtr desktopHandle, string desktopName)
             {
                 this.desktopHandle = desktopHandle;
                 this.desktopName = desktopName;
-                this.jobHandle = jobHandle;
             }
 
             public bool HasAcceptedWindows
@@ -4235,6 +6127,11 @@ namespace CourtOfShadows.Headless
             public DateTime ArmedUtc
             {
                 get { lock (stateLock) return armedUtc; }
+            }
+
+            public bool InitiallyEmpty
+            {
+                get { lock (stateLock) return initiallyEmpty; }
             }
 
             public void StartAndWaitUntilArmed(int milliseconds)
@@ -4262,37 +6159,45 @@ namespace CourtOfShadows.Headless
                 stop.Set();
                 if (!thread.Join(milliseconds))
                     throw new TimeoutException("Private-desktop watcher did not stop.");
-                ThrowIfFailed();
             }
 
-            public void Reconcile(HashSet<int> ownedPids)
+            public void DisposeEventsAfterJoin()
             {
-                lock (stateLock)
+                if (thread != null && thread.IsAlive)
+                    throw new InvalidOperationException("Cannot dispose watcher events while its thread is alive.");
+                armed.Dispose();
+                stop.Dispose();
+            }
+
+            public void Reconcile()
+            {
+                lock (stateLock) ReconcilePendingCandidates();
+            }
+
+            private void ReconcilePendingCandidates()
+            {
+                for (int i = 0; i < candidates.Count; i++)
                 {
-                    for (int i = 0; i < candidates.Count; i++)
+                    WindowCandidate item = candidates[i];
+                    string key = item.Pid.ToString(System.Globalization.CultureInfo.InvariantCulture) + ":" +
+                        item.Hwnd.ToInt64().ToString("X", System.Globalization.CultureInfo.InvariantCulture);
+                    WindowEvidence evidence = new WindowEvidence {
+                        Pid = item.Pid,
+                        Hwnd = "0x" + item.Hwnd.ToInt64().ToString("X", System.Globalization.CultureInfo.InvariantCulture),
+                        Event = item.Source,
+                        Title = item.Title,
+                        ClassName = item.ClassName,
+                        Desktop = desktopName,
+                        ObservedUtc = FormatUtc(item.ObservedUtc)
+                    };
+                    WindowEvidence existing;
+                    if (accepted.TryGetValue(key, out existing))
                     {
-                        WindowCandidate item = candidates[i];
-                        if (!item.PrivateShowProof && item.InJobAtObservation != true && !ownedPids.Contains(item.Pid)) continue;
-                        string key = item.Pid.ToString(System.Globalization.CultureInfo.InvariantCulture) + ":" +
-                            item.Hwnd.ToInt64().ToString("X", System.Globalization.CultureInfo.InvariantCulture);
-                        WindowEvidence evidence = new WindowEvidence {
-                            Pid = item.Pid,
-                            Hwnd = "0x" + item.Hwnd.ToInt64().ToString("X", System.Globalization.CultureInfo.InvariantCulture),
-                            Event = item.Source,
-                            Title = item.Title,
-                            ClassName = item.ClassName,
-                            Desktop = desktopName,
-                            ObservedUtc = FormatUtc(item.ObservedUtc)
-                        };
-                        WindowEvidence existing;
-                        if (accepted.TryGetValue(key, out existing))
-                        {
-                            if (item.PrivateShowProof && !String.Equals(existing.Event, "EVENT_OBJECT_SHOW", StringComparison.Ordinal))
-                                accepted[key] = evidence;
-                            continue;
-                        }
-                        accepted[key] = evidence;
+                        if (item.PrivateShowProof && !String.Equals(existing.Event, "EVENT_OBJECT_SHOW", StringComparison.Ordinal))
+                            accepted[key] = evidence;
+                        continue;
                     }
+                    accepted[key] = evidence;
                 }
             }
 
@@ -4300,6 +6205,7 @@ namespace CourtOfShadows.Headless
             {
                 lock (stateLock)
                 {
+                    ReconcilePendingCandidates();
                     List<WindowEvidence> values = new List<WindowEvidence>(accepted.Values);
                     values.Sort(delegate(WindowEvidence left, WindowEvidence right) {
                         int pidOrder = left.Pid.CompareTo(right.Pid);
@@ -4333,7 +6239,7 @@ namespace CourtOfShadows.Headless
                     {
                         if (candidates.Count != 0)
                             throw new InvalidOperationException("A newly created private desktop was not empty.");
-                        postArmObservation = true;
+                        initiallyEmpty = true;
                         armedUtc = DateTime.UtcNow;
                     }
                     armed.Set();
@@ -4374,7 +6280,7 @@ namespace CourtOfShadows.Headless
                 {
                     CaptureVisibleTopLevel(hwnd,
                         eventType == EVENT_OBJECT_SHOW ? "EVENT_OBJECT_SHOW" : "EVENT_OBJECT_CREATE",
-                        eventType == EVENT_OBJECT_SHOW, eventThread);
+                        eventType == EVENT_OBJECT_SHOW);
                 }
                 catch (Exception ex) { RecordFailure(ex); }
             }
@@ -4384,7 +6290,7 @@ namespace CourtOfShadows.Headless
                 try
                 {
                     string source = Marshal.PtrToStringUni(parameter);
-                    CaptureVisibleTopLevel(hwnd, source == null ? "EnumDesktopWindows" : source, false, 0);
+                    CaptureVisibleTopLevel(hwnd, source == null ? "EnumDesktopWindows" : source, false);
                     return true;
                 }
                 catch (Exception ex)
@@ -4410,7 +6316,7 @@ namespace CourtOfShadows.Headless
                 finally { Marshal.FreeHGlobal(sourceMemory); }
             }
 
-            private void CaptureVisibleTopLevel(IntPtr hwnd, string source, bool privateShowProof, uint eventThread)
+            private void CaptureVisibleTopLevel(IntPtr hwnd, string source, bool privateShowProof)
             {
                 if (GetCurrentThreadId() != nativeThreadId)
                     throw new InvalidOperationException("A window candidate arrived outside the dedicated watcher thread.");
@@ -4419,23 +6325,15 @@ namespace CourtOfShadows.Headless
                 {
                     if (!windowAlive || !IsWindowVisible(hwnd) || GetAncestor(hwnd, GA_ROOT) != hwnd) return;
                 }
-                else if (windowAlive && GetAncestor(hwnd, GA_ROOT) != hwnd)
+                else if (windowAlive)
                 {
-                    return;
+                    IntPtr root = GetAncestor(hwnd, GA_ROOT);
+                    if (root != IntPtr.Zero && root != hwnd) return;
                 }
 
                 uint pid = 0;
                 uint windowThread = windowAlive ? GetWindowThreadProcessId(hwnd, out pid) : 0;
                 if (windowThread == 0) pid = 0;
-                if (pid == 0 && eventThread != 0) pid = GetProcessIdForEventThread(eventThread);
-                if (pid == 0 && !privateShowProof) return;
-
-                bool afterArm;
-                lock (stateLock) afterArm = postArmObservation;
-                bool? inJob = afterArm
-                    ? TryIsProcessInJobAtObservation(unchecked((int)pid), jobHandle)
-                    : (bool?)null;
-                if (afterArm && inJob == false) return;
 
                 WindowCandidate candidate = new WindowCandidate();
                 candidate.Pid = unchecked((int)pid);
@@ -4443,7 +6341,6 @@ namespace CourtOfShadows.Headless
                 candidate.Source = source;
                 candidate.Title = windowAlive ? ReadWindowText(hwnd) : "";
                 candidate.ClassName = windowAlive ? ReadClassName(hwnd) : "";
-                candidate.InJobAtObservation = inJob;
                 candidate.PrivateShowProof = privateShowProof;
                 candidate.ObservedUtc = DateTime.UtcNow;
                 lock (stateLock) candidates.Add(candidate);
@@ -4457,18 +6354,6 @@ namespace CourtOfShadows.Headless
                     TranslateMessage(ref message);
                     DispatchMessageW(ref message);
                 }
-            }
-        }
-
-        private static uint GetProcessIdForEventThread(uint threadId)
-        {
-            IntPtr thread = OpenThread(THREAD_QUERY_LIMITED_INFORMATION, false, threadId);
-            if (thread == IntPtr.Zero) return 0;
-            try { return GetProcessIdOfThread(thread); }
-            finally
-            {
-                if (!CloseHandle(thread))
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "CloseHandle(event thread) failed");
             }
         }
 
@@ -4520,7 +6405,6 @@ namespace CourtOfShadows.Headless
             public string Source;
             public string Title;
             public string ClassName;
-            public bool? InJobAtObservation;
             public bool PrivateShowProof;
             public DateTime ObservedUtc;
         }
@@ -4629,12 +6513,9 @@ namespace CourtOfShadows.Headless
         [DllImport("kernel32.dll", SetLastError = true)] private static extern uint ResumeThread(IntPtr thread);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern uint WaitForSingleObject(IntPtr handle, uint milliseconds);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool GetExitCodeProcess(IntPtr process, out uint exitCode);
-        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool TerminateProcess(IntPtr process, uint exitCode);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool CloseHandle(IntPtr handle);
+        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool GetHandleInformation(IntPtr handle, out uint flags);
         [DllImport("kernel32.dll")] private static extern uint GetCurrentThreadId();
-        [DllImport("kernel32.dll", SetLastError = true)] private static extern IntPtr OpenThread(uint desiredAccess, bool inheritHandle, uint threadId);
-        [DllImport("kernel32.dll")] private static extern uint GetProcessIdOfThread(IntPtr thread);
-        [DllImport("kernel32.dll", SetLastError = true)] private static extern IntPtr OpenProcess(uint desiredAccess, bool inheritHandle, uint processId);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool IsProcessInJob(IntPtr process, IntPtr job, out bool result);
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern IntPtr CreateFileW(string name, uint access, uint share, ref SECURITY_ATTRIBUTES security,
@@ -4645,7 +6526,6 @@ namespace CourtOfShadows.Headless
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)] private static extern IntPtr CreateJobObjectW(IntPtr attributes, string name);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool SetInformationJobObject(IntPtr job, uint infoClass, IntPtr info, uint length);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool QueryInformationJobObject(IntPtr job, uint infoClass, IntPtr info, uint length, out uint returnedLength);
-        [DllImport("kernel32.dll", SetLastError = true)] private static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool TerminateJobObject(IntPtr job, uint exitCode);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern IntPtr CreateIoCompletionPort(IntPtr file, IntPtr existingPort, UIntPtr completionKey, uint threads);
         [DllImport("kernel32.dll", SetLastError = true)] private static extern bool GetQueuedCompletionStatus(IntPtr port, out uint bytes, out UIntPtr key, out IntPtr overlapped, uint milliseconds);
@@ -4656,11 +6536,17 @@ namespace CourtOfShadows.Headless
 
 ## Appendix B — `Invoke-PrivateDesktopProcess.ps1`
 
-Exact committed helper payload: **5,016 bytes**; **SHA-256 `8C0AA6CCE2C419F9CAE3096A35EF279BFC401796152D823400767948A6A35C2A`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
+Exact committed helper payload: **24,229 bytes**; **SHA-256 `73A3F9C43CF994E08F004E0A1266122A3EC5E0EAF065C63E6D9439CF0B0E1880`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
 
 ```powershell
 [CmdletBinding()]
-param()
+param(
+    [switch]$PrivateDesktopInternalHostMode,
+    [string]$PrivateDesktopInternalRequestPath,
+    [string]$PrivateDesktopInternalRunnerSource
+)
+
+$PrivateDesktopWrapperScriptPath = [IO.Path]::GetFullPath($PSCommandPath)
 
 function Write-NewUtf8File {
     [CmdletBinding()]
@@ -4686,6 +6572,335 @@ function Write-NewUtf8File {
         }
     } finally {
         $Stream.Dispose()
+    }
+}
+
+function ConvertTo-PrivateDesktopHostArgument {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$Value)
+
+    if ($Value.Length -eq 0) { return '""' }
+    if ($Value -notmatch '[\s"]') { return $Value }
+
+    $Builder = New-Object System.Text.StringBuilder
+    [void]$Builder.Append([char]34)
+    $SlashCount = 0
+    foreach ($Character in $Value.ToCharArray()) {
+        if ($Character -eq [char]92) {
+            $SlashCount++
+            continue
+        }
+        if ($Character -eq [char]34) {
+            [void]$Builder.Append([char]92, ($SlashCount * 2) + 1)
+            [void]$Builder.Append([char]34)
+            $SlashCount = 0
+            continue
+        }
+        [void]$Builder.Append([char]92, $SlashCount)
+        $SlashCount = 0
+        [void]$Builder.Append($Character)
+    }
+    [void]$Builder.Append([char]92, $SlashCount * 2)
+    [void]$Builder.Append([char]34)
+    return $Builder.ToString()
+}
+
+function Invoke-PrivateDesktopHostFailClosedTeardown {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][System.Diagnostics.Process]$Process)
+
+    $KillIssued = $false
+    $KillError = $null
+    try {
+        $Process.Kill()
+        $KillIssued = $true
+    } catch {
+        $KillError = $_.Exception.Message
+    }
+
+    $ExitProven = $false
+    $ExitProofError = $null
+    try {
+        $BoundedWaitCompleted = $Process.WaitForExit(5000)
+        if ($BoundedWaitCompleted) {
+            $ExitProven = $Process.HasExited
+        }
+    } catch {
+        $ExitProofError = $_.Exception.Message
+    }
+
+    return [pscustomobject][ordered]@{
+        kill_issued = $KillIssued
+        kill_error = $KillError
+        exit_proven = $ExitProven
+        exit_proof_error = $ExitProofError
+    }
+}
+
+function Test-PrivateDesktopIntegralValue {
+    [CmdletBinding()]
+    param($Value)
+
+    return ($Value -is [byte] -or $Value -is [sbyte] -or
+        $Value -is [int16] -or $Value -is [uint16] -or
+        $Value -is [int32] -or $Value -is [uint32] -or
+        $Value -is [int64] -or $Value -is [uint64])
+}
+
+function Get-PrivateDesktopMappedHelperExitCode {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][string]$Classification)
+
+    if ($Classification -ceq 'COMPLETED') { return 0 }
+    if ($Classification -ceq 'NEEDS_CONTEXT') { return 20 }
+    if ($Classification -ceq 'TIMEOUT') { return 21 }
+    if ($Classification -ceq 'LAUNCH_ERROR') { return 22 }
+    throw "Unknown private desktop helper classification: $Classification"
+}
+
+function Assert-PrivateDesktopResultDocument {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)]$Result)
+
+    if ($null -eq $Result) { throw 'Private desktop result was null.' }
+    if ($Result.PSObject.Properties.Match('process_coverage_complete').Count -ne 0) {
+        throw 'Legacy process_coverage_complete is forbidden in result schema v2.'
+    }
+    $ExpectedProperties = @(
+        'schema_version', 'classification', 'detail', 'started', 'root_pid', 'root_exit_code',
+        'timed_out', 'job_drained', 'desktop_name', 'process_ids', 'new_process_ids',
+        'active_snapshot_process_ids', 'job_total_processes', 'observed_distinct_process_id_count',
+        'process_id_accounting_kind', 'process_diagnostic_errors', 'private_desktop_initially_empty',
+        'monitor_armed_before_create', 'monitor_armed_before_resume', 'monitor_armed_utc',
+        'process_created_utc', 'resumed_utc', 'root_assigned_to_job_before_resume',
+        'job_kill_on_close_verified', 'job_breakaway_forbidden',
+        'job_handle_non_inheritable', 'job_active_processes_final',
+        'monitor_completed_after_job_drain', 'host_termination_required',
+        'cleanup_complete', 'cleanup_errors', 'visible_windows', 'started_utc', 'finished_utc',
+        'elapsed_milliseconds', 'stdout_path', 'stderr_path', 'helper_exit_code'
+    )
+    $ExpectedSignature = (@($ExpectedProperties | Sort-Object) -join "`n")
+    $ActualSignature = (@($Result.PSObject.Properties.Name | Sort-Object) -join "`n")
+    if ($ActualSignature -cne $ExpectedSignature) {
+        throw 'Private desktop result does not have the exact schema-v2 property set.'
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.schema_version) -or [int64]$Result.schema_version -ne 2) {
+        throw 'Private desktop helper result schema must be exactly 2.'
+    }
+    if ($Result.classification -isnot [string]) {
+        throw 'Private desktop classification must be a string.'
+    }
+    $MappedHelperExitCode = Get-PrivateDesktopMappedHelperExitCode -Classification $Result.classification
+    if (-not (Test-PrivateDesktopIntegralValue $Result.helper_exit_code) -or
+        @(0, 20, 21, 22) -notcontains [int64]$Result.helper_exit_code -or
+        [int64]$Result.helper_exit_code -ne $MappedHelperExitCode) {
+        throw 'Persisted helper_exit_code is missing, unknown, or inconsistent with classification.'
+    }
+    foreach ($BooleanField in @(
+        'started', 'timed_out', 'job_drained', 'private_desktop_initially_empty',
+        'monitor_armed_before_create', 'monitor_armed_before_resume',
+        'root_assigned_to_job_before_resume', 'job_kill_on_close_verified',
+        'job_breakaway_forbidden', 'job_handle_non_inheritable',
+        'monitor_completed_after_job_drain', 'host_termination_required', 'cleanup_complete'
+    )) {
+        if ($Result.$BooleanField -isnot [bool]) {
+            throw "Private desktop result field must be Boolean: $BooleanField"
+        }
+    }
+    if ($null -ne $Result.root_pid -and
+        (-not (Test-PrivateDesktopIntegralValue $Result.root_pid) -or [int64]$Result.root_pid -le 0)) {
+        throw 'root_pid must be null or a positive integer.'
+    }
+    if ($null -ne $Result.root_exit_code -and -not (Test-PrivateDesktopIntegralValue $Result.root_exit_code)) {
+        throw 'root_exit_code must be null or an integer.'
+    }
+    if ($null -ne $Result.job_active_processes_final -and
+        (-not (Test-PrivateDesktopIntegralValue $Result.job_active_processes_final) -or
+         [int64]$Result.job_active_processes_final -lt 0)) {
+        throw 'job_active_processes_final must be null or a nonnegative integer.'
+    }
+    if ([string]$Result.process_id_accounting_kind -cne 'diagnostic_distinct_pid') {
+        throw 'process_id_accounting_kind must be diagnostic_distinct_pid.'
+    }
+    foreach ($PidField in @('process_ids', 'new_process_ids', 'active_snapshot_process_ids')) {
+        if ($Result.$PidField -isnot [System.Array]) {
+            throw ($PidField + ' must be present as a diagnostic PID array.')
+        }
+        foreach ($ProcessId in @($Result.$PidField)) {
+            if (-not (Test-PrivateDesktopIntegralValue $ProcessId) -or [int64]$ProcessId -le 0) {
+                throw ($PidField + ' contains a non-positive or non-integral PID.')
+            }
+        }
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.observed_distinct_process_id_count) -or
+        [int64]$Result.observed_distinct_process_id_count -lt 0) {
+        throw 'observed_distinct_process_id_count must be a nonnegative diagnostic integer.'
+    }
+    if ($null -ne $Result.job_total_processes -and
+        (-not (Test-PrivateDesktopIntegralValue $Result.job_total_processes) -or
+         [int64]$Result.job_total_processes -lt 0)) {
+        throw 'job_total_processes must be null or a nonnegative diagnostic integer.'
+    }
+    if ($Result.process_diagnostic_errors -isnot [System.Array]) {
+        throw 'process_diagnostic_errors must be present as an array.'
+    }
+    foreach ($DiagnosticError in @($Result.process_diagnostic_errors)) {
+        if ($DiagnosticError -isnot [string]) {
+            throw 'process_diagnostic_errors contains a non-string value.'
+        }
+    }
+    if ($Result.cleanup_errors -isnot [System.Array]) {
+        throw 'cleanup_errors must be present as an array.'
+    }
+    foreach ($CleanupError in @($Result.cleanup_errors)) {
+        if ($CleanupError -isnot [string]) { throw 'cleanup_errors contains a non-string value.' }
+    }
+    if ($Result.visible_windows -isnot [System.Array]) {
+        throw 'visible_windows must be present as an array.'
+    }
+    if (@($Result.visible_windows).Count -ne 0 -and $Result.classification -cne 'NEEDS_CONTEXT') {
+        throw 'Visible-window evidence requires NEEDS_CONTEXT classification.'
+    }
+}
+
+function Test-PrivateDesktopParentHostResult {
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param(
+        [Parameter(Mandatory = $true)]$Result,
+        [Parameter(Mandatory = $true)]$ActualHostExitCode
+    )
+
+    Assert-PrivateDesktopResultDocument -Result $Result
+    if (-not (Test-PrivateDesktopIntegralValue $ActualHostExitCode) -or
+        @(0, 20, 21, 22) -notcontains [int64]$ActualHostExitCode -or
+        [int64]$ActualHostExitCode -ne [int64]$Result.helper_exit_code) {
+        throw 'Actual PowerShell host exit does not match persisted helper_exit_code.'
+    }
+    if (-not $Result.host_termination_required) {
+        Assert-PrivateDesktopSafetyEnvelope -Result $Result
+        return $true
+    }
+    if ($Result.classification -cne 'NEEDS_CONTEXT' -or [int64]$Result.helper_exit_code -ne 20) {
+        throw 'Catastrophic helper-host termination must be NEEDS_CONTEXT with exit 20.'
+    }
+    if ($Result.cleanup_complete -or $Result.monitor_completed_after_job_drain) {
+        throw 'Catastrophic helper-host termination cannot claim cleanup or monitor completion.'
+    }
+    return $false
+}
+
+function Assert-PrivateDesktopSafetyEnvelope {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)]$Result)
+
+    Assert-PrivateDesktopResultDocument -Result $Result
+
+    if ($null -eq $Result) { throw 'Private desktop result was null.' }
+    if ($Result.PSObject.Properties.Match('process_coverage_complete').Count -ne 0) {
+        throw 'Legacy process_coverage_complete is forbidden in result schema v2.'
+    }
+
+    $ExpectedProperties = @(
+        'schema_version', 'classification', 'detail', 'started', 'root_pid', 'root_exit_code',
+        'timed_out', 'job_drained', 'desktop_name', 'process_ids', 'new_process_ids',
+        'active_snapshot_process_ids', 'job_total_processes', 'observed_distinct_process_id_count',
+        'process_id_accounting_kind', 'process_diagnostic_errors', 'private_desktop_initially_empty',
+        'monitor_armed_before_create', 'monitor_armed_before_resume', 'monitor_armed_utc',
+        'process_created_utc', 'resumed_utc', 'root_assigned_to_job_before_resume',
+        'job_kill_on_close_verified', 'job_breakaway_forbidden',
+        'job_handle_non_inheritable', 'job_active_processes_final',
+        'monitor_completed_after_job_drain', 'host_termination_required',
+        'cleanup_complete', 'cleanup_errors',
+        'visible_windows', 'started_utc', 'finished_utc', 'elapsed_milliseconds',
+        'stdout_path', 'stderr_path', 'helper_exit_code'
+    )
+    $ExpectedSignature = (@($ExpectedProperties | Sort-Object) -join "`n")
+    $ActualSignature = (@($Result.PSObject.Properties.Name | Sort-Object) -join "`n")
+    if ($ActualSignature -cne $ExpectedSignature) {
+        throw 'Private desktop result does not have the exact schema-v2 property set.'
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.schema_version) -or [int64]$Result.schema_version -ne 2) {
+        throw 'Private desktop helper result schema must be exactly 2.'
+    }
+    if ($Result.started -isnot [bool] -or -not $Result.started) {
+        throw 'Safety-envelope validation requires a started helper result.'
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.root_pid) -or [int64]$Result.root_pid -le 0) {
+        throw 'Started helper result has no valid root_pid.'
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.helper_exit_code) -or
+        @(0, 20, 21, 22) -notcontains [int64]$Result.helper_exit_code) {
+        throw 'Persisted helper_exit_code is missing, non-integral, or unknown.'
+    }
+    $MappedHelperExitCode = Get-PrivateDesktopMappedHelperExitCode -Classification ([string]$Result.classification)
+    if ([int64]$Result.helper_exit_code -ne $MappedHelperExitCode) {
+        throw 'Persisted helper_exit_code does not match classification.'
+    }
+
+    foreach ($Gate in @(
+        'private_desktop_initially_empty',
+        'monitor_armed_before_create',
+        'monitor_armed_before_resume',
+        'root_assigned_to_job_before_resume',
+        'job_kill_on_close_verified',
+        'job_breakaway_forbidden',
+        'job_handle_non_inheritable',
+        'job_drained',
+        'monitor_completed_after_job_drain',
+        'cleanup_complete'
+    )) {
+        if ($Result.$Gate -isnot [bool] -or -not $Result.$Gate) {
+            throw "Private desktop safety gate failed: $Gate"
+        }
+    }
+    if ($Result.host_termination_required -isnot [bool] -or $Result.host_termination_required) {
+        throw 'Reusable helper result requires host_termination_required=false.'
+    }
+    if ($null -eq $Result.cleanup_errors -or @($Result.cleanup_errors).Count -ne 0) {
+        throw 'Private desktop helper reported cleanup errors.'
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.job_active_processes_final) -or
+        [int64]$Result.job_active_processes_final -ne 0) {
+        throw 'Final Job ActiveProcesses must be exactly zero.'
+    }
+    if ([string]$Result.process_id_accounting_kind -cne 'diagnostic_distinct_pid') {
+        throw 'process_id_accounting_kind must be diagnostic_distinct_pid.'
+    }
+    foreach ($PidField in @('process_ids', 'new_process_ids', 'active_snapshot_process_ids')) {
+        if ($Result.$PidField -isnot [System.Array]) {
+            throw ($PidField + ' must be present as a diagnostic PID array.')
+        }
+        foreach ($ProcessId in @($Result.$PidField)) {
+            if (-not (Test-PrivateDesktopIntegralValue $ProcessId) -or [int64]$ProcessId -le 0) {
+                throw ($PidField + ' contains a non-positive or non-integral PID.')
+            }
+        }
+    }
+    if (-not (Test-PrivateDesktopIntegralValue $Result.observed_distinct_process_id_count) -or
+        [int64]$Result.observed_distinct_process_id_count -lt 0) {
+        throw 'observed_distinct_process_id_count must be a nonnegative diagnostic integer.'
+    }
+    if ($null -ne $Result.job_total_processes -and
+        (-not (Test-PrivateDesktopIntegralValue $Result.job_total_processes) -or
+         [int64]$Result.job_total_processes -lt 0)) {
+        throw 'job_total_processes must be null or a nonnegative diagnostic integer.'
+    }
+    if ($Result.process_diagnostic_errors -isnot [System.Array]) {
+        throw 'process_diagnostic_errors must be present as an array.'
+    }
+    foreach ($DiagnosticError in @($Result.process_diagnostic_errors)) {
+        if ($DiagnosticError -isnot [string]) {
+            throw 'process_diagnostic_errors contains a non-string value.'
+        }
+    }
+
+    $Invariant = [Globalization.CultureInfo]::InvariantCulture
+    $Armed = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, $Invariant)
+    $Created = [DateTimeOffset]::Parse([string]$Result.process_created_utc, $Invariant)
+    $Resumed = [DateTimeOffset]::Parse([string]$Result.resumed_utc, $Invariant)
+    if ($Armed -gt $Created -or $Created -gt $Resumed) {
+        throw 'Private desktop timestamps must satisfy armed <= created <= resumed.'
     }
 }
 
@@ -4759,43 +6974,662 @@ function Invoke-PrivateDesktopProcess {
     $Json = ConvertTo-Json -InputObject $Request -Depth 6 -Compress
     Write-NewUtf8File -LiteralPath $RequestPath -Text $Json
 
-    Import-PrivateDesktopRunner -SourcePath $RunnerSource
-    $HelperExitCode = [CourtOfShadows.Headless.PrivateDesktopRunner]::RunRequestFile($RequestPath)
+    $ResolvedRunnerSource = (Resolve-Path -LiteralPath $RunnerSource).Path
+    $PowerShellHost = (Get-Command powershell.exe -ErrorAction Stop).Source
+    $HostArguments = @(
+        '-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
+        '-File', $PrivateDesktopWrapperScriptPath,
+        '-PrivateDesktopInternalHostMode',
+        '-PrivateDesktopInternalRequestPath', $RequestPath,
+        '-PrivateDesktopInternalRunnerSource', $ResolvedRunnerSource
+    )
+    $StartInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $StartInfo.FileName = $PowerShellHost
+    $StartInfo.Arguments = (@($HostArguments | ForEach-Object {
+        ConvertTo-PrivateDesktopHostArgument -Value ([string]$_)
+    }) -join ' ')
+    $StartInfo.WorkingDirectory = $EvidenceFullPath
+    $StartInfo.UseShellExecute = $false
+    $StartInfo.CreateNoWindow = $true
+
+    $HostProcess = New-Object System.Diagnostics.Process
+    $HostProcess.StartInfo = $StartInfo
+    $HostWaitMilliseconds = [int](($TimeoutSeconds * 1000) + 30000)
+    $ActualHostExitCode = $null
+    $HostStarted = $false
+    $HostExitAndCodeProven = $false
+    $HostObservationError = $null
+    $HostFailClosedTeardown = $null
+    try {
+        try {
+            $HostStarted = $HostProcess.Start()
+            if (-not $HostStarted) {
+                throw 'Dedicated PowerShell helper host did not report a successful start.'
+            }
+            if (-not $HostProcess.WaitForExit($HostWaitMilliseconds)) {
+                throw 'Dedicated PowerShell helper host exceeded the bounded wait.'
+            }
+            if (-not $HostProcess.HasExited) {
+                throw 'Dedicated PowerShell helper host completed its wait without proving exit.'
+            }
+            $ActualHostExitCode = $HostProcess.ExitCode
+            $HostExitAndCodeProven = $true
+        } catch {
+            $HostObservationError = $_.Exception.Message
+        } finally {
+            if ($HostStarted -and -not $HostExitAndCodeProven) {
+                $HostFailClosedTeardown = Invoke-PrivateDesktopHostFailClosedTeardown -Process $HostProcess
+            }
+        }
+    } finally {
+        $HostProcess.Dispose()
+    }
+
+    if (-not $HostExitAndCodeProven) {
+        if (-not $HostStarted) {
+            throw "NEEDS_CONTEXT: dedicated PowerShell helper host start was not proven; no retry is permitted. Observation detail: $HostObservationError"
+        }
+        if ($null -eq $HostFailClosedTeardown) {
+            throw "NEEDS_CONTEXT: dedicated PowerShell helper host exit observation failed and fail-closed teardown produced no proof; no retry is permitted. Observation detail: $HostObservationError"
+        }
+        throw ("NEEDS_CONTEXT: dedicated PowerShell helper host exit observation failed; no retry is permitted. " +
+            "Observation detail: $HostObservationError; " +
+            "fail_closed_kill_issued=$($HostFailClosedTeardown.kill_issued); " +
+            "exit_proven_after_teardown=$($HostFailClosedTeardown.exit_proven); " +
+            "kill_error=$($HostFailClosedTeardown.kill_error); " +
+            "exit_proof_error=$($HostFailClosedTeardown.exit_proof_error)")
+    }
+
     if (-not (Test-Path -LiteralPath $ResultPath -PathType Leaf)) {
-        throw 'Private desktop helper returned without a result.json artifact.'
+        throw 'NEEDS_CONTEXT: dedicated PowerShell helper host exited without result.json; no retry is permitted.'
     }
     $StrictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
-    $Result = [IO.File]::ReadAllText($ResultPath, $StrictUtf8) | ConvertFrom-Json -ErrorAction Stop
-    if ($Result.schema_version -ne 1) { throw 'Private desktop helper result schema drifted.' }
-    if ($HelperExitCode -eq 0 -and $Result.classification -cne 'COMPLETED') {
-        throw 'Helper exit/result classification mismatch.'
+    try {
+        $ResultText = [IO.File]::ReadAllText($ResultPath, $StrictUtf8)
+        $Result = $ResultText | ConvertFrom-Json -ErrorAction Stop
+        Assert-PrivateDesktopResultDocument -Result $Result
+    } catch {
+        throw "NEEDS_CONTEXT: result.json was missing, truncated, non-UTF-8, or structurally invalid: $($_.Exception.Message)"
     }
-    if ($HelperExitCode -eq 20 -and $Result.classification -cne 'NEEDS_CONTEXT') {
-        throw 'Helper exit/result classification mismatch.'
+    try {
+        $SafeToReuse = Test-PrivateDesktopParentHostResult -Result $Result -ActualHostExitCode $ActualHostExitCode
+    } catch {
+        throw "NEEDS_CONTEXT: actual helper-host exit and persisted result validation failed: $($_.Exception.Message)"
     }
-    if ($HelperExitCode -eq 21 -and $Result.classification -cne 'TIMEOUT') {
-        throw 'Helper exit/result classification mismatch.'
+    if (-not $SafeToReuse) {
+        throw 'NEEDS_CONTEXT: helper host required catastrophic termination; the result is preserved but cannot be treated as a reusable safety PASS.'
     }
-    if ($HelperExitCode -eq 22 -and $Result.classification -cne 'LAUNCH_ERROR') {
-        throw 'Helper exit/result classification mismatch.'
-    }
-    $Result | Add-Member -NotePropertyName helper_exit_code -NotePropertyValue $HelperExitCode
     return $Result
+}
+
+if ($PrivateDesktopInternalHostMode) {
+    try {
+        if ([string]::IsNullOrWhiteSpace($PrivateDesktopInternalRequestPath) -or
+            [string]::IsNullOrWhiteSpace($PrivateDesktopInternalRunnerSource)) {
+            throw 'PrivateDesktopInternalHostMode requires internal request and runner paths.'
+        }
+        Import-PrivateDesktopRunner -SourcePath $PrivateDesktopInternalRunnerSource
+        $InternalHelperExitCode = [CourtOfShadows.Headless.PrivateDesktopRunner]::RunRequestFile($PrivateDesktopInternalRequestPath)
+    } catch {
+        [Console]::Error.WriteLine($_.Exception.ToString())
+        [Environment]::Exit(22)
+    }
+    [Environment]::Exit($InternalHelperExitCode)
 }
 ```
 
 ## Appendix C — `Test-PrivateDesktopRunner.ps1`
 
-Exact committed helper payload: **16,866 bytes**; **SHA-256 `00808C50EE4BEC6D28CC3B7DE8C6EF853D9BC1DDCAABE9625E84D3FD767A183F`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
+Exact committed helper payload: **53,188 bytes**; **SHA-256 `20198B669F70E51E51F71BD01E6D06D1949D300F43CE9A94FB0190A47D781A15`**. The fenced body below is the complete UTF-8, no-BOM source and includes its final LF.
 
 ```powershell
 [CmdletBinding()]
 param(
-    [switch]$IncludeVisibleWindowTest
+    [switch]$IncludeVisibleWindowTest,
+    [switch]$ContractOnly
 )
 
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
+$PrivateDesktopSelfTestScriptPath = $PSCommandPath
+. (Join-Path $PSScriptRoot 'Invoke-PrivateDesktopProcess.ps1')
+$SelfTestSource = [IO.File]::ReadAllText($PrivateDesktopSelfTestScriptPath)
+if ([regex]::IsMatch($SelfTestSource, '[^\x00-\x7F]')) {
+    throw 'Test-PrivateDesktopRunner.ps1 must remain ASCII so Windows PowerShell 5.1 cannot misdecode literals.'
+}
+
+function Assert-Equal($Actual, $Expected, [string]$Context) {
+    if ($Actual -cne $Expected) { throw "$Context expected <$Expected>, actual <$Actual>." }
+}
+
+function Copy-ContractPayload($Payload) {
+    return ($Payload | ConvertTo-Json -Depth 8 -Compress | ConvertFrom-Json -ErrorAction Stop)
+}
+
+function Assert-ContractRejected($Payload, [string]$Context, [scriptblock]$Mutate) {
+    $Candidate = Copy-ContractPayload $Payload
+    & $Mutate $Candidate
+    $Rejected = $false
+    try {
+        Assert-PrivateDesktopSafetyEnvelope -Result $Candidate
+    } catch {
+        $Rejected = $true
+    }
+    Assert-Equal $Rejected $true $Context
+}
+
+function Assert-ParentHostContractRejected($Payload, [int]$ActualHostExitCode, [string]$Context, [scriptblock]$Mutate) {
+    $Candidate = Copy-ContractPayload $Payload
+    & $Mutate $Candidate
+    $Rejected = $false
+    try {
+        Test-PrivateDesktopParentHostResult -Result $Candidate -ActualHostExitCode $ActualHostExitCode | Out-Null
+    } catch {
+        $Rejected = $true
+    }
+    Assert-Equal $Rejected $true $Context
+}
+
+function New-ValidContractPayload {
+    $ProcessIds = @(1..63)
+    return [pscustomobject][ordered]@{
+        schema_version = 2
+        classification = 'COMPLETED'
+        detail = 'Synthetic contract-only result.'
+        started = $true
+        root_pid = 1
+        root_exit_code = 7
+        timed_out = $false
+        job_drained = $true
+        desktop_name = 'WinSta0\CosHeadless_contract_only'
+        process_ids = $ProcessIds
+        new_process_ids = $ProcessIds
+        active_snapshot_process_ids = @()
+        job_total_processes = 66
+        observed_distinct_process_id_count = 63
+        process_id_accounting_kind = 'diagnostic_distinct_pid'
+        process_diagnostic_errors = @()
+        private_desktop_initially_empty = $true
+        monitor_armed_before_create = $true
+        monitor_armed_before_resume = $true
+        monitor_armed_utc = '2026-08-11T00:00:01.0000000Z'
+        process_created_utc = '2026-08-11T00:00:02.0000000Z'
+        resumed_utc = '2026-08-11T00:00:03.0000000Z'
+        root_assigned_to_job_before_resume = $true
+        job_kill_on_close_verified = $true
+        job_breakaway_forbidden = $true
+        job_handle_non_inheritable = $true
+        job_active_processes_final = 0
+        monitor_completed_after_job_drain = $true
+        host_termination_required = $false
+        cleanup_complete = $true
+        cleanup_errors = @()
+        visible_windows = @()
+        started_utc = '2026-08-11T00:00:00.0000000Z'
+        finished_utc = '2026-08-11T00:00:04.0000000Z'
+        elapsed_milliseconds = 4000
+        stdout_path = 'C:\contract-only\stdout.txt'
+        stderr_path = 'C:\contract-only\stderr.txt'
+        helper_exit_code = 0
+    }
+}
+
+function Assert-PrivateDesktopRunnerSourceContract {
+    param([Parameter(Mandatory = $true)][string]$SourcePath)
+
+    $Source = [IO.File]::ReadAllText($SourcePath)
+    foreach ($Banned in @('SwitchDesktop(', 'OpenInputDesktop(', 'SendInput(', 'mouse_event(', 'keybd_event(', 'SetForegroundWindow(')) {
+        if ($Source.Contains($Banned)) { throw "Banned desktop/input API appears in helper source: $Banned" }
+    }
+    if (-not $Source.Contains('SetThreadDesktop(')) { throw 'Dedicated private-desktop watcher does not bind its thread desktop.' }
+    if (-not $Source.Contains('CREATE_NO_WINDOW')) { throw 'CREATE_NO_WINDOW is absent from the helper.' }
+    if (-not $Source.Contains('private sealed class PrivateDesktopWatcher')) { throw 'Dedicated private-desktop watcher type is absent.' }
+    if ($Source.Contains('ReadDesktopName(')) { throw 'Window classification still relies on a separately queried desktop-name field.' }
+    if ($Source.Contains('process_coverage_complete') -or $Source.Contains('ProcessCoverageComplete')) {
+        throw 'Legacy process coverage is still present in the C# result contract.'
+    }
+    if ([regex]::Matches($Source, 'SchemaVersion = 2').Count -ne 2 -or $Source.Contains('SchemaVersion = 1')) {
+        throw 'C# result constructors do not exclusively emit schema v2.'
+    }
+    if ([regex]::Matches($Source, '!SetThreadDesktop\(desktopHandle\)').Count -ne 1 -or
+        [regex]::Matches($Source, 'extern bool SetThreadDesktop\(IntPtr desktop\)').Count -ne 1) {
+        throw 'SetThreadDesktop must have exactly one watcher call and one P/Invoke declaration.'
+    }
+
+    $WatcherBind = $Source.IndexOf('if (!SetThreadDesktop(desktopHandle))', [StringComparison]::Ordinal)
+    $QueueReady = $Source.IndexOf('PeekMessageW(out queueProbe, IntPtr.Zero, 0, 0, PM_NOREMOVE);', $WatcherBind, [StringComparison]::Ordinal)
+    $WatcherHook = $Source.IndexOf('createHook = SetWinEventHook(', $WatcherBind, [StringComparison]::Ordinal)
+    $WatcherArm = $Source.IndexOf('armed.Set();', $WatcherHook, [StringComparison]::Ordinal)
+    if ($WatcherBind -lt 0 -or $QueueReady -le $WatcherBind -or $WatcherHook -le $QueueReady -or $WatcherArm -le $WatcherHook) {
+        throw 'Watcher bind/queue/hook/arm ordering is not explicit.'
+    }
+
+    $SetJobLimit = $Source.IndexOf('ConfigureKillOnClose(job);', [StringComparison]::Ordinal)
+    $QueryJobLimit = $Source.IndexOf('VerifyKillOnCloseAndNoBreakaway(job);', $SetJobLimit, [StringComparison]::Ordinal)
+    $RecordKillOnClose = $Source.IndexOf('result.JobKillOnCloseVerified = true;', $QueryJobLimit, [StringComparison]::Ordinal)
+    $RecordBreakaway = $Source.IndexOf('result.JobBreakawayForbidden = true;', $RecordKillOnClose, [StringComparison]::Ordinal)
+    $RecordNonInheritable = $Source.IndexOf('result.JobHandleNonInheritable = VerifyHandleNonInheritable(job);', $RecordBreakaway, [StringComparison]::Ordinal)
+    $WaitForArm = $Source.IndexOf('watcher.StartAndWaitUntilArmed(5000);', $RecordNonInheritable, [StringComparison]::Ordinal)
+    $InitialEmptyProof = $Source.IndexOf('result.PrivateDesktopInitiallyEmpty = watcher.InitiallyEmpty;', $WaitForArm, [StringComparison]::Ordinal)
+    $JobListAttribute = $Source.IndexOf('new UIntPtr(PROC_THREAD_ATTRIBUTE_JOB_LIST)', $InitialEmptyProof, [StringComparison]::Ordinal)
+    $CreateSuspended = $Source.IndexOf('if (!CreateProcessW(', $JobListAttribute, [StringComparison]::Ordinal)
+    $CreatedTimestamp = $Source.IndexOf('DateTime processCreatedUtc = DateTime.UtcNow;', $CreateSuspended, [StringComparison]::Ordinal)
+    $RecordCreated = $Source.IndexOf('result.ProcessCreatedUtc = FormatUtc(processCreatedUtc);', $CreatedTimestamp, [StringComparison]::Ordinal)
+    $RecordArmedBeforeCreate = $Source.IndexOf('result.MonitorArmedBeforeCreate = watcher.ArmedUtc <= processCreatedUtc;', $RecordCreated, [StringComparison]::Ordinal)
+    $VerifyRoot = $Source.IndexOf('if (!IsProcessInJob(processInfo.hProcess, job, out rootInJob))', $RecordArmedBeforeCreate, [StringComparison]::Ordinal)
+    $RecordAssigned = $Source.IndexOf('result.RootAssignedToJobBeforeResume = true;', $VerifyRoot, [StringComparison]::Ordinal)
+    $ResumeSuspended = $Source.IndexOf('uint resumeResult = ResumeThread(', $RecordAssigned, [StringComparison]::Ordinal)
+    $ResumedTimestamp = $Source.IndexOf('DateTime resumedUtc = DateTime.UtcNow;', $ResumeSuspended, [StringComparison]::Ordinal)
+    $RecordResumed = $Source.IndexOf('result.ResumedUtc = FormatUtc(resumedUtc);', $ResumedTimestamp, [StringComparison]::Ordinal)
+    $RecordArmedBeforeResume = $Source.IndexOf('result.MonitorArmedBeforeResume = watcher.ArmedUtc <= resumedUtc;', $RecordResumed, [StringComparison]::Ordinal)
+    if ($SetJobLimit -lt 0 -or $QueryJobLimit -le $SetJobLimit -or
+        $RecordKillOnClose -le $QueryJobLimit -or $RecordBreakaway -le $RecordKillOnClose -or
+        $RecordNonInheritable -le $RecordBreakaway -or $WaitForArm -le $RecordNonInheritable -or
+        $InitialEmptyProof -le $WaitForArm -or $JobListAttribute -le $InitialEmptyProof -or
+        $CreateSuspended -le $JobListAttribute -or $CreatedTimestamp -le $CreateSuspended -or
+        $RecordCreated -le $CreatedTimestamp -or $RecordArmedBeforeCreate -le $RecordCreated -or
+        $VerifyRoot -le $RecordArmedBeforeCreate -or
+        $RecordAssigned -le $VerifyRoot -or $ResumeSuspended -le $RecordAssigned -or
+        $ResumedTimestamp -le $ResumeSuspended -or $RecordResumed -le $ResumedTimestamp -or
+        $RecordArmedBeforeResume -le $RecordResumed) {
+        throw 'Private-desktop v2 hard-field assignment order is not explicit.'
+    }
+    if ($Source.Contains('DuplicateHandle(') -or $Source.Contains('AssignProcessToJobObject(') -or
+        $Source.Contains('unassigned root') -or
+        -not $Source.Contains('private const uint PROC_THREAD_ATTRIBUTE_JOB_LIST = 0x0002000D;') -or
+        -not $Source.Contains('InitializeProcThreadAttributeList(IntPtr.Zero, 2, 0, ref attributeBytes);') -or
+        -not $Source.Contains('InitializeProcThreadAttributeList(attributeList, 2, 0, ref attributeBytes)') -or
+        -not $Source.Contains('Marshal.WriteIntPtr(jobListMemory, job);') -or
+        -not $Source.Contains('job = CreateJobObjectW(IntPtr.Zero, null);') -or
+        -not $Source.Contains('IntPtr[] inheritedHandles = new IntPtr[] { stdinHandle, stdoutHandle, stderrHandle };') -or
+        -not $Source.Contains('if (!GetHandleInformation(handle, out flags))') -or
+        -not $Source.Contains('if ((flags & HANDLE_FLAG_INHERIT) != 0)')) {
+        throw 'Atomic Job-list assignment or unique non-inheritable Job-handle ownership is not proven.'
+    }
+
+    if ($Source.Contains('TryIsProcessInJobAtObservation') -or $Source.Contains('InJobAtObservation') -or
+        $Source.Contains('Reconcile(HashSet<int>') -or $Source.Contains('pid == 0 && !privateShowProof') -or
+        $Source.Contains('GetProcessIdForEventThread') -or $Source.Contains('OpenThread(') -or
+        $Source.Contains('GetProcessIdOfThread')) {
+        throw 'Visible-window acceptance still contains PID/Job filtering.'
+    }
+    $ReconcileStart = $Source.IndexOf('public void Reconcile()', [StringComparison]::Ordinal)
+    $ReconcileEnd = $Source.IndexOf('public WindowEvidence[] SnapshotWindows()', $ReconcileStart, [StringComparison]::Ordinal)
+    $CandidateStart = $Source.IndexOf('WindowCandidate item = candidates[i];', $ReconcileStart, [StringComparison]::Ordinal)
+    $EvidenceKey = $Source.IndexOf('string key = item.Pid.ToString(', $CandidateStart, [StringComparison]::Ordinal)
+    if ($ReconcileStart -lt 0 -or $ReconcileEnd -le $ReconcileStart -or
+        $CandidateStart -le $ReconcileStart -or $EvidenceKey -le $CandidateStart) {
+        throw 'PID-independent visible-window reconciliation is absent.'
+    }
+    $PreKeyReconcile = $Source.Substring($CandidateStart, $EvidenceKey - $CandidateStart)
+    if ($PreKeyReconcile.Contains('continue') -or $PreKeyReconcile.Contains('ownedPid') -or
+        $PreKeyReconcile.Contains('InJob')) {
+        throw 'A private-desktop visible-window candidate can still be filtered before acceptance.'
+    }
+    if (-not $Source.Contains('if (!windowAlive || !IsWindowVisible(hwnd) || GetAncestor(hwnd, GA_ROOT) != hwnd) return;') -or
+        -not $Source.Contains('IntPtr root = GetAncestor(hwnd, GA_ROOT);') -or
+        -not $Source.Contains('if (root != IntPtr.Zero && root != hwnd) return;') -or
+        $Source.Contains('else if (windowAlive && GetAncestor(hwnd, GA_ROOT) != hwnd)') -or
+        -not $Source.Contains('candidate.PrivateShowProof = privateShowProof;') -or
+        -not $Source.Contains('item.PrivateShowProof')) {
+        throw 'CREATE/enumeration visibility or fail-closed transient SHOW evidence semantics drifted.'
+    }
+
+    $AccountingStart = $Source.IndexOf('private static void FinalizeProcessAccounting(', [StringComparison]::Ordinal)
+    $AccountingEnd = $Source.IndexOf('private sealed class PrivateDesktopWatcher', $AccountingStart, [StringComparison]::Ordinal)
+    if ($AccountingStart -lt 0 -or $AccountingEnd -le $AccountingStart) {
+        throw 'Diagnostic process-accounting method is absent.'
+    }
+    $AccountingBody = $Source.Substring($AccountingStart, $AccountingEnd - $AccountingStart)
+    if ($AccountingBody.Contains('Classification') -or $AccountingBody.Contains('Detail') -or
+        $AccountingBody.Contains('CleanupErrors') -or $AccountingBody.Contains('cleanupErrors') -or
+        $AccountingBody.Contains('ProcessCoverageComplete') -or
+        -not $AccountingBody.Contains('result.JobTotalProcesses = total;') -or
+        -not $AccountingBody.Contains('result.ObservedDistinctProcessIdCount = observed;')) {
+        throw 'PID/accounting diagnostics can still classify the result or are not recorded.'
+    }
+    $DiagnosticBoundaryStart = $Source.IndexOf('private static void TryPumpJobMessages(', [StringComparison]::Ordinal)
+    $DiagnosticBoundaryEnd = $Source.IndexOf('private static uint QueryActiveProcessCount(', $DiagnosticBoundaryStart, [StringComparison]::Ordinal)
+    $DiagnosticBoundary = $Source.Substring($DiagnosticBoundaryStart, $DiagnosticBoundaryEnd - $DiagnosticBoundaryStart)
+    if ($DiagnosticBoundaryStart -lt 0 -or $DiagnosticBoundaryEnd -le $DiagnosticBoundaryStart -or
+        $DiagnosticBoundary.Contains('Classification') -or $DiagnosticBoundary.Contains('Detail') -or
+        $DiagnosticBoundary.Contains('CleanupErrors') -or $DiagnosticBoundary.Contains('cleanupErrors')) {
+        throw 'Best-effort process diagnostic collection can still alter outcome or cleanup state.'
+    }
+    $DiagnosticRecordStart = $Source.IndexOf('private static void RecordProcessDiagnosticError(', [StringComparison]::Ordinal)
+    $DiagnosticRecordEnd = $Source.IndexOf('private static void PumpJobMessages(', $DiagnosticRecordStart, [StringComparison]::Ordinal)
+    $DiagnosticRecordBody = $Source.Substring($DiagnosticRecordStart, $DiagnosticRecordEnd - $DiagnosticRecordStart)
+    if ($DiagnosticRecordStart -lt 0 -or $DiagnosticRecordEnd -le $DiagnosticRecordStart -or
+        -not $Source.Contains('private const int MAX_PROCESS_DIAGNOSTIC_ERRORS = 8;') -or
+        -not $Source.Contains('private const int MAX_PROCESS_DIAGNOSTIC_ERROR_CHARACTERS = 2048;') -or
+        -not $DiagnosticRecordBody.Contains('diagnosticErrors.Contains(message)') -or
+        -not $DiagnosticRecordBody.Contains('diagnosticErrors.Count >= MAX_PROCESS_DIAGNOSTIC_ERRORS') -or
+        -not $DiagnosticRecordBody.Contains('message.Substring(0, MAX_PROCESS_DIAGNOSTIC_ERROR_CHARACTERS)')) {
+        throw 'Process diagnostic errors are not explicitly deduplicated and bounded by count and characters.'
+    }
+
+    $ExecuteStart = $Source.IndexOf('private static RunResult Execute(', [StringComparison]::Ordinal)
+    $ExecuteEnd = $Source.IndexOf('private static void ValidateRequest(', $ExecuteStart, [StringComparison]::Ordinal)
+    $ExecuteBody = $Source.Substring($ExecuteStart, $ExecuteEnd - $ExecuteStart)
+    if ([regex]::IsMatch($ExecuteBody, '(?m)^\s*PumpJobMessages\(') -or
+        [regex]::IsMatch($ExecuteBody, '(?m)^\s*RefreshOwnedPidsFromJob\(') -or
+        [regex]::IsMatch($ExecuteBody, '(?m)^\s*FinalizeProcessAccounting\(') -or
+        -not $ExecuteBody.Contains('result.ProcessDiagnosticErrors = processDiagnosticErrors.ToArray();')) {
+        throw 'Process diagnostics can still escape their best-effort recording boundary.'
+    }
+
+    $DrainProven = $Source.IndexOf('bool drainProven = result.JobDrained && result.JobActiveProcessesFinal.HasValue &&', [StringComparison]::Ordinal)
+    $DrainFailure = $Source.IndexOf('if (job != IntPtr.Zero && !drainProven)', $DrainProven, [StringComparison]::Ordinal)
+    $DrainHostTermination = $Source.IndexOf('result.HostTerminationRequired = true;', $DrainFailure, [StringComparison]::Ordinal)
+    $WatcherDrainGate = $Source.IndexOf('if (watcher != null && drainProven)', $DrainHostTermination, [StringComparison]::Ordinal)
+    $WatcherStop = $Source.IndexOf('watcher.StopAndJoin(5000);', $WatcherDrainGate, [StringComparison]::Ordinal)
+    $JoinHostTermination = $Source.IndexOf('result.HostTerminationRequired = true;', $WatcherStop, [StringComparison]::Ordinal)
+    $MonitorCondition = $Source.IndexOf('if (drainProven && watcherJoinSucceeded && watcherCompletionSucceeded)', $WatcherStop, [StringComparison]::Ordinal)
+    $MonitorComplete = $Source.IndexOf('result.MonitorCompletedAfterJobDrain = true;', $MonitorCondition, [StringComparison]::Ordinal)
+    $ReusableCleanupGate = $Source.IndexOf('if (!result.HostTerminationRequired)', $MonitorComplete, [StringComparison]::Ordinal)
+    $CloseJob = $Source.IndexOf('job = CloseKernelHandleForCleanup(job, "job", cleanupErrors);', $ReusableCleanupGate, [StringComparison]::Ordinal)
+    $CloseCompletionPort = $Source.IndexOf('completionPort = CloseKernelHandleForCleanup(completionPort, "completion port", cleanupErrors);', $CloseJob, [StringComparison]::Ordinal)
+    $ClosePrivateDesktop = $Source.IndexOf('if (!CloseDesktop(desktop))', $CloseCompletionPort, [StringComparison]::Ordinal)
+    if ($DrainProven -lt 0 -or $DrainFailure -le $DrainProven -or
+        $DrainHostTermination -le $DrainFailure -or $WatcherDrainGate -le $DrainHostTermination -or
+        $WatcherStop -le $WatcherDrainGate -or $JoinHostTermination -le $WatcherStop -or
+        $MonitorCondition -le $WatcherStop -or $MonitorComplete -le $MonitorCondition -or
+        $ReusableCleanupGate -le $MonitorComplete -or $CloseJob -le $ReusableCleanupGate -or
+        $CloseCompletionPort -le $CloseJob -or $ClosePrivateDesktop -le $CloseCompletionPort) {
+        throw 'Catastrophic host termination and drain-gated watcher shutdown ordering is not explicit.'
+    }
+    $DrainFailureBody = $Source.Substring($DrainFailure, $WatcherDrainGate - $DrainFailure)
+    if ($DrainFailureBody.Contains('StopAndJoin(') -or
+        -not $DrainFailureBody.Contains('result.HostTerminationRequired = true;')) {
+        throw 'Unproven Job drain can still stop the watcher or avoid catastrophic host termination.'
+    }
+    if (-not $Source.Contains('watcher.DisposeEventsAfterJoin();') -or
+        -not $Source.Contains('if (thread != null && thread.IsAlive)')) {
+        throw 'Watcher events are not disposed only after a proven normal join.'
+    }
+
+    $RunRequestStart = $Source.IndexOf('public static int RunRequestFile(', [StringComparison]::Ordinal)
+    $RunRequestEnd = $Source.IndexOf('public static string QuoteWindowsArgument(', $RunRequestStart, [StringComparison]::Ordinal)
+    $RunRequestBody = $Source.Substring($RunRequestStart, $RunRequestEnd - $RunRequestStart)
+    if ($RunRequestStart -lt 0 -or $RunRequestEnd -le $RunRequestStart -or
+        -not $Source.Contains('[DataMember(Name = "helper_exit_code", Order = 36)]') -or
+        -not $RunRequestBody.Contains('result.HelperExitCode = helperExitCode;') -or
+        -not $RunRequestBody.Contains('if (result.HostTerminationRequired)') -or
+        -not $RunRequestBody.Contains('PersistResultAndTerminateHost(resultPath, result, helperExitCode);')) {
+        throw 'RunRequestFile does not persist the mapped helper exit or route catastrophic results to host termination.'
+    }
+    $PersistHostStart = $Source.IndexOf('private static void PersistResultAndTerminateHost(', [StringComparison]::Ordinal)
+    $PersistHostEnd = $Source.IndexOf('private static int MapResultExitCode(', $PersistHostStart, [StringComparison]::Ordinal)
+    $PersistHostBody = $Source.Substring($PersistHostStart, $PersistHostEnd - $PersistHostStart)
+    $PersistWrite = $PersistHostBody.IndexOf('WriteJsonCreateNew(resultPath, result);', [StringComparison]::Ordinal)
+    $TerminateHost = $PersistHostBody.IndexOf('Environment.Exit(helperExitCode);', [StringComparison]::Ordinal)
+    if ($PersistHostStart -lt 0 -or $PersistHostEnd -le $PersistHostStart -or
+        $PersistWrite -lt 0 -or $TerminateHost -le $PersistWrite -or
+        -not $PersistHostBody.Contains('finally')) {
+        throw 'Catastrophic result is not persisted before unconditional dedicated-host termination.'
+    }
+    $MapExitStart = $PersistHostEnd
+    $MapExitEnd = $Source.IndexOf('public static string QuoteWindowsArgument(', $MapExitStart, [StringComparison]::Ordinal)
+    $MapExitBody = $Source.Substring($MapExitStart, $MapExitEnd - $MapExitStart)
+    if ($MapExitEnd -le $MapExitStart -or
+        -not $MapExitBody.Contains('"COMPLETED", StringComparison.Ordinal)) return 0;') -or
+        -not $MapExitBody.Contains('"NEEDS_CONTEXT", StringComparison.Ordinal)) return 20;') -or
+        -not $MapExitBody.Contains('"TIMEOUT", StringComparison.Ordinal)) return 21;') -or
+        -not $MapExitBody.Contains('"LAUNCH_ERROR", StringComparison.Ordinal)) return 22;') -or
+        -not $MapExitBody.Contains('throw new InvalidOperationException("Unknown helper classification: "')) {
+        throw 'C# helper classification-to-host-exit mapping is not exact and fail-closed.'
+    }
+    $SnapshotStart = $Source.IndexOf('public WindowEvidence[] SnapshotWindows()', $WatcherStop, [StringComparison]::Ordinal)
+    if ($SnapshotStart -lt 0) {
+        $SnapshotStart = $Source.IndexOf('public WindowEvidence[] SnapshotWindows()', [StringComparison]::Ordinal)
+    }
+    $SnapshotEnd = $Source.IndexOf('private void ThreadMain()', $SnapshotStart, [StringComparison]::Ordinal)
+    $SnapshotBody = $Source.Substring($SnapshotStart, $SnapshotEnd - $SnapshotStart)
+    if ($SnapshotStart -lt 0 -or $SnapshotEnd -le $SnapshotStart -or
+        -not $SnapshotBody.Contains('ReconcilePendingCandidates();')) {
+        throw 'Pending visible-window candidates can be lost when watcher shutdown reports failure.'
+    }
+    $VisiblePrecedence = $Source.IndexOf('bool visibleWindowObserved = result.VisibleWindows != null && result.VisibleWindows.Length != 0;', [StringComparison]::Ordinal)
+    $NeedsContextFinal = $Source.IndexOf('result.Classification = "NEEDS_CONTEXT";', $VisiblePrecedence, [StringComparison]::Ordinal)
+    $NoWindowLaunchError = $Source.IndexOf('result.Classification = "LAUNCH_ERROR";', $NeedsContextFinal, [StringComparison]::Ordinal)
+    if ($VisiblePrecedence -lt 0 -or $NeedsContextFinal -le $VisiblePrecedence -or
+        $NoWindowLaunchError -le $NeedsContextFinal) {
+        throw 'Visible-window NEEDS_CONTEXT precedence over cleanup failure is not explicit.'
+    }
+    $CatastrophicResultGate = $Source.IndexOf('if (result.HostTerminationRequired)', $NoWindowLaunchError, [StringComparison]::Ordinal)
+    $CatastrophicResultEnd = $Source.IndexOf('stopwatch.Stop();', $CatastrophicResultGate, [StringComparison]::Ordinal)
+    $CatastrophicResultBody = $Source.Substring($CatastrophicResultGate, $CatastrophicResultEnd - $CatastrophicResultGate)
+    if ($CatastrophicResultGate -lt 0 -or $CatastrophicResultEnd -le $CatastrophicResultGate -or
+        -not $CatastrophicResultBody.Contains('result.MonitorCompletedAfterJobDrain = false;') -or
+        -not $CatastrophicResultBody.Contains('result.CleanupComplete = false;') -or
+        -not $CatastrophicResultBody.Contains('result.Classification = "NEEDS_CONTEXT";') -or
+        -not $CatastrophicResultBody.Contains('Previous classification=') -or
+        $CatastrophicResultBody.Contains('if (String.Equals(result.Classification, "COMPLETED"')) {
+        throw 'Catastrophic results can still claim reusable cleanup/monitoring or a weaker conditional classification.'
+    }
+    if (-not $Source.Contains('bool attributeListInitialized = false;') -or
+        -not $Source.Contains('if (attributeListInitialized) DeleteProcThreadAttributeList(attributeList);')) {
+        throw 'Attribute-list initialization is not guarded during cleanup.'
+    }
+
+    $ExitCaptureStart = $Source.IndexOf('private static void TryCaptureRootExitCode(', [StringComparison]::Ordinal)
+    $ExitCaptureEnd = $Source.IndexOf('private static void ValidateRequest(', $ExitCaptureStart, [StringComparison]::Ordinal)
+    $ExitCaptureBody = $Source.Substring($ExitCaptureStart, $ExitCaptureEnd - $ExitCaptureStart)
+    if ($ExitCaptureStart -lt 0 -or $ExitCaptureEnd -le $ExitCaptureStart -or
+        -not $Source.Contains('bool rootExitProven = false;') -or
+        -not $Source.Contains('if (rootWait == WAIT_OBJECT_0) rootExitProven = true;') -or
+        -not $Source.Contains('if (drainedRootWait == WAIT_OBJECT_0) rootExitProven = true;') -or
+        -not $ExitCaptureBody.Contains('if (exitCode == STILL_ACTIVE && !rootExitProven) return;') -or
+        -not $ExitCaptureBody.Contains('result.RootExitCode = unchecked((int)exitCode);') -or
+        $Source.Contains('exitCode != STILL_ACTIVE') -or
+        $Source.Contains('finalRootExitCode != STILL_ACTIVE')) {
+        throw 'A signaled root process can still lose the legitimate exit code 259.'
+    }
+}
+
+$Payload = New-ValidContractPayload
+Assert-Equal (ConvertTo-PrivateDesktopHostArgument -Value '') '""' 'dedicated host empty argument quoting'
+Assert-Equal (ConvertTo-PrivateDesktopHostArgument -Value 'plain') 'plain' 'dedicated host plain argument quoting'
+Assert-Equal (ConvertTo-PrivateDesktopHostArgument -Value 'white space') '"white space"' 'dedicated host whitespace argument quoting'
+Assert-Equal (ConvertTo-PrivateDesktopHostArgument -Value 'quote"inside') '"quote\"inside"' 'dedicated host embedded-quote argument quoting'
+Assert-Equal (ConvertTo-PrivateDesktopHostArgument -Value 'trailing slash\') '"trailing slash\\"' 'dedicated host trailing-slash argument quoting'
+Assert-PrivateDesktopSafetyEnvelope -Result $Payload
+Assert-Equal (Test-PrivateDesktopParentHostResult -Result $Payload -ActualHostExitCode 0) $true 'reusable parent-host validation'
+
+$OutcomeNeutral = Copy-ContractPayload $Payload
+$OutcomeNeutral.classification = 'NEEDS_CONTEXT'
+$OutcomeNeutral.helper_exit_code = 20
+$OutcomeNeutral.timed_out = $true
+$OutcomeNeutral.root_exit_code = 99
+$OutcomeNeutral.visible_windows = @([pscustomobject]@{
+    pid = 0
+    hwnd = '0x1'
+    event = 'EVENT_OBJECT_SHOW'
+    title = 'synthetic'
+    class_name = 'synthetic'
+    desktop = 'CosHeadless_contract_only'
+    observed_utc = '2026-08-11T00:00:02.5000000Z'
+})
+Assert-PrivateDesktopSafetyEnvelope -Result $OutcomeNeutral
+
+$DiagnosticNeutral = Copy-ContractPayload $Payload
+$DiagnosticNeutral.job_total_processes = $null
+$DiagnosticNeutral.process_diagnostic_errors = @('synthetic completion-port diagnostic')
+Assert-PrivateDesktopSafetyEnvelope -Result $DiagnosticNeutral
+$DiagnosticMismatch = Copy-ContractPayload $Payload
+$DiagnosticMismatch.job_total_processes = 62
+$DiagnosticMismatch.observed_distinct_process_id_count = 64
+Assert-PrivateDesktopSafetyEnvelope -Result $DiagnosticMismatch
+
+$Catastrophic = Copy-ContractPayload $Payload
+$Catastrophic.classification = 'NEEDS_CONTEXT'
+$Catastrophic.helper_exit_code = 20
+$Catastrophic.host_termination_required = $true
+$Catastrophic.cleanup_complete = $false
+$Catastrophic.cleanup_errors = @('synthetic unproven Job drain')
+$Catastrophic.monitor_completed_after_job_drain = $false
+Assert-Equal (Test-PrivateDesktopParentHostResult -Result $Catastrophic -ActualHostExitCode 20) $false 'catastrophic parent-host disposition'
+$CatastrophicSafetyRejected = $false
+try {
+    Assert-PrivateDesktopSafetyEnvelope -Result $Catastrophic
+} catch {
+    $CatastrophicSafetyRejected = $true
+}
+Assert-Equal $CatastrophicSafetyRejected $true 'catastrophic result cannot pass reusable safety envelope'
+
+Assert-ParentHostContractRejected $Catastrophic 20 'parent missing/truncated result-field rejection' {
+    param($Item)
+    $Item.PSObject.Properties.Remove('finished_utc')
+}
+Assert-ParentHostContractRejected $Catastrophic 22 'parent actual host exit mismatch rejection' { param($Item) }
+Assert-ParentHostContractRejected $Catastrophic 20 'parent persisted mapping mismatch rejection' { param($Item) $Item.helper_exit_code = 22 }
+Assert-ParentHostContractRejected $Catastrophic 22 'parent catastrophic non-NEEDS_CONTEXT rejection' {
+    param($Item)
+    $Item.classification = 'LAUNCH_ERROR'
+    $Item.helper_exit_code = 22
+}
+Assert-ParentHostContractRejected $Catastrophic 0 'parent catastrophic zero/COMPLETED rejection' {
+    param($Item)
+    $Item.classification = 'COMPLETED'
+    $Item.helper_exit_code = 0
+}
+Assert-ParentHostContractRejected $Catastrophic 20 'parent catastrophic cleanup claim rejection' { param($Item) $Item.cleanup_complete = $true }
+Assert-ParentHostContractRejected $Catastrophic 20 'parent catastrophic monitor claim rejection' { param($Item) $Item.monitor_completed_after_job_drain = $true }
+
+Assert-ContractRejected $Payload 'schema v1 rejection' { param($Item) $Item.schema_version = 1 }
+Assert-ContractRejected $Payload 'legacy coverage property rejection' {
+    param($Item)
+    $Item | Add-Member -NotePropertyName process_coverage_complete -NotePropertyValue $true
+}
+Assert-ContractRejected $Payload 'private desktop initially empty gate' { param($Item) $Item.private_desktop_initially_empty = $false }
+Assert-ContractRejected $Payload 'monitor armed before create gate' { param($Item) $Item.monitor_armed_before_create = $false }
+Assert-ContractRejected $Payload 'monitor armed before resume gate' { param($Item) $Item.monitor_armed_before_resume = $false }
+Assert-ContractRejected $Payload 'root assigned before resume gate' { param($Item) $Item.root_assigned_to_job_before_resume = $false }
+Assert-ContractRejected $Payload 'Job kill-on-close verification gate' { param($Item) $Item.job_kill_on_close_verified = $false }
+Assert-ContractRejected $Payload 'Job breakaway forbidden gate' { param($Item) $Item.job_breakaway_forbidden = $false }
+Assert-ContractRejected $Payload 'Job handle non-inheritable gate' { param($Item) $Item.job_handle_non_inheritable = $false }
+Assert-ContractRejected $Payload 'Job drained gate' { param($Item) $Item.job_drained = $false }
+Assert-ContractRejected $Payload 'final Job active-process count gate' { param($Item) $Item.job_active_processes_final = 1 }
+Assert-ContractRejected $Payload 'monitor completion after Job drain gate' { param($Item) $Item.monitor_completed_after_job_drain = $false }
+Assert-ContractRejected $Payload 'catastrophic host termination gate' { param($Item) $Item.host_termination_required = $true }
+Assert-ContractRejected $Payload 'cleanup complete gate' { param($Item) $Item.cleanup_complete = $false }
+Assert-ContractRejected $Payload 'cleanup errors gate' { param($Item) $Item.cleanup_errors = @('synthetic cleanup error') }
+Assert-ContractRejected $Payload 'armed/create timestamp ordering' { param($Item) $Item.process_created_utc = '2026-08-11T00:00:00.5000000Z' }
+Assert-ContractRejected $Payload 'create/resume timestamp ordering' { param($Item) $Item.resumed_utc = '2026-08-11T00:00:01.5000000Z' }
+Assert-ContractRejected $Payload 'accounting kind rejection' { param($Item) $Item.process_id_accounting_kind = 'complete_pid_history' }
+Assert-ContractRejected $Payload 'negative observed PID count rejection' { param($Item) $Item.observed_distinct_process_id_count = -1 }
+Assert-ContractRejected $Payload 'negative Job total rejection' { param($Item) $Item.job_total_processes = -1 }
+Assert-ContractRejected $Payload 'process_ids scalar rejection' { param($Item) $Item.process_ids = 1 }
+Assert-ContractRejected $Payload 'new_process_ids scalar rejection' { param($Item) $Item.new_process_ids = 1 }
+Assert-ContractRejected $Payload 'active_snapshot_process_ids scalar rejection' { param($Item) $Item.active_snapshot_process_ids = 1 }
+Assert-ContractRejected $Payload 'process diagnostic errors scalar rejection' { param($Item) $Item.process_diagnostic_errors = 'synthetic scalar' }
+Assert-ContractRejected $Payload 'visible window with non-NEEDS_CONTEXT rejection' {
+    param($Item)
+    $Item.visible_windows = @([pscustomobject]@{ pid = 0; hwnd = '0x2'; event = 'EVENT_OBJECT_SHOW' })
+}
+Assert-ContractRejected $Payload 'helper exit classification mapping rejection' { param($Item) $Item.helper_exit_code = 20 }
+Assert-ContractRejected $Payload 'unknown helper exit rejection' { param($Item) $Item.helper_exit_code = 99 }
+Assert-PrivateDesktopRunnerSourceContract -SourcePath (Join-Path $PSScriptRoot 'PrivateDesktopRunner.cs')
+$WrapperSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Invoke-PrivateDesktopProcess.ps1'))
+$InvokeWrapperStart = $WrapperSource.IndexOf('function Invoke-PrivateDesktopProcess', [StringComparison]::Ordinal)
+$InternalHostStart = $WrapperSource.IndexOf('if ($PrivateDesktopInternalHostMode)', $InvokeWrapperStart, [StringComparison]::Ordinal)
+$InvokeWrapperBody = $WrapperSource.Substring($InvokeWrapperStart, $InternalHostStart - $InvokeWrapperStart)
+$InternalHostBody = $WrapperSource.Substring($InternalHostStart)
+$HostObservationStart = $InvokeWrapperBody.IndexOf('$HostExitAndCodeProven = $false', [StringComparison]::Ordinal)
+$HostInitialWait = $InvokeWrapperBody.IndexOf('$HostProcess.WaitForExit($HostWaitMilliseconds)', $HostObservationStart, [StringComparison]::Ordinal)
+$HostInitialHasExited = $InvokeWrapperBody.IndexOf('$HostProcess.HasExited', $HostInitialWait, [StringComparison]::Ordinal)
+$HostInitialExitCode = $InvokeWrapperBody.IndexOf('$ActualHostExitCode = $HostProcess.ExitCode', $HostInitialHasExited, [StringComparison]::Ordinal)
+$HostObservationProven = $InvokeWrapperBody.IndexOf('$HostExitAndCodeProven = $true', $HostInitialExitCode, [StringComparison]::Ordinal)
+$HostObservationCatch = $InvokeWrapperBody.IndexOf('$HostObservationError = $_.Exception.Message', $HostObservationProven, [StringComparison]::Ordinal)
+$HostObservationFinally = $InvokeWrapperBody.IndexOf('} finally {', $HostObservationCatch, [StringComparison]::Ordinal)
+$HostTeardownGate = $InvokeWrapperBody.IndexOf('if ($HostStarted -and -not $HostExitAndCodeProven)', $HostObservationFinally, [StringComparison]::Ordinal)
+$HostTeardownCall = $InvokeWrapperBody.IndexOf('Invoke-PrivateDesktopHostFailClosedTeardown -Process $HostProcess', $HostTeardownGate, [StringComparison]::Ordinal)
+if ($InvokeWrapperStart -lt 0 -or $InternalHostStart -le $InvokeWrapperStart -or
+    $InvokeWrapperBody.Contains('Import-PrivateDesktopRunner') -or
+    $InvokeWrapperBody.Contains('::RunRequestFile(') -or
+    $InvokeWrapperBody.Contains('Add-Type') -or
+    -not $InvokeWrapperBody.Contains('New-Object System.Diagnostics.ProcessStartInfo') -or
+    -not $InvokeWrapperBody.Contains('$StartInfo.UseShellExecute = $false') -or
+    -not $InvokeWrapperBody.Contains('$StartInfo.CreateNoWindow = $true') -or
+    -not $InvokeWrapperBody.Contains('$HostProcess.WaitForExit($HostWaitMilliseconds)') -or
+    -not $InvokeWrapperBody.Contains('$HostProcess.HasExited') -or
+    -not $InvokeWrapperBody.Contains('$HostExitAndCodeProven = $true') -or
+    -not $InvokeWrapperBody.Contains('if ($HostStarted -and -not $HostExitAndCodeProven)') -or
+    -not $InvokeWrapperBody.Contains('Invoke-PrivateDesktopHostFailClosedTeardown -Process $HostProcess') -or
+    -not $InvokeWrapperBody.Contains('$ActualHostExitCode = $HostProcess.ExitCode') -or
+    -not $InvokeWrapperBody.Contains('Test-PrivateDesktopParentHostResult') -or
+    $HostObservationStart -lt 0 -or $HostInitialWait -le $HostObservationStart -or
+    $HostInitialHasExited -le $HostInitialWait -or $HostInitialExitCode -le $HostInitialHasExited -or
+    $HostObservationProven -le $HostInitialExitCode -or $HostObservationCatch -le $HostObservationProven -or
+    $HostObservationFinally -le $HostObservationCatch -or $HostTeardownGate -le $HostObservationFinally -or
+    $HostTeardownCall -le $HostTeardownGate -or
+    [regex]::Matches($InvokeWrapperBody, '\$HostProcess\.Start\(\)').Count -ne 1) {
+    throw 'Parent wrapper does not launch and validate exactly one dedicated noninteractive PowerShell helper host.'
+}
+$HostTeardownStart = $WrapperSource.IndexOf('function Invoke-PrivateDesktopHostFailClosedTeardown', [StringComparison]::Ordinal)
+$HostTeardownEnd = $WrapperSource.IndexOf('function Test-PrivateDesktopIntegralValue', $HostTeardownStart, [StringComparison]::Ordinal)
+$HostTeardownBody = $WrapperSource.Substring($HostTeardownStart, $HostTeardownEnd - $HostTeardownStart)
+if ($HostTeardownStart -lt 0 -or $HostTeardownEnd -le $HostTeardownStart -or
+    -not $HostTeardownBody.Contains('$Process.Kill()') -or
+    -not $HostTeardownBody.Contains('$Process.WaitForExit(5000)') -or
+    -not $HostTeardownBody.Contains('$Process.HasExited') -or
+    -not $HostTeardownBody.Contains('kill_issued = $KillIssued') -or
+    -not $HostTeardownBody.Contains('exit_proven = $ExitProven') -or
+    -not $InvokeWrapperBody.Contains('no retry is permitted') -or
+    $InvokeWrapperBody.Contains('parent termination was issued and exit was then proven')) {
+    throw 'Parent wrapper can lose ownership after host observation failure or overstate termination proof.'
+}
+if (-not $InternalHostBody.Contains('Import-PrivateDesktopRunner') -or
+    -not $InternalHostBody.Contains('::RunRequestFile(') -or
+    -not $InternalHostBody.Contains('[Environment]::Exit($InternalHelperExitCode)')) {
+    throw 'Internal helper-host mode does not own C# loading and terminal normal-path host exit.'
+}
+$ScriptParameterStart = $WrapperSource.IndexOf('param(', [StringComparison]::Ordinal)
+$ScriptParameterEnd = $WrapperSource.IndexOf('function Write-NewUtf8File', $ScriptParameterStart, [StringComparison]::Ordinal)
+$ScriptParameterBlock = $WrapperSource.Substring($ScriptParameterStart, $ScriptParameterEnd - $ScriptParameterStart)
+if ($ScriptParameterBlock.Contains('[string]$RequestPath') -or
+    $ScriptParameterBlock.Contains('[string]$RunnerSource') -or
+    -not $ScriptParameterBlock.Contains('$PrivateDesktopInternalHostMode') -or
+    -not $ScriptParameterBlock.Contains('$PrivateDesktopInternalRequestPath') -or
+    -not $ScriptParameterBlock.Contains('$PrivateDesktopInternalRunnerSource')) {
+    throw 'Dot-sourcing the wrapper can still overwrite generic caller variables.'
+}
+if ($WrapperSource.Contains('Add-Member -NotePropertyName helper_exit_code') -or
+    -not $WrapperSource.Contains('function Test-PrivateDesktopParentHostResult') -or
+    -not $WrapperSource.Contains('Actual PowerShell host exit does not match persisted helper_exit_code.')) {
+    throw 'Parent result validation does not compare actual host exit with the C#-persisted mapping.'
+}
+$ContractOnlyMarker = 'if ($' + 'ContractOnly) {'
+$FullSelfTestMarker = '$' + 'RunnerSource = Join-Path $PSScriptRoot'
+$ContractOnlyBoundary = $SelfTestSource.IndexOf($ContractOnlyMarker, [StringComparison]::Ordinal)
+$FullSelfTestStart = $SelfTestSource.IndexOf($FullSelfTestMarker, $ContractOnlyBoundary, [StringComparison]::Ordinal)
+$FullSelfTestBody = $SelfTestSource.Substring($FullSelfTestStart)
+if ($ContractOnlyBoundary -lt 0 -or $FullSelfTestStart -le $ContractOnlyBoundary -or
+    -not $FullSelfTestBody.Contains('public static class Exit259Fixture') -or
+    -not $FullSelfTestBody.Contains("return 259;") -or
+    -not $FullSelfTestBody.Contains("-FilePath (Join-Path `$TestRoot 'Exit259Fixture.exe')") -or
+    -not $FullSelfTestBody.Contains("Assert-Equal `$Exit259.root_exit_code 259 'exit-259 root exit code'")) {
+    throw 'Full selftest does not preserve a caller-level exit-code-259 regression case.'
+}
+
+if ($ContractOnly) {
+    [pscustomobject][ordered]@{
+        verdict = 'PASS'
+        mode = 'CONTRACT_ONLY'
+        accepted_job_total_processes = 66
+        accepted_observed_distinct_process_id_count = 63
+        rejected_mutations = 27
+        rejected_parent_host_mutations = 7
+        catastrophic_parent_validation = 'PASS'
+        dedicated_host_architecture = 'PASS'
+        atomic_job_assignment = 'PASS'
+        root_exit_259_contract = 'PASS'
+        ascii_source_contract = 'PASS'
+        static_source_contract = 'PASS'
+    }
+    return
+}
+
 $RunnerSource = Join-Path $PSScriptRoot 'PrivateDesktopRunner.cs'
 $CSharp5 = New-Object System.CodeDom.Compiler.CompilerParameters
 $CSharp5.CompilerOptions = '/langversion:5'
@@ -4803,23 +7637,14 @@ foreach ($Reference in @('System.dll', 'System.Core.dll', 'System.Runtime.Serial
     [void]$CSharp5.ReferencedAssemblies.Add($Reference)
 }
 Add-Type -Path $RunnerSource -CompilerParameters $CSharp5 -ErrorAction Stop
-. (Join-Path $PSScriptRoot 'Invoke-PrivateDesktopProcess.ps1')
 
 $TestRoot = Join-Path ([IO.Path]::GetTempPath()) ('cos-private-desktop-selftest-' + [Guid]::NewGuid().ToString('N'))
 [IO.Directory]::CreateDirectory($TestRoot) | Out-Null
 $PowerShell = (Get-Command powershell.exe -ErrorAction Stop).Source
 
-function Assert-Equal($Actual, $Expected, [string]$Context) {
-    if ($Actual -cne $Expected) { throw "$Context expected <$Expected>, actual <$Actual>." }
-}
-
 function Assert-MonitorAndCleanup($Result, [string]$Context) {
-    Assert-Equal $Result.monitor_armed_before_resume $true "$Context monitor armed before resume"
-    $Armed = [DateTimeOffset]::Parse([string]$Result.monitor_armed_utc, [Globalization.CultureInfo]::InvariantCulture)
-    $Resumed = [DateTimeOffset]::Parse([string]$Result.resumed_utc, [Globalization.CultureInfo]::InvariantCulture)
-    if ($Armed -gt $Resumed) { throw "$Context monitor timestamp is after ResumeThread." }
-    Assert-Equal $Result.cleanup_complete $true "$Context cleanup complete"
-    Assert-Equal @($Result.cleanup_errors).Count 0 "$Context cleanup error count"
+    Assert-Equal $Result.started $true "$Context started"
+    Assert-PrivateDesktopSafetyEnvelope -Result $Result
 }
 
 try {
@@ -4895,6 +7720,14 @@ public static class EnvironmentProbeFixture {
 }
 '@ -ReferencedAssemblies @('System.dll') -OutputAssembly (Join-Path $TestRoot 'EnvironmentProbeFixture.exe') -OutputType ConsoleApplication
 
+    Add-Type -TypeDefinition @'
+public static class Exit259Fixture {
+    public static int Main(string[] args) {
+        return 259;
+    }
+}
+'@ -ReferencedAssemblies @('System.dll') -OutputAssembly (Join-Path $TestRoot 'Exit259Fixture.exe') -OutputType ConsoleApplication
+
     $NoWindowDir = Join-Path $TestRoot 'no-window-exit7'
     $NoWindow = Invoke-PrivateDesktopProcess -FilePath $PowerShell `
         -ArgumentList @('-NoProfile', '-NonInteractive', '-Command', '[Console]::Out.Write("out"); [Console]::Error.Write("err"); exit 7') `
@@ -4903,43 +7736,46 @@ public static class EnvironmentProbeFixture {
     Assert-Equal $NoWindow.classification 'COMPLETED' 'no-window classification'
     Assert-Equal $NoWindow.root_exit_code 7 'no-window exit code'
     Assert-Equal @($NoWindow.visible_windows).Count 0 'no-window visible count'
-    Assert-Equal $NoWindow.job_drained $true 'no-window tree drain'
-    Assert-Equal $NoWindow.process_coverage_complete $true 'no-window PID coverage'
-    Assert-Equal $NoWindow.job_total_processes @($NoWindow.process_ids).Count 'no-window accounting coverage'
+    Assert-Equal $NoWindow.timed_out $false 'no-window timeout flag'
     Assert-MonitorAndCleanup $NoWindow 'no-window'
     Assert-Equal ([IO.File]::ReadAllText((Join-Path $NoWindowDir 'stdout.txt'))) 'out' 'stdout capture'
     Assert-Equal ([IO.File]::ReadAllText((Join-Path $NoWindowDir 'stderr.txt'))) 'err' 'stderr capture'
+
+    $Exit259Dir = Join-Path $TestRoot 'exit-259'
+    $Exit259 = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'Exit259Fixture.exe') `
+        -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $Exit259Dir
+    Assert-Equal $Exit259.classification 'COMPLETED' 'exit-259 classification'
+    Assert-Equal $Exit259.root_exit_code 259 'exit-259 root exit code'
+    Assert-Equal $Exit259.timed_out $false 'exit-259 timeout flag'
+    Assert-Equal @($Exit259.visible_windows).Count 0 'exit-259 visible count'
+    Assert-MonitorAndCleanup $Exit259 'exit-259'
 
     $TimeoutDir = Join-Path $TestRoot 'timeout-tree-drain'
     $Timeout = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'TimeoutTreeFixture.exe') `
         -WorkingDirectory $TestRoot -TimeoutSeconds 1 -EvidenceDirectory $TimeoutDir
     Assert-Equal $Timeout.classification 'TIMEOUT' 'timeout classification'
     Assert-Equal $Timeout.timed_out $true 'timeout flag'
-    Assert-Equal $Timeout.job_drained $true 'timeout tree drain'
     Assert-Equal @($Timeout.visible_windows).Count 0 'timeout visible count'
-    Assert-Equal $Timeout.process_coverage_complete $true 'timeout PID coverage'
-    Assert-Equal $Timeout.job_total_processes @($Timeout.process_ids).Count 'timeout accounting coverage'
     Assert-MonitorAndCleanup $Timeout 'timeout'
-    if (@($Timeout.process_ids).Count -lt 2) { throw 'timeout test did not observe the descendant PID.' }
-    if (@($Timeout.active_snapshot_process_ids).Count -lt 1) { throw 'timeout test did not use active Job snapshots as a PID source.' }
 
     $CoverageDir = Join-Path $TestRoot 'short-lived-pid-coverage'
     $Coverage = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'CoverageBurstFixture.exe') `
         -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $CoverageDir
     Assert-Equal $Coverage.classification 'COMPLETED' 'short-lived coverage classification'
-    Assert-Equal $Coverage.job_drained $true 'short-lived coverage tree drain'
-    Assert-Equal $Coverage.process_coverage_complete $true 'short-lived PID coverage'
-    Assert-Equal $Coverage.job_total_processes @($Coverage.process_ids).Count 'short-lived accounting coverage'
+    Assert-Equal $Coverage.root_exit_code 0 'short-lived coverage exit code'
+    Assert-Equal $Coverage.timed_out $false 'short-lived coverage timeout flag'
+    Assert-Equal @($Coverage.visible_windows).Count 0 'short-lived coverage visible count'
     Assert-MonitorAndCleanup $Coverage 'short-lived coverage'
-    if ($Coverage.job_total_processes -lt 33) { throw 'short-lived accounting did not include the root and 32 child launches.' }
-    if (@($Coverage.new_process_ids).Count -lt 33) { throw 'NEW_PROCESS messages did not cover the root and short-lived descendants.' }
 
-    $ComplexArguments = @('', 'plain', 'white space', 'quote"inside', 'trailing\', 'slashes\\before"quote', '中文 空格', "tab`tvalue")
+    $UnicodeArgument = -join @([char]0x4E2D, [char]0x6587, [char]0x20, [char]0x7A7A, [char]0x683C)
+    $ComplexArguments = @('', 'plain', 'white space', 'quote"inside', 'trailing\', 'slashes\\before"quote', $UnicodeArgument, "tab`tvalue")
     $ArgvDir = Join-Path $TestRoot 'argv-roundtrip'
     $ArgvResult = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'ArgvProbeFixture.exe') `
         -ArgumentList $ComplexArguments -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $ArgvDir
     Assert-Equal $ArgvResult.classification 'COMPLETED' 'argv classification'
     Assert-Equal $ArgvResult.root_exit_code 0 'argv exit code'
+    Assert-Equal $ArgvResult.timed_out $false 'argv timeout flag'
+    Assert-Equal @($ArgvResult.visible_windows).Count 0 'argv visible count'
     Assert-MonitorAndCleanup $ArgvResult 'argv'
     $ArgvLines = [IO.File]::ReadAllLines((Join-Path $ArgvDir 'stdout.txt'))
     Assert-Equal $ArgvLines.Count $ComplexArguments.Count 'argv count'
@@ -4947,6 +7783,7 @@ public static class EnvironmentProbeFixture {
         $Decoded = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($ArgvLines[$Index]))
         Assert-Equal $Decoded $ComplexArguments[$Index] ("argv[$Index]")
     }
+    Assert-Equal $ArgvLines[6] '5Lit5paHIOepuuagvA==' 'unicode argv UTF-8 base64'
 
     $SetName = 'COS_PRIVATE_DESKTOP_SET_' + [Guid]::NewGuid().ToString('N')
     $RemoveName = 'COS_PRIVATE_DESKTOP_REMOVE_' + [Guid]::NewGuid().ToString('N')
@@ -4959,6 +7796,9 @@ public static class EnvironmentProbeFixture {
             -EnvironmentOverrides @{ $SetName = 'child-set'; $RemoveName = $null } `
             -TimeoutSeconds 20 -EvidenceDirectory $EnvironmentDir
         Assert-Equal $EnvironmentResult.classification 'COMPLETED' 'environment classification'
+        Assert-Equal $EnvironmentResult.root_exit_code 0 'environment exit code'
+        Assert-Equal $EnvironmentResult.timed_out $false 'environment timeout flag'
+        Assert-Equal @($EnvironmentResult.visible_windows).Count 0 'environment visible count'
         Assert-MonitorAndCleanup $EnvironmentResult 'environment'
         Assert-Equal ([IO.File]::ReadAllText((Join-Path $EnvironmentDir 'stdout.txt'))) 'child-set|<NULL>' 'child environment set/remove'
         Assert-Equal ([Environment]::GetEnvironmentVariable($SetName, 'Process')) 'parent-set' 'parent set variable unchanged'
@@ -4981,43 +7821,7 @@ public static class EnvironmentProbeFixture {
     Assert-Equal $Rejected $true 'preexisting evidence rejection'
     Assert-Equal ([IO.File]::ReadAllText((Join-Path $ExistingDir 'sentinel.txt'))) 'do-not-overwrite' 'preexisting sentinel'
 
-    $Source = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'PrivateDesktopRunner.cs'))
-    foreach ($Banned in @('SwitchDesktop(', 'OpenInputDesktop(', 'SendInput(', 'mouse_event(', 'keybd_event(', 'SetForegroundWindow(')) {
-        if ($Source.Contains($Banned)) { throw "Banned desktop/input API appears in helper source: $Banned" }
-    }
-    if (-not $Source.Contains('SetThreadDesktop(')) { throw 'Dedicated private-desktop watcher does not bind its thread desktop.' }
-    if (-not $Source.Contains('CREATE_NO_WINDOW')) { throw 'CREATE_NO_WINDOW is absent from the helper.' }
-    if (-not $Source.Contains('private sealed class PrivateDesktopWatcher')) { throw 'Dedicated private-desktop watcher type is absent.' }
-    if ($Source.Contains('ReadDesktopName(')) { throw 'Window classification still relies on a separately queried desktop-name field.' }
-    if ([regex]::Matches($Source, '!SetThreadDesktop\(desktopHandle\)').Count -ne 1 -or
-        [regex]::Matches($Source, 'extern bool SetThreadDesktop\(IntPtr desktop\)').Count -ne 1) {
-        throw 'SetThreadDesktop must have exactly one watcher call and one P/Invoke declaration.'
-    }
-    $WatcherBind = $Source.IndexOf('if (!SetThreadDesktop(desktopHandle))', [StringComparison]::Ordinal)
-    $QueueReady = $Source.IndexOf('PeekMessageW(out queueProbe, IntPtr.Zero, 0, 0, PM_NOREMOVE);', $WatcherBind, [StringComparison]::Ordinal)
-    $WatcherHook = $Source.IndexOf('createHook = SetWinEventHook(', $WatcherBind, [StringComparison]::Ordinal)
-    $WatcherArm = $Source.IndexOf('armed.Set();', $WatcherHook, [StringComparison]::Ordinal)
-    if ($WatcherBind -lt 0 -or $QueueReady -le $WatcherBind -or $WatcherHook -le $QueueReady -or $WatcherArm -le $WatcherHook) {
-        throw 'Watcher bind/queue/hook/arm ordering is not explicit.'
-    }
-    $WaitForArm = $Source.IndexOf('watcher.StartAndWaitUntilArmed(5000);', [StringComparison]::Ordinal)
-    $CreateSuspended = $Source.IndexOf('if (!CreateProcessW(', $WaitForArm, [StringComparison]::Ordinal)
-    $ResumeSuspended = $Source.IndexOf('uint resumeResult = ResumeThread(', $CreateSuspended, [StringComparison]::Ordinal)
-    if ($WaitForArm -lt 0 -or $CreateSuspended -le $WaitForArm -or $ResumeSuspended -le $CreateSuspended) {
-        throw 'Watcher arming does not precede CreateProcessW and ResumeThread.'
-    }
-    if (-not $Source.Contains('TryIsProcessInJobAtObservation')) { throw 'Observation-time IsProcessInJob binding is absent.' }
-    if (-not $Source.Contains('JOBOBJECT_BASIC_ACCOUNTING_INFORMATION.TotalProcesses')) {
-        throw 'Fail-closed TotalProcesses coverage detail is absent.'
-    }
-    if (-not $Source.Contains('bool attributeListInitialized = false;') -or
-        -not $Source.Contains('if (attributeListInitialized) DeleteProcThreadAttributeList(attributeList);')) {
-        throw 'Attribute-list initialization is not guarded during cleanup.'
-    }
-    if (-not $Source.Contains('item.PrivateShowProof') -or
-        -not $Source.Contains('pid == 0 && !privateShowProof')) {
-        throw 'EVENT_OBJECT_SHOW is not retained as fail-closed private-watcher proof.'
-    }
+    Assert-PrivateDesktopRunnerSourceContract -SourcePath $RunnerSource
 
     if ($IncludeVisibleWindowTest) {
         Add-Type -TypeDefinition @'
@@ -5053,9 +7857,7 @@ public static class VisibleDescendantFixture {
         $Visible = Invoke-PrivateDesktopProcess -FilePath (Join-Path $TestRoot 'VisibleDescendantFixture.exe') `
             -WorkingDirectory $TestRoot -TimeoutSeconds 20 -EvidenceDirectory $VisibleDir
         Assert-Equal $Visible.classification 'NEEDS_CONTEXT' 'visible descendant classification'
-        Assert-Equal $Visible.job_drained $true 'visible descendant tree drain'
-        Assert-Equal $Visible.process_coverage_complete $true 'visible descendant PID coverage'
-        Assert-Equal $Visible.job_total_processes @($Visible.process_ids).Count 'visible descendant accounting coverage'
+        Assert-Equal $Visible.timed_out $false 'visible descendant timeout flag'
         Assert-MonitorAndCleanup $Visible 'visible descendant'
         if (@($Visible.visible_windows).Count -lt 1) { throw 'visible descendant evidence is empty.' }
         $Sentinels = @($Visible.visible_windows | Where-Object { $_.title -ceq 'private desktop sentinel' })
@@ -5071,9 +7873,10 @@ public static class VisibleDescendantFixture {
     [pscustomobject][ordered]@{
         verdict = 'PASS'
         test_root = $TestRoot
+        contract_v2 = 'PASS'
         no_window_exit7 = 'PASS'
         timeout_tree_drain = 'PASS'
-        short_lived_pid_coverage = 'PASS'
+        short_lived_process_accounting = 'PASS'
         argv_roundtrip = 'PASS'
         environment_isolation = 'PASS'
         preexisting_evidence_rejection = 'PASS'
