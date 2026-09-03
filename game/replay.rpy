@@ -29,9 +29,9 @@ init -5 python:
             return
         try:
             renpy.save("auto_ch-" + ch_id)
-        except Exception:
+        except Exception as exc:
             ## 存档失败（磁盘/回滚边缘）不能打断游戏
-            pass
+            renpy.log("auto_chapter_save({}) failed: {!r}".format(ch_id, exc))
 
     def SkipToChoice():
         """快进到下一个选择点, 带自定义中文确认框。"""

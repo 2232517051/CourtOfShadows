@@ -1258,7 +1258,7 @@ screen southern_dlc_return():
                 text_size 20
                 text_color "#d4a942"
                 text_hover_color "#ffd866"
-                action MainMenu(confirm=False)
+                action [Function(save_persistent_before_menu), MainMenu(confirm=False)]
 
 
 ## ── DLC 进度里程碑 ──
@@ -2938,7 +2938,7 @@ label southern_act2:
         corsair "要不是你非要去看那条空船，我这辈子都不会知道，是谁拿我当刀使。"
 
         menu:
-            "你不是刀。是这港口少有的、肯先问一句的人":
+            "你不是刀。是这港口少有的、肯先问一句的人|确认恋爱承诺 · 将关闭艾琳娜恋爱线":
                 $ corsair_romance = True
                 $ change_rel("rel_corsair", 20)
                 $ log_decision("南境游记", "在海堤上向赛琳交心")

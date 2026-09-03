@@ -219,6 +219,14 @@ label after_load:
         if _past_ch4:
             prince_imprisoned_known = True      # 王子被软禁
 
+        ## v3.7 前王子盟约没有独立状态。prince_returned_willingly 只在成功
+        ## 营救后的岔路诀别写入，可精确迁移旧营救档，不误判否认/逃离路线。
+        if (not getattr(store, "prince_pact_status", "")
+                and getattr(store, "prince_returned_willingly", False)
+                and getattr(store, "prince_ally", False)
+                and not getattr(store, "prince_betrayed", False)):
+            prince_pact_status = "sworn"
+
         ## ---- 领主初见标记追溯 ----
         ## wells_met/grey_met/steinfurt_met 在领主会议(chapter2.rpy L1541+)首次 set=True
         ## 老存档加载新版本时这些 flag 可能残留 False, 导致"重复初见"台词
@@ -341,6 +349,7 @@ init 999 python:
             "alliance_church": False,
             "merchant_deal": False,
             "assassination_survived": False,
+            "assassin_garden_warning_known": False,
             "council_outcome": "",
             "wells_met": False,
             "grey_met": False,
@@ -375,6 +384,11 @@ init 999 python:
             "captain_knows_passage": False,
             "passage_re_opened": False,
             "poison_evidence": False,
+            "ch3_antidote_formula_shared": False,
+            "ch3_black_liquid_sampled": False,
+            "ch3_ritual_evidence_recorded": False,
+            "ch3_herbalist_lead_known": False,
+            "ch3_antidote_learned": False,
             "elena_spy_known": False,
             "elena_identity_exposed_known": False,
             "elena_dark_past_done": False,
@@ -384,6 +398,10 @@ init 999 python:
             "queen_trust": False,
             "prince_ally": False,
             "prince_betrayed": False,
+            "prince_pact_status": "",
+            "prince_pact_honored": False,
+            "iron_postwar_policy": "",
+            "iron_battle_defeat": False,
             "elena_romance": False,
             "marriage_proposal_open": False,
             "court_faction": "",

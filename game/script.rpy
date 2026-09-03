@@ -7,7 +7,10 @@
 label splashscreen:
     ## 自动化测试在 testcase hook 之前就会经过 splashscreen；测试命令必须
     ## 能从全新 persistent 启动，正常运行仍严格展示合规弹窗。
-    if not persistent.privacy_agreed and not renpy.is_in_test():
+    if renpy.android:
+        ## Android 已在原生 ConsentActivity 中完成同意，且 SDL 尚未启动。
+        $ persistent.privacy_agreed = True
+    elif not persistent.privacy_agreed and not renpy.is_in_test():
         call screen privacy_policy_screen
     return
 

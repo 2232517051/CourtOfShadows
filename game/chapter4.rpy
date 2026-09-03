@@ -1298,6 +1298,15 @@ label ch4_throne:
         "她知道。你以为瞒得严严实实的事，到底还是传进了王座大厅。"
         $ change_rel("rel_queen", -10)
 
+    if ch3_antidote_formula_shared:
+        $ hide_all_chars("queen_img")
+        show queen_img at left with dissolve
+        queen "还有你公开的影月草解药。御药房守了二十年的方子，如今北方每间诊所都能抄到。"
+        queen "你救了不少人，也让王室少了一件只有自己握着的东西。做这种善事以前，最好先想清楚谁会因此睡不安稳。"
+        $ hide_all_chars()
+        "她仍然面带微笑。大厅两侧却彻底静了下来——这不是嘉奖，是告诉你王后已经把这笔账记下。"
+        $ change_rel("rel_queen", -10)
+
     ## 艾德蒙回响C(举报线): 玩家亲手把铁刺派交给了王庭——王后当众提旧案。
     ## 血缘未上报, 她是否起疑保持悬而未决, 不坐实。
     if ch3_cult_leader_fate == "arrested":
@@ -2910,6 +2919,7 @@ label ch4_betrayal:
                 jump ch4_rescue
 
             "撇清关系，否认一切":
+                $ prince_pact_status = "released"
                 $ change_stat("intrigue", 5)
                 $ change_rel("rel_prince", -20)
                 $ hide_all_chars("player_char_img")
@@ -2928,6 +2938,7 @@ label ch4_betrayal:
                 jump ch4_deny
 
             "趁乱逃离王都":
+                $ prince_pact_status = "released"
                 $ change_stat("power", -5)
                 $ change_rel("rel_prince", -15)
                 hide captain_img
@@ -3118,7 +3129,7 @@ label ch4_rescue_inner:
     "终于，在最深处的一间牢房前，你们停下了脚步。"
 
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
 
     $ hide_all_chars()
     "王子蜷缩在牢房角落。他的嘴角有血迹，一只眼睛肿了起来。华贵的衣服已经破烂不堪。"
@@ -3126,7 +3137,7 @@ label ch4_rescue_inner:
     "但他看到你的那一刻，眼睛里亮起了一道光。"
 
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "你来了……我以为你会弃我于不顾。"
 
     hide prince_img
@@ -3136,7 +3147,7 @@ label ch4_rescue_inner:
 
     hide player_char_img
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "等等——他们审问了我。我什么都没说。但他们知道你的事了。"
 
     prince "你回不去艾登堡了……至少不能走大路。"
@@ -3235,7 +3246,7 @@ label ch4_rescue_aftermath:
     "王子用沙哑的声音说——"
 
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
 
     prince "谢谢你。我不会忘记今晚。"
 
@@ -3964,7 +3975,7 @@ label ch4_rescue_partial_recovery:
     "华贵的衣服没了，换的是粗布外袍。脸上的肿消了，但嘴角的伤痂还在。"
 
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "你来了……"
     prince "我以为你不会来了。"
 
@@ -3975,7 +3986,7 @@ label ch4_rescue_partial_recovery:
 
     hide player_char_img
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "牢里那一夜——铁门是从外面被人撬开的。我没看清那人的脸。"
     prince "他没说话。只是把镣铐砸开，给了我一袋干粮和一把短剑，然后就走了。"
 

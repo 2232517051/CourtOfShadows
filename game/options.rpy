@@ -33,9 +33,6 @@ define config.autosave_slots = 5
 ## 移动端后台保存：关屏/切后台时自动存档，防止进程被杀后黑屏
 define config.save_on_mobile_background = True
 
-## 安卓/iOS返回键 = 打开游戏菜单（而非直接退出）
-define config.quit_action = ShowMenu("confirm", _("确定要退出游戏吗？"), MainMenu(), Return())
-
 ## 横屏锁定（视觉小说标准，Android + iOS）
 define build.android_landscape = True
 define build.ios_landscape = True

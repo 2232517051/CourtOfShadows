@@ -27,6 +27,8 @@ image bg throne_room = Transform("images/bg_throne_room.webp", size=(1280, 720),
 image bg palace_garden = Transform("images/bg_palace_garden.webp", size=(1280, 720), fit="cover")
 image bg dungeon = Transform("images/bg_dungeon.webp", size=(1280, 720), fit="cover")
 image bg battlefield = Transform("images/bg_battlefield.webp", size=(1280, 720), fit="cover")
+image bg battlefield_active = Transform("images/bg_battlefield_active.png", size=(1280, 720), fit="cover")
+image bg iron_parade_winter = Transform("images/bg_iron_parade_winter.png", size=(1280, 720), fit="cover")
 
 ## ════════════════════════════════════════════════════════════
 ## 背景图 - 别名映射（场景引用名 → 已有素材）
@@ -198,6 +200,7 @@ image lily_master_img = Transform("images/lily_master.png", zoom=0.45, yalign=1.
 image edmund_masked_img = Transform("images/edmund_masked.png", zoom=0.45, yalign=1.0)
 image edmund_img = Transform("images/edmund.png", zoom=0.45, yalign=1.0)
 image prince_img = Transform("images/prince.png", zoom=0.45, yalign=1.0)
+image prince_img wounded = Transform("images/prince_wounded.png", zoom=0.45, yalign=1.0)
 
 ## 南境游记 DLC — 渡鸦船长赛琳
 ## 仿 Elena：rel_corsair>=80 或 corsair_romance 时切"亲密版"；亲密图未生成时回退基础立绘。

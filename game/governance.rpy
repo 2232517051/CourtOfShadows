@@ -720,6 +720,7 @@ label gov_famine_crisis:
             $ change_stat("reputation", 5)
             $ change_stat("wealth", -3)
             $ change_prosperity(3)
+            $ famine_prevented = True
             $ governance_events_seen.append("famine_crisis")
 
             $ hide_all_chars("player_char_img")

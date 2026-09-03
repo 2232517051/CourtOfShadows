@@ -1355,6 +1355,7 @@ label ch3_deep_cure:
     $ hide_all_chars()
     "她的动作极其谨慎——手里这东西，沾上一滴就能要人命。"
     "你在旁边帮忙递器具，同时也在学习整个过程。"
+    $ ch3_antidote_learned = True
 
     hide elena_img
     $ hide_all_chars("player_char_img")
@@ -1441,6 +1442,7 @@ label ch3_deep_cure_keep:
 
     $ ch3_deep_cure_found = True
     $ change_stat("intrigue", 3)
+    $ add_item("antidote", 1)
 
     "（你保留了这瓶珍贵的解药。在未来的某一天，它也许会成为你最后的生命线。）"
 
@@ -1469,14 +1471,16 @@ label ch3_deep_cure_share:
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     elena "……换了别人，没人会舍得放掉这种筹码。"
-    elena "好吧。我会亲自教治疗师制备的方法。但他必须发誓保密。"
+    elena "好吧。我会亲自教治疗师制备的方法。但配方一旦公开，就再也收不回来了。"
 
     $ ch3_deep_cure_found = True
+    $ ch3_antidote_formula_shared = True
     $ change_stat("loyalty", 8)
     $ change_stat("reputation", 3)
     $ change_rel("rel_elena", 5)
 
-    "（你选择分享救命的知识，也赢得了艾琳娜更深的尊敬。）"
+    "治疗师将配方抄给各村诊所，登记为任何医者都可查阅的公方。消息沿商路传向王都——救命的知识不再是王室药房能独占的筹码。"
+    "（你选择公开救命的知识，也赢得了艾琳娜更深的尊敬。）"
 
     jump ch3_deep_cure_end
 
@@ -1535,6 +1539,7 @@ label ch3_deep_cure_poison:
     $ ch3_deep_cure_found = True
     $ change_stat("intrigue", 8)
     $ change_rel("rel_elena", -3)
+    $ add_item("antidote", 1)
 
     "（你同时拥有了解药和毒药。力量在手——但艾琳娜对你的信任出现了裂痕。）"
 

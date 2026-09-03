@@ -47,7 +47,19 @@ EXPECTED_ACTIVITIES = (
     "org.renpy.android.ConsentActivity",
     "org.renpy.android.PythonSDLActivity",
 )
+EXPECTED_LAUNCHABLE_ACTIVITY = "org.renpy.android.ConsentActivity"
 EXPECTED_ORIENTATION = 0x6
+FORBIDDEN_ANDROID_PERMISSIONS = frozenset(
+    {
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+        "android.permission.INTERNET",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+    }
+)
 REQUIRED_WINDOWS_PATHS = {
     "CourtOfShadows.exe",
     "README.txt",
@@ -56,7 +68,7 @@ REQUIRED_WINDOWS_PATHS = {
 # must deliberately refresh the runtime, common-cache, and source-map constants.
 EXPECTED_WINDOWS_RUNTIME_COUNT = 1377
 EXPECTED_WINDOWS_RUNTIME_FINGERPRINT = (
-    "cebc3d5c093063219dd1d40da28790a2f8bd12dc6777592f6fdb1f51b01b4dab"
+    "d87ac8f07807a7971a12caaf82bfec31fb58e2cebdee741af6bd71817578415c"
 )
 RPYC_MAGIC = b"_2025-07-06"
 RPYC2_HEADER = b"RENPY RPC2"
@@ -136,6 +148,14 @@ STRICT_LEGACY_COMMON = {
         "a7bf2ae79ac83ef3e56cf6fa825f5db6c216e9251a78020053561690cb3f6f72",
     ),
 }
+# Ren'Py 8.5.2 ships this RPC2 cache with a trailer for an earlier copy of
+# its source. The parsed AST remains covered by the fixed runtime fingerprint.
+KNOWN_STALE_COMMON_SOURCE_MD5 = frozenset(
+    {
+        "renpy/common/_layout/classic_preferences.rpymc",
+        "renpy/common/_layout/classic_preferences_common.rpymc",
+    }
+)
 WINDOWS_INVALID_COMPONENT_CHARS = frozenset('<>:"|?*')
 WINDOWS_RESERVED_BASENAMES = frozenset(
     {"con", "prn", "aux", "nul"}
@@ -747,7 +767,10 @@ def inspect_compiled_common_contract(
                 expected_source_md5 = hashlib.md5(
                     source_payload + RPYC_MAGIC, usedforsecurity=False
                 ).digest()
-                if parsed_common.source_md5 != expected_source_md5:
+                if (
+                    parsed_common.source_md5 != expected_source_md5
+                    and relative not in KNOWN_STALE_COMMON_SOURCE_MD5
+                ):
                     raise VerificationError(
                         f"compiled common source MD5 does not match {source}: {relative}"
                     )
@@ -1199,6 +1222,12 @@ def parse_badging(output: str) -> dict[str, object]:
     )
     minimum = re.search(r"^sdkVersion:'(\d+)'", output, re.MULTILINE)
     target = re.search(r"^targetSdkVersion:'(\d+)'", output, re.MULTILINE)
+    launchable = re.search(
+        r"^launchable-activity:\s+name='([^']+)'", output, re.MULTILINE
+    )
+    permissions = frozenset(
+        re.findall(r"^uses-permission:\s+name='([^']+)'", output, re.MULTILINE)
+    )
     if package is None or minimum is None or target is None:
         raise VerificationError("aapt badging output is missing required metadata")
     return {
@@ -1207,6 +1236,8 @@ def parse_badging(output: str) -> dict[str, object]:
         "version_code": int(package.group(2)),
         "min_sdk": int(minimum.group(1)),
         "target_sdk": int(target.group(1)),
+        "launchable_activity": launchable.group(1) if launchable else None,
+        "permissions": permissions,
     }
 
 
@@ -1296,6 +1327,23 @@ def validate_android_contract(
         errors.append(
             f"ANDROID: targetSdk is {current.get('target_sdk')!r}, "
             f"expected {APPROVED_ANDROID_API}"
+        )
+
+    if current.get("launchable_activity") != EXPECTED_LAUNCHABLE_ACTIVITY:
+        errors.append(
+            f"ANDROID: launchable activity is {current.get('launchable_activity')!r}, "
+            f"expected {EXPECTED_LAUNCHABLE_ACTIVITY!r}"
+        )
+    permissions = current.get("permissions")
+    forbidden_permissions = (
+        FORBIDDEN_ANDROID_PERMISSIONS.intersection(permissions)
+        if isinstance(permissions, (set, frozenset))
+        else FORBIDDEN_ANDROID_PERMISSIONS
+    )
+    if forbidden_permissions:
+        errors.append(
+            "ANDROID: forbidden permissions are present: "
+            + ", ".join(sorted(forbidden_permissions))
         )
 
     for activity in EXPECTED_ACTIVITIES:

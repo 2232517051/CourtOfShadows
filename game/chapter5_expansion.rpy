@@ -1760,6 +1760,46 @@ label ch5_exp_skirmish:
 
         hide captain_img with dissolve
 
+        if not baron_field_power_broken and (power >= 55 or intrigue >= 50):
+            $ mark_important_choice()
+            menu:
+                "乘胜追击——趁男爵联军动摇，先统一北境|击溃前期强敌，获得周边领主兵力":
+                    $ baron_field_power_broken = True
+                    $ northern_lords_unified = True
+                    $ alliance_baron = False
+                    $ change_rel("rel_baron", -35)
+                    $ change_stat("power", 5)
+                    $ change_stat("reputation", 5)
+
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
+                    player "三百先锋败了，男爵主力还没到。现在退回城里，只是在等他重新攥紧拳头。"
+                    player "把俘虏口供和联军名册抄三份。艾琳娜，送给那几个被男爵强征来的领主。雷恩，点齐能走的兵。"
+
+                    hide player_char_img
+                    $ hide_all_chars("captain_img")
+                    show captain_img at left with dissolve
+                    captain "您要在他的两千人合流之前，直接端掉军营？"
+
+                    hide captain_img
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
+                    player "不是打两千人。是让两千人里真正愿意替他死的，先显出来。"
+
+                    $ hide_all_chars()
+                    "当天夜里，男爵联军的三座营门同时起了火。不是你的兵点的——是收到名册的北境领主自己动了手。"
+                    "他们本就不愿替冯·哈根送命。先锋惨败、粮道暴露，给了他们退出联军的理由。你带兵压到鹰隼峡时，五面领主旗在阵前倒转，矛尖一齐指向黑狼旗。"
+                    "男爵试图用八百铁骑冲开缺口。雷恩没有接战，只守住峡口；失去步兵和粮车的骑兵绕了两次，最终护着男爵退回格鲁瓦尔德堡。"
+                    "这一战没有歼灭两千五百人。你做的是更彻底的事——拆掉了把他们绑在一起的那只手。"
+                    "三天后，六位北境小领主在艾登堡签下共同防务约书。男爵仍有城堡和残余铁骑，却再也不能代表整个北方。"
+
+                "见好就收——守住艾登堡，不把胜利押在追击上":
+                    $ hide_all_chars("player_char_img")
+                    show player_char_img at left with dissolve
+                    player "我们的任务是守城，不是被一场小胜冲昏头。收拢兵马，封死城门。"
+                    $ hide_all_chars()
+                    "男爵的先锋退回主力。你保住了人，却也给了黑狼重新整队的时间。"
+
     elif ch5_exp_skirmish_result == "pyrrhic":
         "你回到城墙上。士兵们在清理战场——收集敌军留下的箭矢和武器。每一支箭、每一把剑都是宝贵的资源。"
 

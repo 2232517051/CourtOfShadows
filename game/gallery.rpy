@@ -23,6 +23,8 @@ init python:
         ("bg_palace_garden", "宫廷花园"),
         ("bg_dungeon", "地牢"),
         ("bg_battlefield", "战场"),
+        ("bg_battlefield_active", "暴雨会战"),
+        ("bg_iron_parade_winter", "冬日铁骑"),
         ## 南境游记 DLC
         ("bg_tideport_harbor", "潮汐港"),
         ("bg_tideport_tavern", "断锚酒馆"),
@@ -101,12 +103,15 @@ screen cg_gallery():
 
             null height 4
 
-            grid 4 11:
+            $ gallery_rows = (len(gallery_images) + 3) // 4
+            grid 4 gallery_rows:
                 spacing 12
                 xfill True
 
                 for img_name, img_label in gallery_images:
-                    $ img_path = "images/" + img_name + ".webp"
+                    $ img_webp = "images/" + img_name + ".webp"
+                    $ img_png = "images/" + img_name + ".png"
+                    $ img_path = img_webp if renpy.loadable(img_webp) else img_png
                     $ is_unlocked = img_name in persistent.gallery_unlocked
                     if renpy.loadable(img_path) and is_unlocked:
                         vbox:
@@ -137,7 +142,7 @@ screen cg_gallery():
                                     text "锁" xalign 0.5 yalign 0.5 size 28 color "#2a2040"
                             text "？？？" size 12 xalign 0.5 color "#3a3040"
 
-                for i in range(4 * 11 - len(gallery_images)):
+                for i in range(4 * gallery_rows - len(gallery_images)):
                     null
 
             null height 20

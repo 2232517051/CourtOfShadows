@@ -700,9 +700,52 @@ class EndingTimelineContractTests(unittest.TestCase):
     def test_iron_memorial_consumes_actual_battle_outcome(self) -> None:
         iron = label_body("endings_expansion.rpy", "ending_iron_epilogue")
         self.assertIn('if iron_battle_outcome == "pyrrhic":', iron)
-        self.assertIn("两百多人", iron)
-        self.assertIn("七十多人", iron)
+        self.assertIn("[iron_battle_dead]人", iron)
+        self.assertNotIn("两百多人", iron)
+        self.assertNotIn("七十多人", iron)
         self.assertNotIn("三百七十二", iron)
+
+    def test_iron_route_consumes_governance_and_expansion_preparation(self) -> None:
+        chapter5 = read_game_file("chapter5.rpy")
+        for state in (
+            "ch5_exp_defender_bonus",
+            "ch5_exp_skirmish_result",
+            "ch5_exp_enemy_morale_hit",
+            "ch5_exp_casualties",
+            "ch5_exp_deserter_intel",
+            "ch5_exp_war_strategy",
+            "ch5_exp_final_formation",
+            "famine_prevented",
+            "built_granary",
+            "governance_prosperity",
+        ):
+            self.assertIn(state, chapter5)
+        self.assertIn("iron_player_regulars =", chapter5)
+        self.assertIn("iron_total_troops =", chapter5)
+        self.assertIn("iron_battle_dead = max", chapter5)
+        self.assertNotIn("同时迎战两路大军", chapter5)
+
+    def test_baron_can_be_broken_before_the_royal_battle(self) -> None:
+        expansion = read_game_file("chapter5_expansion.rpy")
+        self.assertIn("baron_field_power_broken = True", expansion)
+        self.assertIn("northern_lords_unified = True", expansion)
+        self.assertIn("拆掉了把他们绑在一起的那只手", expansion)
+
+    def test_self_rule_variant_resolves_the_barbarians(self) -> None:
+        chapter5 = read_game_file("chapter5.rpy")
+        epilogue = read_game_file("endings_expansion.rpy")
+        self.assertIn("self_rule_declared = True", chapter5)
+        self.assertIn("顺应人心，宣告北境自立", chapter5)
+        self.assertIn("jump ending_iron_self_rule_epilogue", epilogue)
+        self.assertIn("label ending_iron_self_rule_epilogue:", epilogue)
+        self.assertIn("三万蛮兵重新结盟", epilogue)
+        self.assertIn("北境证明了自己能把三万人挡在村庄之外", epilogue)
+
+    def test_popular_famine_solution_records_survival(self) -> None:
+        governance = read_game_file("governance.rpy")
+        choice = governance.index("亲自下村组织自救")
+        outcome = governance.index("三周后春雨来了", choice)
+        self.assertIn("$ famine_prevented = True", governance[choice:outcome])
 
 
 class EndingRouteContractTests(unittest.TestCase):
@@ -1641,6 +1684,57 @@ class MissingEndingContractTests(unittest.TestCase):
         )
         self.assertNotIn("show ingrid_img", cold_source)
         self.assertNotRegex(cold_source, r"(?m)^\s*ingrid\s+[\x22']")
+
+
+class LatestPlayerFeedbackClosureTests(unittest.TestCase):
+    def test_apothecary_evidence_and_leads_preserve_continuity(self) -> None:
+        expansion = read_game_file("chapter3_expansion.rpy")
+        event = read_game_file("random_events_expansion.rpy")
+
+        self.assertIn("$ ch3_black_liquid_sampled = True", expansion)
+        self.assertIn("$ ch3_ritual_evidence_recorded = True", expansion)
+        self.assertNotIn("$ ch3_herbalist_met = False", expansion)
+        self.assertIn("if assassin_garden_warning_known:", expansion)
+        self.assertIn(
+            '("flag", "assassin_garden_warning_known", True)', event
+        )
+
+    def test_antidote_knowledge_unlocks_real_items_and_crafting(self) -> None:
+        expansion = read_game_file("chapter3_expansion.rpy")
+        deepening = read_game_file("chapters_deepening.rpy")
+        crafting = read_game_file("crafting.rpy")
+
+        self.assertGreaterEqual(expansion.count('$ add_item("antidote", 1)'), 2)
+        self.assertIn("$ ch3_antidote_learned = True", deepening)
+        self.assertGreaterEqual(deepening.count('$ add_item("antidote", 1)'), 2)
+        self.assertIn('"knowledge_flag": "ch3_antidote_learned"', crafting)
+        self.assertIn('getattr(store, knowledge_flag, False)', crafting)
+
+    def test_public_formula_has_a_queen_reaction(self) -> None:
+        deepening = read_game_file("chapters_deepening.rpy")
+        chapter4 = read_game_file("chapter4.rpy")
+
+        self.assertIn("$ ch3_antidote_formula_shared = True", deepening)
+        self.assertIn("if ch3_antidote_formula_shared:", chapter4)
+        self.assertIn("御药房守了二十年的方子", chapter4)
+
+    def test_romance_choice_warns_and_elena_relationship_uses_rel_api(self) -> None:
+        expansion = read_game_file("chapter3_expansion.rpy")
+        southern = read_game_file("southern_expansion.rpy")
+
+        self.assertNotIn('change_stat("rel_elena"', expansion)
+        self.assertIn("确认恋爱承诺 · 将关闭艾琳娜恋爱线", southern)
+
+    def test_iron_battle_has_resource_penalties_and_explicit_death(self) -> None:
+        chapter5 = read_game_file("chapter5.rpy")
+        difficulty = read_game_file("difficulty.rpy")
+
+        for source in (chapter5, difficulty):
+            self.assertIn("if wealth < 15:", source)
+            self.assertIn("if reputation < 20:", source)
+        self.assertIn("iron_war_score >= 24 + get_war_threshold_mod()", chapter5)
+        self.assertIn("$ iron_battle_defeat = True", chapter5)
+        self.assertIn("艾登堡领主战死", chapter5)
 
 
 if __name__ == "__main__":

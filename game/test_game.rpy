@@ -119,7 +119,7 @@ testsuite test_ending_catalog:
             (
                 {"difficulty": "hard", "power": 72},
                 {"difficulty": "hard", "power": 72},
-                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": False, "sea": False},
+                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
             ),
             (
                 {"difficulty": "normal", "power": 55, "rel_baron": -1, "rel_queen": -1},
@@ -134,12 +134,12 @@ testsuite test_ending_catalog:
             (
                 {"difficulty": "hard", "rel_baron": 30},
                 {"difficulty": "hard", "rel_baron": 30, "alliance_baron": True, "baron_supply_intel": True},
-                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": False, "sea": False},
+                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
             ),
             (
                 {"difficulty": "hard", "rel_baron": 30},
                 {"difficulty": "hard", "rel_baron": 30, "baron_supply_intel": True},
-                {"iron_lord": True, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
+                {"iron_lord": False, "shadow_king": False, "holy_guardian": False, "peoples_lord": False, "truth": False, "borgia": False, "vassal": False, "fall": True, "sea": False},
             ),
             (
                 {"difficulty": "hard", "southern_outcome": "free"},
@@ -174,6 +174,11 @@ testsuite test_ending_catalog:
         $ _route_kwargs = {"difficulty": difficulty_name, stat_name: _threshold}
         $ _ending_routes = get_finale_ending_availability(get_finale_route_availability(**_route_kwargs))
         assert eval (_ending_routes[ending_id])
+
+    testcase collapsed_resources_cannot_win_the_normal_iron_battle:
+        $ _collapsed = get_resistance_battle_outcomes(difficulty="normal", power=55, wealth=0, reputation=0, rel_baron=-100, rel_captain=-100)
+        assert eval (not _collapsed["iron_lord"])
+        assert eval (_collapsed["fall"])
 
     testcase special_routes_map_to_real_endings:
         parameter (route_kwargs, ending_id) = [
@@ -219,15 +224,16 @@ testsuite test_balance_ending_report:
         assert eval (_ending_requirements["fall"]["desc"] == "未能守住艾登堡（失败结局）")
         assert eval (_ending_requirements["fall"]["requirement"] == "没有其他核心路线可选，或铁腕会战存在战败路径")
 
-    testcase supported_hard_resistance_report_has_no_loss_path:
+    testcase supported_hard_resistance_report_has_win_and_loss_paths:
         $ persistent.difficulty = "hard"
         $ rel_baron = 30
         $ alliance_baron = True
         $ baron_supply_intel = True
         $ _balance_report = {row[0]: row for row in check_ending_reachability()}
         assert eval (_balance_report["iron_lord"][2])
-        assert eval (not _balance_report["fall"][2])
-        assert eval (_balance_report["fall"][3] == "仍有其他核心路线可选；铁腕会战当前没有战败路径")
+        assert eval (_balance_report["fall"][2])
+        assert eval (_balance_report["iron_lord"][3] == "已满足条件")
+        assert eval (_balance_report["fall"][3] == "已满足条件")
 
     testcase unsupported_hard_resistance_report_has_no_win_path:
         $ persistent.difficulty = "hard"
@@ -266,7 +272,7 @@ testsuite test_resistance_battle_transition:
         advance until screen "choice" timeout 30.0
         pause 1.0
         assert eval (not _iron_prepared)
-        assert eval (iron_war_score < 12 + get_war_threshold_mod())
+        assert eval (iron_war_score < 24 + get_war_threshold_mod())
         click "硬拼——你没有更好的选择了"
         pause 0.5
         advance
@@ -871,6 +877,25 @@ label test_new_run_after_load_driver:
     $ _after_load_rollback_limit_after = renpy.game.log.rollback_limit
     $ _after_load_rollback_block_after = renpy.game.log.rollback_block
     jump chapter3_start
+
+
+## 真渲染存档页与新增资源画廊，防止 screen 插值/资源后缀只在运行时崩溃
+testcase test_review_ui:
+    $ _review_gallery_original = set(persistent.gallery_unlocked)
+    $ persistent.gallery_unlocked.add("bg_battlefield_active")
+    $ persistent.gallery_unlocked.add("bg_iron_parade_winter")
+
+    run ShowMenu("load")
+    pause until screen "load"
+    screenshot "review/load_screen.png"
+    run Return()
+
+    run ShowMenu("cg_gallery")
+    pause until screen "cg_gallery"
+    screenshot "review/gallery_screen.png"
+    run Return()
+
+    $ persistent.gallery_unlocked = _review_gallery_original
 
 
 ################################################################################

@@ -45,7 +45,9 @@ RPYC_MAGIC = b"_2025-07-06"
 BADGING = f"""package: name='{APPROVED_ANDROID_PACKAGE}' versionCode='{CURRENT_CODE}' versionName='{APPROVED_VERSION}' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36'
 sdkVersion:'21'
 targetSdkVersion:'{APPROVED_ANDROID_API}'
+uses-permission: name='android.permission.WAKE_LOCK'
 application-label:'权谋之庭'
+launchable-activity: name='org.renpy.android.ConsentActivity' label='权谋之庭' icon=''
 """
 
 PREVIOUS_BADGING = f"""package: name='{APPROVED_ANDROID_PACKAGE}' versionCode='{PREVIOUS_CODE}' versionName='3.9.1' platformBuildVersionCode='36'
@@ -1031,6 +1033,8 @@ class AndroidOutputParsingTests(VerifierTestCase):
                 "version_code": CURRENT_CODE,
                 "min_sdk": 21,
                 "target_sdk": APPROVED_ANDROID_API,
+                "launchable_activity": "org.renpy.android.ConsentActivity",
+                "permissions": frozenset({"android.permission.WAKE_LOCK"}),
             },
         )
 
@@ -1080,6 +1084,8 @@ class AndroidOutputParsingTests(VerifierTestCase):
             "version code": ({**current, "version_code": PREVIOUS_CODE}, previous, orientations, CERTIFICATE),
             "minSdk": ({**current, "min_sdk": 22}, previous, orientations, CERTIFICATE),
             "targetSdk": ({**current, "target_sdk": 35}, previous, orientations, CERTIFICATE),
+            "launcher": ({**current, "launchable_activity": "org.renpy.android.PythonSDLActivity"}, previous, orientations, CERTIFICATE),
+            "permission": ({**current, "permissions": frozenset({"android.permission.INTERNET"})}, previous, orientations, CERTIFICATE),
             "orientation": (current, previous, {**orientations, "org.renpy.android.PythonSDLActivity": 1}, CERTIFICATE),
             "certificate": (current, previous, orientations, "different"),
         }

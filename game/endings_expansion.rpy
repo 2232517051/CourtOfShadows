@@ -85,6 +85,7 @@ label ending_vassal_epilogue:
     "年轻人的手在剑柄上放了一会儿，又拿开了。"
 
     if rel_captain >= 40:
+        $ hide_all_chars()
         "他往你身后看了一眼。雷恩站在门边，一身王后册封的守备队长制服，一个字没说。"
 
         "制服是王后的。站的位置是你的。"
@@ -163,6 +164,7 @@ label ending_sea_epilogue:
 
         hide corsair_img with dissolve
 
+        $ hide_all_chars()
         "渡鸦号继续向南。赛琳说前面有个群岛，岛上的人不问来路。"
 
         "你说好。"
@@ -729,10 +731,13 @@ label ending_truth_epilogue:
 
         elena "这是真相能给人的——我父亲生前没等到的——一个交代。"
 
+        $ hide_all_chars()
         "你点了点头。这是你五年前没敢承诺、却终于做到的一件事。"
 
         "她靠在你肩上，看着窗外的夕阳。"
 
+        $ hide_all_chars("elena_img")
+        show elena_img at left with dissolve
         elena "五年了。你不觉得累吗？"
 
         hide elena_img
@@ -1082,21 +1087,30 @@ label ending_truth_epilogue:
 
 label ending_iron_epilogue:
 
+    if self_rule_declared:
+        jump ending_iron_self_rule_epilogue
+
+    if not iron_postwar_policy or prince_pact_honored or iron_postwar_policy == "clemency" or resist_route:
+        jump ending_iron_epilogue_protective
+
     scene black with fade
 
-    centered "{size=+10}五年后{/size}"
+    $ play_music("audio/music/throne.ogg", fadein=2.0)
+
+    centered "{size=+10}同年冬{/size}"
     centered "{size=+6}王历二十七年·冬{/size}"
 
     pause 1.0
 
     ## —— 第一幕：铁之阅兵 ——
 
-    scene bg battlefield with dissolve
+    scene bg iron_parade_winter with dissolve
+    $ unlock_gallery("bg_iron_parade_winter")
 
     "寒风凛冽。旌旗猎猎。"
 
-    "五千名士兵整齐列阵，铠甲在冬日的阳光下闪烁着冷光。"
-    "他们是这个王国最精锐的军队——艾登堡铁骑。"
+    "五千名常备军整齐列阵。步兵居中，弓手与骑兵分列两翼，铠甲在冬日的阳光下闪烁着冷光。"
+    "他们是这个王国最精锐的成建制军团——艾登堡北境军。"
 
     "而你，站在检阅台上，俯视着这支你亲手缔造的力量。"
 
@@ -1109,7 +1123,7 @@ label ending_iron_epilogue:
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
-    captain "大人，阅兵准备就绪。五千铁骑，一人不缺。"
+    captain "大人，阅兵准备就绪。五千名常备军，各营一人不缺。"
 
     hide captain_img
     $ hide_all_chars("player_char_img")
@@ -1117,7 +1131,7 @@ label ending_iron_epilogue:
     player "好。让他们开始。"
 
     $ hide_all_chars()
-    "号角响起。铁骑如潮水般涌过检阅台前，马蹄声震动大地。"
+    "号角响起。各营依次从检阅台前通过，最后压阵的骑兵踏得大地震动。"
 
     "每一个士兵都向你行注目礼——眼中带着敬畏，也带着一丝……恐惧。"
 
@@ -1181,16 +1195,16 @@ label ending_iron_epilogue:
 
     "拉维尼亚帝国。东方最强大的国家。他们的疆域是你的王国的三倍。"
 
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
     envoy "久仰大名，公爵大人。拉维尼亚皇帝陛下派我前来，是为了表达友好之意。"
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "友好？你们的军队刚刚吞并了三个邻国。这就是你们表达友好的方式？"
 
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
     envoy "那些小国……不值一提。皇帝陛下感兴趣的，是与贵国建立平等的同盟关系。"
 
     $ hide_all_chars("player_char_img")
@@ -1198,11 +1212,11 @@ label ending_iron_epilogue:
     player "平等？"
 
     $ hide_all_chars()
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
     envoy "当然。毕竟在整个西方，只有您的军事力量值得我们尊重。"
 
-    envoy "您在五年内建立了一支五千人的精锐铁骑。这在军事史上堪称奇迹。"
+    envoy "您在五年内依靠北境六城的税赋、兵役和军屯，建立了一支五千人的精锐军团。这足以改变地区均势。"
 
     envoy "皇帝陛下说——「能让铁骑之主成为朋友，远比让他成为敌人更明智。」"
 
@@ -1217,8 +1231,8 @@ label ending_iron_epilogue:
     $ hide_all_chars()
     "特使的笑容僵了一瞬，随即更深地鞠了一躬。"
 
-    $ hide_all_chars("servant_generic_img")
-    show servant_generic_img at left with dissolve
+    $ hide_all_chars("queen_envoy_img")
+    show queen_envoy_img at left with dissolve
     envoy "大人果然如传闻中一样……令人敬畏。我会如实转告陛下的。"
 
     "特使离开后，大厅安静了下来。"
@@ -1377,11 +1391,11 @@ label ending_iron_epilogue:
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     if iron_battle_outcome == "pyrrhic":
-        player "两百多人。"
-        player "两百多条命。"
+        player "[iron_battle_dead]人。"
+        player "[iron_battle_dead]条命。"
     else:
-        player "七十多人。"
-        player "七十多条命。"
+        player "[iron_battle_dead]人。"
+        player "[iron_battle_dead]条命。"
 
     player "换来了和平。但——"
 
@@ -1613,6 +1627,173 @@ label ending_iron_epilogue:
     else:
         centered "「铁不仅能铸剑，也能铸犁。」"
         centered "「也许，真正的力量不在于摧毁，而在于重建。」"
+
+    pause 2.0
+
+    return
+
+
+label ending_iron_self_rule_epilogue:
+
+    scene black with fade
+    $ play_music("audio/music/throne.ogg", fadein=2.0)
+
+    centered "{size=+10}北境自立第五年{/size}"
+    centered "{size=+6}灰隘停战后的第一个春天{/size}"
+    pause 1.0
+
+    scene bg great_hall with dissolve
+    "大厅里没有王座。原来领主座位所在的高台被拆平，换成一张能坐下六城代表的长桌。"
+    "你仍坐在首席，却不再有人称你为王。盟约写得很清楚：战时统兵，平时议政，三年一推举。"
+
+    if built_granary:
+        "墙上的北境地图旁挂着一块旧粮仓木牌。灰隘之战四十天不断粮，靠的不是军神降世，而是每座仓、每条路和每一本没有做假的账。"
+    if famine_prevented:
+        "大旱时活下来的几个村子，如今负责北线转运。老人们不懂法统，只记得最难那年你和他们吃过一样的稀粥。"
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "盟主，三处关口换防完毕。常备军两千，轮训民兵三千，各回各营。"
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "伤兵呢？"
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+    captain "都进了诊所。阵亡名册也送到各城，没有拿失踪两个字糊弄家属。"
+    $ hide_all_chars()
+
+    "五年前，山外三万蛮兵重新结盟。这个数字曾在北境传了二十年，像一个没人敢碰的噩梦。"
+    "真正压到边境时，他们分成三路：一万攻灰隘，一万抢草场，其余部众拖着家眷和牲口等待缺口。"
+    "你没有带五千人冲进三万人的海里。灰隘守军封住山口，轻骑烧掉无人草场，各城民兵护住粮道；每守十日就换一批人，让农田不至于全部荒废。"
+    "第七个月，大雪先埋了北面的路。年轻的蛮族首领派来使者。你放下刀，与他签了五年互市、退兵和交换俘虏的条约。"
+    "北境没有消灭三万人。北境证明了自己能把三万人挡在村庄之外。"
+
+    scene bg iron_parade_winter with dissolve
+    $ unlock_gallery("bg_iron_parade_winter")
+    "春阅没有五千匹凭空出现的精骑。台下是两千常备军，身后是已经回乡播种的三千轮训民兵。"
+    "军队来自六城税册，军粮来自改革后的仓储，甲胄来自你前几年扶起来的工坊。过去堆高的每一个数字，终于都有了去处。"
+
+    if baron_field_power_broken:
+        "冯·哈根男爵没有参加这场阅兵。他在格鲁瓦尔德堡交出了最后两百名私兵，以余生软禁换取家族平安。"
+        "他的八百铁骑没有神秘消失：战死、解甲、投奔各城，最后留下三百余人，被拆编进三个边防营，再没有一面黑狼旗能号令他们。"
+    elif iron_postwar_policy == "annexation":
+        "男爵领已经并入北境盟邦。他的旧部被拆分安置在不同关口，不能再以一家私兵的身份聚集。"
+
+    "王都起初拒绝承认北境自立。直到蛮兵越过第一道山梁，王廷既派不出援军，也不敢让北境防线倒下。"
+    "灰隘停战后，王都送来的文书第一次没有写「叛臣」，而写「北境盟邦」。承认藏在称呼里，没有仪式，也没有恩赐。"
+
+    scene bg village with dissolve
+    "回艾登堡的路上，孩子们围着一块新立的界碑玩。碑正面刻着六城纹章，背面只有一句话："
+    centered "「守土者共治其土。」"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "父亲，我没有拿到王冠。"
+    player "我拿到的是一张必须每三年重新赢得信任的椅子。这样也好。"
+
+    scene black with fade
+    centered "{size=+8}铁腕领主 · 北境自立{/size}"
+    centered "「人心所向，不是天命落在谁头上。」"
+    centered "「是烽火亮起时，仍有人愿意站在你的旗旁。」"
+    pause 2.0
+    return
+
+
+label ending_iron_epilogue_protective:
+
+    scene black with fade
+
+    $ play_music("audio/music/throne.ogg", fadein=2.0)
+
+    centered "{size=+10}同年冬{/size}"
+    centered "{size=+6}王历二十七年·冬{/size}"
+
+    pause 1.0
+
+    scene bg iron_parade_winter with dissolve
+    $ unlock_gallery("bg_iron_parade_winter")
+
+    "五千名常备军列在冬日的原野上。步兵方阵前白气一团接一团，侧翼战马的铁甲压着晨光。"
+
+    $ play_sound("audio/sfx/horse_gallop.ogg")
+
+    "号角响过，第一列铁骑从检阅台前驰过。随后是第二列、第三列。地面一直在震。"
+
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+
+    captain "大人，五千人，一人不缺。北境三处关口也都换完防了。"
+
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "留两千守关。其余的人，开春以后轮流回乡。"
+
+    hide player_char_img
+    $ hide_all_chars("captain_img")
+    show captain_img at left with dissolve
+
+    captain "让他们回去种地？"
+
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "仗已经打完五年了。兵不能只会骑马。"
+
+    $ hide_all_chars()
+
+    if prince_pact_honored:
+        scene bg great_hall with dissolve
+
+        "弗雷德里克登基已有两年。王都来的信每月一封，有时谈边防，有时只夹一张税表。"
+        "他没有收走你的军权。你也没有把五千北境军带进王都。两边都守着当初划下的线。"
+
+        if prince_sister_known:
+            "今年第一封私信只有两句话：「她出宫了。她在花园里看了半天落叶。」"
+            "你把信折好，压在那枚银质隼鸟徽章下面。"
+        else:
+            "信末照例没有客套。你把它压在银质隼鸟徽章下面，等奥尔德里克来取。"
+
+    elif prince_ally and prince_pact_status == "conditional":
+        scene bg great_hall with dissolve
+
+        "王子的登基仍没有日期。他留在王都主持旧案重审，你握着北方军权。"
+        "他的信一年比一年短。最近一封只问了关税，没再问你什么时候进京。"
+
+    elif prince_ally:
+        scene bg great_hall with dissolve
+
+        "你没有拥立王子，也没有把他赶出王都。他凭那批证据进了王室议会，手里没有兵，但说话终于有人听。"
+        "你们偶尔通一封信，只谈边防和税，不谈岔路口。"
+
+    scene bg village with dissolve
+
+    "回城的路经过石桥村。五年前烧塌的屋子已经重建，桥边多了一座磨坊。"
+    "几个孩子在路旁拿木棍比剑。看见金鹰旗，他们停下来，让出路，又忍不住盯着骑兵的马。"
+
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+
+    player "别挡着他们。走慢点。"
+
+    $ hide_all_chars()
+
+    "队伍从村里穿过去。磨坊照常转，铁匠铺里也没停锤。"
+
+    scene black with fade
+
+    centered "{size=+8}铁腕领主 · 尾声{/size}"
+
+    if prince_pact_honored:
+        centered "守住北方，也守住盟约。"
+    elif iron_postwar_policy == "clemency":
+        centered "剑压住了战火，宽赦收住了余波。"
+    else:
+        centered "王后的军队退了，北方的旗帜留了下来。"
 
     pause 2.0
 

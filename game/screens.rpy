@@ -490,6 +490,12 @@ screen navigation():
 
         if main_menu:
 
+            textbutton _("继续游戏"):
+                at menu_btn_hover
+                action Continue()
+                text_size 26
+                text_font "msyh.ttf"
+
             textbutton _("开始游戏"):
                 at menu_btn_hover
                 action Start()
@@ -565,9 +571,9 @@ screen navigation():
                     action EndReplay(confirm=True)
 
             else:
-                textbutton _("返回主菜单"):
+                textbutton _("保存并返回主菜单"):
                     at menu_btn_hover
-                    action MainMenu()
+                    action [Function(save_progress_before_exit), MainMenu(confirm=False)]
 
 
 ## ════════════════════════════════════════════════════════════════
@@ -978,6 +984,12 @@ screen file_slots(title):
 
                     textbutton _("»") action FilePageNext()
                     key "save_page_next" action FilePageNext()
+
+                text _("A：自动存档　Q：快速存档"):
+                    xalign 0.5
+                    size 14
+                    color "#8a7e60"
+                    font "msyh.ttf"
 
                 if config.has_sync:
                     if CurrentScreenName() == "save":

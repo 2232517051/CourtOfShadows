@@ -87,7 +87,7 @@ define woman_refugee = Character("妇人", color="#c4a882", image="blacksmith_wi
 define martin = Character("马丁", color="#8b7355", image="servant_generic")
 define young_soldier = Character("年轻士兵", color="#708090", image="soldier_generic")
 define baron_envoy = Character("男爵密使", color="#556677", image="servant_generic")
-define envoy = Character("特使", color="#9088a0", image="servant_generic")
+define envoy = Character("特使", color="#9088a0", image="queen_envoy")
 define retired_steward = Character("退休管家", color="#8b7355", image="servant_generic")
 define vanguard = Character("先锋官", color="#556677", image="soldier_generic")
 define carlos = Character("卡洛斯", color="#6a5a4a", image="soldier_generic")
@@ -167,6 +167,7 @@ default merchant_deal = False
 default karl_warehouse_tip = False    # 卡尔赠的旧仓库交易情报 (ch2 末回响→男爵疑点, 批31)
 default karl_debt_owed = False        # 买家身份情报选了"先欠着" (卡尔深度回归时勾销, 批31)
 default assassination_survived = False
+default assassin_garden_warning_known = False
 default council_outcome = ""
 
 # 信息揭示标记（"已知"flag体系）
@@ -218,6 +219,7 @@ default player_scarred = False
 default captain_knows_passage = False
 default passage_re_opened = False
 default poison_evidence = False
+default ch3_antidote_formula_shared = False
 
 # 第四章剧情标记
 default queen_trust = False
@@ -240,6 +242,9 @@ default ch5_north_wall_neglected = False  ## ch5 城防菜单选"不做特别处
 default prince_returned_willingly = False
 default prince_mentor_known = False
 default prince_trust_deep = False
+## 岔路诀别时玩家对拥立盟约的态度: sworn / conditional / released
+default prince_pact_status = ""
+default prince_pact_honored = False
 ## Zane 反馈(2026-06-07): 章间王子密信原本无回应 flag, 也不与花园密会衔接 → 线索"莫名其妙地没了"
 ## 取值: "" 未回应 / "heed" 应约 / "cautious" 存疑 / "decline" 婉拒; 花园开场据此分支
 default prince_letter_response = ""
@@ -260,7 +265,20 @@ default court_faction = ""
 # 第五章/结局标记
 default ending_type = ""
 default iron_battle_outcome = "decisive"  # 铁腕线战役结果 (decisive 决定性胜利 / pyrrhic 惨胜) — 由左翼危机 crisis 决定
+default iron_battle_defeat = False
 default iron_war_score = 0  # 铁腕线战力分 (花露水反馈): power/intrigue/loyalty + 领主好感 + 战前准备 累加, 决定会战成败
+default iron_postwar_policy = ""  # clemency / execution / annexation
+default baron_field_power_broken = False  # 第五章前哨战后瓦解男爵联军
+default northern_lords_unified = False  # 周边北境领主已转投艾登堡
+default self_rule_declared = False  # 铁腕结局政治变体：北境正式自立
+default iron_player_regulars = 0
+default iron_player_militia = 0
+default iron_neighbor_levies = 0
+default iron_allied_troops = 0
+default iron_total_troops = 0
+default iron_enemy_troops = 0
+default iron_battle_dead = 0
+default iron_battle_wounded = 0
 # 选择深度 L2 第2批-B: 战备枢纽的延迟后果 flag
 default harsh_with_refugees = False  # ch5:168 强硬压制领民 → ch5:732 民兵志愿者锐减兑现
 default baron_supply_intel = False   # ch5:604 套出男爵军后勤弱点 → ch5:2272 截断补给线额外战力兑现

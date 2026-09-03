@@ -146,6 +146,7 @@ init 1 python:
             faith=getattr(store, "faith", 0),
             loyalty=getattr(store, "loyalty", 0),
             wealth=getattr(store, "wealth", 0),
+            reputation=getattr(store, "reputation", 0),
             difficulty=persistent.difficulty or "normal",
             alliance_baron=getattr(store, "alliance_baron", False),
             rel_baron=getattr(store, "rel_baron", 0),
@@ -207,7 +208,7 @@ init 1 python:
         return max(0, min(100, current + adjusted))
 
     def get_resistance_battle_outcomes(
-            power=0, intrigue=0, faith=0, loyalty=0, wealth=0,
+            power=0, intrigue=0, faith=0, loyalty=0, wealth=0, reputation=40,
             difficulty="normal", alliance_baron=False, rel_baron=0,
             prince_ally=False, rel_captain=0,
             ch5_pay_advance_pension=False, marriage_route=False,
@@ -219,6 +220,12 @@ init 1 python:
             + max(0, intrigue - 30) // 6
             + max(0, loyalty - 30) // 8
         )
+        if wealth < 15:
+            score -= 3
+        else:
+            score += max(0, wealth - 30) // 15
+        if reputation < 20:
+            score -= 2
         if alliance_baron:
             score += 10
         elif rel_baron > 0:
@@ -279,7 +286,8 @@ init 1 python:
             ))
 
         outcomes = {"iron_lord": False, "fall": False}
-        grind_threshold = 12 + _war_threshold_mod.get(difficulty, 0)
+        prepared_floor = 12 + _war_threshold_mod.get(difficulty, 0)
+        grind_threshold = 15 + _war_threshold_mod.get(difficulty, 0)
 
         for plan_power, plan_intrigue, plan_faith, plan_loyalty, plan_wealth, plan_score in plans:
             skirmishes = [
@@ -327,7 +335,8 @@ init 1 python:
                         or final_intrigue >= 55
                         or (final_intrigue >= 45 and final_loyalty >= 50)
                     )
-                    if prepared or final_score >= grind_threshold:
+                    required_score = prepared_floor if prepared else grind_threshold
+                    if final_score >= required_score:
                         outcomes["iron_lord"] = True
                     else:
                         outcomes["fall"] = True

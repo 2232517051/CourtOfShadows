@@ -556,7 +556,7 @@ screen death_screen(cause="你的伤势过重，倒在了权谋的漩涡中。")
                     text_hover_color "#c8b890"
                     text_font "msyh.ttf"
                     xalign 0.5
-                    action MainMenu(confirm=False)
+                    action [Function(save_persistent_before_menu), MainMenu(confirm=False)]
 
 ################################################################################
 ## 7. 危机事件脚本 Label — 通用流程

@@ -16,6 +16,9 @@ default ch3_ancient_ruin_found = False
 default ch3_antidote_learned = False
 default ch3_witness_count = 0
 default stein_origin_revealed = False
+default ch3_black_liquid_sampled = False
+default ch3_ritual_evidence_recorded = False
+default ch3_herbalist_lead_known = False
 
 ## ============================================================
 ## 第一部分：调查序列 — Investigation Sequence (~500行)
@@ -334,7 +337,10 @@ label ch3_exp_investigate_cunning:
 
         "影能告诉你的是核心圈；外围已经变质的那些，你得自己去探。"
 
-        "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        if assassin_garden_warning_known:
+            "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        else:
+            "外围账本反复提到断头斧酒馆，还有几笔用刻花铜币结算的款项。那里是你目前最可靠的入口。"
 
         "你决定从酒馆开始——暗焰的爪牙一定混迹在城镇的底层社会中。"
     elif dark_lily_destroyed:
@@ -342,7 +348,10 @@ label ch3_exp_investigate_cunning:
 
         "核心虽已清空，底层那些被暗百合雇来的爪牙还在。你要确保每一个都被揪出来。"
 
-        "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        if assassin_garden_warning_known:
+            "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        else:
+            "缴获的账本反复提到断头斧酒馆，还有几笔用刻花铜币结算的款项。残党很可能在那里接头。"
 
         "你决定从酒馆开始。这类人一定混迹在城镇的底层社会中。"
     else:
@@ -350,7 +359,10 @@ label ch3_exp_investigate_cunning:
 
         "第一步，你需要一个切入点。暗百合不接受陌生人——你需要一个介绍人。"
 
-        "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        if assassin_garden_warning_known:
+            "你想起了那个在地窖中死去的报信刺客，以及他说的话：「花园里的人。」"
+        else:
+            "失踪铁匠的工钱簿里夹着一枚刻花铜币，背面只写了四个字：断头斧酒馆。那是你目前唯一的入口。"
 
         "你决定从酒馆开始。暗百合的外围人员一定混迹在城镇的底层社会中。"
 
@@ -503,7 +515,9 @@ label ch3_exp_crime_scene:
 
     "经过仔细搜查，你发现了几样东西：地上的拖拽痕迹、一块沾了黑色液体的布片、以及树干上新刻的记号。"
 
-    "黑色液体散发着苦涩的气味。你用手帕小心包好——这很可能是某种药物。"
+    "黑色液体散发着苦涩的气味。你把布片封进样本瓶，又将灰烬、脚印和石圈的位置一一记下。无论接下来先查哪一项，证物都不会留在这里。"
+    $ ch3_black_liquid_sampled = True
+    $ ch3_ritual_evidence_recorded = True
 
     "拖拽痕迹指向森林深处。你沿着痕迹走了一段，来到了一块空地。"
 
@@ -525,19 +539,25 @@ label ch3_exp_crime_scene:
 
             "你盯着那片灰烬，把先前的推断全部推翻重来。"
 
-        "采集黑色液体样本「带回去化验」":
+        "请城堡医师化验样本「耗费3财富购置试剂」" if wealth >= 3:
             $ change_stat("reputation", 3)
             $ change_stat("wealth", -3)
 
-            "你小心翼翼地采集了黑色液体的样本，带回城堡交给医师。"
+            "你把样本带回城堡交给医师。辨认这种混合药需要银盐、蒸馏酒精和一套会被毒性腐蚀的器皿；三点财富付的是外购试剂和风险津贴，不是医师张口要价。"
 
             "医师经过一天的研究后告诉你：「这是一种由多种草药混合而成的迷药。服用后会产生强烈的幻觉和极度的顺从感。效果持续约三个时辰。」"
 
             "「制作这种迷药需要非常专业的草药学知识，」医师补充道，「普通人做不出来。」"
 
-            "你想到了一个人——森林里的那位草药师。也许你该去拜访一下她。"
+            "医师还提起，北部森林边缘住着一位叫薇拉的草药师。猎户中毒时常去找她，她也许认得其中最罕见的那味药。"
+            $ ch3_herbalist_lead_known = True
 
-            $ ch3_herbalist_met = False
+        "自己查阅药典「需谋略≥35，不花钱」" if intrigue >= 35:
+            $ change_stat("intrigue", 4)
+
+            "你没有动用府库，而是把样本封在玻璃片间，连夜翻查父亲留下的药典。"
+            "曼陀罗、乌头、夜影草都能对上，唯独最后一种紫黑色花粉没有记载。页边有猎户留下的一行小字：「不识深林毒，去找薇拉。」"
+            $ ch3_herbalist_lead_known = True
 
         "标记位置后离开「以后再来」":
             $ change_stat("power", 2)
@@ -546,7 +566,7 @@ label ch3_exp_crime_scene:
 
             "过早惊动暗百合不是明智之举。你需要更多的准备。"
 
-    "回到城堡后，你将今天的发现一条条补进羊皮纸。"
+    "离开现场前，你确认布片、药液样本和仪式记录都已收好。回到城堡后，你将今天的发现一条条补进羊皮纸。"
 
     "写得越多，空白就越扎眼。你知道的还远远不够。"
 
@@ -561,7 +581,7 @@ label ch3_exp_forest_expedition:
     scene bg forest_path with dissolve
     $ play_music("audio/music/forest_ambient.ogg", fadein=2.0)
 
-    "你决定深入北部森林——那片被迷雾和传说笼罩的古老林地。"
+    "现场的拖痕继续向北。次日，你沿着它深入北部森林——那片被迷雾和传说笼罩的古老林地。"
 
     "所有的线索都指向那里。失踪的农民、暗百合的据点、废弃的修道院……森林藏着太多秘密。"
 
@@ -598,7 +618,7 @@ label ch3_exp_forest_expedition:
 
         "只带艾琳娜「人少目标小」":
             $ change_stat("loyalty", 5)
-            $ change_stat("rel_elena", 5)
+            $ change_rel("rel_elena", 5)
 
             hide captain_img
             $ hide_all_chars("player_char_img")
@@ -748,9 +768,12 @@ label ch3_exp_herbalist:
 
     scene bg forest_path with dissolve
 
-    "你在森林边缘的一条岔路上看到了一个路标——一块木板上画着草药和药钵的图案。箭头指向一条几乎被灌木淹没的小径。"
+    "从遗迹折返时，你在森林边缘的一条岔路上看到一块画着草药和药钵的路标。箭头指向一条几乎被灌木淹没的小径。"
 
-    "这是森林草药师的住处。传说中，她是方圆百里最懂草药的人。"
+    if ch3_herbalist_lead_known:
+        "医师和药典提过的名字就在木板下方：薇拉。你循着这条新得到的线索拐了进去。"
+    else:
+        "路过的猎户告诉你，这里住着方圆百里最懂草药的薇拉。你身上正带着那份无法辨清的黑色药液。"
 
     "你沿着小径走了约一刻钟，来到了一座被花圃和药圃环绕的小木屋。"
 
@@ -836,8 +859,6 @@ label ch3_exp_herbalist:
 
     menu:
         "请薇拉制作解药":
-            $ change_stat("wealth", 5)
-            $ change_stat("wealth", -5)
             $ ch3_antidote_learned = True
 
             hide herbalist_vera_img
@@ -862,16 +883,19 @@ label ch3_exp_herbalist:
             hide player_char_img
             $ hide_all_chars("herbalist_vera_img")
             show herbalist_vera_img at left with dissolve
-            herbalist_vera "不要钱。但有一个条件——如果您找到了活着的失踪者，让我见见他们。我需要研究暗百合精华对人体的长期影响。"
+            herbalist_vera "不要钱。材料我这里有，但有一个条件——如果您找到了活着的失踪者，让我见见他们。我需要研究暗百合精华对人体的长期影响。"
 
             $ hide_all_chars()
             "你同意了。"
 
-            "三天后，薇拉如约交付了一小瓶碧绿色的解药。她还教了你一个简单的急救方法——如果有人被暗百合精华迷晕，用冷水浇头加上薰衣草精油可以暂时恢复神志。"
+            "三天后，薇拉如约交付了一小瓶碧绿色的解药。她让你完整看过最后一次调配，并把比例写在清单背面。以后只要有材料，你可以自己配，也可以让领地医师照方制作。"
+            $ add_item("antidote", 1)
 
         "请教更多关于毒药的知识" if intrigue >= 45:
             $ change_stat("intrigue", 8)
             $ change_stat("faith", -3)
+            $ ch3_antidote_learned = True
+            $ crafting_skill_bonus += 15
 
             hide herbalist_vera_img
             $ hide_all_chars("player_char_img")
@@ -885,15 +909,18 @@ label ch3_exp_herbalist:
             show herbalist_vera_img at left with dissolve
             herbalist_vera "学毒药学的领主……有意思。"
 
-            "接下来一整个下午，薇拉把她知道的毒药知识一样一样掰开了讲给你。你学会了辨认十几种常见毒药的气味和症状，以及中了毒该怎么救。"
+            "接下来一整个下午，薇拉把她知道的毒药知识一样一样掰开了讲给你。暗百合解药的比例、火候和失败征兆，她让你亲手做了一遍。"
 
             herbalist_vera "记住最重要的一条——大多数毒药都有气味。如果你的酒闻起来有杏仁味，不要喝。"
 
-            "这些知识你牢牢记住了。在这样的宫廷里，多懂一点毒药，多一分活命的机会。"
+            "黄昏前，你做出第一瓶合格的解药。薇拉把它和一份练习材料交给你；以后你可以亲手制作，也可以把配方交给可信的医师。"
+            $ add_item("antidote", 1)
+            $ add_item("medicinal_herbs", 3)
+            $ add_item("dark_lily_extract", 1)
 
         "询问她是否知道暗百合组织的事":
             $ change_stat("loyalty", 5)
-            $ change_stat("rel_elena", 3)
+            $ change_rel("rel_elena", 3)
 
             hide herbalist_vera_img
             $ hide_all_chars("player_char_img")

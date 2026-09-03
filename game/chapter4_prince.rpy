@@ -10,8 +10,8 @@
 
 label ch4_prince_farewell:
 
-    $ play_music("audio/music/campfire.ogg", fadein=2.0)
-    scene bg forest_path with dissolve
+    $ play_music("audio/music/dawn.ogg", fadein=2.0)
+    scene bg_road_dawn with dissolve
 
     "岔路口。一条路向北，通往艾登堡。另一条路向南，通往王都。"
 
@@ -20,7 +20,7 @@ label ch4_prince_farewell:
     "王子从马上翻下来，踉跄了一下——伤还没有好。雷恩伸手扶住了他。"
 
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
 
     prince "到这里就好了。"
 
@@ -31,7 +31,7 @@ label ch4_prince_farewell:
 
     hide player_char_img
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "我不跟你去艾登堡。"
 
     "你愣住了。"
@@ -42,7 +42,7 @@ label ch4_prince_farewell:
     player "你在说什么？你现在回去就是送死。"
 
     hide player_char_img
-    show prince_img sad at left
+    show prince_img wounded at left
 
     prince "不。如果我跟你走——那才是送死。送我们两个人的死。"
 
@@ -61,7 +61,7 @@ label ch4_prince_farewell:
 
     hide player_char_img
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "回去。"
 
     hide prince_img
@@ -73,7 +73,7 @@ label ch4_prince_farewell:
 
     hide player_char_img with dissolve
     $ hide_all_chars("prince_img")
-    show prince_img at left
+    show prince_img wounded at left
 
     prince "听我说。母后关我，是因为她怀疑我。但她不会杀我——至少现在不会。"
 
@@ -92,7 +92,7 @@ label ch4_prince_farewell:
 
     hide player_char_img
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "比死强。而且——"
 
     "他压低了声音，环顾四周确认没有其他人能听到。"
@@ -116,68 +116,25 @@ label ch4_prince_farewell:
 
     ## 艾德蒙回响D(接管线): 两张网的镜像。知情圈之外谁也不能提。
     if iron_thorn_controlled:
+        $ hide_all_chars()
         "你心里闪过一个念头：他在宫墙之内有一张网，你在宫墙之外也有一张。两张网的线头都不能摆到台面上。"
 
         "你没有说出口。有些牌，摊开了就没用了。"
 
     menu:
-        "理解他的计划，但担心他的安全":
-            $ change_rel("rel_prince", 8)
-            $ prince_trust_deep = True
-            hide prince_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "你考虑得比我周全。但你确定你能撑住？"
-            hide player_char_img
-            $ hide_all_chars("prince_img")
-            show prince_img at left with dissolve
-            prince "十二年的宫廷生活教会了我一件事——"
-            prince "最安全的地方，就是敌人认为你已经被驯服的地方。"
-            prince "我会装作一个悔过的、顺从的王子。她会相信的。因为她太骄傲了，她相信所有人最终都会屈服于她。"
-            hide prince_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "如果她不信呢？"
-            hide player_char_img
-            $ hide_all_chars("prince_img")
-            show prince_img at left with dissolve
-            prince "那你就当我已经死了。继续做你该做的事。"
-            $ hide_all_chars()
-            "他说得很平静。像是在说一件与自己无关的事。"
-            "但你注意到他握着缰绳的手在微微发抖。"
-
-        "试图劝阻——这太危险了":
-            $ change_rel("rel_prince", 5)
-            hide prince_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "不行。这太冒险了。你跟我走，我们可以联合北方的领主——"
-            hide player_char_img
-            $ hide_all_chars("prince_img")
-            show prince_img at left with dissolve
-            prince "联合北方？你觉得男爵会帮我？"
-            prince "男爵想要的是自己当王，不是拥立一个年轻的王子。"
-            prince "我回去，至少还能从内部牵制母后。让她分心，让她不敢全力对付你。"
-            prince "而你在外面，联合愿意追随正义的人。"
-            prince "里应外合。这是唯一的胜算。"
-            "他说得有道理——比你愿意承认的更有道理。"
-
-        "直接问他是否还有其他原因":
+        "问他是否还有没说出口的理由":
             $ change_stat("intrigue", 5)
-            $ change_rel("rel_prince", 10)
+            $ change_rel("rel_prince", 5)
             $ prince_trust_deep = True
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "弗雷德里克。我们刚从地牢里死里逃生。你不会仅仅因为「战略考量」就要回去。"
-            player "告诉我真正的原因。"
+            player "你的盘算我听懂了。但你还有一件事没说。"
+            player "宫里还有谁？"
             $ hide_all_chars()
-            "王子沉默了很久。长到你以为他不会回答了。"
-            "然后他开口了，声音很低。"
-            hide player_char_img
+            "王子握着缰绳，没有立刻回答。"
             $ hide_all_chars("prince_img")
-            show prince_img at left with dissolve
-            prince "宫里还有一个人。"
+            show prince_img wounded at left with dissolve
             prince "我的妹妹。"
             hide prince_img
             $ hide_all_chars("player_char_img")
@@ -185,13 +142,70 @@ label ch4_prince_farewell:
             player "你有妹妹？"
             hide player_char_img
             $ hide_all_chars("prince_img")
-            show prince_img at left with dissolve
-            prince "同父异母。母后从来不承认她的存在。她是父王和一个侍女的女儿。"
-            prince "母后把她养在后宫最偏僻的院子里。没有名字，没有身份。像一只笼子里的鸟。"
-            prince "她今年十四岁。如果我不回去……就没有人保护她了。"
+            show prince_img wounded at left with dissolve
+            prince "同父异母。她是父王和一个侍女的女儿，母后从来不承认她。"
+            prince "她今年十四岁。我的人能递消息，却护不住她。"
             $ prince_sister_known = True
             $ hide_all_chars()
-            "你感到一阵刺痛。他回去不是赴死——是回去护一个十四岁的孩子。"
+            "这不是他返回王都的全部理由。但这是他不能留在北方的那一个。"
+
+        "不再追问":
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "宫里的事，你比我清楚。"
+            player "我只问一句：你有几成把握活下来？"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img wounded at left with dissolve
+            prince "比留在艾登堡多一成。够了。"
+
+    menu:
+        "我拥你登基的承诺不变":
+            $ prince_pact_status = "sworn"
+            $ prince_trust_deep = True
+            $ change_rel("rel_prince", 10)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "弗雷德里克。我说清楚——我拥你登基的承诺不变。"
+            player "你从宫里站出来的那一天，我会带兵到王都。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img wounded at left with dissolve
+            prince "你要对付的会是母后的军队。"
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我知道。"
+
+        "先照计划合作，王位等他拿出证据再谈":
+            $ prince_pact_status = "conditional"
+            $ change_rel("rel_prince", 5)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "你在宫里找证据，我在外面备兵。这个计划可以继续。"
+            player "至于拥立——等你手里真有牌的时候，我们再谈。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img wounded at left with dissolve
+            prince "好。下一次，我拿东西来换你的答复。"
+
+        "你可以回去，但我们的拥立盟约到此为止":
+            $ prince_pact_status = "released"
+            $ change_rel("rel_prince", -5)
+            $ change_stat("intrigue", 3)
+            hide prince_img
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "我救你出来，不是为了再把艾登堡押上一次。"
+            player "你可以回去。但拥立、登基——从现在起，与我无关。"
+            hide player_char_img
+            $ hide_all_chars("prince_img")
+            show prince_img wounded at left with dissolve
+            prince "好。我记住了。"
+            prince "宫里的情报仍会送给你。母后也是我的敌人。"
 
     $ prince_returned_willingly = True
 
@@ -212,14 +226,16 @@ label ch4_prince_farewell:
 
     hide player_char_img
     $ hide_all_chars("prince_img")
-    show prince_img at left with dissolve
+    show prince_img wounded at left with dissolve
     prince "你也是。"
 
     "他从怀里掏出一枚小小的银质徽章——一只展翅的隼鸟，是弗雷德里克家族的私印。"
 
-    prince "拿着。如果有一天你需要证明我们之间的盟约——这就是凭证。"
-
-    prince "任何看到这枚徽章的人都会知道，持有者是弗雷德里克王子唯一信任的人。"
+    if prince_pact_status == "released":
+        prince "拿着。不是盟约。我的人见到它，会把消息交给你。"
+    else:
+        prince "拿着。如果有一天你需要证明我们之间的盟约——这就是凭证。"
+        prince "任何看到这枚徽章的人都会知道，持有者是弗雷德里克王子唯一信任的人。"
 
     $ hide_all_chars()
     "你接过徽章。银子在晨光中闪着微弱的光。"
@@ -264,13 +280,16 @@ label ch5_prince_letter:
 
     "守卫搜了他的身，在他鞋底的夹层里找到了一封信——用王子的私印蜡封。"
 
-    "你在书房里拆开了信。"
+    "你在书房里拆开了信。纸角沾着泥，折痕压得很深。"
 
     $ hide_all_chars("prince_img")
     show prince_img at left with dissolve
     $ unlock_gallery("prince")
 
-    prince "致艾登堡领主——我的兄弟："
+    if prince_pact_status == "released":
+        prince "致艾登堡领主："
+    else:
+        prince "致艾登堡领主——我的兄弟："
 
     if not prince_imprisoned_known:
         prince "如你所料，我回到王宫后被软禁了。母后没有对外公布我出逃的事——"
@@ -283,10 +302,13 @@ label ch5_prince_letter:
     else:
         prince "我果然被软禁了，和我们预料的一样。母后对外只说我「偶感风寒」。"
 
-    if prince_trust_deep:
-        prince "我们那晚谈的事——我没有忘记。她很安全。我已经把她转移到了更隐蔽的地方。"
+    if prince_sister_known:
+        prince "我回来后的第三天，把她从偏院挪走了。照看她的是父王留下的老人，母后还没察觉。"
+        prince "她现在安全。这件事到此为止，信上不能再多写。"
+    elif prince_trust_deep:
+        prince "你问我能不能撑住。现在还撑得住。宫里的六个人也都在，一个没少。"
     else:
-        prince "有些事我暂时不能多说。但请相信我，我回来不仅仅是为了自己。"
+        prince "宫里那张网还在。我回来不是白送一条命。"
 
     prince "宫里的情况比我预想的更糟。母后已经决定用武力解决一切。"
 
@@ -295,14 +317,13 @@ label ch5_prince_letter:
     prince "但军中不是铁板一块。我的人传来消息——至少有三个营的士兵对这场「平叛」战争心存疑虑。"
 
     prince "他们中很多人的家就在北方。他们不想对自己的乡亲动刀。"
+    prince "我让人递了一个口令。开战后若听见「隼归」，那三个营就不会再替母后向前一步。"
 
     if testament_forged_known:
         prince "我能做的不多。但我已经安排人在军中散布真相——遗诏被篡改的事。"
     else:
         prince "我能做的不多。但我已经安排人在军中散布一些……关于母后的真相。"
         $ testament_forged_known = True
-
-    prince "种子已经种下。它会在合适的时候发芽。"
 
     prince "还有一件事——我在母后的书房里找到了一份文件。"
 
@@ -317,10 +338,12 @@ label ch5_prince_letter:
         prince "母后上个月以「渎职」为名把他下了狱，三天后狱卒报他「畏罪自尽」。"
         prince "她让格里芬替她杀人，回头又把格里芬除掉。她在一个个抹掉知道内情的人——这反倒成了我们的机会。"
 
-    if prince_sister_known:
-        prince "你大概还记得，我说过宫里还有一个我必须护着的人。她还好。"
-        prince "我回来后第一件事，就是把她从那处偏院挪走，身边换上了我信得过的人。母后至今没察觉。"
-        prince "只要我还在这宫里装着顺从，就还护得住她。这条路我没走错。"
+    if prince_pact_status == "sworn":
+        prince "你在岔路口说的话，我记着。真到那一天，我会先站出来。"
+    elif prince_pact_status == "conditional":
+        prince "你说等我手里有牌。这份文件是第一张。"
+    elif prince_pact_status == "released":
+        prince "你不欠我王位。这份文件也不是拿来讨价还价的——它关乎你父亲。"
 
     $ hide_all_chars()
     "你翻过信纸。背面密密麻麻地写满了蝇头小楷——日期、人名、命令、剂量。"
@@ -331,23 +354,23 @@ label ch5_prince_letter:
     $ true_killer_known = True
 
     menu:
-        "回信：请他在最关键的时刻公开表态":
+        "回信：请那三个营在开战时响应口令":
             $ change_rel("rel_prince", 3)  ## batch 14 #7 王子好感: 5→3 减弱小加成累加
             hide prince_img
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "殿下，当战争到来的那一天，我需要你站出来。不是为了我，是为了这个国家。"
+            player "殿下，真到开战那天，我需要那三个营听见「隼归」就停下。"
             $ hide_all_chars()
             "你写了一封简短但坚定的回信。"
             "少年信使把信藏在鞋底，还没等你说完就走了。"
 
-        "回信：让他千万保重，不要冒险":
+        "回信：只写一个字——「活」":
             $ change_rel("rel_prince", 1)  ## batch 14 #7 王子好感: 3→1 减弱小加成累加
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
-            player "你已经做得够多了。保护好自己。等一切尘埃落定，我们再见面。"
+            player "活。"
             $ hide_all_chars()
-            "你犹豫了一下，又加了一句：「活着。这是命令。」"
+            "你只写了这一个字。墨干以后，少年把信藏进鞋底。"
 
         "不回信——信使可能被跟踪" if intrigue >= 60:
             $ change_stat("intrigue", 5)
@@ -493,6 +516,7 @@ label ch5_prince_betrayal:
 
     "你必须在没有王子支持的情况下，独自面对王后。"
 
+    $ prince_betrayed = True
     $ prince_ally = False
 
     hide prince_img with dissolve
@@ -536,7 +560,7 @@ label ch5_prince_confronts_queen:
     if prince_mentor_known:
         prince "你杀了西里尔。那个教我骑马、教我读书的老人。因为他给了我一本记载真相的书。"
         prince "你杀了他的父亲。一个只想做好领主的好人。因为他发现了你的秘密。"
-        prince "你把你自己的女儿关在后宫最阴暗的角落里。因为她的存在提醒着你犯过的错。"
+        prince "你把父王的女儿关在后宫最阴暗的角落里。因为她的存在提醒着你受过的背叛。"
         "王后的脸色终于变了。不是愤怒——而是震惊。"
         hide prince_img
         $ hide_all_chars("queen_img")

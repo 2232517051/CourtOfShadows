@@ -47,6 +47,7 @@ init python:
             "result_qty": 1,
             "result_id": "antidote",
             "category": "药剂",
+            "knowledge_flag": "ch3_antidote_learned",
         },
         "bandage": {
             "name": "绷带",
@@ -156,11 +157,22 @@ init python:
         recipe = crafting_recipes.get(recipe_id)
         if not recipe:
             return False
+        knowledge_flag = recipe.get("knowledge_flag")
+        if knowledge_flag and not getattr(store, knowledge_flag, False):
+            return False
         inv = get_inventory()
         for mat_id, mat_qty in recipe["materials"].items():
             if inv.get(mat_id, 0) < mat_qty:
                 return False
         return True
+
+    def knows_recipe(recipe_id):
+        """剧情配方只在玩家实际学会后显示。"""
+        recipe = crafting_recipes.get(recipe_id)
+        if not recipe:
+            return False
+        knowledge_flag = recipe.get("knowledge_flag")
+        return not knowledge_flag or getattr(store, knowledge_flag, False)
 
     def get_missing_materials(recipe_id):
         """返回缺少的材料列表 [(物品id, 需要量， 拥有量)]"""
@@ -335,7 +347,7 @@ screen crafting_screen():
 
                                     ## 按类别分组
                                     for _rc_cat, _rc_label in [("药剂", "药剂"), ("战斗", "战斗用品"), ("装备", "装备")]:
-                                        $ _rc_items = [(rid, r) for rid, r in crafting_recipes.items() if r.get("category", "") == _rc_cat]
+                                        $ _rc_items = [(rid, r) for rid, r in crafting_recipes.items() if r.get("category", "") == _rc_cat and knows_recipe(rid)]
 
                                         if _rc_items:
                                             text "* [_rc_label]" size 13 color "#6a5e48" font "msyh.ttf"

@@ -104,6 +104,7 @@ label ch5_war_clouds:
     captain "而我们的领地，正好在两军的必经之路上。"
 
     if land_rumor_heard:
+        $ hide_all_chars()
         "你想起那场婚宴上格雷伯爵的提醒——有人在暗中收购你领地周围的土地。"
         "军队未动，粮草先行。那些买地的人，买下的是大军过境的粮道。"
 
@@ -714,6 +715,7 @@ label ch5_factions_move:
 
     ## ── 批32: ch4「试探——我需要考虑」的答复在此兑现, 王子不再无声消失 ──
     if prince_answer_pending and not prince_ally and not prince_betrayed:
+        $ hide_all_chars()
         "掌灯时分，第三个信使到了。没有仪仗，没有徽记，只递上一柄旧短剑——剑柄上刻着两个字：西里尔。"
 
         "王子的信物。信只有两行。"
@@ -1895,6 +1897,7 @@ label ch5_final_night:
     show soldier_generic_img at left with dissolve
     veteran "为了我在城里的老婆和三个孩子。只要他们平安，我什么都愿意做。"
 
+    $ hide_all_chars()
     "你环顾篝火旁的每一张脸。有的你叫得出名字，有的连见都没见过。"
 
     "这些人，都把自己的命运交到了你手上。"
@@ -2209,7 +2212,10 @@ label ch5_final_choice:
     if _finale_routes["iron_lord"]:
         $ hide_all_chars("captain_img")
         show captain_img at left with dissolve
-        captain "要打，兵是现成的。但打就是同时接两路——王后军三千在南官道，男爵联军两千五在北边。"
+        if baron_field_power_broken:
+            captain "要打，兵是现成的。男爵的联军已经被我们拆散，北境各旗也签了共同防务约书——接下来要挡的是王后军三千人。"
+        else:
+            captain "要打，兵是现成的。但王后军三千在南官道，男爵联军两千五在北边。我们不能同时硬接，必须先让两路争出缺口，再集中兵力打其中一支。"
         hide captain_img
 
     if _finale_routes["shadow_king"]:
@@ -2250,6 +2256,7 @@ label ch5_final_choice:
     "大厅里一片寂静。"
 
     if _sea_available:
+        $ hide_all_chars()
         "你的目光越过争论的人群，落向南面那扇窗。风从窗缝灌进来——你在南境闻过这种气味。是海。"
 
         "没有人提起这条路。但你记得，它一直在。"
@@ -2257,9 +2264,27 @@ label ch5_final_choice:
     $ mark_important_choice()
     $ play_sound("audio/sfx/heartbeat.ogg")
     menu:
-        "以铁和血终结战争——用武力征服一切|全军出击，同时迎战两路大军 → 铁腕领主" if _finale_routes["iron_lord"]:
+        "率军迎敌，兑现与王子的盟约|击溃来犯军队，为王子登基打开道路 → 铁腕领主" if _finale_routes["iron_lord"] and prince_ally and not prince_betrayed and prince_pact_status in ("sworn", "conditional"):
+            $ log_decision("第五章", "率军出击并准备兑现王子盟约")
+            $ ending_type = "iron_lord"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
+            player "王子在宫里等我们的信号。先打掉母后的军队，再进王都。"
+            player "雷恩，全军出击。"
+            hide player_char_img
+            $ hide_all_chars("captain_img")
+            show captain_img at left with dissolve
+            captain "是！全军听令！"
+            $ hide_all_chars()
+            "铠甲碰在一起。传令兵奔出大厅，城门随后打开。"
+            call ending_decision_pause from _call_decision_pause_iron_prince
+            jump ending_iron_lord
+
+        "以铁和血终结战争——介入两路争夺，逐段击破|不与五千五百人硬拼，抓住两军裂缝统一北境 → 铁腕领主" if _finale_routes["iron_lord"] and not (prince_ally and not prince_betrayed and prince_pact_status in ("sworn", "conditional")):
             $ log_decision("第五章", "选择以铁血手段终结战争")
             $ ending_type = "iron_lord"
+            $ hide_all_chars("player_char_img")
+            show player_char_img at left with dissolve
             player "这个世界只尊重力量。既然和平无法用嘴巴说出来，那就用剑来实现。"
             player "雷恩，全军出击。目标——击溃一切敌人。"
             hide player_char_img
@@ -2401,10 +2426,12 @@ label ch5_final_choice:
 
 label ending_iron_lord:
 
-    $ play_music("audio/music/war_drums.ogg", fadein=2.0)
+    $ iron_battle_outcome = "decisive"
+    $ iron_battle_defeat = False
     scene bg battlefield with dissolve
     $ unlock_gallery("bg_battlefield")
     $ set_mood("battle")
+    $ play_music("audio/music/war_drums.ogg", fadein=2.0)
     $ set_weather("rain", "heavy")
 
     # ── 战力评估 (花露水反馈: 让属性 + 领主好感真正决定战局, 而非无脑通关) ──
@@ -2413,6 +2440,12 @@ label ending_iron_lord:
         iron_war_score += max(0, power - 30) // 4       # 军事投入
         iron_war_score += max(0, intrigue - 30) // 6    # 谋略部署
         iron_war_score += max(0, loyalty - 30) // 8     # 军心士气
+        if wealth < 15:
+            iron_war_score -= 3                         # 府库见底: 粮饷、马料与军械无法补充
+        else:
+            iron_war_score += max(0, wealth - 30) // 15
+        if reputation < 20:
+            iron_war_score -= 2                         # 声名崩塌: 征募与沿途补给无人响应
         if alliance_baron:
             iron_war_score += 10                        # 男爵盟约 = 成建制的援军
         elif rel_baron > 0:
@@ -2427,6 +2460,45 @@ label ending_iron_lord:
             iron_war_score += 5                          # 北疆议会卫队四百人 (婚约承诺兑现, 批31)
         if iron_thorn_controlled:
             iron_war_score += 3                          # 铁刺网提前摸清敌军部署 (总部可选化·接管线回响)
+        iron_war_score += min(6, ch5_exp_defender_bonus // 3)
+        if ch5_exp_skirmish_result == "victory":
+            iron_war_score += 3
+        elif ch5_exp_casualties >= 7:
+            iron_war_score -= 1
+        if ch5_exp_enemy_morale_hit:
+            iron_war_score += 2
+        if ch5_exp_deserter_intel:
+            iron_war_score += 2
+        if famine_prevented:
+            iron_war_score += 2                          # 灾年留下的人口与信任成为征募、运输基础
+        if built_granary:
+            iron_war_score += 2                          # 粮仓把治理投入兑现为战役续航
+        if governance_prosperity >= 60:
+            iron_war_score += 2
+        if northern_lords_unified:
+            iron_war_score += 6                          # 男爵联军瓦解后转投的北境领主
+
+        iron_player_regulars = 200 + max(0, power - 40) * 5
+        iron_player_militia = 50 + max(0, loyalty - 30) * 5 + max(0, reputation - 40) * 3
+        if built_granary:
+            iron_player_militia += 100
+        if famine_prevented:
+            iron_player_militia += 100
+        iron_neighbor_levies = 0
+        if northern_lords_unified:
+            iron_neighbor_levies = 700 + min(200, max(0, reputation - 50) * 10)
+        iron_allied_troops = iron_neighbor_levies
+        if resist_route or alliance_baron:
+            iron_allied_troops += 2200
+        if marriage_route:
+            iron_allied_troops += 400
+        iron_total_troops = iron_player_regulars + iron_player_militia + iron_allied_troops
+        if resist_route or alliance_baron or northern_lords_unified:
+            iron_enemy_troops = 3000
+        else:
+            iron_enemy_troops = 1600                    # 王后与男爵先战后的可用主力
+        if prince_ally and not prince_betrayed:
+            iron_enemy_troops = max(900, iron_enemy_troops - 600)
 
     "艾登堡的军队集结完毕。旗帜在春风中猎猎作响。"
     if resist_route:
@@ -2436,37 +2508,33 @@ label ending_iron_lord:
         "左翼列着北疆议会的四百卫队。渡鸦旗被雨水打湿，沉甸甸地垂着。"
     if ch5_pay_advance_pension:
         "队列里没人交头接耳。抚恤银上个月就发到了各家手里——他们清楚，就算自己回不来，家里也有米下锅。这种安静，雷恩说，比喊破嗓子的口号顶用。"
+    if built_granary:
+        "粮车从你亲手修起的粮仓下一辆辆驶过。前期省下的每一袋粮，如今都变成军队能在野外多撑的一天。"
+    if famine_prevented:
+        "大旱时被你保下来的村庄没有等征召令。运粮队、担架队和民兵都由村民自己编好名册——人心不是一句颂词，是此刻真正站进队伍里的人。"
 
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
 
-    if power >= 70:
-        captain "领主大人，我们的兵力已经扩充到三百人。加上征召的民兵，接近五百。"
-        captain "甲胄、长矛都是新打的——这几个月的银子没白花。"
-        hide captain_img
-        $ hide_all_chars("player_char_img")
-        show player_char_img at left with dissolve
-        player "够了。这些兵力，足够应对眼前的局势。"
-        $ change_stat("power", 3)
+    captain "艾登堡本部正规军[iron_player_regulars]人，民兵和后勤队[iron_player_militia]人。"
+    if northern_lords_unified:
+        captain "六位北境领主按约送来[iron_neighbor_levies]名步骑。男爵的黑狼旗已经退回格鲁瓦尔德，不在今天的战场上。"
+    if resist_route or alliance_baron:
+        captain "男爵兑现盟约，带来两千二百名可战之兵。我们不是拿几百人替他挡刀，而是两支军队并肩列阵。"
+    if marriage_route:
+        captain "再算上北疆议会四百卫队，我们此战合计[iron_total_troops]人。"
     else:
-        if rel_baron > 0:
-            hide player_char_img
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "男爵愿意与我们联手。加上他的兵力，我们有近四百人。"
-            hide captain_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "告诉男爵，我们在北坡汇合。"
-        else:
-            hide player_char_img
-            $ hide_all_chars("captain_img")
-            show captain_img at left with dissolve
-            captain "我们的兵力有限，但士气高昂。"
-            hide captain_img
-            $ hide_all_chars("player_char_img")
-            show player_char_img at left with dissolve
-            player "兵不在多而在精。我们用策略弥补数量上的不足。"
+        captain "各部合计[iron_total_troops]人。"
+    if not (resist_route or alliance_baron or northern_lords_unified):
+        captain "王后军与男爵军已在石桥谷互相打了两天。两边原有五千五百人，如今能继续列阵的胜方约[iron_enemy_troops]人——我们等到的是战机，不是奇迹。"
+    else:
+        captain "敌方当前可列阵约[iron_enemy_troops]人。兵力仍有差距，但已经是一场能按军法打的仗。"
+    hide captain_img
+    $ hide_all_chars("player_char_img")
+    show player_char_img at left with dissolve
+    player "把这些数字写进军令。今天不许再有人拿三百人打三千人的神话骗士兵送死。"
+    if power >= 70:
+        $ change_stat("power", 3)
 
     if captain_knows_weakness:
         hide player_char_img
@@ -2482,6 +2550,7 @@ label ending_iron_lord:
     hide captain_img with dissolve
 
     ## ── 战前谋略：情报与准备 ──
+    $ clear_weather()
     scene bg study with dissolve
 
     "大军开拔前夜。你在书房里铺开了地图，召集核心幕僚做最后的战前部署。"
@@ -2494,11 +2563,11 @@ label ending_iron_lord:
     $ hide_all_chars("elena_img")
     show elena_img at left with dissolve
     if resist_route:
-        elena "我的探子带回了王后军的情报。他们的先锋主力驻扎在北坡，大约八百人。"
+        elena "我的探子带回了王后军的情报。他们当前能列阵约[iron_enemy_troops]人，主力驻扎在北坡。"
     elif alliance_baron:
-        elena "我的探子带回了敌军的情报——王后军的先锋。他们的主力驻扎在北坡，大约八百人。"
+        elena "我的探子带回了敌军的情报——王后军当前能列阵约[iron_enemy_troops]人，主力驻扎在北坡。"
     else:
-        elena "我的探子带回了敌军的情报。他们的主力驻扎在北坡，大约八百人。"
+        elena "我的探子带回了敌军的情报。他们当前能列阵约[iron_enemy_troops]人，主力驻扎在北坡。"
 
     hide elena_img
     $ hide_all_chars("captain_img")
@@ -2617,6 +2686,7 @@ label ending_iron_lord:
     hide captain_img with dissolve
 
     scene bg battlefield with dissolve
+    $ set_weather("rain", "heavy")
 
     "大军开拔之前，你做了最后的检阅。"
 
@@ -2788,8 +2858,9 @@ label ending_iron_lord:
 
     "第五天，两军主力终于在旷野上对峙了。"
 
-    scene bg battlefield with dissolve
-    $ unlock_gallery("bg_battlefield")
+    scene bg battlefield_active with dissolve
+    $ unlock_gallery("bg_battlefield_active")
+    $ play_music("audio/music/war_drums.ogg", fadein=1.0)
 
     "对面的军阵一眼望不到头。旌旗蔽日，铠甲的反光刺得人睁不开眼。"
 
@@ -2812,18 +2883,25 @@ label ending_iron_lord:
             $ hide_all_chars("player_char_img")
             show player_char_img at left with dissolve
             player "全军出击！一鼓作气冲垮他们！"
+            $ play_sound("audio/sfx/army_battle_cry.mp3")
             $ hide_all_chars()
             "老兵们对望了一眼。这一令的意思他们都懂——头一排撞上去的人，活下来的不会多。"
             "战鼓擂响。你的军队如洪流般冲向敌阵。"
-            $ play_sound("audio/sfx/sword_draw.ogg")
+            $ play_sound("audio/sfx/melee_clash.mp3")
             "铁与铁的碰撞，血混着泥。战场上响彻着惨叫和呐喊。"
-            if iron_war_score >= 20 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 抵消战备菜单代价 (原 22); 批31: 难度修正 easy-2/hard+4
+            if ch5_exp_war_strategy == "attack":
+                $ iron_war_score += 2
+                "你在军议上定下的主动出击不是空话。各营早已按进攻次序编组，第一声鼓响时没有一队找错位置。"
+            if iron_war_score >= 30 + get_war_threshold_mod():
                 "你的兵甲是这几个月一刀一枪攒出来的。硬撞之下，先撕开防线的是你。"
                 "代价不轻，但第一回合是你赢了。"
-            else:
+            elif iron_war_score >= 18 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "可你的人手不够厚。正面对撞，两边都在往下掉人。"
                 "你赢了第一回合——靠的是拿命去填。雷恩的脸色很难看。"
+            else:
+                "第一轮冲击还没压到敌阵中央，你的后队就断了。没有粮饷补兵，也没有第二支队伍肯接上缺口。"
+                jump ironlord_battle_lost
 
         "采用迂回战术，先攻击敌军侧翼|需谋略≥55" if intrigue >= 55:
             $ change_stat("intrigue", 3)
@@ -2838,13 +2916,19 @@ label ending_iron_lord:
             captain "……是。"
             $ hide_all_chars()
             "他没多说什么，但你听得出那个停顿。把两百人从主阵抽走，正面就得拿单薄的阵线去顶——他清楚，你也清楚。"
-            if iron_war_score >= 16 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 (原 18); 批31: 难度修正
+            if ch5_exp_final_formation == "hidden_blade" or ch5_exp_war_strategy == "divide":
+                $ iron_war_score += 3
+                "战前反复操演的藏锋阵终于派上用场。侧翼旗号一换，预留的通道立刻让开，没有一队人挤在林口。"
+            if iron_war_score >= 26 + get_war_threshold_mod():
                 "雷恩的人从林子里杀出来的时候，敌军还在盯着正面——侧翼被撕开了一道口子，阵脚立刻乱了。"
                 "仗打完的时候你清点了一遍——己方伤亡比你预想的少得多。"
-            else:
+            elif iron_war_score >= 18 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "迂回是对的，可你能分出去的人太少。雷恩那一击没能凿穿。"
                 "敌军缓了过来。你扳回了局面，但战线被拖成了消耗战。"
+            else:
+                "雷恩绕到了位置，正面却先垮了。战术没有错，可已经没有一条完整的战线等他回来夹击。"
+                jump ironlord_battle_lost
 
         "先防御，等待敌军露出破绽再反击|需谋略≥45 · 忠诚≥50" if intrigue >= 45 and loyalty >= 50:
             $ change_stat("intrigue", 4)
@@ -2857,17 +2941,23 @@ label ending_iron_lord:
             $ play_sound("audio/sfx/crowd_murmur.ogg")
             $ hide_all_chars()
             "对面阵中有人哄笑起来，隔着旷野喊艾登堡的领主缩了。这话会随败兵传开——可你不在乎，先挨过这几波再说。"
-            if iron_war_score >= 14 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 (原 16); 批31: 难度修正
+            if ch5_exp_final_formation in ("iron_wall", "peoples_bastion", "holy_shield") or ch5_exp_war_strategy == "defend":
+                $ iron_war_score += 3
+                "城下练过数百遍的阵型在旷野上合拢。修墙、运粮、操练民兵积下的本事，终于不再只是账面上的加成。"
+            if iron_war_score >= 24 + get_war_threshold_mod():
                 "敌军发起了一波又一波的冲锋，但你的防线岿然不动。"
                 "随着进攻的失败，敌军的士气开始下降。终于，你看到了破绽——"
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "全军反击！！！"
                 "反击的号角一响，撑了一整天的兵全扑出去了。对面那些已经冲累了的人，根本接不住这一下。"
-            else:
+            elif iron_war_score >= 18 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "盾墙撑住了前几波。可你的兵太疲，阵线一处接一处地凹下去。"
                 "你等到了反击的破绽——但反扑出去的力气，已经剩不下多少了。"
+            else:
+                "盾墙只撑过两轮。欠饷的民兵先退，缺甲的缺口随即被骑兵撞开；你等不到反击的时机了。"
+                jump ironlord_battle_lost
 
         "硬拼——你没有更好的选择了" if not _iron_prepared:
             $ change_stat("power", 2)
@@ -2876,13 +2966,13 @@ label ending_iron_lord:
             show player_char_img at left with dissolve
             player "顶上去。没有别的办法了。"
             $ hide_all_chars()
-            if iron_war_score >= 12 + get_war_threshold_mod():    # 选择深度 L2: 阈值-2 防不公平战败 (原 14); 批31: 难度修正
+            if iron_war_score >= 24 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "你没有奇兵，没有内应，能做的只有把人压上去。"
                 "靠一股不肯退的狠劲，你险险撕开了一道口子——但每一步都踩在自己人身上。"
             else:
                 "你没有奇兵，没有内应，也没有足够的人。"
-                "拿三百人去填一场根本没准备好的会战——结果就摆在眼前。"
+                "拿[iron_total_troops]名没有成体系准备的人去填会战——结果就摆在眼前。"
                 jump ironlord_battle_lost
 
     hide captain_img with dissolve
@@ -2943,9 +3033,23 @@ label ending_iron_lord:
                 courage_cost=10)
             call crisis_encounter from _call_crisis_ironlord_flank
 
-    label ironlord_post_left_flank:
+label ironlord_post_left_flank:
     hide captain_img with dissolve
 
+    if prince_ally and not prince_betrayed:
+        $ hide_all_chars()
+        "你的前阵顶住第三轮冲击时，对面右后方忽然有人高喊——「隼归！」"
+        "敌军右翼的一面旗停了。紧接着是第二面、第三面。"
+        "那三个营没有倒戈，也没有向你冲来。他们收起长矛，盾牌落地，任凭军官在马背上嘶喊。"
+        if prince_trust_deep:
+            "王子说过，他被关住了，眼睛和耳朵却还在宫墙外。"
+        "一道军令传不动，旁边的阵列也跟着迟疑。敌军右翼空出了一截。"
+        $ hide_all_chars("captain_img")
+        show captain_img at left with dissolve
+        captain "大人！就是现在！"
+        hide captain_img with dissolve
+
+    $ hide_all_chars()
     "下午三点，战场上的局势翻了——"
 
     "敌军的主将出现在了你的视线范围内。他骑着一匹黑色战马，在战场中央指挥着部队。"
@@ -2979,6 +3083,8 @@ label ending_iron_lord:
             "果然，被包围的敌军开始从那条唯一的退路逃散。"
             "没有了阵型的溃兵毫无威胁。你的骑兵在后面追击，收获了大量俘虏。"
 
+    scene bg battlefield with dissolve
+
     "当夕阳染红了战场时，你站在山丘上俯瞰着满地的旗帜。"
 
     "有些旗帜还在飘扬。有些永远倒下了。"
@@ -3000,23 +3106,30 @@ label ending_iron_lord:
     hide player_char_img
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
+    python:
+        if iron_battle_outcome == "pyrrhic":
+            iron_battle_dead = max(60, iron_total_troops // 7)
+            iron_battle_wounded = max(100, iron_total_troops // 4)
+        else:
+            iron_battle_dead = max(35, iron_total_troops // 18)
+            iron_battle_wounded = max(70, iron_total_troops // 10)
     if iron_battle_outcome == "pyrrhic":
-        captain "我们阵亡了两百多人， 伤了三百多。敌军——是我们的两倍， 不是三倍。"
+        captain "各部合计阵亡[iron_battle_dead]人，伤[iron_battle_wounded]人。敌军损失更重，但这不是一场可以轻描淡写的胜利。"
     else:
-        captain "我们阵亡了七十多人，伤了一百多。敌军……至少是我们的三倍。"
+        captain "各部合计阵亡[iron_battle_dead]人，伤[iron_battle_wounded]人。战前的每一车粮、每一次操练，都从名册上替我们留下了名字。"
 
     hide captain_img
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     if iron_battle_outcome == "pyrrhic":
-        player "两百多人……"
+        player "[iron_battle_dead]人……"
         $ hide_all_chars()
-        "你闭上了眼睛。两百多条生命。每一个都是一个家庭塌下来。"
+        "你闭上了眼睛。[iron_battle_dead]条生命。每一个都是一个家庭塌下来。"
         "这场仗你赢了， 但代价大得让你不敢去看名册。"
     else:
-        player "七十多人……"
+        player "[iron_battle_dead]人……"
         $ hide_all_chars()
-        "你闭上了眼睛。七十多条生命。他们家里的人还在等他们回去。"
+        "你闭上了眼睛。[iron_battle_dead]条生命。他们家里的人还在等他们回去。"
 
     hide player_char_img
     $ hide_all_chars("captain_img")
@@ -3125,6 +3238,7 @@ label ending_iron_lord:
     $ mark_important_choice()
     menu:
         "宽大为怀——释放战俘，与战败方签订平等条约|忠诚+ 声望+ 敌意消除":
+            $ iron_postwar_policy = "clemency"
             $ change_stat("loyalty", 10)
             $ change_stat("reputation", 10)
             hide elena_img
@@ -3142,6 +3256,7 @@ label ending_iron_lord:
             "消息传开后，周围的领主纷纷遣使示好。能打赢仗还肯放人——这种领主，谁不想交好？"
 
         "杀鸡儆猴——处决首恶，释放士兵|权力+ 声望- 威慑四方" if power >= 55:
+            $ iron_postwar_policy = "execution"
             $ change_stat("power", 10)
             $ change_stat("reputation", -5)
             hide elena_img
@@ -3154,6 +3269,7 @@ label ending_iron_lord:
             "但也有人在背后说——这个年轻的领主，比他父亲更冷酷。"
 
         "吞并领地——将战败方纳入版图|权力+ 财富+ 管理压力大" if power >= 60:
+            $ iron_postwar_policy = "annexation"
             $ change_stat("power", 15)
             $ change_stat("wealth", 18)
             $ change_stat("reputation", -3)
@@ -3173,6 +3289,87 @@ label ending_iron_lord:
     hide captain_img with dissolve
     hide elena_img with dissolve
 
+    if (iron_battle_outcome == "decisive"
+            and power >= 60 and loyalty >= 60 and reputation >= 50
+            and (northern_lords_unified or iron_postwar_policy == "annexation")
+            and not resist_route):
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
+        aldric "大人，还有一件事。六位北境领主和十二个自治镇联名送来议案。"
+        aldric "他们不愿再把粮税和兵员交给一个只在出兵时才想起北方的王廷。他们请艾登堡牵头，另立北境法统。"
+        hide aldric_img
+        $ hide_all_chars("captain_img")
+        show captain_img at left with dissolve
+        captain "我们的军队打赢了，关隘在我们手里，百姓也认这面旗。现在开口，不是谁封您——是北境自己选。"
+        $ mark_important_choice()
+        menu:
+            "顺应人心，宣告北境自立|保留铁腕领主结局，开启「北境自立」政治尾声":
+                $ self_rule_declared = True
+                $ prince_pact_honored = False
+                $ change_stat("power", 8)
+                $ change_stat("loyalty", 5)
+                $ log_decision("第五章", "接受北境议案, 宣告脱离王廷自立")
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "王冠不是神器，血统也不是。能让人交出粮食、拿起武器、相信明天还有收成的，才是法统。"
+                player "回信给王都：从今日起，北境不再纳贡，不再接受王廷驻军。各城保留自治，战时共举一旗。"
+                $ hide_all_chars()
+                "大厅里没有人高呼万岁。六位领主先后解下旧王徽，自治镇代表把沾着泥的手按在盟约上。"
+                "你没有坐上另一个王座。你成为北境盟主——由诸城推举，也必须向诸城交代。"
+
+            "保留王国名义——北境自治，但不正式割裂":
+                $ self_rule_declared = False
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "北境可以自己守，但还不到另立国号的时候。把议案改成永久自治约书。"
+                $ hide_all_chars()
+                "你留下了实权，也给王都留下一层名义。那是一条更稳妥、也更含混的路。"
+
+    if not self_rule_declared and prince_ally and not prince_betrayed and prince_pact_status in ("sworn", "conditional"):
+        $ hide_all_chars("aldric_img")
+        show aldric_img at left with dissolve
+        aldric "大人，王都又来了信。王子的人在问——我们何时进京。"
+        $ hide_all_chars()
+        if prince_pact_status == "sworn":
+            "岔路口那句承诺，到了兑现的时候。"
+        else:
+            "你当时说，等他手里有牌再谈。证据、内应、停战的三个营——他的牌已经摆上了桌。"
+        $ mark_important_choice()
+        menu:
+            "兑现约定，护送王子进京登基":
+                $ prince_pact_honored = True
+                $ change_rel("rel_prince", 10)
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "回信。艾登堡整军三日，随后护送王子进京。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "以什么名义？"
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "以盟友的名义。王位是他的，北方的安稳是我的。"
+                $ hide_all_chars()
+                "信使当夜离开。你没有让他带条件。"
+
+            "留下军权，暂不安排王子登基":
+                $ prince_pact_honored = False
+                $ change_rel("rel_prince", -15)
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "告诉他，王都还不稳。登基的事，以后再议。"
+                hide player_char_img
+                $ hide_all_chars("aldric_img")
+                show aldric_img at left with dissolve
+                aldric "这个以后，要等多久？"
+                hide aldric_img
+                $ hide_all_chars("player_char_img")
+                show player_char_img at left with dissolve
+                player "等我认为可以的时候。"
+                $ hide_all_chars()
+                "奥尔德里克没有再问。王子收到这句话，也不会再问。"
+
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
 
@@ -3191,15 +3388,25 @@ label ending_iron_lord:
     $ play_music("audio/music/main_theme.ogg", fadein=2.0)
     scene black with dissolve
 
-    "此后的日子里，你凭借在战争中积累的军功和威望，成为北方最强大的领主。"
+    if self_rule_declared:
+        "此后的日子里，你凭借战争中积累的军功和民望，把六座城、十二个自治镇和三处山隘缝成了一个真正能调粮、征兵、共同守关的北境盟邦。"
+        "自立不是在地图上换一种颜色。每座城交多少粮、出多少兵、灾年由谁先开仓，你和议会吵了整整三年。"
+    else:
+        "此后的日子里，你凭借在战争中积累的军功和威望，成为北方最强大的领主。"
 
     "你重建了被战火摧毁的村庄，安置了失去家园的难民。"
 
-    "你建立了一支强大的常备军，让任何心怀不轨的势力都不敢轻举妄动。"
+    "你建立了一支由常备军、轮训民兵和各城守备组成的北境军。它不是一夜冒出来的神兵，而是粮仓、道路、税收和五年操练一点点养出来的。"
 
     "人们称你为「铁腕领主」。"
 
-    "你的领地富庶安定，边境太平。"
+    if self_rule_declared:
+        "自立后的第一个秋天，北岗烽火连亮七座。二十年前被击退的部落重新结盟——斥候估算，山外聚起了三万蛮兵。"
+        "这一次，他们没有消失在一句军报里。你把两千常备军压上三处山隘，各城再轮调三千民兵；粮仓连续向北运了四十天粮。"
+        "三万人没有在同一天撞向一面城墙。你守隘、断草场、放回俘虏传话，逼年轻的蛮族首领在入冬前坐上谈判桌。边战持续了七个月，北境丢了两个哨堡，也守住了所有村镇。"
+        "最后签下的不是永世和平，只是一份五年互市与退兵约。但北境第一次不靠王都援军，自己接住了真正的北方威胁。"
+    else:
+        "你的领地富庶安定，边境暂时太平。北岗仍不断送来蛮族集结的军报——和平从来不是结局，只是下一场考验前争来的时间。"
 
     scene bg great_hall with dissolve
     $ unlock_gallery("bg_great_hall")
@@ -3208,7 +3415,7 @@ label ending_iron_lord:
 
     "你坐在大厅的领主之位上，听取幕僚们的汇报。"
 
-    "艾登堡已经从一个小领地，发展成了北方最富饶的城邦。"
+    "艾登堡正在从一个小领地，变成北方最富饶的城邦。"
 
     $ hide_all_chars("aldric_img")
     show aldric_img at left with dissolve
@@ -3341,10 +3548,11 @@ label ironlord_flank_lose:
 
 ## ── 铁腕线会战惨败 → 艾登堡陷落 (花露水反馈: 准备不足要有战败结局) ──
 label ironlord_battle_lost:
+    $ iron_battle_defeat = True
     $ hide_all_chars()
     scene bg battlefield with dissolve
     "你的中军是从正中央被凿穿的。"
-    "没有援军，没有内应，没有一支能绕到敌后的奇兵——你能押上的，只有正面那三百人。"
+    "没有成建制的援军，没有可靠内应，也没有一支能按时绕到敌后的奇兵——你能押上的，只有这支仓促拼起的队伍。"
     "他们撑了不到一个时辰。"
     $ hide_all_chars("captain_img")
     show captain_img at left with dissolve
@@ -3359,7 +3567,7 @@ label ironlord_battle_lost:
     $ change_stat("power", -10)
     $ change_stat("reputation", -8)
     $ change_stat("loyalty", -5)
-    "残部退回了城里。北方那两支大军，跟着你的背影，一路压到了艾登堡城下。"
+    "残部退回了城里。战场上仍能行动的敌军跟着你的背影，一路压到了艾登堡城下。"
     $ ending_type = "fall"
     $ log_decision("第五章", "铁腕会战惨败, 退守艾登堡")
     jump ending_fall
@@ -4972,6 +5180,7 @@ label ending_truth:
         "大厅里爆发了巨大的喧哗。"
         if alliance_church:
             ## R2 延迟兑现: ch4 与教会结盟时马修斯说过"这笔账干净不到哪里去"。现在当众摊开——你的盟友是共犯。
+            $ hide_all_chars()
             "你站在原地，没动。这个低着头认罪的人，是你亲手请进来的盟友。"
             "你接住教会支持的那天就被告知过：这笔账干净不到哪里去。现在它当着满堂的人摊开了。"
             "你父亲的血，有一份就在你此刻盟友的手上。"
@@ -4997,6 +5206,7 @@ label ending_truth:
     ## 王子盟友路线的隐形好感预警：议会抉择前的侧笔，提示玩家当前王子心态
     if prince_ally and not prince_betrayed:
         if rel_prince < 25:
+            $ hide_all_chars()
             "议会召开前夕，你托人给王子捎了口信。"
             "来人带回的只有一句话：「他听完了。」"
             "他听完了。没别的。"
@@ -5683,6 +5893,7 @@ label ending_borgia:
     show player_char_img at left with dissolve
     player "陛下美意， 臣岂敢推辞。"
 
+    $ hide_all_chars()
     "你举起酒杯， 跟她碰了一下。两杯酒看起来一模一样。"
 
     "你母亲教过你——把毒下在自己的杯子里， 别人就永远不会怀疑。然后在敬酒的瞬间， 用袖口盖住交换。"
@@ -5749,6 +5960,7 @@ label ending_borgia:
 
         elena "我不能跟一个会下毒的人睡在同一张床上。"
 
+        $ hide_all_chars()
         "她那天夜里离开了艾登堡。没有告诉你她去哪。"
         hide elena_img with dissolve
 
@@ -6100,6 +6312,7 @@ label ending_fall:
         captain "守一天可以， 守一周不可能。"
         hide captain_img
     else:
+        $ hide_all_chars()
         "你没有像样的军队。 雷恩当初要的兵你没批， 城墙加固的钱你拿去给税赋空账填了。"
         "现在能用的人， 加上厨子和马夫， 不到八十。"
 
@@ -6176,7 +6389,11 @@ label ending_fall:
 
     pause 1.5
 
-    centered "{size=+6}领主下落不明{/size}"
+    if iron_battle_defeat:
+        centered "{size=+6}艾登堡领主战死{/size}"
+        centered "{size=+5}破城后的清晨，人们在烧毁的大厅里找到了你。父亲的剑仍握在手中。{/size}"
+    else:
+        centered "{size=+6}领主下落不明{/size}"
 
     pause 1.5
 
@@ -6305,6 +6522,7 @@ label ending_sea:
 
         corsair "跑路的。"
 
+        $ hide_all_chars()
         "不是问句。你点了点头。"
 
         "她跳下缆桩走到你面前。"
@@ -6314,15 +6532,20 @@ label ending_sea:
 
             "赛琳接过去。手指在绳结上停了一下。"
 
+            $ hide_all_chars("corsair_img")
+            show corsair_img at left with dissolve
             corsair "结没散。"
 
             "她把绳头塞回你手里，转身朝船上喊了一声。有人放下跳板。"
         else:
             ## 南境陨落线正典: 绳结不在了(空缺意象, 与 ending_decision_pause 的 fall 变体一致)
+            $ hide_all_chars()
             "你下意识往口袋里摸。指尖抵到布底——空的。"
 
             "赛琳看了一眼你空着的手。"
 
+            $ hide_all_chars("corsair_img")
+            show corsair_img at left with dissolve
             corsair "丢了就丢了。"
 
             "她转身朝船上喊了一声。有人放下跳板。"

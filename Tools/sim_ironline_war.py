@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """铁血线会战平衡验证 (世界的尽头批遗留: 完胜/惨胜比例未 playtest)
 管线 1:1 复刻自:
-  chapter5.rpy 2367-2382  iron_war_score 基础分 (属性 + 盟友/旗标)
+  chapter5.rpy ending_iron_lord  iron_war_score 基础分 (属性 + 治理 + 盟友/战备旗标)
   chapter5.rpy 2478       战前谋略 menu   (+4/+6[+3]/+6/+8)
   chapter5.rpy 2631       前锋 menu       (+0/+3)
   chapter5.rpy 2690       弃村 menu       (+0/-3/+0)
-  chapter5.rpy 2756-2833  决战 menu 4 档阈值 20/16/14/12 + get_war_threshold_mod()
+  chapter5.rpy 决战 menu 4 档阈值 30/26/24/24 + get_war_threshold_mod()
   difficulty.rpy          阈值难度修正 normal 0 / hard +4; change_stat 双层缩放
   attr_system.rpy 214     change_stat 原始层 (0.4 增益 * 高位衰减 / 0.6 代价, wealth 0.4)
 战中 crisis 掷骰 (trigger_crisis) 与 war_score 无关, 不在本模拟范围。
@@ -70,6 +70,12 @@ def base_score(st, fl):
     s += max(0, st["power"] - 30) // 4
     s += max(0, st["intrigue"] - 30) // 6
     s += max(0, st["loyalty"] - 30) // 8
+    if st["wealth"] < 15:
+        s -= 3
+    else:
+        s += max(0, st["wealth"] - 30) // 15
+    if st["reputation"] < 20:
+        s -= 2
     if fl["alliance_baron"]:
         s += 10
     elif fl["rel_baron_pos"]:
@@ -82,6 +88,25 @@ def base_score(st, fl):
         s += 3
     if fl["marriage"]:
         s += 5
+    if fl["iron_thorn"]:
+        s += 3
+    s += min(6, fl["defender_bonus"] // 3)
+    if fl["skirmish"] == "victory":
+        s += 3
+    elif fl["casualties"] >= 7:
+        s -= 1
+    if fl["enemy_morale_hit"]:
+        s += 2
+    if fl["deserter_intel"]:
+        s += 2
+    if fl["famine_prevented"]:
+        s += 2
+    if fl["granary"]:
+        s += 2
+    if fl["prosperous"]:
+        s += 2
+    if fl["north_unified"]:
+        s += 6
     return s
 
 
@@ -118,13 +143,13 @@ def tactic_options(st):
     """决战 menu: (id, 阈值基数). 硬拼仅当 _iron_prepared 为假."""
     opts = []
     if st["power"] >= 60:
-        opts.append(("assault", 20))
+        opts.append(("assault", 30))
     if st["intrigue"] >= 55:
-        opts.append(("flank", 16))
+        opts.append(("flank", 26))
     if st["intrigue"] >= 45 and st["loyalty"] >= 50:
-        opts.append(("defend", 14))
+        opts.append(("defend", 24))
     if not opts:
-        opts.append(("grind", 12))
+        opts.append(("grind", 24))
     return opts
 
 
@@ -198,23 +223,40 @@ def play_war(st, fl, persona, difficulty, rng):
     else:                                          # random / roleplay: 均匀选可见战术
         tid, th = rng.choice(topts)
 
+    if tid == "assault" and fl["war_strategy"] == "attack":
+        score += 2
+    elif tid == "flank" and (
+        fl["formation"] == "hidden_blade" or fl["war_strategy"] == "divide"
+    ):
+        score += 3
+    elif tid == "defend" and (
+        fl["formation"] in ("iron_wall", "peoples_bastion", "holy_shield")
+        or fl["war_strategy"] == "defend"
+    ):
+        score += 3
+
     # 阈值档带 (以最终 score 对 4 档基准)
-    if score >= 20 + mod:
-        band = "强攻完胜档(>=20)"
-    elif score >= 16 + mod:
-        band = "迂回档(16-19)"
-    elif score >= 14 + mod:
-        band = "防守档(14-15)"
-    elif score >= 12 + mod:
-        band = "硬拼惨胜档(12-13)"
+    if score >= 30 + mod:
+        band = "强攻完胜档(>=30)"
+    elif score >= 26 + mod:
+        band = "迂回档(26-29)"
+    elif score >= 24 + mod:
+        band = "防守档(24-25)"
+    elif score >= 18 + mod:
+        band = "惨胜档(18-23)"
     else:
-        band = "更差(<12)"
+        band = "更差(<18)"
 
     # 实际结局
     if tid == "grind":
-        outcome = "惨胜" if score >= 12 + mod else "战败"
+        outcome = "惨胜" if score >= 24 + mod else "战败"
     else:
-        outcome = "完胜" if score >= th + mod else "惨胜"
+        if score >= th + mod:
+            outcome = "完胜"
+        elif score >= 18 + mod:
+            outcome = "惨胜"
+        else:
+            outcome = "战败"
     return score, band, outcome
 
 
@@ -287,13 +329,25 @@ def sample_entry(persona, difficulty, rng):
         change_stat(st, "wealth", -15, difficulty)
     fl["marriage"] = coin(rng, p_mar)
     fl["intel"] = coin(rng, p_int)
+    fl["iron_thorn"] = coin(rng, 0.25)
+    fl["defender_bonus"] = rng.randint(4, 22)
+    fl["skirmish"] = rng.choice(("victory", "pyrrhic", "retreat"))
+    fl["casualties"] = {"victory": 3, "pyrrhic": 7, "retreat": 0}[fl["skirmish"]]
+    fl["enemy_morale_hit"] = fl["skirmish"] == "victory"
+    fl["deserter_intel"] = fl["skirmish"] == "victory"
+    fl["famine_prevented"] = coin(rng, 0.65)
+    fl["granary"] = coin(rng, 0.55)
+    fl["prosperous"] = coin(rng, 0.45)
+    fl["north_unified"] = fl["skirmish"] == "victory" and coin(rng, 0.45)
+    fl["war_strategy"] = rng.choice(("defend", "attack", "divide", "diplomacy"))
+    fl["formation"] = rng.choice(("iron_wall", "hidden_blade", "holy_shield", "peoples_bastion"))
     return st, fl
 
 
 # ────────────────────────────────────────────────────────────────
 # 主循环 + 报告
 # ────────────────────────────────────────────────────────────────
-BANDS = ["强攻完胜档(>=20)", "迂回档(16-19)", "防守档(14-15)", "硬拼惨胜档(12-13)", "更差(<12)"]
+BANDS = ["强攻完胜档(>=30)", "迂回档(26-29)", "防守档(24-25)", "惨胜档(18-23)", "更差(<18)"]
 OUTCOMES = ["完胜", "惨胜", "战败"]
 PERSONA_NAMES = {"optimal": "最优玩家", "random": "均匀随机玩家", "roleplay": "角色扮演中间玩家"}
 
@@ -307,22 +361,22 @@ def emit(s=""):
 
 def median_band(counter_scores, mod):
     m = statistics.median(counter_scores)
-    if m >= 20 + mod:
+    if m >= 30 + mod:
         return "强攻完胜档", m
-    if m >= 16 + mod:
+    if m >= 26 + mod:
         return "迂回档", m
-    if m >= 14 + mod:
+    if m >= 24 + mod:
         return "防守档", m
-    if m >= 12 + mod:
-        return "硬拼惨胜档", m
+    if m >= 18 + mod:
+        return "惨胜档", m
     return "更差", m
 
 
 def main():
     rng = random.Random(20260711)
     emit("=" * 78)
-    emit("铁血线会战 平衡模拟  (N=%d / 画像×难度)   阈值: 强攻20/迂回16/防守14/硬拼12" % N)
-    emit("难度修正: normal +0 → 20/16/14/12   hard +4 → 24/20/18/16")
+    emit("铁血线会战 平衡模拟  (N=%d / 画像×难度)   阈值: 强攻30/迂回26/防守24/硬拼24" % N)
+    emit("难度修正: normal +0 → 30/26/24/24   hard +4 → 34/30/28/28")
     emit("=" * 78)
 
     results = {}
@@ -330,7 +384,7 @@ def main():
         mod = WAR_TH_MOD[difficulty]
         emit("")
         emit("#### 难度 %s (阈值 %d/%d/%d/%d) ####" % (
-            difficulty, 20 + mod, 16 + mod, 14 + mod, 12 + mod))
+            difficulty, 30 + mod, 26 + mod, 24 + mod, 24 + mod))
         for persona in ("optimal", "random", "roleplay"):
             band_ct = {b: 0 for b in BANDS}
             out_ct = {o: 0 for o in OUTCOMES}
@@ -364,8 +418,8 @@ def main():
     checks = []
     for difficulty in ("normal", "hard"):
         band_ct, out_ct, p10, p50, p90, mb = results[(difficulty, "roleplay")]
-        mid_two = (band_ct["迂回档(16-19)"] + band_ct["防守档(14-15)"]) / N
-        top = band_ct["强攻完胜档(>=20)"] / N
+        mid_two = (band_ct["迂回档(26-29)"] + band_ct["防守档(24-25)"]) / N
+        top = band_ct["强攻完胜档(>=30)"] / N
         pyr = out_ct["惨胜"] / N
         lose = out_ct["战败"] / N
         ok_med = mb in ("强攻完胜档", "迂回档", "防守档")
@@ -403,6 +457,20 @@ def main():
         ("无任何盟友/旗标", dict(alliance_baron=False, rel_baron_pos=False, prince_ally=False,
                                  captain60=False, pension=False, marriage=False, intel=False)),
     ]
+    prep_defaults = dict(
+        iron_thorn=False,
+        defender_bonus=12,
+        skirmish="pyrrhic",
+        casualties=7,
+        enemy_morale_hit=False,
+        deserter_intel=False,
+        famine_prevented=True,
+        granary=False,
+        prosperous=False,
+        north_unified=False,
+        war_strategy="defend",
+        formation="iron_wall",
+    )
     NS = 20000
     worst = []
     for difficulty in ("normal", "hard"):
@@ -412,6 +480,7 @@ def main():
             difficulty, "画像", "盟友组合", "完胜", "惨胜", "战败"))
         for pname, pst in profiles:
             for aname, afl in ally_sets:
+                afl = {**prep_defaults, **afl}
                 out_ct = {o: 0 for o in OUTCOMES}
                 scs = []
                 for _ in range(NS):

@@ -183,6 +183,25 @@ label show_chapter(ch_num="第一章", ch_name="新主登基", ch_desc=""):
 
 init python:
 
+    def save_progress_before_exit():
+        """Save the current playable position and persistent unlocks."""
+        try:
+            renpy.force_autosave(block=True)
+        except Exception as exc:
+            ## Saving failure must not trap the player in the game.
+            renpy.log("exit autosave failed: {!r}".format(exc))
+        try:
+            renpy.save_persistent()
+        except Exception as exc:
+            renpy.log("persistent save before exit failed: {!r}".format(exc))
+
+    def save_persistent_before_menu():
+        """Flush unlocks without replacing the last playable autosave."""
+        try:
+            renpy.save_persistent()
+        except Exception as exc:
+            renpy.log("persistent save before menu failed: {!r}".format(exc))
+
     ## 属性中文名映射
     _stat_names = {
         "power": "权力", "wealth": "财富", "faith": "信仰",
@@ -346,6 +365,14 @@ init python:
                     break
         return results
 
+## 系统退出事件先完成自动存档，避免移动端划掉进程时丢失最近进度。
+define config.quit_action = ShowMenu(
+    "confirm",
+    _("保存当前进度并退出游戏吗？"),
+    [Function(save_progress_before_exit), Quit(confirm=False)],
+    Return(),
+)
+
 ## ── 属性变化弹幕 ──
 screen stat_toast(stat_name="", delta=0, is_rel=False, slot=0, tag_id=0):
     zorder 250
@@ -444,13 +471,13 @@ screen autosave_indicator():
                 add _as_quill yalign 0.5
             else:
                 text "【存】" size 14 yalign 0.5
-            text "自动存档..." size 13 color "#8a7e60" yalign 0.5
+            text "自动存档已完成" size 13 color "#8a7e60" yalign 0.5
 
     timer 2.0 action Hide("autosave_indicator")
 
 ## 在关键抉择前调用
 label autosave_before_choice:
-    $ renpy.force_autosave()
+    $ renpy.force_autosave(block=True)
     show screen autosave_indicator
     pause 0.5
     return
@@ -1369,7 +1396,7 @@ screen ending_complete_hint(current_ending=""):
                     text_color "#8a7e60"
                     text_hover_color "#c8b890"
                     text_font "msyh.ttf"
-                    action [Hide("ending_complete_hint"), MainMenu()]
+                    action [Hide("ending_complete_hint"), Function(save_persistent_before_menu), MainMenu(confirm=False)]
 
                 if remaining > 0:
                     textbutton "再玩一次":

@@ -1129,6 +1129,48 @@ class VersionAndAndroidContractTests(unittest.TestCase):
             self.android["numeric_version"], MINIMUM_ANDROID_NUMERIC_VERSION
         )
 
+    def test_android_native_privacy_gate_precedes_sdl_startup(self) -> None:
+        java = read_text("Tools/android_privacy/ConsentActivity.java")
+        manifest = read_text("Tools/android_privacy/app-AndroidManifest.xml")
+        installer = read_text("Tools/apply_android_privacy_gate.py")
+        script = read_text("game/script.rpy")
+
+        self.assertIn("class ConsentActivity extends Activity", java)
+        self.assertIn('getBoolean(AGREED_KEY, false)', java)
+        self.assertRegex(
+            java,
+            r"putBoolean\(AGREED_KEY, true\)\.commit\(\)[\s\S]+launchGame\(\)",
+        )
+        self.assertIn("new Intent(this, PythonSDLActivity.class)", java)
+        self.assertLess(
+            manifest.index('android:name="org.renpy.android.ConsentActivity"'),
+            manifest.index('android:name="org.renpy.android.PythonSDLActivity"'),
+        )
+        self.assertRegex(
+            manifest,
+            r'android:name="org\.renpy\.android\.ConsentActivity"[\s\S]+android\.intent\.action\.MAIN',
+        )
+        self.assertRegex(
+            manifest,
+            r'android:name="org\.renpy\.android\.PythonSDLActivity"[\s\S]+android:exported="false"',
+        )
+        self.assertIn('android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"', manifest)
+        self.assertIn('android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove"', manifest)
+        self.assertIn('android:name="androidx.startup.InitializationProvider"', manifest)
+        self.assertIn('android:allowBackup="false"', manifest)
+        for permission in (
+            "ACCESS_NETWORK_STATE",
+            "RECEIVE_BOOT_COMPLETED",
+            "FOREGROUND_SERVICE",
+            "FOREGROUND_SERVICE_DATA_SYNC",
+        ):
+            self.assertIn(
+                f'android.permission.{permission}" tools:node="remove"', manifest
+            )
+        self.assertIn('for tree in ("prototype", "project"):', installer)
+        self.assertIn("if renpy.android:", script)
+        self.assertIn("$ persistent.privacy_agreed = True", script)
+
 
 class EndingCatalogContractTests(unittest.TestCase):
     def test_catalog_and_three_source_maps_use_exactly_nine_endings(self) -> None:

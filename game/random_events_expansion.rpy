@@ -35,7 +35,7 @@ init python:
                     "stat_req": ("power", 35),
                     "success": {
                         "narration": "你当机立断，命令雷恩封锁所有出入口，逐层搜查城堡。\n\n整整两个时辰的搜查后，侍卫们在北塔的阁楼里发现了一个藏匿的黑衣人。他身上携带着淬毒的匕首和一封密信。\n\n密信上的笔迹你似曾相识——那是某位你信任之人的手迹。\n\n「把他关进地牢。」你冷冷地说，心中波澜翻涌。\n\n而那个报信的刺客，在天亮前死在了地窖里。他的最后一句话是：「小心……花园里的人。」",
-                        "effects": [("stat", "power", 5), ("stat", "intrigue", 8), ("stat", "reputation", 3)],
+                        "effects": [("stat", "power", 5), ("stat", "intrigue", 8), ("stat", "reputation", 3), ("flag", "assassin_garden_warning_known", True)],
                     },
                     "failure": {
                         "narration": "你下令搜查城堡，但侍卫们行动缓慢，惊动了潜伏者。\n\n当搜查队到达北塔时，只发现一扇敞开的窗户和一根垂下的绳索。刺客已经逃了。\n\n墙上用炭笔留下一行字：「下次不会再有人报信。」\n\n你一脚踢翻了旁边的木桶，深深的无力感涌上心头。",
