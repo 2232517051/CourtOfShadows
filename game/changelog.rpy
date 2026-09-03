@@ -21,6 +21,38 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.25 (商店版 v3.9.3) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.25" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "回应 · 商店版 v3.9.3" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.09.04" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "新剧情：格伦瓦德对峙（玩家反馈）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第三章末，冯·哈根男爵率三百铁骑越境进驻格伦瓦德村。列阵逼退、以计智退或以粮换退兵，北境各家都在看" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 在格伦瓦德站出来过的领主，第五章前哨战后可直接发动「统一北境」，坎贝尔、莫林、瓦特三家派兵助战" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 新增专属场景图「格伦瓦德对峙」，已入画廊" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "平衡：铁腕会战数值收紧" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 属性权重提高、判定阈值上调：普通难度乱点从九成完胜降到五成上下，准备充分仍可完胜" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 困难难度阈值改为 +3，简单难度放宽到 -6" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.24 (商店版 v3.9.2) ──
             frame:
                 xfill True
@@ -51,6 +83,13 @@ screen changelog_screen():
                     text "· 手机端长选项支持滚动，150% 字号下仍可查看并选择全部路线" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 字号与高对比设置改用引擎原生偏好，切换后即时生效" size 14 color "#c8b890" font "msyh.ttf"
                     text "· 修正战斗与锻造界面的百分号重复显示" size 14 color "#c8b890" font "msyh.ttf"
+                    null height 8
+                    text "剧情与结局（玩家反馈）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 铁腕会战兵力改为按属性、治理与盟友动态计算，王后军与男爵军先在石桥谷互耗，不再是三百人打三千人" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 前哨战大胜后可乘胜拆散男爵联军，六位北境领主签共同防务约书" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 决定性胜利并统一北境后新增「北境自立」政治尾声，三万蛮兵压境的边战终于登场" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 铁腕线新增战败结局，府库与声望见底会拖累会战" size 14 color "#c8b890" font "msyh.ttf"
 
             null height 4
 

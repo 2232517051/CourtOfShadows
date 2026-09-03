@@ -42,7 +42,7 @@ except ImportError:  # Supports ``python -m Tools.verify_distributions``.
 
 ROOT = Path(__file__).resolve().parents[1]
 WINDOWS_ROOT = f"CourtOfShadows-{APPROVED_VERSION}-win"
-EXPECTED_RELEASE_RPYC_COUNT = 55
+EXPECTED_RELEASE_RPYC_COUNT = 56  # 3.9.3: + baron_clash.rpy
 EXPECTED_ACTIVITIES = (
     "org.renpy.android.ConsentActivity",
     "org.renpy.android.PythonSDLActivity",

@@ -25,6 +25,7 @@ init python:
         ("bg_battlefield", "战场"),
         ("bg_battlefield_active", "暴雨会战"),
         ("bg_iron_parade_winter", "冬日铁骑"),
+        ("bg_grenwald_standoff", "格伦瓦德对峙"),
         ## 南境游记 DLC
         ("bg_tideport_harbor", "潮汐港"),
         ("bg_tideport_tavern", "断锚酒馆"),

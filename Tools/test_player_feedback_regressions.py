@@ -1732,9 +1732,63 @@ class LatestPlayerFeedbackClosureTests(unittest.TestCase):
         for source in (chapter5, difficulty):
             self.assertIn("if wealth < 15:", source)
             self.assertIn("if reputation < 20:", source)
-        self.assertIn("iron_war_score >= 24 + get_war_threshold_mod()", chapter5)
+        self.assertIn("iron_war_score >= 44 + get_war_threshold_mod()", chapter5)
+        self.assertIn("iron_war_score >= 50 + get_war_threshold_mod()", chapter5)
+        self.assertIn("max(0, power - 30) // 3", chapter5)
         self.assertIn("$ iron_battle_defeat = True", chapter5)
         self.assertIn("艾登堡领主战死", chapter5)
+
+
+class GrenwaldStandoffContractTests(unittest.TestCase):
+    """3.9.3 晨曦反馈: 男爵作为前期小boss(第三章末格伦瓦德对峙) + 铁腕线数值收紧."""
+
+    def test_chapter_three_calls_the_standoff_before_the_northern_envoy(self) -> None:
+        chapter3 = read_game_file("chapter3.rpy")
+        call_at = chapter3.index("call ch3_baron_clash from _call_ch3_baron_clash")
+        envoy_at = chapter3.index("灰隘口的信使在午后到达")
+        self.assertLess(call_at, envoy_at)
+        self.assertIn('        "你还没缓过气，北边又来了人。"', chapter3)
+
+    def test_standoff_scene_has_three_resolutions_and_skips_the_alliance_route(self) -> None:
+        scene = read_game_file("baron_clash.rpy")
+        body = label_body("baron_clash.rpy", "ch3_baron_clash")
+        self.assertIn("if alliance_baron:\n        return", body)
+        self.assertEqual(body.count("$ baron_checked_early = True"), 2)
+        self.assertEqual(body.count("$ baron_checked_early = False"), 1)
+        for choice in ('"stand"', '"scheme"', '"yield"'):
+            self.assertIn(f"$ baron_clash_choice = {choice}", body)
+        self.assertIn("if baron_is_darkflame_known:", body)
+        self.assertIn("default baron_checked_early = False", scene)
+        self.assertIn("default baron_clash_choice = \"\"", scene)
+        self.assertIn('"baron_checked_early": False', read_game_file("save_compat.rpy"))
+
+    def test_standoff_feeds_the_iron_route_and_northern_unification(self) -> None:
+        chapter5 = read_game_file("chapter5.rpy")
+        expansion = read_game_file("chapter5_expansion.rpy")
+        self.assertIn("if baron_checked_early:\n            iron_war_score += 3", chapter5)
+        self.assertIn("elif baron_checked_early:\n            iron_neighbor_levies = 150", chapter5)
+        self.assertIn("坎贝尔、莫林、瓦特三家各遣步兵前来，合计[iron_neighbor_levies]人", chapter5)
+        self.assertIn("(power >= 55 or intrigue >= 50 or baron_checked_early)", expansion)
+        self.assertIn('elif baron_clash_choice == "yield":', expansion)
+
+    def test_standoff_background_is_registered_and_present(self) -> None:
+        self.assertIn('image bg grenwald_standoff = Transform("images/bg_grenwald_standoff.webp"', read_game_file("images_def.rpy"))
+        self.assertIn('("bg_grenwald_standoff", "格伦瓦德对峙")', read_game_file("gallery.rpy"))
+        self.assertTrue((GAME / "images" / "bg_grenwald_standoff.webp").is_file())
+        self.assertIn('unlock_gallery("bg_grenwald_standoff")', read_game_file("baron_clash.rpy"))
+
+    def test_iron_battle_thresholds_are_tightened_consistently(self) -> None:
+        chapter5 = read_game_file("chapter5.rpy")
+        difficulty = read_game_file("difficulty.rpy")
+        sim = (ROOT / "Tools" / "sim_ironline_war.py").read_text(encoding="utf-8")
+        for source in (chapter5, difficulty):
+            self.assertIn("max(0, power - 30) // 3", source)
+            self.assertIn("max(0, intrigue - 30) // 5", source)
+            self.assertIn("max(0, loyalty - 30) // 6", source)
+        self.assertEqual(chapter5.count("iron_war_score >= 32 + get_war_threshold_mod()"), 3)
+        self.assertIn('_war_threshold_mod = {"easy": -6, "normal": 0, "hard": 3}', difficulty)
+        self.assertIn('COEF = {"power": 3, "intrigue": 5, "loyalty": 6}', sim)
+        self.assertIn('TH = {"assault": 50, "flank": 46, "defend": 44, "grind": 44, "pyrrhic": 32}', sim)
 
 
 if __name__ == "__main__":

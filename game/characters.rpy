@@ -90,6 +90,7 @@ define baron_envoy = Character("男爵密使", color="#556677", image="servant_g
 define envoy = Character("特使", color="#9088a0", image="queen_envoy")
 define retired_steward = Character("退休管家", color="#8b7355", image="servant_generic")
 define vanguard = Character("先锋官", color="#556677", image="soldier_generic")
+define baron_officer = Character("骑兵军官", color="#556677", image="soldier_generic")  # 3.9.3 格伦瓦德对峙 男爵方军官
 define carlos = Character("卡洛斯", color="#6a5a4a", image="soldier_generic")
 define servant_common = Character("仆人", color="#a9a9a9", image="servant_generic")
 define veteran = Character("老兵", color="#6a5a4a", image="soldier_generic")

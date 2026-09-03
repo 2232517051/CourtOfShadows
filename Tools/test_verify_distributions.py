@@ -28,7 +28,7 @@ from test_release_contract import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WINDOWS_ROOT = "CourtOfShadows-3.9.2-win"
+WINDOWS_ROOT = verifier.WINDOWS_ROOT
 CURRENT_CODE = 1_785_596_475
 PREVIOUS_CODE = 1_785_386_554
 CERTIFICATE = "5fcb5758461427026b13ecf987e86ad11e13170dc60386d42e4c2f20a93b3708"

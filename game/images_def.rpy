@@ -29,6 +29,7 @@ image bg dungeon = Transform("images/bg_dungeon.webp", size=(1280, 720), fit="co
 image bg battlefield = Transform("images/bg_battlefield.webp", size=(1280, 720), fit="cover")
 image bg battlefield_active = Transform("images/bg_battlefield_active.png", size=(1280, 720), fit="cover")
 image bg iron_parade_winter = Transform("images/bg_iron_parade_winter.png", size=(1280, 720), fit="cover")
+image bg grenwald_standoff = Transform("images/bg_grenwald_standoff.webp", size=(1280, 720), fit="cover")  ## 3.9.3 格伦瓦德对峙(codex/gpt-image 专属)
 
 ## ════════════════════════════════════════════════════════════
 ## 背景图 - 别名映射（场景引用名 → 已有素材）

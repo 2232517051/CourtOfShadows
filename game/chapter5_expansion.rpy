@@ -1760,7 +1760,13 @@ label ch5_exp_skirmish:
 
         hide captain_img with dissolve
 
-        if not baron_field_power_broken and (power >= 55 or intrigue >= 50):
+        ## 3.9.3: 格伦瓦德对峙逼退/智退过男爵(baron_checked_early)的玩家不再受属性门槛限制
+        if not baron_field_power_broken and (power >= 55 or intrigue >= 50 or baron_checked_early):
+            if baron_checked_early:
+                $ hide_all_chars("elena_img")
+                show elena_img at left with dissolve
+                elena "男爵联军里的北境领主坐不住了——有三家刚派密使到东门，点名要见你，说格伦瓦德的旧情他们没忘。"
+                hide elena_img with dissolve
             $ mark_important_choice()
             menu:
                 "乘胜追击——趁男爵联军动摇，先统一北境|击溃前期强敌，获得周边领主兵力":
@@ -1788,6 +1794,10 @@ label ch5_exp_skirmish:
 
                     $ hide_all_chars()
                     "当天夜里，男爵联军的三座营门同时起了火。不是你的兵点的——是收到名册的北境领主自己动了手。"
+                    if baron_checked_early:
+                        "北境的小领主们敢在这一夜派出信使倒戈，不是因为你今夜赢了一场前哨战——而是因为他们记得，去年在格伦瓦德村外，是谁只带一百多人就挡住了冯·哈根的三百铁骑。"
+                    elif baron_clash_choice == "yield":
+                        "你感觉得到北境领主们的迟疑：去年在格伦瓦德，你用三十车粮食换来了退兵，这在他们眼中与其说是手腕，不如说是软弱。直到今夜先锋大胜的消息传遍各堡，那些紧闭的门才终于开了一道缝。"
                     "他们本就不愿替冯·哈根送命。先锋惨败、粮道暴露，给了他们退出联军的理由。你带兵压到鹰隼峡时，五面领主旗在阵前倒转，矛尖一齐指向黑狼旗。"
                     "男爵试图用八百铁骑冲开缺口。雷恩没有接战，只守住峡口；失去步兵和粮车的骑兵绕了两次，最终护着男爵退回格鲁瓦尔德堡。"
                     "这一战没有歼灭两千五百人。你做的是更彻底的事——拆掉了把他们绑在一起的那只手。"

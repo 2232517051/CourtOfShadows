@@ -556,7 +556,7 @@ screen privacy_policy_screen():
                     text "本游戏适合12岁及以上用户。游戏包含中世纪宫廷题材的虚构剧情。" size 14 color "#c0b8a8"
 
                     null height 4
-                    text "版本：3.9.2 | 更新日期：2026年8月 | 开发者：FFire的工作室" size 12 color "#6a5e48"
+                    text "版本：3.9.3 | 更新日期：2026年9月 | 开发者：FFire的工作室" size 12 color "#6a5e48"
 
             null height 8
             add Solid("#d4a94230") xsize 500 ysize 1 xalign 0.5

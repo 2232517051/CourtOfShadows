@@ -372,6 +372,8 @@ init 999 python:
             "ch5_clash_silent": False,
 
             ## 第三章剧情标记
+            "baron_checked_early": False,   # 3.9.3 格伦瓦德对峙
+            "baron_clash_choice": "",
             "dark_lily_joined": False,
             "dark_lily_destroyed": False,
             "father_poison_method_known": False,

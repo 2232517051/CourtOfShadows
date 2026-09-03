@@ -2437,9 +2437,11 @@ label ending_iron_lord:
     # ── 战力评估 (花露水反馈: 让属性 + 领主好感真正决定战局, 而非无脑通关) ──
     python:
         iron_war_score = 0
-        iron_war_score += max(0, power - 30) // 4       # 军事投入
-        iron_war_score += max(0, intrigue - 30) // 6    # 谋略部署
-        iron_war_score += max(0, loyalty - 30) // 8     # 军心士气
+        ## 3.9.3 平衡收紧(晨曦反馈"数值一点用没有"): 属性系数 4/6/8 → 3/5/6, 阈值 30/26/24/24/18 → 50/46/44/44/32,
+        ## 模拟(Tools/sim_ironline_war.py): normal 随机玩家完胜 90%→54%, 扮演型 52%, 最优 100%; 战败 5%。
+        iron_war_score += max(0, power - 30) // 3       # 军事投入
+        iron_war_score += max(0, intrigue - 30) // 5    # 谋略部署
+        iron_war_score += max(0, loyalty - 30) // 6     # 军心士气
         if wealth < 15:
             iron_war_score -= 3                         # 府库见底: 粮饷、马料与军械无法补充
         else:
@@ -2477,6 +2479,8 @@ label ending_iron_lord:
             iron_war_score += 2
         if northern_lords_unified:
             iron_war_score += 6                          # 男爵联军瓦解后转投的北境领主
+        if baron_checked_early:
+            iron_war_score += 3                          # 3.9.3 格伦瓦德对峙: 北境小领主记得谁敢站出来
 
         iron_player_regulars = 200 + max(0, power - 40) * 5
         iron_player_militia = 50 + max(0, loyalty - 30) * 5 + max(0, reputation - 40) * 3
@@ -2487,6 +2491,10 @@ label ending_iron_lord:
         iron_neighbor_levies = 0
         if northern_lords_unified:
             iron_neighbor_levies = 700 + min(200, max(0, reputation - 50) * 10)
+            if baron_checked_early:
+                iron_neighbor_levies += 150               # 坎贝尔/莫林/瓦特三家最早站队, 多出的人
+        elif baron_checked_early:
+            iron_neighbor_levies = 150                    # 3.9.3 格伦瓦德之后三家小领主各遣数十步兵
         iron_allied_troops = iron_neighbor_levies
         if resist_route or alliance_baron:
             iron_allied_troops += 2200
@@ -2519,6 +2527,10 @@ label ending_iron_lord:
     captain "艾登堡本部正规军[iron_player_regulars]人，民兵和后勤队[iron_player_militia]人。"
     if northern_lords_unified:
         captain "六位北境领主按约送来[iron_neighbor_levies]名步骑。男爵的黑狼旗已经退回格鲁瓦尔德，不在今天的战场上。"
+        if baron_checked_early:
+            captain "六家联防约书上，这三家的印章盖在最前面——格伦瓦德那天之后，他们就再没犹豫过。"
+    elif baron_checked_early:
+        captain "禀领主，本部集结完毕——另有坎贝尔、莫林、瓦特三家各遣步兵前来，合计[iron_neighbor_levies]人，已编入左翼枪阵。"
     if resist_route or alliance_baron:
         captain "男爵兑现盟约，带来两千二百名可战之兵。我们不是拿几百人替他挡刀，而是两支军队并肩列阵。"
     if marriage_route:
@@ -2892,10 +2904,10 @@ label ending_iron_lord:
             if ch5_exp_war_strategy == "attack":
                 $ iron_war_score += 2
                 "你在军议上定下的主动出击不是空话。各营早已按进攻次序编组，第一声鼓响时没有一队找错位置。"
-            if iron_war_score >= 30 + get_war_threshold_mod():
+            if iron_war_score >= 50 + get_war_threshold_mod():
                 "你的兵甲是这几个月一刀一枪攒出来的。硬撞之下，先撕开防线的是你。"
                 "代价不轻，但第一回合是你赢了。"
-            elif iron_war_score >= 18 + get_war_threshold_mod():
+            elif iron_war_score >= 32 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "可你的人手不够厚。正面对撞，两边都在往下掉人。"
                 "你赢了第一回合——靠的是拿命去填。雷恩的脸色很难看。"
@@ -2919,10 +2931,10 @@ label ending_iron_lord:
             if ch5_exp_final_formation == "hidden_blade" or ch5_exp_war_strategy == "divide":
                 $ iron_war_score += 3
                 "战前反复操演的藏锋阵终于派上用场。侧翼旗号一换，预留的通道立刻让开，没有一队人挤在林口。"
-            if iron_war_score >= 26 + get_war_threshold_mod():
+            if iron_war_score >= 46 + get_war_threshold_mod():
                 "雷恩的人从林子里杀出来的时候，敌军还在盯着正面——侧翼被撕开了一道口子，阵脚立刻乱了。"
                 "仗打完的时候你清点了一遍——己方伤亡比你预想的少得多。"
-            elif iron_war_score >= 18 + get_war_threshold_mod():
+            elif iron_war_score >= 32 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "迂回是对的，可你能分出去的人太少。雷恩那一击没能凿穿。"
                 "敌军缓了过来。你扳回了局面，但战线被拖成了消耗战。"
@@ -2944,14 +2956,14 @@ label ending_iron_lord:
             if ch5_exp_final_formation in ("iron_wall", "peoples_bastion", "holy_shield") or ch5_exp_war_strategy == "defend":
                 $ iron_war_score += 3
                 "城下练过数百遍的阵型在旷野上合拢。修墙、运粮、操练民兵积下的本事，终于不再只是账面上的加成。"
-            if iron_war_score >= 24 + get_war_threshold_mod():
+            if iron_war_score >= 44 + get_war_threshold_mod():
                 "敌军发起了一波又一波的冲锋，但你的防线岿然不动。"
                 "随着进攻的失败，敌军的士气开始下降。终于，你看到了破绽——"
                 $ hide_all_chars("player_char_img")
                 show player_char_img at left with dissolve
                 player "全军反击！！！"
                 "反击的号角一响，撑了一整天的兵全扑出去了。对面那些已经冲累了的人，根本接不住这一下。"
-            elif iron_war_score >= 18 + get_war_threshold_mod():
+            elif iron_war_score >= 32 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "盾墙撑住了前几波。可你的兵太疲，阵线一处接一处地凹下去。"
                 "你等到了反击的破绽——但反扑出去的力气，已经剩不下多少了。"
@@ -2966,7 +2978,7 @@ label ending_iron_lord:
             show player_char_img at left with dissolve
             player "顶上去。没有别的办法了。"
             $ hide_all_chars()
-            if iron_war_score >= 24 + get_war_threshold_mod():
+            if iron_war_score >= 44 + get_war_threshold_mod():
                 $ iron_battle_outcome = "pyrrhic"
                 "你没有奇兵，没有内应，能做的只有把人压上去。"
                 "靠一股不肯退的狠劲，你险险撕开了一道口子——但每一步都踩在自己人身上。"

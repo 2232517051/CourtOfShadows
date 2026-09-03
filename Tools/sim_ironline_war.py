@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """铁血线会战平衡验证 (世界的尽头批遗留: 完胜/惨胜比例未 playtest)
+3.9.3 收紧(晨曦反馈"数值一点用没有"): 目标 normal 随机玩家完胜 45-55%、战败<=10%, 最优>=85%;
+  hard 随机完胜 25-40%、战败<=20%, 最优>=70%。参数见 COEF/TH/WAR_TH_MOD, 判定见 main() 末尾。
 管线 1:1 复刻自:
   chapter5.rpy ending_iron_lord  iron_war_score 基础分 (属性 + 治理 + 盟友/战备旗标)
   chapter5.rpy 2478       战前谋略 menu   (+4/+6[+3]/+6/+8)
@@ -19,12 +21,16 @@ import sys
 random.seed(20260711)
 N = 40000
 
+# 可调参数 (与 chapter5.rpy 铁腕会战一一对应; 由 sweep 脚本覆盖后再跑 main)
+COEF = {"power": 3, "intrigue": 5, "loyalty": 6}      # (stat-30)//COEF   (3.9.3 前: 4/6/8)
+TH = {"assault": 50, "flank": 46, "defend": 44, "grind": 44, "pyrrhic": 32}   # (3.9.3 前: 30/26/24/24/18)
+
 # ────────────────────────────────────────────────────────────────
 # change_stat 双层管线 (difficulty.rpy change_stat_with_difficulty
 #                        → attr_system.rpy change_stat)
 # ────────────────────────────────────────────────────────────────
 _DIFF_MULT = {"easy": (1.5, 0.5), "normal": (1.0, 1.0), "hard": (0.7, 1.5)}
-WAR_TH_MOD = {"easy": -2, "normal": 0, "hard": 4}
+WAR_TH_MOD = {"easy": -6, "normal": 0, "hard": 3}
 
 
 def change_stat(stats, name, delta, difficulty):
@@ -67,9 +73,9 @@ def change_stat(stats, name, delta, difficulty):
 # ────────────────────────────────────────────────────────────────
 def base_score(st, fl):
     s = 0
-    s += max(0, st["power"] - 30) // 4
-    s += max(0, st["intrigue"] - 30) // 6
-    s += max(0, st["loyalty"] - 30) // 8
+    s += max(0, st["power"] - 30) // COEF["power"]
+    s += max(0, st["intrigue"] - 30) // COEF["intrigue"]
+    s += max(0, st["loyalty"] - 30) // COEF["loyalty"]
     if st["wealth"] < 15:
         s -= 3
     else:
@@ -143,13 +149,13 @@ def tactic_options(st):
     """决战 menu: (id, 阈值基数). 硬拼仅当 _iron_prepared 为假."""
     opts = []
     if st["power"] >= 60:
-        opts.append(("assault", 30))
+        opts.append(("assault", TH["assault"]))
     if st["intrigue"] >= 55:
-        opts.append(("flank", 26))
+        opts.append(("flank", TH["flank"]))
     if st["intrigue"] >= 45 and st["loyalty"] >= 50:
-        opts.append(("defend", 24))
+        opts.append(("defend", TH["defend"]))
     if not opts:
-        opts.append(("grind", 24))
+        opts.append(("grind", TH["grind"]))
     return opts
 
 
@@ -236,24 +242,24 @@ def play_war(st, fl, persona, difficulty, rng):
         score += 3
 
     # 阈值档带 (以最终 score 对 4 档基准)
-    if score >= 30 + mod:
-        band = "强攻完胜档(>=30)"
-    elif score >= 26 + mod:
-        band = "迂回档(26-29)"
-    elif score >= 24 + mod:
-        band = "防守档(24-25)"
-    elif score >= 18 + mod:
-        band = "惨胜档(18-23)"
+    if score >= TH["assault"] + mod:
+        band = BANDS[0]
+    elif score >= TH["flank"] + mod:
+        band = BANDS[1]
+    elif score >= TH["defend"] + mod:
+        band = BANDS[2]
+    elif score >= TH["pyrrhic"] + mod:
+        band = BANDS[3]
     else:
-        band = "更差(<18)"
+        band = BANDS[4]
 
     # 实际结局
     if tid == "grind":
-        outcome = "惨胜" if score >= 24 + mod else "战败"
+        outcome = "惨胜" if score >= TH["grind"] + mod else "战败"
     else:
         if score >= th + mod:
             outcome = "完胜"
-        elif score >= 18 + mod:
+        elif score >= TH["pyrrhic"] + mod:
             outcome = "惨胜"
         else:
             outcome = "战败"
@@ -347,7 +353,7 @@ def sample_entry(persona, difficulty, rng):
 # ────────────────────────────────────────────────────────────────
 # 主循环 + 报告
 # ────────────────────────────────────────────────────────────────
-BANDS = ["强攻完胜档(>=30)", "迂回档(26-29)", "防守档(24-25)", "惨胜档(18-23)", "更差(<18)"]
+BANDS = ["强攻完胜档", "迂回档", "防守档", "惨胜档", "更差"]
 OUTCOMES = ["完胜", "惨胜", "战败"]
 PERSONA_NAMES = {"optimal": "最优玩家", "random": "均匀随机玩家", "roleplay": "角色扮演中间玩家"}
 
@@ -361,13 +367,13 @@ def emit(s=""):
 
 def median_band(counter_scores, mod):
     m = statistics.median(counter_scores)
-    if m >= 30 + mod:
+    if m >= TH["assault"] + mod:
         return "强攻完胜档", m
-    if m >= 26 + mod:
+    if m >= TH["flank"] + mod:
         return "迂回档", m
-    if m >= 24 + mod:
+    if m >= TH["defend"] + mod:
         return "防守档", m
-    if m >= 18 + mod:
+    if m >= TH["pyrrhic"] + mod:
         return "惨胜档", m
     return "更差", m
 
@@ -375,8 +381,10 @@ def median_band(counter_scores, mod):
 def main():
     rng = random.Random(20260711)
     emit("=" * 78)
-    emit("铁血线会战 平衡模拟  (N=%d / 画像×难度)   阈值: 强攻30/迂回26/防守24/硬拼24" % N)
-    emit("难度修正: normal +0 → 30/26/24/24   hard +4 → 34/30/28/28")
+    emit("铁血线会战 平衡模拟  (N=%d / 画像×难度)   阈值: 强攻%d/迂回%d/防守%d/硬拼%d/惨胜线%d" % (
+        N, TH["assault"], TH["flank"], TH["defend"], TH["grind"], TH["pyrrhic"]))
+    emit("属性系数: (power-30)//%d  (intrigue-30)//%d  (loyalty-30)//%d   难度修正: normal +%d / hard +%d" % (
+        COEF["power"], COEF["intrigue"], COEF["loyalty"], WAR_TH_MOD["normal"], WAR_TH_MOD["hard"]))
     emit("=" * 78)
 
     results = {}
@@ -384,7 +392,7 @@ def main():
         mod = WAR_TH_MOD[difficulty]
         emit("")
         emit("#### 难度 %s (阈值 %d/%d/%d/%d) ####" % (
-            difficulty, 30 + mod, 26 + mod, 24 + mod, 24 + mod))
+            difficulty, TH["assault"] + mod, TH["flank"] + mod, TH["defend"] + mod, TH["grind"] + mod))
         for persona in ("optimal", "random", "roleplay"):
             band_ct = {b: 0 for b in BANDS}
             out_ct = {o: 0 for o in OUTCOMES}
@@ -416,25 +424,30 @@ def main():
     emit("判定检查")
     emit("=" * 78)
     checks = []
+    # 3.9.3 目标: normal 随机完胜 45-55% / 战败<=10% / 最优>=85%, 扮演型完胜不低于随机-3;
+    #            hard   随机完胜 25-40% / 战败<=20% / 最优>=70%
+    TARGET = {"normal": (45, 55, 10, 85), "hard": (25, 40, 20, 70)}
+    # 扮演型画像在 hard 的盟友先验更低(p_all .35 vs .45), 允许比随机低 8 个点; normal 允许 3 个点
+    RP_TOL = {"normal": 3, "hard": 8}
     for difficulty in ("normal", "hard"):
-        band_ct, out_ct, p10, p50, p90, mb = results[(difficulty, "roleplay")]
-        mid_two = (band_ct["迂回档(26-29)"] + band_ct["防守档(24-25)"]) / N
-        top = band_ct["强攻完胜档(>=30)"] / N
-        pyr = out_ct["惨胜"] / N
-        lose = out_ct["战败"] / N
-        ok_med = mb in ("强攻完胜档", "迂回档", "防守档")
-        ok_pyr = pyr < 0.5
-        checks.append(("roleplay/" + difficulty, ok_med and ok_pyr))
-        emit("[中间玩家/%s] 中位落档=%s(高于中间两档也算通过) 强攻档%.0f%% 中间两档%.0f%% "
-             "惨胜%.1f%% 战败%.1f%% → %s" % (
-                 difficulty, mb, top * 100, mid_two * 100, pyr * 100, lose * 100,
-                 "通过" if (ok_med and ok_pyr) else "不通过"))
-
-        band_ct, out_ct, p10, p50, p90, mb = results[(difficulty, "random")]
-        ok = mb in ("强攻完胜档", "迂回档", "防守档")
-        checks.append(("random/" + difficulty, ok))
-        emit("[随机玩家/%s] 中位落档=%s (要求不低于防守档) 战败%.1f%% → %s" % (
-            difficulty, mb, 100.0 * out_ct["战败"] / N, "通过" if ok else "不通过"))
+        lo, hi, max_lose, min_opt = TARGET[difficulty]
+        _, r_out, _, _, _, r_mb = results[(difficulty, "random")]
+        _, p_out, _, _, _, p_mb = results[(difficulty, "roleplay")]
+        _, o_out, _, _, _, _ = results[(difficulty, "optimal")]
+        r_win, r_lose = 100.0 * r_out["完胜"] / N, 100.0 * r_out["战败"] / N
+        p_win, p_lose = 100.0 * p_out["完胜"] / N, 100.0 * p_out["战败"] / N
+        o_win = 100.0 * o_out["完胜"] / N
+        ok_r = lo <= r_win <= hi and r_lose <= max_lose
+        ok_p = p_win >= r_win - RP_TOL[difficulty] and p_lose <= max_lose
+        ok_o = o_win >= min_opt
+        checks.append(("random/" + difficulty, ok_r))
+        checks.append(("roleplay/" + difficulty, ok_p))
+        checks.append(("optimal/" + difficulty, ok_o))
+        emit("[随机玩家/%s] 完胜%.1f%% (目标 %d-%d) 战败%.1f%% (<=%d) 中位落档=%s → %s" % (
+            difficulty, r_win, lo, hi, r_lose, max_lose, r_mb, "通过" if ok_r else "不通过"))
+        emit("[中间玩家/%s] 完胜%.1f%% (不低于随机-%d) 战败%.1f%% 中位落档=%s → %s" % (
+            difficulty, p_win, RP_TOL[difficulty], p_lose, p_mb, "通过" if ok_p else "不通过"))
+        emit("[最优玩家/%s] 完胜%.1f%% (>=%d) → %s" % (difficulty, o_win, min_opt, "通过" if ok_o else "不通过"))
 
     # ── 敏感性: 固定画像 × 盟友组合 (不依赖旗标先验概率), 角色扮演策略 ──
     emit("")

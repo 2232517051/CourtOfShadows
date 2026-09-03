@@ -158,10 +158,10 @@ init 1 python:
             baron_supply_intel=getattr(store, "baron_supply_intel", False),
         )
 
-    ## 铁腕会战阈值难度修正 (批31收尾轮): 模拟显示最优策略下完胜率 ~95% (normal),
-    ## hard +4 → 结盟玩家完胜~74% / 无盟友最优~38%完胜60%惨胜, 战败只惩罚无盟友乱打。
-    ## easy -2 保体验档爽感。sim: Tools/sim_batch31_balance.py
-    _war_threshold_mod = {"easy": -2, "normal": 0, "hard": 4}
+    ## 铁腕会战阈值难度修正。3.9.3 平衡收紧(晨曦反馈): 阈值 50/46/44/44/32 + 属性系数 3/5/6,
+    ## sim: Tools/sim_ironline_war.py → normal 随机 54% 完胜 / 5% 战败, hard(+3) 随机 31% 完胜 / 16% 战败,
+    ## 最优玩家 normal 100% / hard 93%。easy -6 保体验档爽感。(历史: 30/26/24 + easy-2/hard+4, sim_batch31_balance.py)
+    _war_threshold_mod = {"easy": -6, "normal": 0, "hard": 3}
 
     def get_war_threshold_mod():
         """铁腕会战 iron_war_score 判定阈值的难度修正"""
@@ -216,9 +216,9 @@ init 1 python:
         """Purely enumerate win/loss outcomes of the chapter-five resistance battle."""
         difficulty = difficulty or "normal"
         score = (
-            max(0, power - 30) // 4
-            + max(0, intrigue - 30) // 6
-            + max(0, loyalty - 30) // 8
+            max(0, power - 30) // 3
+            + max(0, intrigue - 30) // 5
+            + max(0, loyalty - 30) // 6
         )
         if wealth < 15:
             score -= 3
@@ -286,6 +286,8 @@ init 1 python:
             ))
 
         outcomes = {"iron_lord": False, "fall": False}
+        ## 这是终局候选"铁腕路线可见"的宽松下限, 不是会战判定阈值(会战阈值见 chapter5 50/46/44/44/32):
+        ## 路线可见但准备不足的玩家会在会战中战败(fall 可达), 契约见 test_game.rpy test_ending_catalog。
         prepared_floor = 12 + _war_threshold_mod.get(difficulty, 0)
         grind_threshold = 15 + _war_threshold_mod.get(difficulty, 0)
 
