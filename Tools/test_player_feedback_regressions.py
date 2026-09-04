@@ -1791,5 +1791,26 @@ class GrenwaldStandoffContractTests(unittest.TestCase):
         self.assertIn('TH = {"assault": 50, "flank": 46, "defend": 44, "grind": 44, "pyrrhic": 32}', sim)
 
 
+class QueenEmpathyKnowledgeContractTests(unittest.TestCase):
+    """3.9.4 风铃反馈: 已知王后害死父亲时, 夜戏"坦诚"分支不能再是真心话."""
+
+    SUSPECT = "father_death_known or queen_poisoned_king_known or testament_forged_known"
+
+    def test_menu_switches_caption_on_queen_suspicion(self) -> None:
+        deepening = read_game_file("chapters_deepening.rpy")
+        self.assertIn(f"$ _ch4_queen_suspect = {self.SUSPECT}", deepening)
+        self.assertIn('"坦诚——是的，我看到了。但我理解。" if not _ch4_queen_suspect:', deepening)
+        self.assertIn('"坦诚——以真心为刃" if _ch4_queen_suspect:', deepening)
+
+    def test_empathy_branch_marks_the_appeal_as_deliberate_when_guilt_is_known(self) -> None:
+        body = label_body("chapters_deepening.rpy", "ch4_deep_queen_empathy")
+        self.assertIn("你看着杀父嫌疑人的眼睛，把父亲从心底拖了出来。", body)
+        self.assertIn("每一个字都是真的。这比撒谎恶心多了。", body)
+        self.assertIn("$ ch4_deep_queen_feigned = True", body)
+        self.assertIn("（你把真实的丧父之痛磨成钝刀，递进了杀父嫌疑人的手心。她信了。）", body)
+        self.assertIn("（你用真诚回应了王后的脆弱。铁面之下，一丝信任悄然落地。）", body)
+        self.assertIn("default ch4_deep_queen_feigned = False", read_game_file("chapters_deepening.rpy"))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -11,6 +11,7 @@ default ch2_deep_baron_letter = False
 default ch3_deep_ritual_witnessed = False
 default ch3_deep_cure_found = False
 default ch4_deep_queen_weakness = False
+default ch4_deep_queen_feigned = False   # 3.9.4 风铃反馈: 已知王后嫌疑时, 夜戏"坦诚"是明知故演的感情牌
 default ch4_deep_court_poet = False
 default ch5_deep_deserter_mercy = False
 default ch5_deep_final_prayer = False
@@ -1640,8 +1641,13 @@ label ch4_deep_queen_weakness:
 
     "她的声音平静得反常——刚才眼里那点恐惧，一丝都听不出来了。"
 
+    ## 3.9.4 风铃反馈("已知父亲被王后害死还打感情牌"): 读过日记/掌握证据的玩家, 坦诚分支改为明知故演
+    $ _ch4_queen_suspect = father_death_known or queen_poisoned_king_known or testament_forged_known
     menu:
-        "坦诚——是的，我看到了。但我理解。":
+        "坦诚——是的，我看到了。但我理解。" if not _ch4_queen_suspect:
+            jump ch4_deep_queen_empathy
+
+        "坦诚——以真心为刃" if _ch4_queen_suspect:
             jump ch4_deep_queen_empathy
 
         "这个秘密是一张王牌——利用它":
@@ -1651,21 +1657,33 @@ label ch4_deep_queen_weakness:
             jump ch4_deep_queen_leave
 
 label ch4_deep_queen_empathy:
+    $ _ch4_queen_suspect = father_death_known or queen_poisoned_king_known or testament_forged_known
 
     $ hide_all_chars("player_char_img")
     show player_char_img at left with dissolve
     player "陛下——"
 
-    "你咬了下嘴唇内侧。"
+    if _ch4_queen_suspect:
+        "你咬了下嘴唇内侧。不是犹豫——是在选要递出去的东西。"
+    else:
+        "你咬了下嘴唇内侧。"
 
     player "我看到了一个思念丈夫的女人。仅此而已。"
 
     "王后一动不动地盯着你。"
 
+    if _ch4_queen_suspect:
+        $ hide_all_chars()
+        "你看着杀父嫌疑人的眼睛，把父亲从心底拖了出来。"
+        $ hide_all_chars("player_char_img")
+        show player_char_img at left with dissolve
+
     player "我的父亲也去世了。有些夜晚，我也会对着他留下的东西说话。"
     player "好像……只要我说了，他就还在某个地方听着。"
 
     $ hide_all_chars()
+    if _ch4_queen_suspect:
+        "每一个字都是真的。这比撒谎恶心多了。"
     "沉默。漫长的沉默。"
 
     "然后王后做了一件你完全没有预料到的事——"
@@ -1717,13 +1735,20 @@ label ch4_deep_queen_empathy:
     $ hide_all_chars("queen_img")
     show queen_img at left with dissolve
     queen "你和你父亲不一样。他太老实了。你……更复杂。"
+    if _ch4_queen_suspect:
+        "是。他是太老实了。"
     queen "今晚——你选择了善意。我记住了。"
 
     $ ch4_deep_queen_weakness = True
-    $ change_stat("reputation", 5)
-    $ change_rel("rel_queen", 8)
-
-    "（你用真诚回应了王后的脆弱。铁面之下，一丝信任悄然落地。）"
+    if _ch4_queen_suspect:
+        $ ch4_deep_queen_feigned = True
+        $ change_stat("intrigue", 4)
+        $ change_rel("rel_queen", 8)
+        "（你把真实的丧父之痛磨成钝刀，递进了杀父嫌疑人的手心。她信了。）"
+    else:
+        $ change_stat("reputation", 5)
+        $ change_rel("rel_queen", 8)
+        "（你用真诚回应了王后的脆弱。铁面之下，一丝信任悄然落地。）"
 
     jump ch4_deep_queen_weakness_end
 
