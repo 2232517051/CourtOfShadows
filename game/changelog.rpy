@@ -21,6 +21,32 @@ screen changelog_screen():
 
             null height 8
 
+            ## ── v3.26 (商店版 v3.9.4) ──
+            frame:
+                xfill True
+                xpadding 16
+                ypadding 10
+                background Solid("#d4a94220")
+                hbox:
+                    spacing 8
+                    text "v3.26" size 22 color "#d4a942" font "msyh.ttf" bold True yalign 0.5
+                    text "补正 · 商店版 v3.9.4" size 16 color "#c8b890" font "msyh.ttf" yalign 0.5
+                    text "2026.09.05" size 13 color "#6a5e48" xalign 1.0 yalign 0.5
+
+            frame:
+                xfill True
+                xpadding 20
+                ypadding 12
+                background Solid("#1a152820")
+                vbox:
+                    spacing 6
+                    text "剧情补正（玩家反馈）" size 18 color "#9b59b6" font "msyh.ttf" bold True
+                    null height 4
+                    text "· 第四章王后夜戏：已从父亲日记或证据得知王后嫌疑的玩家，「坦诚」不再是真心话，而是明知故演的软刀子，旁白与结果随之改变" size 14 color "#c8b890" font "msyh.ttf"
+                    text "· 未读日记的玩家保持原有真心版本，王后的反应不变" size 14 color "#c8b890" font "msyh.ttf"
+
+            null height 4
+
             ## ── v3.25 (商店版 v3.9.3) ──
             frame:
                 xfill True

@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game"
 OLD_GAME = ROOT / "old-game"
 
-APPROVED_VERSION = "3.9.3"
+APPROVED_VERSION = "3.9.4"
 APPROVED_ANDROID_PACKAGE = "com.xiaoyiai.courtofshadows"
 APPROVED_ANDROID_API = 36
 MINIMUM_ANDROID_NUMERIC_VERSION = 1_785_596_475
@@ -97,6 +97,7 @@ APPROVED_PACKAGE_EXCLUSIONS = (
     "TapTap_v3.8_更新公告.md",
     "TapTap_v3.9_更新公告.md",
     "TapTap_v3.9.3_更新公告.md",
+    "TapTap_v3.9.4_更新公告.md",
     "TapTap_回归声明.md",
     "ui_icons_progress.json",
     "voice_mapping.json",
@@ -1398,10 +1399,10 @@ class PlayerFacingCopyContractTests(unittest.TestCase):
             self.about,
             re.compile(r"(?:死因|死亡|遇害|骤逝).{0,24}(?:疑案|疑云|真相|谜)", re.DOTALL),
         )
-        self.assertIn("v3.9.3", self.about)
+        self.assertIn("v3.9.4", self.about)
 
     def test_privacy_copy_matches_the_current_build(self) -> None:
-        self.assertIn("版本：3.9.3", self.privacy)
+        self.assertIn("版本：3.9.4", self.privacy)
         self.assertIn("更新日期：2026年9月", self.privacy)
 
     def test_rating_copy_is_platform_neutral_and_close_only(self) -> None:

@@ -1,7 +1,7 @@
 ## 游戏基本配置
 
 define config.name = _("权谋之庭 - Court of Shadows")
-define config.version = "3.9.3"
+define config.version = "3.9.4"
 
 define gui.show_name = True
 define gui.about = _p("""
@@ -11,7 +11,7 @@ define gui.about = _p("""
 
 全篇共五章，包含九个主线结局与一个隐藏尾声。你的选择会关上一些道路，也会打开另一些道路。
 
-{b}版本：{/b}v3.9.3
+{b}版本：{/b}v3.9.4
 
 基于 Ren'Py 引擎制作
 """)
@@ -100,6 +100,7 @@ init python:
     build.classify('TapTap_v3.8_更新公告.md', None)
     build.classify('TapTap_v3.9_更新公告.md', None)
     build.classify('TapTap_v3.9.3_更新公告.md', None)
+    build.classify('TapTap_v3.9.4_更新公告.md', None)
     build.classify('TapTap_回归声明.md', None)
     build.classify('ui_icons_progress.json', None)
     build.classify('voice_mapping.json', None)
