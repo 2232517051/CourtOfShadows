@@ -66,9 +66,13 @@ REQUIRED_WINDOWS_PATHS = {
 }
 # Fixed Ren'Py 8.5.2 / Court of Shadows 3.9.2 runtime contract. Engine upgrades
 # must deliberately refresh the runtime, common-cache, and source-map constants.
+# 3.9.3 (2026-09-04) 重新测量: 同一 Ren'Py 8.5.2.26010301, 但 SDK 目录已从 E 盘迁到
+# C 盘 Temp/opencode 下, renpy/__pycache__/*.pyc 与 renpy/common/*.rpyc 随之重新生成,
+# 文件数 1377 不变, 引擎源码未变。旧指纹(3.9.2):
+# d87ac8f07807a7971a12caaf82bfec31fb58e2cebdee741af6bd71817578415c
 EXPECTED_WINDOWS_RUNTIME_COUNT = 1377
 EXPECTED_WINDOWS_RUNTIME_FINGERPRINT = (
-    "d87ac8f07807a7971a12caaf82bfec31fb58e2cebdee741af6bd71817578415c"
+    "9a7f0772bab3e666ea1f32241883f3d5807c0828910b3c2aab09b992ab2488ef"
 )
 RPYC_MAGIC = b"_2025-07-06"
 RPYC2_HEADER = b"RENPY RPC2"
